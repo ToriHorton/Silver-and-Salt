@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Founding Vision — Silver & Salt Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Satoshi:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FBF8F2;
+    --sand: #F4EFE6;
+    --moss: #2F3E34;
+    --moss-light: #4A5E50;
+    --sage: #7E8E84;
+    --rust: #D16B4F;
+    --rust-light: rgba(209,107,79,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--moss);
+    font-family: 'Satoshi', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    background: rgba(251,248,242,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(47,62,52,0.08);
+    padding: 0 48px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--moss);
+  }
+
+  /* Split circle mark */
+  .mark {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .mark-left, .mark-right {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 50%;
+  }
+  .mark-left { left: 0; background: var(--moss); }
+  .mark-right { right: 0; background: var(--rust); }
+  .mark-amp {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    z-index: 2;
+    line-height: 1;
+  }
+
+  .nav-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sage);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--moss); }
+
+  .nav-cta {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--cream);
+    background: var(--moss);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 18px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--rust); }
+
+  /* ── FADE IN ANIMATION ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+  .fade-1 { animation-delay: 0.1s; }
+  .fade-2 { animation-delay: 0.25s; }
+  .fade-3 { animation-delay: 0.4s; }
+  .fade-4 { animation-delay: 0.55s; }
+  .fade-5 { animation-delay: 0.7s; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--moss);
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    bottom: -40px; right: -20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(120px, 18vw, 260px);
+    font-weight: 600;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 108px);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: rgba(251,248,242,0.6);
+  }
+
+  .hero-subtitle {
+    max-width: 560px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(251,248,242,0.7);
+    font-weight: 300;
+    border-left: 2px solid var(--rust);
+    padding-left: 20px;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px; right: 48px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sage);
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-scroll::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 48px;
+    background: var(--sage);
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 96px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--moss);
+    margin-bottom: 32px;
+  }
+
+  .body-text {
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--moss-light);
+    font-weight: 300;
+    max-width: 680px;
+  }
+  .body-text + .body-text {
+    margin-top: 20px;
+  }
+
+  /* ── WHY SECTION ── */
+  .why-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .why-label-col {
+    position: sticky;
+    top: 100px;
+  }
+  .why-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--moss);
+    line-height: 1.3;
+  }
+  .why-rule {
+    width: 40px;
+    height: 2px;
+    background: var(--rust);
+    margin-top: 16px;
+  }
+
+  /* ── DATA CALLOUT ── */
+  .data-callout {
+    background: var(--moss);
+    border-radius: 12px;
+    padding: 48px 56px;
+    margin: 64px 0;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .data-callout::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(209,107,79,0.1);
+  }
+  .data-big-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 96px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .data-big-num span {
+    font-size: 48px;
+    color: var(--rust);
+  }
+  .data-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(251,248,242,0.75);
+    font-weight: 300;
+  }
+  .data-text strong { color: var(--cream); font-weight: 700; }
+  .data-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rust);
+    text-decoration: none;
+    margin-top: 12px;
+    border-bottom: 1px solid rgba(209,107,79,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .data-link:hover { border-color: var(--rust); }
+
+  /* ── BROADSIDE (SPLIT PAGE COMMITMENT) ── */
+  .broadside-wrap {
+    background: var(--sand);
+    padding: 0;
+  }
+
+  .broadside {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    min-height: 80vh;
+    max-width: 100%;
+  }
+
+  .b-left {
+    background: var(--moss);
+    padding: 80px 60px 80px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .b-left::before {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .b-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 28px;
+  }
+
+  .b-declaration {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 28px;
+  }
+
+  .b-body {
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(251,248,242,0.7);
+    font-weight: 300;
+    max-width: 400px;
+  }
+
+  /* Seam */
+  .b-seam {
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, rgba(209,107,79,0.3) 20%, var(--rust) 50%, rgba(209,107,79,0.3) 80%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .b-seam-mark {
+    position: absolute;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 0 4px var(--sand);
+  }
+  .bsm-left {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 50%;
+    background: var(--moss);
+  }
+  .bsm-right {
+    position: absolute;
+    top: 0; bottom: 0; right: 0;
+    width: 50%;
+    background: var(--rust);
+  }
+  .bsm-amp {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: white;
+    z-index: 2;
+    line-height: 1;
+  }
+
+  .b-right {
+    background: var(--rust);
+    padding: 80px 48px 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .b-right::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .b-commit-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(251,248,242,0.6);
+    margin-bottom: 28px;
+  }
+
+  .b-commits {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .b-commit {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(251,248,242,0.85);
+    font-weight: 300;
+    padding-left: 16px;
+    border-left: 1px solid rgba(251,248,242,0.25);
+  }
+  .b-commit strong {
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  .b-truth {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(251,248,242,0.5);
+    margin-bottom: 10px;
+  }
+
+  .b-close {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.2vw, 26px);
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  /* ── WHO WE ARE ── */
+  .who-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .who-left .section-heading {
+    font-size: clamp(40px, 5vw, 72px);
+    line-height: 1.0;
+  }
+
+  .who-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rust);
+    text-decoration: none;
+    margin-top: 24px;
+    border-bottom: 1px solid rgba(209,107,79,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .who-link:hover { border-color: var(--rust); }
+
+  /* ── WHAT WE DO ── */
+  .what-section {
+    background: var(--sand);
+    padding: 96px 48px;
+  }
+  .what-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .what-stat {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 96px;
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--moss);
+    letter-spacing: -0.03em;
+  }
+  .what-stat span {
+    display: block;
+    font-size: 24px;
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--rust);
+    margin-top: 8px;
+  }
+
+  /* ── WHY NOW ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 40px 0;
+  }
+  .stat-card {
+    background: white;
+    border: 1px solid rgba(47,62,52,0.1);
+    border-radius: 8px;
+    padding: 24px 20px;
+    border-top: 3px solid var(--rust);
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 600;
+    color: var(--moss);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--moss-light);
+  }
+  .stat-source {
+    font-size: 10px;
+    color: var(--sage);
+    margin-top: 6px;
+  }
+
+  .why-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rust);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(209,107,79,0.3);
+    padding-bottom: 2px;
+    margin-top: 8px;
+    transition: border-color 0.2s;
+  }
+  .why-link:hover { border-color: var(--rust); }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--moss);
+    padding: 120px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '&';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 480px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .cta-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .cta-text {
+    font-size: 16px;
+    color: rgba(251,248,242,0.65);
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+    position: relative;
+  }
+  .cta-btn {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--moss);
+    background: var(--cream);
+    border: none;
+    border-radius: 4px;
+    padding: 16px 36px;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    transition: background 0.2s, color 0.2s;
+  }
+  .cta-btn:hover { background: var(--rust); color: white; }
+
+  /* ── FOOTNOTES ── */
+  .footnotes {
+    padding: 64px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(47,62,52,0.1);
+  }
+  .fn-title {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 16px;
+  }
+  .fn-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .fn-list li {
+    font-size: 11px;
+    color: var(--sage);
+  }
+  .fn-list li strong {
+    color: var(--moss-light);
+    font-weight: 700;
+  }
+
+  /* ── CITATION SUPERSCRIPTS ── */
+  .cite {
+    font-size: 9px;
+    vertical-align: super;
+    color: var(--rust);
+    font-weight: 700;
+    margin-left: 1px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .divider-line {
+    height: 1px;
+    background: rgba(47,62,52,0.1);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    section { padding: 64px 24px; }
+    .hero { padding: 100px 24px 64px; }
+    .why-section { grid-template-columns: 1fr; gap: 32px; }
+    .why-label-col { position: static; }
+    .broadside { grid-template-columns: 1fr; }
+    .b-seam { display: none; }
+    .b-left, .b-right { padding: 56px 24px; }
+    .who-grid { grid-template-columns: 1fr; gap: 40px; }
+    .what-inner { grid-template-columns: 1fr; gap: 40px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .data-callout { flex-direction: column; padding: 40px 32px; gap: 24px; }
+    .cta-section { padding: 80px 24px; }
+    .footnotes { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="mark">
+      <div class="mark-left"></div>
+      <div class="mark-right"></div>
+      <div class="mark-amp">&</div>
+    </div>
+    <span class="nav-name">Silver & Salt Capital</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">The Opportunity</a></li>
+    <li><a href="#">The Data</a></li>
+    <li><a href="#">The Networks</a></li>
+    <li><a href="#">Open Research</a></li>
+  </ul>
+  <a href="#join" class="nav-cta">Join Us</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-bg-text">S&S</div>
+  <p class="hero-eyebrow fade fade-1">Founding Vision</p>
+  <h1 class="hero-title fade fade-2">Silver<br><em>&</em> Salt<br>Capital</h1>
+  <p class="hero-subtitle fade fade-3">A coordinated community of individual investors who learn together, evaluate opportunities together, and invest together. We know collaboration compounds faster than competition.</p>
+  <div class="hero-scroll">Scroll</div>
+</div>
+
+<!-- ══ WHY ══ -->
+<section>
+  <div class="why-section">
+    <div class="why-label-col fade fade-1">
+      <div class="why-label">Let's dream together about what's possible.</div>
+      <div class="why-rule"></div>
+    </div>
+    <div>
+      <p class="body-text">In 2022, I served as CEO of a startup based in Salt Lake City for 2 years. While launching a company with one of my best friends, we explored a private equity roll-up strategy to acquire companies like ours nationwide and consolidate operations to maximize operational efficiency and profitability.</p>
+      <p class="body-text">To connect with other women and investors in Utah, I joined SheMoney, How Women Succeed, Founders N' Fuders. We joined the Kinect Capital accelerator, and we entered two pitch competitions for WeROC and RevRoad. I met so many amazing friends and loved all the support and robust network. We found some lovely champions. We had large check commitments from 2 women who understood the value of our work and one man who experienced our home services and caught the vision.</p>
+      <p class="body-text">While seeking investors, I had dozens of conversations with male investors who did not understand the value of the home services we were offering — and one who bluntly told me I "did not look like the kind of person who runs a company."</p>
+      <p class="body-text">For a myriad of reasons, we ultimately decided not to pursue a national expansion and we did not take capital to grow. Today, the business continues to successfully operate in the SLC region as a profitable lifestyle business run by my talented and amazing friend.</p>
+      <p class="body-text">As I moved on to other startups, I promised myself that I would return to my home state of Utah at another point in my career to see if I could make this journey better for the next wave of women founders.</p>
+      <p class="body-text">One of my early startups had an exit, and I'm back exploring interest among my friends and our broader community to launch a women's angel network in Utah. We can make it easier for women founders in this state to raise pre- and seed-stage capital.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ══ WHY SILVER & SALT ══ -->
+<section>
+  <span class="eyebrow">Why Silver & Salt?</span>
+  <h2 class="section-heading">This is the place and<br>these are our resources!</h2>
+  <p class="body-text">Utah is one of the best places in America to build a business<span class="cite">[S01]</span> — and still one of the hardest places to be a woman building one.<span class="cite">[S02]</span></p>
+  <p class="body-text" style="margin-top:20px">The problem is not talent. The problem is not ambition. The problem is participation and access to growth capital. This group unites women in the Utah region with a shared purpose: to help new women founders launch and lead successful businesses in our community.</p>
+  <p class="body-text" style="margin-top:20px">Capital exists here. Experience exists here. Influence exists here. We know that despite all of this, many women remain outside the networks where investment decisions are made.</p>
+  <p class="body-text" style="margin-top:20px">Silver & Salt Capital represent two minerals that shaped the Park City and Wasatch region. At times, they've both been more valuable than gold, and they represent the resources we have to shape a new landscape for women founders today.</p>
+  <p class="body-text" style="margin-top:20px">And yes, if we have a few silver hairs or are just a little more salty than one might expect, it's all a part of what makes our Utah community so strong and vibrant.</p>
+
+  <!-- Data callout -->
+  <div class="data-callout">
+    <div class="data-big-num">~6<span>%</span></div>
+    <div>
+      <p class="data-text">An AI-assisted analysis of publicly available data estimates that roughly <strong>6% of Utah's $509.6 million in 2025 pre-seed and seed capital</strong> reached startups with at least one female founder.<span style="color:rgba(209,107,79,0.7);font-size:9px;vertical-align:super;margin-left:2px">[S48][S51]</span></p>
+      <a href="#" class="data-link">See the full research and data →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BROADSIDE — COMMUNITY COMMITMENT ══ -->
+<div class="broadside-wrap">
+  <div class="broadside">
+
+    <div class="b-left">
+      <div class="b-eyebrow">Our Community Commitment</div>
+      <div class="b-declaration">"Every woman in Utah deserves to feel she is enough."</div>
+      <p class="b-body">We are a group of women who commit to standing as fierce advocates for one another. We believe women belong in every room where financial decisions are made — and we are building in proximity with one another and the communities we serve.</p>
+    </div>
+
+    <div class="b-seam">
+      <div class="b-seam-mark">
+        <div class="bsm-left"></div>
+        <div class="bsm-right"></div>
+        <div class="bsm-amp">&</div>
+      </div>
+    </div>
+
+    <div class="b-right">
+      <div class="b-commit-label">We Commit</div>
+      <div class="b-commits">
+        <div class="b-commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+        <div class="b-commit">To leading with curiosity <strong>& assuming positive intent.</strong></div>
+        <div class="b-commit">To being kind <strong>& being effective.</strong></div>
+        <div class="b-commit">To amplifying each other's voices <strong>& operating from abundance, not scarcity.</strong></div>
+      </div>
+      <div class="b-truth">Because we hold this truth:</div>
+      <div class="b-close">Utah's next generation of innovation will be shaped by founders & determined by funders — it's time more of them are women.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ WHO WE ARE ══ -->
+<section>
+  <span class="eyebrow">Who We Are</span>
+  <div class="who-grid">
+    <div class="who-left">
+      <h2 class="section-heading">Don't you know?<br><em style="font-style:italic">I'm an angel.</em></h2>
+      <a href="#" class="who-link">See the full landscape of women's angel collectives →</a>
+    </div>
+    <div>
+      <p class="body-text">Silver & Salt Capital is a coordinated community of individual investors who learn together, evaluate opportunities together, and invest together — while maintaining individual choice.</p>
+      <p class="body-text" style="margin-top:20px">We are executives, operators, entrepreneurs, professionals, and community leaders who are no longer waiting for invitations into existing systems. We are rewriting how women participate in economic power and building the systems we need for our capital to thrive.</p>
+      <p class="body-text" style="margin-top:20px">Across the country, women's angel collectives like ours are already thriving. We're not new, just new to Utah. From Golden Seeds in New York (290 members, $190M+ invested over 20 years) to The JumpFund in Chattanooga (100+ investors, 19× co-investment leverage).<span class="cite">[S22][S23]</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHAT WE DO ══ -->
+<div class="what-section">
+  <div class="what-inner">
+    <div>
+      <div class="what-stat">$10K<span>individual commitment</span></div>
+      <div class="what-stat" style="margin-top:24px">$1M+<span>collective movement</span></div>
+    </div>
+    <div>
+      <span class="eyebrow">What We Do</span>
+      <h2 class="section-heading" style="font-size:clamp(28px,3vw,40px)">We identify and support women-led companies building real businesses.</h2>
+      <p class="body-text">We seek out women-founded companies creating revenue, good jobs, durable value, and profitable investment returns.</p>
+      <p class="body-text" style="margin-top:16px">We share vetted deal flow, conduct diligence together, mentor founders, invest individually with shared conviction, and become customers, champions, and connectors. We individually commit $10,000 to the economy and collectively move over $1M in investments — and we're just getting started.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WHY NOW ══ -->
+<section>
+  <span class="eyebrow">Why Now</span>
+  <h2 class="section-heading">The numbers make the case.</h2>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num">78¢</div>
+      <div class="stat-label">Revenue per dollar invested by women founders vs. 31¢ for male-founded startups</div>
+      <div class="stat-source">[S11]</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">1%</div>
+      <div class="stat-label">All-female teams' share of U.S. venture capital in 2024</div>
+      <div class="stat-source">[S09]</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">1.92%</div>
+      <div class="stat-label">Estimated share of Utah VC funding that has gone to female founders</div>
+      <div class="stat-source">[S10]</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">63%</div>
+      <div class="stat-label">Better performance by companies with women founders vs. all-male teams</div>
+      <div class="stat-source">[S12]</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">35%</div>
+      <div class="stat-label">Higher ROI delivered by women-founded companies</div>
+      <div class="stat-source">[S13]</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">15%</div>
+      <div class="stat-label">Less capital burned by women-founded companies</div>
+      <div class="stat-source">[S14]</div>
+    </div>
+  </div>
+
+  <p class="body-text">The capital is here. The founders are here. Utah has 129,429 women-owned businesses<span class="cite">[S06]</span> and an estimated 25,000 accredited women investors in the Salt Lake–Park City corridor. The connection infrastructure is what's been missing.</p>
+  <a href="#" class="why-link" style="display:inline-flex;margin-top:20px">Check out our data resources to see the full business case →</a>
+</section>
+
+<!-- ══ CTA ══ -->
+<div class="cta-section" id="join">
+  <h2 class="cta-heading">Join us.</h2>
+  <p class="cta-text">Silver & Salt Capital is forming now. We're looking for founding members who believe that collaboration compounds faster than competition.</p>
+  <a href="#" class="cta-btn">Learn more about becoming a Founding Member</a>
+</div>
+
+<!-- ══ FOOTNOTES ══ -->
+<div class="footnotes">
+  <div class="fn-title">Sources</div>
+  <ul class="fn-list">
+    <li><strong>S01</strong> Utah business environment ranking</li>
+    <li><strong>S02</strong> Women in Utah business / funding gap</li>
+    <li><strong>S06</strong> Utah women-owned businesses (129,429)</li>
+    <li><strong>S09</strong> All-female teams: 1% of US VC 2024</li>
+    <li><strong>S10</strong> Utah VC to female founders: 1.92%</li>
+    <li><strong>S11</strong> Women founder revenue per dollar invested</li>
+    <li><strong>S12</strong> 63% better performance, women-founded</li>
+    <li><strong>S13</strong> 35% higher ROI</li>
+    <li><strong>S14</strong> 15% less capital burned</li>
+    <li><strong>S22</strong> Golden Seeds: 290 members, $190M+</li>
+    <li><strong>S23</strong> The JumpFund: 100+ investors, 19× leverage</li>
+    <li><strong>S48</strong> Utah 2025 pre-seed/seed capital data</li>
+    <li><strong>S51</strong> AI-assisted female founder funding analysis</li>
+  </ul>
+</div>
+
+</body>
+</html>
