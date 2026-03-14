@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silver & Salt Capital — Site Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Satoshi:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FBF8F2;
+    --sand: #F4EFE6;
+    --moss: #2F3E34;
+    --moss-light: #4A5E50;
+    --sage: #7E8E84;
+    --rust: #D16B4F;
+    --lavender: #8C86FF;
+    --teal: #1A8F7D;
+    --warm: #C4A47E;
+    --ink: #3D5A99;
+    --copper: #C87F5A;
+    --plum: #8B5E83;
+    --gold: #C9A84C;
+    --lime: #7CB83F;
+    --charcoal: #3D3D3D;
+    --silver: #B0B0B0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Satoshi', sans-serif;
+    color: var(--moss);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--moss);
+    color: var(--cream);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 8px;
+  }
+  .header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+  .header-title span {
+    color: var(--rust);
+  }
+  .header-sub {
+    font-size: 13px;
+    color: var(--sage);
+    margin-top: 6px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .meta-stat {
+    text-align: center;
+  }
+  .meta-stat .num {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .meta-stat .lbl {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-top: 2px;
+  }
+
+  /* ── QUICK LINKS ── */
+  .quick-links {
+    background: var(--sand);
+    border-bottom: 1px solid rgba(47,62,52,0.1);
+    padding: 12px 40px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .ql-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-right: 4px;
+  }
+  .ql {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--moss);
+    background: white;
+    border: 1px solid rgba(47,62,52,0.15);
+    border-radius: 4px;
+    padding: 4px 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .ql:hover { background: var(--moss); color: var(--cream); }
+  .ql.accent { background: var(--rust); color: white; border-color: var(--rust); }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 48px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--moss);
+  }
+  .section-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .section-header .sh-sub {
+    font-size: 12px;
+    color: var(--sage);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── BRAND STANDARDS ── */
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 700px) { .brand-grid { grid-template-columns: 1fr; } }
+
+  .brand-card {
+    background: white;
+    border: 1px solid rgba(47,62,52,0.12);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .brand-card.full { grid-column: 1 / -1; }
+  .bc-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+  .bc-locked {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--moss);
+    color: var(--cream);
+    border-radius: 3px;
+    padding: 2px 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* Color swatches */
+  .swatch-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .swatch-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .swatch-name {
+    font-size: 9px;
+    color: var(--sage);
+    text-align: center;
+    max-width: 40px;
+  }
+  .accent-pairs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .accent-pair {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .ap-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .ap-name { font-weight: 700; }
+  .ap-hex { color: var(--sage); font-size: 10px; }
+
+  /* Logo rules */
+  .rules-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rules-list li {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px 10px;
+    background: var(--sand);
+    border-radius: 4px;
+    border-left: 3px solid var(--moss);
+  }
+  .rules-list li .rule-num {
+    font-weight: 900;
+    color: var(--moss);
+    margin-right: 6px;
+  }
+  .rules-list li.critical { border-left-color: var(--rust); background: rgba(209,107,79,0.06); }
+
+  /* Typography */
+  .type-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .type-item {
+    padding: 10px 12px;
+    background: var(--sand);
+    border-radius: 4px;
+  }
+  .type-family { font-size: 13px; font-weight: 700; }
+  .type-use { font-size: 11px; color: var(--sage); margin-top: 2px; }
+
+  /* ── PAGE CARDS ── */
+  .pages-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .page-card {
+    background: white;
+    border: 1px solid rgba(47,62,52,0.12);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .page-card.complete { border-left: 4px solid var(--teal); }
+  .page-card.in-progress { border-left: 4px solid var(--rust); }
+  .page-card.draft { border-left: 4px solid var(--gold); }
+  .page-card.planned { border-left: 4px solid var(--silver); }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .page-header:hover { background: var(--sand); }
+
+  .ph-left { display: flex; align-items: center; gap: 12px; }
+  .ph-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--moss);
+    color: var(--cream);
+    font-size: 11px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .ph-title {
+    font-size: 15px;
+    font-weight: 900;
+  }
+  .ph-sub {
+    font-size: 11px;
+    color: var(--sage);
+    margin-top: 1px;
+  }
+  .ph-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .accent-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
+  .badge {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-weight: 700;
+  }
+  .badge-complete { background: rgba(26,143,125,0.12); color: var(--teal); }
+  .badge-progress { background: rgba(209,107,79,0.12); color: var(--rust); }
+  .badge-draft { background: rgba(201,168,76,0.15); color: #9a7a1a; }
+  .badge-planned { background: rgba(176,176,176,0.2); color: var(--sage); }
+
+  .arrow {
+    font-size: 14px;
+    color: var(--sage);
+    transition: transform 0.2s;
+  }
+
+  .page-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid rgba(47,62,52,0.08);
+  }
+  .page-body.open { display: block; }
+
+  .pb-section {
+    margin-top: 16px;
+  }
+  .pb-label {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 8px;
+  }
+  .pb-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--moss-light);
+  }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .cb {
+    width: 16px; height: 16px;
+    border: 1.5px solid rgba(47,62,52,0.3);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.15s;
+  }
+  .cb.done {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+  }
+  .cb.done + .ci-text { text-decoration: line-through; color: var(--sage); }
+  .ci-note {
+    font-size: 10px;
+    color: var(--sage);
+    display: block;
+    margin-top: 1px;
+  }
+
+  /* Decisions */
+  .decisions-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .decisions-list li {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 6px 10px;
+    border-radius: 4px;
+  }
+  .decisions-list li.resolved {
+    background: rgba(26,143,125,0.08);
+    border-left: 2px solid var(--teal);
+  }
+  .decisions-list li.open {
+    background: rgba(209,107,79,0.08);
+    border-left: 2px solid var(--rust);
+  }
+  .decisions-list li .tag {
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-right: 6px;
+  }
+  .decisions-list li.resolved .tag { color: var(--teal); }
+  .decisions-list li.open .tag { color: var(--rust); }
+
+  /* Assets */
+  .assets-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .asset {
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 3px 8px;
+    letter-spacing: 0.04em;
+  }
+  .asset.ready { background: rgba(26,143,125,0.12); color: var(--teal); }
+  .asset.needed { background: rgba(176,176,176,0.2); color: var(--sage); }
+
+  /* Notes */
+  .notes-area {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid rgba(47,62,52,0.15);
+    border-radius: 4px;
+    padding: 8px;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 12px;
+    color: var(--moss);
+    background: var(--sand);
+    resize: vertical;
+  }
+
+  /* ── ACTION ITEMS ── */
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 700px) { .action-grid { grid-template-columns: 1fr; } }
+
+  .action-card {
+    background: white;
+    border: 1px solid rgba(47,62,52,0.12);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .action-card .ac-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+
+  /* ── GITHUB WORKFLOW ── */
+  .workflow-card {
+    background: var(--moss);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+  .wf-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .wf-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .wf-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .wf-step-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--rust);
+    color: white;
+    font-size: 11px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .wf-step-text { color: rgba(251,248,242,0.85); }
+  .wf-step-text strong { color: var(--cream); }
+
+  /* ── STATUS LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--sage);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+
+  /* ── LOGO PREVIEW ── */
+  .logo-mark {
+    width: 48px; height: 48px;
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  .lm-left, .lm-right {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 50%;
+  }
+  .lm-left { left: 0; }
+  .lm-right { right: 0; }
+  .lm-amp {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    z-index: 2;
+    line-height: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     HEADER
+══════════════════════════════════ -->
+<div class="site-header">
+  <div class="header-eyebrow">Project Master Document</div>
+  <div style="display:flex;align-items:center;gap:0">
+    <div class="logo-mark">
+      <div class="lm-left" style="background:#2F3E34"></div>
+      <div class="lm-right" style="background:#D16B4F"></div>
+      <div class="lm-amp" style="color:white">&</div>
+    </div>
+    <h1 class="header-title">Silver <span>&</span> Salt Capital <span style="font-weight:400;color:var(--sage);font-size:22px">— Site Blueprint</span></h1>
+  </div>
+  <div class="header-sub">Last updated March 2026 · Three files, every session: blueprint + source-bible + ecosystem-map</div>
+  <div class="header-meta">
+    <div class="meta-stat"><div class="num">10</div><div class="lbl">Pages</div></div>
+    <div class="meta-stat"><div class="num">55+</div><div class="lbl">Sources</div></div>
+    <div class="meta-stat"><div class="num">9</div><div class="lbl">Assets Built</div></div>
+    <div class="meta-stat"><div class="num">7</div><div class="lbl">Logo Rules</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     QUICK LINKS
+══════════════════════════════════ -->
+<div class="quick-links">
+  <span class="ql-label">Files</span>
+  <a class="ql" href="#">site-blueprint.html</a>
+  <a class="ql" href="#">source-bible.html</a>
+  <a class="ql" href="#">ecosystem-map.html</a>
+  <span class="ql-label" style="margin-left:12px">Pages</span>
+  <a class="ql" href="#">manifesto.html</a>
+  <a class="ql" href="#">networks-page.html</a>
+  <a class="ql" href="#">open-research.html</a>
+  <a class="ql" href="#">utah-funding-research.html</a>
+  <a class="ql" href="#">accredited-women-research.html</a>
+</div>
+
+<div class="main">
+
+  <!-- ══════════════════════════════════
+       GITHUB WORKFLOW
+  ══════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Session Workflow</h2>
+    <span class="sh-sub">How to use these files with Claude</span>
+  </div>
+
+  <div class="workflow-card">
+    <div class="wf-title">Every session — three steps</div>
+    <div class="wf-steps">
+      <div class="wf-step">
+        <div class="wf-step-num">1</div>
+        <div class="wf-step-text"><strong>Download your files from GitHub.</strong> Go to your silver-and-salt-capital repo, click the file, click the download icon. Do this for: site-blueprint.html, source-bible.html, ecosystem-map.html.</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-step-num">2</div>
+        <div class="wf-step-text"><strong>Upload all three to Claude at the start of your session.</strong> Say: "Here are my three files — let's work on [page or task]." Claude reads them and picks up exactly where you left off.</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-step-num">3</div>
+        <div class="wf-step-text"><strong>At the end of your session, upload the updated files back to GitHub.</strong> Go to your repo → click the file → click the pencil (edit) icon → paste the new code → click "Commit changes." Nothing is ever lost.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BRAND STANDARDS
+  ══════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Brand Standards</h2>
+    <span class="sh-sub">Locked — apply to every page</span>
+  </div>
+
+  <div class="brand-grid">
+
+    <!-- Colors: Base -->
+    <div class="brand-card">
+      <div class="bc-label">Base Palette <span class="bc-locked">Locked</span></div>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#FBF8F2;border:1px solid #ddd"></div><div class="swatch-name">Cream #FBF8F2</div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#F4EFE6"></div><div class="swatch-name">Sand #F4EFE6</div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#2F3E34"></div><div class="swatch-name">Moss #2F3E34</div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#4A5E50"></div><div class="swatch-name">Moss Lt #4A5E50</div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#7E8E84"></div><div class="swatch-name">Sage #7E8E84</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--sage);margin-top:6px">Every page includes a 5-palette switcher. Switcher decision: ships on live site or internal only — TBD.</div>
+    </div>
+
+    <!-- Colors: Accent Pairs -->
+    <div class="brand-card">
+      <div class="bc-label">Accent Pairs — One Per Page <span class="bc-locked">Locked</span></div>
+      <div class="accent-pairs">
+        <div class="accent-pair"><div class="ap-dot" style="background:#D16B4F"></div><div class="ap-dot" style="background:#8C86FF"></div><span class="ap-name">Rust & Lavender</span><span class="ap-hex">#D16B4F + #8C86FF · Home</span></div>
+        <div class="accent-pair"><div class="ap-dot" style="background:#1A8F7D"></div><div class="ap-dot" style="background:#C4A47E"></div><span class="ap-name">Teal & Warm</span><span class="ap-hex">#1A8F7D + #C4A47E · Opportunity / Networks</span></div>
+        <div class="accent-pair"><div class="ap-dot" style="background:#3D5A99"></div><div class="ap-dot" style="background:#C87F5A"></div><span class="ap-name">Ink Blue & Copper</span><span class="ap-hex">#3D5A99 + #C87F5A · Data / Open Research</span></div>
+        <div class="accent-pair"><div class="ap-dot" style="background:#8B5E83"></div><div class="ap-dot" style="background:#C9A84C"></div><span class="ap-name">Plum & Gold</span><span class="ap-hex">#8B5E83 + #C9A84C · How It Works</span></div>
+        <div class="accent-pair"><div class="ap-dot" style="background:#7CB83F"></div><div class="ap-dot" style="background:#3D3D3D"></div><span class="ap-name">Lime & Charcoal</span><span class="ap-hex">#7CB83F + #3D3D3D · Join</span></div>
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div class="brand-card">
+      <div class="bc-label">Typography <span class="bc-locked">Locked</span></div>
+      <div class="type-row">
+        <div class="type-item">
+          <div class="type-family" style="font-family:'Cormorant Garamond',serif;font-size:18px">Cormorant Garamond</div>
+          <div class="type-use">Display headlines, editorial moments, manifesto</div>
+        </div>
+        <div class="type-item">
+          <div class="type-family" style="font-weight:900;letter-spacing:-0.02em">Satoshi 900 / 700</div>
+          <div class="type-use">Section labels, subheads, UI, bold callouts</div>
+        </div>
+        <div class="type-item">
+          <div class="type-family" style="font-weight:400">Satoshi 400</div>
+          <div class="type-use">Body text, notes, captions</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Naming Rules -->
+    <div class="brand-card">
+      <div class="bc-label">Naming Convention <span class="bc-locked">Locked</span></div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:4px">✓ Correct</div>
+        <div style="font-size:13px;background:rgba(26,143,125,0.08);padding:8px;border-radius:4px;margin-bottom:6px"><strong>Silver & Salt Capital</strong> — full name, always</div>
+        <div style="font-size:13px;background:rgba(26,143,125,0.08);padding:8px;border-radius:4px"><strong>S&S Capital</strong> — abbreviation only</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--rust);margin-bottom:4px">✗ Never use</div>
+        <div style="font-size:13px;background:rgba(209,107,79,0.08);padding:8px;border-radius:4px">"Silver & Salt" or "S&S" without "Capital"</div>
+      </div>
+    </div>
+
+    <!-- Logo Rules -->
+    <div class="brand-card full">
+      <div class="bc-label">Split Circle Logo — All 7 Rules <span class="bc-locked">Locked · Verify against all 7 before publishing any mark</span></div>
+      <ul class="rules-list">
+        <li class="critical"><span class="rule-num">1</span>Split is always 50/50 vertical — never diagonal, horizontal, or off-center. Use clip-path or absolute-positioned halves. Never CSS gradients at angles.</li>
+        <li><span class="rule-num">2</span>Must include silver or white in the ampersand or one half.</li>
+        <li><span class="rule-num">3</span>Colors may include moss (#2F3E34). Will NOT include cream.</li>
+        <li><span class="rule-num">4</span>Moss may match the background — one half can disappear.</li>
+        <li><span class="rule-num">5</span>Only one accent color per version. All other elements are silver, white, or moss.</li>
+        <li class="critical"><span class="rule-num">6</span>The & is always white, silver, or moss — NEVER an accent color. When an accent is present elsewhere in the mark, the & MUST be white or silver (never moss).</li>
+        <li><span class="rule-num">7</span>The & must be a different color from both halves — never matches either side.</li>
+      </ul>
+      <div style="margin-top:14px">
+        <div class="bc-label" style="margin-bottom:6px">Logo Preferences</div>
+        <div style="font-size:12px;line-height:1.6">
+          <div style="margin-bottom:6px"><strong>⭐ Favorites (use first):</strong> Moss/Accent + White & · Silver/Accent + White & · Moss/Silver + White & · Silver/White + Moss &</div>
+          <div style="margin-bottom:6px"><strong>Acceptable:</strong> Moss/Accent + Silver & · White/Accent + Silver & · Moss/White + Silver &</div>
+          <div style="color:var(--sage)">Note: White-half variants lose edge on white backgrounds — restrict to dark or cream surfaces.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGES
+  ══════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Site Pages</h2>
+    <span class="sh-sub">Click any card to expand</span>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Complete</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>In Progress</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Draft</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--silver)"></div>Planned</div>
+  </div>
+
+  <div class="pages-grid">
+
+    <!-- PAGE 1: HOME -->
+    <div class="page-card in-progress" id="card-home">
+      <div class="page-header" onclick="toggle('card-home')">
+        <div class="ph-left">
+          <div class="ph-num">1</div>
+          <div>
+            <div class="ph-title">Home</div>
+            <div class="ph-sub">hero · thesis hook · why now intro</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#D16B4F" title="Rust accent"></div>
+          <span class="badge badge-progress">In Progress</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-home">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">First impression for cold traffic and warm referrals. Communicates the thesis in one glance, creates desire to read more.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb done">✓</div><div><span class="ci-text">Hero — thesis hook</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Personal story / Why section (Tori's voice, SheMoney, WeROC, Kinect, Founders N' Fuders)</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Why Silver & Salt Capital (heritage, minerals, Park City/Wasatch history)</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Who We Are: "Don't you know? I'm an angel."</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">What We Do — $10K individual / $1M+ collective</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Why Now — performance data with source citations</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">CTA: "Learn more about becoming a Founding Member"</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Logo mark integrated in nav</span><span class="ci-note">Needs final vector from designer</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Social proof / credibility strip (partner logos)</span><span class="ci-note">Future — when partners confirmed</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Open Decisions</div>
+          <ul class="decisions-list">
+            <li class="resolved"><span class="tag">✓</span>"Founding members now forming" creates urgency without pressure.</li>
+            <li class="open"><span class="tag">Open</span>Heritage block: stays on Home as teaser or moves fully to About?</li>
+            <li class="open"><span class="tag">Open</span>Add a "What is Silver & Salt Capital" one-liner for pure cold traffic?</li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">Full page draft ✓</span>
+            <span class="asset ready">Personal story ✓</span>
+            <span class="asset ready">All sections ✓</span>
+            <span class="asset needed">Logo vector</span>
+            <span class="asset needed">Partner logos</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: MANIFESTO -->
+    <div class="page-card complete" id="card-manifesto">
+      <div class="page-header" onclick="toggle('card-manifesto')">
+        <div class="ph-left">
+          <div class="ph-num">2</div>
+          <div>
+            <div class="ph-title">Manifesto</div>
+            <div class="ph-sub">founding vision · community commitment · broadside design</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#D16B4F"></div>
+          <div class="accent-dot" style="background:#2F3E34"></div>
+          <span class="badge badge-complete">Complete</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-manifesto">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">The emotional and philosophical heart of S&S Capital. Sets the culture before anyone invests. Opens with Tori's personal story, closes with the locked Community Commitment design.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb done">✓</div><div><span class="ci-text">Personal story — Tori's voice (SheMoney, Founders N' Fuders, Kinect, WeROC, How Women Succeed)</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Why Silver & Salt Capital — mineral heritage, Park City/Wasatch, "silver hairs" / "salty" line</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Community Commitment text — LOCKED final version</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Broadside II split-page design — moss left / rust right / ampersand at seam — LOCKED</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Who We Are, What We Do, Why Now sections with citations</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">10 source citations linked to source bible</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Commitment Text — Locked Structure</div>
+          <div style="font-size:12px;line-height:1.7;background:var(--sand);padding:12px;border-radius:6px;border-left:3px solid var(--rust)">
+            <div style="margin-bottom:6px"><strong>Declaration:</strong> Every woman in Utah deserves to feel she is enough. We are a group of women who commit to standing as fierce advocates for one another...</div>
+            <div style="margin-bottom:6px"><strong>We Commit pairs (all equal weight, & within pairs):</strong> showing up (capital/knowledge/relationships/visibility/advocacy) · curiosity & assuming positive intent · being kind & being effective · amplifying voices & abundance not scarcity</div>
+            <div><strong>Conviction close:</strong> Utah's next generation will be shaped by founders & determined by funders — it's time more of them are women.</div>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Open Decisions</div>
+          <ul class="decisions-list">
+            <li class="resolved"><span class="tag">✓</span>Broadside II (split-page) locked as the commitment design.</li>
+            <li class="resolved"><span class="tag">✓</span>All commitment text at equal weight — no thin/italic on second halves of pairs.</li>
+            <li class="open"><span class="tag">Open</span>Should the manifesto be the About page, or a separate page linked from About?</li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">manifesto.html ✓</span>
+            <span class="asset ready">Commitment text locked ✓</span>
+            <span class="asset ready">Broadside design locked ✓</span>
+            <span class="asset ready">10 citations ✓</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: OPPORTUNITY -->
+    <div class="page-card draft" id="card-opp">
+      <div class="page-header" onclick="toggle('card-opp')">
+        <div class="ph-left">
+          <div class="ph-num">3</div>
+          <div>
+            <div class="ph-title">The Opportunity</div>
+            <div class="ph-sub">the gap · two sides · market case</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#1A8F7D" title="Teal accent"></div>
+          <span class="badge badge-draft">Draft</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-opp">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">Makes the rational case. Two sides of the same problem: founders who can't get funded, investors who aren't at the table. Utah paradox — capital is here, participation infrastructure is missing.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb"></div><div><span class="ci-text">Concentric rings diagram integrated</span><span class="ci-note">Diagram exists — needs integration into page</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">5 market pitches edited into page-ready prose</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Utah-specific context section</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">25,000 accredited women stat prominently placed</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">"Utah isn't capital-constrained. It's participation-constrained." as hero line</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Open Decisions</div>
+          <ul class="decisions-list">
+            <li class="open"><span class="tag">Open</span>How much Utah-specific context lives here vs. separate page?</li>
+            <li class="open"><span class="tag">Open</span>Does the concentric rings diagram live here or on its own page?</li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">Diagram concept ✓</span>
+            <span class="asset needed">Page HTML</span>
+            <span class="asset needed">Prose copy</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: DATA -->
+    <div class="page-card draft" id="card-data">
+      <div class="page-header" onclick="toggle('card-data')">
+        <div class="ph-left">
+          <div class="ph-num">4</div>
+          <div>
+            <div class="ph-title">The Data</div>
+            <div class="ph-sub">performance metrics · Utah paradox · receipts wall</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#3D5A99"></div>
+          <span class="badge badge-draft">Draft</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-data">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">The numbers page. Removes doubt. 12-stat receipts wall showing women founder performance, funding gap, Utah paradox. Every claim sourced.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb"></div><div><span class="ci-text">Full 12-stat receipts wall layout</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Comparable angel collective returns section</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Utah paradox section — 129,429 women-owned businesses, 25K investors, 1.92% VC</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Link to Open Research hub</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Key Stats (all sourced)</div>
+          <div style="font-size:11px;line-height:1.8;background:var(--sand);padding:10px;border-radius:4px">
+            78¢ revenue per dollar invested (women) vs 31¢ (men) · S11<br>
+            All-female teams: 1% of US VC 2024 · S09<br>
+            Utah women founders: 1.92% of VC · S10<br>
+            63% better performance, female-founded · S12<br>
+            35% higher ROI · S13 · 15% less capital burned · S14<br>
+            129,429 women-owned businesses in Utah · S06<br>
+            ~25,000 accredited women investors, SLC–Park City corridor
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">All stats sourced ✓</span>
+            <span class="asset needed">Page HTML</span>
+            <span class="asset needed">Data visualization</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 5: HOW IT WORKS -->
+    <div class="page-card draft" id="card-how">
+      <div class="page-header" onclick="toggle('card-how')">
+        <div class="ph-left">
+          <div class="ph-num">5</div>
+          <div>
+            <div class="ph-title">How It Works</div>
+            <div class="ph-sub">source · vet · back · compound · three investment paths</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#8B5E83"></div>
+          <span class="badge badge-draft">Draft</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-how">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">Removes confusion. Shows the model, the commitment, and the three paths (angel investing, revenue-based financing, donor-advised fund alignment). Makes joining feel accessible.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb"></div><div><span class="ci-text">Four-step model: Source → Vet → Back → Compound</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">$10,000 individual commitment / $1M+ collective explained</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Three investment paths</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">What a member actually does week to week</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">Model concept ✓</span>
+            <span class="asset needed">Page HTML</span>
+            <span class="asset needed">Path descriptions</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 6: JOIN -->
+    <div class="page-card draft" id="card-join">
+      <div class="page-header" onclick="toggle('card-join')">
+        <div class="ph-left">
+          <div class="ph-num">6</div>
+          <div>
+            <div class="ph-title">Join</div>
+            <div class="ph-sub">founding member CTA · scale projections · application</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#7CB83F"></div>
+          <span class="badge badge-draft">Draft</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-join">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">The natural end of the story. If you've read the opportunity, seen the data, understood the model — the only question left is "are you in?" Short. Don't repeat the thesis. Show the math and the button.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb done">✓</div><div><span class="ci-text">Scale projections — $8M+ year one → $50M+ over five years</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">CTA copy: "Founding members now forming"</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Source list / footnotes</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Application form or link</span><span class="ci-note">Needs real form — Typeform or equivalent</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Founding member benefits / urgency copy</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Confirmation flow after application</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Open Decisions</div>
+          <ul class="decisions-list">
+            <li class="open"><span class="tag">Open</span>Application form: embedded on page or external link (Typeform)?</li>
+            <li class="open"><span class="tag">Open</span>Founding member tier benefits — what do founding members get that later members don't?</li>
+            <li class="open"><span class="tag">Open</span>Confirmation flow — email sequence, welcome packet?</li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">Scale projections ✓</span>
+            <span class="asset ready">CTA copy ✓</span>
+            <span class="asset needed">Application form</span>
+            <span class="asset needed">Benefits copy</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 7: ABOUT -->
+    <div class="page-card planned" id="card-about">
+      <div class="page-header" onclick="toggle('card-about')">
+        <div class="ph-left">
+          <div class="ph-num">7</div>
+          <div>
+            <div class="ph-title">About / Heritage</div>
+            <div class="ph-sub">founder story · team · S&S Capital name origin</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#B0B0B0"></div>
+          <span class="badge badge-planned">Planned</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-about">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">The human page. Who started this and why. The Silver & Salt Capital name origin. The founding team (when ready). The community culture. This is where trust gets personal.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb done">✓</div><div><span class="ci-text">Heritage copy: "Silver built Park City's fortune. Salt defined the Great Basin."</span><span class="ci-note">Written — currently on Home page</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Founder letter / story (Tori)</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Founding team bios + photos</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Values / principles</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Advisory board (future)</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Contact information</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Open Decisions</div>
+          <ul class="decisions-list">
+            <li class="open"><span class="tag">Open</span>Founder letter vs. team page vs. both?</li>
+            <li class="open"><span class="tag">Open</span>Heritage stays on Home as teaser or moves fully to About?</li>
+            <li class="open"><span class="tag">Open</span>Is the Manifesto the About page, or does About link to Manifesto?</li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">Heritage copy ✓</span>
+            <span class="asset needed">Founder story</span>
+            <span class="asset needed">Team bios + photos</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area">This page can wait until closer to launch — it needs real people and real photos. The heritage copy is strong and can carry the page initially.</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 8: NETWORKS -->
+    <div class="page-card complete" id="card-networks">
+      <div class="page-header" onclick="toggle('card-networks')">
+        <div class="ph-left">
+          <div class="ph-num">8</div>
+          <div>
+            <div class="ph-title">The Networks</div>
+            <div class="ph-sub">women's angel collectives · national landscape map</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#1A8F7D"></div>
+          <span class="badge badge-complete">Complete</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-networks">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">Shows S&S Capital is part of a proven national movement. 10 women's angel collectives with size, geography, and precedent. Anchors credibility.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Content Checklist</div>
+          <ul class="checklist">
+            <li><div class="cb done">✓</div><div><span class="ci-text">10 women's collectives profiled (Golden Seeds, JumpFund, etc.)</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">Size / members / capital deployed per collective</span></div></li>
+            <li><div class="cb done">✓</div><div><span class="ci-text">US map with geographic footprint</span></div></li>
+            <li><div class="cb"></div><div><span class="ci-text">Actual logos for each collective</span><span class="ci-note">Currently placeholder — needs real logos</span></div></li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">networks-page.html ✓</span>
+            <span class="asset ready">10 collectives profiled ✓</span>
+            <span class="asset ready">US map ✓</span>
+            <span class="asset needed">Real logos</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 9: OPEN RESEARCH HUB -->
+    <div class="page-card complete" id="card-research">
+      <div class="page-header" onclick="toggle('card-research')">
+        <div class="ph-left">
+          <div class="ph-num">9</div>
+          <div>
+            <div class="ph-title">Open Research</div>
+            <div class="ph-sub">hub + 2 published reports · AI-assisted methodology</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#3D5A99"></div>
+          <span class="badge badge-complete">Complete</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-research">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">Establishes S&S Capital as a serious research organization, not just a club. Shows the work. Invites challenge. Positions the collective as a knowledge creator for the Utah ecosystem.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Published Reports</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+            <div style="background:var(--sand);padding:10px;border-radius:6px;font-size:12px">
+              <strong>Report No. 01</strong> — Utah Early-Stage Capital Landscape<br>
+              <span style="color:var(--sage)">utah-funding-research.html · AI tool: Claude · Sources: 11</span>
+            </div>
+            <div style="background:var(--sand);padding:10px;border-radius:6px;font-size:12px">
+              <strong>Report No. 02</strong> — Accredited Women Investors in Utah<br>
+              <span style="color:var(--sage)">accredited-women-research.html · Estimated ~92,000–103,000 accredited women across Wasatch Front. Site states "25,000" as deliberately conservative.</span>
+            </div>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Four Methodology Principles</div>
+          <div style="font-size:12px;line-height:1.8;background:var(--sand);padding:10px;border-radius:4px">
+            Show the work · Credit the tools · Link the sources · Invite the challenge
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Assets</div>
+          <div class="assets-row">
+            <span class="asset ready">open-research.html ✓</span>
+            <span class="asset ready">utah-funding-research.html ✓</span>
+            <span class="asset ready">accredited-women-research.html ✓</span>
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 10: BRAND STANDARDS PAGE -->
+    <div class="page-card planned" id="card-brand">
+      <div class="page-header" onclick="toggle('card-brand')">
+        <div class="ph-left">
+          <div class="ph-num">10</div>
+          <div>
+            <div class="ph-title">Brand Standards</div>
+            <div class="ph-sub">internal reference · color system · logo rules · typography</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <div class="accent-dot" style="background:#B0B0B0"></div>
+          <span class="badge badge-planned">Planned (Internal)</span>
+          <span class="arrow">▾</span>
+        </div>
+      </div>
+      <div class="page-body" id="body-brand">
+        <div class="pb-section">
+          <div class="pb-label">Purpose</div>
+          <div class="pb-text">Internal reference page for anyone working on S&S Capital assets — website, social, print. All brand rules in one place. Not necessarily public-facing.</div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Open Decisions</div>
+          <ul class="decisions-list">
+            <li class="open"><span class="tag">Open</span>Public-facing brand page or internal-only?</li>
+            <li class="open"><span class="tag">Open</span>Does the palette switcher ship on the live site?</li>
+          </ul>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Notes</div>
+          <textarea class="notes-area">All brand standards live in the Brand Standards section of this blueprint for now. Build as a separate page when needed for handoff to designers/developers.</textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /pages-grid -->
+
+  <!-- ══════════════════════════════════
+       PRE-LAUNCH ACTION ITEMS
+  ══════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Pre-Launch Action Items</h2>
+    <span class="sh-sub">Global tasks across all pages</span>
+  </div>
+
+  <div class="action-grid">
+    <div class="action-card">
+      <div class="ac-label">Platform & Hosting</div>
+      <ul class="checklist">
+        <li><div class="cb"></div><div><span class="ci-text">Decide: Webflow, custom host, or GitHub Pages?</span><span class="ci-note">GitHub Pages available now — free, files already there</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Buy domain: silverandsaltcapital.com (or .co)</span></div></li>
+        <li><div class="cb done">✓</div><div><span class="ci-text">GitHub repository created</span><span class="ci-note">silver-and-salt-capital repo live</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Set up analytics (Google Analytics or Plausible)</span></div></li>
+      </ul>
+    </div>
+    <div class="action-card">
+      <div class="ac-label">Brand & Design</div>
+      <ul class="checklist">
+        <li><div class="cb"></div><div><span class="ci-text">Commission final split-circle logo vector from designer</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Integrate logo mark into nav on all pages</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Create favicon using split-circle mark</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Decide: palette switcher ships live or internal only?</span></div></li>
+      </ul>
+    </div>
+    <div class="action-card">
+      <div class="ac-label">Content & Copy</div>
+      <ul class="checklist">
+        <li><div class="cb"></div><div><span class="ci-text">Full naming audit — "Silver & Salt Capital" or "S&S Capital" everywhere</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">SEO: meta titles, descriptions, OG images per page</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Build application form (Typeform or equivalent)</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Write founding member benefits copy</span></div></li>
+      </ul>
+    </div>
+    <div class="action-card">
+      <div class="ac-label">Technical & QA</div>
+      <ul class="checklist">
+        <li><div class="cb"></div><div><span class="ci-text">Mobile responsive testing across all pages</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Cross-browser testing (Chrome, Safari, Firefox)</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">All internal links working</span></div></li>
+        <li><div class="cb"></div><div><span class="ci-text">Source bible citations verified live on all pages</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       OPEN DECISIONS SUMMARY
+  ══════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Open Decisions — Master List</h2>
+    <span class="sh-sub">Resolve these to unblock build progress</span>
+  </div>
+
+  <div style="background:white;border:1px solid rgba(47,62,52,0.12);border-radius:8px;padding:20px">
+    <ul class="decisions-list">
+      <li class="open"><span class="tag">Hosting</span>Platform decision: Webflow, custom, or GitHub Pages for launch?</li>
+      <li class="open"><span class="tag">Home</span>Heritage block: stays on Home as teaser or moves to About?</li>
+      <li class="open"><span class="tag">Home</span>Add "What is Silver & Salt Capital" one-liner for cold traffic?</li>
+      <li class="open"><span class="tag">Manifesto</span>Is the Manifesto the About page, or a separate page linked from About?</li>
+      <li class="open"><span class="tag">Join</span>Application form: embedded Typeform or external link?</li>
+      <li class="open"><span class="tag">Join</span>Founding member tier: what benefits do founding members get?</li>
+      <li class="open"><span class="tag">Join</span>Confirmation flow after application — email sequence?</li>
+      <li class="open"><span class="tag">Brand</span>Palette switcher: ships on live site or internal only?</li>
+      <li class="open"><span class="tag">Opportunity</span>Concentric rings diagram — this page or its own page?</li>
+    </ul>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+function toggle(id) {
+  const card = document.getElementById(id);
+  const body = card.querySelector('.page-body');
+  const arrow = card.querySelector('.arrow');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▴' : '▾';
+}
+
+// Checkbox interactivity
+document.querySelectorAll('.cb').forEach(cb => {
+  cb.addEventListener('click', e => {
+    e.stopPropagation();
+    cb.classList.toggle('done');
+    cb.textContent = cb.classList.contains('done') ? '✓' : '';
+  });
+});
+</script>
+</body>
+</html>
