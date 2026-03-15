@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S Capital Open Research</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Satoshi:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;--sage:#7E8E84;--rust:#D16B4F;--ink:#3D5A99;--copper:#C87F5A;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);font-family:'Satoshi',sans-serif;color:var(--moss);-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(47,62,52,0.08);padding:0 48px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--moss);}
+.mark{width:36px;height:36px;border-radius:50%;position:relative;overflow:hidden;}
+.ml{position:absolute;top:0;bottom:0;left:0;width:50%;background:var(--moss);}
+.mr{position:absolute;top:0;bottom:0;right:0;width:50%;background:var(--rust);}
+.ma{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:white;z-index:2;line-height:1;}
+.nav-name{font-size:13px;font-weight:700;}
+.nav-back{font-size:12px;font-weight:700;color:var(--sage);text-decoration:none;}
+.hero{background:var(--moss);padding:120px 48px 80px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.03);}
+.hero-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);margin-bottom:16px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,80px);font-weight:300;color:var(--cream);line-height:1.0;margin-bottom:20px;}
+.hero-sub{font-size:15px;color:rgba(251,248,242,0.65);max-width:560px;line-height:1.7;font-weight:300;}
+.stats-bar{background:var(--rust);padding:20px 48px;display:flex;gap:48px;}
+.sb-stat .n{font-size:28px;font-weight:900;color:white;}
+.sb-stat .l{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.7);}
+.main{max-width:1000px;margin:0 auto;padding:80px 48px;}
+.intro{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;line-height:1.5;color:var(--moss);max-width:700px;margin-bottom:64px;border-left:2px solid var(--rust);padding-left:24px;font-style:italic;}
+.reports-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--sage);margin-bottom:20px;}
+.reports{display:flex;flex-direction:column;gap:16px;margin-bottom:80px;}
+.report-card{background:white;border:1px solid rgba(47,62,52,0.1);border-radius:10px;padding:32px;display:grid;grid-template-columns:auto 1fr;gap:24px;transition:box-shadow 0.2s;text-decoration:none;color:inherit;}
+.report-card:hover{box-shadow:0 4px 20px rgba(47,62,52,0.1);}
+.report-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;color:var(--rust);line-height:1;width:60px;}
+.report-title{font-size:18px;font-weight:900;margin-bottom:8px;}
+.report-desc{font-size:13px;color:var(--moss-light);line-height:1.6;margin-bottom:16px;}
+.findings{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.finding{font-size:11px;font-weight:700;background:rgba(47,62,52,0.06);border-radius:4px;padding:4px 10px;color:var(--moss);}
+.report-meta{font-size:11px;color:var(--sage);display:flex;gap:16px;flex-wrap:wrap;}
+.methodology{background:var(--moss);color:var(--cream);border-radius:10px;padding:40px;margin-bottom:48px;}
+.meth-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-bottom:16px;}
+.meth-text{font-size:14px;color:rgba(251,248,242,0.75);line-height:1.7;margin-bottom:24px;}
+.principles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.principle{background:rgba(255,255,255,0.06);border-radius:6px;padding:14px;}
+.pr-title{font-size:12px;font-weight:700;color:var(--cream);margin-bottom:4px;}
+.pr-text{font-size:11px;color:rgba(251,248,242,0.6);line-height:1.5;}
+.contribute{text-align:center;padding:48px 0;}
+.contribute h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;margin-bottom:12px;}
+.contribute p{font-size:14px;color:var(--moss-light);max-width:480px;margin:0 auto 24px;}
+.btn{display:inline-block;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--cream);background:var(--moss);border:none;border-radius:4px;padding:12px 28px;text-decoration:none;cursor:pointer;}
+.btn:hover{background:var(--rust);}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="mark"><div class="ml"></div><div class="mr"></div><div class="ma">&</div></div>
+    <span class="nav-name">Silver &amp; Salt Capital</span>
+  </a>
+  <a href="#" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">S&amp;S Capital Open Research</p>
+  <h1 class="hero-title">We show<br>our work.</h1>
+  <p class="hero-sub">AI-assisted research, verified against public data, published openly. Every claim traced to a source. Every methodology documented. Invite the challenge.</p>
+</div>
+
+<div class="stats-bar">
+  <div class="sb-stat"><div class="n">2</div><div class="l">Published Reports</div></div>
+  <div class="sb-stat"><div class="n">55+</div><div class="l">Sources Cited</div></div>
+  <div class="sb-stat"><div class="n">Mar 2026</div><div class="l">Latest Update</div></div>
+</div>
+
+<div class="main">
+  <p class="intro">"Utah's investment ecosystem produces extraordinary data — but most of it lives in expensive databases or academic papers that never reach the founders and investors who need it most. We built this research series to change that."</p>
+
+  <div class="reports-label">Published Reports</div>
+  <div class="reports">
+    <a class="report-card" href="utah-funding-research.html">
+      <div class="report-num">01</div>
+      <div>
+        <div class="report-title">Utah Early-Stage Capital Landscape</div>
+        <div class="report-desc">A comprehensive analysis of pre-seed and seed capital flow in Utah in 2025 — who gets it, who doesn't, and what the data reveals about the gender funding gap in one of America's top startup states.</div>
+        <div class="findings">
+          <span class="finding">$509.6M total pool</span>
+          <span class="finding">~6% to women founders</span>
+          <span class="finding">1.92% Utah VC to women</span>
+          <span class="finding">129,429 women-owned businesses</span>
+        </div>
+        <div class="report-meta">
+          <span>AI Tool: Claude (Anthropic)</span>
+          <span>11 primary sources</span>
+          <span>Validated March 2026</span>
+        </div>
+      </div>
+    </a>
+    <a class="report-card" href="accredited-women-research.html">
+      <div class="report-num">02</div>
+      <div>
+        <div class="report-title">Accredited Women Investors in Utah</div>
+        <div class="report-desc">How many women in Utah meet the SEC's accredited investor threshold — and what does that mean for the potential size of a women's angel collective? An original analysis using IRS income data, Census household data, and Utah labor statistics.</div>
+        <div class="findings">
+          <span class="finding">~92K–103K accredited women</span>
+          <span class="finding">25K conservative estimate</span>
+          <span class="finding">5% activation = 1,000+ investors</span>
+          <span class="finding">Wasatch Front focus</span>
+        </div>
+        <div class="report-meta">
+          <span>AI Tool: Claude (Anthropic)</span>
+          <span>8 primary sources</span>
+          <span>Validated March 2026</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <div class="meth-title">Our Methodology</div>
+    <div class="meth-text">Silver &amp; Salt Capital uses AI tools — primarily Claude (Anthropic) — to assist with research synthesis and analysis. AI is a starting point, not an endpoint. Every significant claim is verified against primary sources before publication. We name the tools we use. We publish our source lists. We flag estimates as estimates.</div>
+    <div class="principles">
+      <div class="principle"><div class="pr-title">Show the work</div><div class="pr-text">Methodology is documented in every report. You can see exactly how we got here.</div></div>
+      <div class="principle"><div class="pr-title">Credit the tools</div><div class="pr-text">AI tools are named and described. No pretending this is traditional research.</div></div>
+      <div class="principle"><div class="pr-title">Link the sources</div><div class="pr-text">Every primary source is cited. Our full Source Bible is available to members.</div></div>
+      <div class="principle"><div class="pr-title">Invite the challenge</div><div class="pr-text">Found an error? Have better data? We want to know. This is a living document.</div></div>
+    </div>
+  </div>
+
+  <div class="contribute">
+    <h3>Have data we should know about?</h3>
+    <p>We're actively seeking better Utah-specific data on angel investing, women founder outcomes, and accredited investor demographics. If you work in research, policy, or financial services, we'd love to hear from you.</p>
+    <a href="mailto:tori@letsplaymoney.com" class="btn">Contribute Data</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S Capital — Source Bible</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Satoshi:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;--sage:#7E8E84;--rust:#D16B4F;--teal:#1A8F7D;--ink:#3D5A99;--silver:#B0B0B0; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);font-family:'Satoshi',sans-serif;color:var(--moss);padding:0 0 80px;}
+  .header{background:var(--moss);color:var(--cream);padding:40px 48px 32px;}
+  .header h1{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;margin-bottom:6px;}
+  .header p{font-size:13px;color:var(--sage);}
+  .stats{display:flex;gap:32px;margin-top:24px;flex-wrap:wrap;}
+  .stat .n{font-size:28px;font-weight:900;color:var(--cream);}
+  .stat .l{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);}
+  .filters{background:var(--sand);border-bottom:1px solid rgba(47,62,52,0.1);padding:14px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .fl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-right:4px;}
+  .fb{font-size:11px;font-weight:700;padding:5px 12px;border-radius:4px;border:1px solid rgba(47,62,52,0.15);background:white;cursor:pointer;color:var(--moss);transition:all 0.15s;}
+  .fb:hover,.fb.active{background:var(--moss);color:var(--cream);border-color:var(--moss);}
+  .main{max-width:1000px;margin:0 auto;padding:40px 48px;}
+  .note-box{background:rgba(209,107,79,0.06);border:1px solid rgba(209,107,79,0.2);border-radius:6px;padding:12px 16px;font-size:12px;color:var(--moss-light);line-height:1.6;margin-bottom:32px;}
+  .note-box strong{color:var(--rust);}
+  .topic{margin-bottom:48px;}
+  .topic-header{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--moss);padding-bottom:8px;margin-bottom:20px;}
+  .topic-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;}
+  .topic-count{font-size:11px;color:var(--sage);letter-spacing:0.08em;}
+  .source{background:white;border:1px solid rgba(47,62,52,0.1);border-radius:8px;padding:20px;margin-bottom:12px;}
+  .source-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;}
+  .sid{font-size:11px;font-weight:900;background:var(--moss);color:var(--cream);border-radius:4px;padding:3px 8px;flex-shrink:0;letter-spacing:0.04em;}
+  .stitle{font-size:14px;font-weight:700;flex:1;}
+  .smeta{font-size:11px;color:var(--sage);margin-bottom:10px;}
+  .claims{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .claim{display:flex;gap:8px;font-size:12px;line-height:1.55;padding:6px 10px;background:var(--sand);border-radius:4px;}
+  .cb{color:var(--rust);font-weight:900;flex-shrink:0;}
+  .cd{font-weight:700;color:var(--moss);}
+  .used-on{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+  .ut{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-radius:3px;padding:2px 7px;}
+  .u-home{background:rgba(209,107,79,0.12);color:var(--rust);}
+  .u-opp{background:rgba(26,143,125,0.12);color:var(--teal);}
+  .u-data{background:rgba(61,90,153,0.12);color:var(--ink);}
+  .u-man{background:rgba(139,94,131,0.15);color:#8B5E83;}
+  .u-net{background:rgba(201,168,76,0.15);color:#9a7a1a;}
+  .u-res{background:rgba(124,184,63,0.15);color:#4a7a1a;}
+  .u-join{background:rgba(47,62,52,0.12);color:var(--moss);}
+  .add-src{background:var(--sand);border:2px dashed rgba(47,62,52,0.2);border-radius:8px;padding:20px;text-align:center;color:var(--sage);font-size:13px;cursor:pointer;margin-top:16px;}
+  .add-src:hover{border-color:var(--rust);color:var(--rust);}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Source Bible — Silver &amp; Salt Capital</h1>
+  <p>Every citable fact, numbered and tagged. Upload this file at the start of every session alongside the blueprint and ecosystem map.</p>
+  <div class="stats">
+    <div class="stat"><div class="n">55+</div><div class="l">Sources</div></div>
+    <div class="stat"><div class="n">14</div><div class="l">Topics</div></div>
+    <div class="stat"><div class="n">100+</div><div class="l">Data Points</div></div>
+    <div class="stat"><div class="n">8</div><div class="l">Pages Using</div></div>
+  </div>
+</div>
+
+<div class="filters">
+  <span class="fl">Filter:</span>
+  <button class="fb active" onclick="filterAll(this)">All</button>
+  <button class="fb" onclick="ft('utah-biz',this)">Utah Business</button>
+  <button class="fb" onclick="ft('utah-fund',this)">Utah Funding</button>
+  <button class="fb" onclick="ft('utah-women',this)">Utah Women</button>
+  <button class="fb" onclick="ft('performance',this)">Performance</button>
+  <button class="fb" onclick="ft('gap',this)">Funding Gap</button>
+  <button class="fb" onclick="ft('networks',this)">Angel Networks</button>
+  <button class="fb" onclick="ft('accredited',this)">Accredited Investors</button>
+  <button class="fb" onclick="ft('utah-angel',this)">Utah Angel Analysis</button>
+</div>
+
+<div class="main">
+  <div class="note-box"><strong>How to use:</strong> Every claim on the site gets a source ID (S01, S09, etc.). When you find a new source, paste it into chat and Claude will add it here with the next available number. Start every writing session by reading relevant sources first.</div>
+
+  <!-- UTAH BUSINESS -->
+  <div class="topic" data-topic="utah-biz">
+    <div class="topic-header"><span class="topic-title">Utah Business Environment</span><span class="topic-count">3 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S01</span><span class="stitle">WalletHub — Best &amp; Worst States to Start a Business 2025</span></div>
+      <div class="smeta">WalletHub · 2025</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Utah ranked <span class="cd">#3 best state</span> to start a business in America in 2025</span></li>
+        <li class="claim"><span class="cb">→</span><span>Ranked on business environment, access to resources, and business costs</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-home">Home</span><span class="ut u-man">Manifesto</span><span class="ut u-opp">Opportunity</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S02</span><span class="stitle">WalletHub — Women's Equality by State 2025</span></div>
+      <div class="smeta">WalletHub · 2025</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Utah ranked <span class="cd">#50 (last)</span> for women's equality for 11 consecutive years</span></li>
+        <li class="claim"><span class="cb">→</span><span>Measures workplace environment, education &amp; health, and political empowerment</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-man">Manifesto</span><span class="ut u-opp">Opportunity</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S03</span><span class="stitle">UWLP Brief — Status of Women Leaders in Utah Business 2024</span></div>
+      <div class="smeta">Utah Women &amp; Leadership Project · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women hold <span class="cd">fewer than 20%</span> of C-suite positions in Utah's largest companies</span></li>
+        <li class="claim"><span class="cb">→</span><span>Utah lags national averages across most leadership metrics</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-data">Data</span></div>
+    </div>
+  </div>
+
+  <!-- UTAH WOMEN-OWNED BUSINESSES -->
+  <div class="topic" data-topic="utah-women">
+    <div class="topic-header"><span class="topic-title">Utah Women-Owned Businesses</span><span class="topic-count">3 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S06</span><span class="stitle">SBA Small Business Profile — Utah 2025</span></div>
+      <div class="smeta">U.S. Small Business Administration · 2025</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Utah has <span class="cd">129,429 women-owned businesses</span></span></li>
+        <li class="claim"><span class="cb">→</span><span>Women-owned businesses employ over <span class="cd">105,000 people</span> in Utah</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-home">Home</span><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S07</span><span class="stitle">2024 Impact of Women-Owned Businesses — WIPP Education Institute</span></div>
+      <div class="smeta">WIPP Education Institute · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women-owned businesses generate <span class="cd">$2.7 trillion</span> in annual revenue nationally</span></li>
+        <li class="claim"><span class="cb">→</span><span>Employ <span class="cd">12.2 million</span> workers across the U.S.</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-data">Data</span><span class="ut u-opp">Opportunity</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S04</span><span class="stitle">UWLP Brief — Women Entrepreneurs in Utah</span></div>
+      <div class="smeta">Utah Women &amp; Leadership Project · 2023</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women start businesses at faster rates than men in Utah but receive substantially less capital support</span></li>
+        <li class="claim"><span class="cb">→</span><span>Access to networks and capital identified as the primary barriers</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-data">Data</span></div>
+    </div>
+  </div>
+
+  <!-- UTAH FUNDING GAP -->
+  <div class="topic" data-topic="utah-fund">
+    <div class="topic-header"><span class="topic-title">Utah Funding Gap</span><span class="topic-count">4 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S10</span><span class="stitle">Sorenson Impact / Project DEEP — Utah VC Gender Analysis</span></div>
+      <div class="smeta">Sorenson Impact Center · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Only <span class="cd">1.92%</span> of Utah venture capital funding has gone to female founders</span></li>
+        <li class="claim"><span class="cb">→</span><span>Utah significantly lags national benchmarks for female founder funding</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-home">Home</span><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S48</span><span class="stitle">PitchBook — Utah Pre-Seed &amp; Seed Capital 2025</span></div>
+      <div class="smeta">PitchBook · 2025</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Utah deployed <span class="cd">$509.6 million</span> in pre-seed and seed capital in 2025</span></li>
+        <li class="claim"><span class="cb">→</span><span>Used as the denominator in the S&amp;S Capital female founder funding analysis</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-data">Data</span><span class="ut u-res">Research</span><span class="ut u-man">Manifesto</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S51</span><span class="stitle">S&amp;S Capital Original Analysis — 2025 Utah Angel-Stage Female Founder Estimate</span></div>
+      <div class="smeta">Silver &amp; Salt Capital / AI-Assisted Research · 2026</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>18-round sample totaling <span class="cd">$72.65M</span> — only <span class="cd">$3.75M (5.2%)</span> went to female-co-founded startups</span></li>
+        <li class="claim"><span class="cb">→</span><span>Best estimate: <span class="cd">~$31M</span> of Utah's $509.6M pre-seed/seed pool reached female-founded startups (range: $20M–$51M)</span></li>
+        <li class="claim"><span class="cb">→</span><span>Utah's 5.2% is roughly <span class="cd">one-quarter to one-third of national benchmarks</span> (Carta: 24.2%, SEC: 19%)</span></li>
+        <li class="claim"><span class="cb">→</span><span>Site published claim: <span class="cd">~6%</span> (conservative rounded estimate)</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span><span class="ut u-res">Research</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S50</span><span class="stitle">Athena AI / Air Quality Startup — 2025 Utah Female-Founded Pre-Seed Example</span></div>
+      <div class="smeta">PitchBook / press releases · 2025</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Led by <span class="cd">Heather Holmes</span> (Assoc. Prof, Chemical Engineering, U of U)</span></li>
+        <li class="claim"><span class="cb">→</span><span>1 of only <span class="cd">2 female-co-founded</span> Utah pre-seed/seed raises in 2025 sample</span></li>
+        <li class="claim"><span class="cb">→</span><span>Named 2025 "Startup of the Year" by U of U Technology Licensing Office</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-data">Data</span><span class="ut u-res">Research</span></div>
+    </div>
+  </div>
+
+  <!-- WOMEN FOUNDER PERFORMANCE -->
+  <div class="topic" data-topic="performance">
+    <div class="topic-header"><span class="topic-title">Women Founder Performance Data</span><span class="topic-count">6 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S11</span><span class="stitle">BCG / MassChallenge — Why Women-Owned Startups Are a Better Bet</span></div>
+      <div class="smeta">Boston Consulting Group &amp; MassChallenge · 2018 (widely cited)</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women-founded startups generate <span class="cd">78¢ of revenue per dollar invested</span> vs. 31¢ for male-founded</span></li>
+        <li class="claim"><span class="cb">→</span><span>Over a 5-year period, women-founded companies generated <span class="cd">2× more revenue</span> per dollar invested</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-home">Home</span><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S12</span><span class="stitle">First Round Capital — 10 Years of Investing Data</span></div>
+      <div class="smeta">First Round Capital · 2015 (widely cited)</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Companies with at least one female founder performed <span class="cd">63% better</span> than all-male founding teams</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S13</span><span class="stitle">Kauffman Foundation — Women Entrepreneur Performance Study</span></div>
+      <div class="smeta">Kauffman Foundation · 2019</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women-founded companies deliver <span class="cd">35% higher ROI</span> than comparable male-founded companies</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S14</span><span class="stitle">Female Founders Fund — Capital Efficiency Study</span></div>
+      <div class="smeta">Female Founders Fund · 2020</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women-founded companies burn <span class="cd">15% less capital</span> than male-founded counterparts</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S16</span><span class="stitle">Female Founder Statistics 2026 — Theanna</span></div>
+      <div class="smeta">Theanna · 2026</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Current state of female founder funding, growth, and key trends — 2026 edition</span></li>
+        <li class="claim"><span class="cb">→</span><span>Aggregates data across PitchBook, Crunchbase, and SEC filings</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-data">Data</span><span class="ut u-opp">Opportunity</span></div>
+    </div>
+  </div>
+
+  <!-- NATIONAL FUNDING GAP -->
+  <div class="topic" data-topic="gap">
+    <div class="topic-header"><span class="topic-title">National Funding Gap</span><span class="topic-count">4 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S09</span><span class="stitle">PitchBook — All-Female Founding Teams VC Share 2024</span></div>
+      <div class="smeta">PitchBook · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>All-female founding teams received just <span class="cd">1%</span> of U.S. venture capital in 2024</span></li>
+        <li class="claim"><span class="cb">→</span><span>Mixed-gender teams: ~15%; all-male teams: ~84%</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-home">Home</span><span class="ut u-man">Manifesto</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S15</span><span class="stitle">Crunchbase — Women in Venture 2024 Report</span></div>
+      <div class="smeta">Crunchbase · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women founders received <span class="cd">18.3%</span> of all VC deals in 2024 but only ~2% of total dollars at all-female companies</span></li>
+        <li class="claim"><span class="cb">→</span><span>Funding gap has persisted for 10+ years despite increased awareness</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-data">Data</span><span class="ut u-opp">Opportunity</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S17</span><span class="stitle">Banu Ozkazanc-Pan Research — Brown University Women &amp; Venture Capital</span></div>
+      <div class="smeta">Brown University · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Structural analysis of why women remain systematically excluded from VC networks</span></li>
+        <li class="claim"><span class="cb">→</span><span>Homophily in VC networks: investors fund people who look like themselves</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-data">Data</span></div>
+    </div>
+  </div>
+
+  <!-- ANGEL NETWORKS -->
+  <div class="topic" data-topic="networks">
+    <div class="topic-header"><span class="topic-title">Angel Networks — Comparable Models</span><span class="topic-count">10 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S22</span><span class="stitle">Golden Seeds — 20 Years of Women-Led Angel Investing</span></div>
+      <div class="smeta">Golden Seeds / Dallas Innovates · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span><span class="cd">290+ members</span> across multiple U.S. cities</span></li>
+        <li class="claim"><span class="cb">→</span><span><span class="cd">$190M+</span> invested over 20 years in 200+ women-led companies</span></li>
+        <li class="claim"><span class="cb">→</span><span>Mandatory investing bootcamp — portfolio IRR above <span class="cd">20%</span> (top decile)</span></li>
+        <li class="claim"><span class="cb">→</span><span>Min $25K/year. Chapters in NYC, Boston, Atlanta, Dallas, Philadelphia</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-man">Manifesto</span><span class="ut u-net">Networks</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S23</span><span class="stitle">The JumpFund — Chattanooga Women's Angel Collective</span></div>
+      <div class="smeta">The JumpFund · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span><span class="cd">100+ investors</span>, 83% women members</span></li>
+        <li class="claim"><span class="cb">→</span><span>Every dollar invested attracted <span class="cd">19× in co-investor capital</span></span></li>
+        <li class="claim"><span class="cb">→</span><span>Built from a mid-market city — proof the model works outside major metros</span></li>
+        <li class="claim"><span class="cb">→</span><span>Check size: $100K–$250K. Fully deployed; now in portfolio support mode.</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-man">Manifesto</span><span class="ut u-net">Networks</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S24</span><span class="stitle">37 Angels — NYC Women's Angel Network</span></div>
+      <div class="smeta">37 Angels · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span><span class="cd">150+ members</span>, founded 2012. Annual bootcamp trains new investors.</span></li>
+        <li class="claim"><span class="cb">→</span><span>$1K–$10K minimum checks — accessible entry point</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-net">Networks</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S25</span><span class="stitle">Pipeline Angels — Angels-in-the-Making Model</span></div>
+      <div class="smeta">Pipeline Angels · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span><span class="cd">200+ members</span> trained; <span class="cd">$4M+</span> deployed into 40+ companies</span></li>
+        <li class="claim"><span class="cb">→</span><span>"Friends and family round" for founders who don't come from wealthy networks</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-net">Networks</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S26</span><span class="stitle">Portfolia — Learn-by-Investing Collective Model</span></div>
+      <div class="smeta">Portfolia · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Closest structural match to Silver &amp; Salt Capital — members invest together, learn together</span></li>
+        <li class="claim"><span class="cb">→</span><span>Multiple themed funds with as low as <span class="cd">$10K minimums</span></span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-net">Networks</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S29</span><span class="stitle">Citrine Angels — DC/Metro Women's Angel Group</span></div>
+      <div class="smeta">Citrine Angels · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>No minimum investment barrier — most accessible entry model of any comparable collective</span></li>
+        <li class="claim"><span class="cb">→</span><span>Regional model (DC/Metro) proving mid-market cities can sustain angel collectives</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-net">Networks</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S30</span><span class="stitle">Angel Capital Association — State of Angel Investing 2024</span></div>
+      <div class="smeta">Angel Capital Association · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Angel investors deploy <span class="cd">$650M+</span> annually across the U.S.</span></li>
+        <li class="claim"><span class="cb">→</span><span>Average angel returns: <span class="cd">2.5×</span></span></li>
+        <li class="claim"><span class="cb">→</span><span>Group investing significantly outperforms solo angel investing</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-data">Data</span><span class="ut u-opp">Opportunity</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S31</span><span class="stitle">Girl Math Capital — Next-Generation Angel Collective</span></div>
+      <div class="smeta">Girl Math Capital · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span><span class="cd">200+ members</span> built in under 2 years by three founders in their 20s</span></li>
+        <li class="claim"><span class="cb">→</span><span><span class="cd">$100</span> membership, <span class="cd">$1K</span> minimum check — accreditation not required</span></li>
+        <li class="claim"><span class="cb">→</span><span>Portfolio includes Vacation, Girl Beer, Halfdays</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-net">Networks</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S32</span><span class="stitle">Broadway Angels — SF Senior Executive Women's Collective</span></div>
+      <div class="smeta">Broadway Angels · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Senior executive and C-suite women investors in the SF Bay Area — invite-only</span></li>
+        <li class="claim"><span class="cb">→</span><span>Decades of combined experience in tech investing; the high-profile end of the spectrum</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-net">Networks</span></div>
+    </div>
+  </div>
+
+  <!-- ACCREDITED INVESTOR RESEARCH -->
+  <div class="topic" data-topic="accredited">
+    <div class="topic-header"><span class="topic-title">Accredited Women Investor Research</span><span class="topic-count">5 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S45</span><span class="stitle">SEC — Accredited Investor Definition &amp; Thresholds</span></div>
+      <div class="smeta">U.S. Securities &amp; Exchange Commission · Current</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Accredited investor: <span class="cd">$200K+ individual income</span> (or $300K joint) for 2+ years, OR <span class="cd">$1M+ net worth</span> excluding primary residence</span></li>
+        <li class="claim"><span class="cb">→</span><span>Can also qualify by professional certification (Series 65, etc.)</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-res">Research</span><span class="ut u-join">Join</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S46</span><span class="stitle">S&amp;S Capital Open Research — Accredited Women in Utah (Report No. 02)</span></div>
+      <div class="smeta">Silver &amp; Salt Capital / AI-Assisted Research · 2026</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Estimated <span class="cd">~92,000–103,000 accredited women</span> across the Wasatch Front market area</span></li>
+        <li class="claim"><span class="cb">→</span><span>Site states <span class="cd">"25,000"</span> — deliberately conservative, focused on SLC–Park City corridor</span></li>
+        <li class="claim"><span class="cb">→</span><span>At 5% activation: <span class="cd">1,000+ new early-stage investors</span> in Utah</span></li>
+        <li class="claim"><span class="cb">→</span><span>Analysis based on IRS income data, Census household data, and Utah labor statistics</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-data">Data</span><span class="ut u-res">Research</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S47</span><span class="stitle">Revelatory Research / Business Wire — Unlocking Women's Wealth</span></div>
+      <div class="smeta">Business Wire · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Women control <span class="cd">$10.9 trillion</span> in investable assets in the U.S.</span></li>
+        <li class="claim"><span class="cb">→</span><span>Expected to control <span class="cd">$30 trillion</span> by 2030 through wealth transfer and earnings growth</span></li>
+        <li class="claim"><span class="cb">→</span><span><span class="cd">67%</span> of women investors plan new venture fund commitments in 2026</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S52</span><span class="stitle">Jacki Zehner Quote — Money as a Power Tool</span></div>
+      <div class="smeta">Jacki Zehner, Women Moving Millions · widely cited</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>"Money is a power tool." — Bridge to Silver &amp; Salt's role in activating women investors</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-res">Research</span></div>
+    </div>
+  </div>
+
+  <!-- Utah Angel Analysis -->
+  <div class="topic" data-topic="utah-angel">
+    <div class="topic-header"><span class="topic-title">Utah Angel &amp; Investor Landscape</span><span class="topic-count">3 sources</span></div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S40</span><span class="stitle">Utah Economic Blueprint 2024</span></div>
+      <div class="smeta">State of Utah · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Utah is one of the fastest-growing economies in the United States</span></li>
+        <li class="claim"><span class="cb">→</span><span>Tech sector employment and startup formation rates consistently outpace national averages</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-data">Data</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S41</span><span class="stitle">Park City Angels — Utah Angel Group</span></div>
+      <div class="smeta">Park City Angels · 2024</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>One of Utah's most active angel groups — predominantly male membership</span></li>
+        <li class="claim"><span class="cb">→</span><span>Underscores the gap Silver &amp; Salt Capital is filling</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-res">Research</span></div>
+    </div>
+    <div class="source">
+      <div class="source-top"><span class="sid">S53</span><span class="stitle">How Women Lead — New Table Campaign</span></div>
+      <div class="smeta">How Women Lead · 2025</div>
+      <ul class="claims">
+        <li class="claim"><span class="cb">→</span><span>Campaign goal: bring <span class="cd">10,000 women</span> into venture investing</span></li>
+        <li class="claim"><span class="cb">→</span><span>National activation model — relevant precedent for S&amp;S Capital's Utah activation strategy</span></li>
+      </ul>
+      <div class="used-on"><span class="ut u-opp">Opportunity</span><span class="ut u-res">Research</span></div>
+    </div>
+  </div>
+
+  <div class="add-src">+ Add a new source — paste URL or stats into chat and Claude will format and number it here</div>
+</div>
+
+<script>
+function filterAll(btn){document.querySelectorAll('.topic').forEach(t=>t.style.display='');document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function ft(topic,btn){document.querySelectorAll('.topic').forEach(t=>{t.style.display=t.dataset.topic===topic?'':'none';});document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+</script>
+</body>
+</html>

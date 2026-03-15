@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S Capital — Ecosystem Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Satoshi:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;--sage:#7E8E84;--rust:#D16B4F;--teal:#1A8F7D;--ink:#3D5A99;--gold:#C9A84C;--silver:#B0B0B0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);font-family:'Satoshi',sans-serif;color:var(--moss);padding:0 0 80px;}
+.header{background:var(--moss);padding:40px 48px 32px;color:var(--cream);}
+.header h1{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;margin-bottom:6px;}
+.header p{font-size:13px;color:var(--sage);}
+.stats{display:flex;gap:32px;margin-top:24px;}
+.stat .n{font-size:28px;font-weight:900;color:var(--cream);}
+.stat .l{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);}
+.filters{background:var(--sand);border-bottom:1px solid rgba(47,62,52,0.1);padding:14px 48px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.fl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-right:4px;}
+.fb{font-size:11px;font-weight:700;padding:5px 12px;border-radius:4px;border:1px solid rgba(47,62,52,0.15);background:white;cursor:pointer;color:var(--moss);}
+.fb:hover,.fb.active{background:var(--moss);color:var(--cream);border-color:var(--moss);}
+.legend{display:flex;gap:20px;flex-wrap:wrap;padding:16px 48px;background:var(--cream);border-bottom:1px solid rgba(47,62,52,0.08);font-size:11px;color:var(--sage);}
+.legend-item{display:flex;align-items:center;gap:6px;}
+.tag{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-radius:3px;padding:2px 6px;}
+.tag-comp{background:rgba(209,107,79,0.15);color:var(--rust);}
+.tag-partner{background:rgba(26,143,125,0.12);color:var(--teal);}
+.tag-resource{background:rgba(61,90,153,0.12);color:var(--ink);}
+.tag-onsite{background:rgba(124,184,63,0.15);color:#4a7a1a;}
+.tag-ref{background:rgba(176,176,176,0.2);color:var(--sage);}
+.main{max-width:1100px;margin:0 auto;padding:40px 48px;}
+.category{margin-bottom:40px;}
+.cat-header{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;border-bottom:2px solid var(--moss);padding-bottom:8px;margin-bottom:16px;}
+.orgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;}
+.org{background:white;border:1px solid rgba(47,62,52,0.1);border-radius:8px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;}
+.org.highlight{border-left:3px solid var(--rust);}
+.org-name{font-size:13px;font-weight:700;color:var(--moss);margin-bottom:3px;}
+.org-desc{font-size:11px;color:var(--sage);line-height:1.5;}
+.org-tags{display:flex;gap:4px;flex-wrap:wrap;padding-top:2px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Ecosystem Map — Silver &amp; Salt Capital</h1>
+  <p>The full landscape of women's financial and entrepreneurial organizations — tagged by relevance. Upload this file every session alongside the blueprint and source bible.</p>
+  <div class="stats">
+    <div class="stat"><div class="n">150+</div><div class="l">Organizations</div></div>
+    <div class="stat"><div class="n">15</div><div class="l">Categories</div></div>
+    <div class="stat"><div class="n">12</div><div class="l">Direct Comps</div></div>
+    <div class="stat"><div class="n">18</div><div class="l">Potential Partners</div></div>
+  </div>
+</div>
+<div class="filters">
+  <span class="fl">Filter by tag:</span>
+  <button class="fb active" onclick="filterAll(this)">All</button>
+  <button class="fb" onclick="ft('comp',this)">Comp</button>
+  <button class="fb" onclick="ft('partner',this)">Partner</button>
+  <button class="fb" onclick="ft('resource',this)">Resource</button>
+  <button class="fb" onclick="ft('onsite',this)">On Site</button>
+</div>
+<div class="legend">
+  <div class="legend-item"><span class="tag tag-comp">Comp</span> Direct comparable — proof the model works</div>
+  <div class="legend-item"><span class="tag tag-partner">Partner</span> Potential collaboration</div>
+  <div class="legend-item"><span class="tag tag-resource">Resource</span> Recommend to members</div>
+  <div class="legend-item"><span class="tag tag-onsite">On Site</span> Already cited on website</div>
+  <div class="legend-item"><span class="tag tag-ref">Ref</span> Good to know</div>
+</div>
+<div class="main">
+
+<div class="category" data-cat="angel-collectives">
+  <div class="cat-header">Women's Angel Collectives — Direct Comparables</div>
+  <div class="orgs">
+    <div class="org highlight" data-tags="comp onsite">
+      <div><div class="org-name">Golden Seeds</div><div class="org-desc">290+ members, $190M+ invested, 20 years. NYC, Boston, Atlanta, Dallas, Philadelphia. Mandatory bootcamp, top-decile IRR.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span><span class="tag tag-onsite">On Site</span></div>
+    </div>
+    <div class="org highlight" data-tags="comp onsite">
+      <div><div class="org-name">The JumpFund</div><div class="org-desc">Chattanooga, TN. 100+ investors, 83% women. 19× co-investment leverage. Closest mid-market structural model.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span><span class="tag tag-onsite">On Site</span></div>
+    </div>
+    <div class="org" data-tags="comp">
+      <div><div class="org-name">37 Angels</div><div class="org-desc">NYC. 150+ members, founded 2012. $1K–$10K min checks. Annual bootcamp.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span></div>
+    </div>
+    <div class="org" data-tags="comp">
+      <div><div class="org-name">Pipeline Angels</div><div class="org-desc">National. 200+ members trained, $4M+ deployed, 40+ companies. "Angels-in-the-Making" bootcamp.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span></div>
+    </div>
+    <div class="org" data-tags="comp">
+      <div><div class="org-name">Portfolia</div><div class="org-desc">SF. Learn-by-investing model. Multiple themed funds, $10K minimums. Closest structural match overall.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span></div>
+    </div>
+    <div class="org" data-tags="comp">
+      <div><div class="org-name">Citrine Angels</div><div class="org-desc">DC/Metro. No minimum investment barrier. Regional mid-market model.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span></div>
+    </div>
+    <div class="org" data-tags="comp">
+      <div><div class="org-name">Broadway Angels</div><div class="org-desc">SF Bay Area. Senior executive and C-suite women. Invite-only. High-profile tech investing.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span></div>
+    </div>
+    <div class="org" data-tags="comp">
+      <div><div class="org-name">Girl Math Capital</div><div class="org-desc">NYC. 200+ members in under 2 years. $100 membership, $1K min check. No accreditation required.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span></div>
+    </div>
+    <div class="org" data-tags="comp">
+      <div><div class="org-name">Next Wave Impact</div><div class="org-desc">National. ~200 women trained. Kauffman Foundation partnership. Impact-focused angel training.</div></div>
+      <div class="org-tags"><span class="tag tag-comp">Comp</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="category" data-cat="utah-ecosystem">
+  <div class="cat-header">Utah Investor &amp; Angel Ecosystem</div>
+  <div class="orgs">
+    <div class="org highlight" data-tags="partner ref">
+      <div><div class="org-name">Park City Angels</div><div class="org-desc">Utah's most active angel group. Predominantly male. Leslie Goldman Tepper is a connected member. Key relationship to cultivate.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span><span class="tag tag-ref">Ref</span></div>
+    </div>
+    <div class="org" data-tags="ref">
+      <div><div class="org-name">Plus550</div><div class="org-desc">"Super Angel" fund. Rick Alden (Skullcandy), Alan Hall (MarketStar), Josh James (Domo), Todd Pedersen (Vivint), Greg Warnock (Mercato).</div></div>
+      <div class="org-tags"><span class="tag tag-ref">Ref</span></div>
+    </div>
+    <div class="org" data-tags="ref">
+      <div><div class="org-name">REES Capital</div><div class="org-desc">South Jordan. Angel investment and mentor capital for startups. Strategic direction and equity value focus.</div></div>
+      <div class="org-tags"><span class="tag tag-ref">Ref</span></div>
+    </div>
+    <div class="org" data-tags="ref">
+      <div><div class="org-name">Kickstart Fund</div><div class="org-desc">Salt Lake City. One of the most active early-stage VCs in the Mountain West.</div></div>
+      <div class="org-tags"><span class="tag tag-ref">Ref</span></div>
+    </div>
+    <div class="org" data-tags="ref">
+      <div><div class="org-name">Mercato Partners</div><div class="org-desc">SLC. Growth equity focused on tech and consumer brands in the Mountain West.</div></div>
+      <div class="org-tags"><span class="tag tag-ref">Ref</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="category" data-cat="utah-women-orgs">
+  <div class="cat-header">Utah Women's Organizations — Potential Partners</div>
+  <div class="orgs">
+    <div class="org highlight" data-tags="partner">
+      <div><div class="org-name">SheMoney</div><div class="org-desc">Utah. Financial education and community for women. Tori has direct relationship. Strong partner candidate.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org highlight" data-tags="partner">
+      <div><div class="org-name">Founders N' Fuders</div><div class="org-desc">SLC. Community connecting founders and funders. Tori has direct relationship.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org" data-tags="partner">
+      <div><div class="org-name">WeROC</div><div class="org-desc">Utah. Women entrepreneurs pitch competition and network. Tori participated directly.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org" data-tags="partner">
+      <div><div class="org-name">How Women Succeed</div><div class="org-desc">Utah. Professional women's network. Tori has direct relationship and community ties.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org" data-tags="partner">
+      <div><div class="org-name">Women Tech Council</div><div class="org-desc">Utah. Develops economic pipeline for women in tech. Members are senior tech executives — many likely accredited.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org" data-tags="partner">
+      <div><div class="org-name">Women's Leadership Institute / ElevateHER</div><div class="org-desc">Utah. Alumni network of women leaders. Strong prospecting ground for founding members.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org" data-tags="partner">
+      <div><div class="org-name">Zions Bank Women's Business Forum</div><div class="org-desc">Run by LeeAnne Linderman. Direct access to women business owners statewide. Priority relationship.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org" data-tags="partner">
+      <div><div class="org-name">Womenpreneurs Utah</div><div class="org-desc">Accelerates women into positions of power. Leadership and entrepreneurship focus.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Utah Women &amp; Leadership Project (UWLP)</div><div class="org-desc">University of Utah. Premier research organization on women in Utah business and leadership. Key source for data.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="category" data-cat="accelerators">
+  <div class="cat-header">Utah Accelerators &amp; Support Programs</div>
+  <div class="orgs">
+    <div class="org highlight" data-tags="partner resource">
+      <div><div class="org-name">Kinect Capital</div><div class="org-desc">Utah accelerator. Tori's startup participated directly. Strong insider relationship for referrals.</div></div>
+      <div class="org-tags"><span class="tag tag-partner">Partner</span><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">RevRoad</div><div class="org-desc">Provo. Revenue-focused accelerator. Tori entered pitch competition. Good referral pipeline for women founders.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Beta Boom</div><div class="org-desc">Salt Lake City. Explicitly focuses on underrepresented founders including women. Strong pipeline alignment.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Sybilla Masters Fund</div><div class="org-desc">SLC. Named for Utah's first entrepreneur. Focus on women-led early-stage companies.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">BoomStartup</div><div class="org-desc">Accelerator partnering with universities and local government in Utah.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Innosphere Ventures (U of U)</div><div class="org-desc">9-month cohort for early-stage life science companies. University partnership.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="category" data-cat="community">
+  <div class="cat-header">Ecosystem &amp; Community Organizations</div>
+  <div class="orgs">
+    <div class="org" data-tags="ref">
+      <div><div class="org-name">Silicon Slopes</div><div class="org-desc">Utah's central tech and startup community. Events, news, and networking hub. High visibility platform.</div></div>
+      <div class="org-tags"><span class="tag tag-ref">Ref</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Mountain West Capital Network</div><div class="org-desc">Education, expertise, and business relationships for entrepreneurs and service providers.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Grow Utah</div><div class="org-desc">Hosts Ramp Innovation accelerator and Utah startup resource directory (Connectory).</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Pando</div><div class="org-desc">Entrepreneurial community connecting founders with mentors in the Mountain West.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="ref">
+      <div><div class="org-name">Beehive Startups</div><div class="org-desc">Media company covering Utah's startup scene. PR and visibility channel.</div></div>
+      <div class="org-tags"><span class="tag tag-ref">Ref</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="category" data-cat="national-resources">
+  <div class="cat-header">National Women's Investing Resources</div>
+  <div class="orgs">
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Angel Capital Association</div><div class="org-desc">National angel investing body. $650M+ deployed annually. Education, standards, and community for all angels.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Women Moving Millions</div><div class="org-desc">Jacki Zehner's org. Mobilizing women to give and invest $1M+. "Money is a power tool." Key thought-leader.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">How Women Lead</div><div class="org-desc">"New Table" campaign: 10,000 women into venture investing. National activation model and precedent.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">National Women's Business Council</div><div class="org-desc">Federal advisory council. Publishes annual data on women-owned businesses and capital access.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+    <div class="org" data-tags="resource">
+      <div><div class="org-name">Girls That Invest</div><div class="org-desc">Podcast and community empowering women with financial education. New generation of potential members.</div></div>
+      <div class="org-tags"><span class="tag tag-resource">Resource</span></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+<script>
+function filterAll(btn){document.querySelectorAll('.org').forEach(o=>o.style.display='');document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function ft(tag,btn){document.querySelectorAll('.org').forEach(o=>{const tags=o.dataset.tags||'';o.style.display=tags.includes(tag)?'':'none';});document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+</script>
+</body>
+</html>
