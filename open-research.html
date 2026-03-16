@@ -10,12 +10,9 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--cream);font-family:'Satoshi',sans-serif;color:var(--moss);-webkit-font-smoothing:antialiased;}
 nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(47,62,52,0.08);padding:0 48px;height:60px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--moss);}
-.mark{width:36px;height:36px;border-radius:50%;position:relative;overflow:hidden;}
-.ml{position:absolute;top:0;bottom:0;left:0;width:50%;background:var(--moss);}
-.mr{position:absolute;top:0;bottom:0;right:0;width:50%;background:var(--rust);}
-.ma{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:white;z-index:2;line-height:1;}
-.nav-name{font-size:13px;font-weight:700;}
+.nav-logo{display:flex;align-items:center;text-decoration:none;color:var(--moss);}
+.nav-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;}
+.nav-name .amp{color:var(--rust);}
 .nav-back{font-size:12px;font-weight:700;color:var(--sage);text-decoration:none;}
 .hero{background:var(--moss);padding:120px 48px 80px;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.03);}
@@ -53,11 +50,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0
 </head>
 <body>
 <nav>
-  <a class="nav-logo" href="#">
-    <div class="mark"><div class="ml"></div><div class="mr"></div><div class="ma">&</div></div>
-    <span class="nav-name">Silver &amp; Salt Capital</span>
+  <a class="nav-logo" href="index.html">
+    <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
   </a>
-  <a href="#" class="nav-back">← Back to Home</a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
 </nav>
 
 <div class="hero">

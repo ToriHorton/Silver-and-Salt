@@ -56,43 +56,15 @@
   .nav-logo {
     display: flex;
     align-items: center;
-    gap: 12px;
     text-decoration: none;
     color: var(--moss);
   }
-
-  /* Split circle mark */
-  .mark {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-  .mark-left, .mark-right {
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 50%;
-  }
-  .mark-left { left: 0; background: var(--moss); }
-  .mark-right { right: 0; background: var(--rust); }
-  .mark-amp {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: white;
-    z-index: 2;
-    line-height: 1;
-  }
-
   .nav-name {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
   }
+  .nav-name .amp { color: var(--rust); }
 
   .nav-links {
     display: flex;
@@ -733,21 +705,16 @@
 
 <!-- ══ NAV ══ -->
 <nav>
-  <a class="nav-logo" href="#">
-    <div class="mark">
-      <div class="mark-left"></div>
-      <div class="mark-right"></div>
-      <div class="mark-amp">&</div>
-    </div>
-    <span class="nav-name">Silver & Salt Capital</span>
+  <a class="nav-logo" href="index.html">
+    <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#">The Opportunity</a></li>
-    <li><a href="#">The Data</a></li>
-    <li><a href="#">The Networks</a></li>
-    <li><a href="#">Open Research</a></li>
+    <li><a href="opportunity.html">The Opportunity</a></li>
+    <li><a href="index.html">The Data</a></li>
+    <li><a href="networks.html">The Networks</a></li>
+    <li><a href="open-research.html">Open Research</a></li>
   </ul>
-  <a href="#join" class="nav-cta">Join Us</a>
+  <a href="index.html#join" class="nav-cta">Join Us</a>
 </nav>
 
 <!-- ══ HERO ══ -->
