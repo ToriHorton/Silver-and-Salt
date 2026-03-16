@@ -244,36 +244,142 @@ sup.fn a{color:inherit;text-decoration:none}
 .stat-cell-src{font-size:10px;color:var(--text-on-dark-body);opacity:.5;margin-top:4px}
 
 /* ═══════════════════════════════════════
-   STEPS
+   HOW IT WORKS PAGE
    ═══════════════════════════════════════ */
-.steps{margin-top:48px;max-width:640px}
-.step{display:grid;grid-template-columns:48px 1fr;gap:16px;padding:24px 0;border-top:1px solid var(--border-dark)}
-.step:last-child{padding-bottom:0}
-.step-num{
-  font-family:'Satoshi',sans-serif;font-weight:900;font-size:24px;
-  color:var(--highlight);opacity:.4;padding-top:2px;
-}
-.step-title{font-family:'Satoshi',sans-serif;font-weight:700;font-size:17px;color:var(--text-on-dark);margin-bottom:4px;letter-spacing:-.01em}
-.step-desc{font-size:15px;line-height:1.65;color:var(--text-on-dark-body)}
+/* Invitation */
+.hiw-inv{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:48px}
+.hiw-inv-left h3{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,40px);font-weight:300;color:var(--text-on-dark);line-height:1.2;margin-bottom:20px}
+.hiw-inv-left h3 em{font-style:italic;color:var(--highlight)}
+.hiw-inv-left p{font-size:15px;color:var(--text-on-dark-body);line-height:1.8;font-weight:300}
+.hiw-inv-left p+p{margin-top:14px}
+.hiw-pillar{background:rgba(255,255,255,0.06);border-radius:8px;padding:18px 20px;border-left:2px solid var(--highlight);margin-bottom:12px}
+.hiw-pillar-title{font-size:12px;font-weight:900;color:var(--text-on-dark);letter-spacing:.04em;margin-bottom:4px}
+.hiw-pillar-text{font-size:12px;color:var(--text-on-dark-dim);line-height:1.5}
 
-/* ═══════════════════════════════════════
-   COMMIT STRIP
-   ═══════════════════════════════════════ */
-.commit-strip{
-  display:flex;align-items:center;gap:40px;margin:48px 0 0;padding:48px;
-  background:var(--moss);border-radius:16px;
-}
-.commit-strip-num{
-  font-family:'Satoshi',sans-serif;font-weight:900;
-  font-size:clamp(48px,7vw,72px);color:var(--pop);line-height:1;letter-spacing:-.03em;flex-shrink:0;
-}
-.commit-strip-text{font-size:17px;line-height:1.72;color:var(--text-on-dark-body);max-width:440px}
+/* 4-Step Grid */
+.hiw-steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(47,62,52,0.1);border-radius:12px;overflow:hidden;margin-top:48px}
+.hiw-step{background:white;padding:36px 28px;position:relative}
+.hiw-step:hover{background:var(--cream)}
+.hiw-step-num{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:600;color:var(--pop);line-height:1;opacity:.2;margin-bottom:-16px}
+.hiw-step-icon{width:40px;height:40px;border-radius:8px;background:rgba(139,94,131,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:18px}
+.hiw-step-name{font-size:18px;font-weight:900;color:var(--moss);margin-bottom:12px}
+.hiw-step-desc{font-size:12px;color:var(--text-body);line-height:1.65}
+.hiw-step-conn{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--pop);font-weight:700;margin-top:12px}
+.hiw-step-arrow{position:absolute;top:50%;right:-10px;transform:translateY(-50%);width:20px;height:20px;background:var(--pop);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:2}
+.hiw-step-arrow svg{width:10px;height:10px;fill:white}
+.hiw-step:last-child .hiw-step-arrow{display:none}
 
-/* Paths list */
-.paths-list{margin-top:32px;max-width:640px}
-.path-row{display:grid;grid-template-columns:140px 1fr;gap:16px;padding:20px 0;border-top:1px solid var(--border)}
-.path-name{font-family:'Satoshi',sans-serif;font-weight:700;font-size:15px;color:var(--moss);padding-top:1px}
-.path-desc{font-size:15px;line-height:1.65;color:var(--text-body)}
+.hiw-naf{background:var(--moss);border-radius:10px;padding:32px 36px;margin-top:40px;display:flex;gap:24px;align-items:flex-start}
+.hiw-naf-mark{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;color:var(--highlight);line-height:1;flex-shrink:0}
+.hiw-naf-text{font-size:15px;color:rgba(251,248,242,0.75);line-height:1.7;font-weight:300}
+.hiw-naf-text strong{color:var(--text-on-dark);font-weight:700}
+
+/* Focus */
+.hiw-focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:40px}
+.hiw-fc{background:white;border:1px solid var(--border);border-radius:10px;padding:28px}
+.hiw-fc+.hiw-fc{margin-top:12px}
+.hiw-fc-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pop);margin-bottom:10px}
+.hiw-fc-value{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--moss);line-height:1.2;margin-bottom:10px}
+.hiw-fc-desc{font-size:12px;color:var(--text-muted);line-height:1.6}
+.hiw-sectors{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.hiw-sector{font-size:11px;font-weight:700;background:rgba(201,168,76,0.12);color:#7a6010;border-radius:4px;padding:4px 10px}
+
+/* Girl Math */
+.hiw-math{background:var(--pop);padding:96px 40px;position:relative;overflow:hidden}
+.hiw-math::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(201,168,76,0.08)}
+.hiw-math .wrap{position:relative;z-index:2}
+.hiw-math-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,72px);font-weight:300;color:white;line-height:1.05;margin-bottom:48px}
+.hiw-math-title em{font-style:italic;color:var(--highlight)}
+.hiw-math-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+.hiw-mc{background:rgba(255,255,255,0.08);border-radius:10px;padding:28px 24px;border:1px solid rgba(255,255,255,0.1)}
+.hiw-mc-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px}
+.hiw-mc-big{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;color:white;line-height:1;margin-bottom:6px}
+.hiw-mc-big span{color:var(--highlight)}
+.hiw-mc-desc{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.55}
+.hiw-commit{background:var(--highlight);border-radius:10px;padding:32px 36px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.hiw-commit-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:600;color:var(--moss);line-height:1}
+.hiw-commit-text{font-size:15px;color:var(--moss);line-height:1.7}
+.hiw-commit-text strong{font-weight:900}
+
+/* Platform */
+.hiw-plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-top:40px}
+.hiw-plat-left p{font-size:15px;line-height:1.85;color:var(--text-body);font-weight:300}
+.hiw-plat-left p+p{margin-top:14px}
+.hiw-plat-left strong{color:var(--moss);font-weight:700}
+.hiw-spv{background:white;border-radius:12px;padding:32px;border:1px solid var(--border)}
+.hiw-spv-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:24px}
+.hiw-spv-investors{display:flex;gap:6px}
+.hiw-spv-inv{background:rgba(47,62,52,0.05);border:1px solid rgba(47,62,52,0.1);border-radius:4px;flex:1;padding:8px;text-align:center}
+.hiw-spv-inv span{font-size:9px;color:var(--text-muted);display:block}
+.hiw-spv-inv strong{font-size:11px;color:var(--moss);display:block;margin-top:2px}
+.hiw-spv-arrow{text-align:center;padding:8px 0;font-size:20px;color:var(--pop)}
+.hiw-spv-box{border-radius:6px;padding:12px 16px;text-align:center}
+.hiw-spv-box.plum{background:rgba(139,94,131,0.12);border:1px solid rgba(139,94,131,0.2)}
+.hiw-spv-box.gold{background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.2)}
+.hiw-spv-box.muted{background:rgba(47,62,52,0.06);border:1px solid rgba(47,62,52,0.15)}
+.hiw-spv-box-name{font-size:12px;font-weight:700;color:var(--moss)}
+.hiw-spv-box-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+
+/* Pricing */
+.hiw-pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.hiw-pc{background:white;border:1px solid var(--border);border-radius:10px;padding:28px;border-top:3px solid var(--pop)}
+.hiw-pc.gold{border-top-color:#C9A84C}
+.hiw-pc.moss{border-top-color:var(--moss)}
+.hiw-pc-eyebrow{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
+.hiw-pc-big{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;color:var(--moss);line-height:1;margin-bottom:8px}
+.hiw-pc-big span{font-size:24px}
+.hiw-pc-name{font-size:14px;font-weight:700;color:var(--moss);margin-bottom:8px}
+.hiw-pc-desc{font-size:12px;color:var(--text-muted);line-height:1.6}
+.hiw-pc-note{font-size:11px;color:var(--pop);margin-top:10px;font-weight:700}
+
+/* Revenue */
+.hiw-rev-streams{display:flex;flex-direction:column;gap:12px;margin:40px 0 48px}
+.hiw-rev-stream{background:rgba(255,255,255,0.06);border-radius:8px;padding:18px 20px;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;border-left:2px solid var(--highlight)}
+.hiw-rs-icon{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--highlight);line-height:1}
+.hiw-rs-desc{font-size:13px;color:var(--text-on-dark-body);line-height:1.5}
+.hiw-rs-desc strong{color:var(--text-on-dark)}
+.hiw-rs-pct{font-size:20px;font-weight:900;color:var(--highlight);white-space:nowrap}
+.hiw-y1{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:32px 36px}
+.hiw-y1-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--highlight);margin-bottom:20px}
+.hiw-y1-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-on-dark-body);padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.hiw-y1-row:last-child{border-bottom:none}
+.hiw-y1-val{font-weight:700;color:var(--text-on-dark)}
+.hiw-y1-hl{color:var(--highlight)}
+.hiw-wg{margin-top:32px}
+.hiw-wg-title{font-size:13px;font-weight:700;color:var(--text-on-dark);margin-bottom:12px}
+.hiw-wg-items{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.hiw-wg-item{font-size:12px;color:var(--text-on-dark-dim);padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:4px;display:flex;align-items:center;gap:8px}
+.hiw-wg-item::before{content:'→';color:var(--highlight);font-weight:700}
+
+/* Vision */
+.hiw-timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(47,62,52,0.1);border-radius:12px;overflow:hidden;margin-top:48px}
+.hiw-yr{background:white;padding:36px 28px}
+.hiw-yr:first-child{background:rgba(139,94,131,0.12)}
+.hiw-yr:last-child{background:var(--moss)}
+.hiw-yr-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pop);margin-bottom:8px}
+.hiw-yr:last-child .hiw-yr-label{color:var(--highlight)}
+.hiw-yr-year{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;color:var(--pop);line-height:1;margin-bottom:20px}
+.hiw-yr:last-child .hiw-yr-year{color:var(--highlight)}
+.hiw-yr-stat{margin-bottom:12px}
+.hiw-yr-n{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--moss);line-height:1}
+.hiw-yr:last-child .hiw-yr-n{color:var(--text-on-dark)}
+.hiw-yr-l{font-size:11px;color:var(--text-muted);margin-top:2px}
+.hiw-yr:last-child .hiw-yr-l{color:var(--text-on-dark-dim)}
+
+/* Partners */
+.hiw-partners{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.hiw-partner{font-size:12px;font-weight:700;background:white;border:1px solid var(--border);border-radius:6px;padding:8px 16px;color:var(--moss)}
+
+/* HOW responsive */
+@media(max-width:900px){
+  .hiw-inv,.hiw-focus-grid,.hiw-plat-grid{grid-template-columns:1fr;gap:40px}
+  .hiw-steps-grid{grid-template-columns:1fr 1fr}
+  .hiw-math-flow,.hiw-pricing-grid,.hiw-timeline{grid-template-columns:1fr}
+  .hiw-commit{grid-template-columns:1fr;text-align:center}
+  .hiw-naf{flex-direction:column}
+  .hiw-wg-items{grid-template-columns:1fr}
+  .hiw-step-arrow{display:none}
+}
 
 /* ═══════════════════════════════════════
    SCALE LINE
@@ -355,6 +461,45 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
 
 
 /* ═══════════════════════════════════════
+   RESEARCH CARDS
+   ═══════════════════════════════════════ */
+.research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.research-card{
+  display:block;text-decoration:none;
+  background:var(--sand);border-radius:14px;padding:36px 32px;
+  border:1px solid var(--border);
+  transition:all .3s ease;position:relative;overflow:hidden;
+}
+.research-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(47,62,52,0.08);
+  border-color:var(--pop);
+}
+.research-card-eyebrow{
+  font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--pop);
+  margin-bottom:14px;
+}
+.research-card-title{
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  font-size:clamp(22px,2.4vw,28px);line-height:1.2;
+  color:var(--moss);margin-bottom:12px;letter-spacing:-.01em;
+}
+.research-card-desc{
+  font-size:14px;line-height:1.65;color:var(--text-body);margin-bottom:20px;
+}
+.research-card-cta{
+  font-family:'Satoshi',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.04em;color:var(--pop);
+  display:inline-flex;align-items:center;gap:6px;
+  transition:gap .2s ease;
+}
+.research-card:hover .research-card-cta{gap:10px}
+@media(max-width:900px){
+  .research-grid{grid-template-columns:1fr}
+}
+
+/* ═══════════════════════════════════════
    ANIMATIONS
    ═══════════════════════════════════════ */
 @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -374,11 +519,8 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
   .stat-row{grid-template-columns:1fr}
   .stat-cell:nth-child(even){padding-left:0;border-left:none}
   .stat-cell:nth-child(odd){padding-right:0}
-  .commit-strip{flex-direction:column;gap:20px;padding:36px 24px;text-align:center}
-  .path-row{grid-template-columns:1fr;gap:4px}
   .scale-line{flex-direction:column}
   .scale-seg+.scale-seg{padding-left:0;border-left:none}
-  .step{grid-template-columns:36px 1fr}
   .bridge{padding:32px 24px}
 }
 @media(max-width:600px){
@@ -888,6 +1030,36 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
     </div>
   </section>
 
+  <section class="s-sand" style="padding:96px 40px">
+    <div class="wrap">
+      <div class="narrow r">
+        <p class="label">Research</p>
+        <h2>Go deeper. <em>See the data.</em></h2>
+        <p class="body">Our research backs every claim with sources, statistics, and context. Explore the full picture.</p>
+      </div>
+      <div class="research-grid r rd1">
+        <a href="accredited-women-research.html" class="research-card">
+          <div class="research-card-eyebrow">Investor Research</div>
+          <div class="research-card-title">How Many Accredited Women Investors Are in Utah?</div>
+          <div class="research-card-desc">The demographics, the numbers, and the untapped investor base waiting to be activated.</div>
+          <span class="research-card-cta">Read the research &rarr;</span>
+        </a>
+        <a href="utah-funding-research.html" class="research-card">
+          <div class="research-card-eyebrow">Utah Research</div>
+          <div class="research-card-title">Utah Angel Funding: Where Are the Women?</div>
+          <div class="research-card-desc">A deep look at the gap between Utah's startup ecosystem and the capital reaching women founders.</div>
+          <span class="research-card-cta">Read the research &rarr;</span>
+        </a>
+        <a href="source-bible.html" class="research-card">
+          <div class="research-card-eyebrow">Reference</div>
+          <div class="research-card-title">Sources</div>
+          <div class="research-card-desc">The complete research foundation — every statistic, source, and study behind Silver &amp; Salt's thesis.</div>
+          <span class="research-card-cta">Explore sources &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 
@@ -896,49 +1068,330 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
      ═══════════════════════════════════════ -->
 <div class="page" id="page-how" data-palette="plum">
 
+  <!-- Hero -->
   <section class="s-dark s-glow" style="padding-top:140px">
     <div class="wrap">
       <div class="narrow r">
         <p class="label">How It Works</p>
-        <h2>Source together. <em>Decide for yourself.</em></h2>
-        <p class="body">Silver &amp; Salt is an investment collective. We find great companies, vet them as a community, mentor them with our expertise. Then each member decides individually how and whether to invest. The power isn't in a fund — it's in hundreds of women making informed decisions with a shared pipeline.</p>
+        <h2>Simple. Powerful. <em>Yours.</em></h2>
+        <p class="body">A coordinated community of individual investors. You make your own decisions — with the benefit of shared deal flow, shared diligence, and 100 women doing it alongside you.</p>
       </div>
-      <div class="steps r rd1">
-        <div class="step">
-          <div class="step-num">01</div>
-          <div><div class="step-title">Source</div><div class="step-desc">Members surface women-owned businesses across Utah — services, health, fintech, consumer, SaaS-adjacent. The market nobody is serving.</div></div>
+    </div>
+  </section>
+
+  <!-- Invitation -->
+  <section class="s-dark">
+    <div class="wrap">
+      <div class="hiw-inv r">
+        <div class="hiw-inv-left">
+          <h3>We are creating <em>regenerative capital</em> in Utah.</h3>
+          <p>We're building an entire ecosystem to support women in our beautiful state. Collectively, we make it easier for our daughters to launch, grow, and thrive in our communities.</p>
+          <p>The power isn't in a fund. It's in hundreds of women making informed decisions with a shared pipeline. We are not a networking group. We are not a happy hour. We are an organized community of individual investors built around how women founders are already building companies.</p>
         </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <div><div class="step-title">Vet</div><div class="step-desc">Shared due diligence. Collective intelligence. One investor's expertise sharpens every decision.</div></div>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <div><div class="step-title">Back</div><div class="step-desc">Angel investment, revenue-based financing, or DAF-aligned giving. You choose which founders and which path.</div></div>
-        </div>
-        <div class="step">
-          <div class="step-num">04</div>
-          <div><div class="step-title">Compound</div><div class="step-desc">Businesses grow. Returns come back. Founders send other founders. Every dollar does more than one job.</div></div>
+        <div>
+          <div class="hiw-pillar">
+            <div class="hiw-pillar-title">Writing small checks to make a big change.</div>
+            <div class="hiw-pillar-text">Our power is in the number of investors now working in parallel to meaningfully fund the overall startup ecosystem.</div>
+          </div>
+          <div class="hiw-pillar">
+            <div class="hiw-pillar-title">Where the money flows, opportunities grow.</div>
+            <div class="hiw-pillar-text">If we have a pool of funds reserved for the most profitable ideas with women in leadership, more ideas will emerge to meet the opportunity.</div>
+          </div>
+          <div class="hiw-pillar">
+            <div class="hiw-pillar-title">Silver &amp; Salt Capital is the bridge.</div>
+            <div class="hiw-pillar-text">Women in Salt Lake City and Park City who show up for each other with money, connections, and influence.</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
+  <!-- 4-Step Model -->
+  <section class="s-sand">
     <div class="wrap">
       <div class="narrow r">
-        <p class="label">The Commitment</p>
-        <h2>$10K per year. <em>That's the floor.</em></h2>
-        <p class="body">Every dollar goes to businesses with at least one woman on the founding team. Each of us makes our own investment decisions — with shared research, shared deal flow, and shared conviction.</p>
+        <h2>Four steps. One collective. <em>Individual power.</em></h2>
       </div>
-      <div class="commit-strip r rd1">
-        <div class="commit-strip-num">$10K+</div>
-        <div class="commit-strip-text">Per member, per year. Some commit far more. You invest individually into women-founded businesses through angel circles, revenue-based financing, or donor-advised giving. We source and vet together. You decide for yourself.</div>
+      <div class="hiw-steps-grid r rd1">
+        <div class="hiw-step">
+          <div class="hiw-step-num">01</div>
+          <div class="hiw-step-icon">&#128269;</div>
+          <div class="hiw-step-name">We Source</div>
+          <div class="hiw-step-desc">We find great women-led companies with $250K–$5M in revenue, across health, sports, retail, fintech, care, and consumer sectors.</div>
+          <div class="hiw-step-conn">Deal Flow →</div>
+          <div class="hiw-step-arrow"><svg viewBox="0 0 10 10"><path d="M3 2l4 3-4 3" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-step-num">02</div>
+          <div class="hiw-step-icon">&#128300;</div>
+          <div class="hiw-step-name">We Vet Together</div>
+          <div class="hiw-step-desc">The collective reviews deals together. Shared due diligence means no one has to be an expert alone.</div>
+          <div class="hiw-step-conn">Diligence →</div>
+          <div class="hiw-step-arrow"><svg viewBox="0 0 10 10"><path d="M3 2l4 3-4 3" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-step-num">03</div>
+          <div class="hiw-step-icon">&#127793;</div>
+          <div class="hiw-step-name">We Mentor</div>
+          <div class="hiw-step-desc">Our members don't just write checks — they become customers, connectors, and champions.</div>
+          <div class="hiw-step-conn">Support →</div>
+          <div class="hiw-step-arrow"><svg viewBox="0 0 10 10"><path d="M3 2l4 3-4 3" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-step-num">04</div>
+          <div class="hiw-step-icon">&#9997;&#65039;</div>
+          <div class="hiw-step-name">You Decide</div>
+          <div class="hiw-step-desc">You decide individually how and whether to invest. No pressure. Your capital, your conviction, your choice.</div>
+          <div class="hiw-step-conn">Your Call.</div>
+        </div>
       </div>
-      <div class="paths-list r rd2">
-        <div class="path-row"><div class="path-name">Angel Investing</div><div class="path-desc">Invest directly in early-stage startups our community has sourced and vetted. You choose which founders you believe in.</div></div>
-        <div class="path-row"><div class="path-name">Revenue-Based</div><div class="path-desc">Capital to businesses already generating income. Repaid as a percentage of revenue. Founder keeps ownership.</div></div>
-        <div class="path-row"><div class="path-name">DAF-Aligned</div><div class="path-desc">Direct donor-advised funds toward women-founded businesses in our network. Same deal flow, same community.</div></div>
+      <div class="hiw-naf r rd2">
+        <div class="hiw-naf-mark">&amp;</div>
+        <div class="hiw-naf-text"><strong>Silver &amp; Salt Capital is not a fund.</strong> No one gives us their money to manage. Every member makes her own investment decisions. The collective amplifies every individual — shared pipeline, individual conviction.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Focus -->
+  <section class="s-cream">
+    <div class="wrap">
+      <div class="narrow r">
+        <p class="label">Our Focus</p>
+        <h2>The market adjacent to Silicon Slopes <em>that nobody is serving well. Yet.</em></h2>
+      </div>
+      <div class="hiw-focus-grid r rd1">
+        <div>
+          <div class="hiw-fc">
+            <div class="hiw-fc-label">Company Stage</div>
+            <div class="hiw-fc-value">$250K – $5M in revenue</div>
+            <div class="hiw-fc-desc">Women-led companies that have already proven their model and are ready for growth capital. Past idea stage. Past friends-and-family. Ready for a believer with a check.</div>
+          </div>
+        </div>
+        <div>
+          <div class="hiw-fc">
+            <div class="hiw-fc-label">Investment Model</div>
+            <div class="hiw-fc-value">Capital-efficient growth with a believable exit</div>
+            <div class="hiw-fc-desc">We're not swinging for unicorns. We're backing founders building real businesses — revenue-generating, operationally sound, with clear paths to profitable exit.</div>
+          </div>
+          <div class="hiw-fc">
+            <div class="hiw-fc-label">Target Sectors</div>
+            <div class="hiw-fc-desc">Where women are already building and buying.</div>
+            <div class="hiw-sectors">
+              <span class="hiw-sector">Health</span>
+              <span class="hiw-sector">Sports</span>
+              <span class="hiw-sector">Retail</span>
+              <span class="hiw-sector">Fintech</span>
+              <span class="hiw-sector">Care</span>
+              <span class="hiw-sector">Consumer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Girl Math -->
+  <section class="hiw-math">
+    <div class="wrap">
+      <div class="r">
+        <p class="label" style="color:var(--highlight);opacity:.8">The Math</p>
+        <h2 class="hiw-math-title">Girl Math<br><em>is Good Math.</em></h2>
+      </div>
+      <div class="hiw-math-flow r rd1">
+        <div class="hiw-mc">
+          <div class="hiw-mc-label">The Founding 100</div>
+          <div class="hiw-mc-big">100 <span>women</span></div>
+          <div class="hiw-mc-desc">We are seeking the Founding 100 women to join us with a commitment to write 1–10 checks to women-founded companies each year for 5 years.</div>
+        </div>
+        <div class="hiw-mc">
+          <div class="hiw-mc-label">The Commitment</div>
+          <div class="hiw-mc-big">$10<span>K</span></div>
+          <div class="hiw-mc-desc">Sign up and commit to write $10,000 worth of angel investments into seed-stage companies that we collectively source and due-diligence together.</div>
+        </div>
+        <div class="hiw-mc">
+          <div class="hiw-mc-label">The Collective Power</div>
+          <div class="hiw-mc-big">$1<span>M+</span></div>
+          <div class="hiw-mc-desc">100 investors × $10,000 = $1M+ deployed. Year 1. That's the kind of signal that changes a founder's trajectory — and ours.</div>
+        </div>
+      </div>
+      <div class="hiw-commit r rd2">
+        <div class="hiw-commit-num">5</div>
+        <div class="hiw-commit-text"><strong>Five years. 1–10 checks per year.</strong> That's it. You don't need to be an expert. You don't need to go it alone. You just need to show up with $10,000 worth of conviction over five years — and Silver &amp; Salt Capital handles the rest.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform -->
+  <section class="s-sand">
+    <div class="wrap">
+      <div class="narrow r">
+        <p class="label">The Platform</p>
+        <h2>Investing made as easy <em>as shopping online.</em></h2>
+        <p class="body" style="color:var(--text-muted);font-size:14px">Powered by Play Money — built for exactly this.</p>
+      </div>
+      <div class="hiw-plat-grid r rd1">
+        <div class="hiw-plat-left">
+          <p>We manage investments on <strong>Play Money</strong>, an angel investing platform designed to make the process as easy as shopping online. No complicated wire transfers, no cap table confusion.</p>
+          <p>We write small checks into an <strong>SPV (Special Purpose Vehicle)</strong> — a structure that bundles all our individual investments into a single entry on a founder's cap table. To the founder, it appears as one clean check.</p>
+          <p>That means founders get a clean cap table. You get a real ownership stake. And our collective looks like the serious institutional investor we are.</p>
+        </div>
+        <div>
+          <div class="hiw-spv">
+            <div class="hiw-spv-title">How the SPV Structure Works</div>
+            <div class="hiw-spv-investors">
+              <div class="hiw-spv-inv"><span>Member</span><strong>$500</strong></div>
+              <div class="hiw-spv-inv"><span>Member</span><strong>$1K</strong></div>
+              <div class="hiw-spv-inv"><span>Member</span><strong>$2K</strong></div>
+              <div class="hiw-spv-inv" style="opacity:.4"><span>100+</span><strong>more</strong></div>
+            </div>
+            <div class="hiw-spv-arrow">↓</div>
+            <div class="hiw-spv-box plum">
+              <div class="hiw-spv-box-name">Silver &amp; Salt SPV</div>
+              <div class="hiw-spv-box-sub">Managed by Play Money · Yellow Purse Capital</div>
+            </div>
+            <div class="hiw-spv-arrow">↓</div>
+            <div class="hiw-spv-box gold">
+              <div class="hiw-spv-box-name">Women Founder</div>
+              <div class="hiw-spv-box-sub">Sees one clean check on her cap table</div>
+            </div>
+            <div class="hiw-spv-arrow" style="color:#C9A84C">↩</div>
+            <div class="hiw-spv-box muted">
+              <div class="hiw-spv-box-name">Returns distributed to members</div>
+              <div class="hiw-spv-box-sub">80% to investors · 20% carry to S&amp;S</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="s-cream">
+    <div class="wrap">
+      <div class="narrow r">
+        <p class="label">Standard Pricing</p>
+        <h2>Transparent fees. <em>No surprises.</em></h2>
+      </div>
+      <div class="hiw-pricing-grid r rd1">
+        <div class="hiw-pc">
+          <div class="hiw-pc-eyebrow">Platform Fee</div>
+          <div class="hiw-pc-big">10<span>%</span></div>
+          <div class="hiw-pc-name">On every investment</div>
+          <div class="hiw-pc-desc">Paid to Play Money for managing the SPV, platform access, and administration.</div>
+          <div class="hiw-pc-note">Capped at $1,500 per investment</div>
+        </div>
+        <div class="hiw-pc gold">
+          <div class="hiw-pc-eyebrow">Carry</div>
+          <div class="hiw-pc-big">20<span>%</span></div>
+          <div class="hiw-pc-name">On profits returned</div>
+          <div class="hiw-pc-desc">When your investment returns profit, 20% goes to the group that sourced and diligenced the company. The remaining 80% is distributed to you.</div>
+        </div>
+        <div class="hiw-pc moss">
+          <div class="hiw-pc-eyebrow">Your Return</div>
+          <div class="hiw-pc-big">80<span>%</span></div>
+          <div class="hiw-pc-name">Of carry goes to you</div>
+          <div class="hiw-pc-desc">Your share of returns, proportional to your investment in the SPV. Distributed when the company has a liquidity event.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue -->
+  <section class="s-dark">
+    <div class="wrap">
+      <div class="narrow r">
+        <h2>How Silver &amp; Salt Capital <em>earns.</em></h2>
+        <p class="body">Through our partnership with Play Money, the collective generates revenue that funds operations, events, and community — keeping membership costs low while building something durable.</p>
+      </div>
+      <div class="hiw-rev-streams r rd1">
+        <div class="hiw-rev-stream">
+          <div class="hiw-rs-icon">100</div>
+          <div class="hiw-rs-desc"><strong>100% of Carry</strong> on investments from our community into our deals.</div>
+          <div class="hiw-rs-pct">100%</div>
+        </div>
+        <div class="hiw-rev-stream">
+          <div class="hiw-rs-icon">25</div>
+          <div class="hiw-rs-desc"><strong>25% of Carry</strong> on investments from the broader Play Money community into our deals.</div>
+          <div class="hiw-rs-pct">25%</div>
+        </div>
+        <div class="hiw-rev-stream">
+          <div class="hiw-rs-icon">25</div>
+          <div class="hiw-rs-desc"><strong>25% of Carry</strong> on every investment our members make across any Play Money deal.</div>
+          <div class="hiw-rs-pct">25%</div>
+        </div>
+        <div class="hiw-rev-stream">
+          <div class="hiw-rs-icon">20</div>
+          <div class="hiw-rs-desc"><strong>20% Revenue Share</strong> on all fees after our SPV crosses $6K in total fees per company.</div>
+          <div class="hiw-rs-pct">20%</div>
+        </div>
+      </div>
+      <div class="hiw-y1 r rd2">
+        <div class="hiw-y1-title">Year 1 Snapshot — The Math in Action</div>
+        <div class="hiw-y1-row"><span>100 investors × $10,000 commitment</span><span class="hiw-y1-val">$1M invested</span></div>
+        <div class="hiw-y1-row"><span>10% platform fee to Play Money</span><span class="hiw-y1-val">$100,000</span></div>
+        <div class="hiw-y1-row"><span>5 companies cross $6K fee threshold</span><span class="hiw-y1-val">$30,000 in fees</span></div>
+        <div class="hiw-y1-row"><span>20% revenue share on remaining $70K</span><span class="hiw-y1-val hiw-y1-hl">$14,000 to S&amp;S Capital</span></div>
+        <div class="hiw-y1-row"><span>3–5 women-led companies funded</span><span class="hiw-y1-val">Real impact, year one</span></div>
+        <div class="hiw-wg">
+          <div class="hiw-wg-title">In Year 1, all revenue goes back into building:</div>
+          <div class="hiw-wg-items">
+            <div class="hiw-wg-item">Required taxes, accounting &amp; reporting</div>
+            <div class="hiw-wg-item">Website and software tools</div>
+            <div class="hiw-wg-item">Sourcing and due diligence support</div>
+            <div class="hiw-wg-item">Events and community gatherings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision -->
+  <section class="s-cream">
+    <div class="wrap">
+      <div class="narrow r">
+        <p class="label">The Vision</p>
+        <h2>What we're building <em>over five years.</em></h2>
+      </div>
+      <div class="hiw-timeline r rd1">
+        <div class="hiw-yr">
+          <div class="hiw-yr-label">Year One</div>
+          <div class="hiw-yr-year">Y1</div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">100</div><div class="hiw-yr-l">Founding investors</div></div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">$1M+</div><div class="hiw-yr-l">Deployed</div></div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">3–5</div><div class="hiw-yr-l">Companies funded</div></div>
+        </div>
+        <div class="hiw-yr">
+          <div class="hiw-yr-label">Year Three</div>
+          <div class="hiw-yr-year">Y3</div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">500</div><div class="hiw-yr-l">Active investors</div></div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">$8M+</div><div class="hiw-yr-l">Deployed</div></div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">~40</div><div class="hiw-yr-l">Companies supported</div></div>
+        </div>
+        <div class="hiw-yr">
+          <div class="hiw-yr-label">Year Five</div>
+          <div class="hiw-yr-year">Y5</div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">$30M+</div><div class="hiw-yr-l">Mobilized capital</div></div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">Durable</div><div class="hiw-yr-l">Pipeline of women investors</div></div>
+          <div class="hiw-yr-stat"><div class="hiw-yr-n">Utah</div><div class="hiw-yr-l">Changed for our daughters</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partners -->
+  <section class="s-sand">
+    <div class="wrap">
+      <div class="r">
+        <p class="label">Strategic Partners — Looking Forward To Collaborating With</p>
+        <div class="hiw-partners">
+          <span class="hiw-partner">Artemis Fund</span>
+          <span class="hiw-partner">Sorenson Impact Institute</span>
+          <span class="hiw-partner">Women Tech Council</span>
+          <span class="hiw-partner">Lassonde Entrepreneur Institute</span>
+          <span class="hiw-partner">Silicon Slopes</span>
+          <span class="hiw-partner">Zions Bank Women's Business Forum</span>
+          <span class="hiw-partner">Play Money</span>
+        </div>
       </div>
     </div>
   </section>
@@ -1105,8 +1558,10 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 });
 
 
-// Initial page load
-showPage('home');
+// Initial page load — check URL hash for deep linking
+const hashPage = window.location.hash.replace('#', '');
+const validPages = ['home','about','opportunity','data','how','join'];
+showPage(validPages.includes(hashPage) ? hashPage : 'home');
 </script>
 
 </body>
