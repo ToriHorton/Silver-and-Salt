@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S Hero Options</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FBF8F2;
+  --sand: #F4EFE6;
+  --moss: #2F3E34;
+  --moss-light: #4A5E50;
+  --sage: #7E8E84;
+  --rust: #D16B4F;
+  --rust-hover: #E07A5E;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#1a1a1a;color:#ccc;padding:40px}
+h2.option-label{
+  font-family:'Satoshi',sans-serif;font-weight:900;font-size:14px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--rust);
+  margin-bottom:16px;
+}
+.option-desc{font-size:13px;color:#888;margin-bottom:24px;max-width:600px;line-height:1.6}
+.mockup{
+  border-radius:12px;overflow:hidden;margin-bottom:80px;
+  box-shadow:0 24px 80px rgba(0,0,0,0.4);
+  max-width:1100px;
+}
+
+/* ═══════════════════════════════════════
+   OPTION A — DARK DRAMATIC HERO
+   ═══════════════════════════════════════ */
+.hero-a{
+  background:var(--moss);min-height:85vh;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 64px 80px;
+}
+.hero-a::before{
+  content:'';position:absolute;top:-100px;right:-100px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(209,107,79,0.12) 0%,transparent 70%);
+}
+.hero-a::after{
+  content:'&';position:absolute;bottom:-60px;right:40px;
+  font-family:'Cormorant Garamond',serif;font-size:400px;font-weight:300;
+  color:rgba(255,255,255,0.03);line-height:1;pointer-events:none;
+}
+.hero-a .split-circle-lg{
+  position:absolute;top:50%;right:80px;transform:translateY(-50%);
+  width:340px;height:340px;border-radius:50%;overflow:hidden;opacity:.15;
+}
+.hero-a .sc-l{position:absolute;top:0;left:0;width:50%;height:100%;background:rgba(251,248,242,0.3)}
+.hero-a .sc-r{position:absolute;top:0;right:0;width:50%;height:100%;background:var(--rust)}
+.hero-a .eyebrow{
+  font-family:'Satoshi',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--rust);
+  margin-bottom:32px;position:relative;z-index:2;
+}
+.hero-a h1{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(42px,6vw,80px);line-height:1.05;
+  color:#F0EDE7;max-width:700px;letter-spacing:-.02em;
+  position:relative;z-index:2;
+}
+.hero-a h1 em{font-style:normal;color:var(--rust)}
+.hero-a .sub{
+  font-size:17px;line-height:1.7;color:rgba(240,237,231,0.6);
+  max-width:520px;margin-top:28px;position:relative;z-index:2;
+}
+.hero-a .stats-row{
+  display:flex;gap:48px;margin-top:48px;position:relative;z-index:2;
+}
+.hero-a .stat-num{
+  font-family:'Satoshi',sans-serif;font-weight:900;
+  font-size:36px;color:#F0EDE7;letter-spacing:-.02em;
+}
+.hero-a .stat-num em{font-style:normal;color:var(--rust)}
+.hero-a .stat-label{font-size:13px;color:rgba(240,237,231,0.45);margin-top:4px;max-width:180px;line-height:1.4}
+.hero-a .cta-row{
+  display:flex;gap:16px;margin-top:48px;position:relative;z-index:2;
+}
+.hero-a .btn-primary{
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;
+  padding:16px 40px;border-radius:10px;border:none;cursor:pointer;
+  background:var(--rust);color:white;letter-spacing:.02em;
+}
+.hero-a .btn-ghost{
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;
+  padding:16px 40px;border-radius:10px;cursor:pointer;
+  background:transparent;color:rgba(240,237,231,0.7);
+  border:1.5px solid rgba(240,237,231,0.15);letter-spacing:.02em;
+}
+
+/* ═══════════════════════════════════════
+   OPTION B — SPLIT HERO
+   ═══════════════════════════════════════ */
+.hero-b{
+  background:var(--cream);min-height:85vh;
+  display:grid;grid-template-columns:1fr 1fr;
+}
+.hero-b-left{
+  padding:120px 64px 80px;display:flex;flex-direction:column;justify-content:center;
+}
+.hero-b-left .eyebrow{
+  font-family:'Satoshi',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--rust);
+  margin-bottom:28px;
+}
+.hero-b-left h1{
+  font-family:'Satoshi',sans-serif;font-weight:900;
+  font-size:clamp(32px,4vw,52px);line-height:1.06;
+  letter-spacing:-.03em;color:var(--moss);
+}
+.hero-b-left h1 em{font-style:normal;color:var(--rust)}
+.hero-b-left .sub{
+  font-size:16px;line-height:1.7;color:var(--moss-light);
+  max-width:440px;margin-top:24px;
+}
+.hero-b-left .cta-row{display:flex;gap:16px;margin-top:36px}
+.hero-b-left .btn-primary{
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;
+  padding:16px 40px;border-radius:10px;border:none;cursor:pointer;
+  background:var(--rust);color:white;letter-spacing:.02em;
+}
+.hero-b-left .btn-outline{
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;
+  padding:16px 40px;border-radius:10px;cursor:pointer;
+  background:transparent;color:var(--moss);
+  border:1.5px solid rgba(47,62,52,0.15);letter-spacing:.02em;
+}
+.hero-b-right{
+  background:var(--moss);display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding:64px;
+}
+.hero-b-right::after{
+  content:'&';position:absolute;bottom:-40px;right:-20px;
+  font-family:'Cormorant Garamond',serif;font-size:300px;font-weight:300;
+  color:rgba(255,255,255,0.04);line-height:1;
+}
+.hero-b-stat-stack{position:relative;z-index:2;display:flex;flex-direction:column;gap:40px}
+.hero-b-stat{text-align:center}
+.hero-b-stat-num{
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  font-size:clamp(56px,7vw,88px);color:#F0EDE7;line-height:1;
+}
+.hero-b-stat-num em{font-style:normal;color:var(--rust)}
+.hero-b-stat-label{
+  font-size:14px;color:rgba(240,237,231,0.5);margin-top:8px;
+  max-width:240px;margin-left:auto;margin-right:auto;line-height:1.5;
+}
+.hero-b-stat-src{font-size:10px;color:rgba(240,237,231,0.25);margin-top:4px}
+.hero-b-divider{width:40px;height:1px;background:rgba(240,237,231,0.12);margin:0 auto}
+
+/* ═══════════════════════════════════════
+   OPTION C — STATEMENT HERO
+   ═══════════════════════════════════════ */
+.hero-c{
+  background:var(--cream);min-height:85vh;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:120px 64px 80px;text-align:center;position:relative;overflow:hidden;
+}
+.hero-c::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(209,107,79,0.06) 0%,transparent 60%);
+}
+.hero-c .eyebrow{
+  font-family:'Satoshi',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--rust);
+  margin-bottom:40px;position:relative;z-index:2;
+}
+.hero-c h1{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(48px,8vw,110px);line-height:1.0;
+  color:var(--moss);max-width:900px;letter-spacing:-.03em;
+  position:relative;z-index:2;
+}
+.hero-c h1 em{font-style:italic;color:var(--rust)}
+.hero-c .sub{
+  font-size:18px;line-height:1.7;color:var(--sage);
+  max-width:480px;margin-top:36px;position:relative;z-index:2;
+}
+.hero-c .cta-row{
+  display:flex;gap:16px;margin-top:40px;position:relative;z-index:2;
+}
+.hero-c .btn-primary{
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;
+  padding:16px 40px;border-radius:10px;border:none;cursor:pointer;
+  background:var(--rust);color:white;letter-spacing:.02em;
+}
+.hero-c .btn-ghost{
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;
+  padding:16px 40px;border-radius:10px;cursor:pointer;
+  background:transparent;color:var(--moss);
+  border:1.5px solid rgba(47,62,52,0.12);letter-spacing:.02em;
+}
+/* Stats band below hero C */
+.hero-c-stats{
+  background:var(--moss);padding:56px 64px;
+  display:flex;justify-content:center;gap:80px;
+}
+.hero-c-stats .stat{text-align:center}
+.hero-c-stats .stat-num{
+  font-family:'Satoshi',sans-serif;font-weight:900;
+  font-size:36px;color:#F0EDE7;letter-spacing:-.02em;
+}
+.hero-c-stats .stat-num em{font-style:normal;color:var(--rust)}
+.hero-c-stats .stat-label{
+  font-size:12px;color:rgba(240,237,231,0.45);margin-top:6px;
+  max-width:160px;margin-left:auto;margin-right:auto;line-height:1.45;
+}
+</style>
+</head>
+<body>
+
+<h2 class="option-label">Option A — Dark Dramatic Hero</h2>
+<p class="option-desc">Moss background, light serif headline, split-circle visual element. Premium, high contrast. The data lives in the hero but feels secondary to the statement.</p>
+<div class="mockup">
+  <div class="hero-a">
+    <div class="split-circle-lg"><div class="sc-l"></div><div class="sc-r"></div></div>
+    <p class="eyebrow">Utah Women's Angel Investment Collective</p>
+    <h1>Women founders return 2.5&times; more revenue per dollar than men. <em>Almost none of them are getting funded.</em></h1>
+    <p class="sub">Silver &amp; Salt Capital is a women's angel investment collective forming across Utah. We source deals, share diligence, and invest individually — in the founders generating the strongest returns in the market.</p>
+    <div class="stats-row">
+      <div>
+        <div class="stat-num">~100K</div>
+        <div class="stat-label">Accredited women investors in Utah</div>
+      </div>
+      <div>
+        <div class="stat-num"><em>$509M</em></div>
+        <div class="stat-label">In Utah seed capital — almost none reaching women</div>
+      </div>
+      <div>
+        <div class="stat-num">63%</div>
+        <div class="stat-label">Better performance with a female founder</div>
+      </div>
+    </div>
+    <div class="cta-row">
+      <button class="btn-primary">Apply for Membership</button>
+      <button class="btn-ghost">See the Thesis</button>
+    </div>
+  </div>
+</div>
+
+
+<h2 class="option-label">Option B — Split Hero</h2>
+<p class="option-desc">Text left, bold data visualization right. The stats become the visual element — large, typographic, dramatic on a dark panel. Creates tension between the two halves.</p>
+<div class="mockup">
+  <div class="hero-b">
+    <div class="hero-b-left">
+      <p class="eyebrow">Utah Women's Angel Investment Collective</p>
+      <h1>Women founders return 2.5&times; more revenue per dollar than men. <em>Almost none of them are getting funded.</em></h1>
+      <p class="sub">Silver &amp; Salt Capital is forming across Utah. We source deals, share diligence, and invest individually — in the founders generating the strongest returns in the market.</p>
+      <div class="cta-row">
+        <button class="btn-primary">Apply for Membership</button>
+        <button class="btn-outline">See the Thesis</button>
+      </div>
+    </div>
+    <div class="hero-b-right">
+      <div class="hero-b-stat-stack">
+        <div class="hero-b-stat">
+          <div class="hero-b-stat-num">~100<em>K</em></div>
+          <div class="hero-b-stat-label">Accredited women investors in Utah</div>
+        </div>
+        <div class="hero-b-divider"></div>
+        <div class="hero-b-stat">
+          <div class="hero-b-stat-num">$509<em>M</em></div>
+          <div class="hero-b-stat-label">In seed capital — almost none reaching women founders</div>
+        </div>
+        <div class="hero-b-divider"></div>
+        <div class="hero-b-stat">
+          <div class="hero-b-stat-num">63<em>%</em></div>
+          <div class="hero-b-stat-label">Better performance with a female founder</div>
+          <div class="hero-b-stat-src">First Round Capital</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h2 class="option-label">Option C — Statement Hero</h2>
+<p class="option-desc">Just the headline, massive and elegant, centered. Nothing competes. The stats come AFTER the scroll in a dark band. The page opens like a declaration.</p>
+<div class="mockup">
+  <div class="hero-c">
+    <p class="eyebrow">Utah Women's Angel Investment Collective</p>
+    <h1>Women founders return 2.5&times; more. <em>Almost none are getting funded.</em></h1>
+    <p class="sub">Silver &amp; Salt Capital is forming across Utah. We source deals, share diligence, and invest individually — in the founders generating the strongest returns in the market.</p>
+    <div class="cta-row">
+      <button class="btn-primary">Apply for Membership</button>
+      <button class="btn-ghost">See the Thesis</button>
+    </div>
+  </div>
+  <div class="hero-c-stats">
+    <div class="stat">
+      <div class="stat-num">~100K</div>
+      <div class="stat-label">Accredited women investors in Utah</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>$509M</em></div>
+      <div class="stat-label">In Utah seed capital — almost none reaching women</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">63%</div>
+      <div class="stat-label">Better performance with a female founder</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

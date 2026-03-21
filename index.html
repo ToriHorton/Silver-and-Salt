@@ -181,40 +181,75 @@ sup.fn a{color:inherit;text-decoration:none}
    ═══════════════════════════════════════ */
 .hero{
   min-height:calc(100vh - 60px);display:flex;flex-direction:column;
-  justify-content:center;padding:80px 40px;
-  max-width:1100px;margin:0 auto;
+  justify-content:center;align-items:center;text-align:center;
+  padding:120px 40px 80px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(209,107,79,0.06) 0%,transparent 60%);
+}
+.hero::after{
+  content:'&';position:absolute;bottom:-80px;right:40px;
+  font-family:'Cormorant Garamond',serif;font-size:420px;font-weight:300;
+  color:var(--moss);opacity:.04;line-height:1;pointer-events:none;user-select:none;
 }
 .hero-eyebrow{
   font-family:'Satoshi',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--text-muted);margin-bottom:32px;
+  font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--pop);margin-bottom:40px;position:relative;z-index:2;
   opacity:0;animation:up .5s ease .1s forwards;
 }
+.hero-eyebrow::before{
+  content:'';display:block;width:40px;height:1px;
+  background:var(--pop);margin:0 auto 16px;opacity:.5;
+}
+/* Thin decorative lines flanking the hero — subtle geometric accents */
+.hero-accent-line-left{
+  position:absolute;top:30%;left:40px;width:1px;height:120px;
+  background:linear-gradient(to bottom,transparent,rgba(209,107,79,0.15),transparent);z-index:1;
+}
+.hero-accent-line-right{
+  position:absolute;top:25%;right:40px;width:1px;height:160px;
+  background:linear-gradient(to bottom,transparent,rgba(47,62,52,0.08),transparent);z-index:1;
+}
 .hero h1{
-  font-family:'Satoshi',sans-serif;font-weight:900;
-  font-size:clamp(38px,6.5vw,74px);line-height:1.02;
-  letter-spacing:-.04em;color:var(--moss);max-width:900px;
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(48px,8vw,110px);line-height:1.0;
+  letter-spacing:-.03em;color:var(--moss);max-width:900px;
+  position:relative;z-index:2;
   opacity:0;animation:up .6s ease .2s forwards;
 }
-.hero h1 em{font-style:normal;color:var(--pop)}
-.hero-stats{
-  display:flex;gap:48px;margin:48px 0;
-  opacity:0;animation:up .5s ease .4s forwards;
-}
-.hero-stat-num{
-  font-family:'Satoshi',sans-serif;font-weight:900;
-  font-size:clamp(32px,4vw,52px);line-height:1;color:var(--moss);letter-spacing:-.02em;
-}
-.hero-stat-num em{font-style:normal;color:var(--pop)}
-.hero-stat-label{font-size:14px;color:var(--text-muted);margin-top:6px;max-width:200px;line-height:1.45}
+.hero h1 em{font-style:italic;color:var(--pop)}
 .hero-line{
-  font-size:18px;line-height:1.65;color:var(--text-body);max-width:520px;margin-bottom:40px;
+  font-size:18px;line-height:1.7;color:var(--sage);
+  max-width:480px;margin-top:36px;position:relative;z-index:2;
   opacity:0;animation:up .5s ease .55s forwards;
 }
 .hero-cta{
-  display:flex;gap:16px;
+  display:flex;gap:16px;margin-top:40px;position:relative;z-index:2;
   opacity:0;animation:up .45s ease .7s forwards;
 }
+
+/* ═══════════════════════════════════════
+   ANCHOR STAT
+   ═══════════════════════════════════════ */
+.anchor-stat{
+  background:var(--cream);padding:0 40px 48px;text-align:center;
+}
+.anchor-stat-inner{
+  border-top:1px solid rgba(47,62,52,0.06);
+  padding-top:32px;max-width:400px;margin:0 auto;
+}
+.anchor-stat-num{
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  font-size:clamp(48px,6vw,64px);color:var(--moss);line-height:1;letter-spacing:-.02em;
+}
+.anchor-stat-num em{font-style:normal;color:var(--pop)}
+.anchor-stat-label{font-size:14px;color:var(--sage);margin-top:8px;line-height:1.5}
+.anchor-stat-src{font-size:10px;margin-top:6px}
+.anchor-stat-src a{color:rgba(126,142,132,0.5);text-decoration:none}
+.anchor-stat-src a:hover{color:var(--pop)}
 
 /* ═══════════════════════════════════════
    STAT INLINE
@@ -832,30 +867,27 @@ footer::after{
      ═══════════════════════════════════════ -->
 <div class="page active" id="page-home" data-palette="rust">
 
-  <!-- HERO -->
+  <!-- HERO — Statement (Option C) -->
   <section class="hero">
+    <div class="hero-accent-line-left"></div>
+    <div class="hero-accent-line-right"></div>
     <p class="hero-eyebrow">Utah Women's Angel Investment Collective</p>
-    <h1>Women founders return 2.5× more revenue per dollar than men. <em>Almost none of them are getting funded.</em></h1>
-    <div class="hero-stats">
-      <div>
-        <div class="hero-stat-num">~100K</div>
-        <div class="hero-stat-label">Accredited women investors in Utah<sup class="fn"><a href="accredited-women-research.html">R2</a></sup></div>
-      </div>
-      <div>
-        <div class="hero-stat-num"><em>$509M</em></div>
-        <div class="hero-stat-label">In Utah seed capital — almost none reaching women founders<sup class="fn"><a href="utah-funding-research.html">R1</a></sup></div>
-      </div>
-      <div>
-        <div class="hero-stat-num">63%</div>
-        <div class="hero-stat-label">Better performance from companies with a female founder<sup class="fn"><a href="http://10years.firstround.com/" target="_blank">S12</a></sup></div>
-      </div>
-    </div>
-    <p class="hero-line">Silver &amp; Salt Capital is a women's angel investment collective forming across Utah. We source deals, share diligence, and invest individually — in the founders generating the strongest returns in the market.</p>
+    <h1>Women founders return 2.5&times; more.<sup class="fn" style="font-size:16px;opacity:.4"><a href="source-bible.html" style="color:var(--pop)">S11</a></sup> <em>Almost none are getting funded.</em></h1>
+    <p class="hero-line">Silver &amp; Salt Capital is closing a market gap for women founders in Utah. We collectively source deals and individually invest $10,000 a year in local startups.</p>
     <div class="hero-cta">
       <button class="btn btn-pop" onclick="showPage('join')">Apply for Membership</button>
       <button class="btn btn-outline" onclick="showPage('thesis')">See the Thesis</button>
     </div>
   </section>
+
+  <!-- ANCHOR STAT -->
+  <div class="anchor-stat">
+    <div class="anchor-stat-inner">
+      <div class="anchor-stat-num">63<em>%</em></div>
+      <div class="anchor-stat-label">Better performance from companies with a female founder</div>
+      <div class="anchor-stat-src"><a href="source-bible.html">First Round Capital, 10 Year Project</a></div>
+    </div>
+  </div>
 
   <!-- FLYWHEEL -->
   <section class="s-dark">
