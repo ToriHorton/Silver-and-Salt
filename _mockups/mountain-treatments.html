@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mountain Background Treatments</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#888;font-family:'Satoshi',sans-serif}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:#C17A56;padding:14px 40px 0;background:#FBF8F2;
+}
+.strip{
+  background:#C4836A;padding:72px 40px;position:relative;overflow:hidden;
+  text-align:center;margin-bottom:20px;
+}
+.strip h2{
+  font-family:'Satoshi',sans-serif;font-weight:900;font-size:24px;
+  color:white;letter-spacing:-.02em;margin-bottom:8px;position:relative;z-index:2;
+}
+.strip p{
+  font-size:15px;color:rgba(255,255,255,0.75);max-width:520px;
+  margin:0 auto 24px;line-height:1.6;position:relative;z-index:2;
+}
+.strip .btn{
+  background:white;color:#2F3E34;font-weight:700;font-size:13px;
+  padding:12px 32px;border-radius:8px;border:none;cursor:pointer;
+  position:relative;z-index:2;
+}
+
+/* A: Jagged peaks, bottom-aligned, two layers */
+.mtn-a::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:140px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200' preserveAspectRatio='none'%3E%3Cpath d='M0 200 L0 140 L80 90 L150 120 L220 60 L300 100 L380 40 L440 80 L520 20 L600 70 L680 30 L750 80 L820 50 L900 90 L960 55 L1040 85 L1100 45 L1200 100 L1200 200Z' fill='rgba(255,255,255,0.06)'/%3E%3Cpath d='M0 200 L0 160 L100 130 L200 150 L300 110 L400 140 L500 90 L600 120 L700 80 L800 110 L900 130 L1000 100 L1100 120 L1200 140 L1200 200Z' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none;
+}
+
+/* B: Smooth rolling Wasatch-style ridgeline, single layer, taller */
+.mtn-b::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:180px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200' preserveAspectRatio='none'%3E%3Cpath d='M0 200 L0 150 Q100 80 200 110 Q300 140 400 90 Q500 40 600 70 Q700 100 800 50 Q900 0 1000 60 Q1100 120 1200 80 L1200 200Z' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none;
+}
+
+/* C: Dramatic single peak center, geometric/minimal */
+.mtn-c::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:200px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 220' preserveAspectRatio='none'%3E%3Cpath d='M0 220 L0 180 L200 150 L350 120 L450 80 L550 40 L600 15 L650 40 L750 75 L850 110 L1000 145 L1200 170 L1200 220Z' fill='rgba(255,255,255,0.07)'/%3E%3Cpath d='M0 220 L0 190 L150 175 L300 155 L450 130 L520 100 L580 70 L620 55 L660 70 L720 100 L850 140 L1000 165 L1200 185 L1200 220Z' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<div class="label">A — Jagged Peaks, Two Layers (current)</div>
+<div class="strip mtn-a">
+  <h2>The founding cohort is forming now.</h2>
+  <p>The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  <button class="btn">Join Us</button>
+</div>
+
+<div class="label">B — Smooth Rolling Ridgeline</div>
+<div class="strip mtn-b">
+  <h2>The founding cohort is forming now.</h2>
+  <p>The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  <button class="btn">Join Us</button>
+</div>
+
+<div class="label">C — Single Dramatic Peak, Center</div>
+<div class="strip mtn-c">
+  <h2>The founding cohort is forming now.</h2>
+  <p>The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  <button class="btn">Join Us</button>
+</div>
+
+</body>
+</html>

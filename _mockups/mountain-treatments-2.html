@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mountain Treatments — Round 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#888;font-family:'Satoshi',sans-serif}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:#C17A56;padding:14px 40px 0;background:#FBF8F2;
+}
+.strip{
+  background:#C4836A;padding:72px 40px;position:relative;overflow:hidden;
+  text-align:center;margin-bottom:20px;
+}
+.strip h2{
+  font-family:'Satoshi',sans-serif;font-weight:900;font-size:24px;
+  color:white;letter-spacing:-.02em;margin-bottom:8px;position:relative;z-index:2;
+}
+.strip p{
+  font-size:15px;color:rgba(255,255,255,0.75);max-width:520px;
+  margin:0 auto 24px;line-height:1.6;position:relative;z-index:2;
+}
+.strip .btn{
+  background:white;color:#2F3E34;font-weight:700;font-size:13px;
+  padding:12px 32px;border-radius:8px;border:none;cursor:pointer;
+  position:relative;z-index:2;
+}
+
+/* D: Three layers with depth, taller peaks, more dramatic */
+.mtn-d::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:180px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 220' preserveAspectRatio='none'%3E%3Cpath d='M0 220 L0 160 L60 120 L120 145 L180 80 L260 110 L340 50 L400 90 L480 30 L560 75 L640 25 L720 70 L780 40 L860 85 L940 55 L1020 95 L1080 60 L1140 90 L1200 70 L1200 220Z' fill='rgba(255,255,255,0.08)'/%3E%3Cpath d='M0 220 L0 170 L100 140 L180 155 L280 120 L360 145 L460 100 L540 130 L640 90 L720 115 L820 85 L900 120 L1000 100 L1080 130 L1200 110 L1200 220Z' fill='rgba(255,255,255,0.05)'/%3E%3Cpath d='M0 220 L0 185 L120 170 L240 180 L360 160 L480 175 L600 155 L720 170 L840 158 L960 172 L1080 162 L1200 175 L1200 220Z' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none;
+}
+
+/* E: Full-width, peaks extend higher, more contrast between layers */
+.mtn-e::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:220px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 260' preserveAspectRatio='none'%3E%3Cpath d='M0 260 L0 180 L50 130 L100 160 L170 90 L230 130 L310 60 L370 100 L440 30 L510 80 L570 20 L640 70 L700 35 L770 90 L840 45 L920 80 L980 40 L1050 75 L1120 30 L1200 80 L1200 260Z' fill='rgba(255,255,255,0.07)'/%3E%3Cpath d='M0 260 L0 200 L80 170 L160 190 L260 150 L340 175 L440 130 L530 160 L630 120 L720 150 L820 125 L920 155 L1020 135 L1120 160 L1200 145 L1200 260Z' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none;
+}
+
+/* F: Subtle, lower profile, wide valleys — elegant restraint */
+.mtn-f::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:100px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 120 L0 90 L100 70 L200 85 L320 55 L420 75 L540 45 L620 65 L740 40 L840 60 L940 50 L1060 68 L1140 48 L1200 60 L1200 120Z' fill='rgba(255,255,255,0.06)'/%3E%3Cpath d='M0 120 L0 100 L150 88 L300 96 L450 80 L600 92 L750 82 L900 94 L1050 85 L1200 95 L1200 120Z' fill='rgba(255,255,255,0.035)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<div class="label">D — Three Layers, Taller Peaks, More Dramatic</div>
+<div class="strip mtn-d">
+  <h2>The founding cohort is forming now.</h2>
+  <p>The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  <button class="btn">Join Us</button>
+</div>
+
+<div class="label">E — Higher Peaks, Stronger Contrast</div>
+<div class="strip mtn-e">
+  <h2>The founding cohort is forming now.</h2>
+  <p>The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  <button class="btn">Join Us</button>
+</div>
+
+<div class="label">F — Low Profile, Wide Valleys, Elegant Restraint</div>
+<div class="strip mtn-f">
+  <h2>The founding cohort is forming now.</h2>
+  <p>The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  <button class="btn">Join Us</button>
+</div>
+
+</body>
+</html>
