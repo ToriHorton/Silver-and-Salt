@@ -108,7 +108,7 @@ nav{
 /* ═══════════════════════════════════════
    PAGE SYSTEM
    ═══════════════════════════════════════ */
-.page{display:none;min-height:100vh;padding-top:20px}
+.page{display:none;min-height:100vh;padding-top:0}
 .page.active{display:block}
 
 section{padding:100px 40px}
@@ -180,9 +180,9 @@ sup.fn a{color:inherit;text-decoration:none}
    HERO (Page 1)
    ═══════════════════════════════════════ */
 .hero{
-  min-height:calc(100vh - 60px);display:flex;flex-direction:column;
-  justify-content:center;align-items:center;text-align:center;
-  padding:120px 40px 80px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  align-items:center;text-align:center;
+  padding:112px 40px 80px;position:relative;overflow:hidden;
 }
 .hero::before{
   content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -196,14 +196,11 @@ sup.fn a{color:inherit;text-decoration:none}
 }
 .hero-eyebrow{
   font-family:'Satoshi',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--pop);margin-bottom:40px;position:relative;z-index:2;
+  font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--pop);margin-bottom:20px;position:relative;z-index:2;
   opacity:0;animation:up .5s ease .1s forwards;
 }
-.hero-eyebrow::before{
-  content:'';display:block;width:40px;height:1px;
-  background:var(--pop);margin:0 auto 16px;opacity:.5;
-}
+.hero-eyebrow::before{display:none;}
 /* Thin decorative lines flanking the hero — subtle geometric accents */
 .hero-accent-line-left{
   position:absolute;top:30%;left:40px;width:1px;height:120px;
@@ -596,7 +593,11 @@ footer::after{
   .nav-inner{padding:0 20px}
   .nav-tab{padding:0 12px;font-size:10px;letter-spacing:.06em}
   section,.hero{padding-left:20px;padding-right:20px}
-  .hero{padding-top:60px}
+  .hero{padding-top:112px}
+  .hero-eyebrow{font-size:11px;letter-spacing:.15em;margin-bottom:32px}
+  .hero-line{font-size:16px;max-width:100%}
+  .hero-cta{flex-direction:column;gap:12px;width:100%}
+  .hero-cta .btn{width:100%;padding:14px 24px}
   .hero-stats{flex-direction:column;gap:24px}
   .stat-row{grid-template-columns:1fr}
   .stat-cell:nth-child(even){padding-left:0;border-left:none}
@@ -619,7 +620,8 @@ footer::after{
   .nav-tabs::-webkit-scrollbar{display:none}
   .nav-rail{position:relative}
   .nav-rail::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,rgba(251,248,242,.92));pointer-events:none;z-index:2}
-  .hero h1{font-size:34px}
+  .hero h1{font-size:32px;line-height:1.15}
+  .hero h1 em{font-size:30px}
   h2{font-size:28px}
 }
 @media(max-width:480px){
@@ -628,7 +630,10 @@ footer::after{
   .nav-mark{gap:8px}
   .nav-mark .split-circle{width:26px;height:26px}
   .nav-mark .sc-amp{font-size:14px}
-  .hero h1{font-size:28px}
+  .hero{padding-top:112px}
+  .hero h1{font-size:26px;line-height:1.2}
+  .hero h1 em{font-size:24px}
+  .hero-eyebrow{margin-bottom:20px;font-size:9px;letter-spacing:.08em}
   h2{font-size:24px}
   section,.hero{padding-left:16px;padding-right:16px}
 }
@@ -871,7 +876,7 @@ footer::after{
   <section class="hero">
     <div class="hero-accent-line-left"></div>
     <div class="hero-accent-line-right"></div>
-    <p class="hero-eyebrow">Utah Women's Angel Investment Collective</p>
+    <p class="hero-eyebrow">We Are a Utah Women's Angel Investment Collective</p>
     <h1>Women founders return 2.5&times; more.<sup class="fn" style="font-size:16px;opacity:.4"><a href="source-bible.html" style="color:var(--pop)">S11</a></sup> <em>Almost none are getting funded.</em></h1>
     <p class="hero-line">Silver &amp; Salt Capital is closing a market gap for women founders in Utah. We collectively source deals and individually invest $10,000 a year in local startups.</p>
     <div class="hero-cta">
