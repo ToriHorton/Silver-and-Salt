@@ -121,13 +121,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0
 .source-item a{color:var(--accent);text-decoration:none}
 .source-item a:hover{text-decoration:underline}
 
+/* Mobile hamburger menu */
+.nav-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:10px;width:44px;height:44px;flex-direction:column;justify-content:center;align-items:center;gap:5px;flex-shrink:0;}
+.nav-menu-btn span{display:block;width:20px;height:2px;background:var(--moss);border-radius:1px;transition:all .25s;}
+.nav-dropdown{display:none;position:absolute;top:60px;left:0;right:0;background:var(--cream);border-bottom:1px solid rgba(47,62,52,0.12);box-shadow:0 8px 24px rgba(47,62,52,0.08);padding:16px 20px;flex-direction:column;gap:12px;z-index:60;}
+.nav-dropdown a{font-size:14px;font-weight:600;color:var(--moss);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(47,62,52,0.06);}
+.nav-dropdown a:last-child{border-bottom:none;}
+nav.nav-open .nav-dropdown{display:flex;}
+nav.nav-open .nav-menu-btn span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+nav.nav-open .nav-menu-btn span:nth-child(2){opacity:0;}
+nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+
 @media(max-width:768px){
+  nav{padding:0 20px;}
+  .nav-back{display:none;}
+  .nav-menu-btn{display:flex;}
   .hero{padding:60px 20px 48px}
   .content,.big-stat-section{padding-left:20px;padding-right:20px}
   .big-stat-grid{grid-template-columns:1fr}
   .scenario-box{grid-template-columns:1fr}
   .step{grid-template-columns:36px 1fr;gap:12px}
   .step-num{width:32px;height:32px;font-size:14px}
+}
+@media(max-width:480px){
+  .hero{padding:50px 16px 40px}
+  .content,.big-stat-section{padding-left:16px;padding-right:16px}
 }
 </style>
 </head>
@@ -138,6 +156,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0
     <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
   </a>
   <a href="index.html#data" class="nav-back">← Back to The Data</a>
+  <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-dropdown">
+    <a href="index.html#data">← Back to The Data</a>
+    <a href="index.html#join">Apply</a>
+  </div>
 </nav>
 
 <div class="hero">
