@@ -681,10 +681,23 @@
     background: rgba(47,62,52,0.1);
   }
 
+  /* Mobile hamburger menu */
+  .nav-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:10px;width:44px;height:44px;flex-direction:column;justify-content:center;align-items:center;gap:5px;flex-shrink:0;}
+  .nav-menu-btn span{display:block;width:20px;height:2px;background:var(--moss);border-radius:1px;transition:all .25s;}
+  .nav-dropdown{display:none;position:absolute;top:60px;left:0;right:0;background:var(--cream);border-bottom:1px solid rgba(47,62,52,0.12);box-shadow:0 8px 24px rgba(47,62,52,0.08);padding:16px 20px;flex-direction:column;gap:12px;z-index:60;}
+  .nav-dropdown a{font-size:14px;font-weight:600;color:var(--moss);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(47,62,52,0.06);}
+  .nav-dropdown a:last-child{border-bottom:none;}
+  nav.nav-open .nav-dropdown{display:flex;}
+  nav.nav-open .nav-menu-btn span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+  nav.nav-open .nav-menu-btn span:nth-child(2){opacity:0;}
+  nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    nav { padding: 0 24px; }
+    nav { padding: 0 20px; }
     .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-menu-btn { display: flex; }
     section { padding: 64px 24px; }
     .hero { padding: 100px 24px 64px; }
     .why-section { grid-template-columns: 1fr; gap: 32px; }
@@ -698,6 +711,14 @@
     .data-callout { flex-direction: column; padding: 40px 32px; gap: 24px; }
     .cta-section { padding: 80px 24px; }
     .footnotes { padding: 48px 24px; }
+  }
+  @media (max-width: 480px) {
+    .hero { padding: 80px 16px 48px; }
+    section { padding: 48px 16px; }
+    .b-left, .b-right { padding: 40px 16px; }
+    .data-callout { padding: 28px 16px; }
+    .cta-section { padding: 56px 16px; }
+    .footnotes { padding: 40px 16px; }
   }
 </style>
 </head>
@@ -715,6 +736,16 @@
     <li><a href="open-research.html">Open Research</a></li>
   </ul>
   <a href="index.html#join" class="nav-cta">Join Us</a>
+  <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-dropdown">
+    <a href="index.html">← Back to Home</a>
+    <a href="opportunity.html">The Opportunity</a>
+    <a href="networks.html">The Networks</a>
+    <a href="open-research.html">Open Research</a>
+    <a href="index.html#join">Join Us</a>
+  </div>
 </nav>
 
 <!-- ══ HERO ══ -->
