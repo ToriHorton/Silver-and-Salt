@@ -408,6 +408,31 @@ sup.fn a{color:inherit;text-decoration:none}
 .heritage strong{color:var(--highlight);font-weight:700}
 
 /* ═══════════════════════════════════════
+   FLYWHEEL
+   ═══════════════════════════════════════ */
+.flywheel-section{
+  display:grid;grid-template-columns:1fr auto;gap:64px;align-items:center;
+}
+.flywheel-text{max-width:560px}
+.flywheel-visual{width:280px;height:280px;flex-shrink:0}
+.flywheel-svg{width:100%;height:100%}
+@media(max-width:900px){
+  .flywheel-section{grid-template-columns:1fr;gap:40px}
+  .flywheel-visual{width:220px;height:220px;margin:0 auto}
+}
+
+/* ═══════════════════════════════════════
+   COHORT URGENCY STRIP
+   ═══════════════════════════════════════ */
+.cohort-strip{
+  background:var(--pop);padding:72px 40px;position:relative;overflow:hidden;
+}
+.cohort-strip::before{
+  content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;
+  border-radius:50%;background:rgba(255,255,255,0.06);
+}
+
+/* ═══════════════════════════════════════
    CTA
    ═══════════════════════════════════════ */
 .cta{padding:140px 40px;text-align:center}
@@ -741,9 +766,7 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
   </div>
   <div class="nav-rail">
     <div class="nav-tabs">
-      <button class="nav-tab" data-page="about">About</button>
-      <button class="nav-tab" data-page="opportunity">Opportunity</button>
-      <button class="nav-tab" data-page="data">The Data</button>
+      <button class="nav-tab" data-page="thesis">The Thesis</button>
       <button class="nav-tab" data-page="how">How It Works</button>
       <button class="nav-tab" data-page="join">Join</button>
     </div>
@@ -756,35 +779,73 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
      ═══════════════════════════════════════ -->
 <div class="page active" id="page-home" data-palette="rust">
 
+  <!-- HERO -->
   <section class="hero">
-    <p class="hero-eyebrow">Salt Lake City · Park City · Utah</p>
-    <h1>129,000 businesses need capital. 25,000 investors need deal flow. <em>Nobody built the room.</em></h1>
+    <p class="hero-eyebrow">Utah Women's Angel Investment Collective</p>
+    <h1>Women founders return 2.5× more revenue per dollar than men. <em>Almost none of them are getting funded.</em></h1>
     <div class="hero-stats">
       <div>
-        <div class="hero-stat-num">78¢</div>
-        <div class="hero-stat-label">Revenue per $1 invested in women-founded startups<sup class="fn"><a href="#fn18">18</a></sup></div>
+        <div class="hero-stat-num">~100K</div>
+        <div class="hero-stat-label">Accredited women investors in Utah<sup class="fn"><a href="accredited-women-research.html">R2</a></sup></div>
       </div>
       <div>
-        <div class="hero-stat-num">vs <em>31¢</em></div>
-        <div class="hero-stat-label">Revenue per $1 in male-founded startups<sup class="fn"><a href="#fn18">18</a></sup></div>
+        <div class="hero-stat-num"><em>$509M</em></div>
+        <div class="hero-stat-label">In Utah seed capital — almost none reaching women founders<sup class="fn"><a href="utah-funding-research.html">R1</a></sup></div>
       </div>
       <div>
-        <div class="hero-stat-num">1%</div>
-        <div class="hero-stat-label">Of U.S. venture capital going to all-female teams<sup class="fn"><a href="#fn8">8</a></sup></div>
+        <div class="hero-stat-num">63%</div>
+        <div class="hero-stat-label">Better performance from companies with a female founder<sup class="fn"><a href="http://10years.firstround.com/" target="_blank">S12</a></sup></div>
       </div>
     </div>
-    <p class="hero-line">Women founders outperform on every metric — and receive almost none of the capital. Silver &amp; Salt is the investment collective that connects them.</p>
+    <p class="hero-line">Silver &amp; Salt Capital is a women's angel investment collective forming across Utah. We source deals, share diligence, and invest individually — in the founders generating the strongest returns in the market.</p>
     <div class="hero-cta">
       <button class="btn btn-pop" onclick="showPage('join')">Apply for Membership</button>
-      <button class="btn btn-outline" onclick="showPage('opportunity')">See the Opportunity</button>
+      <button class="btn btn-outline" onclick="showPage('thesis')">See the Thesis</button>
     </div>
   </section>
 
+  <!-- FLYWHEEL -->
   <section class="s-dark">
     <div class="wrap">
-      <div class="narrow">
-        <p class="heritage"><strong>Silver</strong> built Park City's fortune. <strong>Salt</strong> defined the Great Basin. Both were once more valuable than gold. Silver &amp; Salt carries that forward — the most valuable resource in Utah has always been the people willing to build something from nothing.</p>
+      <div class="flywheel-section">
+        <div class="flywheel-text">
+          <p class="label" style="color:var(--highlight);opacity:.8">The Flywheel</p>
+          <p class="heritage">When one investor writes a check, a founder gets funded. When a hundred do it together — sourcing, vetting, mentoring, connecting — <strong>the entire ecosystem shifts.</strong></p>
+          <p style="font-size:16px;line-height:1.75;color:var(--text-on-dark-body);margin-top:20px;max-width:520px">More capital reaches women founders. More women start companies. More companies succeed. That success attracts more investors. The cycle accelerates.</p>
+          <p style="font-size:16px;line-height:1.75;color:var(--text-on-dark-body);margin-top:16px;max-width:520px">This is not charity. It's a market correction — and the women who start it will define how Utah funds its next generation of businesses.</p>
+        </div>
+        <div class="flywheel-visual">
+          <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="flywheel-svg">
+            <!-- Outer ring -->
+            <circle cx="160" cy="160" r="140" fill="none" stroke="rgba(224,122,94,0.15)" stroke-width="2"/>
+            <!-- Arrow segments -->
+            <path d="M 160 20 A 140 140 0 0 1 296 120" fill="none" stroke="var(--highlight)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 296 120 A 140 140 0 0 1 240 280" fill="none" stroke="rgba(224,122,94,0.6)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 240 280 A 140 140 0 0 1 80 280" fill="none" stroke="rgba(224,122,94,0.4)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 80 280 A 140 140 0 0 1 24 120" fill="none" stroke="rgba(224,122,94,0.25)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 24 120 A 140 140 0 0 1 160 20" fill="none" stroke="rgba(224,122,94,0.15)" stroke-width="3" stroke-linecap="round"/>
+            <!-- Arrow heads -->
+            <polygon points="158,18 166,18 162,10" fill="var(--highlight)" transform="rotate(15,160,160)"/>
+            <!-- Labels -->
+            <text x="240" y="60" fill="var(--highlight)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">CAPITAL</text>
+            <text x="275" y="200" fill="rgba(224,122,94,0.7)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">FOUNDERS</text>
+            <text x="155" y="305" fill="rgba(224,122,94,0.5)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">GROWTH</text>
+            <text x="15" y="200" fill="rgba(224,122,94,0.4)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">RETURNS</text>
+            <!-- Center -->
+            <text x="160" y="152" fill="var(--text-on-dark)" font-family="Cormorant Garamond,serif" font-size="22" font-weight="600" text-anchor="middle">Silver &amp;</text>
+            <text x="160" y="176" fill="var(--text-on-dark)" font-family="Cormorant Garamond,serif" font-size="22" font-weight="600" text-anchor="middle">Salt</text>
+          </svg>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <!-- FOUNDING COHORT URGENCY STRIP -->
+  <section class="cohort-strip">
+    <div class="wrap" style="text-align:center">
+      <p style="font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(20px,3vw,28px);color:white;letter-spacing:-.02em;margin-bottom:8px">The founding cohort is forming now.</p>
+      <p style="font-size:15px;color:rgba(255,255,255,0.75);max-width:520px;margin:0 auto 24px;line-height:1.6">The first 100 members will set the investment thesis, shape the culture, and build the foundation. This is a one-time moment.</p>
+      <button class="btn" style="background:white;color:var(--moss);font-weight:700" onclick="showPage('join')">Apply for Membership</button>
     </div>
   </section>
 
@@ -794,7 +855,7 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
 <!-- ═══════════════════════════════════════
      PAGE — ABOUT (Manifesto)
      ═══════════════════════════════════════ -->
-<div class="page" id="page-about" data-palette="rust">
+<div class="page" id="page-about-OLD" data-palette="rust" style="display:none!important">
 
   <div class="m-hero">
     <div class="m-hero-bg">S&S</div>
@@ -944,7 +1005,7 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
 <!-- ═══════════════════════════════════════
      PAGE 2 — OPPORTUNITY (Teal & Warm)
      ═══════════════════════════════════════ -->
-<div class="page" id="page-opportunity" data-palette="teal">
+<div class="page" id="page-thesis" data-palette="teal">
 
   <section class="s-cream" style="padding-top:140px">
     <div class="wrap">
@@ -983,7 +1044,7 @@ footer{padding:40px;text-align:center;border-top:1px solid var(--border);backgro
 <!-- ═══════════════════════════════════════
      PAGE 3 — THE DATA (Ink Blue & Copper)
      ═══════════════════════════════════════ -->
-<div class="page" id="page-data" data-palette="ink">
+<div class="page" id="page-data-OLD" data-palette="ink" style="display:none!important">
 
   <section class="s-dark s-glow" style="padding-top:140px">
     <div class="wrap">
@@ -1560,7 +1621,7 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 
 // Initial page load — check URL hash for deep linking
 const hashPage = window.location.hash.replace('#', '');
-const validPages = ['home','about','opportunity','data','how','join'];
+const validPages = ['home','thesis','how','join'];
 showPage(validPages.includes(hashPage) ? hashPage : 'home');
 </script>
 
