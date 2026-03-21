@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closing Sentence — Design Treatments</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;
+  --moss:#2F3E34;
+  --pop:#C17A56;
+  --rust-strip:#C4836A;
+  --sage:#6B7F6B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#999;font-family:'Satoshi',sans-serif}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:0.8em;font-style:normal;margin:0 -.04em}
+
+.option{
+  max-width:800px;margin:20px auto;overflow:hidden;
+  border-radius:8px;
+}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--pop);padding:16px 40px;background:var(--cream);
+}
+.strip{
+  background:var(--rust-strip);text-align:center;position:relative;
+}
+.strip-headline{
+  font-family:'Satoshi',sans-serif;font-weight:900;font-size:24px;
+  color:white;letter-spacing:-.02em;margin-bottom:8px;
+}
+.strip-body{
+  font-size:15px;color:rgba(255,255,255,0.75);max-width:520px;
+  margin:0 auto;line-height:1.6;
+}
+
+/* Option A: Sentence pulled out as its own styled line */
+.opt-a .strip{padding:32px 40px 16px}
+.opt-a .closing{
+  background:var(--rust-strip);text-align:center;padding:8px 40px 32px;
+}
+.opt-a .closing p{
+  font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;
+  font-style:italic;color:white;letter-spacing:-.01em;
+}
+
+/* Option B: White pill/badge treatment */
+.opt-b .strip{padding:32px 40px 24px}
+.opt-b .closing{
+  background:var(--rust-strip);text-align:center;padding:0 40px 32px;
+}
+.opt-b .pill{
+  display:inline-block;background:white;color:var(--moss);
+  font-family:'Satoshi',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 28px;border-radius:40px;
+}
+
+/* Option C: Large ampersand as visual anchor */
+.opt-c .strip{padding:32px 40px 16px}
+.opt-c .closing{
+  background:var(--rust-strip);text-align:center;padding:0 40px 32px;
+}
+.opt-c .closing-inner{
+  display:flex;align-items:center;justify-content:center;gap:16px;
+}
+.opt-c .big-amp{
+  font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;
+  color:rgba(255,255,255,0.3);line-height:1;
+}
+.opt-c .closing-text{
+  font-family:'Satoshi',sans-serif;font-size:15px;font-weight:600;
+  color:white;text-align:left;line-height:1.5;
+}
+.opt-c .closing-text span{display:block}
+
+/* Option D: Separated into two lines with a rule between */
+.opt-d .strip{padding:32px 40px 16px}
+.opt-d .closing{
+  background:var(--rust-strip);text-align:center;padding:0 40px 32px;
+}
+.opt-d .rule{
+  width:40px;height:1px;background:rgba(255,255,255,0.3);
+  margin:16px auto;
+}
+.opt-d .closing-line{
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;
+  color:white;line-height:1.4;
+}
+.opt-d .closing-line em{font-style:italic;color:rgba(255,255,255,0.9)}
+
+/* Option E: Full-width bottom bar, dark moss */
+.opt-e .strip{padding:32px 40px 0}
+.opt-e .closing{
+  background:var(--moss);text-align:center;padding:20px 40px;
+}
+.opt-e .closing p{
+  font-family:'Satoshi',sans-serif;font-size:14px;font-weight:700;
+  color:rgba(255,255,255,0.7);letter-spacing:.08em;text-transform:uppercase;
+}
+.opt-e .closing .brand-amp{color:var(--pop)}
+</style>
+</head>
+<body>
+
+<!-- Option A: Italic Cormorant pull-out -->
+<div class="option opt-a">
+  <div class="label">A — Italic Cormorant Pull-Out</div>
+  <div class="strip">
+    <p class="strip-headline">The founding cohort is forming now.</p>
+    <p class="strip-body">The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  </div>
+  <div class="closing">
+    <p>Utah is the place <span class="brand-amp">&amp;</span> now is the moment.</p>
+  </div>
+</div>
+
+<!-- Option B: White pill badge -->
+<div class="option opt-b">
+  <div class="label">B — White Pill Badge</div>
+  <div class="strip">
+    <p class="strip-headline">The founding cohort is forming now.</p>
+    <p class="strip-body">The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  </div>
+  <div class="closing">
+    <span class="pill">Utah is the place <span class="brand-amp">&amp;</span> now is the moment</span>
+  </div>
+</div>
+
+<!-- Option C: Large ampersand anchor -->
+<div class="option opt-c">
+  <div class="label">C — Large Ampersand Visual Anchor</div>
+  <div class="strip">
+    <p class="strip-headline">The founding cohort is forming now.</p>
+    <p class="strip-body">The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  </div>
+  <div class="closing">
+    <div class="closing-inner">
+      <div class="big-amp">&amp;</div>
+      <div class="closing-text">
+        <span>Utah is the place</span>
+        <span>now is the moment.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Option D: Two lines with rule -->
+<div class="option opt-d">
+  <div class="label">D — Two Lines with Divider</div>
+  <div class="strip">
+    <p class="strip-headline">The founding cohort is forming now.</p>
+    <p class="strip-body">The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  </div>
+  <div class="closing">
+    <div class="rule"></div>
+    <p class="closing-line"><em>Utah is the place</em> <span class="brand-amp">&amp;</span> <em>now is the moment.</em></p>
+  </div>
+</div>
+
+<!-- Option E: Moss contrast bar -->
+<div class="option opt-e">
+  <div class="label">E — Moss Contrast Bar</div>
+  <div class="strip">
+    <p class="strip-headline">The founding cohort is forming now.</p>
+    <p class="strip-body">The first 100 members will set the investment thesis, shape the culture, and build the foundation.</p>
+  </div>
+  <div class="closing">
+    <p>Utah is the place <span class="brand-amp">&amp;</span> now is the moment.</p>
+  </div>
+</div>
+
+</body>
+</html>
