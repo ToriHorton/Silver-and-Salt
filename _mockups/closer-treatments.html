@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closer Line Treatments</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;
+  --moss:#2F3E34;
+  --pop:#C17A56;
+  --sage:#6B7F6B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--cream);font-family:'Satoshi',sans-serif;color:var(--moss)}
+.option{
+  padding:60px 40px 80px;
+  max-width:800px;
+  margin:0 auto;
+  text-align:center;
+  border-bottom:1px solid rgba(47,62,52,0.1);
+}
+.label{
+  font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--pop);
+  margin-bottom:32px;
+}
+.headline{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:42px;line-height:1.05;letter-spacing:-.03em;color:var(--moss);
+  margin-bottom:4px;
+}
+.headline em{font-style:italic;color:var(--pop)}
+
+/* Treatment A: Rust italic Cormorant */
+.closer-a{
+  font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;
+  font-style:italic;color:var(--pop);margin-top:16px;line-height:1.1;
+}
+
+/* Treatment B: Moss Cormorant, heavier weight */
+.closer-b{
+  font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;
+  color:var(--moss);margin-top:16px;line-height:1.1;
+}
+
+/* Treatment C: Rust Satoshi, all caps, tracked */
+.closer-c{
+  font-family:'Satoshi',sans-serif;font-size:13px;font-weight:700;
+  color:var(--pop);margin-top:24px;letter-spacing:.2em;text-transform:uppercase;
+}
+
+/* Treatment D: Moss Satoshi, larger, light weight */
+.closer-d{
+  font-family:'Satoshi',sans-serif;font-size:24px;font-weight:300;
+  color:var(--moss);margin-top:20px;letter-spacing:.01em;
+}
+</style>
+</head>
+<body>
+
+<div class="option">
+  <p class="label">Option A — Rust Italic Cormorant</p>
+  <h1 class="headline">Women founders return 2.5× more revenue per dollar invested. <em>Almost none are getting funded.</em></h1>
+  <p class="closer-a">And everyone is missing out.</p>
+</div>
+
+<div class="option">
+  <p class="label">Option B — Moss Cormorant, Bold</p>
+  <h1 class="headline">Women founders return 2.5× more revenue per dollar invested. <em>Almost none are getting funded.</em></h1>
+  <p class="closer-b">And everyone is missing out.</p>
+</div>
+
+<div class="option">
+  <p class="label">Option C — Rust Satoshi, All Caps</p>
+  <h1 class="headline">Women founders return 2.5× more revenue per dollar invested. <em>Almost none are getting funded.</em></h1>
+  <p class="closer-c">And everyone is missing out.</p>
+</div>
+
+<div class="option">
+  <p class="label">Option D — Moss Satoshi, Light</p>
+  <h1 class="headline">Women founders return 2.5× more revenue per dollar invested. <em>Almost none are getting funded.</em></h1>
+  <p class="closer-d">And everyone is missing out.</p>
+</div>
+
+</body>
+</html>

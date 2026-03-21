@@ -212,12 +212,18 @@ sup.fn a{color:inherit;text-decoration:none}
 }
 .hero h1{
   font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-size:clamp(48px,8vw,110px);line-height:1.0;
+  font-size:clamp(36px,5.5vw,72px);line-height:1.05;
   letter-spacing:-.03em;color:var(--moss);max-width:900px;
   position:relative;z-index:2;
   opacity:0;animation:up .6s ease .2s forwards;
 }
 .hero h1 em{font-style:italic;color:var(--pop)}
+.hero-closer{
+  font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;
+  color:#4A5568;margin-top:16px;line-height:1.1;
+  position:relative;z-index:2;
+  opacity:0;animation:up .5s ease .5s forwards;
+}
 .hero-line{
   font-size:18px;line-height:1.7;color:var(--sage);
   max-width:480px;margin-top:36px;position:relative;z-index:2;
@@ -877,10 +883,11 @@ footer::after{
     <div class="hero-accent-line-left"></div>
     <div class="hero-accent-line-right"></div>
     <p class="hero-eyebrow">We Are a Utah Women's Angel Investment Collective</p>
-    <h1>Women founders return 2.5&times; more.<sup class="fn" style="font-size:16px;opacity:.4"><a href="source-bible.html" style="color:var(--pop)">S11</a></sup> <em>Almost none are getting funded.</em></h1>
-    <p class="hero-line">Silver &amp; Salt Capital is closing a market gap for women founders in Utah. We collectively source deals and individually invest $10,000 a year in local startups.</p>
+    <h1>Women founders return 2.5&times; more revenue per dollar invested.<sup class="fn" style="font-size:16px;opacity:.4"><a href="source-bible.html" style="color:var(--pop)">S11</a></sup> <em>Almost none are getting funded.</em></h1>
+    <p class="hero-closer">And everyone is missing out.</p>
+    <p class="hero-line">Silver &amp; Salt Capital brings women investors together to turn this gap into returns. As a coordinated community, we find and individually fund great founders.</p>
     <div class="hero-cta">
-      <button class="btn btn-pop" onclick="showPage('join')">Apply for Membership</button>
+      <button class="btn btn-pop" onclick="showPage('join')">Join Us</button>
       <button class="btn btn-outline" onclick="showPage('thesis')">See the Thesis</button>
     </div>
   </section>
@@ -894,39 +901,12 @@ footer::after{
     </div>
   </div>
 
-  <!-- FLYWHEEL -->
-  <section class="s-dark">
-    <div class="wrap">
-      <div class="flywheel-section">
-        <div class="flywheel-text">
-          <p class="label" style="color:var(--highlight);opacity:.8">The Flywheel</p>
-          <p class="heritage">When one investor writes a check, a founder gets funded. When a hundred do it together — sourcing, vetting, mentoring, connecting — <strong>the entire ecosystem shifts.</strong></p>
-          <p style="font-size:16px;line-height:1.75;color:var(--text-on-dark-body);margin-top:20px;max-width:520px">More capital reaches women founders. More women start companies. More companies succeed. That success attracts more investors. The cycle accelerates.</p>
-          <p style="font-size:16px;line-height:1.75;color:var(--text-on-dark-body);margin-top:16px;max-width:520px">This is not charity. It's a market correction — and the women who start it will define how Utah funds its next generation of businesses.</p>
-        </div>
-        <div class="flywheel-visual">
-          <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="flywheel-svg">
-            <!-- Outer ring -->
-            <circle cx="160" cy="160" r="140" fill="none" stroke="rgba(224,122,94,0.15)" stroke-width="2"/>
-            <!-- Arrow segments -->
-            <path d="M 160 20 A 140 140 0 0 1 296 120" fill="none" stroke="var(--highlight)" stroke-width="3" stroke-linecap="round"/>
-            <path d="M 296 120 A 140 140 0 0 1 240 280" fill="none" stroke="rgba(224,122,94,0.6)" stroke-width="3" stroke-linecap="round"/>
-            <path d="M 240 280 A 140 140 0 0 1 80 280" fill="none" stroke="rgba(224,122,94,0.4)" stroke-width="3" stroke-linecap="round"/>
-            <path d="M 80 280 A 140 140 0 0 1 24 120" fill="none" stroke="rgba(224,122,94,0.25)" stroke-width="3" stroke-linecap="round"/>
-            <path d="M 24 120 A 140 140 0 0 1 160 20" fill="none" stroke="rgba(224,122,94,0.15)" stroke-width="3" stroke-linecap="round"/>
-            <!-- Arrow heads -->
-            <polygon points="158,18 166,18 162,10" fill="var(--highlight)" transform="rotate(15,160,160)"/>
-            <!-- Labels -->
-            <text x="240" y="60" fill="var(--highlight)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">CAPITAL</text>
-            <text x="275" y="200" fill="rgba(224,122,94,0.7)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">FOUNDERS</text>
-            <text x="155" y="305" fill="rgba(224,122,94,0.5)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">GROWTH</text>
-            <text x="15" y="200" fill="rgba(224,122,94,0.4)" font-family="Satoshi,sans-serif" font-size="11" font-weight="700" letter-spacing=".04em">RETURNS</text>
-            <!-- Center -->
-            <text x="160" y="152" fill="var(--text-on-dark)" font-family="Cormorant Garamond,serif" font-size="22" font-weight="600" text-anchor="middle">Silver &amp;</text>
-            <text x="160" y="176" fill="var(--text-on-dark)" font-family="Cormorant Garamond,serif" font-size="22" font-weight="600" text-anchor="middle">Salt</text>
-          </svg>
-        </div>
-      </div>
+  <!-- DECLARATION -->
+  <section class="s-dark" style="padding:40px 40px">
+    <div class="wrap" style="max-width:680px;margin:0 auto">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--text-on-dark);line-height:1.2;margin-bottom:24px">We are creating <em style="font-style:italic;color:var(--highlight)">regenerative capital</em> in Utah.</h3>
+      <p style="font-size:15px;line-height:1.8;color:var(--text-on-dark-body);font-weight:300;margin-bottom:14px">We're building an ecosystem where women founders launch, grow, and thrive. The power isn't in a fund. It's in hundreds of women making informed decisions with a shared pipeline.</p>
+      <p style="font-size:15px;line-height:1.8;color:var(--text-on-dark-body);font-weight:300;margin-bottom:0">We are not a networking group. We are not a happy hour. We are an organized community of individual investors built around how women founders are already building companies.</p>
     </div>
   </section>
 
@@ -935,7 +915,7 @@ footer::after{
     <div class="wrap" style="text-align:center">
       <p style="font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(20px,3vw,28px);color:white;letter-spacing:-.02em;margin-bottom:8px">The founding cohort is forming now.</p>
       <p style="font-size:15px;color:rgba(255,255,255,0.75);max-width:520px;margin:0 auto 24px;line-height:1.6">The first 100 members will set the investment thesis, shape the culture, and build the foundation. This is a one-time moment.</p>
-      <button class="btn" style="background:white;color:var(--moss);font-weight:700" onclick="showPage('join')">Apply for Membership</button>
+      <button class="btn" style="background:white;color:var(--moss);font-weight:700" onclick="showPage('join')">Join Us</button>
     </div>
   </section>
 
@@ -1590,7 +1570,7 @@ footer::after{
       <p class="label">Join Us</p>
       <h2>The capital is ours. The networks are ours. <em>Are you in?</em></h2>
       <p class="body" style="text-align:center;margin:0 auto 36px">Each of us decides for herself — but we do it together, and that changes everything.</p>
-      <a href="#" class="btn btn-pop">Apply for Membership</a>
+      <a href="#" class="btn btn-pop">Join Us</a>
       <p class="cta-note">Founding members now forming · Applications reviewed monthly</p>
     </div>
   </section>
