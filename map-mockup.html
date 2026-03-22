@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Women's Funding Landscape - Silver &amp; Salt Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FBF8F2;
+    --sand: #F4EFE6;
+    --moss: #2F3E34;
+    --moss-light: #4A5E50;
+    --sage: #7E8E84;
+    --pop: #D16B4F;
+    --pop-hover: #E07A5E;
+    --accent: #8C86FF;
+    --accent-soft: rgba(140,134,255,0.10);
+    --border: rgba(47,62,52,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--moss);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* === NAV BAR === */
+  .navbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,248,242,.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700; font-size: 22px;
+    color: var(--moss);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--pop); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px; font-weight: 600;
+    color: var(--sage); text-decoration: none;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .nav-links a.active { color: var(--moss); border-bottom: 2px solid var(--pop); padding-bottom: 2px; }
+
+  /* === HERO SECTION === */
+  .hero {
+    background: var(--moss);
+    padding: 50px 40px 40px;
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--pop);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 700;
+    color: #F0EDE7;
+    max-width: 700px; margin: 0 auto 16px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .amp {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--pop);
+  }
+  .hero p {
+    color: #B8C4BB;
+    font-size: 16px;
+    max-width: 540px; margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* === FILTER BAR === */
+  .filter-bar {
+    background: var(--sand);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .filter-label {
+    font-size: 12px; font-weight: 600;
+    color: var(--sage);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+  .filter-pill {
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 13px; font-weight: 500;
+    border: 1px solid rgba(47,62,52,0.12);
+    background: white;
+    color: var(--moss-light);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-pill:hover { border-color: var(--pop); color: var(--pop); }
+  .filter-pill.active {
+    background: var(--moss);
+    color: white;
+    border-color: var(--moss);
+  }
+  .filter-pill .count {
+    font-size: 11px;
+    color: var(--sage);
+    margin-left: 4px;
+  }
+  .filter-pill.active .count { color: rgba(255,255,255,0.6); }
+  .filter-search {
+    margin-left: auto;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(47,62,52,0.12);
+    background: white;
+    font-size: 13px;
+    color: var(--moss);
+    width: 220px;
+    font-family: 'Inter', sans-serif;
+  }
+  .filter-search::placeholder { color: var(--sage); }
+
+  /* === MAIN LAYOUT: MAP + SIDEBAR === */
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    height: 560px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* === MAP PANEL === */
+  .map-panel {
+    padding: 30px 40px;
+    position: relative;
+  }
+  .map-container {
+    width: 100%;
+    height: 500px;
+    background: var(--sand);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* US Map SVG mockup */
+  .us-map {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* State styling */
+  .state {
+    stroke: rgba(251,248,242,0.8);
+    stroke-width: 1;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .state:hover { stroke: var(--pop); stroke-width: 2; }
+
+  /* Density levels */
+  .density-0 { fill: #E8E3DA; }
+  .density-1 { fill: #C5D1C8; }
+  .density-2 { fill: #9AB0A0; }
+  .density-3 { fill: #6E8E76; }
+  .density-4 { fill: #4A6E52; }
+  .density-5 { fill: var(--moss); }
+
+  /* Selected state */
+  .state.selected {
+    stroke: var(--pop);
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 8px rgba(209,107,79,0.3));
+  }
+
+  /* Legend */
+  .map-legend {
+    position: absolute;
+    bottom: 24px; left: 24px;
+    background: white;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--sage);
+    box-shadow: 0 2px 12px rgba(47,62,52,0.06);
+  }
+  .legend-bar {
+    display: flex; gap: 2px;
+  }
+  .legend-swatch {
+    width: 16px; height: 10px;
+    border-radius: 2px;
+  }
+
+  /* State tooltip */
+  .state-tooltip {
+    position: absolute;
+    top: 160px; left: 320px;
+    background: var(--moss);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .state-tooltip .tt-name {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .state-tooltip .tt-count {
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+  }
+  .state-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 50%;
+    transform: translateX(-50%);
+    width: 12px; height: 6px;
+    background: var(--moss);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+  }
+
+  /* === SIDEBAR === */
+  .sidebar {
+    border-left: 1px solid var(--border);
+    background: white;
+    overflow-y: auto;
+    max-height: 620px;
+  }
+  .sidebar-header {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+    background: white;
+    z-index: 10;
+  }
+  .sidebar-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 700;
+    color: var(--moss);
+    margin-bottom: 4px;
+  }
+  .sidebar-header p {
+    font-size: 13px;
+    color: var(--sage);
+  }
+
+  /* Org cards */
+  .org-card {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .org-card:hover { background: var(--sand); }
+  .org-card-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .org-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--moss);
+  }
+  .org-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 3px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-angels { background: rgba(209,107,79,0.12); color: var(--pop); }
+  .badge-funds { background: var(--accent-soft); color: var(--accent); }
+  .badge-syndicates { background: rgba(47,62,52,0.08); color: var(--moss-light); }
+  .badge-education { background: rgba(126,142,132,0.12); color: var(--sage); }
+  .badge-micro { background: rgba(76,145,95,0.12); color: #3a7a4a; }
+  .badge-corporate { background: rgba(180,130,50,0.12); color: #8a6520; }
+
+  .org-desc {
+    font-size: 13px;
+    color: var(--moss-light);
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .org-links {
+    display: flex; gap: 16px;
+    align-items: center;
+  }
+  .org-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--pop);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .org-link:hover { color: var(--pop-hover); }
+  .org-link-muted {
+    font-size: 12px;
+    color: var(--sage);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .org-founder {
+    font-size: 12px;
+    color: var(--sage);
+    margin-top: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .founder-avatar {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sand);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 600;
+    color: var(--moss-light);
+  }
+
+  /* === STATS BAR === */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    background: white;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--moss);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  /* === ANNOTATION CALLOUTS === */
+  .annotation {
+    position: absolute;
+    background: var(--pop);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    z-index: 20;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(209,107,79,0.3);
+    white-space: nowrap;
+  }
+  .annotation::before {
+    content: '';
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--pop);
+    transform: rotate(45deg);
+  }
+  .anno-1 { top: 60px; right: 60px; }
+  .anno-1::before { bottom: -4px; left: 20px; }
+  .anno-2 { bottom: 80px; right: 100px; }
+  .anno-2::before { top: -4px; right: 20px; }
+  .anno-3 { top: 200px; left: 60px; }
+  .anno-3::before { right: -4px; top: 8px; }
+
+  /* === MOBILE INDICATOR === */
+  .mobile-preview {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 40px;
+  }
+  .mobile-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .mobile-frame {
+    width: 375px;
+    margin: 0 auto;
+    border: 2px solid rgba(47,62,52,0.12);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(47,62,52,0.08);
+  }
+  .mobile-statusbar {
+    background: var(--moss);
+    height: 28px;
+  }
+  .mobile-body {
+    background: var(--cream);
+  }
+  .mobile-state-select {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-dropdown {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(47,62,52,0.12);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: var(--moss);
+    background: white;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237E8E84' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+  }
+  .mobile-filter-scroll {
+    padding: 12px 16px;
+    display: flex; gap: 8px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-pill {
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid rgba(47,62,52,0.12);
+    background: white;
+    color: var(--moss-light);
+    white-space: nowrap;
+  }
+  .mobile-pill.active {
+    background: var(--moss);
+    color: white;
+    border-color: var(--moss);
+  }
+  .mobile-card {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-card-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--moss);
+    margin-bottom: 4px;
+  }
+  .mobile-card-desc {
+    font-size: 12px;
+    color: var(--moss-light);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .mobile-card-link {
+    font-size: 11px;
+    color: var(--pop);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+  <div class="nav-logo">Silver <span>&</span> Salt</div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Thesis</a>
+    <a href="#">Community</a>
+    <a href="#" class="active">Research</a>
+    <a href="#">Apply</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-label">Research</div>
+  <h1>The Women's Funding Landscape</h1>
+  <p>An interactive directory of angel groups, syndicates, venture funds, and education programs supporting women founders across all 50 states.</p>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-number">198</div>
+    <div class="stat-label">Organizations</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">50</div>
+    <div class="stat-label">States Covered</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">7</div>
+    <div class="stat-label">Categories</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">$4.2B+</div>
+    <div class="stat-label">Combined AUM</div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Filter by</span>
+  <button class="filter-pill active">All <span class="count">198</span></button>
+  <button class="filter-pill">Angels <span class="count">42</span></button>
+  <button class="filter-pill">Women Funds <span class="count">78</span></button>
+  <button class="filter-pill">Syndicates <span class="count">24</span></button>
+  <button class="filter-pill">Education <span class="count">18</span></button>
+  <button class="filter-pill">Micro-Funds <span class="count">22</span></button>
+  <button class="filter-pill">Corporate <span class="count">8</span></button>
+  <button class="filter-pill">Crowdfunding <span class="count">6</span></button>
+  <input type="text" class="filter-search" placeholder="Search organizations...">
+</div>
+
+<!-- MAIN: MAP + SIDEBAR -->
+<div class="main-content">
+
+  <!-- MAP -->
+  <div class="map-panel">
+    <div class="map-container">
+      <svg class="us-map" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg">
+        <!-- Simplified US states - representative shapes -->
+        <!-- West Coast -->
+        <path class="state density-5" d="M120,80 L150,60 L170,80 L170,220 L130,240 L100,200 L90,140 Z" title="California"/>
+        <path class="state density-2" d="M130,240 L170,220 L190,250 L150,280 L120,270 Z" title="Nevada"/>
+        <path class="state density-3" d="M100,30 L170,10 L170,80 L120,80 L90,60 Z" title="Washington"/>
+        <path class="state density-2" d="M100,60 L120,80 L100,130 L80,120 L75,80 Z" title="Oregon"/>
+
+        <!-- Mountain -->
+        <path class="state density-1" d="M170,80 L230,70 L240,130 L200,150 L170,140 Z" title="Idaho"/>
+        <path class="state density-1" d="M170,140 L200,150 L210,210 L170,220 Z" title="Utah"/>
+        <path class="state density-2" d="M210,210 L260,200 L270,260 L220,270 L190,250 Z" title="Colorado"/>
+        <path class="state density-1" d="M240,130 L310,120 L310,170 L260,180 L240,160 Z" title="Wyoming"/>
+        <path class="state density-1" d="M230,70 L310,60 L310,120 L240,130 Z" title="Montana"/>
+        <path class="state density-1" d="M190,250 L220,270 L200,310 L170,300 L150,280 Z" title="Arizona"/>
+        <path class="state density-1" d="M220,270 L270,260 L280,310 L240,320 L200,310 Z" title="New Mexico"/>
+
+        <!-- Central -->
+        <path class="state density-1" d="M310,60 L390,50 L390,100 L310,120 Z" title="North Dakota"/>
+        <path class="state density-1" d="M310,120 L390,100 L390,160 L310,170 Z" title="South Dakota"/>
+        <path class="state density-1" d="M310,170 L390,160 L400,220 L340,230 L310,210 Z" title="Nebraska"/>
+        <path class="state density-1" d="M340,230 L400,220 L410,280 L360,290 L330,270 Z" title="Kansas"/>
+        <path class="state density-1" d="M260,180 L310,170 L310,210 L340,230 L330,270 L270,260 Z" title="Central misc"/>
+        <path class="state density-2" d="M360,290 L410,280 L420,330 L370,350 L340,330 Z" title="Oklahoma"/>
+        <path class="state density-3 selected" d="M280,310 L340,330 L370,350 L420,330 L440,400 L380,430 L300,420 L260,370 Z" title="Texas"/>
+
+        <!-- Upper Midwest -->
+        <path class="state density-2" d="M390,50 L460,30 L470,80 L450,110 L390,100 Z" title="Minnesota"/>
+        <path class="state density-1" d="M390,100 L450,110 L460,160 L390,160 Z" title="Iowa"/>
+        <path class="state density-2" d="M390,160 L460,160 L470,220 L400,220 Z" title="Missouri"/>
+        <path class="state density-1" d="M400,220 L470,220 L480,270 L410,280 Z" title="Arkansas"/>
+
+        <!-- Great Lakes -->
+        <path class="state density-2" d="M460,30 L520,20 L540,50 L520,80 L470,80 Z" title="Wisconsin"/>
+        <path class="state density-2" d="M520,80 L580,70 L590,130 L530,140 L470,130 L460,100 Z" title="Michigan"/>
+        <path class="state density-3" d="M470,80 L520,80 L530,140 L520,170 L460,160 Z" title="Illinois"/>
+        <path class="state density-1" d="M460,160 L520,170 L530,200 L500,220 L470,220 Z" title="Indiana"/>
+        <path class="state density-2" d="M500,220 L530,200 L570,210 L560,250 L520,260 L480,270 Z" title="Kentucky"/>
+        <path class="state density-2" d="M520,170 L580,170 L590,210 L570,210 L530,200 Z" title="Ohio"/>
+
+        <!-- Southeast -->
+        <path class="state density-2" d="M520,260 L560,250 L590,270 L600,310 L560,320 L530,300 L480,270 Z" title="Tennessee"/>
+        <path class="state density-1" d="M480,270 L530,300 L520,340 L460,360 L420,330 Z" title="Mississippi / Alabama"/>
+        <path class="state density-3" d="M560,320 L600,310 L640,330 L630,380 L580,390 L550,360 Z" title="Georgia"/>
+        <path class="state density-3" d="M550,360 L580,390 L570,440 L530,450 L500,420 L460,360 L520,340 Z" title="Florida"/>
+
+        <!-- Mid-Atlantic -->
+        <path class="state density-2" d="M590,130 L650,120 L660,170 L640,190 L600,180 Z" title="Pennsylvania"/>
+        <path class="state density-2" d="M590,270 L640,260 L660,290 L640,330 L600,310 Z" title="North Carolina"/>
+        <path class="state density-1" d="M600,240 L640,220 L660,250 L640,260 L610,250 Z" title="Virginia"/>
+        <path class="state density-2" d="M600,180 L640,190 L650,220 L640,220 L600,210 Z" title="Maryland/DC"/>
+
+        <!-- Northeast -->
+        <path class="state density-5" d="M650,120 L700,100 L720,140 L700,170 L660,170 Z" title="New York"/>
+        <path class="state density-1" d="M700,170 L730,160 L740,180 L720,190 L700,180 Z" title="Connecticut"/>
+        <path class="state density-4" d="M660,170 L700,170 L700,200 L680,210 L650,200 Z" title="New Jersey"/>
+        <path class="state density-4" d="M700,100 L750,80 L760,110 L740,130 L720,140 Z" title="Massachusetts"/>
+        <path class="state density-1" d="M740,60 L770,50 L780,80 L760,90 L750,80 Z" title="Vermont/NH"/>
+        <path class="state density-1" d="M770,40 L800,30 L800,60 L780,70 Z" title="Maine"/>
+
+        <!-- Hawaii (inset) -->
+        <rect x="220" y="470" width="80" height="50" rx="8" class="state density-1" title="Hawaii"/>
+        <text x="260" y="500" font-size="10" fill="var(--sage)" text-anchor="middle" font-family="Inter">HI</text>
+
+        <!-- Alaska (inset) -->
+        <rect x="100" y="470" width="100" height="50" rx="8" class="state density-1" title="Alaska"/>
+        <text x="150" y="500" font-size="10" fill="var(--sage)" text-anchor="middle" font-family="Inter">AK</text>
+
+        <!-- State labels for key states -->
+        <text x="140" y="160" font-size="9" fill="white" text-anchor="middle" font-family="Inter" font-weight="600">CA</text>
+        <text x="360" y="380" font-size="9" fill="white" text-anchor="middle" font-family="Inter" font-weight="600">TX</text>
+        <text x="680" y="145" font-size="9" fill="white" text-anchor="middle" font-family="Inter" font-weight="600">NY</text>
+        <text x="740" y="110" font-size="9" fill="white" text-anchor="middle" font-family="Inter" font-weight="600">MA</text>
+        <text x="500" y="140" font-size="9" fill="rgba(47,62,52,0.5)" text-anchor="middle" font-family="Inter">IL</text>
+        <text x="600" y="350" font-size="9" fill="white" text-anchor="middle" font-family="Inter" font-weight="600">GA</text>
+        <text x="240" y="240" font-size="9" fill="rgba(47,62,52,0.5)" text-anchor="middle" font-family="Inter">CO</text>
+        <text x="130" y="50" font-size="9" fill="rgba(47,62,52,0.5)" text-anchor="middle" font-family="Inter">WA</text>
+        <text x="540" y="400" font-size="9" fill="white" text-anchor="middle" font-family="Inter" font-weight="600">FL</text>
+
+        <!-- Dot markers for high-density areas -->
+        <circle cx="140" cy="140" r="3" fill="var(--pop)" opacity="0.8"/>
+        <circle cx="135" cy="155" r="3" fill="var(--accent)" opacity="0.8"/>
+        <circle cx="145" cy="170" r="3" fill="var(--pop)" opacity="0.8"/>
+        <circle cx="130" cy="180" r="2.5" fill="var(--accent)" opacity="0.6"/>
+        <circle cx="150" cy="145" r="2.5" fill="var(--accent)" opacity="0.6"/>
+
+        <circle cx="685" cy="130" r="3" fill="var(--accent)" opacity="0.8"/>
+        <circle cx="675" cy="140" r="3" fill="var(--pop)" opacity="0.8"/>
+        <circle cx="695" cy="135" r="2.5" fill="var(--accent)" opacity="0.6"/>
+        <circle cx="680" cy="150" r="2.5" fill="var(--pop)" opacity="0.6"/>
+
+        <circle cx="360" cy="370" r="3" fill="var(--pop)" opacity="0.8"/>
+        <circle cx="370" cy="360" r="2.5" fill="var(--accent)" opacity="0.6"/>
+        <circle cx="350" cy="380" r="2.5" fill="var(--accent)" opacity="0.6"/>
+      </svg>
+
+      <!-- Tooltip -->
+      <div class="state-tooltip" style="top: 305px; left: 300px;">
+        <div class="tt-name">Texas</div>
+        <div class="tt-count">5 organizations &middot; Click to view</div>
+      </div>
+
+      <!-- Legend -->
+      <div class="map-legend">
+        <span>Fewer</span>
+        <div class="legend-bar">
+          <div class="legend-swatch" style="background: #E8E3DA;"></div>
+          <div class="legend-swatch" style="background: #C5D1C8;"></div>
+          <div class="legend-swatch" style="background: #9AB0A0;"></div>
+          <div class="legend-swatch" style="background: #6E8E76;"></div>
+          <div class="legend-swatch" style="background: #4A6E52;"></div>
+          <div class="legend-swatch" style="background: var(--moss);"></div>
+        </div>
+        <span>More orgs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h3>Texas</h3>
+      <p>5 organizations</p>
+    </div>
+
+    <div class="org-card">
+      <div class="org-card-top">
+        <div class="org-name">The Artemis Fund</div>
+        <span class="org-badge badge-funds">Women Funds</span>
+      </div>
+      <div class="org-desc">Early-stage fund investing in women-led companies transforming health, wealth, and commerce.</div>
+      <div class="org-links">
+        <a href="#" class="org-link">&#x2197; Website</a>
+        <a href="#" class="org-link-muted">in Founder LinkedIn</a>
+      </div>
+      <div class="org-founder">
+        <div class="founder-avatar">SC</div>
+        Stephanie Campbell, Managing Partner
+      </div>
+    </div>
+
+    <div class="org-card">
+      <div class="org-card-top">
+        <div class="org-name">True Wealth Ventures</div>
+        <span class="org-badge badge-funds">Women Funds</span>
+      </div>
+      <div class="org-desc">Women-led businesses improving environmental and human health through greener technologies.</div>
+      <div class="org-links">
+        <a href="#" class="org-link">&#x2197; Website</a>
+        <a href="#" class="org-link-muted">in Founder LinkedIn</a>
+      </div>
+      <div class="org-founder">
+        <div class="founder-avatar">SB</div>
+        Sara Brand, Founder
+      </div>
+    </div>
+
+    <div class="org-card">
+      <div class="org-card-top">
+        <div class="org-name">Rogue Women's Fund</div>
+        <span class="org-badge badge-funds">Women Funds</span>
+      </div>
+      <div class="org-desc">Early seed B2B SaaS. Uniquely shares GP carry with every portfolio founder. 50%+ women LPs.</div>
+      <div class="org-links">
+        <a href="#" class="org-link">&#x2197; Website</a>
+        <a href="#" class="org-link-muted">in Founder LinkedIn</a>
+      </div>
+      <div class="org-founder">
+        <div class="founder-avatar">CL</div>
+        Caroline Lewis, Managing Partner
+      </div>
+    </div>
+
+    <div class="org-card">
+      <div class="org-card-top">
+        <div class="org-name">Curate Capital</div>
+        <span class="org-badge badge-funds">Women Funds</span>
+      </div>
+      <div class="org-desc">$15M fund. Consumer products by women for women. 80% women investors.</div>
+      <div class="org-links">
+        <a href="#" class="org-link">&#x2197; Website</a>
+        <a href="#" class="org-link-muted">in Founder LinkedIn</a>
+      </div>
+      <div class="org-founder">
+        <div class="founder-avatar">CC</div>
+        Carrie Colbert, Founder
+      </div>
+    </div>
+
+    <div class="org-card">
+      <div class="org-card-top">
+        <div class="org-name">BEAM Network</div>
+        <span class="org-badge badge-angels">Angels</span>
+      </div>
+      <div class="org-desc">Angel network supporting women entrepreneurs through mentorship and capital access.</div>
+      <div class="org-links">
+        <a href="#" class="org-link">&#x2197; Website</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE PREVIEW -->
+<div class="mobile-preview">
+  <div class="mobile-label">Mobile View (375px)</div>
+  <div class="mobile-frame">
+    <div class="mobile-statusbar"></div>
+    <div class="mobile-body">
+      <div style="padding: 16px; text-align: center;">
+        <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pop); margin-bottom: 6px;">Research</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--moss); line-height: 1.2;">The Women's Funding Landscape</div>
+      </div>
+      <div class="mobile-state-select">
+        <select class="mobile-dropdown">
+          <option>Select a state... (Texas)</option>
+        </select>
+      </div>
+      <div class="mobile-filter-scroll">
+        <div class="mobile-pill active">All (5)</div>
+        <div class="mobile-pill">Angels</div>
+        <div class="mobile-pill">Funds</div>
+        <div class="mobile-pill">Syndicates</div>
+        <div class="mobile-pill">Education</div>
+      </div>
+      <div class="mobile-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div class="mobile-card-name">The Artemis Fund</div>
+          <span class="org-badge badge-funds" style="font-size: 9px;">Funds</span>
+        </div>
+        <div class="mobile-card-desc">Early-stage fund investing in women-led companies transforming health, wealth, and commerce.</div>
+        <div class="mobile-card-link">&#x2197; theartemisfund.com</div>
+      </div>
+      <div class="mobile-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div class="mobile-card-name">Rogue Women's Fund</div>
+          <span class="org-badge badge-funds" style="font-size: 9px;">Funds</span>
+        </div>
+        <div class="mobile-card-desc">Early seed B2B SaaS. Shares GP carry with founders. 50%+ women LPs.</div>
+        <div class="mobile-card-link">&#x2197; roguewmn.com</div>
+      </div>
+      <div class="mobile-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div class="mobile-card-name">Curate Capital</div>
+          <span class="org-badge badge-funds" style="font-size: 9px;">Funds</span>
+        </div>
+        <div class="mobile-card-desc">$15M. Consumer products by women for women.</div>
+        <div class="mobile-card-link">&#x2197; curate.capital</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height: 60px;"></div>
+
+</body>
+</html>
