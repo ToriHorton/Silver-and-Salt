@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commitment Treatments — Round 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;
+  --moss:#2F3E34;
+  --pop:#C17A56;
+  --rust-strip:#C4836A;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#888;font-family:'Satoshi',sans-serif}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:0.8em;font-style:normal;margin:0 -.04em}
+.option{max-width:900px;margin:20px auto;border-radius:8px;overflow:hidden}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--pop);padding:14px 40px 0;background:var(--cream);
+}
+.broadside{display:grid;grid-template-columns:1fr 1fr;min-height:480px}
+.left{
+  background:var(--moss);padding:48px 40px;display:flex;flex-direction:column;justify-content:center;
+}
+.left-eyebrow{
+  font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,242,0.5);margin-bottom:20px;
+}
+.left-quote{
+  font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;
+  font-style:italic;color:var(--cream);line-height:1.25;margin-bottom:24px;
+}
+.left-body{
+  font-size:14px;color:rgba(251,248,242,0.6);line-height:1.7;font-weight:300;
+}
+.right{
+  background:var(--rust-strip);padding:48px 40px;display:flex;flex-direction:column;justify-content:center;
+}
+.commit-label{
+  font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:20px;
+}
+.truth-label{
+  font-family:'Satoshi',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:16px;margin-bottom:8px;
+}
+.truth{
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;
+  font-style:italic;color:rgba(255,255,255,0.85);line-height:1.5;
+}
+
+/* F: Vertical rust line accent */
+.opt-f .commit{
+  font-size:14px;color:rgba(255,255,255,0.85);line-height:1.6;font-weight:300;
+  padding:12px 0 12px 16px;
+  border-left:3px solid rgba(255,255,255,0.2);
+  margin-bottom:12px;
+}
+
+/* G: Larger first word "TO" */
+.opt-g .commit{
+  font-size:14px;color:rgba(255,255,255,0.85);line-height:1.6;font-weight:300;
+  padding:12px 0;
+  border-top:1px solid rgba(255,255,255,0.1);
+}
+.opt-g .commit:last-of-type{border-bottom:1px solid rgba(255,255,255,0.1)}
+.opt-g .commit-to{
+  font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,0.45);
+  display:inline;margin-right:4px;
+}
+
+/* H: Large Cormorant numbers */
+.opt-h .commit{
+  font-size:14px;color:rgba(255,255,255,0.85);line-height:1.6;font-weight:300;
+  padding:14px 0;
+  border-top:1px solid rgba(255,255,255,0.1);
+  display:flex;gap:20px;align-items:baseline;
+}
+.opt-h .commit:last-of-type{border-bottom:1px solid rgba(255,255,255,0.1)}
+.opt-h .commit-num{
+  font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;
+  color:rgba(255,255,255,0.15);flex-shrink:0;min-width:36px;line-height:1;
+}
+</style>
+</head>
+<body>
+
+<!-- Option F: Vertical line accent -->
+<div class="label">F — Vertical Rust Line Accent</div>
+<div class="option">
+  <div class="broadside">
+    <div class="left">
+      <div class="left-eyebrow">Our Community Commitment</div>
+      <div class="left-quote">"Every woman in Utah deserves to feel she is enough."</div>
+      <p class="left-body">We are a group of women who commit to standing as fierce advocates for one another.</p>
+      <p class="left-body" style="margin-top:14px">We imagine and build new companies in proximity with one another to support the communities we need to thrive.</p>
+    </div>
+    <div class="right opt-f">
+      <div class="commit-label">We Commit</div>
+      <div class="commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+      <div class="commit">To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+      <div class="commit">To being kind <span class="brand-amp">&amp;</span> being effective.</div>
+      <div class="commit">To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+      <div class="truth-label">Because we hold this truth:</div>
+      <div class="truth">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders — it's time more of them are women.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Option G: Larger "TO" -->
+<div class="label" style="margin-top:20px">G — Larger First Word "TO"</div>
+<div class="option">
+  <div class="broadside">
+    <div class="left">
+      <div class="left-eyebrow">Our Community Commitment</div>
+      <div class="left-quote">"Every woman in Utah deserves to feel she is enough."</div>
+      <p class="left-body">We are a group of women who commit to standing as fierce advocates for one another.</p>
+      <p class="left-body" style="margin-top:14px">We imagine and build new companies in proximity with one another to support the communities we need to thrive.</p>
+    </div>
+    <div class="right opt-g">
+      <div class="commit-label">We Commit</div>
+      <div class="commit"><span class="commit-to">To</span> showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+      <div class="commit"><span class="commit-to">To</span> leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+      <div class="commit"><span class="commit-to">To</span> being kind <span class="brand-amp">&amp;</span> being effective.</div>
+      <div class="commit"><span class="commit-to">To</span> amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+      <div class="truth-label">Because we hold this truth:</div>
+      <div class="truth">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders — it's time more of them are women.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Option H: Large Cormorant numbers -->
+<div class="label" style="margin-top:20px">H — Large Cormorant Numbers</div>
+<div class="option">
+  <div class="broadside">
+    <div class="left">
+      <div class="left-eyebrow">Our Community Commitment</div>
+      <div class="left-quote">"Every woman in Utah deserves to feel she is enough."</div>
+      <p class="left-body">We are a group of women who commit to standing as fierce advocates for one another.</p>
+      <p class="left-body" style="margin-top:14px">We imagine and build new companies in proximity with one another to support the communities we need to thrive.</p>
+    </div>
+    <div class="right opt-h">
+      <div class="commit-label">We Commit</div>
+      <div class="commit"><span class="commit-num">01</span><span>To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</span></div>
+      <div class="commit"><span class="commit-num">02</span><span>To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</span></div>
+      <div class="commit"><span class="commit-num">03</span><span>To being kind <span class="brand-amp">&amp;</span> being effective.</span></div>
+      <div class="commit"><span class="commit-num">04</span><span>To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</span></div>
+      <div class="truth-label">Because we hold this truth:</div>
+      <div class="truth">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders — it's time more of them are women.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

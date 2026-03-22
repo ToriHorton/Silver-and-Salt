@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commitment Treatments — Round 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;
+  --moss:#2F3E34;
+  --pop:#C17A56;
+  --rust-strip:#C4836A;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#888;font-family:'Satoshi',sans-serif}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:0.8em;font-style:normal;margin:0 -.04em}
+.option{max-width:900px;margin:20px auto;border-radius:8px;overflow:hidden}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--pop);padding:14px 40px 0;background:var(--cream);
+}
+.broadside{display:grid;grid-template-columns:1fr 1fr;min-height:480px}
+.left{
+  background:var(--moss);padding:48px 40px;display:flex;flex-direction:column;justify-content:center;
+}
+.left-eyebrow{
+  font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,242,0.5);margin-bottom:20px;
+}
+.left-quote{
+  font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;
+  font-style:italic;color:var(--cream);line-height:1.25;margin-bottom:24px;
+}
+.left-body{
+  font-size:14px;color:rgba(251,248,242,0.6);line-height:1.7;font-weight:300;
+}
+.right{
+  background:var(--rust-strip);padding:48px 40px;display:flex;flex-direction:column;justify-content:center;
+}
+.commit-label{
+  font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:20px;
+}
+.truth-label{
+  font-family:'Satoshi',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:20px;margin-bottom:8px;
+}
+.truth{
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;
+  font-style:italic;color:rgba(255,255,255,0.85);line-height:1.5;
+}
+
+/* I: Cards — each commitment in its own translucent card */
+.opt-i .commit{
+  font-size:13px;color:rgba(255,255,255,0.9);line-height:1.6;font-weight:400;
+  padding:16px 18px;margin-bottom:10px;
+  background:rgba(255,255,255,0.08);border-radius:8px;
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+/* J: Italic Cormorant — each commitment in elegant serif */
+.opt-j .commit{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:300;font-style:italic;
+  color:rgba(255,255,255,0.85);line-height:1.45;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.opt-j .commit:first-of-type{border-top:1px solid rgba(255,255,255,0.08)}
+
+/* K: Two-column grid of commitments */
+.opt-k .commit-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.opt-k .commit{
+  font-size:13px;color:rgba(255,255,255,0.85);line-height:1.55;font-weight:300;
+  padding:16px;
+  border-left:2px solid rgba(255,255,255,0.15);
+}
+.opt-k .commit-keyword{
+  font-family:'Satoshi',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);
+  display:block;margin-bottom:6px;
+}
+</style>
+</head>
+<body>
+
+<!-- Option I: Cards -->
+<div class="label">I — Translucent Cards</div>
+<div class="option">
+  <div class="broadside">
+    <div class="left">
+      <div class="left-eyebrow">Our Community Commitment</div>
+      <div class="left-quote">"Every woman in Utah deserves to feel she is enough."</div>
+      <p class="left-body">We are a group of women who commit to standing as fierce advocates for one another.</p>
+      <p class="left-body" style="margin-top:14px">We imagine and build new companies in proximity with one another to support the communities we need to thrive.</p>
+    </div>
+    <div class="right opt-i">
+      <div class="commit-label">We Commit</div>
+      <div class="commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+      <div class="commit">To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+      <div class="commit">To being kind <span class="brand-amp">&amp;</span> being effective.</div>
+      <div class="commit">To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+      <div class="truth-label">Because we hold this truth:</div>
+      <div class="truth">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders — it's time more of them are women.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Option J: Italic Cormorant -->
+<div class="label" style="margin-top:20px">J — Italic Cormorant Serif</div>
+<div class="option">
+  <div class="broadside">
+    <div class="left">
+      <div class="left-eyebrow">Our Community Commitment</div>
+      <div class="left-quote">"Every woman in Utah deserves to feel she is enough."</div>
+      <p class="left-body">We are a group of women who commit to standing as fierce advocates for one another.</p>
+      <p class="left-body" style="margin-top:14px">We imagine and build new companies in proximity with one another to support the communities we need to thrive.</p>
+    </div>
+    <div class="right opt-j">
+      <div class="commit-label">We Commit</div>
+      <div class="commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+      <div class="commit">To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+      <div class="commit">To being kind <span class="brand-amp">&amp;</span> being effective.</div>
+      <div class="commit">To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+      <div class="truth-label">Because we hold this truth:</div>
+      <div class="truth">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders — it's time more of them are women.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Option K: Two-column grid with keywords -->
+<div class="label" style="margin-top:20px">K — Two-Column Grid with Keywords</div>
+<div class="option">
+  <div class="broadside">
+    <div class="left">
+      <div class="left-eyebrow">Our Community Commitment</div>
+      <div class="left-quote">"Every woman in Utah deserves to feel she is enough."</div>
+      <p class="left-body">We are a group of women who commit to standing as fierce advocates for one another.</p>
+      <p class="left-body" style="margin-top:14px">We imagine and build new companies in proximity with one another to support the communities we need to thrive.</p>
+    </div>
+    <div class="right opt-k">
+      <div class="commit-label">We Commit</div>
+      <div class="commit-grid">
+        <div class="commit"><span class="commit-keyword">Show Up</span>To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+        <div class="commit"><span class="commit-keyword">Lead</span>To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+        <div class="commit"><span class="commit-keyword">Be Real</span>To being kind <span class="brand-amp">&amp;</span> being effective.</div>
+        <div class="commit"><span class="commit-keyword">Amplify</span>To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+      </div>
+      <div class="truth-label">Because we hold this truth:</div>
+      <div class="truth">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders — it's time more of them are women.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

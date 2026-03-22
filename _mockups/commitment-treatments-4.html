@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commitment Treatments — Round 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;
+  --moss:#2F3E34;
+  --pop:#C17A56;
+  --rust-strip:#C4836A;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#888;font-family:'Satoshi',sans-serif}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:0.8em;font-style:normal;margin:0 -.04em}
+.option{max-width:500px;margin:20px auto;border-radius:8px;overflow:hidden}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--pop);padding:14px 40px 0;background:var(--cream);max-width:500px;margin:0 auto;
+}
+.right{
+  background:var(--rust-strip);padding:40px;
+}
+.commit-label{
+  font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:20px;
+}
+
+/* L: Stacked with white dot bullets */
+.opt-l .commit{
+  font-size:14px;color:rgba(255,255,255,0.85);line-height:1.6;font-weight:300;
+  padding:10px 0 10px 20px;position:relative;
+}
+.opt-l .commit::before{
+  content:'';position:absolute;left:0;top:18px;
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,0.25);
+}
+
+/* M: Centered, each commitment separated by a small & */
+.opt-m{text-align:center}
+.opt-m .commit{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-weight:400;color:rgba(255,255,255,0.9);
+  line-height:1.5;padding:8px 0;
+}
+.opt-m .commit-divider{
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;
+  color:rgba(255,255,255,0.2);padding:4px 0;
+}
+
+/* N: Horizontal rules with generous spacing, all caps "TO" inline */
+.opt-n .commit{
+  font-size:14px;color:rgba(255,255,255,0.85);line-height:1.6;font-weight:300;
+  padding:16px 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.opt-n .commit:first-of-type{border-top:1px solid rgba(255,255,255,0.08)}
+.opt-n .commit-to{
+  font-weight:700;color:white;
+}
+
+/* O: Each in a moss-colored pill/tag */
+.opt-o .commit{
+  font-size:13px;color:rgba(255,255,255,0.9);line-height:1.55;font-weight:400;
+  padding:14px 18px;margin-bottom:8px;
+  background:rgba(47,62,52,0.3);border-radius:6px;
+}
+
+/* P: Large quotation-style, one per line, no decoration */
+.opt-p .commit{
+  font-family:'Satoshi',sans-serif;
+  font-size:15px;font-weight:500;color:white;
+  line-height:1.5;padding:12px 0;
+  letter-spacing:-.01em;
+}
+.opt-p .commit span{
+  color:rgba(255,255,255,0.5);font-weight:300;
+}
+</style>
+</head>
+<body>
+
+<!-- L: Dot bullets -->
+<div class="label">L — Dot Bullets</div>
+<div class="option">
+  <div class="right opt-l">
+    <div class="commit-label">We Commit</div>
+    <div class="commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+    <div class="commit">To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+    <div class="commit">To being kind <span class="brand-amp">&amp;</span> being effective.</div>
+    <div class="commit">To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+  </div>
+</div>
+
+<!-- M: Centered with & dividers -->
+<div class="label">M — Centered with Ampersand Dividers</div>
+<div class="option">
+  <div class="right opt-m">
+    <div class="commit-label">We Commit</div>
+    <div class="commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+    <div class="commit-divider">&amp;</div>
+    <div class="commit">To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+    <div class="commit-divider">&amp;</div>
+    <div class="commit">To being kind <span class="brand-amp">&amp;</span> being effective.</div>
+    <div class="commit-divider">&amp;</div>
+    <div class="commit">To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+  </div>
+</div>
+
+<!-- N: Bold "To" inline -->
+<div class="label">N — Bold "To" with Rules</div>
+<div class="option">
+  <div class="right opt-n">
+    <div class="commit-label">We Commit</div>
+    <div class="commit"><span class="commit-to">To</span> showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+    <div class="commit"><span class="commit-to">To</span> leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+    <div class="commit"><span class="commit-to">To</span> being kind <span class="brand-amp">&amp;</span> being effective.</div>
+    <div class="commit"><span class="commit-to">To</span> amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+  </div>
+</div>
+
+<!-- O: Moss pills -->
+<div class="label">O — Moss Cards</div>
+<div class="option">
+  <div class="right opt-o">
+    <div class="commit-label">We Commit</div>
+    <div class="commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+    <div class="commit">To leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+    <div class="commit">To being kind <span class="brand-amp">&amp;</span> being effective.</div>
+    <div class="commit">To amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+  </div>
+</div>
+
+<!-- P: Bold with faded "to" -->
+<div class="label">P — Bold Statement, Soft "To"</div>
+<div class="option">
+  <div class="right opt-p">
+    <div class="commit-label">We Commit</div>
+    <div class="commit"><span>To</span> showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
+    <div class="commit"><span>To</span> leading with curiosity <span class="brand-amp">&amp;</span> assuming positive intent.</div>
+    <div class="commit"><span>To</span> being kind <span class="brand-amp">&amp;</span> being effective.</div>
+    <div class="commit"><span>To</span> amplifying each other's voices <span class="brand-amp">&amp;</span> operating from abundance, not scarcity.</div>
+  </div>
+</div>
+
+</body>
+</html>
