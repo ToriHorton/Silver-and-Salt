@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — Hero Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=Satoshi:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FBF8F2;
+  --sand: #F4EFE6;
+  --moss: #2F3E34;
+  --moss-light: #4A5E50;
+  --sage: #7E8E84;
+  --pop: #8B5E83;
+  --pop-hover: #A06E97;
+  --highlight: #C9A84C;
+  --deep-plum: #3A2536;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; color:var(--moss); background:#1a1a1a; }
+.brand-amp { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:400; }
+
+.option-label {
+  text-align:center; padding:48px 20px 16px;
+  font-family:'Satoshi',sans-serif; font-size:13px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; color:#666;
+}
+.divider { height:2px; background:#333; margin:0; }
+
+/* ════════════════════════════════════════
+   OPTION A — Stacked centered, tight
+   ════════════════════════════════════════ */
+.hero-a {
+  background:var(--deep-plum); padding:120px 40px 80px; text-align:center;
+}
+.hero-a .label {
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sage); margin-bottom:32px;
+}
+.hero-a h1 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(36px,5.5vw,56px); color:var(--cream); line-height:1.15;
+  max-width:700px; margin:0 auto 32px;
+}
+.hero-a h1 em { font-style:italic; color:var(--highlight); }
+.hero-a .rule { width:48px; height:1px; background:var(--highlight); margin:0 auto 32px; }
+.hero-a .qa-row {
+  max-width:640px; margin:0 auto 40px;
+  display:grid; grid-template-columns:1fr auto 1fr; gap:0; text-align:left;
+}
+.hero-a .qa-item { padding:0 28px; }
+.hero-a .qa-divider { width:1px; background:rgba(201,168,76,0.3); }
+.hero-a .qa-label {
+  font-family:'Cormorant Garamond',serif; font-weight:600; font-style:italic;
+  font-size:20px; color:var(--highlight); margin-bottom:10px;
+}
+.hero-a .qa-desc {
+  font-size:13px; color:rgba(251,248,242,0.5); line-height:1.7; font-weight:300;
+}
+.hero-a h2 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(22px,3vw,32px); color:var(--cream);
+}
+.hero-a h2 em { font-style:italic; color:var(--highlight); }
+
+/* ════════════════════════════════════════
+   OPTION B — Left-aligned editorial
+   ════════════════════════════════════════ */
+.hero-b {
+  background:var(--deep-plum); padding:120px 40px 80px;
+}
+.hero-b-inner {
+  max-width:1000px; margin:0 auto;
+  display:grid; grid-template-columns:1.4fr 1fr; gap:64px; align-items:end;
+}
+.hero-b .label {
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sage); margin-bottom:20px;
+}
+.hero-b h1 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(32px,4.5vw,52px); color:var(--cream); line-height:1.15;
+  margin-bottom:24px;
+}
+.hero-b h1 em { font-style:italic; color:var(--highlight); }
+.hero-b h2 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:28px; color:var(--cream); margin-top:8px;
+}
+.hero-b h2 em { font-style:italic; color:var(--highlight); }
+.hero-b .qa-stack { display:flex; flex-direction:column; gap:28px; }
+.hero-b .qa-item { border-left:2px solid var(--highlight); padding-left:20px; }
+.hero-b .qa-label {
+  font-family:'Satoshi',sans-serif; font-weight:700; font-size:14px;
+  color:var(--cream); margin-bottom:6px; letter-spacing:.02em;
+}
+.hero-b .qa-desc {
+  font-size:13px; color:rgba(251,248,242,0.5); line-height:1.7; font-weight:300;
+}
+
+/* ════════════════════════════════════════
+   OPTION C — Big statement, inline answers
+   ════════════════════════════════════════ */
+.hero-c {
+  background:var(--deep-plum); padding:120px 40px 80px; text-align:center;
+}
+.hero-c .label {
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sage); margin-bottom:32px;
+}
+.hero-c h1 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(36px,5.5vw,56px); color:var(--cream); line-height:1.15;
+  max-width:700px; margin:0 auto 40px;
+}
+.hero-c h1 em { font-style:italic; color:var(--highlight); }
+.hero-c .inline-qa {
+  max-width:600px; margin:0 auto 40px; text-align:left;
+  font-size:15px; color:rgba(251,248,242,0.6); line-height:1.9; font-weight:300;
+}
+.hero-c .inline-qa strong {
+  display:block; font-family:'Cormorant Garamond',serif;
+  font-weight:600; font-size:20px; color:var(--cream);
+  margin-top:20px; margin-bottom:4px;
+}
+.hero-c h2 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(22px,3vw,32px); color:var(--cream);
+}
+.hero-c h2 em { font-style:italic; color:var(--highlight); }
+
+/* ════════════════════════════════════════
+   OPTION D — Broadside split (sand + plum)
+   ════════════════════════════════════════ */
+.hero-d {
+  display:grid; grid-template-columns:1fr 1fr; min-height:560px;
+}
+.hero-d-left {
+  background:var(--deep-plum); padding:120px 48px 64px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.hero-d-right {
+  background:var(--sand); padding:120px 48px 64px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.hero-d .label {
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sage); margin-bottom:20px;
+}
+.hero-d h1 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(28px,3.5vw,44px); color:var(--cream); line-height:1.15;
+  margin-bottom:20px;
+}
+.hero-d h1 em { font-style:italic; color:var(--highlight); }
+.hero-d h2 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:24px; color:var(--cream);
+}
+.hero-d h2 em { font-style:italic; color:var(--highlight); }
+.hero-d .qa-item { margin-bottom:28px; }
+.hero-d .qa-label {
+  font-family:'Cormorant Garamond',serif; font-weight:600;
+  font-size:22px; color:var(--moss); margin-bottom:8px;
+}
+.hero-d .qa-desc {
+  font-size:14px; color:var(--moss-light); line-height:1.7; font-weight:300;
+}
+
+/* ════════════════════════════════════════
+   OPTION E — Full-bleed, watermark ampersand
+   ════════════════════════════════════════ */
+.hero-e {
+  background:var(--deep-plum); padding:120px 40px 80px;
+  text-align:center; position:relative; overflow:hidden;
+}
+.hero-e-amp {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-family:'Cormorant Garamond',serif; font-size:min(50vw,480px); font-weight:600;
+  color:rgba(139,94,131,0.06); line-height:1; pointer-events:none;
+}
+.hero-e .label {
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sage); margin-bottom:32px; position:relative;
+}
+.hero-e h1 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(36px,5.5vw,56px); color:var(--cream); line-height:1.15;
+  max-width:700px; margin:0 auto 40px; position:relative;
+}
+.hero-e h1 em { font-style:italic; color:var(--highlight); }
+.hero-e .qa-cards {
+  max-width:640px; margin:0 auto 40px; position:relative;
+  display:grid; grid-template-columns:1fr 1fr; gap:20px;
+}
+.hero-e .qa-card {
+  background:rgba(139,94,131,0.12); border:1px solid rgba(201,168,76,0.15);
+  border-radius:10px; padding:24px 20px; text-align:left;
+}
+.hero-e .qa-label {
+  font-family:'Cormorant Garamond',serif; font-weight:600;
+  font-size:18px; color:var(--highlight); margin-bottom:8px;
+}
+.hero-e .qa-desc {
+  font-size:13px; color:rgba(251,248,242,0.5); line-height:1.7; font-weight:300;
+}
+.hero-e h2 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(22px,3vw,32px); color:var(--cream); position:relative;
+}
+.hero-e h2 em { font-style:italic; color:var(--highlight); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  .hero-a .qa-row { grid-template-columns:1fr; gap:24px; }
+  .hero-a .qa-divider { display:none; }
+  .hero-b-inner { grid-template-columns:1fr; gap:40px; }
+  .hero-d { grid-template-columns:1fr; }
+  .hero-d-left, .hero-d-right { padding:80px 24px 48px; }
+  .hero-e .qa-cards { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ OPTION A — Centered with vertical divider ═══════════ -->
+<div class="option-label">Option A — Centered, gold rule divider</div>
+<section class="hero-a">
+  <div class="label">How It Works</div>
+  <h1>Utah's first women's angel investment collective. <em>We vet together. You invest on your terms.</em></h1>
+  <div class="rule"></div>
+  <div class="qa-row">
+    <div class="qa-item">
+      <div class="qa-label">We vet together.</div>
+      <div class="qa-desc">Any member can champion a startup. The community diligences it together and selects a handful of companies we believe in.</div>
+    </div>
+    <div class="qa-divider"></div>
+    <div class="qa-item">
+      <div class="qa-label">You invest on your terms.</div>
+      <div class="qa-desc">You commit $10K/year and decide how to allocate it. You can always invest in more ways than just your money and support founders as an advisor, champion, customer, or online advocate.</div>
+    </div>
+  </div>
+  <h2>Simple. Powerful. <em>Yours.</em></h2>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ OPTION B — Editorial left-aligned ═══════════ -->
+<div class="option-label">Option B — Left-aligned editorial with gold accent borders</div>
+<section class="hero-b">
+  <div class="hero-b-inner">
+    <div>
+      <div class="label">How It Works</div>
+      <h1>Utah's first women's angel investment collective. <em>We vet together. You invest on your terms.</em></h1>
+      <h2>Simple. Powerful. <em>Yours.</em></h2>
+    </div>
+    <div class="qa-stack">
+      <div class="qa-item">
+        <div class="qa-label">We vet together.</div>
+        <div class="qa-desc">Any member can champion a startup. The community diligences it together and selects a handful of companies we believe in.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-label">You invest on your terms.</div>
+        <div class="qa-desc">You commit $10K/year and decide how to allocate it. You can always invest in more ways than just your money and support founders as an advisor, champion, customer, or online advocate.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ OPTION C — Inline flowing prose ═══════════ -->
+<div class="option-label">Option C — Flowing prose, no cards</div>
+<section class="hero-c">
+  <div class="label">How It Works</div>
+  <h1>Utah's first women's angel investment collective. <em>We vet together. You invest on your terms.</em></h1>
+  <div class="inline-qa">
+    <strong>We vet together.</strong>
+    Any member can champion a startup. The community diligences it together and selects a handful of companies we believe in.
+    <strong>You invest on your terms.</strong>
+    You commit $10K/year and decide how to allocate it. You can always invest in more ways than just your money and support founders as an advisor, champion, customer, or online advocate.
+  </div>
+  <h2>Simple. Powerful. <em>Yours.</em></h2>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ OPTION D — Broadside split ═══════════ -->
+<div class="option-label">Option D — Broadside split (plum + sand)</div>
+<section class="hero-d">
+  <div class="hero-d-left">
+    <div class="label">How It Works</div>
+    <h1>Utah's first women's angel investment collective. <em>We vet together. You invest on your terms.</em></h1>
+    <h2>Simple. Powerful. <em>Yours.</em></h2>
+  </div>
+  <div class="hero-d-right">
+    <div class="qa-item">
+      <div class="qa-label">We vet together.</div>
+      <div class="qa-desc">Any member can champion a startup. The community diligences it together and selects a handful of companies we believe in.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-label">You invest on your terms.</div>
+      <div class="qa-desc">You commit $10K/year and decide how to allocate it. You can always invest in more ways than just your money and support founders as an advisor, champion, customer, or online advocate.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════ OPTION E — Watermark ampersand + glass cards ═══════════ -->
+<div class="option-label">Option E — Watermark ampersand with glass cards</div>
+<section class="hero-e">
+  <div class="hero-e-amp">&amp;</div>
+  <div class="label">How It Works</div>
+  <h1>Utah's first women's angel investment collective. <em>We vet together. You invest on your terms.</em></h1>
+  <div class="qa-cards">
+    <div class="qa-card">
+      <div class="qa-label">We vet together.</div>
+      <div class="qa-desc">Any member can champion a startup. The community diligences it together and selects a handful of companies we believe in.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-label">You invest on your terms.</div>
+      <div class="qa-desc">You commit $10K/year and decide how to allocate it. You can always invest in more ways than just your money and support founders as an advisor, champion, customer, or online advocate.</div>
+    </div>
+  </div>
+  <h2>Simple. Powerful. <em>Yours.</em></h2>
+</section>
+
+</body>
+</html>

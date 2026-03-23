@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — Draft v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=Satoshi:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FBF8F2;
+  --sand: #F4EFE6;
+  --moss: #2F3E34;
+  --moss-light: #4A5E50;
+  --sage: #7E8E84;
+  --pop: #8B5E83;
+  --pop-hover: #A06E97;
+  --highlight: #C9A84C;
+  --deep-plum: #3A2536;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; color:var(--moss); background:var(--cream); }
+.brand-amp { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:400; }
+
+/* ── HERO ── */
+.hero {
+  background:var(--deep-plum); padding:120px 40px 80px; text-align:center;
+}
+.hero .label {
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sage); margin-bottom:32px;
+}
+.hero h1 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(36px,5.5vw,56px); color:var(--cream); line-height:1.15;
+  max-width:700px; margin:0 auto 32px;
+}
+.hero h1 em { font-style:italic; color:var(--highlight); }
+.hero .rule { width:48px; height:1px; background:var(--highlight); margin:0 auto 32px; }
+.hero .qa-row {
+  max-width:640px; margin:0 auto 40px;
+  display:grid; grid-template-columns:1fr auto 1fr; gap:0; text-align:left;
+}
+.hero .qa-item { padding:0 28px; }
+.hero .qa-divider { width:1px; background:rgba(201,168,76,0.3); }
+.hero .qa-label {
+  font-family:'Satoshi',sans-serif; font-weight:700; font-size:14px;
+  color:var(--cream); margin-bottom:6px; letter-spacing:.02em;
+}
+.hero .qa-desc {
+  font-size:13px; color:rgba(251,248,242,0.5); line-height:1.7; font-weight:300;
+}
+.hero h2 {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(22px,3vw,32px); color:var(--cream);
+}
+.hero h2 em { font-style:italic; color:var(--highlight); }
+
+/* ── PILLARS ── */
+.pillars {
+  background:var(--deep-plum); padding:56px 40px;
+}
+.pillars-inner {
+  max-width:900px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px;
+}
+.pillar {
+  background:rgba(139,94,131,0.15); border-radius:10px; padding:28px 24px;
+  border-left:3px solid var(--highlight);
+}
+.pillar-title {
+  font-family:'Satoshi',sans-serif; font-weight:700; font-size:15px;
+  color:var(--cream); margin-bottom:10px; line-height:1.4;
+}
+.pillar-desc {
+  font-size:13px; color:rgba(251,248,242,0.55); line-height:1.7; font-weight:300;
+}
+
+/* ── THE MODEL ── */
+.model {
+  background:var(--sand); padding:72px 40px;
+}
+.model-inner {
+  max-width:680px; margin:0 auto;
+}
+.model-heading {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(24px,3.5vw,36px); color:var(--moss); line-height:1.3;
+  margin-bottom:20px;
+}
+.model-heading em { font-style:italic; color:var(--pop); }
+.model-body {
+  font-size:15px; line-height:1.8; color:var(--moss-light); font-weight:300;
+  margin-bottom:20px;
+}
+.model-math {
+  font-family:'Cormorant Garamond',serif; font-weight:400;
+  font-size:clamp(20px,3vw,28px); color:var(--moss); line-height:1.4;
+  margin-top:32px; padding-top:24px;
+  border-top:1px solid rgba(139,94,131,0.2);
+}
+.model-math em { font-style:italic; color:var(--pop); }
+.not-a-fund {
+  margin-top:32px; padding:24px 28px;
+  background:rgba(139,94,131,0.06); border-radius:10px;
+  display:flex; align-items:flex-start; gap:20px;
+}
+.naf-amp {
+  font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:300;
+  color:var(--pop); line-height:1; flex-shrink:0;
+}
+.naf-text {
+  font-size:14px; color:var(--moss-light); line-height:1.7; font-weight:300;
+}
+.naf-text strong { font-weight:600; color:var(--moss); }
+
+/* ── PLATFORM ── */
+.platform {
+  background:var(--cream); padding:72px 40px;
+}
+.platform-inner {
+  max-width:680px; margin:0 auto;
+}
+.platform-label {
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sage); margin-bottom:16px;
+}
+.platform-heading {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(24px,3.5vw,36px); color:var(--moss); line-height:1.2;
+  margin-bottom:24px;
+}
+.platform-body {
+  font-size:15px; line-height:1.8; color:var(--moss-light); font-weight:300;
+  margin-bottom:14px;
+}
+.platform-body strong { font-weight:600; color:var(--moss); }
+
+/* ── CTA ── */
+.cta {
+  background:var(--deep-plum); padding:80px 40px; text-align:center;
+}
+.cta h2 {
+  font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic;
+  font-size:clamp(32px,5vw,52px); color:var(--cream); margin-bottom:24px;
+}
+.cta-btn {
+  display:inline-block; font-size:13px; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--moss); background:var(--cream);
+  border:none; border-radius:4px; padding:16px 36px; cursor:pointer;
+  text-decoration:none; transition:background .2s,color .2s;
+}
+.cta-btn:hover { background:var(--pop-hover); color:white; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  .hero { padding:100px 24px 64px; }
+  .hero .qa-row { grid-template-columns:1fr; gap:24px; }
+  .hero .qa-divider { display:none; }
+  .model { padding:56px 24px; }
+  .pillars { padding:40px 24px; }
+  .pillars-inner { grid-template-columns:1fr; }
+  .platform { padding:56px 24px; }
+  .cta { padding:56px 24px; }
+}
+@media(max-width:480px) {
+  .hero { padding:80px 16px 48px; }
+  .model { padding:40px 16px; }
+  .platform { padding:40px 16px; }
+  .cta { padding:40px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="label">How It Works</div>
+  <h1>Utah's first women's angel investment collective. <em>We vet together. You invest on your terms.</em></h1>
+  <div class="rule"></div>
+  <div class="qa-row">
+    <div class="qa-item">
+      <div class="qa-label">We vet together.</div>
+      <div class="qa-desc">Any member can champion a startup. The community diligences it together and selects a handful of companies we believe in.</div>
+    </div>
+    <div class="qa-divider"></div>
+    <div class="qa-item">
+      <div class="qa-label">You invest on your terms.</div>
+      <div class="qa-desc">You commit $10K/year and decide how to allocate it. You can always invest in more ways than just your money and support founders as an advisor, champion, customer, or online advocate.</div>
+    </div>
+  </div>
+  <h2>Simple. Powerful. <em>Yours.</em></h2>
+</section>
+
+<!-- PILLARS -->
+<section class="pillars">
+  <div class="pillars-inner">
+    <div class="pillar">
+      <div class="pillar-title">Writing small checks to make a big change.</div>
+      <div class="pillar-desc">Our power is in the number of investors now working in parallel to meaningfully fund the overall startup ecosystem.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">Where the money flows, opportunities grow.</div>
+      <div class="pillar-desc">Capital attracts ambition. Fund women-led companies and more women-led companies will emerge.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">Silver <span class="brand-amp">&amp;</span> Salt Capital is the bridge.</div>
+      <div class="pillar-desc">Women in Utah who show up for each other with money, connections, and influence.</div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR COMMUNITY -->
+<section class="platform">
+  <div class="platform-inner">
+    <div class="platform-label">Our Community</div>
+    <h2 class="platform-heading">How the money moves.</h2>
+    <p class="platform-body">Our collective investments are hosted on <strong>Play Money's</strong> syndicate platform. Each deal is structured as an SPV — bundling individual checks into a single entry on the founder's cap table. Clean for founders, simple for you.</p>
+    <p class="platform-body">Management fees and carry that <strong>Silver <span class="brand-amp">&amp;</span> Salt Capital</strong> earns are reinvested into the community and used for managing our group, hosting events, and offering education with oversight from a selected advisory board.</p>
+  </div>
+</section>
+
+<!-- THE COMMITMENT -->
+<section class="model">
+  <div class="model-inner">
+    <h2 class="model-heading">Your commitment. <em>Your portfolio.</em></h2>
+    <div class="model-math">$10K/year. 5 years. <em>30+ companies in your portfolio.</em></div>
+    <p class="model-body" style="margin-top:20px;margin-bottom:0">Each member commits to investing $10K per year. You choose how to allocate it across the companies we select together. Over five years, that builds a diversified portfolio — real returns, built one decision at a time.</p>
+    <div class="not-a-fund">
+      <div class="naf-amp">&amp;</div>
+      <div class="naf-text"><strong>Silver <span class="brand-amp">&amp;</span> Salt Capital is not a fund.</strong> No one gives us their money to manage. Every member makes her own investment decisions. The collective amplifies every individual — shared pipeline, individual conviction.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Ready?</h2>
+  <a href="#" class="cta-btn">Join Us</a>
+</section>
+
+</body>
+</html>
