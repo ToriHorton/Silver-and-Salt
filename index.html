@@ -380,17 +380,174 @@ sup.fn a{color:inherit;text-decoration:none}
 .heritage strong{color:var(--highlight);font-weight:700}
 
 /* ═══════════════════════════════════════
-   FLYWHEEL
+   JOIN PAGE
    ═══════════════════════════════════════ */
-.flywheel-section{
-  display:grid;grid-template-columns:1fr auto;gap:64px;align-items:center;
+/* Invitation hero */
+#page-join .join-hero{background:#2A2A2A;padding:120px 40px 80px;position:relative;overflow:hidden}
+#page-join .join-hero::before{
+  content:'&';position:absolute;top:-40px;right:-40px;
+  font-family:'Cormorant Garamond',serif;font-size:400px;font-weight:300;
+  color:rgba(124,184,63,0.04);line-height:1;pointer-events:none;
 }
-.flywheel-text{max-width:560px}
-.flywheel-visual{width:280px;height:280px;flex-shrink:0}
-.flywheel-svg{width:100%;height:100%}
-@media(max-width:900px){
-  .flywheel-section{grid-template-columns:1fr;gap:40px}
-  .flywheel-visual{width:220px;height:220px;margin:0 auto}
+#page-join .join-hero .label{
+  font-size:13px;letter-spacing:.22em;margin-bottom:20px;color:var(--pop);
+}
+#page-join .join-hero h2{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(36px,5.5vw,56px);color:var(--cream);line-height:1.15;
+  max-width:720px;margin-bottom:28px;
+}
+#page-join .join-hero h2 em{font-style:italic;color:var(--pop)}
+#page-join .join-hero p{font-size:17px;line-height:1.8;color:rgba(251,248,242,0.6);max-width:560px;font-weight:300}
+#page-join .join-hero p strong{color:var(--cream);font-weight:600}
+
+/* Growth timeline */
+.growth-timeline{max-width:720px}
+.growth-year{
+  display:grid;grid-template-columns:80px 1fr;gap:0;
+  padding:36px 0;border-bottom:1px solid var(--border);
+}
+.growth-year:first-child{padding-top:0}
+.growth-year:last-child{border-bottom:none}
+.gy-badge{
+  font-family:'Satoshi',sans-serif;font-weight:900;font-size:13px;
+  color:var(--pop);letter-spacing:.04em;padding-top:4px;
+}
+.gy-members{
+  font-family:'Satoshi',sans-serif;font-weight:900;
+  font-size:clamp(32px,4vw,42px);color:var(--text-primary);line-height:1.1;margin-bottom:4px;
+}
+.gy-members em{font-style:normal;color:var(--pop)}
+.gy-subtitle{
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;
+  color:var(--text-muted);letter-spacing:.02em;margin-bottom:16px;
+}
+.gy-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-bottom:14px}
+.gy-stat-num{font-family:'Satoshi',sans-serif;font-weight:900;font-size:20px;color:var(--text-primary);line-height:1.2}
+.gy-stat-label{font-family:'Inter',sans-serif;font-weight:400;font-size:13px;color:var(--text-body);line-height:1.4}
+.gy-narrative{font-family:'Inter',sans-serif;font-weight:300;font-size:15px;color:var(--text-body);line-height:1.7}
+
+/* Commit / Get */
+.join-commit-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:780px}
+.join-card{background:white;border-radius:12px;padding:36px 32px;border:1px solid rgba(47,62,52,0.06)}
+.join-card-label{
+  font-family:'Satoshi',sans-serif;font-weight:900;font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--pop);margin-bottom:16px;
+}
+.join-card h3{
+  font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;
+  color:var(--moss);line-height:1.3;margin-bottom:20px;
+}
+.join-card ul{list-style:none;padding:0;margin:0}
+.join-card li{
+  font-size:14px;line-height:1.7;color:var(--text-body);font-weight:300;
+  padding:10px 0;border-top:1px solid rgba(47,62,52,0.06);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.join-card li::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--pop);
+  flex-shrink:0;margin-top:7px;
+}
+.join-card li strong{font-weight:600;color:var(--moss)}
+
+/* Community values */
+#page-join .join-values{background:#2A2A2A;padding:80px 40px}
+#page-join .join-values-inner{max-width:720px;margin:0 auto}
+#page-join .join-values .label{color:var(--pop)}
+#page-join .join-values-declaration{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(24px,3.5vw,36px);color:var(--cream);line-height:1.3;
+  margin-bottom:40px;
+}
+#page-join .join-values-declaration em{font-style:italic;color:var(--pop)}
+.join-commitment{
+  padding:20px 0;border-top:1px solid rgba(251,248,242,0.08);
+  display:grid;grid-template-columns:32px 1fr;gap:16px;align-items:start;
+}
+.join-commitment-num{
+  font-family:'Satoshi',sans-serif;font-weight:900;font-size:14px;
+  color:var(--pop);padding-top:2px;
+}
+.join-commitment-text{
+  font-size:15px;line-height:1.8;color:rgba(251,248,242,0.65);font-weight:300;
+}
+.join-commitment-text strong{color:var(--cream);font-weight:700}
+
+/* People grid */
+.join-people{max-width:780px}
+.join-people-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;margin-top:24px}
+.join-person{text-align:center}
+.join-person-photo{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 10px;
+  background:var(--sand);border:2px solid rgba(47,62,52,0.06);
+  display:flex;align-items:center;justify-content:center;
+}
+.join-person-photo span{font-size:24px;color:rgba(47,62,52,0.15)}
+.join-person-name{font-family:'Satoshi',sans-serif;font-weight:700;font-size:12px;color:var(--moss);margin-bottom:2px}
+.join-person-role{font-size:11px;color:var(--text-muted);line-height:1.3}
+
+/* Founder story */
+#page-join .join-founder{padding:80px 40px}
+#page-join .join-founder-inner{max-width:640px;margin:0 auto}
+#page-join .join-founder .label{color:var(--pop)}
+#page-join .join-founder h2{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(24px,3.5vw,36px);color:var(--moss);line-height:1.3;margin-bottom:28px;
+}
+#page-join .join-founder h2 em{font-style:italic;color:var(--pop)}
+#page-join .join-founder p{font-size:15px;line-height:1.8;color:var(--moss-light);font-weight:300;margin-bottom:16px}
+#page-join .join-founder p strong{font-weight:600;color:var(--moss)}
+#page-join .join-founder-sig{
+  margin-top:32px;padding-top:24px;border-top:1px solid rgba(47,62,52,0.08);
+}
+#page-join .join-founder-sig .sig-name{
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;color:var(--moss);
+}
+#page-join .join-founder-sig .sig-title{font-size:13px;color:var(--text-muted);margin-top:2px}
+
+/* Apply CTA */
+#page-join .join-apply{background:var(--pop);padding:100px 40px;text-align:center;position:relative;overflow:hidden}
+#page-join .join-apply::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:140px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200' preserveAspectRatio='none'%3E%3Cpath d='M0 200 L0 140 L80 90 L150 120 L220 60 L300 100 L380 40 L440 80 L520 20 L600 70 L680 30 L750 80 L820 50 L900 90 L960 55 L1040 85 L1100 45 L1200 100 L1200 200Z' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none;
+}
+#page-join .join-apply h2{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(36px,5vw,52px);color:white;line-height:1.15;
+  max-width:560px;margin:0 auto 16px;
+}
+#page-join .join-apply h2 em{font-style:italic}
+#page-join .join-apply p{font-size:16px;color:rgba(255,255,255,0.8);max-width:480px;margin:0 auto 32px;line-height:1.7;font-weight:300}
+#page-join .join-apply-btn{
+  display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--moss);background:white;border:none;border-radius:4px;padding:18px 40px;
+  cursor:pointer;text-decoration:none;transition:background .2s,transform .15s;position:relative;z-index:1;
+}
+#page-join .join-apply-btn:hover{background:var(--cream);transform:translateY(-1px)}
+#page-join .join-apply-note{font-size:13px;color:rgba(255,255,255,0.6);margin-top:16px;position:relative;z-index:1}
+
+/* JOIN responsive */
+@media(max-width:768px){
+  #page-join .join-hero{padding:100px 24px 64px}
+  .join-commit-grid{grid-template-columns:1fr}
+  .growth-year{grid-template-columns:1fr;gap:4px}
+  .gy-badge{margin-bottom:4px}
+  .gy-stats{grid-template-columns:1fr 1fr;gap:10px 16px}
+  #page-join .join-values{padding:56px 24px}
+  .join-people-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+  #page-join .join-founder{padding:56px 24px}
+  #page-join .join-apply{padding:72px 24px}
+}
+@media(max-width:480px){
+  #page-join .join-hero{padding:80px 16px 48px}
+  .join-commit-grid{gap:20px}
+  .join-card{padding:28px 24px}
+  .join-people-grid{grid-template-columns:repeat(3,1fr);gap:12px}
+  .join-person-photo{width:64px;height:64px}
+  #page-join .join-values{padding:40px 16px}
+  #page-join .join-founder{padding:40px 16px}
+  #page-join .join-apply{padding:56px 16px}
 }
 
 /* ═══════════════════════════════════════
@@ -1660,43 +1817,127 @@ footer::after{
      ═══════════════════════════════════════ -->
 <div class="page" id="page-join" data-palette="lime">
 
-  <section class="s-sand" style="padding-top:140px">
+  <!-- ═══ SECTION 1: THE INVITATION ═══ -->
+  <section class="join-hero">
     <div class="wrap">
       <div class="narrow r">
-        <p class="label">What 500 Members Looks Like</p>
-        <h2>The math <em>gets fun fast</em></h2>
-        <p class="body">Five hundred women each committing $10K or more. Some committing far more. Each making her own decisions. All pulling in the same direction.</p>
-      </div>
-      <div class="scale-line r rd1">
-        <div class="scale-seg">
-          <div class="scale-year">Year 1</div>
-          <div class="scale-num">$8M+</div>
-          <div class="scale-desc">Invested into 40–60 women-founded businesses across Utah</div>
-        </div>
-        <div class="scale-seg">
-          <div class="scale-year">Year 3</div>
-          <div class="scale-num">150+</div>
-          <div class="scale-desc">Companies backed. Hundreds of jobs. Returns compounding.</div>
-        </div>
-        <div class="scale-seg">
-          <div class="scale-year">Year 5</div>
-          <div class="scale-num">$50M+</div>
-          <div class="scale-desc">More than Utah VC has historically sent to women founders<sup class="fn"><a href="#fn10">10</a></sup></div>
-        </div>
-      </div>
-      <div class="narrow r rd2" style="margin-top:40px">
-        <p class="body">Plus 6,000 introductions a year — one per member per month. More products, more services, more jobs, more returns. Not because anyone did a favor. Because capital finally found the founders who use it best.</p>
+        <p class="label">The Founding Cohort</p>
+        <h2>We understand that collective finance will fund Utah's future <em>and we can't afford to miss this investment.</em></h2>
+        <p>Silver <span class="brand-amp">&amp;</span> Salt Capital is forming with 100 women who will set the investment thesis, shape the culture, and build the foundation for everything that follows.</p>
       </div>
     </div>
   </section>
 
-  <section class="cta">
+
+  <!-- ═══ SECTION 2: WHAT YOU COMMIT / WHAT YOU GET ═══ -->
+  <section style="padding:72px 40px">
+    <div class="wrap">
+      <div class="narrow r">
+        <p class="label">What It Takes</p>
+        <h2>What you commit. <em>What you get.</em></h2>
+      </div>
+      <div class="join-commit-grid r rd1">
+        <div class="join-card">
+          <div class="join-card-label">What You Commit</div>
+          <h3>Your capital, your time, your network</h3>
+          <ul>
+            <li><strong>$10,000+ per year</strong> — deployed across multiple companies at your discretion</li>
+            <li><strong>2–4 hours per month</strong> — deal reviews, diligence sessions, community events</li>
+            <li><strong>One good thing a month</strong> — a founder, a customer, a connection. You choose and give with intention.</li>
+            <li><strong>Your expertise</strong> — shared openly with founders and fellow members</li>
+          </ul>
+        </div>
+        <div class="join-card">
+          <div class="join-card-label">What You Get</div>
+          <h3>Access, community, and a real portfolio</h3>
+          <ul>
+            <li><strong>Curated deal flow</strong> — vetted opportunities you can't find on your own</li>
+            <li><strong>Shared due diligence</strong> — professional-grade analysis without doing it alone</li>
+            <li><strong>A diversified portfolio</strong> — 30+ companies over five years at $10K/year</li>
+            <li><strong>A community of investors</strong> — sharp women who make each other smarter</li>
+            <li><strong>Education and mentorship</strong> — from angel investing basics to advanced strategy</li>
+            <li><strong>Collective leverage</strong> — better terms, more founder access, bigger impact</li>
+          </ul>
+        </div>
+      </div>
+      <div class="narrow r rd2" style="margin-top:40px">
+        <div style="background:rgba(124,184,63,0.06);border-radius:10px;padding:24px 28px;display:flex;align-items:flex-start;gap:20px">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--pop);line-height:1;flex-shrink:0">&amp;</span>
+          <div>
+            <p style="font-size:14px;color:var(--moss-light);line-height:1.7;font-weight:300"><strong style="font-weight:600;color:var(--moss)">Founding members get more.</strong> You'll be able to invite friends, shape the early decisions, set community culture, and have a voice in building our community. Later cohorts join what you built.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 3: COMMUNITY VALUES ═══ -->
+  <section class="join-values">
+    <div class="join-values-inner r">
+      <p class="label">Our Commitments</p>
+      <div class="join-values-declaration">Every woman in Utah deserves to feel <em>she is enough.</em></div>
+      <p style="font-size:15px;color:rgba(251,248,242,0.55);line-height:1.8;font-weight:300;margin-bottom:32px">We are a group of women who commit to standing as fierce advocates for one another. We believe women belong in every room where financial decisions are made — and we are building in proximity with one another and the communities we serve.</p>
+      <div class="join-commitment">
+        <div class="join-commitment-num">01</div>
+        <div class="join-commitment-text"><strong>We show up — with capital, with knowledge, with relationships, with visibility, with advocacy.</strong></div>
+      </div>
+      <div class="join-commitment">
+        <div class="join-commitment-num">02</div>
+        <div class="join-commitment-text"><strong>We lead with curiosity and assume positive intent.</strong></div>
+      </div>
+      <div class="join-commitment">
+        <div class="join-commitment-num">03</div>
+        <div class="join-commitment-text"><strong>We are kind and we are effective. Both, always.</strong></div>
+      </div>
+      <div class="join-commitment">
+        <div class="join-commitment-num">04</div>
+        <div class="join-commitment-text"><strong>We amplify each other's voices and operate from abundance, not scarcity.</strong></div>
+      </div>
+      <div style="padding-top:32px;border-top:1px solid rgba(251,248,242,0.08);margin-top:24px">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,24px);font-weight:300;font-style:italic;color:var(--cream);line-height:1.5">Utah's next generation of innovation will be shaped by founders <span class="brand-amp" style="color:var(--pop)">&amp;</span> determined by funders — it's time more of them are women.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 4: FOUNDING MEMBERS + ADVISORY ═══ -->
+  <section class="s-sand" style="padding:72px 40px">
+    <div class="wrap">
+      <div class="join-people r">
+        <p class="label">Founding Members</p>
+        <h2>The first 100 <em>are forming now</em></h2>
+        <p class="body">The founding cohort will be executives, operators, entrepreneurs, professionals, and community leaders who are no longer waiting for invitations into existing systems.</p>
+        <div id="members-grid" class="join-people-grid" style="margin-top:32px"></div>
+      </div>
+      <div class="join-people r rd1" style="margin-top:56px">
+        <p class="label">Advisory Council</p>
+        <p class="body">Experienced investors, operators, and community leaders who guide our strategy and open doors.</p>
+        <div id="advisors-grid" class="join-people-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 5: FOUNDER STORY ═══ -->
+  <section class="join-founder">
+    <div class="join-founder-inner r">
+      <p class="label">Why I Started This</p>
+      <h2>I promised myself I'd come back <em>and make it better.</em></h2>
+      <p>I ran a startup in Salt Lake City. Raising capital meant sitting across from investors who couldn't see past the fact that I was a woman. One told me I "did not look like the kind of person who runs a company."</p>
+      <p>I went looking for my people — SheMoney, How Women Succeed, WeROC, Kinect Capital. Brilliant women everywhere. Nothing connecting them.</p>
+      <p><strong>One of my early startups had an exit, and I'm back.</strong> Silver <span class="brand-amp">&amp;</span> Salt Capital is what I wish had existed when I needed it.</p>
+      <div class="join-founder-sig">
+        <div class="sig-name">Tori Horton</div>
+        <div class="sig-title">Founder, Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 6: APPLY ═══ -->
+  <section class="join-apply">
     <div class="r">
-      <p class="label">Join Us</p>
       <h2>The capital is ours. The networks are ours. <em>Are you in?</em></h2>
-      <p class="body" style="text-align:center;margin:0 auto 36px">Each of us decides for herself — but we do it together, and that changes everything.</p>
-      <a href="#" class="btn btn-pop">Join Us</a>
-      <p class="cta-note">Founding members now forming · Applications reviewed monthly</p>
+      <p>Each of us decides for herself — but we do it together, and that changes everything.</p>
+      <a href="#" class="join-apply-btn">Apply to Join</a>
+      <p class="join-apply-note">Founding members now forming · Applications reviewed monthly</p>
     </div>
   </section>
 
@@ -1794,6 +2035,7 @@ footer::after{
 
 
 <script src="org-data.js?v=2"></script>
+<script src="members/members.js?v=1"></script>
 <script>
 /* ═══════════════════════════════════════
    PALETTE DEFINITIONS
@@ -1884,6 +2126,45 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 const hashPage = window.location.hash.replace('#', '');
 const validPages = ['home','thesis','how','join'];
 showPage(validPages.includes(hashPage) ? hashPage : 'home');
+
+/* ═══════════════════════════════════════
+   MEMBER GRID RENDERER
+   ═══════════════════════════════════════ */
+(function() {
+  function renderPerson(m) {
+    const hasPhoto = m.photo;
+    const photoInner = hasPhoto
+      ? `<img src="${m.photo}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : `<span>+</span>`;
+    const liIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#0A66C2" style="vertical-align:-1px;margin-left:4px"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>`;
+    const nameEl = m.linkedin
+      ? `<a href="${m.linkedin}" target="_blank" rel="noopener" class="join-person-name" style="text-decoration:none;color:var(--moss)">${m.name}${liIcon}</a>`
+      : `<div class="join-person-name">${m.name}</div>`;
+    return `<div class="join-person"><div class="join-person-photo">${photoInner}</div>${nameEl}<div class="join-person-role">${m.role}</div></div>`;
+  }
+  function placeholder(name, role) {
+    return `<div class="join-person"><div class="join-person-photo"><span>+</span></div><div class="join-person-name">${name}</div><div class="join-person-role">${role}</div></div>`;
+  }
+  // Render members
+  const mg = document.getElementById('members-grid');
+  if (mg) {
+    if (typeof MEMBERS !== 'undefined' && MEMBERS.length > 0) {
+      const remaining = Math.max(0, 10 - MEMBERS.length);
+      mg.innerHTML = MEMBERS.map(renderPerson).join('') + Array(remaining).fill(0).map(() => placeholder('Your name here', 'Founding Member')).join('');
+    } else {
+      mg.innerHTML = Array(10).fill(0).map(() => placeholder('Your name here', 'Founding Member')).join('');
+    }
+  }
+  // Render advisors
+  const ag = document.getElementById('advisors-grid');
+  if (ag) {
+    if (typeof ADVISORS !== 'undefined' && ADVISORS.length > 0) {
+      ag.innerHTML = ADVISORS.map(renderPerson).join('');
+    } else {
+      ag.innerHTML = Array(5).fill(0).map(() => placeholder('TBA', 'Advisor')).join('');
+    }
+  }
+})();
 
 /* ═══════════════════════════════════════
    THESIS EMBEDDED MAP

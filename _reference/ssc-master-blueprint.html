@@ -1193,10 +1193,275 @@
           <div class="assets-row">
             <span class="asset ready">Scale projections ✓</span>
             <span class="asset ready">CTA copy ✓</span>
+            <span class="asset ready">Member grid system ✓</span>
             <span class="asset needed">Application form</span>
             <span class="asset needed">Benefits copy</span>
           </div>
         </div>
+        <div class="pb-section">
+          <div class="pb-label">Founding Members &amp; Advisors — How to Add</div>
+          <div class="pb-text" style="font-family:monospace;font-size:12px;background:#f8f6f0;padding:16px;border-radius:6px;line-height:1.8">
+            <strong>File:</strong> <code>members/members.js</code><br><br>
+            <strong>To add a founding member:</strong><br>
+            1. Save their headshot to <code>members/</code> as <code>firstname-lastname.jpg</code> (square, 200x200+)<br>
+            2. Add to the <code>MEMBERS</code> array:<br>
+            <code style="color:#D16B4F">{ name: "Jane Smith", role: "Founding Member", photo: "members/jane-smith.jpg", linkedin: "https://linkedin.com/in/janesmith" },</code><br><br>
+            <strong>To add an advisor:</strong><br>
+            1. Save headshot to <code>members/</code><br>
+            2. Add to the <code>ADVISORS</code> array:<br>
+            <code style="color:#D16B4F">{ name: "Jane Doe", role: "Advisor", photo: "members/jane-doe.jpg", linkedin: "https://linkedin.com/in/janedoe" },</code><br><br>
+            <strong>Notes:</strong> Photo and LinkedIn are optional — omit either and it gracefully falls back. When both arrays are empty, placeholder grids show automatically.
+          </div>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Quick Add from LinkedIn</div>
+          <div id="linkedin-adder" style="background:var(--moss);color:var(--cream);padding:24px;border-radius:8px;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:16px;color:var(--cream)">Paste a LinkedIn URL &rarr; tell Claude "go"</div>
+
+            <!-- Input Row -->
+            <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+              <input type="text" id="linkedin-url" placeholder="https://linkedin.com/in/someone"
+                style="flex:1;min-width:280px;padding:12px 14px;border-radius:6px;border:2px solid var(--sage);background:rgba(255,255,255,0.08);color:var(--cream);font-family:'Satoshi',sans-serif;font-size:15px;outline:none;"
+                onfocus="this.style.borderColor='var(--rust)'" onblur="this.style.borderColor='var(--sage)'" />
+              <select id="linkedin-role"
+                style="padding:12px 14px;border-radius:6px;border:2px solid var(--sage);background:var(--moss-light);color:var(--cream);font-family:'Satoshi',sans-serif;font-size:14px;cursor:pointer;outline:none;">
+                <option value="Founding Member">Founding Member</option>
+                <option value="Advisor">Advisor</option>
+              </select>
+            </div>
+
+            <!-- Status indicator -->
+            <div id="linkedin-status" style="font-size:13px;min-height:24px;"></div>
+
+            <!-- User instructions -->
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:var(--sage);line-height:1.7;">
+              <strong style="color:var(--cream)">Two steps:</strong><br>
+              <span style="color:var(--teal)">1.</span> Paste the LinkedIn URL above and pick the role<br>
+              <span style="color:var(--teal)">2.</span> Tell Claude: <code style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;color:var(--rust)">"go"</code>
+            </div>
+
+            <!-- Claude execution instructions (hidden from view, read by Claude) -->
+            <div id="claude-linkedin-instructions" style="display:none;">
+              CLAUDE INSTRUCTIONS — LINKEDIN MEMBER ADD WORKFLOW:
+              When the user says "go" or "process" while this blueprint page is open:
+
+              1. READ localStorage via javascript_tool: JSON.parse(localStorage.getItem('ssc-linkedin-pending'))
+                 This returns { url: "...", role: "..." } or null.
+              2. If null or url is empty, ask the user to paste a LinkedIn URL first.
+              3. OPEN the LinkedIn URL in a new browser tab.
+              4. EXTRACT from the LinkedIn profile:
+                 - Full name (first + last)
+                 - Headline / current title
+                 - Profile photo URL (the main circular photo)
+              5. DOWNLOAD the profile photo and save it to members/firstname-lastname.jpg in the project.
+                 - Resize/crop to square if needed, minimum 200x200.
+              6. UPDATE members/members.js:
+                 - If role is "Founding Member", add to the MEMBERS array.
+                 - If role is "Advisor", add to the ADVISORS array.
+                 - Entry format: { name: "Full Name", role: "[selected role]", photo: "members/firstname-lastname.jpg", linkedin: "[linkedin URL]" },
+              7. CLEAR localStorage: localStorage.removeItem('ssc-linkedin-pending') and clear the input via javascript_tool.
+              8. CONFIRM to the user: show the name, role, and photo path that were added.
+              9. SHOW the join page (join.html or the page using members.js) so user can see the result.
+            </div>
+          </div>
+          <script>
+            // ── Auto-save LinkedIn input to localStorage ──
+            // Persists across page reloads so Claude can always find it
+            (function() {
+              const urlInput = document.getElementById('linkedin-url');
+              const roleSelect = document.getElementById('linkedin-role');
+              const status = document.getElementById('linkedin-status');
+
+              function save() {
+                const url = urlInput.value.trim();
+                const role = roleSelect.value;
+                if (url) {
+                  localStorage.setItem('ssc-linkedin-pending', JSON.stringify({ url, role }));
+                  status.innerHTML = '<span style="color:#1A8F7D;">&#10003; Saved — ready for Claude. Tell Claude "go" to process.</span>';
+                } else {
+                  localStorage.removeItem('ssc-linkedin-pending');
+                  status.innerHTML = '';
+                }
+              }
+
+              // Restore on page load
+              const saved = localStorage.getItem('ssc-linkedin-pending');
+              if (saved) {
+                try {
+                  const data = JSON.parse(saved);
+                  if (data.url) {
+                    urlInput.value = data.url;
+                    roleSelect.value = data.role || 'Founding Member';
+                    status.innerHTML = '<span style="color:#1A8F7D;">&#10003; Saved — ready for Claude. Tell Claude "go" to process.</span>';
+                  }
+                } catch(e) {}
+              }
+
+              // Save on every keystroke and change
+              urlInput.addEventListener('input', save);
+              urlInput.addEventListener('paste', function() { setTimeout(save, 50); });
+              roleSelect.addEventListener('change', save);
+            })();
+          </script>
+        </div>
+        <div class="pb-section">
+          <div class="pb-label">Current Members &amp; Advisors</div>
+          <div id="member-manager" style="background:var(--sand);padding:20px;border-radius:8px;">
+            <!-- Sort controls -->
+            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+              <span style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-right:4px;">Sort:</span>
+              <button onclick="sortMembers('first')" class="sort-btn" style="padding:6px 14px;border-radius:5px;border:1px solid var(--sage);background:white;color:var(--moss);font-family:'Satoshi',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;"
+                onmouseover="this.style.background='var(--moss)';this.style.color='var(--cream)'" onmouseout="this.style.background='white';this.style.color='var(--moss)'">First Name A-Z</button>
+              <button onclick="sortMembers('last')" class="sort-btn" style="padding:6px 14px;border-radius:5px;border:1px solid var(--sage);background:white;color:var(--moss);font-family:'Satoshi',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;"
+                onmouseover="this.style.background='var(--moss)';this.style.color='var(--cream)'" onmouseout="this.style.background='white';this.style.color='var(--moss)'">Last Name A-Z</button>
+              <button onclick="sortMembers('custom')" class="sort-btn" style="padding:6px 14px;border-radius:5px;border:1px solid var(--sage);background:white;color:var(--moss);font-family:'Satoshi',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;"
+                onmouseover="this.style.background='var(--moss)';this.style.color='var(--cream)'" onmouseout="this.style.background='white';this.style.color='var(--moss)'">Custom Order</button>
+              <span style="flex:1"></span>
+              <button onclick="saveOrder()" id="save-order-btn" style="padding:6px 16px;border-radius:5px;border:none;background:var(--rust);color:white;font-family:'Satoshi',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:none;transition:opacity 0.2s;"
+                onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Save Order &rarr; Tell Claude "update order"</button>
+            </div>
+
+            <!-- Founding Members list -->
+            <div style="margin-bottom:16px;">
+              <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;font-weight:700;">Founding Members</div>
+              <div id="members-list"></div>
+              <div id="members-empty" style="padding:12px;color:var(--sage);font-size:13px;font-style:italic;display:none;">No founding members yet. Use the LinkedIn input above to add one.</div>
+            </div>
+
+            <!-- Advisors list -->
+            <div>
+              <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;font-weight:700;">Advisors</div>
+              <div id="advisors-list"></div>
+              <div id="advisors-empty" style="padding:12px;color:var(--sage);font-size:13px;font-style:italic;display:none;">No advisors yet.</div>
+            </div>
+
+            <!-- Claude instructions for reordering -->
+            <div id="claude-reorder-instructions" style="display:none;">
+              CLAUDE INSTRUCTIONS — MEMBER REORDER WORKFLOW:
+              When the user says "update order" or "save the order":
+
+              1. READ the current order from the page by running: JSON.stringify({members: currentMembers, advisors: currentAdvisors}) using javascript_tool on this page.
+              2. REWRITE members/members.js with the arrays in the new order.
+              3. CONFIRM to the user that the order has been updated.
+            </div>
+          </div>
+        </div>
+        <script>
+          // Load members.js dynamically
+          let currentMembers = [];
+          let currentAdvisors = [];
+          let dragSrcEl = null;
+          let customOrder = false;
+
+          (function loadMembers() {
+            const script = document.createElement('script');
+            script.src = '/members/members.js';
+            script.onload = function() {
+              currentMembers = typeof MEMBERS !== 'undefined' ? [...MEMBERS] : [];
+              currentAdvisors = typeof ADVISORS !== 'undefined' ? [...ADVISORS] : [];
+              renderAllMembers();
+            };
+            document.head.appendChild(script);
+          })();
+
+          function renderAllMembers() {
+            renderList('members-list', 'members-empty', currentMembers, 'member');
+            renderList('advisors-list', 'advisors-empty', currentAdvisors, 'advisor');
+          }
+
+          function renderList(containerId, emptyId, arr, type) {
+            const container = document.getElementById(containerId);
+            const empty = document.getElementById(emptyId);
+            if (arr.length === 0) {
+              container.innerHTML = '';
+              empty.style.display = 'block';
+              return;
+            }
+            empty.style.display = 'none';
+            container.innerHTML = arr.map((m, i) =>
+              '<div draggable="true" data-type="' + type + '" data-index="' + i + '" ' +
+              'ondragstart="onDragStart(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragend="onDragEnd(event)" ' +
+              'style="display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:4px;background:white;border-radius:6px;border:1px solid #e8e4dc;cursor:grab;transition:all 0.15s;"' +
+              'onmouseover="this.style.borderColor=\'var(--rust)\'" onmouseout="this.style.borderColor=\'#e8e4dc\'">' +
+                '<div style="color:var(--sage);font-size:14px;cursor:grab;">&#9776;</div>' +
+                (m.photo
+                  ? '<img src="/' + m.photo + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--sand);" onerror="this.style.display=\'none\'">'
+                  : '<div style="width:36px;height:36px;border-radius:50%;background:var(--sage);opacity:0.3;"></div>') +
+                '<div style="flex:1;min-width:0;">' +
+                  '<div style="font-size:14px;font-weight:700;color:var(--moss);">' + m.name + '</div>' +
+                  '<div style="font-size:12px;color:var(--sage);">' + m.role + '</div>' +
+                '</div>' +
+                (m.linkedin ? '<a href="' + m.linkedin + '" target="_blank" style="font-size:11px;color:var(--ink);text-decoration:none;opacity:0.7;">LinkedIn</a>' : '') +
+                '<div style="display:flex;gap:2px;">' +
+                  '<button onclick="moveItem(\'' + type + '\',' + i + ',-1)" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--sage);padding:2px 4px;" title="Move up">&uarr;</button>' +
+                  '<button onclick="moveItem(\'' + type + '\',' + i + ',1)" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--sage);padding:2px 4px;" title="Move down">&darr;</button>' +
+                '</div>' +
+              '</div>'
+            ).join('');
+          }
+
+          function moveItem(type, index, direction) {
+            const arr = type === 'member' ? currentMembers : currentAdvisors;
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= arr.length) return;
+            [arr[index], arr[newIndex]] = [arr[newIndex], arr[index]];
+            customOrder = true;
+            document.getElementById('save-order-btn').style.display = 'inline-block';
+            renderAllMembers();
+          }
+
+          function sortMembers(mode) {
+            const getSortKey = (m, by) => {
+              const parts = m.name.trim().split(/\s+/);
+              return by === 'last' ? (parts[parts.length - 1] || '').toLowerCase() : (parts[0] || '').toLowerCase();
+            };
+            if (mode === 'first' || mode === 'last') {
+              currentMembers.sort((a, b) => getSortKey(a, mode).localeCompare(getSortKey(b, mode)));
+              currentAdvisors.sort((a, b) => getSortKey(a, mode).localeCompare(getSortKey(b, mode)));
+              document.getElementById('save-order-btn').style.display = 'inline-block';
+            } else if (mode === 'custom') {
+              // Reset to file order
+              currentMembers = typeof MEMBERS !== 'undefined' ? [...MEMBERS] : [];
+              currentAdvisors = typeof ADVISORS !== 'undefined' ? [...ADVISORS] : [];
+              document.getElementById('save-order-btn').style.display = 'none';
+            }
+            renderAllMembers();
+          }
+
+          function saveOrder() {
+            document.getElementById('save-order-btn').textContent = 'Order ready — tell Claude "update order"';
+            document.getElementById('save-order-btn').style.background = 'var(--teal)';
+          }
+
+          // Drag and drop
+          function onDragStart(e) {
+            dragSrcEl = e.currentTarget;
+            e.currentTarget.style.opacity = '0.4';
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', e.currentTarget.dataset.index + '|' + e.currentTarget.dataset.type);
+          }
+          function onDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.style.borderTop = '2px solid var(--rust)';
+          }
+          function onDragEnd(e) {
+            e.currentTarget.style.opacity = '1';
+            document.querySelectorAll('[draggable]').forEach(el => el.style.borderTop = '');
+          }
+          function onDrop(e) {
+            e.preventDefault();
+            e.currentTarget.style.borderTop = '';
+            const [fromIdx, fromType] = e.dataTransfer.getData('text/plain').split('|');
+            const toIdx = parseInt(e.currentTarget.dataset.index);
+            const toType = e.currentTarget.dataset.type;
+            if (fromType !== toType) return;
+            const arr = fromType === 'member' ? currentMembers : currentAdvisors;
+            const item = arr.splice(parseInt(fromIdx), 1)[0];
+            arr.splice(toIdx, 0, item);
+            document.getElementById('save-order-btn').style.display = 'inline-block';
+            renderAllMembers();
+          }
+        </script>
         <div class="pb-section">
           <div class="pb-label">Notes</div>
           <textarea class="notes-area" placeholder="Add session notes here..."></textarea>
