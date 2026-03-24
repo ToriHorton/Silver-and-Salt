@@ -486,24 +486,60 @@ sup.fn a{color:inherit;text-decoration:none}
 .join-person-name{font-family:'Satoshi',sans-serif;font-weight:700;font-size:12px;color:var(--moss);margin-bottom:2px}
 .join-person-role{font-size:11px;color:var(--text-muted);line-height:1.3}
 
-/* Founder story */
-#page-join .join-founder{padding:80px 40px}
-#page-join .join-founder-inner{max-width:640px;margin:0 auto}
-#page-join .join-founder .label{color:var(--pop)}
-#page-join .join-founder h2{
-  font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-size:clamp(24px,3.5vw,36px);color:var(--moss);line-height:1.3;margin-bottom:28px;
+/* Virtuous Investment Cycle */
+.vic-section{padding:100px 40px;background:var(--cream)}
+.vic-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;max-width:1100px;margin:0 auto}
+.vic-text .label{text-align:left}
+.vic-body{
+  font-size:16px;line-height:1.85;color:var(--text-body);font-weight:300;
+  margin-bottom:18px;text-align:left;
 }
-#page-join .join-founder h2 em{font-style:italic;color:var(--pop)}
-#page-join .join-founder p{font-size:15px;line-height:1.8;color:var(--moss-light);font-weight:300;margin-bottom:16px}
-#page-join .join-founder p strong{font-weight:600;color:var(--moss)}
-#page-join .join-founder-sig{
-  margin-top:32px;padding-top:24px;border-top:1px solid rgba(47,62,52,0.08);
+.vic-body strong{font-weight:600;color:var(--moss)}
+.vic-wheel-wrap{width:100%;max-width:500px;margin:0 auto}
+.vic-wheel{position:relative;width:500px;height:500px;margin:0 auto}
+.vic-wheel svg{position:absolute;inset:0;width:100%;height:100%}
+
+/* Stage labels */
+.vic-node{
+  position:absolute;text-align:center;transform:translate(-50%,-50%);
+  font-family:'Satoshi',sans-serif;font-weight:800;font-size:10.5px;
+  color:var(--moss);line-height:1.45;width:120px;
+  text-transform:uppercase;letter-spacing:0.06em;
 }
-#page-join .join-founder-sig .sig-name{
-  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;color:var(--moss);
+/* Entry node — emphasized */
+.vic-node-entry{
+  font-size:11.5px;color:#5A9A2A;letter-spacing:0.1em;
 }
-#page-join .join-founder-sig .sig-title{font-size:13px;color:var(--text-muted);margin-top:2px}
+
+/* Center S&S logo */
+.vic-center-logo{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:72px;height:72px;border-radius:50%;overflow:hidden;
+  box-shadow:0 4px 24px rgba(47,62,52,0.1);
+}
+.vic-cl-left{position:absolute;top:0;left:0;width:50%;height:100%;background:var(--moss)}
+.vic-cl-right{position:absolute;top:0;right:0;width:50%;height:100%;background:#7CB83F}
+.vic-cl-amp{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;
+  color:white;z-index:1;
+}
+
+@media(max-width:900px){
+  .vic-layout{grid-template-columns:1fr;gap:48px}
+  .vic-text .label,.vic-body{text-align:center}
+  .vic-wheel-wrap{max-width:420px}
+  .vic-wheel{width:420px;height:420px}
+}
+@media(max-width:480px){
+  .vic-section{padding:48px 16px}
+  .vic-wheel-wrap{max-width:320px}
+  .vic-wheel{width:320px;height:320px}
+  .vic-node{font-size:9px;width:90px}
+  .vic-node-entry{font-size:10px}
+  .vic-center-logo{width:56px;height:56px}
+  .vic-cl-amp{font-size:28px}
+}
 
 /* Apply CTA */
 #page-join .join-apply{background:var(--pop);padding:100px 40px;text-align:center;position:relative;overflow:hidden}
@@ -514,10 +550,10 @@ sup.fn a{color:inherit;text-decoration:none}
 }
 #page-join .join-apply h2{
   font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-size:clamp(36px,5vw,52px);color:white;line-height:1.15;
-  max-width:560px;margin:0 auto 16px;
+  font-size:clamp(32px,4.5vw,48px);color:white;line-height:1.2;
+  max-width:700px;margin:0 auto 28px;
 }
-#page-join .join-apply h2 em{font-style:italic}
+#page-join .join-apply h2 em{font-style:italic;color:rgba(255,255,255,0.7)}
 #page-join .join-apply p{font-size:16px;color:rgba(255,255,255,0.8);max-width:480px;margin:0 auto 32px;line-height:1.7;font-weight:300}
 #page-join .join-apply-btn{
   display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
@@ -536,7 +572,6 @@ sup.fn a{color:inherit;text-decoration:none}
   .gy-stats{grid-template-columns:1fr 1fr;gap:10px 16px}
   #page-join .join-values{padding:56px 24px}
   .join-people-grid{grid-template-columns:repeat(3,1fr);gap:16px}
-  #page-join .join-founder{padding:56px 24px}
   #page-join .join-apply{padding:72px 24px}
 }
 @media(max-width:480px){
@@ -546,7 +581,6 @@ sup.fn a{color:inherit;text-decoration:none}
   .join-people-grid{grid-template-columns:repeat(3,1fr);gap:12px}
   .join-person-photo{width:64px;height:64px}
   #page-join .join-values{padding:40px 16px}
-  #page-join .join-founder{padding:40px 16px}
   #page-join .join-apply{padding:56px 16px}
 }
 
@@ -1221,7 +1255,7 @@ footer::after{
     <div class="m-broadside">
       <div class="m-b-left">
         <div class="m-b-eyebrow">Our Community Commitment</div>
-        <div class="m-b-declaration">"Every woman in Utah deserves to feel she is enough."</div>
+        <div class="m-b-declaration">"Every woman in Utah deserves to feel <strong><u>she is enough.</u></strong>"</div>
         <p class="m-b-body">We are a group of women who commit to standing as fierce advocates for one another.</p>
         <p class="m-b-body" style="margin-top:16px">We imagine and build new companies in proximity with one another to support the communities we need to thrive.</p>
       </div>
@@ -1875,7 +1909,7 @@ footer::after{
   <section class="join-values">
     <div class="join-values-inner r">
       <p class="label">Our Commitments</p>
-      <div class="join-values-declaration">Every woman in Utah deserves to feel <em>she is enough.</em></div>
+      <div class="join-values-declaration">Every woman in Utah deserves to feel <em><strong><u>she is enough.</u></strong></em></div>
       <p style="font-size:15px;color:rgba(251,248,242,0.55);line-height:1.8;font-weight:300;margin-bottom:32px">We are a group of women who commit to standing as fierce advocates for one another. We believe women belong in every room where financial decisions are made — and we are building in proximity with one another and the communities we serve.</p>
       <div class="join-commitment">
         <div class="join-commitment-num">01</div>
@@ -1916,17 +1950,56 @@ footer::after{
     </div>
   </section>
 
-  <!-- ═══ SECTION 5: FOUNDER STORY ═══ -->
-  <section class="join-founder">
-    <div class="join-founder-inner r">
-      <p class="label">Why I Started This</p>
-      <h2>I promised myself I'd come back <em>and make it better.</em></h2>
-      <p>I ran a startup in Salt Lake City. Raising capital meant sitting across from investors who couldn't see past the fact that I was a woman. One told me I "did not look like the kind of person who runs a company."</p>
-      <p>I went looking for my people — SheMoney, How Women Succeed, WeROC, Kinect Capital. Brilliant women everywhere. Nothing connecting them.</p>
-      <p><strong>One of my early startups had an exit, and I'm back.</strong> Silver <span class="brand-amp">&amp;</span> Salt Capital is what I wish had existed when I needed it.</p>
-      <div class="join-founder-sig">
-        <div class="sig-name">Tori Horton</div>
-        <div class="sig-title">Founder, Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+  <!-- ═══ SECTION 5: VIRTUOUS INVESTMENT CYCLE ═══ -->
+  <section class="vic-section">
+    <div class="r vic-layout">
+      <!-- Left: copy -->
+      <div class="vic-text">
+        <p class="label" style="color:var(--pop)">Regenerative Capital</p>
+        <p class="vic-body">This is not charity. It's a market correction.</p>
+        <p class="vic-body">More capital reaches women founders. More women start companies. More companies succeed. That success attracts more S&amp;S Capital investors. <strong>The cycle accelerates.</strong></p>
+        <p class="vic-body">Our power isn't in a fund. It's in hundreds of women making informed decisions with a shared pipeline — an ecosystem where women thrive.</p>
+        <p class="vic-body"><strong>Every member is building the system her daughters will inherit.</strong></p>
+      </div>
+
+      <!-- Right: cycle — Regenerative flywheel with S&S logo -->
+      <div class="vic-wheel-wrap">
+        <div class="vic-wheel">
+          <svg viewBox="0 0 500 500">
+            <defs>
+              <linearGradient id="vicGrad" gradientUnits="userSpaceOnUse" x1="250" y1="0" x2="250" y2="500">
+                <stop offset="0%" stop-color="#7CB83F" stop-opacity="0.1"/>
+                <stop offset="50%" stop-color="#7CB83F" stop-opacity="0.28"/>
+                <stop offset="100%" stop-color="#7CB83F" stop-opacity="0.12"/>
+              </linearGradient>
+              <marker id="vicArr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+                <polygon points="0 0,10 4,0 8" fill="#7CB83F"/>
+              </marker>
+            </defs>
+            <!-- Continuous ring -->
+            <circle cx="250" cy="250" r="195" fill="none" stroke="url(#vicGrad)" stroke-width="3"/>
+            <!-- 6 arrows — intensity grows clockwise, 6→1 return is boldest -->
+            <path d="M 310 60 A 195 195 0 0 1 435 155" fill="none" stroke="#7CB83F" stroke-width="1.2" opacity="0.2" marker-end="url(#vicArr)"/>
+            <path d="M 445 200 A 195 195 0 0 1 440 345" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.25" marker-end="url(#vicArr)"/>
+            <path d="M 420 385 A 195 195 0 0 1 300 448" fill="none" stroke="#7CB83F" stroke-width="1.8" opacity="0.32" marker-end="url(#vicArr)"/>
+            <path d="M 200 448 A 195 195 0 0 1 68 370" fill="none" stroke="#7CB83F" stroke-width="2.2" opacity="0.4" marker-end="url(#vicArr)"/>
+            <path d="M 56 320 A 195 195 0 0 1 58 175" fill="none" stroke="#7CB83F" stroke-width="2.8" opacity="0.5" marker-end="url(#vicArr)"/>
+            <path d="M 72 130 A 195 195 0 0 1 185 58" fill="none" stroke="#7CB83F" stroke-width="3.8" opacity="0.65" marker-end="url(#vicArr)"/>
+          </svg>
+          <!-- 6 stages -->
+          <div class="vic-node vic-node-entry" style="left:50%;top:5%">S&amp;S Capital members<br>source deals &amp; vet companies</div>
+          <div class="vic-node" style="left:93%;top:28%">S&amp;S Capital investors<br>write checks for women founders</div>
+          <div class="vic-node" style="left:93%;top:72%">More startups<br>get funding</div>
+          <div class="vic-node" style="left:50%;top:95%">More companies<br>thrive</div>
+          <div class="vic-node" style="left:7%;top:72%">More S&amp;S Capital investors<br>get returns</div>
+          <div class="vic-node" style="left:7%;top:28%">More investors want<br>to join S&amp;S Capital</div>
+          <!-- Center: S&S logo mark -->
+          <div class="vic-center-logo">
+            <div class="vic-cl-left"></div>
+            <div class="vic-cl-right"></div>
+            <div class="vic-cl-amp">&amp;</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1934,10 +2007,9 @@ footer::after{
   <!-- ═══ SECTION 6: APPLY ═══ -->
   <section class="join-apply">
     <div class="r">
-      <h2>The capital is ours. The networks are ours. <em>Are you in?</em></h2>
-      <p>Each of us decides for herself — but we do it together, and that changes everything.</p>
-      <a href="#" class="join-apply-btn">Apply to Join</a>
-      <p class="join-apply-note">Founding members now forming · Applications reviewed monthly</p>
+      <h2>It all starts with the choice to invest <em>in the future we want.</em></h2>
+      <a href="#" class="join-apply-btn">Join Us</a>
+      <p class="join-apply-note">Be among the first 100 investors · Applications reviewed monthly</p>
     </div>
   </section>
 
@@ -1965,19 +2037,6 @@ footer::after{
     </div>
   </section>
 
-  <section class="footnotes" id="sources">
-    <div class="wrap">
-      <p class="fn-title">Sources</p>
-      <div class="fn-item" id="fn5"><span class="n">5.</span>U.S. SBA, "2025 Small Business Profile — Utah." Women-owned: 129,429 (44.5%).</div>
-      <div class="fn-item" id="fn6"><span class="n">6.</span>Wells Fargo / WIPP, "2025 Impact of Women-Owned Businesses." $3.3T revenue (+73.7%).</div>
-      <div class="fn-item" id="fn8"><span class="n">8.</span>PitchBook, <a href="https://pitchbook.com/news/reports/2024-us-all-in-female-founders-in-the-vc-ecosystem">2024 All In: Female Founders,</a> 2025.</div>
-      <div class="fn-item" id="fn10"><span class="n">10.</span>Sorenson Impact / U of Utah, <a href="https://sorensonimpactinstitute.com/project/project-deep/">Project DEEP.</a> $21M of $1.1B (1.92%).</div>
-      <div class="fn-item" id="fn18"><span class="n">18.</span>BCG / MassChallenge, <a href="https://www.bcg.com/publications/2018/why-women-owned-startups-are-better-bet">Why Women-Owned Startups Are a Better Bet,</a> 2018.</div>
-      <div class="fn-item" id="fn19"><span class="n">19.</span>First Round Capital, <a href="http://10years.firstround.com/">10 Year Project,</a> 2015.</div>
-      <div class="fn-item" id="fn20"><span class="n">20.</span>Kauffman Foundation / Stanford Law, 2013.</div>
-      <div class="fn-item" id="fn21"><span class="n">21.</span>Female Founders Fund, <a href="https://blog.femalefoundersfund.com/2025-review-of-funding-for-female-founders-d7bda299ddba">2025 Review.</a></div>
-    </div>
-  </section>
 
 </div>
 
