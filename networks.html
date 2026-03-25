@@ -4,16 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Women's Angel Collectives — Silver & Salt Capital</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Satoshi:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-:root{--cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;--sage:#7E8E84;--rust:#D16B4F;--teal:#1A8F7D;--warm:#C4A47E;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--cream);font-family:'Satoshi',sans-serif;color:var(--moss);-webkit-font-smoothing:antialiased;}
-nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(47,62,52,0.08);padding:0 48px;height:60px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{display:flex;align-items:center;text-decoration:none;color:var(--moss);}
-.nav-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;}
-.nav-name .amp{color:var(--rust);}
-.nav-back{font-size:12px;font-weight:700;color:var(--sage);text-decoration:none;}
+/* ── Networks-specific styles ── */
 .hero{background:var(--moss);padding:120px 48px 60px;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(26,143,125,0.08);}
 .hero-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;}
@@ -56,13 +51,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0
 .ss-stat .n{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--cream);}
 .ss-stat .l{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(251,248,242,0.5);margin-top:2px;}
 
-/* Mobile hamburger menu */
-.nav-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:10px;width:44px;height:44px;flex-direction:column;justify-content:center;align-items:center;gap:5px;flex-shrink:0;}
+/* Mobile hamburger overrides */
 .nav-menu-btn span{display:block;width:20px;height:2px;background:var(--moss);border-radius:1px;transition:all .25s;}
-.nav-dropdown{display:none;position:absolute;top:60px;left:0;right:0;background:var(--cream);border-bottom:1px solid rgba(47,62,52,0.12);box-shadow:0 8px 24px rgba(47,62,52,0.08);padding:16px 20px;flex-direction:column;gap:12px;z-index:60;}
-.nav-dropdown a{font-size:14px;font-weight:600;color:var(--moss);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(47,62,52,0.06);}
-.nav-dropdown a:last-child{border-bottom:none;}
-nav.nav-open .nav-dropdown{display:flex;}
 nav.nav-open .nav-menu-btn span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
 nav.nav-open .nav-menu-btn span:nth-child(2){opacity:0;}
 nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
@@ -71,7 +61,6 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
 @media(max-width:768px){
   nav{padding:0 20px;}
   .nav-back{display:none;}
-  .nav-menu-btn{display:flex;}
   .hero{padding:100px 20px 48px;}
   .hero-title{font-size:clamp(28px,8vw,48px);}
   .stats-row{gap:24px;}
@@ -94,7 +83,7 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
 </style>
 </head>
 <body>
-<nav>
+<nav class="nav-standalone">
   <a class="nav-logo" href="index.html">
     <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
   </a>
