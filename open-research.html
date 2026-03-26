@@ -76,13 +76,13 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
   <a class="nav-logo" href="index.html">
     <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
   </a>
-  <a href="index.html" class="nav-back">← Back to Home</a>
+  <a href="index.html" class="nav-back" onclick="if(history.length>1){history.back();return false}">← Back</a>
   <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-dropdown">
-    <a href="index.html">← Back to Home</a>
-    <a href="index.html#join">Apply</a>
+    <a href="index.html" onclick="if(history.length>1){history.back();return false}">← Back</a>
+    <a href="index.html#join">Join Us</a>
   </div>
 </nav>
 

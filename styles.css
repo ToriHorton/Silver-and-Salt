@@ -583,10 +583,10 @@ footer::after {
 }
 .f-legal {
   font-family: 'Satoshi', sans-serif;
-  font-size: var(--text-xs);
+  font-size: 12px;
   color: var(--text-muted);
-  opacity: .4;
-  line-height: 1.5;
+  opacity: .55;
+  line-height: 1.6;
   margin-top: var(--space-2);
   max-width: 600px;
 }

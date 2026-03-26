@@ -151,7 +151,7 @@
 <!-- NAV -->
 <nav onclick="if(event.target.closest('.nav-menu-btn'))this.classList.toggle('nav-open')">
   <a href="index.html" class="nav-logo">Silver <span class="amp">&amp;</span> Salt</a>
-  <a href="open-research.html" class="nav-back">&larr; Back to Research</a>
+  <a href="open-research.html" class="nav-back" onclick="if(history.length>1){history.back();return false}">&larr; Back</a>
   <button class="nav-menu-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   <div class="nav-dropdown">
     <a href="index.html">Home</a>

@@ -87,13 +87,13 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
   <a class="nav-logo" href="index.html">
     <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
   </a>
-  <a href="index.html" class="nav-back">← Back to Home</a>
+  <a href="index.html" class="nav-back" onclick="if(history.length>1){history.back();return false}">← Back</a>
   <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-dropdown">
-    <a href="index.html">← Back to Home</a>
-    <a href="index.html#join">Apply</a>
+    <a href="index.html" onclick="if(history.length>1){history.back();return false}">← Back</a>
+    <a href="index.html#join">Join Us</a>
   </div>
 </nav>
 
@@ -162,7 +162,7 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
         <a href="#" class="ss-cta">Learn about joining →</a>
       </div>
       <div class="ss-stats">
-        <div class="ss-stat"><div class="n">$10K</div><div class="l">Individual commitment</div></div>
+        <div class="ss-stat"><div class="n">$10K+</div><div class="l">Individual commitment</div></div>
         <div class="ss-stat"><div class="n">$1M+</div><div class="l">Collective movement</div></div>
         <div class="ss-stat"><div class="n">25K</div><div class="l">Eligible women in SLC corridor</div></div>
         <div class="ss-stat"><div class="n">Now</div><div class="l">Founding members forming</div></div>
@@ -235,7 +235,7 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
         <span class="net-badge">Learn-by-Investing</span>
       </div>
       <div class="net-stats">
-        <div class="ns"><div class="ns-val">$10K</div><div class="ns-label">Min Commitment</div></div>
+        <div class="ns"><div class="ns-val">$10K+</div><div class="ns-label">Min Commitment</div></div>
         <div class="ns"><div class="ns-val">Multi</div><div class="ns-label">Themed Funds</div></div>
         <div class="ns"><div class="ns-val">Both</div><div class="ns-label">Learn + Invest</div></div>
       </div>

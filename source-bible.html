@@ -143,13 +143,13 @@ h1{font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(28px,4vw,40p
   <a class="sb-nav-logo" href="index.html">
     <span class="sb-nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
   </a>
-  <a href="index.html#data" class="sb-nav-back">&larr; Back to The Data</a>
+  <a href="index.html#data" class="sb-nav-back" onclick="if(history.length>1){history.back();return false}">&larr; Back</a>
   <button class="sb-nav-menu-btn" onclick="this.closest('.sb-nav').classList.toggle('nav-open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="sb-nav-dropdown">
-    <a href="index.html#data">← Back to The Data</a>
-    <a href="index.html#join">Apply</a>
+    <a href="index.html#data" onclick="if(history.length>1){history.back();return false}">← Back</a>
+    <a href="index.html#join">Join Us</a>
   </div>
 </div>
 <div class="wrap" style="padding:108px 40px 0">
@@ -957,7 +957,7 @@ h1{font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(28px,4vw,40p
   <div class="source-org">Hustle Fund</div>
   <div class="source-url"><a href="#" target="_blank">hustlefund.vc → Angel Investing for Beginners</a></div>
   <ul class="claims">
-    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Beginner-accessible framing of angel investing. May contain data on minimum check sizes, platforms, and trends that support Silver &amp; Salt's accessible entry point ($10K commitment).</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Beginner-accessible framing of angel investing. May contain data on minimum check sizes, platforms, and trends that support Silver &amp; Salt's accessible entry point ($10K+ commitment).</div></li>
   </ul>
   <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
 </div>
