@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Google Forms Header — Silver &amp; Salt Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 48px;
+  font-family: system-ui, sans-serif;
+}
+
+/* ── Google Forms Header (1600 x 400) ── */
+.header-box {
+  width: 1600px;
+  height: 400px;
+  background: #FBF8F2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+}
+
+.header-circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.header-circle .hc-left {
+  position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+  background: #2F3E34;
+}
+.header-circle .hc-right {
+  position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+  background: #1A8F7D;
+}
+.header-circle .hc-amp {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 48px; font-weight: 600; color: white;
+  z-index: 2; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.header-wordmark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700;
+  font-size: 56px;
+  color: #2F3E34;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.header-wordmark .hw-amp {
+  font-size: 0.8em;
+  font-weight: 400;
+  margin: 0 -0.08em;
+}
+
+.instructions {
+  max-width: 600px;
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  line-height: 1.6;
+  background: white;
+  padding: 20px 28px;
+  border-radius: 8px;
+}
+.instructions strong { color: #333; }
+</style>
+</head>
+<body>
+
+  <div>
+    <div class="header-box">
+      <div class="header-circle">
+        <div class="hc-left"></div>
+        <div class="hc-right"></div>
+        <div class="hc-amp">&</div>
+      </div>
+      <span class="header-wordmark">Silver <span class="hw-amp">&</span> Salt Capital</span>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <strong>Google Forms Header (1600 x 400px)</strong><br><br>
+    <strong>How to save:</strong> Right-click the header above → <strong>Inspect</strong>, then right-click the <code>.header-box</code> element → <strong>Capture node screenshot</strong>. This saves at exactly 1600 x 400px.<br><br>
+    Or use <strong>Cmd + Shift + 4</strong> to screenshot, but the node capture method gives a pixel-perfect result.<br><br>
+    Then upload to Google Forms: <strong>Palette icon → Choose image → Upload</strong>
+  </div>
+
+</body>
+</html>
