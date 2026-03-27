@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>S&S Capital Open Research</title>
+<title>Open Research — Silver &amp; Salt Capital</title>
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -44,16 +44,9 @@
 .btn.btn-dark-alt{color:var(--cream);background:var(--moss);padding:var(--space-3) var(--space-7);}
 .btn.btn-dark-alt:hover{background:var(--rust);}
 
-/* Mobile hamburger overrides */
-.nav-menu-btn span{display:block;width:20px;height:2px;background:var(--moss);border-radius:1px;transition:all .25s;}
-nav.nav-open .nav-menu-btn span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
-nav.nav-open .nav-menu-btn span:nth-child(2){opacity:0;}
-nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
-
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
   nav{padding:0 20px;}
-  .nav-back{display:none;}
   .hero{padding:100px 20px 48px;}
   .stats-bar{padding:16px 20px;gap:24px;flex-wrap:wrap;}
   .sb-stat .n{font-size:22px;}
@@ -70,19 +63,32 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
   .report-title{font-size:16px;}
 }
 </style>
+<meta property="og:title" content="Open Research — Silver &amp; Salt Capital">
+<meta property="og:description" content="AI-assisted research, verified against public data, published openly. Every claim traced to a source.">
+<meta property="og:type" content="article">
 </head>
 <body>
 <nav class="nav-standalone">
-  <a class="nav-logo" href="index.html">
-    <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
   </a>
-  <a href="index.html" class="nav-back" onclick="if(history.length>1){history.back();return false}">← Back</a>
-  <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="open-research.html" class="active">Research</a></li>
+  </ul>
+  <a href="index.html#join" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-dropdown">
-    <a href="index.html" onclick="if(history.length>1){history.back();return false}">← Back</a>
-    <a href="index.html#join">Join Us</a>
+    <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="open-research.html">Research</a>
+    <a href="index.html#join">Join</a>
   </div>
 </nav>
 
@@ -176,5 +182,53 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
     <a href="mailto:tori@letsplaymoney.com" class="btn">Contribute Data</a>
   </div>
 </div>
+
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="index.html#join">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#join">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="mailto:press@silverandsalt.capital">Press Contact</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
 </body>
 </html>

@@ -41,7 +41,6 @@ nav { z-index: 100; }
   font-family:'Satoshi',sans-serif;
   font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
   color:var(--pop);margin-bottom:20px;position:relative;z-index:2;
-  opacity:0;animation:up .5s ease .1s forwards;
 }
 .hero-eyebrow::before{display:none;}
 /* Thin decorative lines flanking the hero — subtle geometric accents */
@@ -58,28 +57,23 @@ nav { z-index: 100; }
   font-size:clamp(36px,5.5vw,72px);line-height:1.05;
   letter-spacing:-.03em;color:var(--moss);max-width:900px;
   position:relative;z-index:2;
-  opacity:0;animation:up .6s ease .2s forwards;
 }
 .hero h1 em{font-style:italic;color:var(--pop)}
 .hero-closer{
   font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;
   color:#4A5568;margin-top:16px;line-height:1.1;
   position:relative;z-index:2;
-  opacity:0;animation:up .5s ease .5s forwards;
 }
 .hero-line{
   font-size:18px;line-height:1.7;color:var(--sage);
   max-width:480px;margin-top:36px;position:relative;z-index:2;
-  opacity:0;animation:up .5s ease .55s forwards;
 }
 .hero-cta{
   display:flex;gap:16px;margin-top:40px;position:relative;z-index:2;
-  opacity:0;animation:up .45s ease .7s forwards;
 }
 .hero-source{
   font-family:'Satoshi',sans-serif;font-size:11px;color:var(--sage);
   margin-top:12px;letter-spacing:.02em;position:relative;z-index:2;
-  opacity:0;animation:up .4s ease .55s forwards;
   text-align:right;width:100%;max-width:900px;
 }
 .hero-source a{color:var(--sage);text-decoration:none;border-bottom:1px solid var(--border);transition:color .2s}
@@ -1860,7 +1854,7 @@ nav { z-index: 100; }
         <div class="f-sitemap-heading">About</div>
         <a class="f-sitemap-link" onclick="showPage('join')">Our Story</a>
         <a class="f-sitemap-link" onclick="showPage('about')">Community Commitments</a>
-        <a class="f-sitemap-link">Advisory Council</a>
+        <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
       </div>
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Research</div>
@@ -1872,7 +1866,7 @@ nav { z-index: 100; }
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Press</div>
         <a class="f-sitemap-link" href="mailto:press@silverandsalt.capital">Press Contact</a>
-        <a class="f-sitemap-link">Brand Assets</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
       </div>
     </div>
     <!-- Brand row -->
@@ -1987,7 +1981,7 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 
 // Initial page load — check URL hash for deep linking
 const hashPage = window.location.hash.replace('#', '');
-const validPages = ['home','thesis','how','join'];
+const validPages = ['home','thesis','how','join','about'];
 showPage(validPages.includes(hashPage) ? hashPage : 'home');
 
 /* ═══════════════════════════════════════

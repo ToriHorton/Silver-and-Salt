@@ -3,26 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Silver &amp; Salt Capital — How Many Accredited Women Investors Are in Utah?</title>
+<title>Accredited Women Investors in Utah — Silver &amp; Salt Capital</title>
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;
-  --sage:#7E8E84;--silver:#B0B0B0;
-  --accent:#1A8F7D;--accent2:#C4A47E;
-  --white:#FFFFFF;
-}
-body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:var(--moss-light);-webkit-font-smoothing:antialiased}
-
-nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(47,62,52,0.08);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{display:flex;align-items:center;text-decoration:none;color:var(--moss)}
-.nav-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
-.nav-name .amp{color:var(--rust)}
-.nav-back{font-family:'Satoshi',sans-serif;font-size:13px;font-weight:600;color:var(--moss);text-decoration:none;transition:color 0.2s}
-.nav-back:hover{color:var(--accent)}
-
+body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); }
 .hero{background:var(--moss);padding:80px 40px 64px;text-align:center;position:relative;overflow:hidden}
 .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(to top,var(--cream),transparent);pointer-events:none}
 .hero-eyebrow{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
@@ -121,21 +107,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(251,248,242,0
 .source-item a{color:var(--accent);text-decoration:none}
 .source-item a:hover{text-decoration:underline}
 
-/* Mobile hamburger menu */
-.nav-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:10px;width:44px;height:44px;flex-direction:column;justify-content:center;align-items:center;gap:5px;flex-shrink:0;}
-.nav-menu-btn span{display:block;width:20px;height:2px;background:var(--moss);border-radius:1px;transition:all .25s;}
-.nav-dropdown{display:none;position:absolute;top:60px;left:0;right:0;background:var(--cream);border-bottom:1px solid rgba(47,62,52,0.12);box-shadow:0 8px 24px rgba(47,62,52,0.08);padding:16px 20px;flex-direction:column;gap:12px;z-index:60;}
-.nav-dropdown a{font-size:14px;font-weight:600;color:var(--moss);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(47,62,52,0.06);}
-.nav-dropdown a:last-child{border-bottom:none;}
-nav.nav-open .nav-dropdown{display:flex;}
-nav.nav-open .nav-menu-btn span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
-nav.nav-open .nav-menu-btn span:nth-child(2){opacity:0;}
-nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
-
 @media(max-width:768px){
-  nav{padding:0 20px;}
-  .nav-back{display:none;}
-  .nav-menu-btn{display:flex;}
   .hero{padding:60px 20px 48px}
   .content,.big-stat-section{padding-left:20px;padding-right:20px}
   .big-stat-grid{grid-template-columns:1fr}
@@ -148,20 +120,33 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
   .content,.big-stat-section{padding-left:16px;padding-right:16px}
 }
 </style>
+<meta property="og:title" content="Accredited Women Investors in Utah — Silver &amp; Salt Capital">
+<meta property="og:description" content="How many accredited women investors are in Utah? An AI-assisted analysis estimates 92,000–103,000 across the Wasatch Front and Park City.">
+<meta property="og:type" content="article">
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="index.html">
-    <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
+<nav class="nav-standalone">
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
   </a>
-  <a href="index.html#data" class="nav-back" onclick="if(history.length>1){history.back();return false}">← Back</a>
-  <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="open-research.html">Research</a></li>
+  </ul>
+  <a href="index.html#join" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-dropdown">
-    <a href="index.html#data" onclick="if(history.length>1){history.back();return false}">← Back</a>
-    <a href="index.html#join">Join Us</a>
+    <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="open-research.html">Research</a>
+    <a href="index.html#join">Join</a>
   </div>
 </nav>
 
@@ -443,6 +428,54 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
   </div>
 
 </div>
+
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="index.html#join">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#join">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="mailto:press@silverandsalt.capital">Press Contact</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
 
 </body>
 </html>

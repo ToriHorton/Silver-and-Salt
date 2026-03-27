@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Women's Funding Landscape - Silver &amp; Salt Capital</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>National Landscape Map — Silver &amp; Salt Capital</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
   :root {
     --cream: #FBF8F2;
@@ -18,26 +20,6 @@
     --accent-soft: rgba(140,134,255,0.10);
     --border: rgba(47,62,52,0.08);
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--cream);
-    color: var(--moss);
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(251,248,242,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 48px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
-  .nav-logo { display: flex; align-items: center; text-decoration: none; color: var(--moss); font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; }
-  .nav-logo .amp { color: var(--pop); }
-  .nav-back { font-size: 12px; font-weight: 700; color: var(--sage); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; }
-  .nav-back:hover { color: var(--pop); }
-  .nav-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
-  .nav-menu-btn svg { width: 22px; height: 22px; }
-  .nav-dropdown { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid var(--border); padding: 16px 48px; }
-  nav.nav-open .nav-dropdown { display: block; }
-  .nav-dropdown a { display: block; padding: 10px 0; font-size: 14px; color: var(--moss); text-decoration: none; font-weight: 500; }
 
   /* HERO */
   .hero { background: var(--moss); padding: 100px 40px 40px; text-align: center; }
@@ -54,12 +36,12 @@
   /* FILTER BAR */
   .filter-bar { background: var(--sand); border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
   .filter-label { font-size: 12px; font-weight: 600; color: var(--sage); letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px; }
-  .filter-pill { padding: 7px 14px; border-radius: 100px; font-size: 13px; font-weight: 500; border: 1px solid rgba(47,62,52,0.12); background: white; color: var(--moss-light); cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+  .filter-pill { padding: 7px 14px; border-radius: 100px; font-size: 13px; font-weight: 500; border: 1px solid rgba(47,62,52,0.12); background: white; color: var(--moss-light); cursor: pointer; transition: all 0.2s; font-family: 'Satoshi', sans-serif; }
   .filter-pill:hover { border-color: var(--pop); color: var(--pop); }
   .filter-pill.active { background: var(--moss); color: white; border-color: var(--moss); }
   .filter-pill .count { font-size: 11px; color: var(--sage); margin-left: 4px; }
   .filter-pill.active .count { color: rgba(255,255,255,0.6); }
-  .filter-search { margin-left: auto; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(47,62,52,0.12); background: white; font-size: 13px; color: var(--moss); width: 220px; font-family: 'Inter', sans-serif; }
+  .filter-search { margin-left: auto; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(47,62,52,0.12); background: white; font-size: 13px; color: var(--moss); width: 220px; font-family: 'Satoshi', sans-serif; }
   .filter-search::placeholder { color: var(--sage); }
 
   /* MAIN LAYOUT */
@@ -125,9 +107,6 @@
 
   /* MOBILE */
   @media (max-width: 768px) {
-    nav { padding: 0 20px; }
-    .nav-back { display: none; }
-    .nav-menu-btn { display: block; }
     .hero { padding: 80px 20px 30px; }
     .hero h1 { font-size: 28px; }
     .hero p { font-size: 14px; }
@@ -140,23 +119,38 @@
     .main-content { display: block; }
     .map-panel { display: none; }
     .mobile-state-select { display: block !important; padding: 16px 20px; border-bottom: 1px solid var(--border); }
-    .mobile-dropdown { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(47,62,52,0.12); font-size: 14px; font-family: 'Inter', sans-serif; font-weight: 500; color: var(--moss); background: white; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237E8E84' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+    .mobile-dropdown { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(47,62,52,0.12); font-size: 14px; font-family: 'Satoshi', sans-serif; font-weight: 500; color: var(--moss); background: white; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237E8E84' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
     .sidebar { border-left: none; max-height: none; }
   }
   .mobile-state-select { display: none; }
 </style>
+<meta property="og:title" content="National Landscape Map — Silver &amp; Salt Capital">
+<meta property="og:description" content="An interactive directory of 181 angel groups, syndicates, and venture funds supporting women founders across all 50 states.">
+<meta property="og:type" content="article">
 </head>
 <body>
 
-<!-- NAV -->
-<nav onclick="if(event.target.closest('.nav-menu-btn'))this.classList.toggle('nav-open')">
-  <a href="index.html" class="nav-logo">Silver <span class="amp">&amp;</span> Salt</a>
-  <a href="open-research.html" class="nav-back" onclick="if(history.length>1){history.back();return false}">&larr; Back</a>
-  <button class="nav-menu-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+<nav class="nav-standalone">
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="open-research.html">Research</a></li>
+  </ul>
+  <a href="index.html#join" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-dropdown">
     <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
     <a href="open-research.html">Research</a>
-    <a href="networks.html">Networks</a>
+    <a href="index.html#join">Join</a>
   </div>
 </nav>
 
@@ -525,5 +519,53 @@ function initCounts() {
 initCounts();
 refresh();
 </script>
+
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="index.html#join">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#join">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="mailto:press@silverandsalt.capital">Press Contact</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
 </body>
 </html>

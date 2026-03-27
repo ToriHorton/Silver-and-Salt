@@ -709,29 +709,22 @@ footer::after {
 }
 
 /* ─── 9. ANIMATIONS ─────────────────────────────────────────── */
+/* Fade/reveal animations removed from brand system.
+   Classes kept as no-ops so existing markup doesn't break. */
 @keyframes up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 1; transform: none; }
+  to { opacity: 1; transform: none; }
 }
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 1; transform: none; }
+  to { opacity: 1; transform: none; }
 }
-.r {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity .5s ease, transform .5s ease;
-}
-.r.v { opacity: 1; transform: translateY(0); }
-.rd1 { transition-delay: .07s; }
-.rd2 { transition-delay: .14s; }
-.rd3 { transition-delay: .21s; }
+.r { opacity: 1; transform: none; }
+.r.v { opacity: 1; transform: none; }
+.rd1, .rd2, .rd3 { transition-delay: 0s; }
 
-.fade { opacity: 0; animation: fadeUp 0.6s ease forwards; }
-.fade-d1 { animation-delay: 0.1s; }
-.fade-d2 { animation-delay: 0.2s; }
-.fade-d3 { animation-delay: 0.3s; }
-.fade-d4 { animation-delay: 0.4s; }
+.fade { opacity: 1; animation: none; }
+.fade-d1, .fade-d2, .fade-d3, .fade-d4 { animation-delay: 0s; }
 
 /* ─── 10. RESPONSIVE — Shared breakpoints ───────────────────── */
 @media(max-width: 900px) {

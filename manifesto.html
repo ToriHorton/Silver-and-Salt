@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Founding Vision — Silver & Salt Capital</title>
+<title>Founding Vision — Silver &amp; Salt Capital</title>
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -602,12 +602,6 @@
     background: rgba(47,62,52,0.1);
   }
 
-  /* Mobile hamburger overrides */
-  .nav-menu-btn span{display:block;width:20px;height:2px;background:var(--moss);border-radius:1px;transition:all .25s;}
-  nav.nav-open .nav-menu-btn span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
-  nav.nav-open .nav-menu-btn span:nth-child(2){opacity:0;}
-  nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
-
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 0 20px; }
@@ -634,30 +628,34 @@
     .footnotes { padding: 40px 16px; }
   }
 </style>
+<meta property="og:title" content="Founding Vision — Silver &amp; Salt Capital">
+<meta property="og:description" content="Silver &amp; Salt Capital is a coordinated community of individual investors who learn together, evaluate together, and invest together.">
+<meta property="og:type" content="article">
 </head>
 <body class="has-grain">
 
 <!-- ══ NAV ══ -->
 <nav class="nav-standalone">
-  <a class="nav-logo" href="index.html">
-    <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
   </a>
   <ul class="nav-links">
-    <li><a href="opportunity.html">The Opportunity</a></li>
-    <li><a href="index.html">The Data</a></li>
-    <li><a href="networks.html">The Networks</a></li>
-    <li><a href="open-research.html">Open Research</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="open-research.html">Research</a></li>
   </ul>
-  <a href="index.html#join" class="nav-cta">Join Us</a>
-  <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+  <a href="index.html#join" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-dropdown">
-    <a href="index.html" onclick="if(history.length>1){history.back();return false}">← Back</a>
-    <a href="opportunity.html">The Opportunity</a>
-    <a href="networks.html">The Networks</a>
-    <a href="open-research.html">Open Research</a>
-    <a href="index.html#join">Join Us</a>
+    <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="open-research.html">Research</a>
+    <a href="index.html#join">Join</a>
   </div>
 </nav>
 
@@ -705,7 +703,7 @@
     <div class="data-big-num">~6<span>%</span></div>
     <div>
       <p class="data-text">An AI-assisted analysis of publicly available data estimates that roughly <strong>6% of Utah's $509.6 million in 2025 pre-seed and seed capital</strong> reached startups with at least one female founder.<span class="ref">3</span></p>
-      <a href="#" class="data-link">See the full research and data →</a>
+      <a href="open-research.html" class="data-link">See the full research and data →</a>
     </div>
   </div>
 </section>
@@ -749,7 +747,7 @@
   <div class="who-grid">
     <div class="who-left">
       <h2 class="section-heading">Don't you know?<br><em style="font-style:italic">I'm an angel.</em></h2>
-      <a href="#" class="who-link">See the full landscape of women's angel collectives →</a>
+      <a href="landscape-map.html" class="who-link">See the full landscape of women's angel collectives →</a>
     </div>
     <div>
       <p class="body-text">Silver & Salt Capital is a coordinated community of individual investors who learn together, evaluate opportunities together, and invest together — while maintaining individual choice.</p>
@@ -814,29 +812,77 @@
   </div>
 
   <p class="body-text">The capital is here. The founders are here. Utah has 129,429 women-owned businesses<span class="ref">5</span> and an estimated 25,000 accredited women investors in the Salt Lake–Park City corridor. The connection infrastructure is what's been missing.</p>
-  <a href="#" class="why-link" style="display:inline-flex;margin-top:20px">Check out our data resources to see the full business case →</a>
+  <a href="open-research.html" class="why-link" style="display:inline-flex;margin-top:20px">Check out our data resources to see the full business case →</a>
 </section>
 
 <!-- ══ CTA ══ -->
 <div class="cta-section" id="join">
   <h2 class="cta-heading">Join us.</h2>
   <p class="cta-text">Silver & Salt Capital is forming now. We're looking for founding members who believe that collaboration compounds faster than competition.</p>
-  <a href="#" class="cta-btn">Learn more about becoming a Founding Member</a>
+  <a href="index.html#join" class="cta-btn">Learn more about becoming a Founding Member</a>
 </div>
 
 <!-- ══ SOURCES ══ -->
 <div class="page-sources">
   <div class="page-sources-heading">Sources &amp; methodology</div>
   <ul class="page-sources-list">
-    <li><span class="claim">Utah is one of the best places to build a business</span> <span class="source">— Utah business environment ranking</span></li>
+    <li><span class="claim">Utah is one of the best places to build a business</span> <span class="source">— <a href="utah-funding-research.html">Utah business environment ranking</a></span></li>
     <li><span class="claim">One of the hardest places to be a woman building one</span> <span class="source">— Utah Women &amp; Leadership Project</span></li>
-    <li><span class="claim">~6% of Utah's $509.6M in pre-seed/seed capital reached women founders</span> <span class="source">— S&amp;S Capital Research, PitchBook</span></li>
+    <li><span class="claim">~6% of Utah's $509.6M in pre-seed/seed capital reached women founders</span> <span class="source">— <a href="utah-funding-research.html">S&amp;S Capital Research, PitchBook</a></span></li>
     <li><span class="claim">Golden Seeds: 290 members, $190M+ invested over 20 years</span> <span class="source">— Golden Seeds public reporting</span></li>
     <li><span class="claim">The JumpFund: 100+ investors, 19× co-investment leverage</span> <span class="source">— The JumpFund public reporting</span></li>
     <li><span class="claim">129,429 women-owned businesses in Utah</span> <span class="source">— Small Business Administration</span></li>
   </ul>
   <a href="open-research.html" class="page-sources-link">Full research &amp; methodology →</a>
 </div>
+
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="index.html#join">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#join">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="mailto:press@silverandsalt.capital">Press Contact</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
 
 </body>
 </html>
