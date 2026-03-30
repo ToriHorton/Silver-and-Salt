@@ -246,6 +246,101 @@ nav { z-index: 100; }
 .heritage strong{color:var(--highlight);font-weight:700}
 
 /* ═══════════════════════════════════════
+   OUR STORY PAGE
+   ═══════════════════════════════════════ */
+#page-story .story-hero{background:var(--moss);padding:120px 48px 80px;position:relative;overflow:hidden}
+#page-story .story-hero .wrap{display:flex;align-items:center;gap:64px}
+#page-story .story-hero .story-hero-text{flex:1}
+#page-story .story-hero .label{color:rgba(251,248,242,0.5)}
+#page-story .story-hero h2{
+  font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(32px,5vw,52px);
+  color:var(--cream);line-height:1.15;max-width:680px;margin-bottom:24px;font-style:italic
+}
+#page-story .story-hero h2 em{font-style:normal;color:var(--pop)}
+#page-story .story-hero p.story-intro{font-size:17px;line-height:1.8;color:rgba(251,248,242,0.6);max-width:560px;font-weight:300}
+#page-story .story-hero-photo{flex-shrink:0;position:relative;width:240px;height:240px}
+#page-story .story-hero-photo::before{
+  content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(251,248,242,0.15);
+  transform:rotate(-6deg)
+}
+#page-story .story-hero-photo::after{
+  content:'&';position:absolute;bottom:-10px;right:-16px;
+  font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--pop);
+  line-height:1;opacity:0.5
+}
+#page-story .story-hero-photo img{width:240px;height:240px;border-radius:50%;object-fit:cover;display:block}
+#page-story .story-hero-name{font-family:'Satoshi',sans-serif;font-size:13px;font-weight:700;color:var(--cream);letter-spacing:.08em;text-transform:uppercase;margin-top:16px;text-align:center}
+#page-story .story-hero-title{font-family:'Satoshi',sans-serif;font-size:13px;font-weight:400;color:rgba(251,248,242,0.5);margin-top:2px;text-align:center}
+
+#page-story .story-narrative{padding:72px 48px}
+#page-story .story-grid{max-width:760px;margin:0 auto}
+#page-story .story-label-col{position:sticky;top:100px}
+#page-story .story-photo-wrap{position:relative;width:180px;height:180px;margin-bottom:24px}
+#page-story .story-photo-wrap::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--pop);opacity:0.4;
+  transform:rotate(-6deg)
+}
+#page-story .story-photo-wrap::after{
+  content:'&';position:absolute;bottom:-8px;right:-12px;
+  font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--pop);
+  line-height:1;opacity:0.5
+}
+#page-story .story-photo{width:180px;height:180px;border-radius:50%;object-fit:cover;display:block}
+#page-story .story-label{
+  font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;
+  font-weight:300;color:var(--moss);line-height:1.3
+}
+#page-story .story-founder-name{font-family:'Satoshi',sans-serif;font-size:13px;font-weight:700;color:var(--moss);letter-spacing:.08em;text-transform:uppercase;margin-top:12px}
+#page-story .story-founder-title{font-family:'Satoshi',sans-serif;font-size:13px;font-weight:400;color:var(--sage);margin-top:2px}
+#page-story .story-rule{width:40px;height:2px;background:var(--pop);margin-top:16px}
+#page-story .story-text{font-size:17px;line-height:1.9;color:var(--moss-light);font-weight:300}
+#page-story .story-text + .story-text{margin-top:20px}
+#page-story .story-pullquote{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(22px,2.5vw,28px);font-weight:300;
+  font-style:italic;color:var(--moss);line-height:1.4;
+  border-left:3px solid var(--pop);padding:8px 0 8px 24px;margin:32px 0;max-width:680px
+}
+#page-story .story-pullquote strong{font-weight:600;color:var(--pop);font-style:normal}
+
+#page-story .story-cta{background:var(--pop);padding:100px 48px;text-align:center;position:relative;overflow:hidden}
+#page-story .story-cta::before{
+  content:'&';position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-size:clamp(160px,25vw,320px);font-weight:300;
+  color:rgba(255,255,255,0.06);line-height:1;pointer-events:none
+}
+#page-story .story-cta h2{
+  font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(28px,4vw,44px);
+  color:white;line-height:1.2;margin-bottom:16px;position:relative;z-index:1
+}
+#page-story .story-cta h2 em{font-style:italic;color:rgba(255,255,255,0.7)}
+#page-story .story-cta p{font-size:16px;color:rgba(255,255,255,0.8);max-width:480px;margin:0 auto 32px;line-height:1.7;font-weight:300}
+#page-story .story-cta-btn{
+  display:inline-block;background:white;color:var(--moss);font-family:'Satoshi',sans-serif;font-weight:700;
+  font-size:14px;padding:14px 36px;border-radius:8px;text-decoration:none;position:relative;z-index:1;
+  transition:background 0.2s,transform 0.2s
+}
+#page-story .story-cta-btn:hover{background:var(--cream);transform:translateY(-1px)}
+
+@media(max-width:768px){
+  #page-story .story-hero{padding:120px 24px 64px}
+  #page-story .story-hero .wrap{flex-direction:column;gap:40px;align-items:flex-start}
+  #page-story .story-hero-photo{width:160px;height:160px}
+  #page-story .story-hero-photo img{width:160px;height:160px}
+  #page-story .story-narrative{padding:56px 24px}
+  #page-story .story-grid{grid-template-columns:1fr;gap:32px}
+  #page-story .story-label-col{position:static}
+  #page-story .story-cta{padding:72px 24px}
+}
+@media(max-width:480px){
+  #page-story .story-hero{padding:112px 16px 48px}
+  #page-story .story-hero h2{font-size:clamp(28px,7vw,36px)}
+  #page-story .story-hero-photo{width:120px;height:120px}
+  #page-story .story-hero-photo img{width:120px;height:120px}
+  #page-story .story-narrative{padding:40px 16px}
+  #page-story .story-cta{padding:56px 16px}
+}
+
+/* ═══════════════════════════════════════
    JOIN PAGE
    ═══════════════════════════════════════ */
 /* Invitation hero */
@@ -940,6 +1035,7 @@ nav { z-index: 100; }
       <button class="nav-tab" data-page="home">Home</button>
       <button class="nav-tab" data-page="thesis">The Thesis</button>
       <button class="nav-tab" data-page="how">How It Works</button>
+      <button class="nav-tab" data-page="story">Our Story</button>
       <button class="nav-tab" data-page="join">Join</button>
     </div>
   </div>
@@ -1721,7 +1817,56 @@ nav { z-index: 100; }
 
 
 <!-- ═══════════════════════════════════════
-     PAGE 5 — JOIN (Lime & Charcoal)
+     PAGE 5 — OUR STORY (Rust & Lavender)
+     ═══════════════════════════════════════ -->
+<div class="page" id="page-story" data-palette="rust">
+
+  <!-- Hero -->
+  <section class="story-hero">
+    <div class="wrap">
+      <div class="story-hero-text r">
+        <p class="label">Our Story</p>
+        <h2>Utah has everything it needs to be the <em>best state in the nation</em> for women founders.</h2>
+      </div>
+      <div class="story-hero-photo r">
+        <img src="members/tori-horton.jpg" alt="Tori Horton, Founder">
+        <div class="story-hero-name">Tori Horton</div>
+        <div class="story-hero-title">Founder</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Narrative -->
+  <section class="story-narrative s-cream">
+    <div class="story-grid">
+      <div>
+        <p class="story-text r">Something remarkable has been happening across the country over the last few years. Groups of women — angel investors and syndicates — have been pooling small-dollar checks to fund women founders. And it's working. Real returns. Real companies. Real change in who gets to build the future.</p>
+        <p class="story-text r">The more I researched it, the more one thought kept nagging at me: <em><strong>someone in Utah should do this.</strong></em> Friends, I think that someone is all of us.</p>
+        <p class="story-text r">I'm starting Silver <span class="brand-amp">&amp;</span> Salt Capital here because Utah is my home. I grew up in Holladay, graduated from BYU, and have lived between the SF Bay Area and Salt Lake City for twenty years. This is where I'll retire. And as a woman in this state, I don't just see the problem — I see the opportunity, from the inside.</p>
+        <p class="story-text r">There is a virtuous cycle waiting to happen here. One that is good for Utah women founders and profitable for Utah women investors. If we put our pioneer "shoulder to the wheel," we can build a flywheel of new business and smart investment that takes Utah from the worst state for women's equity to the best place in the country to be a woman founder. And if we do this together, we can make the change our daughters deserve — so that when they graduate from college, they step into a state that was built for them to lead.</p>
+        <p class="story-text r">Here's the part that surprised me most: it doesn't take as much as you think. For $10,000 a year — a family vacation, a couple of handbags — you become part of a collective that can completely reshape who gets funded in Utah. That's not charity. That's an investment portfolio with the kind of deal flow you can't access on your own.</p>
+
+        <div class="story-pullquote r">If we pick up our pens, we have all the power we need. <strong>The capital is already ours.</strong></div>
+
+        <p class="story-text r">This isn't a theory. This model is already working across the country — generating real investment returns for members while fundamentally changing who gets funded. Utah has 129,000+ women-owned businesses and over 100,000 accredited women investors. The founders are here. The capital is here. All that's been missing is the bridge that helps women realize they have the power to write checks and change the landscape by connecting with women who are building businesses capable of more than they can currently dream.</p>
+        <p class="story-text r">I was born for this moment. <strong>And honestly? I think you were, too.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="story-cta">
+    <div class="r">
+      <h2>We're not waiting anymore.</h2>
+      <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="story-cta-btn">Join Us</a>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 6 — JOIN (Lime & Charcoal)
      ═══════════════════════════════════════ -->
 <div class="page" id="page-join" data-palette="lime">
 
@@ -1929,7 +2074,7 @@ nav { z-index: 100; }
       </div>
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">About</div>
-        <a class="f-sitemap-link" onclick="showPage('join')">Our Story</a>
+        <a class="f-sitemap-link" onclick="showPage('story')">Our Story</a>
         <a class="f-sitemap-link" onclick="showPage('about')">Community Commitments</a>
         <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
       </div>
@@ -2058,7 +2203,7 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 
 // Initial page load — check URL hash for deep linking
 const hashPage = window.location.hash.replace('#', '');
-const validPages = ['home','thesis','how','join','about'];
+const validPages = ['home','thesis','how','story','join','about'];
 showPage(validPages.includes(hashPage) ? hashPage : 'home');
 
 /* ═══════════════════════════════════════
