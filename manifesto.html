@@ -39,6 +39,38 @@
   .vic-section {
     padding: 100px 48px;
     background: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .vic-section::before {
+    content: '&';
+    position: absolute;
+    bottom: -30px; left: -10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(160px, 20vw, 300px);
+    font-weight: 300;
+    color: rgba(47,62,52,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .vic-header {
+    background: linear-gradient(135deg, var(--pop) 0%, #2D7A5E 50%, #3D6B1F 100%);
+    padding: 48px 48px;
+    text-align: center;
+  }
+  .vic-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(32px, 4.5vw, 52px);
+    color: white;
+    line-height: 1.15;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .vic-header .label {
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 16px;
   }
   .vic-layout {
     display: grid;
@@ -72,11 +104,16 @@
   .vic-dot {
     display: inline-flex; align-items: center; justify-content: center;
     width: 22px; height: 22px; border-radius: 50%;
-    background: var(--pop); color: white;
+    color: white;
     font-family: 'Satoshi', sans-serif; font-weight: 800; font-size: 10px;
     margin-bottom: 4px;
   }
-  .vic-node-entry .vic-dot { background: #3D6B1F; }
+  .vic-dot-1 { background: var(--pop); }
+  .vic-dot-2 { background: #1E8A6A; }
+  .vic-dot-3 { background: #2D7A5E; }
+  .vic-dot-4 { background: #4A7E3A; }
+  .vic-dot-5 { background: #578B2E; }
+  .vic-dot-6 { background: #3D6B1F; }
   .vic-center-logo {
     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
     width: 80px; height: 80px; border-radius: 50%; overflow: hidden;
@@ -386,7 +423,7 @@
   /* ── CTA ── */
   .cta-section {
     background: var(--moss);
-    padding: 120px 48px;
+    padding: 80px 48px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -405,11 +442,11 @@
   }
   .cta-heading {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(48px, 7vw, 96px);
+    font-size: clamp(28px, 4vw, 44px);
     font-weight: 300;
     font-style: italic;
     color: var(--cream);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     position: relative;
   }
   .cta-text {
@@ -437,7 +474,7 @@
     position: relative;
     transition: background 0.2s, color 0.2s;
   }
-  .cta-btn:hover { background: var(--rust); color: white; }
+  .cta-btn:hover { background: var(--pop); color: white; }
 
   /* ── FOOTNOTES ── */
   .footnotes {
@@ -492,6 +529,7 @@
   @media (max-width: 768px) {
     nav { padding: 0 20px; }
     section { padding: 64px 24px; }
+    .vic-header { padding: 100px 24px 40px; }
     .vic-section { padding: 64px 24px; }
     .vic-layout { grid-template-columns: 1fr; gap: 48px; }
     .vic-text { max-width: none; }
@@ -552,37 +590,46 @@
 </nav>
 
 <!-- ══ REGENERATIVE CAPITAL ══ -->
-<section class="vic-section" style="padding-top:120px">
+<div class="vic-header" style="padding-top:120px">
+  <p class="label">Regenerative Capital</p>
+  <h2>We are creating <em style="font-style:normal;color:rgba(255,255,255,0.6)">regenerative capital</em> in Utah.</h2>
+</div>
+<section class="vic-section">
   <div class="r vic-layout">
     <div class="vic-text">
-      <p class="label" style="color:var(--pop)">Regenerative Capital</p>
-      <p class="vic-body">When one investor writes a check, a founder gets funded. When a hundred do it together — sourcing, vetting, mentoring, connecting — <strong>the entire ecosystem shifts.</strong></p>
-      <p class="vic-body">Earmark capital for women founders and more women will build companies. More companies mean better deal flow. Better deal flow means better returns. <strong>The cycle accelerates.</strong></p>
+      <p class="vic-body">When one investor writes a check, a founder gets funded. When a hundred do it together — sourcing, vetting, mentoring, connecting — <strong style="color:#1A8F7D">the entire ecosystem shifts.</strong></p>
+      <p class="vic-body">Earmark capital for women founders and more women will build companies. More companies mean better deal flow. Better deal flow means better returns. <strong style="color:#7CB83F">The cycle accelerates.</strong></p>
       <p class="vic-body">Our power is in the number of investors now working in parallel to meaningfully fund the overall startup ecosystem. This is not charity. It's a market correction.</p>
-      <p class="vic-body"><strong>Every member is building the system our daughters will inherit.</strong></p>
+      <p class="vic-body"><strong style="color:#3D6B1F">Every member is building the system our daughters will inherit.</strong></p>
     </div>
     <div class="vic-wheel-wrap">
       <div class="vic-wheel">
         <svg viewBox="0 0 580 580">
           <defs>
             <marker id="vicArr" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto">
-              <polygon points="0 0,12 5,0 10" fill="#7CB83F"/>
+              <polygon points="0 0,12 5,0 10" fill="#4A7E3A"/>
             </marker>
           </defs>
-          <circle cx="290" cy="290" r="175" fill="none" stroke="rgba(124,184,63,0.1)" stroke-width="2"/>
-          <path d="M 345 118 A 175 175 0 0 1 455 205" fill="none" stroke="#7CB83F" stroke-width="2" opacity="0.3" marker-end="url(#vicArr)"/>
-          <path d="M 462 240 A 175 175 0 0 1 432 395" fill="none" stroke="#7CB83F" stroke-width="2.5" opacity="0.38" marker-end="url(#vicArr)"/>
-          <path d="M 405 425 A 175 175 0 0 1 290 465" fill="none" stroke="#7CB83F" stroke-width="3" opacity="0.45" marker-end="url(#vicArr)"/>
-          <path d="M 235 462 A 175 175 0 0 1 135 395" fill="none" stroke="#7CB83F" stroke-width="3.5" opacity="0.52" marker-end="url(#vicArr)"/>
-          <path d="M 118 355 A 175 175 0 0 1 118 220" fill="none" stroke="#7CB83F" stroke-width="4" opacity="0.6" marker-end="url(#vicArr)"/>
-          <path d="M 128 185 A 175 175 0 0 1 240 120" fill="none" stroke="#7CB83F" stroke-width="5" opacity="0.75" marker-end="url(#vicArr)"/>
+          <circle cx="290" cy="290" r="175" fill="none" stroke="rgba(47,122,94,0.1)" stroke-width="2"/>
+          <!-- 1→2: teal -->
+          <path d="M 345 118 A 175 175 0 0 1 455 205" fill="none" stroke="#1A8F7D" stroke-width="2.5" opacity="0.6" marker-end="url(#vicArr)"/>
+          <!-- 2→3 -->
+          <path d="M 462 240 A 175 175 0 0 1 432 395" fill="none" stroke="#1E8A6A" stroke-width="2.5" opacity="0.65" marker-end="url(#vicArr)"/>
+          <!-- 3→4 -->
+          <path d="M 405 425 A 175 175 0 0 1 290 465" fill="none" stroke="#2D7A5E" stroke-width="3" opacity="0.7" marker-end="url(#vicArr)"/>
+          <!-- 4→5 -->
+          <path d="M 235 462 A 175 175 0 0 1 135 395" fill="none" stroke="#4A7E3A" stroke-width="3.5" opacity="0.7" marker-end="url(#vicArr)"/>
+          <!-- 5→6 -->
+          <path d="M 118 355 A 175 175 0 0 1 118 220" fill="none" stroke="#578B2E" stroke-width="4" opacity="0.75" marker-end="url(#vicArr)"/>
+          <!-- 6→1: dark forest green back to teal -->
+          <path d="M 128 185 A 175 175 0 0 1 240 120" fill="none" stroke="#3D6B1F" stroke-width="5" opacity="0.8" marker-end="url(#vicArr)"/>
         </svg>
-        <div class="vic-node vic-node-entry" style="left:50%;top:4%"><div class="vic-dot">1</div><br>S&amp;S Capital<br>sources &amp; vets deals</div>
-        <div class="vic-node" style="left:85%;top:22%"><div class="vic-dot">2</div><br>S&amp;S Capital<br>writes checks</div>
-        <div class="vic-node" style="left:85%;top:72%"><div class="vic-dot">3</div><br>More startups<br>get funded</div>
-        <div class="vic-node" style="left:50%;top:94%"><div class="vic-dot">4</div><br>More companies<br>thrive</div>
-        <div class="vic-node" style="left:15%;top:72%"><div class="vic-dot">5</div><br>Investors<br>see returns</div>
-        <div class="vic-node" style="left:15%;top:22%"><div class="vic-dot">6</div><br>More investors<br>join S&amp;S Capital</div>
+        <div class="vic-node vic-node-entry" style="left:50%;top:4%"><div class="vic-dot vic-dot-1">1</div><br>S&amp;S Capital<br>sources &amp; vets deals</div>
+        <div class="vic-node" style="left:85%;top:22%"><div class="vic-dot vic-dot-2">2</div><br>S&amp;S Capital members<br>individually write checks</div>
+        <div class="vic-node" style="left:85%;top:72%"><div class="vic-dot vic-dot-3">3</div><br>More startups<br>get funded</div>
+        <div class="vic-node" style="left:50%;top:94%"><div class="vic-dot vic-dot-4">4</div><br>More companies<br>thrive</div>
+        <div class="vic-node" style="left:15%;top:72%"><div class="vic-dot vic-dot-5">5</div><br>Investors<br>see returns</div>
+        <div class="vic-node" style="left:15%;top:22%"><div class="vic-dot vic-dot-6">6</div><br>More investors<br>join S&amp;S Capital</div>
         <div class="vic-center-logo">
           <div class="vic-cl-left"></div>
           <div class="vic-cl-right"></div>
@@ -594,132 +641,43 @@
 </section>
 
 <!-- ══ WHY SILVER & SALT ══ -->
-<section>
-  <span class="eyebrow">Why Silver & Salt?</span>
-  <h2 class="section-heading">This is the place and<br>these are our resources!</h2>
-  <p class="body-text">Utah is one of the best places in America to build a business<span class="ref">1</span> — and still one of the hardest places to be a woman building one.<span class="ref">2</span></p>
-  <p class="body-text" style="margin-top:20px">The problem is not talent. The problem is not ambition. The problem is participation and access to growth capital. This group unites women in the Utah region with a shared purpose: to help new women founders launch and lead successful businesses in our community.</p>
-  <p class="body-text" style="margin-top:20px">Capital exists here. Experience exists here. Influence exists here. We know that despite all of this, many women remain outside the networks where investment decisions are made.</p>
-  <p class="body-text" style="margin-top:20px">Silver & Salt Capital represent two minerals that shaped the Park City and Wasatch region. At times, they've both been more valuable than gold, and they represent the resources we have to shape a new landscape for women founders today.</p>
-  <p class="body-text" style="margin-top:20px">And yes, if we have a few silver hairs or are just a little more salty than one might expect, it's all a part of what makes our Utah community so strong and vibrant.</p>
-
-  <!-- Data callout -->
-  <div class="data-callout">
-    <div class="data-big-num">~6<span>%</span></div>
-    <div>
-      <p class="data-text">An AI-assisted analysis of publicly available data estimates that roughly <strong>6% of Utah's $509.6 million in 2025 pre-seed and seed capital</strong> reached startups with at least one female founder.<span class="ref">3</span></p>
-      <a href="open-research.html" class="data-link">See the full research and data →</a>
-    </div>
+<section style="background:var(--moss);padding:96px 48px;position:relative;overflow:hidden">
+  <div style="position:absolute;bottom:-30px;right:-10px;font-family:'Cormorant Garamond',serif;font-size:clamp(160px,20vw,300px);font-weight:300;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none">&amp;</div>
+  <div style="max-width:680px;margin:0 auto;position:relative;z-index:1">
+    <span class="eyebrow" style="color:var(--pop)">Why Silver & Salt?</span>
+    <h2 class="section-heading" style="color:var(--cream)">This is the place and<br>these are our resources!</h2>
+    <p class="body-text" style="color:rgba(251,248,242,0.75)">Utah is one of the best places in America to build a business<span class="ref" style="color:rgba(251,248,242,0.4)">1</span> — and still one of the hardest places to be a woman building one.<span class="ref" style="color:rgba(251,248,242,0.4)">2</span></p>
+    <p class="body-text" style="margin-top:20px;color:rgba(251,248,242,0.75)">The problem is not talent. The problem is not ambition. The problem is participation and access to growth capital. This group unites women in the Utah region with a shared purpose: to help new women founders launch and lead successful businesses in our community.</p>
+    <p class="body-text" style="margin-top:20px;color:rgba(251,248,242,0.75)">Capital exists here. Experience exists here. Influence exists here. We know that despite all of this, many women remain outside the networks where investment decisions are made.</p>
+    <p class="body-text" style="margin-top:20px;color:rgba(251,248,242,0.75)">Silver & Salt Capital represent two minerals that shaped the Park City and Wasatch region. At times, they've both been more valuable than gold, and they represent the resources we have to shape a new landscape for women founders today.</p>
+    <p class="body-text" style="margin-top:20px;color:rgba(251,248,242,0.75)">And yes, if we have a few silver hairs or are just a little more salty than one might expect, it's all a part of what makes our Utah community so strong and vibrant.</p>
   </div>
 </section>
-
-<!-- ══ OUR COMMITMENTS ══ -->
-<div class="commitments-wrap">
-  <div class="commitments-inner">
-    <p class="label">Our Commitments</p>
-    <div class="commitments-declaration">Every woman in Utah deserves to feel <em><strong><u>she is enough.</u></strong></em></div>
-    <p class="commitments-body">We are a group of women who commit to standing as fierce advocates for one another. We believe women belong in every room where financial decisions are made — and we are building in proximity with one another and the communities we serve.</p>
-    <div class="m-commitment">
-      <div class="m-commitment-num">01</div>
-      <div class="m-commitment-text"><strong>We show up — with capital, with knowledge, with relationships, with visibility, with advocacy.</strong></div>
-    </div>
-    <div class="m-commitment">
-      <div class="m-commitment-num">02</div>
-      <div class="m-commitment-text"><strong>We lead with curiosity and assume positive intent.</strong></div>
-    </div>
-    <div class="m-commitment">
-      <div class="m-commitment-num">03</div>
-      <div class="m-commitment-text"><strong>We are kind and we are effective. Both, always.</strong></div>
-    </div>
-    <div class="m-commitment">
-      <div class="m-commitment-num">04</div>
-      <div class="m-commitment-text"><strong>We amplify each other's voices and operate from abundance, not scarcity.</strong></div>
-    </div>
-    <div class="commitments-closing">
-      <p>Utah's next generation of innovation will be shaped by founders <span class="brand-amp" style="color:var(--pop)">&amp;</span> determined by funders — it's time more of them are women.</p>
-    </div>
-  </div>
-</div>
 
 <!-- ══ WHO WE ARE ══ -->
-<section>
-  <span class="eyebrow">Who We Are</span>
-  <div class="who-grid">
-    <div class="who-left">
-      <h2 class="section-heading">Don't you know?<br><em style="font-style:italic">I'm an angel.</em></h2>
-      <a href="landscape-map.html" class="who-link">See the full landscape of women's angel collectives →</a>
-    </div>
-    <div>
-      <p class="body-text">Silver & Salt Capital is a coordinated community of individual investors who learn together, evaluate opportunities together, and invest together — while maintaining individual choice.</p>
-      <p class="body-text" style="margin-top:20px">We are executives, operators, entrepreneurs, professionals, and community leaders who are no longer waiting for invitations into existing systems. We are rewriting how women participate in economic power and building the systems we need for our capital to thrive.</p>
-      <p class="body-text" style="margin-top:20px">Across the country, women's angel collectives like ours are already thriving. We're not new, just new to Utah. From Golden Seeds in New York (290 members, $190M+ invested over 20 years) to The JumpFund in Chattanooga (100+ investors, 19× co-investment leverage).<span class="ref">4</span></p>
-    </div>
-  </div>
-</section>
-
-<!-- ══ WHAT WE DO ══ -->
-<div class="what-section">
-  <div class="what-inner">
-    <div>
-      <div class="what-stat">$10K+<span>individual commitment</span></div>
-      <div class="what-stat" style="margin-top:24px">$1M+<span>collective movement</span></div>
-    </div>
-    <div>
-      <span class="eyebrow">What We Do</span>
-      <h2 class="section-heading" style="font-size:clamp(28px,3vw,40px)">We identify and support women-led companies building real businesses.</h2>
-      <p class="body-text">We seek out women-founded companies creating revenue, good jobs, durable value, and profitable investment returns.</p>
-      <p class="body-text" style="margin-top:16px">We share vetted deal flow, conduct diligence together, mentor founders, invest individually with shared conviction, and become customers, champions, and connectors. We individually commit $10,000+ to the economy and collectively move over $1M in investments — and we're just getting started.</p>
+<section style="background:var(--pop);padding:96px 48px;position:relative;overflow:hidden">
+  <div style="position:absolute;top:-20px;left:-10px;font-family:'Cormorant Garamond',serif;font-size:clamp(160px,20vw,300px);font-weight:300;color:rgba(255,255,255,0.06);line-height:1;pointer-events:none">&amp;</div>
+  <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1">
+    <span class="eyebrow" style="color:rgba(255,255,255,0.5)">Who We Are</span>
+    <div class="who-grid">
+      <div class="who-left">
+        <h2 class="section-heading" style="color:white">Don't you know?<br><em style="font-style:italic;color:rgba(255,255,255,0.6)">I'm an angel.</em></h2>
+        <a href="landscape-map.html" class="who-link" style="color:white;border-color:rgba(255,255,255,0.3)">See the full landscape of women's angel collectives →</a>
+      </div>
+      <div>
+        <p class="body-text" style="color:rgba(255,255,255,0.8)">Silver & Salt Capital is a coordinated community of individual investors who learn together, evaluate opportunities together, and invest together — while maintaining individual choice.</p>
+        <p class="body-text" style="margin-top:20px;color:rgba(255,255,255,0.8)">We are executives, operators, entrepreneurs, professionals, and community leaders who are no longer waiting for invitations into existing systems. We are rewriting how women participate in economic power and building the systems we need for our capital to thrive.</p>
+        <p class="body-text" style="margin-top:20px;color:rgba(255,255,255,0.8)">Across the country, women's angel collectives like ours are already thriving. We're not new, just new to Utah. From Golden Seeds in New York (290 members, $190M+ invested over 20 years) to The JumpFund in Chattanooga (100+ investors, 19× co-investment leverage).<span class="ref" style="color:rgba(255,255,255,0.4)">4</span></p>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- ══ WHY NOW ══ -->
-<section>
-  <span class="eyebrow">Why Now</span>
-  <h2 class="section-heading">The numbers make the case.</h2>
-
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-num">78¢</div>
-      <div class="stat-label">Revenue per dollar invested by women founders vs. 31¢ for male-founded startups</div>
-      <div class="stat-source">BCG / MassChallenge</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">1%</div>
-      <div class="stat-label">All-female teams' share of U.S. venture capital in 2024</div>
-      <div class="stat-source">PitchBook</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">1.92%</div>
-      <div class="stat-label">Estimated share of Utah VC funding that has gone to female founders</div>
-      <div class="stat-source">S&amp;S Capital Research</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">63%</div>
-      <div class="stat-label">Better performance by companies with women founders vs. all-male teams</div>
-      <div class="stat-source">First Round Capital</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">35%</div>
-      <div class="stat-label">Higher ROI delivered by women-founded companies</div>
-      <div class="stat-source">Kauffman Foundation</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">15%</div>
-      <div class="stat-label">Less capital burned by women-founded companies</div>
-      <div class="stat-source">Female Founders Fund</div>
-    </div>
-  </div>
-
-  <p class="body-text">The capital is here. The founders are here. Utah has 129,429 women-owned businesses<span class="ref">5</span> and 100+ accredited women investors in the Salt Lake–Park City corridor. The connection infrastructure is what's been missing.</p>
-  <a href="open-research.html" class="why-link" style="display:inline-flex;margin-top:20px">Check out our data resources to see the full business case →</a>
 </section>
 
 <!-- ══ CTA ══ -->
 <div class="cta-section" id="join">
-  <h2 class="cta-heading">Join us.</h2>
-  <p class="cta-text">Silver & Salt Capital is forming now. We're looking for founding members who believe that collaboration compounds faster than competition.</p>
-  <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="cta-btn">Learn more about becoming a Founding Member</a>
+  <h2 class="cta-heading">Shift the ecosystem.</h2>
+  <p class="cta-text">We believe that collaboration compounds faster than competition.</p>
+  <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="cta-btn">Join Us</a>
 </div>
 
 <!-- ══ SOURCES ══ -->
@@ -763,6 +721,7 @@
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Press</div>
         <a class="f-sitemap-link" href="https://forms.gle/dN1DJgWZs9X7Z8U8A" target="_blank" rel="noopener">Press Contact</a>
+        <a class="f-sitemap-link" href="brand-assets.html">Brand Assets</a>
       </div>
     </div>
     <div class="f-brand-row">
