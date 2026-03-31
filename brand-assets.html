@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Assets — Silver &amp; Salt Capital</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  :root {
+    --pop: #1A8F7D;
+    --rust: #1A8F7D;
+  }
+
+  .nav-cta {
+    color: var(--cream);
+    background: var(--moss);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) 18px;
+    text-transform: none;
+    letter-spacing: var(--tracking-wide);
+  }
+  .nav-cta:hover { background: #22A893; }
+
+  .assets-hero {
+    background: var(--pop);
+    padding: 120px 48px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .assets-hero::before {
+    content: '&';
+    position: absolute;
+    bottom: -30px; right: -10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(160px, 20vw, 300px);
+    font-weight: 300;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .assets-hero .label {
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 16px;
+  }
+  .assets-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(36px, 5.5vw, 56px);
+    color: white;
+    line-height: 1.15;
+    position: relative;
+    z-index: 1;
+  }
+
+  .assets-section {
+    padding: 80px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .assets-label {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--pop);
+    margin-bottom: 12px;
+  }
+
+  .assets-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 300;
+    color: var(--moss);
+    line-height: 1.2;
+    margin-bottom: 32px;
+  }
+
+  .assets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .asset-card {
+    border: 1px solid rgba(47,62,52,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .asset-preview {
+    padding: 48px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  }
+  .asset-preview.on-light {
+    background: var(--cream);
+  }
+  .asset-preview.on-dark {
+    background: var(--moss);
+  }
+  .asset-preview img, .asset-preview svg {
+    max-width: 100%;
+    max-height: 160px;
+    height: auto;
+  }
+
+  .asset-info {
+    padding: 20px 24px;
+    background: var(--sand);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .asset-name {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--moss);
+  }
+  .asset-format {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 11px;
+    color: var(--sage);
+    margin-top: 2px;
+  }
+  .asset-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pop);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--pop);
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .asset-download:hover {
+    background: var(--pop);
+    color: white;
+  }
+
+  .usage-note {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--moss-light);
+    font-weight: 300;
+    max-width: 680px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .assets-hero { padding: 100px 24px 64px; }
+    .assets-section { padding: 56px 24px; }
+    .assets-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .assets-hero { padding: 88px 16px 48px; }
+    .assets-section { padding: 40px 16px; }
+  }
+</style>
+</head>
+<body class="has-grain">
+
+<!-- ══ NAV ══ -->
+<nav class="nav-standalone">
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="open-research.html">Research</a></li>
+  </ul>
+  <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-dropdown">
+    <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="open-research.html">Research</a>
+    <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="assets-hero">
+  <p class="label">Press</p>
+  <h1>Brand Assets</h1>
+</div>
+
+<!-- ══ LOGOS ══ -->
+<div class="assets-section">
+  <p class="assets-label">Logos</p>
+  <h2 class="assets-heading">Download our logos for press and media use.</h2>
+  <p class="usage-note">Please do not modify, recolor, or distort the logos. Maintain clear space around the mark equal to the height of the ampersand symbol.</p>
+
+  <div class="assets-grid">
+    <!-- Primary Horizontal — Light bg -->
+    <div class="asset-card">
+      <div class="asset-preview on-light">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="split-circle" style="width:36px;height:36px"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp" style="font-size:19px;font-weight:600">&amp;</div></div>
+          <span style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:28px;color:#2F3E34;letter-spacing:-0.01em">Silver <span style="color:#7E8E84;font-weight:400;font-style:italic;font-size:24px">&amp;</span> Salt Capital</span>
+        </div>
+      </div>
+      <div class="asset-info">
+        <div>
+          <div class="asset-name">Primary Logo (Horizontal)</div>
+          <div class="asset-format">Navigation &amp; Hero use</div>
+        </div>
+        <a href="assets/circle/community-logo.png" download class="asset-download">Download PNG</a>
+      </div>
+    </div>
+
+    <!-- Secondary Horizontal — Light bg -->
+    <div class="asset-card">
+      <div class="asset-preview on-light">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="split-circle" style="width:40px;height:40px"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp" style="font-size:21px;font-weight:300">&amp;</div></div>
+          <span style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:22px;color:#2F3E34;letter-spacing:-0.02em">Silver <span style="color:#7E8E84;font-weight:400;font-style:italic;font-size:18px">&amp;</span> Salt Capital</span>
+        </div>
+      </div>
+      <div class="asset-info">
+        <div>
+          <div class="asset-name">Secondary Logo (Horizontal)</div>
+          <div class="asset-format">Footer &amp; Print use</div>
+        </div>
+        <a href="assets/circle/community-logo.png" download class="asset-download">Download PNG</a>
+      </div>
+    </div>
+
+    <!-- Primary Horizontal — Dark bg -->
+    <div class="asset-card">
+      <div class="asset-preview on-dark">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="split-circle" style="width:36px;height:36px"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp" style="font-size:19px;font-weight:600">&amp;</div></div>
+          <span style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:28px;color:#FBF8F2;letter-spacing:-0.01em">Silver <span style="color:rgba(251,248,242,0.5);font-weight:400;font-style:italic;font-size:24px">&amp;</span> Salt Capital</span>
+        </div>
+      </div>
+      <div class="asset-info">
+        <div>
+          <div class="asset-name">Primary Logo — On Dark</div>
+          <div class="asset-format">Light text on dark backgrounds</div>
+        </div>
+        <a href="assets/circle/community-logo-dark.png" download class="asset-download">Download PNG</a>
+      </div>
+    </div>
+
+    <!-- Split-Circle Icon -->
+    <div class="asset-card">
+      <div class="asset-preview on-light">
+        <div class="split-circle" style="width:80px;height:80px"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp" style="font-size:42px;font-weight:600">&amp;</div></div>
+      </div>
+      <div class="asset-info">
+        <div>
+          <div class="asset-name">Split-Circle Icon</div>
+          <div class="asset-format">Favicon &amp; Social Avatar</div>
+        </div>
+        <a href="assets/circle/community-icon.svg" download class="asset-download">Download SVG</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#story">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="https://forms.gle/dN1DJgWZs9X7Z8U8A" target="_blank" rel="noopener">Press Contact</a>
+        <a class="f-sitemap-link" href="brand-assets.html">Brand Assets</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
+
+</body>
+</html>

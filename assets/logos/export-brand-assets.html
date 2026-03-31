@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Brand Asset Export — Silver &amp; Salt Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #ccc; display: flex; flex-direction: column; align-items: center; gap: 48px; padding: 48px; font-family: system-ui, sans-serif; }
+h2 { font-size: 14px; color: #666; font-weight: 500; margin-bottom: 8px; }
+p.note { font-size: 12px; color: #999; margin-top: 6px; max-width: 600px; line-height: 1.6; }
+
+/* ═══ SHARED: Split Circle ═══
+   Brand standard: Half moss (#2F3E34) left, half pop/rust (#D16B4F) right
+   White "&" centered, Cormorant Garamond serif */
+.circle {
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.circle .c-left {
+  position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+  background: #2F3E34;
+}
+.circle .c-right {
+  position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+  background: #D16B4F;
+}
+.circle .c-amp {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: white; z-index: 2; line-height: 1;
+}
+
+/* ═══ 1. PRIMARY HORIZONTAL (Navigation / Hero) ═══
+   Brand standard:
+   - Font: Cormorant Garamond, weight 700
+   - Size: 28px
+   - Letter-spacing: -0.01em
+   - Split-circle: 36px, ampersand weight 600, 19px
+   - Wordmark "&": weight 400, 0.8em, margin 0 -0.08em (inherits moss color) */
+.primary-box {
+  width: 600px; height: 120px;
+  background: #FBF8F2;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.primary-box .circle { width: 36px; height: 36px; }
+.primary-box .c-amp { font-size: 19px; font-weight: 600; }
+.primary-box .wordmark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700; font-size: 28px; color: #2F3E34; letter-spacing: -0.01em;
+}
+.primary-box .wordmark .wm-amp {
+  font-size: 0.8em; font-weight: 400; margin: 0 -0.08em;
+}
+
+/* ═══ 2. SECONDARY HORIZONTAL (Footer / Stationery / Print) ═══
+   Brand standard:
+   - Font: Cormorant Garamond, weight 300
+   - Size: 22px
+   - Letter-spacing: -0.02em
+   - Split-circle: 40px, ampersand weight 300, 21px */
+.secondary-box {
+  width: 600px; height: 120px;
+  background: #FBF8F2;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+}
+.secondary-box .circle { width: 40px; height: 40px; }
+.secondary-box .c-amp { font-size: 21px; font-weight: 300; }
+.secondary-box .wordmark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300; font-size: 22px; color: #2F3E34; letter-spacing: -0.02em;
+}
+.secondary-box .wordmark .wm-amp {
+  font-size: 0.8em; font-weight: 400; margin: 0 -0.08em;
+}
+
+/* ═══ 3. PRIMARY ON DARK ═══
+   Same specs as Primary but cream text on moss background */
+.primary-dark-box {
+  width: 600px; height: 120px;
+  background: #2F3E34;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.primary-dark-box .circle { width: 36px; height: 36px; }
+.primary-dark-box .c-left { background: rgba(240,237,231,0.12); }
+.primary-dark-box .c-right { background: #D16B4F; }
+.primary-dark-box .c-amp { font-size: 19px; font-weight: 600; }
+.primary-dark-box .wordmark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700; font-size: 28px; color: #F0EDE7; letter-spacing: -0.01em;
+}
+.primary-dark-box .wordmark .wm-amp {
+  font-size: 0.8em; font-weight: 400; margin: 0 -0.08em;
+}
+
+/* ═══ 4. SPLIT-CIRCLE ICON ═══
+   Brand standard:
+   - Half moss (#2F3E34), half pop/rust (#D16B4F)
+   - White "&" centered, Cormorant Garamond serif
+   - Standalone as favicon or social avatar */
+.icon-box {
+  width: 256px; height: 256px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+.icon-box .c-left {
+  position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+  background: #2F3E34;
+}
+.icon-box .c-right {
+  position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+  background: #D16B4F;
+}
+.icon-box .c-amp {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 140px; font-weight: 600; color: white;
+  z-index: 2; line-height: 1;
+}
+
+/* ═══ 5. COMPACT / PARTNERSHIP MARK ═══
+   Brand standard:
+   - Layout: S [split-circle badge] S on one row, italic "Capital" centered below
+   - S letters: Cormorant Garamond, weight 700, 26px, color moss (#2F3E34)
+   - Split-circle badge: 48px, moss left / pop right, ampersand weight 600
+   - S-to-badge gap: 4px (tight)
+   - "Capital": Cormorant Garamond, weight 300, italic, 14px, color sage (#7E8E84)
+   - Capital vertical gap: 2px */
+.compact-box {
+  width: 300px; height: 160px;
+  background: #FBF8F2;
+  display: flex; align-items: center; justify-content: center;
+}
+.compact-mark {
+  display: flex; flex-direction: column; align-items: center;
+}
+.compact-row {
+  display: flex; align-items: center; gap: 4px;
+}
+.compact-s {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700; font-size: 26px; color: #2F3E34;
+}
+.compact-row .circle { width: 48px; height: 48px; }
+.compact-row .c-amp { font-size: 26px; font-weight: 600; }
+.compact-capital {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300; font-style: italic; font-size: 14px; color: #7E8E84;
+  margin-top: 2px;
+}
+
+.instructions {
+  max-width: 560px; text-align: center; font-size: 13px; color: #888; line-height: 1.6;
+  background: white; padding: 20px 28px; border-radius: 8px;
+}
+.instructions strong { color: #333; }
+</style>
+</head>
+<body>
+
+  <div>
+    <h2>1. Primary Horizontal Logo — Light (600 x 120)</h2>
+    <div class="primary-box" id="primary-light">
+      <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+      <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+    </div>
+    <p class="note">Cormorant Garamond 700, 28px, -0.01em. Circle 36px, amp 600/19px. Use: nav, hero, competing contexts.</p>
+  </div>
+
+  <div>
+    <h2>2. Secondary Horizontal Logo — Light (600 x 120)</h2>
+    <div class="secondary-box" id="secondary-light">
+      <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+      <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+    </div>
+    <p class="note">Cormorant Garamond 300, 22px, -0.02em. Circle 40px, amp 300/21px. Use: footer, stationery, print, luxury contexts.</p>
+  </div>
+
+  <div>
+    <h2>3. Primary Horizontal Logo — Dark (600 x 120)</h2>
+    <div class="primary-dark-box" id="primary-dark">
+      <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+      <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+    </div>
+    <p class="note">Primary on dark: cream (#F0EDE7) text, left circle half rgba(240,237,231,0.12).</p>
+  </div>
+
+  <div>
+    <h2>4. Split-Circle Icon (256 x 256)</h2>
+    <div class="icon-box" id="icon">
+      <div class="c-left"></div>
+      <div class="c-right"></div>
+      <div class="c-amp">&</div>
+    </div>
+    <p class="note">Half moss (#2F3E34), half pop/rust (#D16B4F). White "&amp;" centered. Favicon / social avatar.</p>
+  </div>
+
+  <div>
+    <h2>5. Compact / Partnership Mark — Light (300 x 160)</h2>
+    <div class="compact-box" id="compact-light">
+      <div class="compact-mark">
+        <div class="compact-row">
+          <span class="compact-s">S</span>
+          <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+          <span class="compact-s">S</span>
+        </div>
+        <span class="compact-capital">Capital</span>
+      </div>
+    </div>
+    <p class="note">S letters: CG 700, 26px, moss. Badge 48px. Gap 4px. "Capital": CG 300 italic, 14px, sage. Gap 2px.</p>
+  </div>
+
+  <div class="instructions">
+    <strong>To export:</strong> Use Cmd + Shift + 4 (Mac) to screenshot each box. Or right-click &gt; Inspect &gt; screenshot node.<br><br>
+    <strong>Source:</strong> All specs from <code>_reference/brand-standards.md</code> and <code>_reference/ssc-master-blueprint.html</code>
+  </div>
+
+</body>
+</html>

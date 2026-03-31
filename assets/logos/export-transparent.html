@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Transparent Logo Export</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #ccc; display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 48px; font-family: system-ui; }
+h2 { font-size: 14px; color: #666; margin-bottom: 8px; }
+.export-btn { padding: 8px 20px; background: #2F3E34; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 8px; }
+.export-btn:hover { background: #4A5E50; }
+
+/* Split circle shared */
+.circle { border-radius: 50%; position: relative; overflow: hidden; flex-shrink: 0; }
+.circle .c-left { position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: #2F3E34; }
+.circle .c-right { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: #D16B4F; }
+.circle .c-amp { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Cormorant Garamond', Georgia, serif; color: white; z-index: 2; line-height: 1; }
+
+/* Primary horizontal - transparent bg */
+.logo-primary {
+  width: 600px; height: 120px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  background: transparent;
+}
+.logo-primary .circle { width: 36px; height: 36px; }
+.logo-primary .c-amp { font-size: 19px; font-weight: 600; }
+.logo-primary .wordmark { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 28px; color: #2F3E34; letter-spacing: -0.01em; }
+.logo-primary .wm-amp { font-size: 0.8em; font-weight: 400; margin: 0 -0.08em; }
+
+/* Secondary horizontal - transparent bg */
+.logo-secondary {
+  width: 600px; height: 120px;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  background: transparent;
+}
+.logo-secondary .circle { width: 40px; height: 40px; }
+.logo-secondary .c-amp { font-size: 21px; font-weight: 300; }
+.logo-secondary .wordmark { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 22px; color: #2F3E34; letter-spacing: -0.02em; }
+.logo-secondary .wm-amp { font-size: 0.8em; font-weight: 400; margin: 0 -0.08em; }
+
+/* Primary on dark - transparent bg, light text */
+.logo-primary-dark {
+  width: 600px; height: 120px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  background: transparent;
+}
+.logo-primary-dark .circle { width: 36px; height: 36px; }
+.logo-primary-dark .c-left { background: rgba(240,237,231,0.85); }
+.logo-primary-dark .c-right { background: #D16B4F; }
+.logo-primary-dark .c-amp { font-size: 19px; font-weight: 600; }
+.logo-primary-dark .wordmark { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 28px; color: #F0EDE7; letter-spacing: -0.01em; }
+.logo-primary-dark .wm-amp { font-size: 0.8em; font-weight: 400; margin: 0 -0.08em; }
+
+/* Icon */
+.logo-icon {
+  width: 256px; height: 256px;
+  border-radius: 50%; position: relative; overflow: hidden;
+  background: transparent;
+}
+.logo-icon .c-left { position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: #2F3E34; }
+.logo-icon .c-right { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: #D16B4F; }
+.logo-icon .c-amp { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 140px; font-weight: 600; color: white; z-index: 2; line-height: 1; }
+
+/* Compact */
+.logo-compact {
+  width: 200px; height: 120px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+}
+.compact-mark { display: flex; flex-direction: column; align-items: center; }
+.compact-row { display: flex; align-items: center; gap: 4px; }
+.compact-s { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 26px; color: #2F3E34; }
+.compact-row .circle { width: 48px; height: 48px; }
+.compact-row .c-amp { font-size: 26px; font-weight: 600; }
+.compact-capital { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-style: italic; font-size: 14px; color: #7E8E84; margin-top: 2px; }
+
+/* Checkerboard to show transparency */
+.checker { background: repeating-conic-gradient(#e0e0e0 0% 25%, white 0% 50%) 50% / 20px 20px; border-radius: 8px; padding: 0; }
+</style>
+</head>
+<body>
+
+<div>
+  <h2>1. Primary Logo — Transparent (PNG)</h2>
+  <div class="checker"><div class="logo-primary" id="logo-1">
+    <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+  </div></div>
+  <button class="export-btn" onclick="exportPNG('logo-1','ssc-primary-logo')">Export PNG</button>
+</div>
+
+<div>
+  <h2>2. Secondary Logo — Transparent (PNG)</h2>
+  <div class="checker"><div class="logo-secondary" id="logo-2">
+    <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+  </div></div>
+  <button class="export-btn" onclick="exportPNG('logo-2','ssc-secondary-logo')">Export PNG</button>
+</div>
+
+<div>
+  <h2>3. Primary Logo (Light Text) — Transparent (PNG)</h2>
+  <div class="checker"><div class="logo-primary-dark" id="logo-3">
+    <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+  </div></div>
+  <button class="export-btn" onclick="exportPNG('logo-3','ssc-primary-logo-light')">Export PNG</button>
+</div>
+
+<div>
+  <h2>4. Split-Circle Icon — Transparent (PNG)</h2>
+  <div class="checker"><div class="logo-icon" id="logo-4">
+    <div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div>
+  </div></div>
+  <button class="export-btn" onclick="exportPNG('logo-4','ssc-icon')">Export PNG</button>
+</div>
+
+<div>
+  <h2>5. Compact Mark — Transparent (PNG)</h2>
+  <div class="checker"><div class="logo-compact" id="logo-5">
+    <div class="compact-mark">
+      <div class="compact-row">
+        <span class="compact-s">S</span>
+        <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+        <span class="compact-s">S</span>
+      </div>
+      <span class="compact-capital">Capital</span>
+    </div>
+  </div></div>
+  <button class="export-btn" onclick="exportPNG('logo-5','ssc-compact-mark')">Export PNG</button>
+</div>
+
+<h2 style="margin-top:32px;font-size:18px;color:#8B5E83;border-top:2px solid #8B5E83;padding-top:24px;width:600px;text-align:center">Plum &amp; Gold Palette</h2>
+
+<div>
+  <h2>6. Primary Logo — Plum &amp; Gold (PNG)</h2>
+  <div class="checker"><div class="logo-primary" id="logo-6" style="background:transparent">
+    <div class="circle"><div class="c-left" style="background:#2F3E34"></div><div class="c-right" style="background:#8B5E83"></div><div class="c-amp">&</div></div>
+    <span class="wordmark" style="color:#2F3E34">Silver <span class="wm-amp">&</span> Salt Capital</span>
+  </div></div>
+  <button class="export-btn" style="background:#8B5E83" onclick="exportPNG('logo-6','ssc-primary-plum')">Export PNG</button>
+</div>
+
+<div>
+  <h2>7. Secondary Logo — Plum &amp; Gold (PNG)</h2>
+  <div class="checker"><div class="logo-secondary" id="logo-7" style="background:transparent">
+    <div class="circle"><div class="c-left" style="background:#2F3E34"></div><div class="c-right" style="background:#8B5E83"></div><div class="c-amp">&</div></div>
+    <span class="wordmark" style="color:#2F3E34">Silver <span class="wm-amp">&</span> Salt Capital</span>
+  </div></div>
+  <button class="export-btn" style="background:#8B5E83" onclick="exportPNG('logo-7','ssc-secondary-plum')">Export PNG</button>
+</div>
+
+<div>
+  <h2>8. Primary Logo (Light Text) — Plum &amp; Gold (PNG)</h2>
+  <div class="checker"><div class="logo-primary-dark" id="logo-8" style="background:transparent">
+    <div class="circle"><div class="c-left" style="background:rgba(240,237,231,0.85)"></div><div class="c-right" style="background:#8B5E83"></div><div class="c-amp">&</div></div>
+    <span class="wordmark" style="color:#F0EDE7">Silver <span class="wm-amp">&</span> Salt Capital</span>
+  </div></div>
+  <button class="export-btn" style="background:#8B5E83" onclick="exportPNG('logo-8','ssc-primary-plum-light')">Export PNG</button>
+</div>
+
+<div>
+  <h2>9. Split-Circle Icon — Plum &amp; Gold (PNG)</h2>
+  <div class="checker"><div class="logo-icon" id="logo-9">
+    <div class="c-left" style="background:#2F3E34"></div><div class="c-right" style="background:#8B5E83"></div><div class="c-amp">&</div>
+  </div></div>
+  <button class="export-btn" style="background:#8B5E83" onclick="exportPNG('logo-9','ssc-icon-plum')">Export PNG</button>
+</div>
+
+<div>
+  <h2>10. Compact Mark — Plum &amp; Gold (PNG)</h2>
+  <div class="checker"><div class="logo-compact" id="logo-10">
+    <div class="compact-mark">
+      <div class="compact-row">
+        <span class="compact-s" style="color:#2F3E34">S</span>
+        <div class="circle"><div class="c-left" style="background:#2F3E34"></div><div class="c-right" style="background:#8B5E83"></div><div class="c-amp">&</div></div>
+        <span class="compact-s" style="color:#2F3E34">S</span>
+      </div>
+      <span class="compact-capital" style="color:#C9A84C">Capital</span>
+    </div>
+  </div></div>
+  <button class="export-btn" style="background:#8B5E83" onclick="exportPNG('logo-10','ssc-compact-plum')">Export PNG</button>
+</div>
+
+<button class="export-btn" style="background:#D16B4F;padding:12px 32px;font-size:15px" onclick="exportAll()">Export All PNGs (Standard)</button>
+<button class="export-btn" style="background:#8B5E83;padding:12px 32px;font-size:15px" onclick="exportAllPlum()">Export All PNGs (Plum &amp; Gold)</button>
+
+<script>
+async function exportPNG(id, filename) {
+  const el = document.getElementById(id);
+  const canvas = await html2canvas(el, { backgroundColor: null, scale: 2 });
+  const link = document.createElement('a');
+  link.download = filename + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+async function exportAllPlum() {
+  await exportPNG('logo-6','ssc-primary-plum');
+  await exportPNG('logo-7','ssc-secondary-plum');
+  await exportPNG('logo-8','ssc-primary-plum-light');
+  await exportPNG('logo-9','ssc-icon-plum');
+  await exportPNG('logo-10','ssc-compact-plum');
+}
+async function exportAll() {
+  await exportPNG('logo-1','ssc-primary-logo');
+  await exportPNG('logo-2','ssc-secondary-logo');
+  await exportPNG('logo-3','ssc-primary-logo-light');
+  await exportPNG('logo-4','ssc-icon');
+  await exportPNG('logo-5','ssc-compact-mark');
+}
+</script>
+
+</body>
+</html>
