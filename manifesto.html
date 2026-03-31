@@ -8,8 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
-  /* ── Manifesto-specific overrides ── */
-  :root { --rust-light: rgba(209,107,79,0.12); }
+  /* ── Manifesto-specific overrides — teal palette ── */
+  :root {
+    --pop: #1A8F7D;
+    --rust: #1A8F7D;
+    --rust-light: rgba(26,143,125,0.12);
+  }
 
   /* Manifesto fade delays (different from shared) */
   .fade-1 { animation-delay: 0.1s; }
@@ -28,83 +32,62 @@
     text-transform: none;
     letter-spacing: var(--tracking-wide);
   }
-  .nav-cta:hover { background: var(--rust); }
+  .nav-cta:hover { background: #22A893; }
 
   /* ── HERO ── */
-  .hero {
-    min-height: 92vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 120px 48px 80px;
-    position: relative;
-    overflow: hidden;
-    background: var(--moss);
+  /* ── REGENERATIVE CAPITAL HERO ── */
+  .vic-section {
+    padding: 100px 48px;
+    background: var(--cream);
   }
-
-  .hero-bg-text {
-    position: absolute;
-    bottom: -40px; right: -20px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(120px, 18vw, 260px);
-    font-weight: 600;
-    color: rgba(255,255,255,0.04);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-    letter-spacing: -0.04em;
-  }
-
-  .hero-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--rust);
-    margin-bottom: 20px;
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 8vw, 108px);
-    font-weight: 300;
-    line-height: 0.95;
-    color: var(--cream);
-    letter-spacing: -0.02em;
-    margin-bottom: 32px;
-  }
-  .hero-title em {
-    font-style: italic;
-    color: rgba(251,248,242,0.6);
-  }
-
-  .hero-subtitle {
-    max-width: 560px;
-    font-size: 16px;
-    line-height: 1.7;
-    color: rgba(251,248,242,0.7);
-    font-weight: 300;
-    border-left: 2px solid var(--rust);
-    padding-left: 20px;
-  }
-
-  .hero-scroll {
-    position: absolute;
-    bottom: 32px; right: 48px;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--sage);
-    writing-mode: vertical-rl;
-    display: flex;
+  .vic-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
     align-items: center;
-    gap: 8px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
-  .hero-scroll::before {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 48px;
-    background: var(--sage);
+  .vic-text { max-width: 440px; }
+  .vic-text .label { text-align: left; }
+  .vic-body {
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--text-body, #5a6b5e);
+    font-weight: 300;
+    margin-bottom: 18px;
+    text-align: left;
+  }
+  .vic-body strong { font-weight: 600; color: var(--moss); }
+  .vic-wheel-wrap { width: 100%; max-width: 520px; margin: 0 auto; overflow: visible; }
+  .vic-wheel { position: relative; width: 100%; aspect-ratio: 1; max-width: 520px; margin: 0 auto; }
+  .vic-wheel svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .vic-node {
+    position: absolute; text-align: center; transform: translate(-50%,-50%);
+    font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 14px;
+    color: var(--moss); line-height: 1.45; width: 130px;
+    letter-spacing: 0.01em;
+  }
+  .vic-node-entry { font-weight: 800; color: #3D6B1F; font-size: 15px; }
+  .vic-dot {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--pop); color: white;
+    font-family: 'Satoshi', sans-serif; font-weight: 800; font-size: 10px;
+    margin-bottom: 4px;
+  }
+  .vic-node-entry .vic-dot { background: #3D6B1F; }
+  .vic-center-logo {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 80px; height: 80px; border-radius: 50%; overflow: hidden;
+    box-shadow: 0 6px 32px rgba(47,62,52,0.15);
+  }
+  .vic-cl-left { position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: var(--moss); }
+  .vic-cl-right { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: #7CB83F; }
+  .vic-cl-amp {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300;
+    color: white; z-index: 1;
   }
 
   /* ── SECTIONS ── */
@@ -225,166 +208,69 @@
   }
   .data-link:hover { border-color: var(--rust); }
 
-  /* ── BROADSIDE (SPLIT PAGE COMMITMENT) ── */
-  .broadside-wrap {
-    background: var(--sand);
-    padding: 0;
-  }
-
-  .broadside {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    min-height: 80vh;
-    max-width: 100%;
-  }
-
-  .b-left {
+  /* ── COMMITMENTS SECTION ── */
+  /* ── COMMITMENTS SECTION ── */
+  .commitments-wrap {
     background: var(--moss);
-    padding: 80px 60px 80px 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
+    padding: 80px 48px;
   }
-  .b-left::before {
-    content: '';
-    position: absolute;
-    bottom: -80px; left: -80px;
-    width: 300px; height: 300px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.03);
+  .commitments-inner {
+    max-width: 680px;
+    margin: 0 auto;
   }
-
-  .b-eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--sage);
-    margin-bottom: 28px;
+  .commitments-inner .label {
+    color: var(--pop);
   }
-
-  .b-declaration {
+  .commitments-declaration {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(28px, 3.5vw, 44px);
     font-weight: 300;
-    font-style: italic;
+    font-size: clamp(22px, 3vw, 30px);
     color: var(--cream);
-    line-height: 1.2;
-    margin-bottom: 28px;
+    line-height: 1.3;
+    margin-bottom: 20px;
   }
-
-  .b-body {
-    font-size: 15px;
-    line-height: 1.8;
-    color: rgba(251,248,242,0.7);
-    font-weight: 300;
-    max-width: 400px;
-  }
-
-  /* Seam */
-  .b-seam {
-    width: 2px;
-    background: linear-gradient(to bottom, transparent, rgba(209,107,79,0.3) 20%, var(--rust) 50%, rgba(209,107,79,0.3) 80%, transparent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 2;
-  }
-
-  .b-seam-mark {
-    position: absolute;
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 0 4px var(--sand);
-  }
-  .bsm-left {
-    position: absolute;
-    top: 0; bottom: 0; left: 0;
-    width: 50%;
-    background: var(--moss);
-  }
-  .bsm-right {
-    position: absolute;
-    top: 0; bottom: 0; right: 0;
-    width: 50%;
-    background: var(--rust);
-  }
-  .bsm-amp {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 600;
-    color: white;
-    z-index: 2;
-    line-height: 1;
-  }
-
-  .b-right {
-    background: var(--rust);
-    padding: 80px 48px 80px 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .b-right::before {
-    content: '';
-    position: absolute;
-    top: -80px; right: -80px;
-    width: 300px; height: 300px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.06);
-  }
-
-  .b-commit-label {
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(251,248,242,0.6);
-    margin-bottom: 28px;
-  }
-
-  .b-commits {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
-  .b-commit {
-    font-size: 15px;
+  .commitments-declaration em { font-style: italic; color: var(--pop); }
+  .commitments-body {
+    font-size: 14px;
+    color: rgba(251,248,242,0.55);
     line-height: 1.7;
-    color: rgba(251,248,242,0.85);
     font-weight: 300;
-    padding-left: 16px;
-    border-left: 1px solid rgba(251,248,242,0.25);
+    margin-bottom: 16px;
   }
-  .b-commit strong {
-    color: var(--cream);
-    font-weight: 400;
+  .m-commitment {
+    padding: 12px 0;
+    border-top: 1px solid rgba(251,248,242,0.08);
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    align-items: start;
   }
-
-  .b-truth {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(251,248,242,0.5);
-    margin-bottom: 10px;
+  .m-commitment-num {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 900;
+    font-size: 13px;
+    color: var(--pop);
+    padding-top: 2px;
   }
-
-  .b-close {
+  .m-commitment-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(251,248,242,0.65);
+    font-weight: 300;
+  }
+  .m-commitment-text strong { color: var(--cream); font-weight: 700; }
+  .commitments-closing {
+    padding-top: 16px;
+    border-top: 1px solid rgba(251,248,242,0.08);
+    margin-top: 12px;
+  }
+  .commitments-closing p {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(18px, 2.2vw, 26px);
-    font-weight: 600;
-    color: white;
-    line-height: 1.4;
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 300;
     font-style: italic;
+    color: var(--cream);
+    line-height: 1.5;
   }
 
   /* ── WHO WE ARE ── */
@@ -606,12 +492,14 @@
   @media (max-width: 768px) {
     nav { padding: 0 20px; }
     section { padding: 64px 24px; }
-    .hero { padding: 100px 24px 64px; }
+    .vic-section { padding: 64px 24px; }
+    .vic-layout { grid-template-columns: 1fr; gap: 48px; }
+    .vic-text { max-width: none; }
+    .vic-text .label, .vic-body { text-align: center; }
+    .vic-wheel-wrap { max-width: 400px; }
     .why-section { grid-template-columns: 1fr; gap: 32px; }
     .why-label-col { position: static; }
-    .broadside { grid-template-columns: 1fr; }
-    .b-seam { display: none; }
-    .b-left, .b-right { padding: 56px 24px; }
+    .commitments-wrap { padding: 56px 24px; }
     .who-grid { grid-template-columns: 1fr; gap: 40px; }
     .what-inner { grid-template-columns: 1fr; gap: 40px; }
     .stats-grid { grid-template-columns: 1fr; }
@@ -620,9 +508,13 @@
     .footnotes { padding: 48px 24px; }
   }
   @media (max-width: 480px) {
-    .hero { padding: 80px 16px 48px; }
+    .vic-section { padding: 48px 16px; }
+    .vic-wheel-wrap { max-width: 300px; }
+    .vic-node { font-size: 11px; width: 95px; }
+    .vic-dot { width: 18px; height: 18px; font-size: 8px; }
+    .vic-center-logo { width: 56px; height: 56px; }
+    .vic-cl-amp { font-size: 28px; }
     section { padding: 48px 16px; }
-    .b-left, .b-right { padding: 40px 16px; }
     .data-callout { padding: 28px 16px; }
     .cta-section { padding: 56px 16px; }
     .footnotes { padding: 40px 16px; }
@@ -659,14 +551,47 @@
   </div>
 </nav>
 
-<!-- ══ HERO ══ -->
-<div class="hero">
-  <div class="hero-bg-text">S&S</div>
-  <p class="hero-eyebrow fade fade-1">Founding Vision</p>
-  <h1 class="hero-title fade fade-2">Silver<br><em>&</em> Salt<br>Capital</h1>
-  <p class="hero-subtitle fade fade-3">A coordinated community of individual investors who learn together, evaluate opportunities together, and invest together. We know collaboration compounds faster than competition.</p>
-  <div class="hero-scroll">Scroll</div>
-</div>
+<!-- ══ REGENERATIVE CAPITAL ══ -->
+<section class="vic-section" style="padding-top:120px">
+  <div class="r vic-layout">
+    <div class="vic-text">
+      <p class="label" style="color:var(--pop)">Regenerative Capital</p>
+      <p class="vic-body">When one investor writes a check, a founder gets funded. When a hundred do it together — sourcing, vetting, mentoring, connecting — <strong>the entire ecosystem shifts.</strong></p>
+      <p class="vic-body">Earmark capital for women founders and more women will build companies. More companies mean better deal flow. Better deal flow means better returns. <strong>The cycle accelerates.</strong></p>
+      <p class="vic-body">Our power is in the number of investors now working in parallel to meaningfully fund the overall startup ecosystem. This is not charity. It's a market correction.</p>
+      <p class="vic-body"><strong>Every member is building the system our daughters will inherit.</strong></p>
+    </div>
+    <div class="vic-wheel-wrap">
+      <div class="vic-wheel">
+        <svg viewBox="0 0 580 580">
+          <defs>
+            <marker id="vicArr" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto">
+              <polygon points="0 0,12 5,0 10" fill="#7CB83F"/>
+            </marker>
+          </defs>
+          <circle cx="290" cy="290" r="175" fill="none" stroke="rgba(124,184,63,0.1)" stroke-width="2"/>
+          <path d="M 345 118 A 175 175 0 0 1 455 205" fill="none" stroke="#7CB83F" stroke-width="2" opacity="0.3" marker-end="url(#vicArr)"/>
+          <path d="M 462 240 A 175 175 0 0 1 432 395" fill="none" stroke="#7CB83F" stroke-width="2.5" opacity="0.38" marker-end="url(#vicArr)"/>
+          <path d="M 405 425 A 175 175 0 0 1 290 465" fill="none" stroke="#7CB83F" stroke-width="3" opacity="0.45" marker-end="url(#vicArr)"/>
+          <path d="M 235 462 A 175 175 0 0 1 135 395" fill="none" stroke="#7CB83F" stroke-width="3.5" opacity="0.52" marker-end="url(#vicArr)"/>
+          <path d="M 118 355 A 175 175 0 0 1 118 220" fill="none" stroke="#7CB83F" stroke-width="4" opacity="0.6" marker-end="url(#vicArr)"/>
+          <path d="M 128 185 A 175 175 0 0 1 240 120" fill="none" stroke="#7CB83F" stroke-width="5" opacity="0.75" marker-end="url(#vicArr)"/>
+        </svg>
+        <div class="vic-node vic-node-entry" style="left:50%;top:4%"><div class="vic-dot">1</div><br>S&amp;S Capital<br>sources &amp; vets deals</div>
+        <div class="vic-node" style="left:85%;top:22%"><div class="vic-dot">2</div><br>S&amp;S Capital<br>writes checks</div>
+        <div class="vic-node" style="left:85%;top:72%"><div class="vic-dot">3</div><br>More startups<br>get funded</div>
+        <div class="vic-node" style="left:50%;top:94%"><div class="vic-dot">4</div><br>More companies<br>thrive</div>
+        <div class="vic-node" style="left:15%;top:72%"><div class="vic-dot">5</div><br>Investors<br>see returns</div>
+        <div class="vic-node" style="left:15%;top:22%"><div class="vic-dot">6</div><br>More investors<br>join S&amp;S Capital</div>
+        <div class="vic-center-logo">
+          <div class="vic-cl-left"></div>
+          <div class="vic-cl-right"></div>
+          <div class="vic-cl-amp">&amp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ══ WHY SILVER & SALT ══ -->
 <section>
@@ -688,36 +613,31 @@
   </div>
 </section>
 
-<!-- ══ BROADSIDE — COMMUNITY COMMITMENT ══ -->
-<div class="broadside-wrap">
-  <div class="broadside">
-
-    <div class="b-left">
-      <div class="b-eyebrow">Our Community Commitment</div>
-      <div class="b-declaration">"Every woman in Utah deserves to feel she is enough."</div>
-      <p class="b-body">We are a group of women who commit to standing as fierce advocates for one another. We believe women belong in every room where financial decisions are made — and we are building in proximity with one another and the communities we serve.</p>
+<!-- ══ OUR COMMITMENTS ══ -->
+<div class="commitments-wrap">
+  <div class="commitments-inner">
+    <p class="label">Our Commitments</p>
+    <div class="commitments-declaration">Every woman in Utah deserves to feel <em><strong><u>she is enough.</u></strong></em></div>
+    <p class="commitments-body">We are a group of women who commit to standing as fierce advocates for one another. We believe women belong in every room where financial decisions are made — and we are building in proximity with one another and the communities we serve.</p>
+    <div class="m-commitment">
+      <div class="m-commitment-num">01</div>
+      <div class="m-commitment-text"><strong>We show up — with capital, with knowledge, with relationships, with visibility, with advocacy.</strong></div>
     </div>
-
-    <div class="b-seam">
-      <div class="b-seam-mark">
-        <div class="bsm-left"></div>
-        <div class="bsm-right"></div>
-        <div class="bsm-amp">&</div>
-      </div>
+    <div class="m-commitment">
+      <div class="m-commitment-num">02</div>
+      <div class="m-commitment-text"><strong>We lead with curiosity and assume positive intent.</strong></div>
     </div>
-
-    <div class="b-right">
-      <div class="b-commit-label">We Commit</div>
-      <div class="b-commits">
-        <div class="b-commit">To showing up — with capital, with knowledge, with relationships, with visibility, with advocacy.</div>
-        <div class="b-commit">To leading with curiosity <strong>& assuming positive intent.</strong></div>
-        <div class="b-commit">To being kind <strong>& being effective.</strong></div>
-        <div class="b-commit">To amplifying each other's voices <strong>& operating from abundance, not scarcity.</strong></div>
-      </div>
-      <div class="b-truth">Because we hold this truth:</div>
-      <div class="b-close">Utah's next generation of innovation will be shaped by founders & determined by funders — it's time more of them are women.</div>
+    <div class="m-commitment">
+      <div class="m-commitment-num">03</div>
+      <div class="m-commitment-text"><strong>We are kind and we are effective. Both, always.</strong></div>
     </div>
-
+    <div class="m-commitment">
+      <div class="m-commitment-num">04</div>
+      <div class="m-commitment-text"><strong>We amplify each other's voices and operate from abundance, not scarcity.</strong></div>
+    </div>
+    <div class="commitments-closing">
+      <p>Utah's next generation of innovation will be shaped by founders <span class="brand-amp" style="color:var(--pop)">&amp;</span> determined by funders — it's time more of them are women.</p>
+    </div>
   </div>
 </div>
 
