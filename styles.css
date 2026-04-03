@@ -58,16 +58,16 @@
   --space-16: 120px;
 
   /* Type scale — static */
-  --text-2xs: 9px;
-  --text-xs: 10px;
-  --text-sm: 11px;
-  --text-base: 13px;
-  --text-md: 14px;
-  --text-lg: 15px;
-  --text-xl: 16px;
-  --text-2xl: 17px;
-  --text-3xl: 18px;
-  --text-4xl: 20px;
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-md: 16px;
+  --text-lg: 17px;
+  --text-xl: 18px;
+  --text-2xl: 19px;
+  --text-3xl: 20px;
+  --text-4xl: 22px;
 
   /* Type scale — fluid headings */
   --text-h6: clamp(20px, 2.8vw, 28px);
