@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Export On-Dark Logos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #ddd; display: flex; flex-direction: column; align-items: center; gap: 48px; padding: 48px; font-family: system-ui; }
+h2 { font-size: 14px; color: #666; margin-bottom: 8px; }
+p { font-size: 12px; color: #999; margin-top: 4px; }
+
+/* Each export box is exactly sized for screenshotting */
+.logo-box {
+  width: 600px; height: 120px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.sc { width: 42px; height: 42px; border-radius: 50%; position: relative; overflow: hidden; flex-shrink: 0; }
+.sc-l { position: absolute; top: 0; left: 0; width: 50%; height: 100%; }
+.sc-r { position: absolute; top: 0; right: 0; width: 50%; height: 100%; }
+.sc-a { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: white; z-index: 2; line-height: 1; }
+.wm { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 28px; letter-spacing: -0.01em; line-height: 1.2; }
+.wm .amp { font-size: 0.8em; font-weight: 400; margin: 0 -0.04em; }
+
+.instructions {
+  max-width: 600px; text-align: center; font-size: 13px; color: #666; line-height: 1.6;
+  background: white; padding: 20px 28px; border-radius: 8px;
+}
+.instructions strong { color: #333; }
+</style>
+</head>
+<body>
+
+<div class="instructions">
+  <strong>Export instructions:</strong> Screenshot each box tightly (Cmd+Shift+4 on Mac). The transparent background on the logos means you need to save as PNG with transparency. Alternatively, use a browser extension to capture each .logo-box element directly.<br><br>
+  Each box is 600x120px. The sage left half (#7E8E84) replaces the old near-invisible moss/cream treatment.
+</div>
+
+<!-- 1. Primary Rust — On Dark (sage left, rust right) -->
+<div>
+  <h2>1. ssc-primary-logo-light.png — Primary Rust on Dark</h2>
+  <div class="logo-box" id="export-rust-dark" style="background:transparent">
+    <div class="sc">
+      <div class="sc-l" style="background:#7E8E84"></div>
+      <div class="sc-r" style="background:#D16B4F"></div>
+      <div class="sc-a">&amp;</div>
+    </div>
+    <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+  </div>
+  <p>Sage left (#7E8E84) / Rust right (#D16B4F) / Cream wordmark (#F0EDE7)</p>
+</div>
+
+<!-- 2. Primary Plum — On Dark (sage left, plum right) -->
+<div>
+  <h2>2. ssc-primary-plum-light.png — Primary Plum on Dark</h2>
+  <div class="logo-box" id="export-plum-dark" style="background:transparent">
+    <div class="sc">
+      <div class="sc-l" style="background:#7E8E84"></div>
+      <div class="sc-r" style="background:#8B5E83"></div>
+      <div class="sc-a">&amp;</div>
+    </div>
+    <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+  </div>
+  <p>Sage left (#7E8E84) / Plum right (#8B5E83) / Cream wordmark (#F0EDE7)</p>
+</div>
+
+<!-- Preview on actual dark backgrounds -->
+<div>
+  <h2>Preview — on moss green</h2>
+  <div class="logo-box" style="background:#2F3E34;border-radius:8px">
+    <div class="sc">
+      <div class="sc-l" style="background:#7E8E84"></div>
+      <div class="sc-r" style="background:#D16B4F"></div>
+      <div class="sc-a">&amp;</div>
+    </div>
+    <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+  </div>
+</div>
+
+<div>
+  <h2>Preview — on ink blue</h2>
+  <div class="logo-box" style="background:#3D5A99;border-radius:8px">
+    <div class="sc">
+      <div class="sc-l" style="background:#7E8E84"></div>
+      <div class="sc-r" style="background:#D16B4F"></div>
+      <div class="sc-a">&amp;</div>
+    </div>
+    <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+  </div>
+</div>
+
+<div>
+  <h2>Preview — plum on moss green</h2>
+  <div class="logo-box" style="background:#2F3E34;border-radius:8px">
+    <div class="sc">
+      <div class="sc-l" style="background:#7E8E84"></div>
+      <div class="sc-r" style="background:#8B5E83"></div>
+      <div class="sc-a">&amp;</div>
+    </div>
+    <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+  </div>
+</div>
+
+</body>
+</html>
