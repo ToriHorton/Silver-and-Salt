@@ -90,17 +90,29 @@
   }
 
   .asset-card {
-    border: 1px solid rgba(47,62,52,0.1);
-    border-radius: 12px;
+    border: none;
+    border-radius: 16px;
     overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 20px rgba(47,62,52,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+  .asset-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(47,62,52,0.12);
   }
 
   .asset-preview {
-    padding: 48px 32px;
+    padding: 56px 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 200px;
+    min-height: 220px;
+    position: relative;
   }
   .asset-preview.on-light {
     background: var(--cream);
@@ -115,41 +127,54 @@
   }
 
   .asset-info {
-    padding: 20px 24px;
-    background: var(--sand);
+    padding: 24px 28px;
+    background: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top: 1px solid rgba(47,62,52,0.06);
   }
   .asset-name {
-    font-family: 'Satoshi', sans-serif;
-    font-size: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
     font-weight: 600;
     color: var(--moss);
+    line-height: 1.3;
   }
   .asset-format {
     font-family: 'Satoshi', sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--sage);
-    margin-top: 2px;
+    margin-top: 4px;
+    letter-spacing: 0.02em;
   }
-  .asset-download {
-    display: inline-flex;
+  .asset-dl-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--sand);
+    display: flex;
     align-items: center;
-    gap: 6px;
-    font-family: 'Satoshi', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--pop);
-    text-decoration: none;
-    padding: 8px 16px;
-    border: 1px solid var(--pop);
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.2s;
   }
-  .asset-download:hover {
+  .asset-card:hover .asset-dl-icon {
     background: var(--pop);
-    color: white;
+    transform: scale(1.05);
+  }
+  .asset-dl-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--moss);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.2s;
+  }
+  .asset-card:hover .asset-dl-icon svg {
+    stroke: white;
   }
 
   .usage-note {
@@ -213,20 +238,20 @@
 
   <div class="assets-grid">
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-primary-logo.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-primary-logo.png" alt="Primary Logo — Rust on Light">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Primary Logo — Rust</div>
-          <div class="asset-format">Navigation &amp; Hero use · Light backgrounds</div>
+          <div class="asset-format">Navigation &amp; Hero use · Light backgrounds · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-primary-logo.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-primary-logo-light.png" download>
       <div class="asset-preview on-dark">
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:36px;height:36px;border-radius:50%;position:relative;overflow:hidden;flex-shrink:0">
@@ -240,26 +265,26 @@
       <div class="asset-info">
         <div>
           <div class="asset-name">Primary Logo — Rust on Dark</div>
-          <div class="asset-format">Sage left · Light text on dark backgrounds</div>
+          <div class="asset-format">Sage left · Dark backgrounds · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-primary-logo-light.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-primary-plum.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-primary-plum.png" alt="Primary Logo — Plum on Light">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Primary Logo — Plum</div>
-          <div class="asset-format">Alternate colorway · Light backgrounds</div>
+          <div class="asset-format">Alternate colorway · Light backgrounds · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-primary-plum.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-primary-plum-light.png" download>
       <div class="asset-preview on-dark">
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:36px;height:36px;border-radius:50%;position:relative;overflow:hidden;flex-shrink:0">
@@ -273,89 +298,89 @@
       <div class="asset-info">
         <div>
           <div class="asset-name">Primary Logo — Plum on Dark</div>
-          <div class="asset-format">Sage left · Alternate colorway · Dark backgrounds</div>
+          <div class="asset-format">Sage left · Alternate colorway · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-primary-plum-light.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-secondary-logo.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-secondary-logo.png" alt="Secondary Logo — Rust">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Secondary Logo — Rust</div>
-          <div class="asset-format">Footer &amp; Print use</div>
+          <div class="asset-format">Footer &amp; Print use · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-secondary-logo.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-secondary-plum.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-secondary-plum.png" alt="Secondary Logo — Plum">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Secondary Logo — Plum</div>
-          <div class="asset-format">Alternate colorway · Footer &amp; Print</div>
+          <div class="asset-format">Alternate colorway · Footer &amp; Print · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-secondary-plum.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-compact-mark.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-compact-mark.png" alt="Compact Mark — Rust">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Compact Mark — Rust</div>
-          <div class="asset-format">Co-branding &amp; partnership use</div>
+          <div class="asset-format">Co-branding &amp; partnership use · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-compact-mark.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-compact-plum.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-compact-plum.png" alt="Compact Mark — Plum">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Compact Mark — Plum</div>
-          <div class="asset-format">Alternate colorway · Co-branding</div>
+          <div class="asset-format">Alternate colorway · Co-branding · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-compact-plum.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-icon.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-icon.png" alt="Split-Circle Icon — Rust">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Split-Circle Icon — Rust</div>
-          <div class="asset-format">Favicon &amp; Social Avatar</div>
+          <div class="asset-format">Favicon &amp; Social Avatar · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-icon.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
-    <div class="asset-card">
+    <a class="asset-card" href="assets/logos/brand-assets/ssc-icon-plum.png" download>
       <div class="asset-preview on-light">
         <img src="assets/logos/brand-assets/ssc-icon-plum.png" alt="Split-Circle Icon — Plum">
       </div>
       <div class="asset-info">
         <div>
           <div class="asset-name">Split-Circle Icon — Plum</div>
-          <div class="asset-format">Alternate colorway · Favicon &amp; Social</div>
+          <div class="asset-format">Alternate colorway · Favicon &amp; Social · PNG</div>
         </div>
-        <a href="assets/logos/brand-assets/ssc-icon-plum.png" download class="asset-download">Download PNG</a>
+        <div class="asset-dl-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
       </div>
-    </div>
+    </a>
 
   </div>
 </div>
