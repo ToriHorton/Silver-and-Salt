@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logo On Dark — Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F4EFE6; font-family: 'Satoshi', sans-serif; padding: 48px; }
+h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 36px; color: #2F3E34; margin-bottom: 8px; }
+p.sub { font-size: 15px; color: #7E8E84; margin-bottom: 48px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1100px; }
+.option { border-radius: 12px; overflow: hidden; border: 1px solid rgba(47,62,52,0.1); }
+.option-label { padding: 16px 24px; background: white; font-size: 14px; font-weight: 700; color: #2F3E34; }
+.option-label span { font-weight: 400; color: #7E8E84; display: block; font-size: 13px; margin-top: 4px; }
+.preview { padding: 56px 40px; display: flex; align-items: center; gap: 14px; }
+.preview.on-moss { background: #2F3E34; }
+.preview.on-ink { background: #3D5A99; }
+
+/* Split circle */
+.sc { width: 42px; height: 42px; border-radius: 50%; position: relative; overflow: hidden; flex-shrink: 0; }
+.sc-l { position: absolute; top: 0; left: 0; width: 50%; height: 100%; }
+.sc-r { position: absolute; top: 0; right: 0; width: 50%; height: 100%; }
+.sc-a { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: white; z-index: 2; line-height: 1; }
+
+/* Wordmark */
+.wm { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 28px; letter-spacing: -0.01em; line-height: 1.2; }
+.wm .amp { font-size: 0.8em; font-weight: 400; margin: 0 -0.04em; }
+
+/* Current treatment label */
+.current-tag { display: inline-block; background: rgba(209,107,79,0.12); color: #D16B4F; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; margin-left: 8px; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<h1>Primary Logo on Dark — Options</h1>
+<p class="sub">The current version loses the left half of the circle on dark backgrounds. Here are alternatives.</p>
+
+<div class="grid">
+
+  <!-- CURRENT -->
+  <div class="option">
+    <div class="option-label">A. Current <span class="current-tag">CURRENT</span><span>Moss left / Rust right — left half disappears on dark</span></div>
+    <div class="preview on-moss">
+      <div class="sc">
+        <div class="sc-l" style="background:#2F3E34"></div>
+        <div class="sc-r" style="background:#D16B4F"></div>
+        <div class="sc-a">&amp;</div>
+      </div>
+      <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+    </div>
+    <div class="preview on-ink">
+      <div class="sc">
+        <div class="sc-l" style="background:#2F3E34"></div>
+        <div class="sc-r" style="background:#D16B4F"></div>
+        <div class="sc-a">&amp;</div>
+      </div>
+      <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+    </div>
+  </div>
+
+  <!-- OPTION D: Outlined left / Filled rust right -->
+  <div class="option">
+    <div class="option-label">D. Cream outline left / Filled rust right<span>Elegant — outlined half adds sophistication</span></div>
+    <div class="preview on-moss">
+      <div class="sc" style="background:transparent;border:2px solid #F0EDE7">
+        <div class="sc-l" style="background:transparent"></div>
+        <div class="sc-r" style="background:#D16B4F;top:0;right:0;width:50%;height:100%;border-radius:0 50% 50% 0"></div>
+        <div class="sc-a">&amp;</div>
+      </div>
+      <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+    </div>
+    <div class="preview on-ink">
+      <div class="sc" style="background:transparent;border:2px solid #F0EDE7">
+        <div class="sc-l" style="background:transparent"></div>
+        <div class="sc-r" style="background:#D16B4F;top:0;right:0;width:50%;height:100%;border-radius:0 50% 50% 0"></div>
+        <div class="sc-a">&amp;</div>
+      </div>
+      <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+    </div>
+  </div>
+
+  <!-- OPTION E: Sage/muted left / Rust right -->
+  <div class="option">
+    <div class="option-label">E. Sage left / Rust right<span>Subtle contrast — stays in the green family but visible</span></div>
+    <div class="preview on-moss">
+      <div class="sc">
+        <div class="sc-l" style="background:#7E8E84"></div>
+        <div class="sc-r" style="background:#D16B4F"></div>
+        <div class="sc-a">&amp;</div>
+      </div>
+      <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+    </div>
+    <div class="preview on-ink">
+      <div class="sc">
+        <div class="sc-l" style="background:#7E8E84"></div>
+        <div class="sc-r" style="background:#D16B4F"></div>
+        <div class="sc-a">&amp;</div>
+      </div>
+      <span class="wm" style="color:#F0EDE7">Silver <span class="amp" style="color:rgba(240,237,231,0.5)">&amp;</span> Salt Capital</span>
+    </div>
+  </div>
+
+
+</div>
+
+</body>
+</html>

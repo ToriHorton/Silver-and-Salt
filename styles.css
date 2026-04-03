@@ -372,6 +372,8 @@ body.nav-open .nav-dropdown { display: flex; }
 }
 .nav-mark .sc-left { position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: var(--moss); }
 .nav-mark .sc-right { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: var(--pop); transition: background .3s; }
+/* On dark backgrounds: sage left half for visibility */
+.s-dark .nav-mark .sc-left, .s-dark .f-mark .sc-left { background: var(--sage); }
 .nav-mark .sc-amp {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   font-family: 'Cormorant Garamond', serif;
