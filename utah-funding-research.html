@@ -8,8 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
-body { --pop: #3D5A99; --pop-hover: #4E6DAF; --pop-glow: rgba(61,90,153,0.16); }
-.hero{background:var(--ink);padding:120px 48px 60px;position:relative;overflow:hidden;}
+.hero{background:var(--teal);padding:120px 48px 60px;position:relative;overflow:hidden;}
 .hero::before{content:'01';position:absolute;bottom:-40px;right:-20px;font-family:'Cormorant Garamond',serif;font-size:280px;font-weight:600;color:rgba(255,255,255,0.05);line-height:1;}
 .report-badge{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,64px);font-weight:300;color:white;line-height:1.1;margin-bottom:16px;}
@@ -21,7 +20,7 @@ body { --pop: #3D5A99; --pop-hover: #4E6DAF; --pop-glow: rgba(61,90,153,0.16); }
 .kf-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);line-height:1.4;}
 .main{max-width:800px;margin:0 auto;padding:64px 48px;}
 .section{margin-bottom:56px;}
-.section-eyebrow{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);margin-bottom:12px;}
+.section-eyebrow{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;}
 .section-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;margin-bottom:20px;line-height:1.2;}
 .body{font-size:15px;line-height:1.85;color:var(--moss-light);font-weight:300;}
 .body+.body{margin-top:16px;}
@@ -32,13 +31,13 @@ body { --pop: #3D5A99; --pop-hover: #4E6DAF; --pop-glow: rgba(61,90,153,0.16); }
 .data-table th{background:var(--moss);color:var(--cream);padding:10px 12px;text-align:left;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;}
 .data-table td{padding:10px 12px;border-bottom:1px solid rgba(47,62,52,0.08);}
 .data-table tr:nth-child(even) td{background:var(--sand);}
-.data-table td.highlight{font-weight:700;color:var(--ink);}
+.data-table td.highlight{font-weight:700;color:var(--moss);}
 .cite-note{font-size:10px;color:var(--sage);font-style:italic;}
 .sources-box{background:var(--sand);border-radius:8px;padding:24px;margin-top:40px;}
 .sources-title{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);margin-bottom:12px;}
 .source-item{font-size:11px;color:var(--moss-light);padding:4px 0;border-bottom:1px solid rgba(47,62,52,0.08);}
-.ai-note{background:rgba(61,90,153,0.08);border:1px solid rgba(61,90,153,0.2);border-radius:6px;padding:16px;font-size:12px;color:var(--moss-light);line-height:1.6;margin-top:24px;}
-.ai-note strong{color:var(--ink);}
+.ai-note{background:rgba(47,62,52,0.06);border:1px solid rgba(47,62,52,0.15);border-radius:6px;padding:16px;font-size:12px;color:var(--moss-light);line-height:1.6;margin-top:24px;}
+.ai-note strong{color:var(--moss);}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
@@ -74,7 +73,7 @@ body { --pop: #3D5A99; --pop-hover: #4E6DAF; --pop-glow: rgba(61,90,153,0.16); }
     <li><a href="index.html">Home</a></li>
     <li><a href="index.html#thesis">The Thesis</a></li>
     <li><a href="index.html#how">How It Works</a></li>
-    <li><a href="open-research.html">Research</a></li>
+    <li><a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join</a></li>
   </ul>
   <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="nav-cta">Join</a>
   <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
@@ -84,7 +83,6 @@ body { --pop: #3D5A99; --pop-hover: #4E6DAF; --pop-glow: rgba(61,90,153,0.16); }
     <a href="index.html">Home</a>
     <a href="index.html#thesis">The Thesis</a>
     <a href="index.html#how">How It Works</a>
-    <a href="open-research.html">Research</a>
     <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join</a>
   </div>
 </nav>

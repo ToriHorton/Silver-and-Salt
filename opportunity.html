@@ -182,7 +182,8 @@
   @media (max-width: 768px) {
     nav { padding: 0 20px; }
     section { padding: 64px 24px; }
-    .hero { padding: 100px 24px 64px; }
+    .hero { padding: 100px 24px 64px; min-height: auto; justify-content: center; }
+    .hero-scroll { display: none; }
     .two-sides { grid-template-columns: 1fr; }
     .side-bridge { display: none; }
     .diagram-inner { grid-template-columns: 1fr; gap: 48px; }
@@ -215,25 +216,25 @@
 
 <!-- ══ NAV ══ -->
 <nav class="nav-standalone">
-  <a class="nav-logo" href="index.html">
-    <span class="nav-name">Silver <span class="amp">&amp;</span> Salt Capital</span>
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
   </a>
   <ul class="nav-links">
-    <li><a href="opportunity.html" class="active">The Opportunity</a></li>
-    <li><a href="index.html">The Data</a></li>
-    <li><a href="networks.html">The Networks</a></li>
-    <li><a href="open-research.html">Open Research</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join</a></li>
   </ul>
-  <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="nav-cta">Join Us</a>
-  <button class="nav-menu-btn" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+  <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-dropdown">
-    <a href="index.html" onclick="if(history.length>1){history.back();return false}">← Back</a>
-    <a href="opportunity.html">The Opportunity</a>
-    <a href="networks.html">The Networks</a>
-    <a href="open-research.html">Open Research</a>
-    <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join Us</a>
+    <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join</a>
   </div>
 </nav>
 
@@ -286,11 +287,11 @@
       <div class="side side-right">
         <div class="side-label">Side Two — The Investors</div>
         <h3 class="side-heading">Women have capital.<br><em>They need the on-ramp.</em></h3>
-        <p class="side-body">There are 100+ accredited women investors in the Salt Lake–Park City corridor. Women collectively control $10.9 trillion in investable assets nationally and are on track to control $30 trillion by 2030.</p>
+        <p class="side-body">There are an estimated ~100K accredited women investors in the Salt Lake–Park City corridor. Women collectively control $10.9 trillion in investable assets nationally and are on track to control $30 trillion by 2030.</p>
         <p class="side-body" style="margin-top:14px">The capital is here. What's been missing is the trusted, accessible on-ramp. The community where women can learn together, evaluate deals together, and invest with confidence — without having to walk into a room where they're the only one.</p>
         <div class="side-stats">
           <div class="side-stat">
-            <div class="ss-num">25K</div>
+            <div class="ss-num">~100K</div>
             <div class="ss-label">Estimated accredited women in SLC–Park City corridor<span style="font-size:9px;color:rgba(255,255,255,0.3);display:block;margin-top:2px">[S46]</span></div>
           </div>
           <div class="side-stat">
@@ -380,11 +381,11 @@
 <!-- ══ UTAH PARADOX ══ -->
 <div class="paradox-section">
   <div class="paradox-inner">
-    <h2 class="paradox-head">Twenty-five thousand women<br>with the financial capacity to invest.<br><em>Where are they?</em></h2>
+    <h2 class="paradox-head">One hundred thousand women<br>with the financial capacity to invest.<br><em>Where are they?</em></h2>
     <div class="paradox-grid">
       <div class="paradox-card">
-        <div class="pc-num">25<span>K</span></div>
-        <div class="pc-label">Estimated accredited women investors in the Salt Lake–Park City corridor — conservative estimate<span style="display:block;margin-top:4px;font-size:9px;opacity:0.5">[S46]</span></div>
+        <div class="pc-num">~100<span>K</span></div>
+        <div class="pc-label">Estimated accredited women investors in the Salt Lake–Park City corridor<span style="display:block;margin-top:4px;font-size:9px;opacity:0.5">[S46]</span></div>
       </div>
       <div class="paradox-card">
         <div class="pc-num">5<span>%</span></div>
@@ -400,7 +401,7 @@
 
     <div class="activation">
       <div class="act-num">1,000+</div>
-      <div class="act-text"><strong>New early-stage investors in Utah.</strong> That's what activation of 100+ accredited women in the SLC–Park City corridor would produce. Boulder did it. Austin did it. Utah is next — and Silver &amp; Salt Capital is how we start.</div>
+      <div class="act-text"><strong>New early-stage investors in Utah.</strong> That's what activation of ~100K accredited women in the SLC–Park City corridor would produce. Boulder did it. Austin did it. Utah is next — and Silver &amp; Salt Capital is how we start.</div>
     </div>
   </div>
 </div>
@@ -448,6 +449,55 @@
     <a href="accredited-women-research.html" class="btn-secondary">See the research →</a>
   </div>
 </div>
+
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#story">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Founding Vision</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="https://forms.gle/dN1DJgWZs9X7Z8U8A" target="_blank" rel="noopener">Press Contact</a>
+        <a class="f-sitemap-link" href="brand-assets.html">Brand Assets</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
 
 </body>
 </html>
