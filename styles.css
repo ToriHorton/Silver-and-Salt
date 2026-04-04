@@ -324,6 +324,18 @@ nav.nav-standalone {
   cursor: pointer;
   padding: var(--space-2);
 }
+.nav-menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--moss);
+  border-radius: 1px;
+  transition: all .25s;
+}
+.nav-menu-btn span + span { margin-top: 5px; }
+body.nav-open .nav-menu-btn span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+body.nav-open .nav-menu-btn span:nth-child(2) { opacity: 0; }
+body.nav-open .nav-menu-btn span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 .nav-dropdown {
   display: none;
   position: fixed;
@@ -738,6 +750,11 @@ footer::after {
   .nav-standalone .nav-links { display: none; }
   .nav-standalone .nav-cta { display: none; }
   .nav-standalone .nav-menu-btn { display: block; }
+
+  /* Sources table: stack vertically on mobile */
+  .page-sources-list li { flex-direction: column; gap: 2px; }
+  .page-sources-list .source { white-space: normal; }
+  .page-sources { padding: var(--space-8) var(--space-5) var(--space-10); }
 }
 
 @media(max-width: 600px) {
