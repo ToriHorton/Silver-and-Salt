@@ -160,6 +160,43 @@ nav { z-index: 100; }
 #page-how .hiw-community p{font-size:17px;line-height:1.8;color:var(--moss-light);font-weight:300;margin-bottom:14px}
 #page-how .hiw-community p strong{font-weight:600;color:var(--moss)}
 
+/* How It Works — Pipeline Card */
+#page-how .hiw-pl-wrap{padding:0 48px 72px;background:var(--cream)}
+#page-how .hiw-pl-card{background:#3A2536;border-radius:12px;max-width:1100px;width:100%;margin:0 auto;padding:56px 48px 40px;position:relative;overflow:hidden}
+#page-how .hiw-pl-card::before{content:'&';position:absolute;bottom:-50px;right:-20px;font-family:'Cormorant Garamond',serif;font-size:320px;font-weight:300;color:rgba(139,94,131,0.08);line-height:1;pointer-events:none}
+#page-how .hiw-pl-header{text-align:center;margin-bottom:48px;position:relative}
+#page-how .hiw-pl-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:10px}
+#page-how .hiw-pl-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.5vw,38px);font-weight:300;font-style:italic;color:var(--cream);line-height:1.2;margin-bottom:6px}
+#page-how .hiw-pl-sub{font-size:14px;color:rgba(251,248,242,0.5);max-width:460px;margin:0 auto;line-height:1.6}
+#page-how .hiw-pl-pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+#page-how .hiw-pl-pipeline::before{content:'';position:absolute;top:42px;left:calc(10% + 20px);right:calc(10% + 20px);height:2px;background:linear-gradient(to right,#C9A84C,rgba(201,168,76,0.25),#C9A84C,rgba(201,168,76,0.25),#C9A84C);z-index:0}
+#page-how .hiw-pl-step{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1}
+#page-how .hiw-pl-icon{width:84px;height:84px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:14px;position:relative}
+#page-how .hiw-pl-icon svg{width:28px;height:28px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#page-how .hiw-pl-num{font-family:'Satoshi',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;margin-top:2px}
+#page-how .hiw-pl-icon-you{background:#C9A84C;box-shadow:0 0 0 4px rgba(201,168,76,0.15)}
+#page-how .hiw-pl-icon-you svg{stroke:#3A2536}
+#page-how .hiw-pl-icon-you .hiw-pl-num{color:#3A2536}
+#page-how .hiw-pl-icon-ssc{background:rgba(139,94,131,0.3);box-shadow:0 0 0 4px rgba(139,94,131,0.1)}
+#page-how .hiw-pl-icon-ssc svg{stroke:var(--cream);opacity:.8}
+#page-how .hiw-pl-icon-ssc .hiw-pl-num{color:rgba(251,248,242,0.6)}
+#page-how .hiw-pl-who{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+#page-how .hiw-pl-who-you{color:#C9A84C}
+#page-how .hiw-pl-who-ssc{color:#8B5E83}
+#page-how .hiw-pl-stitle{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--cream);line-height:1.25;margin-bottom:6px;min-height:50px;display:flex;align-items:center}
+#page-how .hiw-pl-sdesc{font-size:12px;color:rgba(251,248,242,0.5);line-height:1.55;max-width:170px;margin:0 auto}
+#page-how .hiw-pl-sdesc strong{color:rgba(251,248,242,0.85);font-weight:600}
+#page-how .hiw-pl-money{margin-top:40px;border-top:1px solid rgba(139,94,131,0.2);padding-top:24px}
+#page-how .hiw-pl-money-label{text-align:center;font-size:9px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:16px}
+#page-how .hiw-pl-money-row{display:grid;grid-template-columns:repeat(5,1fr);position:relative}
+#page-how .hiw-pl-money-row::before{content:'';position:absolute;top:50%;left:calc(10% + 8px);right:calc(10% + 8px);height:3px;background:linear-gradient(to right,#C9A84C,#C9A84C 55%,#7CB83F 60%,#7CB83F);border-radius:2px;transform:translateY(-50%)}
+#page-how .hiw-pl-money-step{display:flex;flex-direction:column;align-items:center;position:relative;z-index:1}
+#page-how .hiw-pl-dot{width:22px;height:22px;border-radius:50%;background:#C9A84C;margin-bottom:6px;border:3px solid #3A2536;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#3A2536;line-height:1}
+#page-how .hiw-pl-dot-go{background:#7CB83F}
+#page-how .hiw-pl-money-text{font-size:11px;font-weight:600;color:rgba(251,248,242,0.55);line-height:1.3;text-align:center;max-width:120px}
+#page-how .hiw-pl-money-text em{font-style:normal;color:#C9A84C}
+#page-how .hiw-pl-money-text em.go{color:#7CB83F}
+
 /* How It Works — Commitment */
 #page-how .hiw-commit-section{background:var(--sand);padding:72px 48px}
 #page-how .hiw-commit-inner{max-width:1100px;margin:0 auto}
@@ -221,6 +258,25 @@ nav { z-index: 100; }
   #page-how .hiw-pillars{padding:40px 24px}
   #page-how .hiw-pillars-inner{grid-template-columns:1fr}
   #page-how .hiw-community{padding:56px 24px}
+  #page-how .hiw-pl-wrap{padding:0 24px 56px}
+  #page-how .hiw-pl-card{padding:40px 28px 32px}
+  #page-how .hiw-pl-pipeline{grid-template-columns:1fr}
+  #page-how .hiw-pl-pipeline::before{display:none}
+  #page-how .hiw-pl-step{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:20px;row-gap:0;text-align:left;padding:0 0 28px 0;position:relative}
+  #page-how .hiw-pl-step::before{content:'';position:absolute;top:0;left:33px;bottom:0;width:2px;background:rgba(201,168,76,0.15);z-index:0}
+  #page-how .hiw-pl-step:last-child::before{display:none}
+  #page-how .hiw-pl-icon{grid-row:1/4;grid-column:1;width:66px;height:66px;margin-bottom:0;position:relative;z-index:1;box-shadow:0 0 0 3px rgba(201,168,76,0.12)}
+  #page-how .hiw-pl-icon svg{width:24px;height:24px}
+  #page-how .hiw-pl-num{font-size:8px}
+  #page-how .hiw-pl-who{grid-column:2;align-self:end;margin-bottom:2px}
+  #page-how .hiw-pl-stitle{grid-column:2;min-height:auto;font-size:20px;margin-bottom:4px}
+  #page-how .hiw-pl-sdesc{grid-column:2;max-width:none;margin:0;font-size:13px;line-height:1.6}
+  #page-how .hiw-pl-money{margin-top:28px}
+  #page-how .hiw-pl-money-row{grid-template-columns:1fr;gap:10px}
+  #page-how .hiw-pl-money-row::before{display:none}
+  #page-how .hiw-pl-money-step{flex-direction:row;gap:12px}
+  #page-how .hiw-pl-dot{margin-bottom:0;flex-shrink:0;font-size:10px}
+  #page-how .hiw-pl-money-text{text-align:left;max-width:none;font-size:12px}
   #page-how .hiw-commit-section{padding:56px 24px}
   #page-how .hiw-funding{padding:56px 24px}
   #page-how .hiw-funding-grid{grid-template-columns:1fr;gap:20px}
@@ -231,6 +287,11 @@ nav { z-index: 100; }
 @media(max-width:480px){
   #page-how .hiw-hero{padding:112px 16px 48px}
   #page-how .hiw-community{padding:40px 16px}
+  #page-how .hiw-pl-wrap{padding:0 16px 40px}
+  #page-how .hiw-pl-card{padding:32px 20px 28px}
+  #page-how .hiw-pl-icon{width:56px;height:56px}
+  #page-how .hiw-pl-step::before{left:27px}
+  #page-how .hiw-pl-icon svg{width:22px;height:22px}
   #page-how .hiw-commit-section{padding:40px 16px}
   #page-how .hiw-funding{padding:40px 16px}
   #page-how .hiw-cta{padding:40px 16px}
@@ -1104,7 +1165,7 @@ nav { z-index: 100; }
   <section class="cohort-strip">
     <div class="wrap" style="text-align:center">
       <p style="font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(20px,3vw,28px);color:white;letter-spacing:-.02em;margin-bottom:8px">We're starting now.</p>
-      <p style="font-size:17px;color:rgba(255,255,255,0.75);max-width:520px;margin:0 auto 24px;line-height:1.6">The first 100 members will set the thesis, shape the culture, and define what comes next.</p>
+      <p style="font-size:17px;color:rgba(255,255,255,0.75);max-width:520px;margin:0 auto 24px;line-height:1.6">The first 100 members will shape the culture, influence who gets funded, and define the standards for everything that follows.</p>
       <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="btn" style="background:white;color:var(--moss);font-weight:700;margin-bottom:0;text-decoration:none">Join Us</a>
     </div>
   </section>
@@ -1661,6 +1722,59 @@ nav { z-index: 100; }
     </div>
   </section>
 
+  <!-- Pipeline Card -->
+  <div class="hiw-pl-wrap">
+    <div class="hiw-pl-card">
+      <div class="hiw-pl-header">
+        <p class="hiw-pl-label">How It Works</p>
+        <h2 class="hiw-pl-title">Your money. Your account. Your decisions.</h2>
+        <p class="hiw-pl-sub">Five steps from joining to championing the founders you believe in.</p>
+      </div>
+      <div class="hiw-pl-pipeline">
+        <div class="hiw-pl-step">
+          <div class="hiw-pl-icon hiw-pl-icon-you"><svg viewBox="0 0 32 32"><circle cx="16" cy="10" r="5"/><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10"/></svg><div class="hiw-pl-num">STEP 1</div></div>
+          <div class="hiw-pl-who hiw-pl-who-you">You</div>
+          <div class="hiw-pl-stitle">Join</div>
+          <div class="hiw-pl-sdesc">Set up a profile with our community. Commit $10K/year and <strong>connect capital to the Utah founders who use it best</strong>.</div>
+        </div>
+        <div class="hiw-pl-step">
+          <div class="hiw-pl-icon hiw-pl-icon-ssc"><svg viewBox="0 0 32 32"><circle cx="14" cy="14" r="8"/><path d="M20 20l7 7"/></svg><div class="hiw-pl-num">STEP 2</div></div>
+          <div class="hiw-pl-who hiw-pl-who-ssc">Silver &amp; Salt</div>
+          <div class="hiw-pl-stitle">Discover</div>
+          <div class="hiw-pl-sdesc">Collectively we all source startups and run diligence. Members <strong>learn about angel investing together</strong>. (Some groups charge for this education, we don't.)</div>
+        </div>
+        <div class="hiw-pl-step">
+          <div class="hiw-pl-icon hiw-pl-icon-you"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10 16l4 4 8-8" stroke-width="2.5"/></svg><div class="hiw-pl-num">STEP 3</div></div>
+          <div class="hiw-pl-who hiw-pl-who-you">You</div>
+          <div class="hiw-pl-stitle">Decide</div>
+          <div class="hiw-pl-sdesc">Say yes or no. <strong>Investments start at $1,000.</strong> Nobody invests your money but you.</div>
+        </div>
+        <div class="hiw-pl-step">
+          <div class="hiw-pl-icon hiw-pl-icon-ssc"><svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="2"/><path d="M4 12h24"/></svg><div class="hiw-pl-num">STEP 4</div></div>
+          <div class="hiw-pl-who hiw-pl-who-ssc">Platform</div>
+          <div class="hiw-pl-stitle">Invest</div>
+          <div class="hiw-pl-sdesc">The platform sets up the SPV — <strong>legal, docs, compliance</strong>. Easier for a founder to take one investment on their cap table and better for you to diversify. Your capital moves only when you say so.</div>
+        </div>
+        <div class="hiw-pl-step">
+          <div class="hiw-pl-icon hiw-pl-icon-you"><svg viewBox="0 0 32 32"><circle cx="16" cy="8" r="3"/><circle cx="6" cy="22" r="3"/><circle cx="26" cy="22" r="3"/><path d="M16 11v4m-6.5 4L14 16m12.5 3L18 16"/></svg><div class="hiw-pl-num">STEP 5</div></div>
+          <div class="hiw-pl-who hiw-pl-who-you">You</div>
+          <div class="hiw-pl-stitle">Champion</div>
+          <div class="hiw-pl-sdesc">Open doors, make intros, share expertise. Our money is one of many ways we can help our women founders win. <strong>Every investor can offer an exponential network of support</strong>.</div>
+        </div>
+      </div>
+      <div class="hiw-pl-money">
+        <div class="hiw-pl-money-label">Your capital at each step</div>
+        <div class="hiw-pl-money-row">
+          <div class="hiw-pl-money-step"><div class="hiw-pl-dot">1</div><div class="hiw-pl-money-text"><em>Your money, in your account</em></div></div>
+          <div class="hiw-pl-money-step"><div class="hiw-pl-dot">2</div><div class="hiw-pl-money-text"><em>Still in your account</em></div></div>
+          <div class="hiw-pl-money-step"><div class="hiw-pl-dot">3</div><div class="hiw-pl-money-text"><em>You choose</em></div></div>
+          <div class="hiw-pl-money-step"><div class="hiw-pl-dot hiw-pl-dot-go">4</div><div class="hiw-pl-money-text"><em class="go">Deployed by you</em></div></div>
+          <div class="hiw-pl-money-step"><div class="hiw-pl-dot hiw-pl-dot-go">5</div><div class="hiw-pl-money-text"><em class="go">Working for you</em></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Your Commitment -->
   <section class="hiw-commit-section">
     <div class="hiw-commit-inner">
@@ -1859,7 +1973,7 @@ nav { z-index: 100; }
       <div class="narrow r">
         <p class="label">The Founding Cohort</p>
         <h2>We understand that collective finance will fund Utah's future. <em>We can't afford to miss this investment.</em></h2>
-        <p>Silver <span class="brand-amp">&amp;</span> Salt Capital is forming with 100 women who will set the investment thesis, shape the culture, and build the foundation for everything that follows.</p>
+        <p>Silver <span class="brand-amp">&amp;</span> Salt Capital is forming with 100 women who will shape the culture, influence who gets funded, and define the standards for everything that follows.</p>
       </div>
     </div>
   </section>
