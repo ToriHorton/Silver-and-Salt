@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S Capital — Flywheel Concepts v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f=satoshi@400,500,600,700,800,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FBF8F2;
+  --sand: #F4EFE6;
+  --moss: #2F3E34;
+  --moss-light: #4A5E50;
+  --sage: #7E8E84;
+  --pop: #D16B4F;
+  --pop-soft: rgba(209,107,79,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#E8E3DA;color:var(--moss)}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(232,227,218,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(47,62,52,0.08);padding:16px 40px;display:flex;justify-content:space-between;align-items:center}
+.nav-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
+.nav-links{display:flex;gap:20px}
+.nav-links a{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--sage);transition:color .2s;padding:4px 8px;border-radius:4px}
+.nav-links a:hover{color:var(--pop);background:var(--pop-soft)}
+
+/* Section wrapper */
+.concept{min-height:100vh;padding:120px 60px 80px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.concept-label{position:absolute;top:100px;left:60px;font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--pop)}
+
+/* Shared layout */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1120px;margin:0 auto}
+
+/* Copy block */
+.copy .tag{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--pop);margin-bottom:20px}
+.copy p{font-size:16px;line-height:1.85;color:var(--moss-light);font-weight:300;margin-bottom:16px}
+.copy p strong{font-weight:600;color:var(--moss)}
+.copy-dark p{color:rgba(251,248,242,0.6)}
+.copy-dark p strong{color:#F0EDE7}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 1 — Elegant Thin Circle
+   Minimal circle, typographic labels outside, thin arrows
+   ═══════════════════════════════════════════════════════ */
+.c1{background:var(--cream)}
+.c1-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c1-wheel svg{position:absolute;inset:0;width:100%;height:100%}
+.c1-stage{position:absolute;width:120px;transform:translate(-50%,-50%)}
+.c1-stage-inner{text-align:center}
+.c1-dot{width:10px;height:10px;border-radius:50%;background:var(--pop);margin:0 auto 10px;box-shadow:0 0 0 4px rgba(209,107,79,0.12)}
+.c1-txt{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--moss);line-height:1.35}
+.c1-stage:nth-child(2){left:220px;top:18px}
+.c1-stage:nth-child(3){left:418px;top:170px}
+.c1-stage:nth-child(4){left:350px;top:400px}
+.c1-stage:nth-child(5){left:90px;top:400px}
+.c1-stage:nth-child(6){left:22px;top:170px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 2 — Bold Circular Segments
+   Thick arc segments with labels along the curve
+   ═══════════════════════════════════════════════════════ */
+.c2{background:var(--sand)}
+.c2-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c2-wheel svg{width:100%;height:100%}
+.c2-label{position:absolute;width:120px;text-align:center;transform:translate(-50%,-50%)}
+.c2-label-num{font-family:'Satoshi',sans-serif;font-weight:900;font-size:32px;color:var(--pop);opacity:0.15;line-height:1}
+.c2-label-txt{font-family:'Satoshi',sans-serif;font-weight:700;font-size:13px;color:var(--moss);line-height:1.4;margin-top:2px}
+.c2-label:nth-child(2){left:220px;top:16px}
+.c2-label:nth-child(3){left:420px;top:168px}
+.c2-label:nth-child(4){left:348px;top:398px}
+.c2-label:nth-child(5){left:92px;top:398px}
+.c2-label:nth-child(6){left:20px;top:168px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 3 — Glowing Ring on Dark
+   Luminous gradient ring, ethereal feel
+   ═══════════════════════════════════════════════════════ */
+.c3{background:var(--moss)}
+.c3-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c3-wheel svg{width:100%;height:100%}
+.c3-node{position:absolute;width:120px;text-align:center;transform:translate(-50%,-50%)}
+.c3-glow{width:12px;height:12px;border-radius:50%;background:var(--pop);margin:0 auto 10px;box-shadow:0 0 24px rgba(209,107,79,0.6),0 0 60px rgba(209,107,79,0.2)}
+.c3-ntxt{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;color:rgba(251,248,242,0.75);line-height:1.35;font-style:italic}
+.c3-node:nth-child(2){left:220px;top:16px}
+.c3-node:nth-child(3){left:418px;top:168px}
+.c3-node:nth-child(4){left:348px;top:400px}
+.c3-node:nth-child(5){left:92px;top:400px}
+.c3-node:nth-child(6){left:22px;top:168px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 4 — Watercolor Ring
+   Soft gradient fills, organic feel
+   ═══════════════════════════════════════════════════════ */
+.c4{background:var(--cream)}
+.c4-wheel{position:relative;width:460px;height:460px;margin:0 auto}
+.c4-wheel svg{width:100%;height:100%}
+.c4-tag{position:absolute;transform:translate(-50%,-50%);text-align:center;width:130px}
+.c4-tag-line{width:24px;height:2px;background:var(--pop);margin:0 auto 8px;border-radius:2px}
+.c4-tag-txt{font-family:'Satoshi',sans-serif;font-weight:600;font-size:13px;color:var(--moss);line-height:1.45}
+.c4-tag:nth-child(2){left:230px;top:10px}
+.c4-tag:nth-child(3){left:435px;top:178px}
+.c4-tag:nth-child(4){left:365px;top:420px}
+.c4-tag:nth-child(5){left:95px;top:420px}
+.c4-tag:nth-child(6){left:25px;top:178px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 5 — Dashed Circle with Serif Labels
+   Classic, editorial, understated
+   ═══════════════════════════════════════════════════════ */
+.c5{background:#F0EDE7}
+.c5-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c5-wheel svg{width:100%;height:100%}
+.c5-item{position:absolute;width:130px;text-align:center;transform:translate(-50%,-50%)}
+.c5-item-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--pop);opacity:0.25;line-height:1}
+.c5-item-txt{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--moss);line-height:1.35;margin-top:4px}
+.c5-item:nth-child(2){left:220px;top:12px}
+.c5-item:nth-child(3){left:420px;top:168px}
+.c5-item:nth-child(4){left:348px;top:400px}
+.c5-item:nth-child(5){left:92px;top:400px}
+.c5-item:nth-child(6){left:20px;top:168px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 6 — Thick Brush Stroke Circle
+   Hand-drawn feel, bold stroke, organic
+   ═══════════════════════════════════════════════════════ */
+.c6{background:var(--sand)}
+.c6-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c6-wheel svg{width:100%;height:100%}
+.c6-pt{position:absolute;width:120px;text-align:center;transform:translate(-50%,-50%)}
+.c6-pt-marker{width:16px;height:16px;border-radius:50%;border:3px solid var(--pop);margin:0 auto 8px}
+.c6-pt-txt{font-family:'Satoshi',sans-serif;font-weight:700;font-size:13px;color:var(--moss);line-height:1.4}
+.c6-pt:nth-child(2){left:220px;top:14px}
+.c6-pt:nth-child(3){left:420px;top:168px}
+.c6-pt:nth-child(4){left:348px;top:400px}
+.c6-pt:nth-child(5){left:92px;top:400px}
+.c6-pt:nth-child(6){left:20px;top:168px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 7 — Growing Dots
+   Dots increase in size around the circle = compounding
+   ═══════════════════════════════════════════════════════ */
+.c7{background:var(--cream)}
+.c7-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c7-wheel svg{width:100%;height:100%}
+.c7-bubble{position:absolute;text-align:center;transform:translate(-50%,-50%)}
+.c7-bubble-dot{border-radius:50%;background:var(--pop);margin:0 auto 10px}
+.c7-bubble-txt{font-family:'Satoshi',sans-serif;font-weight:600;font-size:13px;color:var(--moss);line-height:1.4}
+.c7-bubble:nth-child(2){left:220px;top:14px;width:110px}
+.c7-bubble:nth-child(2) .c7-bubble-dot{width:20px;height:20px;opacity:0.4}
+.c7-bubble:nth-child(3){left:420px;top:168px;width:120px}
+.c7-bubble:nth-child(3) .c7-bubble-dot{width:28px;height:28px;opacity:0.5}
+.c7-bubble:nth-child(4){left:348px;top:400px;width:130px}
+.c7-bubble:nth-child(4) .c7-bubble-dot{width:36px;height:36px;opacity:0.6}
+.c7-bubble:nth-child(5){left:92px;top:400px;width:130px}
+.c7-bubble:nth-child(5) .c7-bubble-dot{width:44px;height:44px;opacity:0.75}
+.c7-bubble:nth-child(6){left:20px;top:168px;width:130px}
+.c7-bubble:nth-child(6) .c7-bubble-dot{width:52px;height:52px;opacity:0.9}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 8 — Double Ring with Center
+   Inner + outer ring, "compounds" in center
+   ═══════════════════════════════════════════════════════ */
+.c8{background:var(--moss)}
+.c8-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c8-wheel svg{width:100%;height:100%}
+.c8-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+.c8-center-big{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:rgba(251,248,242,0.25);display:block}
+.c8-center-sm{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--pop);opacity:0.6}
+.c8-pt{position:absolute;width:120px;text-align:center;transform:translate(-50%,-50%)}
+.c8-pt-pip{width:8px;height:8px;border-radius:50%;background:var(--pop);margin:0 auto 8px;box-shadow:0 0 16px rgba(209,107,79,0.5)}
+.c8-pt-txt{font-family:'Satoshi',sans-serif;font-weight:600;font-size:12px;color:rgba(251,248,242,0.65);line-height:1.4}
+.c8-pt:nth-child(3){left:220px;top:14px}
+.c8-pt:nth-child(4){left:418px;top:168px}
+.c8-pt:nth-child(5){left:348px;top:400px}
+.c8-pt:nth-child(6){left:92px;top:400px}
+.c8-pt:nth-child(7){left:22px;top:168px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 9 — Gradient Arc Sweep
+   Single thick arc that sweeps the full circle with gradient
+   ═══════════════════════════════════════════════════════ */
+.c9{background:var(--cream)}
+.c9-wheel{position:relative;width:440px;height:440px;margin:0 auto}
+.c9-wheel svg{width:100%;height:100%}
+.c9-label{position:absolute;width:130px;text-align:center;transform:translate(-50%,-50%)}
+.c9-label-bar{width:20px;height:3px;border-radius:2px;background:var(--pop);margin:0 auto 8px}
+.c9-label-txt{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--moss);line-height:1.35}
+.c9-label:nth-child(2){left:220px;top:10px}
+.c9-label:nth-child(3){left:425px;top:170px}
+.c9-label:nth-child(4){left:355px;top:410px}
+.c9-label:nth-child(5){left:85px;top:410px}
+.c9-label:nth-child(6){left:15px;top:170px}
+
+
+/* ═══════════════════════════════════════════════════════
+   CONCEPT 10 — Monumental Circle with Bold Type
+   Large, confident, statement piece
+   ═══════════════════════════════════════════════════════ */
+.c10{background:#2A2A2A}
+.c10-wheel{position:relative;width:460px;height:460px;margin:0 auto}
+.c10-wheel svg{width:100%;height:100%}
+.c10-stage{position:absolute;width:130px;text-align:left;transform:translate(-50%,-50%)}
+.c10-stage-num{font-family:'Satoshi',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;color:var(--pop);margin-bottom:4px}
+.c10-stage-txt{font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;color:rgba(251,248,242,0.85);line-height:1.4}
+.c10-stage:nth-child(2){left:230px;top:10px;text-align:center}
+.c10-stage:nth-child(3){left:438px;top:178px}
+.c10-stage:nth-child(4){left:365px;top:425px}
+.c10-stage:nth-child(5){left:95px;top:425px;text-align:right}
+.c10-stage:nth-child(6){left:22px;top:178px;text-align:right}
+.c10 .copy-dark p{color:rgba(251,248,242,0.5)}
+.c10 .copy-dark p strong{color:rgba(251,248,242,0.85)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Silver <span style="font-weight:300">&amp;</span> Salt — Flywheel v2</div>
+  <div class="nav-links">
+    <a href="#c1">01</a><a href="#c2">02</a><a href="#c3">03</a><a href="#c4">04</a><a href="#c5">05</a>
+    <a href="#c6">06</a><a href="#c7">07</a><a href="#c8">08</a><a href="#c9">09</a><a href="#c10">10</a>
+  </div>
+</nav>
+
+
+<!-- ═══ CONCEPT 1 — Elegant Thin Circle ═══ -->
+<section class="concept c1" id="c1">
+  <div class="concept-label">01 — Elegant Thin Circle</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c1-wheel">
+      <svg viewBox="0 0 440 440">
+        <circle cx="220" cy="220" r="170" fill="none" stroke="rgba(47,62,52,0.07)" stroke-width="1"/>
+        <defs><marker id="a1" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#D16B4F" opacity="0.5"/></marker></defs>
+        <path d="M 268 55 A 170 170 0 0 1 380 130" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.35" marker-end="url(#a1)"/>
+        <path d="M 390 175 A 170 170 0 0 1 355 330" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.35" marker-end="url(#a1)"/>
+        <path d="M 325 365 A 170 170 0 0 1 175 385" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.35" marker-end="url(#a1)"/>
+        <path d="M 135 370 A 170 170 0 0 1 58 250" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.35" marker-end="url(#a1)"/>
+        <path d="M 52 200 A 170 170 0 0 1 150 62" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.35" marker-end="url(#a1)"/>
+      </svg>
+      <div class="c1-stage"><div class="c1-stage-inner"><div class="c1-dot"></div><div class="c1-txt">Invest<br>in women</div></div></div>
+      <div class="c1-stage"><div class="c1-stage-inner"><div class="c1-dot"></div><div class="c1-txt">More women<br>founders</div></div></div>
+      <div class="c1-stage"><div class="c1-stage-inner"><div class="c1-dot"></div><div class="c1-txt">More startups<br>with funding</div></div></div>
+      <div class="c1-stage"><div class="c1-stage-inner"><div class="c1-dot"></div><div class="c1-txt">More women<br>succeed</div></div></div>
+      <div class="c1-stage"><div class="c1-stage-inner"><div class="c1-dot"></div><div class="c1-txt">More profit-generating<br>companies</div></div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 2 — Bold Arc Segments ═══ -->
+<section class="concept c2" id="c2">
+  <div class="concept-label">02 — Bold Arc Segments</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c2-wheel">
+      <svg viewBox="0 0 440 440">
+        <defs>
+          <marker id="a2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#D16B4F" opacity="0.7"/></marker>
+        </defs>
+        <!-- 5 thick arc segments with gaps -->
+        <path d="M 264 53 A 170 170 0 0 1 375 125" fill="none" stroke="var(--pop)" stroke-width="6" opacity="0.2" stroke-linecap="round"/>
+        <path d="M 392 168 A 170 170 0 0 1 358 325" fill="none" stroke="var(--pop)" stroke-width="6" opacity="0.3" stroke-linecap="round"/>
+        <path d="M 328 362 A 170 170 0 0 1 175 388" fill="none" stroke="var(--pop)" stroke-width="6" opacity="0.4" stroke-linecap="round"/>
+        <path d="M 132 374 A 170 170 0 0 1 55 245" fill="none" stroke="var(--pop)" stroke-width="6" opacity="0.5" stroke-linecap="round"/>
+        <path d="M 50 195 A 170 170 0 0 1 155 58" fill="none" stroke="var(--pop)" stroke-width="6" opacity="0.6" stroke-linecap="round"/>
+        <!-- Arrow tips -->
+        <path d="M 370 122 L 382 130" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.5" marker-end="url(#a2)"/>
+        <path d="M 352 320 L 360 332" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.5" marker-end="url(#a2)"/>
+        <path d="M 180 385 L 170 390" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.5" marker-end="url(#a2)"/>
+        <path d="M 58 250 L 52 240" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.5" marker-end="url(#a2)"/>
+        <path d="M 152 60 L 160 54" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.5" marker-end="url(#a2)"/>
+        <!-- Subtle inner circle -->
+        <circle cx="220" cy="220" r="120" fill="none" stroke="rgba(47,62,52,0.04)" stroke-width="1"/>
+      </svg>
+      <div class="c2-label"><div class="c2-label-num">01</div><div class="c2-label-txt">Invest<br>in women</div></div>
+      <div class="c2-label"><div class="c2-label-num">02</div><div class="c2-label-txt">More women<br>founders</div></div>
+      <div class="c2-label"><div class="c2-label-num">03</div><div class="c2-label-txt">More startups<br>with funding</div></div>
+      <div class="c2-label"><div class="c2-label-num">04</div><div class="c2-label-txt">More women<br>succeed</div></div>
+      <div class="c2-label"><div class="c2-label-num">05</div><div class="c2-label-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 3 — Glowing Ring on Dark ═══ -->
+<section class="concept c3" id="c3">
+  <div class="concept-label">03 — Glowing Ring</div>
+  <div class="split">
+    <div class="copy copy-dark">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c3-wheel">
+      <svg viewBox="0 0 440 440">
+        <defs>
+          <marker id="a3" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#D16B4F" opacity="0.6"/></marker>
+          <filter id="glow"><feGaussianBlur stdDeviation="4" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <circle cx="220" cy="220" r="170" fill="none" stroke="rgba(209,107,79,0.08)" stroke-width="1.5" filter="url(#glow)"/>
+        <circle cx="220" cy="220" r="170" fill="none" stroke="rgba(209,107,79,0.15)" stroke-width="0.5"/>
+        <path d="M 268 55 A 170 170 0 0 1 380 130" fill="none" stroke="rgba(209,107,79,0.3)" stroke-width="1" marker-end="url(#a3)"/>
+        <path d="M 390 175 A 170 170 0 0 1 355 330" fill="none" stroke="rgba(209,107,79,0.3)" stroke-width="1" marker-end="url(#a3)"/>
+        <path d="M 325 365 A 170 170 0 0 1 175 385" fill="none" stroke="rgba(209,107,79,0.3)" stroke-width="1" marker-end="url(#a3)"/>
+        <path d="M 135 370 A 170 170 0 0 1 58 250" fill="none" stroke="rgba(209,107,79,0.3)" stroke-width="1" marker-end="url(#a3)"/>
+        <path d="M 52 200 A 170 170 0 0 1 150 62" fill="none" stroke="rgba(209,107,79,0.3)" stroke-width="1" marker-end="url(#a3)"/>
+      </svg>
+      <div class="c3-node"><div class="c3-glow"></div><div class="c3-ntxt">Invest<br>in women</div></div>
+      <div class="c3-node"><div class="c3-glow"></div><div class="c3-ntxt">More women<br>founders</div></div>
+      <div class="c3-node"><div class="c3-glow"></div><div class="c3-ntxt">More startups<br>with funding</div></div>
+      <div class="c3-node"><div class="c3-glow"></div><div class="c3-ntxt">More women<br>succeed</div></div>
+      <div class="c3-node"><div class="c3-glow"></div><div class="c3-ntxt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 4 — Watercolor Gradient Ring ═══ -->
+<section class="concept c4" id="c4">
+  <div class="concept-label">04 — Gradient Ring</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c4-wheel">
+      <svg viewBox="0 0 460 460">
+        <defs>
+          <linearGradient id="grd4" gradientTransform="rotate(45)">
+            <stop offset="0%" stop-color="#D16B4F" stop-opacity="0.06"/>
+            <stop offset="50%" stop-color="#D16B4F" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#7E8E84" stop-opacity="0.06"/>
+          </linearGradient>
+          <marker id="a4" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#D16B4F" opacity="0.5"/></marker>
+        </defs>
+        <circle cx="230" cy="230" r="175" fill="none" stroke="url(#grd4)" stroke-width="40"/>
+        <circle cx="230" cy="230" r="175" fill="none" stroke="rgba(47,62,52,0.05)" stroke-width="1"/>
+        <path d="M 278 60 A 175 175 0 0 1 395 138" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.3" marker-end="url(#a4)"/>
+        <path d="M 405 185 A 175 175 0 0 1 368 340" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.3" marker-end="url(#a4)"/>
+        <path d="M 335 375 A 175 175 0 0 1 182 400" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.3" marker-end="url(#a4)"/>
+        <path d="M 138 388 A 175 175 0 0 1 60 255" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.3" marker-end="url(#a4)"/>
+        <path d="M 55 205 A 175 175 0 0 1 158 62" fill="none" stroke="var(--pop)" stroke-width="1.2" opacity="0.3" marker-end="url(#a4)"/>
+      </svg>
+      <div class="c4-tag"><div class="c4-tag-line"></div><div class="c4-tag-txt">Invest<br>in women</div></div>
+      <div class="c4-tag"><div class="c4-tag-line"></div><div class="c4-tag-txt">More women<br>founders</div></div>
+      <div class="c4-tag"><div class="c4-tag-line"></div><div class="c4-tag-txt">More startups<br>with funding</div></div>
+      <div class="c4-tag"><div class="c4-tag-line"></div><div class="c4-tag-txt">More women<br>succeed</div></div>
+      <div class="c4-tag"><div class="c4-tag-line"></div><div class="c4-tag-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 5 — Editorial Dashed ═══ -->
+<section class="concept c5" id="c5">
+  <div class="concept-label">05 — Editorial Dashed</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c5-wheel">
+      <svg viewBox="0 0 440 440">
+        <defs><marker id="a5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2F3E34" opacity="0.3"/></marker></defs>
+        <circle cx="220" cy="220" r="170" fill="none" stroke="var(--moss)" stroke-width="1" stroke-dasharray="6 8" opacity="0.12"/>
+        <path d="M 268 55 A 170 170 0 0 1 380 130" fill="none" stroke="var(--moss)" stroke-width="1" opacity="0.2" stroke-dasharray="4 6" marker-end="url(#a5)"/>
+        <path d="M 390 175 A 170 170 0 0 1 355 330" fill="none" stroke="var(--moss)" stroke-width="1" opacity="0.2" stroke-dasharray="4 6" marker-end="url(#a5)"/>
+        <path d="M 325 365 A 170 170 0 0 1 175 385" fill="none" stroke="var(--moss)" stroke-width="1" opacity="0.2" stroke-dasharray="4 6" marker-end="url(#a5)"/>
+        <path d="M 135 370 A 170 170 0 0 1 58 250" fill="none" stroke="var(--moss)" stroke-width="1" opacity="0.2" stroke-dasharray="4 6" marker-end="url(#a5)"/>
+        <path d="M 52 200 A 170 170 0 0 1 150 62" fill="none" stroke="var(--moss)" stroke-width="1" opacity="0.2" stroke-dasharray="4 6" marker-end="url(#a5)"/>
+      </svg>
+      <div class="c5-item"><div class="c5-item-num">I</div><div class="c5-item-txt">Invest<br>in women</div></div>
+      <div class="c5-item"><div class="c5-item-num">II</div><div class="c5-item-txt">More women<br>founders</div></div>
+      <div class="c5-item"><div class="c5-item-num">III</div><div class="c5-item-txt">More startups<br>with funding</div></div>
+      <div class="c5-item"><div class="c5-item-num">IV</div><div class="c5-item-txt">More women<br>succeed</div></div>
+      <div class="c5-item"><div class="c5-item-num">V</div><div class="c5-item-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 6 — Organic Brush Stroke ═══ -->
+<section class="concept c6" id="c6">
+  <div class="concept-label">06 — Organic Stroke</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c6-wheel">
+      <svg viewBox="0 0 440 440">
+        <defs><marker id="a6" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#D16B4F" opacity="0.4"/></marker></defs>
+        <!-- Thick organic ring -->
+        <circle cx="220" cy="220" r="170" fill="none" stroke="var(--pop)" stroke-width="8" opacity="0.08" stroke-linecap="round"/>
+        <circle cx="220" cy="220" r="170" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.15" stroke-linecap="round"/>
+        <!-- Arrows -->
+        <path d="M 268 55 A 170 170 0 0 1 378 128" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.3" stroke-linecap="round" marker-end="url(#a6)"/>
+        <path d="M 390 175 A 170 170 0 0 1 355 328" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.3" stroke-linecap="round" marker-end="url(#a6)"/>
+        <path d="M 325 365 A 170 170 0 0 1 175 385" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.3" stroke-linecap="round" marker-end="url(#a6)"/>
+        <path d="M 135 370 A 170 170 0 0 1 58 248" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.3" stroke-linecap="round" marker-end="url(#a6)"/>
+        <path d="M 52 200 A 170 170 0 0 1 150 62" fill="none" stroke="var(--pop)" stroke-width="2" opacity="0.3" stroke-linecap="round" marker-end="url(#a6)"/>
+      </svg>
+      <div class="c6-pt"><div class="c6-pt-marker"></div><div class="c6-pt-txt">Invest<br>in women</div></div>
+      <div class="c6-pt"><div class="c6-pt-marker"></div><div class="c6-pt-txt">More women<br>founders</div></div>
+      <div class="c6-pt"><div class="c6-pt-marker"></div><div class="c6-pt-txt">More startups<br>with funding</div></div>
+      <div class="c6-pt"><div class="c6-pt-marker"></div><div class="c6-pt-txt">More women<br>succeed</div></div>
+      <div class="c6-pt"><div class="c6-pt-marker"></div><div class="c6-pt-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 7 — Growing Dots (Compounding) ═══ -->
+<section class="concept c7" id="c7">
+  <div class="concept-label">07 — Compounding Dots</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c7-wheel">
+      <svg viewBox="0 0 440 440">
+        <defs><marker id="a7" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#D16B4F" opacity="0.4"/></marker></defs>
+        <circle cx="220" cy="220" r="170" fill="none" stroke="rgba(47,62,52,0.05)" stroke-width="1"/>
+        <path d="M 268 55 A 170 170 0 0 1 380 130" fill="none" stroke="var(--pop)" stroke-width="1" opacity="0.25" marker-end="url(#a7)"/>
+        <path d="M 390 175 A 170 170 0 0 1 355 330" fill="none" stroke="var(--pop)" stroke-width="1" opacity="0.25" marker-end="url(#a7)"/>
+        <path d="M 325 365 A 170 170 0 0 1 175 385" fill="none" stroke="var(--pop)" stroke-width="1" opacity="0.25" marker-end="url(#a7)"/>
+        <path d="M 135 370 A 170 170 0 0 1 58 250" fill="none" stroke="var(--pop)" stroke-width="1" opacity="0.25" marker-end="url(#a7)"/>
+        <path d="M 52 200 A 170 170 0 0 1 150 62" fill="none" stroke="var(--pop)" stroke-width="1" opacity="0.25" marker-end="url(#a7)"/>
+      </svg>
+      <div class="c7-bubble"><div class="c7-bubble-dot"></div><div class="c7-bubble-txt">Invest<br>in women</div></div>
+      <div class="c7-bubble"><div class="c7-bubble-dot"></div><div class="c7-bubble-txt">More women<br>founders</div></div>
+      <div class="c7-bubble"><div class="c7-bubble-dot"></div><div class="c7-bubble-txt">More startups<br>with funding</div></div>
+      <div class="c7-bubble"><div class="c7-bubble-dot"></div><div class="c7-bubble-txt">More women<br>succeed</div></div>
+      <div class="c7-bubble"><div class="c7-bubble-dot"></div><div class="c7-bubble-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 8 — Double Ring Dark ═══ -->
+<section class="concept c8" id="c8">
+  <div class="concept-label">08 — Double Ring</div>
+  <div class="split">
+    <div class="copy copy-dark">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c8-wheel">
+      <svg viewBox="0 0 440 440">
+        <defs><marker id="a8" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#D16B4F" opacity="0.5"/></marker></defs>
+        <circle cx="220" cy="220" r="170" fill="none" stroke="rgba(251,248,242,0.04)" stroke-width="1"/>
+        <circle cx="220" cy="220" r="130" fill="none" stroke="rgba(251,248,242,0.03)" stroke-width="1"/>
+        <circle cx="220" cy="220" r="90" fill="none" stroke="rgba(209,107,79,0.06)" stroke-width="1"/>
+        <path d="M 268 55 A 170 170 0 0 1 380 130" fill="none" stroke="rgba(209,107,79,0.25)" stroke-width="1" marker-end="url(#a8)"/>
+        <path d="M 390 175 A 170 170 0 0 1 355 330" fill="none" stroke="rgba(209,107,79,0.25)" stroke-width="1" marker-end="url(#a8)"/>
+        <path d="M 325 365 A 170 170 0 0 1 175 385" fill="none" stroke="rgba(209,107,79,0.25)" stroke-width="1" marker-end="url(#a8)"/>
+        <path d="M 135 370 A 170 170 0 0 1 58 250" fill="none" stroke="rgba(209,107,79,0.25)" stroke-width="1" marker-end="url(#a8)"/>
+        <path d="M 52 200 A 170 170 0 0 1 150 62" fill="none" stroke="rgba(209,107,79,0.25)" stroke-width="1" marker-end="url(#a8)"/>
+      </svg>
+      <div class="c8-center"><span class="c8-center-big">the cycle</span><span class="c8-center-sm">compounds</span></div>
+      <div class="c8-pt"><div class="c8-pt-pip"></div><div class="c8-pt-txt">Invest<br>in women</div></div>
+      <div class="c8-pt"><div class="c8-pt-pip"></div><div class="c8-pt-txt">More women<br>founders</div></div>
+      <div class="c8-pt"><div class="c8-pt-pip"></div><div class="c8-pt-txt">More startups<br>with funding</div></div>
+      <div class="c8-pt"><div class="c8-pt-pip"></div><div class="c8-pt-txt">More women<br>succeed</div></div>
+      <div class="c8-pt"><div class="c8-pt-pip"></div><div class="c8-pt-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 9 — Gradient Arc Sweep ═══ -->
+<section class="concept c9" id="c9">
+  <div class="concept-label">09 — Gradient Sweep</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c9-wheel">
+      <svg viewBox="0 0 440 440">
+        <defs>
+          <linearGradient id="grd9" gradientTransform="rotate(90)">
+            <stop offset="0%" stop-color="#D16B4F" stop-opacity="0.05"/>
+            <stop offset="100%" stop-color="#D16B4F" stop-opacity="0.35"/>
+          </linearGradient>
+          <marker id="a9" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#D16B4F" opacity="0.6"/></marker>
+        </defs>
+        <!-- Full gradient arc -->
+        <circle cx="220" cy="220" r="170" fill="none" stroke="url(#grd9)" stroke-width="14" stroke-linecap="round"/>
+        <circle cx="220" cy="220" r="170" fill="none" stroke="rgba(47,62,52,0.06)" stroke-width="1"/>
+        <!-- Directional arrows -->
+        <path d="M 268 55 A 170 170 0 0 1 378 128" fill="none" stroke="var(--pop)" stroke-width="1.5" opacity="0.4" marker-end="url(#a9)"/>
+        <path d="M 390 175 A 170 170 0 0 1 355 328" fill="none" stroke="var(--pop)" stroke-width="1.5" opacity="0.4" marker-end="url(#a9)"/>
+        <path d="M 325 365 A 170 170 0 0 1 175 385" fill="none" stroke="var(--pop)" stroke-width="1.5" opacity="0.4" marker-end="url(#a9)"/>
+        <path d="M 135 370 A 170 170 0 0 1 58 248" fill="none" stroke="var(--pop)" stroke-width="1.5" opacity="0.4" marker-end="url(#a9)"/>
+        <path d="M 52 200 A 170 170 0 0 1 150 62" fill="none" stroke="var(--pop)" stroke-width="1.5" opacity="0.4" marker-end="url(#a9)"/>
+      </svg>
+      <div class="c9-label"><div class="c9-label-bar"></div><div class="c9-label-txt">Invest<br>in women</div></div>
+      <div class="c9-label"><div class="c9-label-bar"></div><div class="c9-label-txt">More women<br>founders</div></div>
+      <div class="c9-label"><div class="c9-label-bar"></div><div class="c9-label-txt">More startups<br>with funding</div></div>
+      <div class="c9-label"><div class="c9-label-bar"></div><div class="c9-label-txt">More women<br>succeed</div></div>
+      <div class="c9-label"><div class="c9-label-bar"></div><div class="c9-label-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CONCEPT 10 — Monumental Bold ═══ -->
+<section class="concept c10" id="c10">
+  <div class="concept-label">10 — Monumental Bold</div>
+  <div class="split">
+    <div class="copy copy-dark">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="c10-wheel">
+      <svg viewBox="0 0 460 460">
+        <defs><marker id="a10" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#D16B4F" opacity="0.7"/></marker></defs>
+        <!-- Bold main ring -->
+        <circle cx="230" cy="230" r="175" fill="none" stroke="rgba(209,107,79,0.06)" stroke-width="24"/>
+        <circle cx="230" cy="230" r="175" fill="none" stroke="rgba(251,248,242,0.03)" stroke-width="1"/>
+        <!-- Bold directional arrows -->
+        <path d="M 278 60 A 175 175 0 0 1 395 138" fill="none" stroke="var(--pop)" stroke-width="3" opacity="0.4" stroke-linecap="round" marker-end="url(#a10)"/>
+        <path d="M 405 185 A 175 175 0 0 1 368 340" fill="none" stroke="var(--pop)" stroke-width="3" opacity="0.4" stroke-linecap="round" marker-end="url(#a10)"/>
+        <path d="M 335 375 A 175 175 0 0 1 182 400" fill="none" stroke="var(--pop)" stroke-width="3" opacity="0.4" stroke-linecap="round" marker-end="url(#a10)"/>
+        <path d="M 138 388 A 175 175 0 0 1 60 255" fill="none" stroke="var(--pop)" stroke-width="3" opacity="0.4" stroke-linecap="round" marker-end="url(#a10)"/>
+        <path d="M 55 205 A 175 175 0 0 1 158 62" fill="none" stroke="var(--pop)" stroke-width="3" opacity="0.4" stroke-linecap="round" marker-end="url(#a10)"/>
+      </svg>
+      <div class="c10-stage"><div class="c10-stage-num">01</div><div class="c10-stage-txt">Invest<br>in women</div></div>
+      <div class="c10-stage"><div class="c10-stage-num">02</div><div class="c10-stage-txt">More women<br>founders</div></div>
+      <div class="c10-stage"><div class="c10-stage-num">03</div><div class="c10-stage-txt">More startups<br>with funding</div></div>
+      <div class="c10-stage"><div class="c10-stage-num">04</div><div class="c10-stage-txt">More women<br>succeed</div></div>
+      <div class="c10-stage"><div class="c10-stage-num">05</div><div class="c10-stage-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S — Flywheel Type Variations</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f=satoshi@400,500,600,700,800,900&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;--sage:#7E8E84;--lime:#7CB83F;--lime-dark:#5A9A2A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#E8E3DA;color:var(--moss)}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(232,227,218,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(47,62,52,0.08);padding:16px 40px;display:flex;justify-content:space-between;align-items:center}
+.nav-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
+.nav-links{display:flex;gap:16px}
+.nav-links a{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--sage);padding:6px 14px;border-radius:20px;transition:all .2s}
+.nav-links a:hover{color:var(--lime-dark);background:rgba(124,184,63,0.1)}
+
+.concept{min-height:100vh;padding:120px 60px 80px;display:flex;flex-direction:column;justify-content:center;position:relative;background:var(--cream)}
+.concept-label{position:absolute;top:100px;left:60px;font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--lime-dark)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1120px;margin:0 auto}
+
+.copy .tag{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--lime-dark);margin-bottom:20px}
+.copy p{font-size:16px;line-height:1.85;color:var(--moss-light);font-weight:300;margin-bottom:16px}
+.copy p strong{font-weight:600;color:var(--moss)}
+
+/* Shared wheel */
+.wheel{position:relative;width:480px;height:480px;margin:0 auto}
+.wheel svg{position:absolute;inset:0;width:100%;height:100%}
+.node{position:absolute;text-align:center;transform:translate(-50%,-50%);width:130px;line-height:1.4}
+/* Positions */
+.n1{left:50%;top:2%}
+.n2{left:95%;top:38%}
+.n3{left:79%;top:92%}
+.n4{left:21%;top:92%}
+.n5{left:5%;top:38%}
+
+/* Shared SVG — same gradient arc for all */
+
+
+/* ═══════════════════════════════════════════════════════
+   V1 — Satoshi Bold + Clean
+   Current direction. Clean sans-serif, bold entry.
+   ═══════════════════════════════════════════════════════ */
+.v1 .node{font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;color:var(--moss)}
+.v1 .n1{font-size:16px;color:var(--lime-dark);font-weight:800}
+
+
+/* ═══════════════════════════════════════════════════════
+   V2 — Cormorant Serif + Light
+   Elegant serif labels. Lighter weight, more editorial.
+   ═══════════════════════════════════════════════════════ */
+.v2 .node{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:17px;color:var(--moss)}
+.v2 .n1{font-size:20px;color:var(--lime-dark);font-weight:700;font-style:italic}
+
+
+/* ═══════════════════════════════════════════════════════
+   V3 — All Caps Satoshi
+   Uppercase, tight tracking. Strong and structured.
+   ═══════════════════════════════════════════════════════ */
+.v3 .node{font-family:'Satoshi',sans-serif;font-weight:800;font-size:11px;color:var(--moss);text-transform:uppercase;letter-spacing:0.08em}
+.v3 .n1{font-size:13px;color:var(--lime-dark);letter-spacing:0.12em}
+
+
+/* ═══════════════════════════════════════════════════════
+   V4 — Mixed: Serif Entry + Sans Stages
+   Cormorant for the entry, Satoshi for stages.
+   Creates hierarchy through font contrast.
+   ═══════════════════════════════════════════════════════ */
+.v4 .node{font-family:'Satoshi',sans-serif;font-weight:600;font-size:13px;color:var(--sage)}
+.v4 .n1{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--lime-dark);font-style:italic}
+
+
+/* ═══════════════════════════════════════════════════════
+   V5 — Inter Light + Moss
+   Clean, modern, minimal weight. Feels like a tech product.
+   ═══════════════════════════════════════════════════════ */
+.v5 .node{font-family:'Inter',sans-serif;font-weight:500;font-size:13px;color:var(--moss-light)}
+.v5 .n1{font-weight:700;font-size:15px;color:var(--lime-dark)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Flywheel — Typography Variations</div>
+  <div class="nav-links">
+    <a href="#v1">V1 · Satoshi Bold</a>
+    <a href="#v2">V2 · Serif</a>
+    <a href="#v3">V3 · All Caps</a>
+    <a href="#v4">V4 · Mixed</a>
+    <a href="#v5">V5 · Light</a>
+  </div>
+</nav>
+
+
+<!-- V1 — Satoshi Bold -->
+<section class="concept v1" id="v1">
+  <div class="concept-label">V1 — Satoshi Bold + Clean</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <linearGradient id="g1" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="240" y2="480"><stop offset="0%" stop-color="#7CB83F" stop-opacity="0.12"/><stop offset="60%" stop-color="#7CB83F" stop-opacity="0.3"/><stop offset="100%" stop-color="#7CB83F" stop-opacity="0.15"/></linearGradient>
+          <marker id="m1" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#7CB83F"/></marker>
+        </defs>
+        <circle cx="240" cy="240" r="180" fill="none" stroke="url(#g1)" stroke-width="3"/>
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.25" marker-end="url(#m1)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.8" opacity="0.3" marker-end="url(#m1)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="2.2" opacity="0.4" marker-end="url(#m1)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="2.6" opacity="0.5" marker-end="url(#m1)"/>
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="3.5" opacity="0.65" marker-end="url(#m1)"/>
+      </svg>
+      <div class="node n1">Invest in women</div>
+      <div class="node n2">More women<br>founders</div>
+      <div class="node n3">More startups<br>with funding</div>
+      <div class="node n4">More women<br>succeed</div>
+      <div class="node n5">More profit-generating<br>companies</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- V2 — Cormorant Serif -->
+<section class="concept v2" id="v2">
+  <div class="concept-label">V2 — Cormorant Serif + Light</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <linearGradient id="g2" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="240" y2="480"><stop offset="0%" stop-color="#7CB83F" stop-opacity="0.1"/><stop offset="60%" stop-color="#7CB83F" stop-opacity="0.25"/><stop offset="100%" stop-color="#7CB83F" stop-opacity="0.12"/></linearGradient>
+          <marker id="m2" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#7CB83F"/></marker>
+        </defs>
+        <circle cx="240" cy="240" r="180" fill="none" stroke="url(#g2)" stroke-width="2"/>
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1.2" opacity="0.2" marker-end="url(#m2)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.25" marker-end="url(#m2)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="1.8" opacity="0.35" marker-end="url(#m2)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="2.2" opacity="0.45" marker-end="url(#m2)"/>
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="3" opacity="0.55" marker-end="url(#m2)"/>
+      </svg>
+      <div class="node n1">Invest in women</div>
+      <div class="node n2">More women<br>founders</div>
+      <div class="node n3">More startups<br>with funding</div>
+      <div class="node n4">More women<br>succeed</div>
+      <div class="node n5">More profit-generating<br>companies</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- V3 — All Caps -->
+<section class="concept v3" id="v3">
+  <div class="concept-label">V3 — All Caps Satoshi</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <linearGradient id="g3" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="240" y2="480"><stop offset="0%" stop-color="#7CB83F" stop-opacity="0.12"/><stop offset="60%" stop-color="#7CB83F" stop-opacity="0.3"/><stop offset="100%" stop-color="#7CB83F" stop-opacity="0.15"/></linearGradient>
+          <marker id="m3" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#7CB83F"/></marker>
+        </defs>
+        <circle cx="240" cy="240" r="180" fill="none" stroke="url(#g3)" stroke-width="3"/>
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.25" marker-end="url(#m3)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.8" opacity="0.3" marker-end="url(#m3)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="2.2" opacity="0.4" marker-end="url(#m3)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="2.6" opacity="0.5" marker-end="url(#m3)"/>
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="3.5" opacity="0.65" marker-end="url(#m3)"/>
+      </svg>
+      <div class="node n1">Invest in women</div>
+      <div class="node n2">More women<br>founders</div>
+      <div class="node n3">More startups<br>with funding</div>
+      <div class="node n4">More women<br>succeed</div>
+      <div class="node n5">More profit-generating<br>companies</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- V4 — Mixed Serif + Sans -->
+<section class="concept v4" id="v4">
+  <div class="concept-label">V4 — Serif Entry + Sans Stages</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <linearGradient id="g4" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="240" y2="480"><stop offset="0%" stop-color="#7CB83F" stop-opacity="0.1"/><stop offset="60%" stop-color="#7CB83F" stop-opacity="0.28"/><stop offset="100%" stop-color="#7CB83F" stop-opacity="0.12"/></linearGradient>
+          <marker id="m4" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#7CB83F"/></marker>
+        </defs>
+        <circle cx="240" cy="240" r="180" fill="none" stroke="url(#g4)" stroke-width="2.5"/>
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1.2" opacity="0.2" marker-end="url(#m4)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.28" marker-end="url(#m4)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="2" opacity="0.36" marker-end="url(#m4)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="2.5" opacity="0.45" marker-end="url(#m4)"/>
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="3.2" opacity="0.6" marker-end="url(#m4)"/>
+      </svg>
+      <div class="node n1">Invest in women</div>
+      <div class="node n2">More women<br>founders</div>
+      <div class="node n3">More startups<br>with funding</div>
+      <div class="node n4">More women<br>succeed</div>
+      <div class="node n5">More profit-generating<br>companies</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- V5 — Inter Light -->
+<section class="concept v5" id="v5">
+  <div class="concept-label">V5 — Inter Light + Minimal</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <linearGradient id="g5" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="240" y2="480"><stop offset="0%" stop-color="#7CB83F" stop-opacity="0.08"/><stop offset="60%" stop-color="#7CB83F" stop-opacity="0.22"/><stop offset="100%" stop-color="#7CB83F" stop-opacity="0.1"/></linearGradient>
+          <marker id="m5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#7CB83F"/></marker>
+        </defs>
+        <circle cx="240" cy="240" r="180" fill="none" stroke="url(#g5)" stroke-width="1.5"/>
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1" opacity="0.18" marker-end="url(#m5)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.2" opacity="0.24" marker-end="url(#m5)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.32" marker-end="url(#m5)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="2" opacity="0.4" marker-end="url(#m5)"/>
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="2.8" opacity="0.55" marker-end="url(#m5)"/>
+      </svg>
+      <div class="node n1">Invest in women</div>
+      <div class="node n2">More women<br>founders</div>
+      <div class="node n3">More startups<br>with funding</div>
+      <div class="node n4">More women<br>succeed</div>
+      <div class="node n5">More profit-generating<br>companies</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

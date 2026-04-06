@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S — Regenerative Flywheel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f=satoshi@400,500,600,700,800,900&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;--sage:#7E8E84;--lime:#7CB83F;--lime-dark:#5A9A2A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--moss)}
+
+.concept{min-height:100vh;padding:80px 60px;display:flex;flex-direction:column;justify-content:center}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1120px;margin:0 auto}
+
+.copy .tag{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--lime-dark);margin-bottom:20px}
+.copy p{font-size:16px;line-height:1.85;color:var(--moss-light);font-weight:300;margin-bottom:16px}
+.copy p strong{font-weight:600;color:var(--moss)}
+
+/* Wheel */
+.wheel{position:relative;width:500px;height:500px;margin:0 auto}
+.wheel svg{position:absolute;inset:0;width:100%;height:100%}
+
+/* 6 nodes in a hexagonal arrangement */
+.node{
+  position:absolute;text-align:center;transform:translate(-50%,-50%);
+  width:120px;
+  font-family:'Satoshi',sans-serif;font-weight:800;font-size:10.5px;
+  color:var(--moss);line-height:1.45;
+  text-transform:uppercase;letter-spacing:0.06em;
+}
+
+/* Positions for 6 nodes — tighter to the ring */
+.n1{left:50%;top:5%}
+.n2{left:93%;top:28%}
+.n3{left:93%;top:72%}
+.n4{left:50%;top:95%}
+.n5{left:7%;top:72%}
+.n6{left:7%;top:28%}
+
+/* Entry node — emphasized */
+.n1{font-size:11.5px;color:var(--lime-dark);letter-spacing:0.1em}
+
+/* Center — S&S split circle logo */
+.center{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  text-align:center;
+}
+.center-logo{
+  width:72px;height:72px;border-radius:50%;position:relative;
+  overflow:hidden;margin:0 auto;
+  box-shadow:0 4px 24px rgba(47,62,52,0.1);
+}
+.center-logo .cl-left{position:absolute;top:0;left:0;width:50%;height:100%;background:var(--moss)}
+.center-logo .cl-right{position:absolute;top:0;right:0;width:50%;height:100%;background:var(--lime)}
+.center-logo .cl-amp{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;
+  color:white;z-index:1;
+}
+</style>
+</head>
+<body>
+
+<section class="concept">
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Regenerative Capital</div>
+      <p>This is not charity. It's a market correction.</p>
+      <p>More capital reaches women founders. More women start companies. More companies succeed. That success attracts more S&amp;S Capital investors. <strong>The cycle accelerates.</strong></p>
+      <p>Our power isn't in a fund. It's in hundreds of women making informed decisions with a shared pipeline — an ecosystem where women thrive.</p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="wheel">
+      <svg viewBox="0 0 500 500">
+        <defs>
+          <linearGradient id="gr" gradientUnits="userSpaceOnUse" x1="250" y1="0" x2="250" y2="500">
+            <stop offset="0%" stop-color="#7CB83F" stop-opacity="0.1"/>
+            <stop offset="50%" stop-color="#7CB83F" stop-opacity="0.28"/>
+            <stop offset="100%" stop-color="#7CB83F" stop-opacity="0.12"/>
+          </linearGradient>
+          <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+            <polygon points="0 0,10 4,0 8" fill="#7CB83F"/>
+          </marker>
+        </defs>
+
+        <!-- Continuous ring -->
+        <circle cx="250" cy="250" r="195" fill="none" stroke="url(#gr)" stroke-width="3"/>
+
+        <!-- 6 arrows — intensity grows clockwise, 6→1 return is boldest -->
+        <!-- 1→2 -->
+        <path d="M 310 60 A 195 195 0 0 1 435 155" fill="none" stroke="#7CB83F" stroke-width="1.2" opacity="0.2" marker-end="url(#arr)"/>
+        <!-- 2→3 -->
+        <path d="M 445 200 A 195 195 0 0 1 440 345" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.25" marker-end="url(#arr)"/>
+        <!-- 3→4 -->
+        <path d="M 420 385 A 195 195 0 0 1 300 448" fill="none" stroke="#7CB83F" stroke-width="1.8" opacity="0.32" marker-end="url(#arr)"/>
+        <!-- 4→5 -->
+        <path d="M 200 448 A 195 195 0 0 1 68 370" fill="none" stroke="#7CB83F" stroke-width="2.2" opacity="0.4" marker-end="url(#arr)"/>
+        <!-- 5→6 -->
+        <path d="M 56 320 A 195 195 0 0 1 58 175" fill="none" stroke="#7CB83F" stroke-width="2.8" opacity="0.5" marker-end="url(#arr)"/>
+        <!-- 6→1 RETURN — boldest, the payoff -->
+        <path d="M 72 130 A 195 195 0 0 1 185 58" fill="none" stroke="#7CB83F" stroke-width="3.8" opacity="0.65" marker-end="url(#arr)"/>
+      </svg>
+
+      <!-- 6 stages -->
+      <div class="node n1">S&amp;S Capital members<br>source deals &amp; vet companies</div>
+      <div class="node n2">S&amp;S Capital investors<br>write checks for women founders</div>
+      <div class="node n3">More startups<br>get funding</div>
+      <div class="node n4">More companies<br>thrive</div>
+      <div class="node n5">More S&amp;S Capital investors<br>get returns</div>
+      <div class="node n6">More investors want<br>to join S&amp;S Capital</div>
+
+      <!-- Center: S&S logo mark -->
+      <div class="center">
+        <div class="center-logo">
+          <div class="cl-left"></div>
+          <div class="cl-right"></div>
+          <div class="cl-amp">&amp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

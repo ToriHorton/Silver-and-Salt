@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>High-Resolution Brand Assets — Silver &amp; Salt Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #e8e5e0;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #333;
+  padding: 40px;
+}
+h1 {
+  font-size: 22px; font-weight: 600; text-align: center;
+  margin-bottom: 6px; color: #2F3E34;
+}
+.subtitle { text-align: center; font-size: 13px; color: #888; margin-bottom: 40px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.card-preview {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 180px;
+  position: relative;
+}
+.card-preview.checker {
+  background: repeating-conic-gradient(#f0f0f0 0% 25%, white 0% 50%) 50% / 16px 16px;
+}
+.card-preview.cream { background: #FBF8F2; }
+.card-preview.dark { background: #2F3E34; }
+.card-info {
+  padding: 16px 20px;
+  border-top: 1px solid #f0f0f0;
+}
+.card-info h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.card-info .dims { font-size: 12px; color: #999; margin-bottom: 10px; }
+.card-info .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  padding: 6px 14px; border: none; border-radius: 6px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.85; }
+.btn-primary { background: #2F3E34; color: white; }
+.btn-secondary { background: #f0ede7; color: #2F3E34; }
+.btn-plum { background: #8B5E83; color: white; }
+
+.section-label {
+  max-width: 1200px; margin: 48px auto 20px;
+  font-size: 16px; font-weight: 700; color: #2F3E34;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #2F3E34;
+}
+.section-label.plum { color: #8B5E83; border-color: #8B5E83; }
+
+.status {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #2F3E34; color: white; padding: 10px 24px;
+  border-radius: 8px; font-size: 13px; font-weight: 500;
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none; z-index: 100;
+}
+.status.show { opacity: 1; }
+
+/* ═══ RENDER CONTAINERS (hidden, used for canvas export) ═══ */
+.render-stage {
+  position: fixed; top: -9999px; left: -9999px;
+  pointer-events: none;
+}
+
+/* ═══ PREVIEW-ONLY logo components ═══ */
+.circle { border-radius: 50%; position: relative; overflow: hidden; flex-shrink: 0; }
+.circle .c-left { position: absolute; top: 0; left: 0; width: 50%; height: 100%; }
+.circle .c-right { position: absolute; top: 0; right: 0; width: 50%; height: 100%; }
+.circle .c-amp {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: white; z-index: 2; line-height: 1;
+}
+
+/* Previews */
+.preview-logo {
+  display: flex; align-items: center; gap: 12px;
+}
+.preview-logo .circle { width: 36px; height: 36px; }
+.preview-logo .circle .c-left { background: #2F3E34; }
+.preview-logo .circle .c-right { background: #D16B4F; }
+.preview-logo .circle .c-amp { font-size: 19px; font-weight: 600; }
+.preview-logo .wordmark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700; font-size: 28px; color: #2F3E34; letter-spacing: -0.01em;
+}
+.preview-logo .wm-amp { font-size: 0.8em; font-weight: 400; margin: 0 -0.08em; }
+
+.preview-logo.secondary .circle { width: 40px; height: 40px; }
+.preview-logo.secondary .circle .c-amp { font-size: 21px; font-weight: 300; }
+.preview-logo.secondary .wordmark { font-weight: 300; font-size: 22px; letter-spacing: -0.02em; }
+
+.preview-logo.dark .circle .c-left { background: #7E8E84; }
+.preview-logo.dark .wordmark { color: #F0EDE7; }
+
+.preview-logo.plum .circle .c-right { background: #8B5E83; }
+.preview-logo.dark.plum .circle .c-right { background: #8B5E83; }
+
+.preview-icon {
+  width: 120px; height: 120px;
+  border-radius: 50%; position: relative; overflow: hidden;
+}
+.preview-icon .c-left { position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: #2F3E34; }
+.preview-icon .c-right { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: #D16B4F; }
+.preview-icon .c-amp {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 66px; font-weight: 600; color: white; z-index: 2; line-height: 1;
+}
+.preview-icon.plum .c-right { background: #8B5E83; }
+
+.preview-compact {
+  display: flex; flex-direction: column; align-items: center;
+}
+.preview-compact .compact-row { display: flex; align-items: center; gap: 4px; }
+.preview-compact .compact-s {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700; font-size: 26px; color: #2F3E34;
+}
+.preview-compact .circle { width: 48px; height: 48px; }
+.preview-compact .circle .c-left { background: #2F3E34; }
+.preview-compact .circle .c-right { background: #D16B4F; }
+.preview-compact .circle .c-amp { font-size: 26px; font-weight: 600; }
+.preview-compact .compact-capital {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300; font-style: italic; font-size: 14px; color: #7E8E84;
+  margin-top: 2px;
+}
+.preview-compact.plum .circle .c-right { background: #8B5E83; }
+
+.preview-compact.dark .compact-s { color: #F0EDE7; }
+.preview-compact.dark .circle .c-left { background: #7E8E84; }
+.preview-compact.dark .compact-capital { color: rgba(240,237,231,0.45); }
+</style>
+</head>
+<body>
+
+<h1>Silver &amp; Salt Capital — High-Resolution Brand Assets</h1>
+<p class="subtitle">Canvas-rendered at 4× resolution for crisp output. All exports are transparent PNG.</p>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- RUST COLORWAY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section-label">Rust Colorway — Standard</div>
+<div class="grid">
+
+  <!-- Primary Logo -->
+  <div class="card">
+    <div class="card-preview cream">
+      <div class="preview-logo">
+        <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+        <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Primary Logo</h3>
+      <div class="dims">Exports at 2400 × 480 px (transparent)</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="renderAndDownload('primary','rust','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secondary Logo -->
+  <div class="card">
+    <div class="card-preview cream">
+      <div class="preview-logo secondary">
+        <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+        <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Secondary Logo</h3>
+      <div class="dims">Exports at 2400 × 480 px (transparent)</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="renderAndDownload('secondary','rust','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Logo — Dark -->
+  <div class="card">
+    <div class="card-preview dark">
+      <div class="preview-logo dark">
+        <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+        <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Primary Logo — On Dark</h3>
+      <div class="dims">Exports at 2400 × 480 px (transparent)</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="renderAndDownload('primary','rust','dark')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Icon -->
+  <div class="card">
+    <div class="card-preview checker" style="padding:24px 0;">
+      <div class="preview-icon">
+        <div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Split-Circle Icon</h3>
+      <div class="dims">Exports at 1024 × 1024 px (transparent)</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="renderAndDownload('icon','rust','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact Mark -->
+  <div class="card">
+    <div class="card-preview cream" style="padding:24px 0;">
+      <div class="preview-compact">
+        <div class="compact-row">
+          <span class="compact-s">S</span>
+          <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+          <span class="compact-s">S</span>
+        </div>
+        <span class="compact-capital">Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Compact / Partnership Mark</h3>
+      <div class="dims">Exports at 800 × 480 px (transparent)</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="renderAndDownload('compact','rust','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact Mark — Dark -->
+  <div class="card">
+    <div class="card-preview dark" style="padding:24px 0;">
+      <div class="preview-compact dark">
+        <div class="compact-row">
+          <span class="compact-s">S</span>
+          <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+          <span class="compact-s">S</span>
+        </div>
+        <span class="compact-capital">Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Compact Mark — On Dark</h3>
+      <div class="dims">Exports at 800 × 480 px (transparent)</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="renderAndDownload('compact','rust','dark')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PLUM COLORWAY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section-label plum">Plum Colorway</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-preview cream">
+      <div class="preview-logo plum">
+        <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+        <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Primary Logo — Plum</h3>
+      <div class="dims">2400 × 480 px</div>
+      <div class="btn-row">
+        <button class="btn btn-plum" onclick="renderAndDownload('primary','plum','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-preview cream">
+      <div class="preview-logo secondary plum">
+        <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+        <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Secondary Logo — Plum</h3>
+      <div class="dims">2400 × 480 px</div>
+      <div class="btn-row">
+        <button class="btn btn-plum" onclick="renderAndDownload('secondary','plum','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-preview dark">
+      <div class="preview-logo dark plum">
+        <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+        <span class="wordmark">Silver <span class="wm-amp">&</span> Salt Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Primary Logo — Plum On Dark</h3>
+      <div class="dims">2400 × 480 px</div>
+      <div class="btn-row">
+        <button class="btn btn-plum" onclick="renderAndDownload('primary','plum','dark')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-preview checker" style="padding:24px 0;">
+      <div class="preview-icon plum">
+        <div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Split-Circle Icon — Plum</h3>
+      <div class="dims">1024 × 1024 px</div>
+      <div class="btn-row">
+        <button class="btn btn-plum" onclick="renderAndDownload('icon','plum','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-preview cream" style="padding:24px 0;">
+      <div class="preview-compact plum">
+        <div class="compact-row">
+          <span class="compact-s">S</span>
+          <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+          <span class="compact-s">S</span>
+        </div>
+        <span class="compact-capital">Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Compact Mark — Plum</h3>
+      <div class="dims">800 × 480 px</div>
+      <div class="btn-row">
+        <button class="btn btn-plum" onclick="renderAndDownload('compact','plum','light')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-preview dark" style="padding:24px 0;">
+      <div class="preview-compact dark plum">
+        <div class="compact-row">
+          <span class="compact-s">S</span>
+          <div class="circle"><div class="c-left"></div><div class="c-right"></div><div class="c-amp">&</div></div>
+          <span class="compact-s">S</span>
+        </div>
+        <span class="compact-capital">Capital</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <h3>Compact Mark — Plum On Dark</h3>
+      <div class="dims">800 × 480 px</div>
+      <div class="btn-row">
+        <button class="btn btn-plum" onclick="renderAndDownload('compact','plum','dark')">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="status" class="status"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// Pure Canvas rendering — no html2canvas dependency
+// Renders at native resolution for pixel-perfect output
+// ══════════════════════════════════════════════════════
+
+const COLORS = {
+  rust: { accent: '#D16B4F' },
+  plum: { accent: '#8B5E83' },
+  moss: '#2F3E34',
+  sage: '#7E8E84',
+  cream: '#F0EDE7',
+  white: '#FFFFFF',
+};
+
+function showStatus(msg) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// Wait for font to load before any rendering
+async function ensureFont() {
+  await document.fonts.load('600 140px "Cormorant Garamond"');
+  await document.fonts.load('700 28px "Cormorant Garamond"');
+  await document.fonts.load('300 22px "Cormorant Garamond"');
+  await document.fonts.load('300 italic 14px "Cormorant Garamond"');
+}
+
+function drawSplitCircle(ctx, cx, cy, r, leftColor, rightColor, ampSize, ampWeight) {
+  // Left half
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI * 0.5, Math.PI * 1.5);
+  ctx.closePath();
+  ctx.fillStyle = leftColor;
+  ctx.fill();
+  ctx.restore();
+
+  // Right half
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI * -0.5, Math.PI * 0.5);
+  ctx.closePath();
+  ctx.fillStyle = rightColor;
+  ctx.fill();
+  ctx.restore();
+
+  // Ampersand
+  ctx.save();
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = `${ampWeight} ${ampSize}px "Cormorant Garamond", Georgia, serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  // Slight upward shift for visual centering of ampersand
+  ctx.fillText('&', cx, cy + ampSize * 0.02);
+  ctx.restore();
+}
+
+function renderPrimary(colorway, theme) {
+  const W = 2400, H = 480;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const accentColor = COLORS[colorway].accent;
+  const isDark = theme === 'dark';
+  const leftCircle = isDark ? COLORS.sage : COLORS.moss;
+  const textColor = isDark ? COLORS.cream : COLORS.moss;
+
+  // Circle: 36px at 4x = 144px diameter → r = 72
+  const circleR = 72;
+  const circleCX = W * 0.5 - 280;
+  const circleCY = H / 2;
+
+  drawSplitCircle(ctx, circleCX, circleCY, circleR, leftCircle, accentColor, 76, 600);
+
+  // Wordmark
+  const textX = circleCX + circleR + 48;
+  ctx.fillStyle = textColor;
+
+  // "Silver " — weight 700, 28px × 4 = 112px
+  ctx.font = '700 112px "Cormorant Garamond", Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.letterSpacing = '-0.01em';
+  const silverText = 'Silver ';
+  ctx.fillText(silverText, textX, H / 2);
+
+  const silverWidth = ctx.measureText(silverText).width;
+
+  // "&" — weight 400, 0.8em = ~90px
+  ctx.font = '400 90px "Cormorant Garamond", Georgia, serif';
+  const ampX = textX + silverWidth - 10;
+  ctx.fillText('&', ampX, H / 2);
+  const ampWidth = ctx.measureText('&').width;
+
+  // " Salt Capital" — weight 700
+  ctx.font = '700 112px "Cormorant Garamond", Georgia, serif';
+  ctx.fillText(' Salt Capital', ampX + ampWidth - 6, H / 2);
+
+  return canvas;
+}
+
+function renderSecondary(colorway, theme) {
+  const W = 2400, H = 480;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const accentColor = COLORS[colorway].accent;
+  const isDark = theme === 'dark';
+  const leftCircle = isDark ? COLORS.sage : COLORS.moss;
+  const textColor = isDark ? COLORS.cream : COLORS.moss;
+
+  // Circle: 40px at 4x = 160px diameter → r = 80
+  const circleR = 80;
+  const circleCX = W * 0.5 - 260;
+  const circleCY = H / 2;
+
+  drawSplitCircle(ctx, circleCX, circleCY, circleR, leftCircle, accentColor, 84, 300);
+
+  // Wordmark — weight 300, 22px × 4 = 88px
+  const textX = circleCX + circleR + 56;
+  ctx.fillStyle = textColor;
+  ctx.font = '300 88px "Cormorant Garamond", Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+
+  const silverText = 'Silver ';
+  ctx.fillText(silverText, textX, H / 2);
+  const silverWidth = ctx.measureText(silverText).width;
+
+  ctx.font = '400 70px "Cormorant Garamond", Georgia, serif';
+  const ampX = textX + silverWidth - 8;
+  ctx.fillText('&', ampX, H / 2);
+  const ampWidth = ctx.measureText('&').width;
+
+  ctx.font = '300 88px "Cormorant Garamond", Georgia, serif';
+  ctx.fillText(' Salt Capital', ampX + ampWidth - 4, H / 2);
+
+  return canvas;
+}
+
+function renderIcon(colorway) {
+  const S = 1024;
+  const canvas = document.createElement('canvas');
+  canvas.width = S; canvas.height = S;
+  const ctx = canvas.getContext('2d');
+
+  const accentColor = COLORS[colorway].accent;
+  const r = S / 2;
+
+  drawSplitCircle(ctx, r, r, r, COLORS.moss, accentColor, 560, 600);
+
+  return canvas;
+}
+
+function renderCompact(colorway, theme) {
+  const W = 800, H = 480;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const accentColor = COLORS[colorway].accent;
+  const isDark = theme === 'dark';
+  const leftCircle = isDark ? COLORS.sage : COLORS.moss;
+  const sColor = isDark ? COLORS.cream : COLORS.moss;
+  const capitalColor = isDark ? 'rgba(240,237,231,0.45)' : COLORS.sage;
+
+  // Badge: 48px × 4 = 192px → r = 96
+  const badgeR = 96;
+  const cx = W / 2;
+  const badgeY = H / 2 - 20;
+
+  // S letters: 26px × 4 = 104px
+  ctx.fillStyle = sColor;
+  ctx.font = '700 104px "Cormorant Garamond", Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Left S
+  ctx.fillText('S', cx - badgeR - 24, badgeY);
+  // Right S
+  ctx.fillText('S', cx + badgeR + 24, badgeY);
+
+  // Split circle badge
+  drawSplitCircle(ctx, cx, badgeY, badgeR, leftCircle, accentColor, 104, 600);
+
+  // "Capital" — 14px × 4 = 56px
+  ctx.fillStyle = capitalColor;
+  ctx.font = 'italic 300 56px "Cormorant Garamond", Georgia, serif';
+  ctx.fillText('Capital', cx, badgeY + badgeR + 48);
+
+  return canvas;
+}
+
+async function renderAndDownload(type, colorway, theme) {
+  await ensureFont();
+
+  let canvas;
+  let filename;
+
+  switch (type) {
+    case 'primary':
+      canvas = renderPrimary(colorway, theme);
+      filename = theme === 'dark'
+        ? `ssc-primary-${colorway === 'plum' ? 'plum-' : ''}logo-light`
+        : `ssc-primary-${colorway === 'plum' ? 'plum' : 'logo'}`;
+      break;
+    case 'secondary':
+      canvas = renderSecondary(colorway, theme);
+      filename = `ssc-secondary-${colorway === 'plum' ? 'plum' : 'logo'}`;
+      break;
+    case 'icon':
+      canvas = renderIcon(colorway);
+      filename = `ssc-icon${colorway === 'plum' ? '-plum' : ''}`;
+      break;
+    case 'compact':
+      canvas = renderCompact(colorway, theme);
+      filename = theme === 'dark'
+        ? `ssc-compact-${colorway === 'plum' ? 'plum-' : 'mark-'}dark`
+        : `ssc-compact-${colorway === 'plum' ? 'plum' : 'mark'}`;
+      break;
+  }
+
+  const link = document.createElement('a');
+  link.download = filename + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+
+  showStatus(`✓ Downloaded ${filename}.png`);
+}
+</script>
+
+</body>
+</html>

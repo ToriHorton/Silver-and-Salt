@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&S Capital — Flywheel Finals v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f=satoshi@400,500,600,700,800,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FBF8F2;
+  --sand: #F4EFE6;
+  --moss: #2F3E34;
+  --moss-light: #4A5E50;
+  --sage: #7E8E84;
+  --lime: #7CB83F;
+  --lime-dark: #5A9A2A;
+  --lime-soft: rgba(124,184,63,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#E8E3DA;color:var(--moss)}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(232,227,218,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(47,62,52,0.08);padding:16px 40px;display:flex;justify-content:space-between;align-items:center}
+.nav-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
+.nav-links{display:flex;gap:16px}
+.nav-links a{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--sage);padding:6px 14px;border-radius:20px;transition:all .2s}
+.nav-links a:hover{color:var(--lime-dark);background:var(--lime-soft)}
+
+.concept{min-height:100vh;padding:120px 60px 80px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.concept-label{position:absolute;top:100px;left:60px;font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--lime-dark)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1120px;margin:0 auto}
+
+.copy .tag{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--lime-dark);margin-bottom:20px}
+.copy p{font-size:16px;line-height:1.85;color:var(--moss-light);font-weight:300;margin-bottom:16px}
+.copy p strong{font-weight:600;color:var(--moss)}
+.copy-dark p{color:rgba(251,248,242,0.6)}
+.copy-dark p strong{color:#F0EDE7}
+
+
+/* ═══════════════════════════════════════════════════════
+   OPTION A — Continuous Gradient Arc
+   Single bold stroke that sweeps and intensifies.
+   Entry at top, strongest arrow on 5→1 return.
+   Center is empty — the shape is the message.
+   ═══════════════════════════════════════════════════════ */
+.cA{background:var(--cream)}
+.cA-wheel{position:relative;width:480px;height:480px;margin:0 auto}
+.cA-wheel svg{position:absolute;inset:0;width:100%;height:100%}
+
+/* Stage labels */
+.cA-stage{position:absolute;text-align:center;transform:translate(-50%,-50%)}
+.cA-stage-txt{font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;color:var(--moss);line-height:1.4}
+/* Stage 1 is the entry — slightly emphasized */
+.cA-stage:nth-child(2){left:240px;top:10px}
+.cA-stage:nth-child(2) .cA-stage-txt{font-size:16px;color:var(--lime-dark)}
+.cA-stage:nth-child(3){left:454px;top:186px;width:130px}
+.cA-stage:nth-child(4){left:378px;top:440px;width:130px}
+.cA-stage:nth-child(5){left:102px;top:440px;width:130px}
+.cA-stage:nth-child(6){left:26px;top:186px;width:130px}
+
+
+/* ═══════════════════════════════════════════════════════
+   OPTION B — Growing Momentum
+   Stroke width increases clockwise. The return arc
+   from 5→1 is the thickest, boldest stroke.
+   Dots grow in size. Empty center.
+   ═══════════════════════════════════════════════════════ */
+.cB{background:var(--sand)}
+.cB-wheel{position:relative;width:480px;height:480px;margin:0 auto}
+.cB-wheel svg{position:absolute;inset:0;width:100%;height:100%}
+
+.cB-stage{position:absolute;text-align:center;transform:translate(-50%,-50%)}
+.cB-dot{border-radius:50%;background:var(--lime);margin:0 auto 10px;transition:transform .3s}
+.cB-stage:hover .cB-dot{transform:scale(1.15)}
+.cB-txt{font-family:'Satoshi',sans-serif;font-weight:600;font-size:13px;color:var(--moss);line-height:1.4}
+
+/* Entry point emphasized */
+.cB-stage:nth-child(2){left:240px;top:8px;width:120px}
+.cB-stage:nth-child(2) .cB-dot{width:18px;height:18px;opacity:1;border:3px solid var(--lime-dark);background:white}
+.cB-stage:nth-child(2) .cB-txt{font-weight:800;font-size:15px;color:var(--lime-dark)}
+
+.cB-stage:nth-child(3){left:454px;top:186px;width:120px}
+.cB-stage:nth-child(3) .cB-dot{width:22px;height:22px;opacity:0.45}
+
+.cB-stage:nth-child(4){left:378px;top:440px;width:130px}
+.cB-stage:nth-child(4) .cB-dot{width:30px;height:30px;opacity:0.55}
+
+.cB-stage:nth-child(5){left:102px;top:440px;width:130px}
+.cB-stage:nth-child(5) .cB-dot{width:40px;height:40px;opacity:0.7}
+
+.cB-stage:nth-child(6){left:26px;top:186px;width:140px}
+.cB-stage:nth-child(6) .cB-dot{width:50px;height:50px;opacity:0.85}
+.cB-stage:nth-child(6) .cB-txt{font-weight:700}
+
+
+/* ═══════════════════════════════════════════════════════
+   OPTION C — Luminous Ring on Dark
+   Glowing arc on dark field. The glow intensifies
+   as the cycle progresses. Clean, cinematic.
+   ═══════════════════════════════════════════════════════ */
+.cC{background:var(--moss)}
+.cC-wheel{position:relative;width:480px;height:480px;margin:0 auto}
+.cC-wheel svg{position:absolute;inset:0;width:100%;height:100%}
+
+.cC-stage{position:absolute;text-align:center;transform:translate(-50%,-50%)}
+.cC-pip{width:8px;height:8px;border-radius:50%;background:var(--lime);margin:0 auto 10px}
+.cC-txt{font-family:'Satoshi',sans-serif;font-weight:500;font-size:13px;color:rgba(251,248,242,0.6);line-height:1.4}
+
+/* Entry emphasized */
+.cC-stage:nth-child(2){left:240px;top:8px;width:120px}
+.cC-stage:nth-child(2) .cC-pip{width:12px;height:12px;box-shadow:0 0 20px rgba(124,184,63,0.6),0 0 40px rgba(124,184,63,0.2)}
+.cC-stage:nth-child(2) .cC-txt{font-weight:700;color:rgba(251,248,242,0.85);font-size:14px}
+
+.cC-stage:nth-child(3){left:454px;top:186px;width:120px}
+.cC-stage:nth-child(3) .cC-pip{box-shadow:0 0 12px rgba(124,184,63,0.3)}
+
+.cC-stage:nth-child(4){left:378px;top:440px;width:130px}
+.cC-stage:nth-child(4) .cC-pip{box-shadow:0 0 14px rgba(124,184,63,0.35)}
+
+.cC-stage:nth-child(5){left:102px;top:440px;width:130px}
+.cC-stage:nth-child(5) .cC-pip{box-shadow:0 0 16px rgba(124,184,63,0.4)}
+
+.cC-stage:nth-child(6){left:26px;top:186px;width:140px}
+.cC-stage:nth-child(6) .cC-pip{width:10px;height:10px;box-shadow:0 0 20px rgba(124,184,63,0.5)}
+.cC-stage:nth-child(6) .cC-txt{font-weight:600;color:rgba(251,248,242,0.7)}
+
+
+/* ═══════════════════════════════════════════════════════
+   OPTION D — Bold Statement
+   Thick confident ring on charcoal. Strong numbered
+   labels. The return arrow 5→1 is visually dominant.
+   ═══════════════════════════════════════════════════════ */
+.cD{background:#2A2A2A}
+.cD-wheel{position:relative;width:480px;height:480px;margin:0 auto}
+.cD-wheel svg{position:absolute;inset:0;width:100%;height:100%}
+
+.cD-stage{position:absolute;transform:translate(-50%,-50%)}
+.cD-num{font-family:'Satoshi',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;color:var(--lime);margin-bottom:3px}
+.cD-label{font-family:'Satoshi',sans-serif;font-weight:700;font-size:14px;color:rgba(251,248,242,0.8);line-height:1.4}
+
+/* Entry emphasized */
+.cD-stage:nth-child(2){left:240px;top:6px;text-align:center;width:130px}
+.cD-stage:nth-child(2) .cD-num{font-size:12px}
+.cD-stage:nth-child(2) .cD-label{font-size:17px;font-weight:900;color:var(--lime)}
+
+.cD-stage:nth-child(3){left:458px;top:186px;text-align:left;width:130px}
+.cD-stage:nth-child(4){left:385px;top:445px;text-align:left;width:140px}
+.cD-stage:nth-child(5){left:95px;top:445px;text-align:right;width:140px}
+.cD-stage:nth-child(6){left:22px;top:186px;text-align:right;width:140px}
+
+.cD .copy-dark p{color:rgba(251,248,242,0.5)}
+.cD .copy-dark p strong{color:rgba(251,248,242,0.85)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Silver <span style="font-weight:300">&amp;</span> Salt — Flywheel Finals v2</div>
+  <div class="nav-links">
+    <a href="#a">A · Gradient Arc</a>
+    <a href="#b">B · Momentum</a>
+    <a href="#c">C · Luminous</a>
+    <a href="#d">D · Bold</a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════
+     OPTION A — Continuous Gradient Arc
+     ═══════════════════════════════════════ -->
+<section class="concept cA" id="a">
+  <div class="concept-label">Option A — Continuous Gradient Arc</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="cA-wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <!-- Gradient intensifies clockwise: faint at 1, bold at 5→1 return -->
+          <linearGradient id="arcGradA" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="240" y2="480">
+            <stop offset="0%" stop-color="#7CB83F" stop-opacity="0.12"/>
+            <stop offset="60%" stop-color="#7CB83F" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#7CB83F" stop-opacity="0.15"/>
+          </linearGradient>
+          <marker id="mA" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+            <polygon points="0 0,10 4,0 8" fill="#7CB83F"/>
+          </marker>
+        </defs>
+
+        <!-- Main ring — continuous, single stroke -->
+        <circle cx="240" cy="240" r="180" fill="none" stroke="url(#arcGradA)" stroke-width="3"/>
+
+        <!-- Directional arrows — opacity increases clockwise, 5→1 return is boldest -->
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.25" marker-end="url(#mA)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.8" opacity="0.3" marker-end="url(#mA)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="2.2" opacity="0.4" marker-end="url(#mA)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="2.6" opacity="0.5" marker-end="url(#mA)"/>
+        <!-- 5→1 return: the strongest arrow -->
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="3.5" opacity="0.65" marker-end="url(#mA)"/>
+      </svg>
+
+      <!-- Stage 1: Entry — top center, emphasized -->
+      <div class="cA-stage"><div class="cA-stage-txt">Invest in women</div></div>
+      <!-- Stages 2-5 -->
+      <div class="cA-stage"><div class="cA-stage-txt">More women<br>founders</div></div>
+      <div class="cA-stage"><div class="cA-stage-txt">More startups<br>with funding</div></div>
+      <div class="cA-stage"><div class="cA-stage-txt">More women<br>succeed</div></div>
+      <div class="cA-stage"><div class="cA-stage-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     OPTION B — Growing Momentum
+     ═══════════════════════════════════════ -->
+<section class="concept cB" id="b">
+  <div class="concept-label">Option B — Growing Momentum</div>
+  <div class="split">
+    <div class="copy">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="cB-wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <marker id="mB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#7CB83F"/>
+          </marker>
+        </defs>
+
+        <!-- Thin continuous track -->
+        <circle cx="240" cy="240" r="180" fill="none" stroke="rgba(47,62,52,0.06)" stroke-width="1"/>
+
+        <!-- Arrows grow thicker clockwise -->
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1" opacity="0.2" marker-end="url(#mB)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.8" opacity="0.3" marker-end="url(#mB)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="2.8" opacity="0.4" marker-end="url(#mB)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="4" opacity="0.5" marker-end="url(#mB)"/>
+        <!-- 5→1 return: boldest -->
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="5.5" opacity="0.6" stroke-linecap="round" marker-end="url(#mB)"/>
+      </svg>
+
+      <!-- Stage 1: Entry — open circle, bold label -->
+      <div class="cB-stage"><div class="cB-dot"></div><div class="cB-txt">Invest in women</div></div>
+      <!-- Growing dots -->
+      <div class="cB-stage"><div class="cB-dot"></div><div class="cB-txt">More women<br>founders</div></div>
+      <div class="cB-stage"><div class="cB-dot"></div><div class="cB-txt">More startups<br>with funding</div></div>
+      <div class="cB-stage"><div class="cB-dot"></div><div class="cB-txt">More women<br>succeed</div></div>
+      <div class="cB-stage"><div class="cB-dot"></div><div class="cB-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     OPTION C — Luminous Ring on Dark
+     ═══════════════════════════════════════ -->
+<section class="concept cC" id="c">
+  <div class="concept-label">Option C — Luminous Ring</div>
+  <div class="split">
+    <div class="copy copy-dark">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="cC-wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <filter id="glowC">
+            <feGaussianBlur stdDeviation="6" result="g"/>
+            <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <marker id="mC" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#7CB83F" opacity="0.7"/>
+          </marker>
+        </defs>
+
+        <!-- Glowing base ring -->
+        <circle cx="240" cy="240" r="180" fill="none" stroke="rgba(124,184,63,0.06)" stroke-width="2" filter="url(#glowC)"/>
+        <circle cx="240" cy="240" r="180" fill="none" stroke="rgba(124,184,63,0.12)" stroke-width="0.5"/>
+
+        <!-- Arcs intensify, glow increases -->
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="1" opacity="0.15" marker-end="url(#mC)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="1.2" opacity="0.2" marker-end="url(#mC)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="1.5" opacity="0.3" marker-end="url(#mC)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="2" opacity="0.4" marker-end="url(#mC)"/>
+        <!-- 5→1 return: brightest glow -->
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="2.5" opacity="0.55" filter="url(#glowC)" marker-end="url(#mC)"/>
+      </svg>
+
+      <!-- Stage 1: Entry — brightest pip -->
+      <div class="cC-stage"><div class="cC-pip"></div><div class="cC-txt">Invest in women</div></div>
+      <div class="cC-stage"><div class="cC-pip"></div><div class="cC-txt">More women<br>founders</div></div>
+      <div class="cC-stage"><div class="cC-pip"></div><div class="cC-txt">More startups<br>with funding</div></div>
+      <div class="cC-stage"><div class="cC-pip"></div><div class="cC-txt">More women<br>succeed</div></div>
+      <div class="cC-stage"><div class="cC-pip"></div><div class="cC-txt">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     OPTION D — Bold Statement
+     ═══════════════════════════════════════ -->
+<section class="concept cD" id="d">
+  <div class="concept-label">Option D — Bold Statement</div>
+  <div class="split">
+    <div class="copy copy-dark">
+      <div class="tag">Show Me The Money</div>
+      <p>We can create the future we want, if we are willing to fund it.</p>
+      <p>When women coordinate capital, the whole ecosystem shifts. More funding means more founders. More founders means more success. More success means more profit — and more profit means <strong>more money to invest again.</strong></p>
+      <p><strong>Every member is building the system her daughters will inherit.</strong></p>
+    </div>
+    <div class="cD-wheel">
+      <svg viewBox="0 0 480 480">
+        <defs>
+          <marker id="mD" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto">
+            <polygon points="0 0,12 5,0 10" fill="#7CB83F" opacity="0.8"/>
+          </marker>
+        </defs>
+
+        <!-- Heavy ring track -->
+        <circle cx="240" cy="240" r="180" fill="none" stroke="rgba(124,184,63,0.05)" stroke-width="28"/>
+        <circle cx="240" cy="240" r="180" fill="none" stroke="rgba(251,248,242,0.02)" stroke-width="1"/>
+
+        <!-- Bold directional arrows — all strong, 5→1 dominant -->
+        <path d="M 290 64 A 180 180 0 0 1 410 142" fill="none" stroke="#7CB83F" stroke-width="2.5" opacity="0.3" stroke-linecap="round" marker-end="url(#mD)"/>
+        <path d="M 420 192 A 180 180 0 0 1 382 355" fill="none" stroke="#7CB83F" stroke-width="3" opacity="0.35" stroke-linecap="round" marker-end="url(#mD)"/>
+        <path d="M 348 390 A 180 180 0 0 1 190 418" fill="none" stroke="#7CB83F" stroke-width="3.5" opacity="0.4" stroke-linecap="round" marker-end="url(#mD)"/>
+        <path d="M 145 400 A 180 180 0 0 1 62 265" fill="none" stroke="#7CB83F" stroke-width="4" opacity="0.45" stroke-linecap="round" marker-end="url(#mD)"/>
+        <!-- 5→1 return: the dominant stroke -->
+        <path d="M 60 210 A 180 180 0 0 1 168 68" fill="none" stroke="#7CB83F" stroke-width="5" opacity="0.6" stroke-linecap="round" marker-end="url(#mD)"/>
+      </svg>
+
+      <!-- Stage 1: Entry — largest, boldest -->
+      <div class="cD-stage"><div class="cD-num">01</div><div class="cD-label">Invest in women</div></div>
+      <div class="cD-stage"><div class="cD-num">02</div><div class="cD-label">More women<br>founders</div></div>
+      <div class="cD-stage"><div class="cD-num">03</div><div class="cD-label">More startups<br>with funding</div></div>
+      <div class="cD-stage"><div class="cD-num">04</div><div class="cD-label">More women<br>succeed</div></div>
+      <div class="cD-stage"><div class="cD-num">05</div><div class="cD-label">More profit-generating<br>companies</div></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
