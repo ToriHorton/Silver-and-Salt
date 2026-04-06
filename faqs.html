@@ -112,49 +112,109 @@
     transform: translateY(0);
   }
 
-  /* ── STICKY SECTION NAV ── */
-  .section-nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: white;
-    border-bottom: 1px solid rgba(47,62,52,0.1);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+  /* ── SIDEBAR TOC (Desktop) ── */
+  .faq-sidebar {
+    position: fixed;
+    top: 80px;
+    left: max(calc((100vw - 780px) / 2 - 240px), 16px);
+    width: 200px;
+    z-index: 90;
   }
-  .section-nav::-webkit-scrollbar {
-    display: none;
-  }
-  .section-nav-inner {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px;
-    white-space: nowrap;
-  }
-  .section-nav a {
-    display: block;
-    padding: 14px 16px;
+  .faq-sidebar-label {
     font-family: 'Satoshi', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--sage);
-    text-decoration: none;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
-    flex-shrink: 0;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(47,62,52,0.1);
   }
-  .section-nav a:hover {
+  .faq-sidebar a {
+    display: block;
+    padding: 7px 0 7px 12px;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--sage);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    line-height: 1.4;
+  }
+  .faq-sidebar a:hover {
     color: var(--moss);
   }
-  .section-nav a.active {
+  .faq-sidebar a.active {
     color: var(--pop);
-    border-bottom-color: var(--pop);
+    font-weight: 600;
+    border-left-color: var(--pop);
+  }
+
+  /* ── MOBILE DROPDOWN (replaces sidebar on small screens) ── */
+  .faq-mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+  }
+  .faq-mobile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: white;
+    background: var(--moss);
+    border: none;
+    border-radius: 40px;
+    padding: 14px 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(47,62,52,0.25);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .faq-mobile-btn:hover {
+    background: var(--pop);
+  }
+  .faq-mobile-btn svg {
+    width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2;
+  }
+  .faq-mobile-dropdown {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(47,62,52,0.18);
+    min-width: 220px;
+    padding: 8px 0;
+    border: 1px solid rgba(47,62,52,0.08);
+  }
+  .faq-mobile-dropdown.open {
+    display: block;
+  }
+  .faq-mobile-dropdown a {
+    display: block;
+    padding: 12px 20px;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--moss-light);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .faq-mobile-dropdown a:hover {
+    background: rgba(26,143,125,0.06);
+    color: var(--moss);
+  }
+  .faq-mobile-dropdown a.active {
+    color: var(--pop);
+    font-weight: 600;
   }
 
   /* ── FAQ BODY ── */
@@ -407,14 +467,19 @@
   .cta-btn:hover { background: var(--pop); color: white; }
 
   /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    .faq-sidebar { display: none; }
+    .faq-mobile-nav { display: block; }
+  }
+  @media (min-width: 1101px) {
+    .faq-mobile-nav { display: none !important; }
+  }
   @media (max-width: 768px) {
     nav { padding: 0 20px; }
     .faq-hero { padding: 120px 24px 56px; }
     .faq-body { padding: 56px 24px; }
     .impact-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
     .cta-section { padding: 64px 24px; }
-    .section-nav-inner { padding: 0 16px; }
-    .section-nav a { padding: 12px 12px; font-size: 11px; }
   }
   @media (max-width: 480px) {
     .faq-hero { padding: 100px 16px 48px; }
@@ -425,13 +490,12 @@
     .cta-section { padding: 56px 16px; }
     .cap-table { font-size: 13px; }
     .cap-table th, .cap-table td { padding: 8px 8px; }
-    .section-nav a { padding: 10px 10px; font-size: 10px; }
   }
 
   /* ── PRINT STYLES ── */
   @media print {
     /* Hide screen-only elements */
-    nav, .nav-standalone, .section-nav, .download-btn,
+    nav, .nav-standalone, .faq-sidebar, .faq-mobile-nav, .download-btn,
     .cta-section, footer, .faq-hero::before {
       display: none !important;
     }
@@ -613,9 +677,20 @@
   <button class="download-btn" onclick="window.print()">Download PDF</button>
 </div>
 
-<!-- STICKY SECTION NAV -->
-<div class="section-nav">
-  <div class="section-nav-inner">
+<!-- SIDEBAR TOC (Desktop) -->
+<div class="faq-sidebar">
+  <div class="faq-sidebar-label">Contents</div>
+  <a href="#angel-investing-101" data-section="angel-investing-101">Angel Investing 101</a>
+  <a href="#my-money" data-section="my-money">My Money</a>
+  <a href="#how-it-actually-works" data-section="how-it-actually-works">How It Actually Works</a>
+  <a href="#why-this-why-now" data-section="why-this-why-now">Why This, Why Now</a>
+  <a href="#is-this-right-for-me" data-section="is-this-right-for-me">Is This Right for Me?</a>
+  <a href="#getting-started" data-section="getting-started">Getting Started</a>
+</div>
+
+<!-- MOBILE DROPDOWN NAV -->
+<div class="faq-mobile-nav">
+  <div class="faq-mobile-dropdown" id="mobile-toc">
     <a href="#angel-investing-101" data-section="angel-investing-101">Angel Investing 101</a>
     <a href="#my-money" data-section="my-money">My Money</a>
     <a href="#how-it-actually-works" data-section="how-it-actually-works">How It Actually Works</a>
@@ -623,6 +698,10 @@
     <a href="#is-this-right-for-me" data-section="is-this-right-for-me">Is This Right for Me?</a>
     <a href="#getting-started" data-section="getting-started">Getting Started</a>
   </div>
+  <button class="faq-mobile-btn" onclick="document.getElementById('mobile-toc').classList.toggle('open')">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    Jump to section
+  </button>
 </div>
 
 <!-- FAQ BODY -->
@@ -1271,42 +1350,55 @@
 </footer>
 
 <script>
-// Sticky section nav: highlight active section on scroll
+// Sidebar + mobile nav: highlight active section on scroll
 (function() {
-  const navLinks = document.querySelectorAll('.section-nav a');
-  const sections = [];
+  const allLinks = document.querySelectorAll('.faq-sidebar a, .faq-mobile-dropdown a');
+  const sectionEls = [];
+  const seen = new Set();
 
-  navLinks.forEach(link => {
+  allLinks.forEach(link => {
     const id = link.getAttribute('data-section');
-    const el = document.getElementById(id);
-    if (el) sections.push({ id, el, link });
+    if (id && !seen.has(id)) {
+      const el = document.getElementById(id);
+      if (el) { sectionEls.push({ id, el }); seen.add(id); }
+    }
   });
 
   function updateActive() {
-    const scrollY = window.scrollY + 120;
-    let current = sections[0];
+    const scrollY = window.scrollY + 150;
+    let currentId = sectionEls[0]?.id;
 
-    for (const s of sections) {
-      if (s.el.offsetTop <= scrollY) {
-        current = s;
-      }
+    for (const s of sectionEls) {
+      if (s.el.offsetTop <= scrollY) currentId = s.id;
     }
 
-    navLinks.forEach(l => l.classList.remove('active'));
-    if (current) current.link.classList.add('active');
+    allLinks.forEach(l => {
+      l.classList.toggle('active', l.getAttribute('data-section') === currentId);
+    });
   }
 
-  // Smooth scroll for nav links
-  navLinks.forEach(link => {
+  // Smooth scroll + close mobile dropdown
+  allLinks.forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
       const id = this.getAttribute('data-section');
       const target = document.getElementById(id);
       if (target) {
-        const offset = target.offsetTop - 60;
-        window.scrollTo({ top: offset, behavior: 'smooth' });
+        window.scrollTo({ top: target.offsetTop - 40, behavior: 'smooth' });
       }
+      // Close mobile dropdown
+      const dd = document.getElementById('mobile-toc');
+      if (dd) dd.classList.remove('open');
     });
+  });
+
+  // Close mobile dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    const nav = document.querySelector('.faq-mobile-nav');
+    const dd = document.getElementById('mobile-toc');
+    if (dd && nav && !nav.contains(e.target)) {
+      dd.classList.remove('open');
+    }
   });
 
   window.addEventListener('scroll', updateActive, { passive: true });
