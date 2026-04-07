@@ -161,7 +161,6 @@ footer p{font-size:12px;color:var(--sage)}
   <h1>Help us pick <em>the opening.</em></h1>
   <p>We're designing the first thing people see when they visit Silver <span class="brand-amp">&amp;</span> Salt Capital. Below are 4 options. <strong style="font-weight:600;color:var(--moss)">Vote for the one that makes you most want to learn more.</strong></p>
   <div class="instructions">Scroll through all 4, then click "This One" on your favorite.</div>
-  <div style="margin-top:16px"><a href="#" onclick="showDashboard();document.getElementById('dashboard').scrollIntoView({behavior:'smooth'});return false" style="font-size:14px;font-weight:700;color:var(--rust);text-decoration:none">View Results Dashboard &darr;</a></div>
 </div>
 
 <!-- ═══ OPTION A ═══ -->
@@ -271,7 +270,16 @@ footer p{font-size:12px;color:var(--sage)}
 </div>
 </div>
 
-<!-- ═══ DASHBOARD ═══ -->
+<!-- ═══ THANK YOU (shown to voters, no results) ═══ -->
+<div class="thankyou" id="thankyou" style="display:none;background:var(--cream);padding:64px 48px;text-align:center;border-top:4px solid var(--rust)">
+  <div style="width:56px;height:56px;border-radius:50%;background:rgba(209,107,79,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(24px,3.5vw,36px);color:var(--moss);margin-bottom:12px">Thank you for voting!</h2>
+  <p style="font-size:16px;color:var(--moss-light);line-height:1.7;font-weight:300;max-width:440px;margin:0 auto">Your vote has been recorded. Tori will share the results once everyone has weighed in.</p>
+</div>
+
+<!-- ═══ DASHBOARD (admin only — ?admin=ssc) ═══ -->
 <div class="dashboard" id="dashboard">
   <div class="dash-header">
     <h2>Live Results</h2>
@@ -339,6 +347,7 @@ footer p{font-size:12px;color:var(--sage)}
 const API = 'https://jsonblob.com/api/jsonBlob';
 let blobId = null;
 let pendingChoice = null;
+const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'ssc';
 
 const OPTION_NAMES = { A: 'The Provocative Question', B: 'The Future Looking Back', C: 'The Exclusive Invitation', D: 'Fund Her' };
 
@@ -378,6 +387,11 @@ async function init() {
   const existingVote = localStorage.getItem('ssc_hero_vote_' + (blobId || 'local'));
   if (existingVote) {
     document.getElementById('card-' + existingVote).classList.add('voted');
+    showThankYou();
+  }
+
+  // Admin always sees dashboard
+  if (isAdmin) {
     showDashboard();
   }
 }
@@ -388,10 +402,10 @@ async function loadAndRender() {
     const res = await fetch(API + '/' + blobId);
     const data = await res.json();
     renderDashboard(data);
-    // If user already voted, show dashboard
+    // If user already voted, show thank you (or dashboard for admin)
     const existingVote = localStorage.getItem('ssc_hero_vote_' + blobId);
-    if (existingVote) {
-      showDashboard();
+    if (existingVote && !isAdmin) {
+      showThankYou();
     }
   } catch (e) {
     console.error('Failed to load poll:', e);
@@ -444,10 +458,21 @@ async function submitVote() {
     }
   }
 
-  showDashboard();
-  setTimeout(() => {
-    document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
-  }, 300);
+  if (isAdmin) {
+    showDashboard();
+    setTimeout(() => {
+      document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+    }, 300);
+  } else {
+    showThankYou();
+    setTimeout(() => {
+      document.getElementById('thankyou').scrollIntoView({ behavior: 'smooth' });
+    }, 300);
+  }
+}
+
+function showThankYou() {
+  document.getElementById('thankyou').style.display = 'block';
 }
 
 function showDashboard() {
