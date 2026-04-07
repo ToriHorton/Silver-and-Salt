@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home v2 — Community Leader</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;
+  --sage:#7E8E84;--rust:#D16B4F;--rust-hover:#E07A5E;
+  --border:rgba(47,62,52,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--cream);color:var(--moss);font-family:'Satoshi',sans-serif;-webkit-font-smoothing:antialiased}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:0.85em}
+
+/* Badge */
+.badge{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;
+  background:#7CB83F;color:white;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--cream);
+  border-bottom:1px solid var(--border);padding:16px 48px;
+  display:flex;align-items:center;justify-content:space-between}
+.nav-mark{display:flex;align-items:center;gap:12px}
+.sc{width:34px;height:34px;border-radius:50%;overflow:hidden;position:relative}
+.sc-l{position:absolute;top:0;left:0;width:50%;height:100%;background:var(--moss)}
+.sc-r{position:absolute;top:0;right:0;width:50%;height:100%;background:var(--rust)}
+.sc-a{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:white;z-index:1}
+.wm{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:20px;color:var(--moss)}
+.nav-cta{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--rust);color:white;border:none;border-radius:4px;padding:10px 24px;text-decoration:none}
+
+/* ── HERO (warm, people-first) ── */
+.hero{padding:150px 48px 80px;position:relative;overflow:hidden}
+.hero::after{content:'&';position:absolute;bottom:-60px;right:60px;
+  font-family:'Cormorant Garamond',serif;font-size:400px;font-weight:300;
+  color:var(--moss);opacity:.025;line-height:1;pointer-events:none}
+.hero-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:56px;align-items:center}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--rust);margin-bottom:20px}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(34px,5vw,58px);line-height:1.08;letter-spacing:-.03em;color:var(--moss)}
+.hero h1 em{font-style:italic;color:var(--rust)}
+.hero-sub{font-size:17px;color:var(--moss-light);margin-top:20px;line-height:1.7;font-weight:300;max-width:480px}
+.hero-cta{display:flex;gap:14px;margin-top:32px}
+.btn-pop{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--rust);color:white;border:none;border-radius:4px;
+  padding:16px 36px;cursor:pointer;text-decoration:none}
+.btn-outline{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:transparent;color:var(--moss);border:1px solid rgba(47,62,52,0.15);
+  border-radius:4px;padding:16px 36px;cursor:pointer;text-decoration:none}
+
+/* Hero visual — network/community illustration */
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center}
+.hero-visual svg{width:100%;max-width:400px;height:auto}
+
+/* ── THE GAP ── */
+.gap{padding:72px 48px;background:var(--moss);position:relative;overflow:hidden}
+.gap::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at 80% 50%,rgba(209,107,79,0.06),transparent 60%);pointer-events:none}
+.gap-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative}
+.gap-text p{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,30px);
+  font-weight:300;color:var(--cream);line-height:1.45;margin-bottom:16px}
+.gap-text p:last-child{margin-bottom:0}
+.gap-text em{font-style:italic;color:var(--rust)}
+.gap-text strong{font-weight:600;color:white}
+.gap-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gap-stat{background:rgba(251,248,242,0.05);border-radius:12px;padding:24px 20px;
+  border:1px solid rgba(251,248,242,0.06);text-align:center}
+.gap-stat-num{font-weight:900;font-size:clamp(28px,4vw,40px);color:white;line-height:1;letter-spacing:-.02em}
+.gap-stat-num em{font-style:normal;color:var(--rust)}
+.gap-stat-desc{font-size:13px;color:rgba(251,248,242,0.5);margin-top:8px;line-height:1.5}
+.gap-stat-src{font-size:9px;color:rgba(251,248,242,0.25);margin-top:6px}
+
+/* ── TOGETHER ── */
+.together{padding:80px 48px;background:var(--cream)}
+.together-inner{max-width:880px;margin:0 auto}
+.label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
+.heading{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(28px,4vw,42px);color:var(--moss);line-height:1.2;margin-bottom:16px}
+.heading em{font-style:italic;color:var(--rust)}
+.together-sub{font-size:16px;color:var(--moss-light);line-height:1.7;font-weight:300;margin-bottom:48px;max-width:580px}
+
+/* Side-by-side: alone vs together */
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:0;max-width:780px}
+.compare-col{padding:32px 28px}
+.compare-col-label{font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
+  margin-bottom:20px}
+.compare-col-label.dim{color:var(--sage)}
+.compare-col-label.bright{color:var(--rust)}
+.compare-div{width:1px;background:var(--border);margin:0 8px}
+.compare-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.compare-item:last-child{margin-bottom:0}
+.compare-x{width:24px;height:24px;border-radius:50%;background:var(--sand);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:12px;color:var(--sage)}
+.compare-check{width:24px;height:24px;border-radius:50%;background:rgba(209,107,79,0.1);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.compare-check svg{width:14px;height:14px;stroke:var(--rust);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.compare-text{font-size:15px;color:var(--moss-light);line-height:1.6;font-weight:300}
+.compare-text strong{font-weight:600;color:var(--moss)}
+
+/* ── YOUR MONEY ── */
+.yours{padding:80px 48px;background:var(--sand)}
+.yours-inner{max-width:720px;margin:0 auto;text-align:center}
+.yours h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(26px,3.5vw,38px);color:var(--moss);line-height:1.25;margin-bottom:24px}
+.yours h2 em{font-style:italic;color:var(--rust)}
+.yours-desc{font-size:17px;color:var(--moss-light);line-height:1.8;font-weight:300;
+  max-width:560px;margin:0 auto 40px}
+.yours-desc strong{font-weight:600;color:var(--moss)}
+
+/* Visual: the journey of your dollar */
+.dollar-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:700px;margin:0 auto;position:relative}
+.dollar-flow::before{content:'';position:absolute;top:40px;left:calc(12.5% + 24px);right:calc(12.5% + 24px);
+  height:2px;background:repeating-linear-gradient(to right,var(--rust) 0,var(--rust) 6px,transparent 6px,transparent 12px);opacity:.3}
+.df-step{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1}
+.df-icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;margin-bottom:16px}
+.df-icon svg{width:32px;height:32px;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.df-icon-1{background:rgba(209,107,79,0.06);border:2px solid rgba(209,107,79,0.12)}
+.df-icon-1 svg{stroke:var(--rust)}
+.df-icon-2{background:rgba(209,107,79,0.1);border:2px solid rgba(209,107,79,0.2)}
+.df-icon-2 svg{stroke:var(--rust)}
+.df-icon-3{background:rgba(209,107,79,0.15);border:2px solid rgba(209,107,79,0.25)}
+.df-icon-3 svg{stroke:var(--rust)}
+.df-icon-4{background:var(--rust);border:2px solid var(--rust)}
+.df-icon-4 svg{stroke:white}
+.df-label{font-weight:700;font-size:14px;color:var(--moss);margin-bottom:4px}
+.df-desc{font-size:12px;color:var(--moss-light);line-height:1.5;font-weight:300;max-width:140px}
+.df-desc strong{font-weight:600;color:var(--moss)}
+
+.yours-callout{margin:40px auto 0;max-width:520px;padding:24px 28px;background:white;border-radius:12px;
+  border:1px solid var(--border);border-left:4px solid var(--rust);text-align:left}
+.yours-callout p{font-size:15px;color:var(--moss-light);line-height:1.7;font-weight:300}
+.yours-callout strong{font-weight:700;color:var(--moss)}
+
+/* ── ACCREDITED ── */
+.acc{padding:72px 48px;background:var(--cream)}
+.acc-inner{max-width:780px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.acc-text h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(24px,3vw,34px);color:var(--moss);line-height:1.3;margin-bottom:16px}
+.acc-text h2 em{font-style:italic;color:var(--rust)}
+.acc-text p{font-size:15px;color:var(--moss-light);line-height:1.75;font-weight:300}
+.acc-text p strong{font-weight:600;color:var(--moss)}
+.acc-card{background:var(--sand);border-radius:14px;padding:28px 24px;border:1px solid var(--border)}
+.acc-card-title{font-weight:700;font-size:14px;color:var(--moss);margin-bottom:16px;
+  letter-spacing:.04em;text-transform:uppercase;font-size:11px}
+.acc-row{display:flex;align-items:center;gap:12px;padding:12px 0;
+  border-top:1px solid var(--border)}
+.acc-row:first-of-type{border-top:none;padding-top:0}
+.acc-dot{width:10px;height:10px;border-radius:50%;background:var(--rust);flex-shrink:0}
+.acc-row-text{font-size:14px;color:var(--moss);line-height:1.5}
+.acc-row-text strong{font-weight:700}
+.acc-note{margin-top:16px;font-size:13px;color:var(--sage);font-style:italic;line-height:1.6}
+
+/* ── WHY IT WORKS ── */
+.why{padding:80px 48px;background:var(--sand)}
+.why-inner{max-width:780px;margin:0 auto}
+.why-split{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center}
+.why-left h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(26px,3.5vw,38px);color:var(--moss);line-height:1.25;margin-bottom:16px}
+.why-left h2 em{font-style:italic;color:var(--rust)}
+.why-left p{font-size:16px;color:var(--moss-light);line-height:1.75;font-weight:300}
+.why-left p strong{font-weight:700;color:var(--moss)}
+.why-left .why-src{font-size:11px;color:var(--sage);margin-top:16px}
+
+/* Simple portfolio size visual */
+.why-visual{position:relative}
+.wv-row{display:grid;grid-template-columns:80px 1fr auto;gap:16px;align-items:center;
+  padding:14px 0;border-bottom:1px solid var(--border)}
+.wv-row:last-child{border-bottom:none}
+.wv-label{font-size:13px;font-weight:700;color:var(--moss)}
+.wv-bar-wrap{height:20px;background:rgba(209,107,79,0.06);border-radius:10px;overflow:hidden}
+.wv-bar{height:100%;border-radius:10px;transition:width .5s}
+.wv-val{font-size:14px;font-weight:900;color:var(--moss);min-width:50px;text-align:right}
+.wv-val em{font-style:normal;color:var(--rust)}
+
+/* ── CTA ── */
+.cta{padding:100px 48px;background:var(--rust);text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'&';position:absolute;bottom:-50px;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-size:360px;font-weight:300;
+  color:rgba(255,255,255,0.05);line-height:1;pointer-events:none}
+
+/* People circles */
+.cta-people{display:flex;justify-content:center;margin-bottom:32px;position:relative}
+.cta-person{width:48px;height:48px;border-radius:50%;border:3px solid var(--rust);
+  display:flex;align-items:center;justify-content:center;margin-left:-12px;
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:white}
+.cta-person:first-child{margin-left:0}
+.cta-person-1{background:#4A5E50}
+.cta-person-2{background:#7E8E84}
+.cta-person-3{background:#8B5E83}
+.cta-person-4{background:#3D5A99}
+.cta-person-5{background:#C87F5A}
+.cta-person-more{background:rgba(255,255,255,0.15);font-size:13px;font-weight:900;
+  font-family:'Satoshi',sans-serif;letter-spacing:-.02em}
+
+.cta h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(32px,5vw,52px);color:white;line-height:1.15;
+  max-width:620px;margin:0 auto 16px;position:relative}
+.cta h2 em{font-style:italic;color:rgba(255,255,255,0.65)}
+.cta-sub{font-size:17px;color:rgba(255,255,255,0.7);max-width:480px;
+  margin:0 auto 36px;line-height:1.7;font-weight:300;position:relative}
+.cta-btn{display:inline-block;font-size:15px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;background:white;color:var(--moss);border:none;
+  border-radius:4px;padding:18px 44px;cursor:pointer;text-decoration:none;position:relative;z-index:1}
+.cta-note{font-size:13px;color:rgba(255,255,255,0.45);margin-top:16px;position:relative}
+
+/* Footer */
+footer{background:var(--sand);padding:40px 48px;text-align:center}
+footer p{font-size:12px;color:var(--sage)}
+footer .f-legal{font-size:11px;color:var(--sage);opacity:.7;margin-top:8px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .hero-visual{order:-1}
+  .hero-visual svg{max-width:300px}
+  .gap-inner{grid-template-columns:1fr}
+  .compare{grid-template-columns:1fr;gap:0}
+  .compare-div{width:100%;height:1px;margin:8px 0}
+  .why-split{grid-template-columns:1fr;gap:32px}
+  .acc-inner{grid-template-columns:1fr}
+  .yours-inner .dollar-flow{grid-template-columns:1fr 1fr;gap:24px}
+  .dollar-flow::before{display:none}
+}
+@media(max-width:768px){
+  nav{padding:14px 24px}
+  .hero{padding:120px 24px 56px}
+  .gap{padding:56px 24px}
+  .gap-stats{grid-template-columns:1fr 1fr}
+  .together{padding:56px 24px}
+  .yours{padding:56px 24px}
+  .acc{padding:48px 24px}
+  .why{padding:56px 24px}
+  .cta{padding:72px 24px}
+}
+@media(max-width:480px){
+  .hero{padding:112px 16px 48px}
+  .gap{padding:40px 16px}
+  .gap-stats{grid-template-columns:1fr}
+  .together{padding:40px 16px}
+  .yours{padding:40px 16px}
+  .yours-inner .dollar-flow{grid-template-columns:1fr;gap:20px}
+  .acc{padding:36px 16px}
+  .why{padding:40px 16px}
+  .cta{padding:56px 16px}
+  .cta-person{width:40px;height:40px;font-size:14px;margin-left:-10px}
+}
+</style>
+</head>
+<body>
+
+<div class="badge">Community Leader Perspective</div>
+
+<nav>
+  <div class="nav-mark">
+    <div class="sc"><div class="sc-l"></div><div class="sc-r"></div><div class="sc-a">&amp;</div></div>
+    <span class="wm">Silver <span class="brand-amp">&amp;</span> Salt Capital</span>
+  </div>
+  <a href="#" class="nav-cta">Join Us</a>
+</nav>
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="hero-eyebrow">Utah Women's Angel Investment Group</p>
+      <h1>100 women. <em>One mission.</em> Fund the founders Utah keeps overlooking.</h1>
+      <p class="hero-sub">Women-led startups make more money. But almost none get funded. Silver <span class="brand-amp">&amp;</span> Salt Capital is a group of women who find great founders, share the research, and each invest on their own terms.</p>
+      <div class="hero-cta">
+        <a href="#" class="btn-pop">Join the Founding 100</a>
+        <a href="#" class="btn-outline">See the Data</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <!-- Network/community illustration -->
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer ring -->
+        <circle cx="200" cy="200" r="170" fill="none" stroke="rgba(209,107,79,0.08)" stroke-width="1.5"/>
+        <circle cx="200" cy="200" r="120" fill="none" stroke="rgba(209,107,79,0.06)" stroke-width="1"/>
+        <!-- Connection lines -->
+        <line x1="200" y1="30" x2="200" y2="200" stroke="rgba(209,107,79,0.08)" stroke-width="1"/>
+        <line x1="347" y1="115" x2="200" y2="200" stroke="rgba(209,107,79,0.08)" stroke-width="1"/>
+        <line x1="347" y1="285" x2="200" y2="200" stroke="rgba(209,107,79,0.08)" stroke-width="1"/>
+        <line x1="200" y1="370" x2="200" y2="200" stroke="rgba(209,107,79,0.08)" stroke-width="1"/>
+        <line x1="53" y1="285" x2="200" y2="200" stroke="rgba(209,107,79,0.08)" stroke-width="1"/>
+        <line x1="53" y1="115" x2="200" y2="200" stroke="rgba(209,107,79,0.08)" stroke-width="1"/>
+        <!-- Cross connections -->
+        <line x1="200" y1="30" x2="347" y2="115" stroke="rgba(47,62,52,0.04)" stroke-width="1"/>
+        <line x1="347" y1="115" x2="347" y2="285" stroke="rgba(47,62,52,0.04)" stroke-width="1"/>
+        <line x1="347" y1="285" x2="200" y2="370" stroke="rgba(47,62,52,0.04)" stroke-width="1"/>
+        <line x1="200" y1="370" x2="53" y2="285" stroke="rgba(47,62,52,0.04)" stroke-width="1"/>
+        <line x1="53" y1="285" x2="53" y2="115" stroke="rgba(47,62,52,0.04)" stroke-width="1"/>
+        <line x1="53" y1="115" x2="200" y2="30" stroke="rgba(47,62,52,0.04)" stroke-width="1"/>
+        <!-- People nodes (outer ring) -->
+        <circle cx="200" cy="30" r="22" fill="#4A5E50"/>
+        <text x="200" y="35" fill="white" font-family="Cormorant Garamond,serif" font-size="16" font-weight="600" text-anchor="middle">A</text>
+        <circle cx="347" cy="115" r="22" fill="#7E8E84"/>
+        <text x="347" y="120" fill="white" font-family="Cormorant Garamond,serif" font-size="16" font-weight="600" text-anchor="middle">B</text>
+        <circle cx="347" cy="285" r="22" fill="#8B5E83"/>
+        <text x="347" y="290" fill="white" font-family="Cormorant Garamond,serif" font-size="16" font-weight="600" text-anchor="middle">C</text>
+        <circle cx="200" cy="370" r="22" fill="#3D5A99"/>
+        <text x="200" y="375" fill="white" font-family="Cormorant Garamond,serif" font-size="16" font-weight="600" text-anchor="middle">D</text>
+        <circle cx="53" cy="285" r="22" fill="#C87F5A"/>
+        <text x="53" y="290" fill="white" font-family="Cormorant Garamond,serif" font-size="16" font-weight="600" text-anchor="middle">E</text>
+        <circle cx="53" cy="115" r="22" fill="#6B7E72"/>
+        <text x="53" y="120" fill="white" font-family="Cormorant Garamond,serif" font-size="16" font-weight="600" text-anchor="middle">F</text>
+        <!-- Smaller satellite nodes -->
+        <circle cx="280" cy="58" r="12" fill="rgba(209,107,79,0.15)"/>
+        <circle cx="370" cy="200" r="12" fill="rgba(209,107,79,0.15)"/>
+        <circle cx="280" cy="342" r="12" fill="rgba(209,107,79,0.15)"/>
+        <circle cx="120" cy="342" r="12" fill="rgba(209,107,79,0.15)"/>
+        <circle cx="30" cy="200" r="12" fill="rgba(209,107,79,0.15)"/>
+        <circle cx="120" cy="58" r="12" fill="rgba(209,107,79,0.15)"/>
+        <!-- Center: S&S logo -->
+        <circle cx="200" cy="200" r="44" fill="white" stroke="rgba(47,62,52,0.08)" stroke-width="1"/>
+        <clipPath id="logo-clip"><circle cx="200" cy="200" r="40"/></clipPath>
+        <g clip-path="url(#logo-clip)">
+          <rect x="160" y="160" width="40" height="80" fill="#2F3E34"/>
+          <rect x="200" y="160" width="40" height="80" fill="#D16B4F"/>
+        </g>
+        <text x="200" y="208" fill="white" font-family="Cormorant Garamond,serif" font-size="28" font-weight="300" text-anchor="middle">&amp;</text>
+        <!-- Labels -->
+        <text x="200" y="10" fill="#7E8E84" font-family="Satoshi,sans-serif" font-size="9" font-weight="600" text-anchor="middle" letter-spacing=".08em">INVESTOR</text>
+        <text x="200" y="396" fill="#7E8E84" font-family="Satoshi,sans-serif" font-size="9" font-weight="600" text-anchor="middle" letter-spacing=".08em">INVESTOR</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. THE GAP ═══ -->
+<section class="gap">
+  <div class="gap-inner">
+    <div class="gap-text">
+      <p>Utah is the <strong>#3 state</strong> to start a business.</p>
+      <p>It ranks <em>#50 for women's equality.</em></p>
+      <p>There are 129,000+ women-owned businesses here. And roughly 100,000 women who could invest in them. <strong>Almost none of that money is reaching those founders.</strong></p>
+    </div>
+    <div class="gap-stats">
+      <div class="gap-stat">
+        <div class="gap-stat-num">78<em>&cent;</em></div>
+        <div class="gap-stat-desc">Revenue per dollar from women-founded startups</div>
+        <div class="gap-stat-src">BCG / MassChallenge</div>
+      </div>
+      <div class="gap-stat">
+        <div class="gap-stat-num">31<em>&cent;</em></div>
+        <div class="gap-stat-desc">Revenue per dollar from men-founded startups</div>
+        <div class="gap-stat-src">BCG / MassChallenge</div>
+      </div>
+      <div class="gap-stat">
+        <div class="gap-stat-num">63<em>%</em></div>
+        <div class="gap-stat-desc">Better performance with a female founder</div>
+        <div class="gap-stat-src">First Round Capital</div>
+      </div>
+      <div class="gap-stat">
+        <div class="gap-stat-num">1<em>%</em></div>
+        <div class="gap-stat-desc">Of venture capital reaches all-female teams</div>
+        <div class="gap-stat-src">PitchBook</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. BETTER TOGETHER ═══ -->
+<section class="together">
+  <div class="together-inner">
+    <p class="label">Why Together</p>
+    <h2 class="heading">Alone, you're writing checks. Together, <em>you're a force.</em></h2>
+    <p class="together-sub">Angel investing works best when people share the work. Here's what changes when you're part of a group instead of going it alone.</p>
+    <div class="compare">
+      <div class="compare-col">
+        <div class="compare-col-label dim">Investing Alone</div>
+        <div class="compare-item">
+          <div class="compare-x">&times;</div>
+          <div class="compare-text">You have to find deals yourself</div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-x">&times;</div>
+          <div class="compare-text">You do all the research yourself</div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-x">&times;</div>
+          <div class="compare-text">You learn by trial and error</div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-x">&times;</div>
+          <div class="compare-text">Hard to build a diversified portfolio</div>
+        </div>
+      </div>
+      <div class="compare-div"></div>
+      <div class="compare-col">
+        <div class="compare-col-label bright">With Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="compare-item">
+          <div class="compare-check"><svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 4"/></svg></div>
+          <div class="compare-text"><strong>Curated deals</strong> come to you, already vetted</div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-check"><svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 4"/></svg></div>
+          <div class="compare-text"><strong>Shared research</strong> &mdash; the group does diligence together</div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-check"><svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 4"/></svg></div>
+          <div class="compare-text"><strong>Education built in</strong> &mdash; learn from experienced investors</div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-check"><svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 4"/></svg></div>
+          <div class="compare-text"><strong>30+ companies</strong> over five years = real diversification</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COLLECTIVE POWER ═══ -->
+<section style="padding:80px 48px;background:var(--moss);position:relative;overflow:hidden">
+  <div style="position:absolute;bottom:-60px;right:-20px;font-family:'Cormorant Garamond',serif;font-size:360px;font-weight:300;color:rgba(251,248,242,0.02);line-height:1;pointer-events:none">&amp;</div>
+  <div style="max-width:880px;margin:0 auto;position:relative">
+    <p style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:16px">Stronger Together</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(28px,4.5vw,44px);color:var(--cream);line-height:1.15;margin-bottom:24px;max-width:620px">Your $1,500 joins 79 others. <em style="font-style:italic;color:var(--rust)">Together, we write the check that changes everything.</em></h2>
+    <p style="font-size:17px;color:rgba(251,248,242,0.6);line-height:1.7;font-weight:300;max-width:540px;margin-bottom:48px">No one person can fund a startup alone. But when a group of women each put in a little, the total is enough to change a founder's life. That's what this community makes possible.</p>
+
+    <!-- People → impact visual -->
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;max-width:700px;margin:0 auto">
+      <!-- People side -->
+      <div style="text-align:center">
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:16px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#4A5E50;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:white;font-weight:600">A</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#7E8E84;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:white;font-weight:600">B</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#8B5E83;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:white;font-weight:600">C</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#3D5A99;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:white;font-weight:600">D</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#C87F5A;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:white;font-weight:600">E</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:rgba(251,248,242,0.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:rgba(251,248,242,0.5)">+75</div>
+        </div>
+        <div style="font-weight:900;font-size:20px;color:white">80 women</div>
+        <div style="font-size:13px;color:rgba(251,248,242,0.45);margin-top:4px">each investing $1,500</div>
+      </div>
+
+      <!-- Arrow -->
+      <div>
+        <svg width="48" height="24" viewBox="0 0 48 24" fill="none"><path d="M0 12h40M34 4l8 8-8 8" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <!-- Impact side -->
+      <div style="text-align:center;background:rgba(209,107,79,0.1);border:2px solid rgba(209,107,79,0.2);border-radius:16px;padding:32px 24px">
+        <div style="font-weight:900;font-size:clamp(36px,5vw,48px);color:white;line-height:1;letter-spacing:-.02em">$120<span style="font-size:.6em">K</span></div>
+        <div style="font-size:14px;color:rgba(251,248,242,0.6);margin-top:8px;line-height:1.4">One round of funding</div>
+        <div style="font-size:13px;color:rgba(251,248,242,0.4);margin-top:4px">One founder's next chapter</div>
+      </div>
+    </div>
+
+    <p style="font-size:16px;color:rgba(251,248,242,0.55);line-height:1.7;font-weight:300;max-width:520px;margin:40px auto 0;text-align:center"><strong style="color:var(--cream);font-weight:600">This is what community makes possible.</strong> Not one hero investor. Not one big check. Just a group of women who each show up with what they can &mdash; and together, it's enough to change everything.</p>
+  </div>
+</section>
+
+<!-- ═══ 4. YOUR MONEY, YOUR CALL ═══ -->
+<section class="yours">
+  <div class="yours-inner">
+    <p class="label">Your Money, Your Decisions</p>
+    <h2>Nobody invests your money for you. <em>You're always in control.</em></h2>
+    <p class="yours-desc">This is not a fund where someone else picks investments. <strong>You write every check yourself.</strong> You decide which founders to back. You manage your own portfolio. We just make sure you have great options to choose from.</p>
+
+    <div class="dollar-flow">
+      <div class="df-step">
+        <div class="df-icon df-icon-1">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><line x1="16" y1="10" x2="16" y2="22"/><line x1="10" y1="16" x2="22" y2="16"/></svg>
+        </div>
+        <div class="df-label">We find</div>
+        <div class="df-desc">Our team finds strong founders in Utah</div>
+      </div>
+      <div class="df-step">
+        <div class="df-icon df-icon-2">
+          <svg viewBox="0 0 32 32"><rect x="6" y="4" width="20" height="24" rx="3"/><line x1="11" y1="10" x2="21" y2="10"/><line x1="11" y1="15" x2="21" y2="15"/><line x1="11" y1="20" x2="17" y2="20"/></svg>
+        </div>
+        <div class="df-label">We research</div>
+        <div class="df-desc">We study each company carefully</div>
+      </div>
+      <div class="df-step">
+        <div class="df-icon df-icon-3">
+          <svg viewBox="0 0 32 32"><path d="M16 4l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <div class="df-label">You pick</div>
+        <div class="df-desc"><strong>You choose</strong> which to invest in</div>
+      </div>
+      <div class="df-step">
+        <div class="df-icon df-icon-4">
+          <svg viewBox="0 0 32 32"><polyline points="4 24 12 14 18 18 28 6"/><polyline points="22 6 28 6 28 12"/></svg>
+        </div>
+        <div class="df-label">You grow</div>
+        <div class="df-desc">Your portfolio builds over time</div>
+      </div>
+    </div>
+
+    <div class="yours-callout">
+      <p><strong>Think of it like a book club, but for investing.</strong> We pick the books (founders). We discuss them together. But you decide which ones to put on your own shelf (invest in). Your shelf, your choices, always.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. ACCREDITED INVESTOR ═══ -->
+<section class="acc">
+  <div class="acc-inner">
+    <div class="acc-text">
+      <h2>What's an <em>accredited investor?</em></h2>
+      <p>It's a legal term. It means you meet certain income or wealth standards that let you invest in startups &mdash; companies that aren't on the stock market yet. The government requires this because startup investing is riskier than buying public stocks.</p>
+      <p style="margin-top:12px">If you meet <strong>any one</strong> of the criteria on the right, you qualify.</p>
+      <p class="acc-note">Not sure? That's okay. We can help you figure it out.</p>
+    </div>
+    <div class="acc-card">
+      <div class="acc-card-title">You Qualify If</div>
+      <div class="acc-row">
+        <span class="acc-dot"></span>
+        <div class="acc-row-text">You earn <strong>$200K+ per year</strong> on your own</div>
+      </div>
+      <div class="acc-row">
+        <span class="acc-dot"></span>
+        <div class="acc-row-text">You and your spouse earn <strong>$300K+ per year</strong> together</div>
+      </div>
+      <div class="acc-row">
+        <span class="acc-dot"></span>
+        <div class="acc-row-text">Your net worth is <strong>over $1 million</strong> (not counting your home)</div>
+      </div>
+      <div class="acc-row">
+        <span class="acc-dot"></span>
+        <div class="acc-row-text">You hold certain <strong>financial licenses</strong> (Series 7, 65, or 82)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6. WHY DIVERSIFICATION ═══ -->
+<section class="why">
+  <div class="why-inner">
+    <div class="why-split">
+      <div class="why-left">
+        <p class="label">The Math</p>
+        <h2>More companies. <em>Better results.</em></h2>
+        <p>Most startups fail. That's the reality. But when you invest in many companies instead of just a few, the winners make up for the losses &mdash; and then some.</p>
+        <p style="margin-top:12px">That's exactly what Silver <span class="brand-amp">&amp;</span> Salt Capital helps you do: <strong>build a wide portfolio</strong> of 30+ companies over five years, so the math works in your favor.</p>
+        <p class="why-src">Source: Correlation Ventures &middot; Wiltbank <span class="brand-amp">&amp;</span> Boeker</p>
+      </div>
+      <div class="why-visual">
+        <div class="wv-row">
+          <div class="wv-label">&lt;5 deals</div>
+          <div class="wv-bar-wrap"><div class="wv-bar" style="width:3%;background:var(--sand)"></div></div>
+          <div class="wv-val">0%</div>
+        </div>
+        <div class="wv-row">
+          <div class="wv-label">5-10</div>
+          <div class="wv-bar-wrap"><div class="wv-bar" style="width:18%;background:rgba(209,107,79,0.2)"></div></div>
+          <div class="wv-val">3%</div>
+        </div>
+        <div class="wv-row">
+          <div class="wv-label">10-20</div>
+          <div class="wv-bar-wrap"><div class="wv-bar" style="width:35%;background:rgba(209,107,79,0.3)"></div></div>
+          <div class="wv-val">7%</div>
+        </div>
+        <div class="wv-row">
+          <div class="wv-label">20-30</div>
+          <div class="wv-bar-wrap"><div class="wv-bar" style="width:55%;background:rgba(209,107,79,0.45)"></div></div>
+          <div class="wv-val">10%</div>
+        </div>
+        <div class="wv-row">
+          <div class="wv-label">30-50</div>
+          <div class="wv-bar-wrap"><div class="wv-bar" style="width:72%;background:rgba(209,107,79,0.6)"></div></div>
+          <div class="wv-val">12%</div>
+        </div>
+        <div class="wv-row" style="border-bottom:none">
+          <div class="wv-label" style="color:var(--rust);font-weight:900">50+</div>
+          <div class="wv-bar-wrap"><div class="wv-bar" style="width:92%;background:var(--rust)"></div></div>
+          <div class="wv-val"><em>14%</em></div>
+        </div>
+        <p style="font-size:11px;color:var(--sage);margin-top:12px;text-align:center">Median annual return (IRR) by number of portfolio companies</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7. CTA ═══ -->
+<section class="cta">
+  <!-- People circles -->
+  <div class="cta-people">
+    <div class="cta-person cta-person-1">A</div>
+    <div class="cta-person cta-person-2">B</div>
+    <div class="cta-person cta-person-3">C</div>
+    <div class="cta-person cta-person-4">D</div>
+    <div class="cta-person cta-person-5">E</div>
+    <div class="cta-person cta-person-more">+95</div>
+  </div>
+  <h2>The first 100 are forming now. <em>Your seat is open.</em></h2>
+  <p class="cta-sub">Founding members shape the culture, choose the first founders to fund, and build the community from day one. This group will grow &mdash; but the founding 100 will always be the founding 100.</p>
+  <a href="#" class="cta-btn">Join the Founding 100</a>
+  <p class="cta-note">Applications reviewed monthly &middot; Accredited investors only</p>
+</section>
+
+<footer>
+  <p>&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital &middot; Utah</p>
+  <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members.</p>
+</footer>
+
+</body>
+</html>
