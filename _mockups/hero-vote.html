@@ -345,46 +345,18 @@ footer p{font-size:12px;color:var(--sage)}
  */
 
 const API = 'https://jsonblob.com/api/jsonBlob';
-let blobId = null;
+const blobId = '019d6a6e-f971-7e03-9a72-1ae708038c7d';
 let pendingChoice = null;
 const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'ssc';
 
 const OPTION_NAMES = { A: 'The Provocative Question', B: 'The Future Looking Back', C: 'The Exclusive Invitation', D: 'Fund Her' };
 
-// Initialize or load existing poll
+// Initialize
 async function init() {
-  // Check URL hash for existing poll
-  const hash = window.location.hash.slice(1);
-  if (hash && hash.length > 5) {
-    blobId = hash;
-    await loadAndRender();
-  } else {
-    // Create new poll
-    const data = { votes: { A: 0, B: 0, C: 0, D: 0 }, log: [] };
-    try {
-      const res = await fetch(API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const loc = res.headers.get('Location') || res.headers.get('X-Jsonblob');
-      if (loc) {
-        blobId = loc.split('/').pop();
-      } else {
-        // Fallback: try to parse from response
-        const url = res.url;
-        blobId = url.split('/').pop();
-      }
-      window.location.hash = blobId;
-    } catch (e) {
-      console.error('Failed to create poll:', e);
-      // Fallback to localStorage only
-      blobId = null;
-    }
-  }
+  await loadAndRender();
 
   // Check if this device already voted
-  const existingVote = localStorage.getItem('ssc_hero_vote_' + (blobId || 'local'));
+  const existingVote = localStorage.getItem('ssc_hero_vote');
   if (existingVote) {
     document.getElementById('card-' + existingVote).classList.add('voted');
     showThankYou();
@@ -397,13 +369,12 @@ async function init() {
 }
 
 async function loadAndRender() {
-  if (!blobId) return;
   try {
     const res = await fetch(API + '/' + blobId);
     const data = await res.json();
     renderDashboard(data);
     // If user already voted, show thank you (or dashboard for admin)
-    const existingVote = localStorage.getItem('ssc_hero_vote_' + blobId);
+    const existingVote = localStorage.getItem('ssc_hero_vote');
     if (existingVote && !isAdmin) {
       showThankYou();
     }
@@ -413,7 +384,7 @@ async function loadAndRender() {
 }
 
 function startVote(option) {
-  const existingVote = localStorage.getItem('ssc_hero_vote_' + (blobId || 'local'));
+  const existingVote = localStorage.getItem('ssc_hero_vote');
   if (existingVote) {
     alert('You\'ve already voted! Thank you.');
     return;
@@ -432,7 +403,7 @@ async function submitVote() {
   document.getElementById('nameModal').classList.remove('show');
 
   // Mark voted locally
-  localStorage.setItem('ssc_hero_vote_' + (blobId || 'local'), option);
+  localStorage.setItem('ssc_hero_vote', option);
   document.getElementById('card-' + option).classList.add('voted');
 
   // Save to blob
