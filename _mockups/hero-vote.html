@@ -338,23 +338,33 @@ footer p{font-size:12px;color:var(--sage)}
 
 <script>
 /*
- * Shared voting via jsonblob.com (free, no auth, CORS-enabled REST API).
- * - On first load: creates a new blob OR loads existing one from URL hash
- * - Each vote: reads current data, appends vote, writes back
- * - Dashboard: shows live results from the blob
- * - Tori shares the URL with #blobId so everyone uses the same poll
+ * Shared voting via Google Apps Script backend.
+ * Votes are stored in a Google Sheet. The Apps Script provides
+ * a CORS-enabled JSON API for reading and writing votes.
+ *
+ * SETUP: Replace API_URL below with your deployed Google Apps Script URL.
+ * See VOTE-BACKEND-SETUP.md for instructions.
  */
 
-const API = 'https://jsonblob.com/api/jsonBlob';
-const blobId = '019d6a6e-f971-7e03-9a72-1ae708038c7d';
+// >>> REPLACE THIS with your Google Apps Script web app URL <<<
+const API_URL = 'https://script.google.com/macros/s/AKfycbzvUGKgWIct2oi2ahstv0Vmtl60D4ZbN1E1wgFUNUcgobnnYNuchNUOlDrD8evx-P4q3A/exec';
+
 let pendingChoice = null;
 const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'ssc';
 
-const OPTION_NAMES = { A: 'The Provocative Question', B: 'The Future Looking Back', C: 'The Exclusive Invitation', D: 'Fund Her' };
+const OPTION_NAMES = {
+  A: 'The Provocative Question',
+  B: 'The Future Looking Back',
+  C: 'The Exclusive Invitation',
+  D: 'Fund Her'
+};
 
-// Initialize
 async function init() {
-  await loadAndRender();
+  // Load existing results (admin only)
+  if (isAdmin && API_URL) {
+    await loadAndRender();
+    showDashboard();
+  }
 
   // Check if this device already voted
   const existingVote = localStorage.getItem('ssc_hero_vote');
@@ -362,25 +372,16 @@ async function init() {
     document.getElementById('card-' + existingVote).classList.add('voted');
     showThankYou();
   }
-
-  // Admin always sees dashboard
-  if (isAdmin) {
-    showDashboard();
-  }
 }
 
 async function loadAndRender() {
+  if (!API_URL) return;
   try {
-    const res = await fetch(API + '/' + blobId);
+    const res = await fetch(API_URL);
     const data = await res.json();
     renderDashboard(data);
-    // If user already voted, show thank you (or dashboard for admin)
-    const existingVote = localStorage.getItem('ssc_hero_vote');
-    if (existingVote && !isAdmin) {
-      showThankYou();
-    }
   } catch (e) {
-    console.error('Failed to load poll:', e);
+    console.error('Failed to load results:', e);
   }
 }
 
@@ -407,23 +408,15 @@ async function submitVote() {
   localStorage.setItem('ssc_hero_vote', option);
   document.getElementById('card-' + option).classList.add('voted');
 
-  // Save to blob
-  if (blobId) {
+  // Save to backend
+  if (API_URL) {
     try {
-      const res = await fetch(API + '/' + blobId);
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ name, choice: option })
+      });
       const data = await res.json();
-      data.votes[option] = (data.votes[option] || 0) + 1;
-      data.log.push({
-        name: name,
-        choice: option,
-        choiceName: OPTION_NAMES[option],
-        time: new Date().toISOString()
-      });
-      await fetch(API + '/' + blobId, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
       renderDashboard(data);
     } catch (e) {
       console.error('Failed to save vote:', e);
@@ -449,8 +442,7 @@ function showThankYou() {
 
 function showDashboard() {
   document.getElementById('dashboard').classList.add('show');
-  // Refresh data
-  if (blobId) loadAndRender();
+  loadAndRender();
 }
 
 function renderDashboard(data) {
@@ -458,7 +450,6 @@ function renderDashboard(data) {
   const total = votes.A + votes.B + votes.C + votes.D;
   const max = Math.max(votes.A, votes.B, votes.C, votes.D, 1);
 
-  // Find winner
   let winnerOpt = 'A';
   ['A','B','C','D'].forEach(opt => {
     if (votes[opt] > votes[winnerOpt]) winnerOpt = opt;
@@ -477,7 +468,6 @@ function renderDashboard(data) {
 
   document.getElementById('dtotal').textContent = total;
 
-  // Render voter log
   const log = data.log || [];
   const logEl = document.getElementById('voterLog');
   if (log.length === 0) {
@@ -486,11 +476,11 @@ function renderDashboard(data) {
     logEl.innerHTML = log.slice().reverse().map(v => {
       const d = new Date(v.time);
       const timeStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-      return `<div class="voter-log-item">
-        <span class="vl-name">${v.name}</span>
-        <span class="vl-choice">Option ${v.choice}</span>
-        <span class="vl-time">${timeStr}</span>
-      </div>`;
+      return '<div class="voter-log-item">' +
+        '<span class="vl-name">' + v.name + '</span>' +
+        '<span class="vl-choice">Option ' + v.choice + '</span>' +
+        '<span class="vl-time">' + timeStr + '</span>' +
+      '</div>';
     }).join('');
   }
 }
@@ -502,12 +492,11 @@ document.getElementById('voterName').addEventListener('keydown', e => {
 
 // Auto-refresh dashboard every 15 seconds if visible
 setInterval(() => {
-  if (document.getElementById('dashboard').classList.contains('show') && blobId) {
+  if (document.getElementById('dashboard').classList.contains('show')) {
     loadAndRender();
   }
 }, 15000);
 
-// Init on load
 init();
 </script>
 
