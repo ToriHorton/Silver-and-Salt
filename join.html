@@ -416,6 +416,55 @@
       line-height: 1.7;
     }
 
+    .confirm-btn {
+      display: block;
+      width: 100%;
+      background-color: var(--lime);
+      color: var(--moss);
+      font-family: 'Satoshi', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      border: none;
+      border-radius: 4px;
+      padding: 15px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.2s;
+    }
+    .confirm-btn:hover { background-color: var(--lime-dark); }
+
+    #step-3 { display: none; text-align: center; padding: 40px 0; }
+    .step3-icon { font-size: 36px; margin-bottom: 16px; }
+    .step3-heading {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 36px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--moss);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .step3-body {
+      font-size: 14px;
+      color: var(--sage);
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+    .step3-link {
+      display: inline-block;
+      font-family: 'Satoshi', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--moss);
+      text-decoration: none;
+      border-bottom: 1px solid var(--lime);
+      padding-bottom: 2px;
+    }
+    .step3-link:hover { color: var(--lime-dark); }
+
     @media (max-width: 480px) {
       .two-col { grid-template-columns: 1fr; }
       .card     { padding: 28px 20px; }
@@ -543,18 +592,26 @@
     <div id="step-2">
       <div class="step2-intro">
         <h2>Reserve your time.</h2>
-        <p>Select a time for your private introduction with Tori.<br>Membership at Silver &amp; Salt Capital begins with a conversation.</p>
+        <p>This is a conversation to learn more about you and explore whether Silver &amp; Salt Capital is the right fit. Spots are limited and by invitation or direct inquiry only.<br><br>Come ready to share a bit about yourself and what you’re looking for in a membership.</p>
       </div>
       <div class="calendar-wrap">
         <div class="cal-header">
           <div class="cal-label">A Private Introduction</div>
-          <div class="cal-sub">30 minutes &middot; By appointment only</div>
+          <div class="cal-sub">By appointment only</div>
         </div>
         <!-- Google Calendar Appointment Scheduling begin -->
         <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" style="border: 0" width="100%" height="600" frameborder="0"></iframe>
         <!-- end Google Calendar Appointment Scheduling -->
       </div>
-      <p class="step2-note">Tori reviews every application personally. You’ll hear from her within two business days.</p>
+      <p class="step2-note">Select a time above, then confirm below once you’ve booked.</p>
+      <button class="confirm-btn" id="confirm-btn">I’ve scheduled my time →</button>
+    </div>
+
+    <div id="step-3">
+      <div class="step3-icon">✦</div>
+      <h2 class="step3-heading">You’re confirmed.</h2>
+      <p class="step3-body">Thank you for applying to Silver &amp; Salt Capital.<br>A calendar invitation has been sent to your email.<br><br>Tori looks forward to the conversation.</p>
+      <a href="/" class="step3-link">Return to Silver &amp; Salt Capital</a>
     </div>
 
   </div>
@@ -577,12 +634,23 @@
     });
 
     // Form submit → advance to step 2
-    const form      = document.getElementById('inquiry-form');
-    const submitBtn = document.getElementById('submit-btn');
-    const step1     = document.getElementById('step-1');
-    const step2     = document.getElementById('step-2');
-    const dot1      = document.getElementById('dot-1');
-    const dot2      = document.getElementById('dot-2');
+    const form        = document.getElementById('inquiry-form');
+    const submitBtn   = document.getElementById('submit-btn');
+    const step1       = document.getElementById('step-1');
+    const step2       = document.getElementById('step-2');
+    const step3       = document.getElementById('step-3');
+    const confirmBtn  = document.getElementById('confirm-btn');
+    const dot1        = document.getElementById('dot-1');
+    const dot2        = document.getElementById('dot-2');
+
+    // Confirm button → advance to step 3 (thank you screen)
+    confirmBtn.addEventListener('click', function() {
+      step2.style.display = 'none';
+      step3.style.display = 'block';
+      dot2.className = 'step complete';
+      dot2.querySelector('.step-dot').innerHTML = '✓';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
