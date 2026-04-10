@@ -465,6 +465,43 @@
     }
     .step3-link:hover { color: var(--lime-dark); }
 
+    .quote-card {
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+      padding-top: 36px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      text-align: left;
+    }
+    .quote-card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top center;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+    }
+    .quote-card-body { flex: 1; }
+    .quote-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--moss);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .quote-attr {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      line-height: 1.6;
+    }
+
     @media (max-width: 480px) {
       .two-col { grid-template-columns: 1fr; }
       .card     { padding: 28px 20px; }
@@ -610,8 +647,15 @@
     <div id="step-3">
       <div class="step3-icon">✦</div>
       <h2 class="step3-heading">You’re confirmed.</h2>
-      <p class="step3-body">Thank you for applying to Silver &amp; Salt Capital.<br>A calendar invitation has been sent to your email.<br><br>Tori looks forward to the conversation.</p>
+      <p class="step3-body">Thank you for applying to Silver &amp; Salt Capital.<br>A calendar invitation has been sent to your email.<br><br>We’ll see you soon.</p>
       <a href="/" class="step3-link">Return to Silver &amp; Salt Capital</a>
+      <div class="quote-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Ivy_Baker_Priest%2C_1971.jpg" alt="Ivy Baker Priest" />
+        <div class="quote-card-body">
+          <p class="quote-text">"We women don’t care too much about getting our pictures on money as long as we can get our hands on it."</p>
+          <p class="quote-attr">Ivy Baker Priest &nbsp;·&nbsp; Utah-born 30th Treasurer of the United States<br>First woman from Utah to hold a Cabinet-level federal office</p>
+        </div>
+      </div>
     </div>
 
   </div>
