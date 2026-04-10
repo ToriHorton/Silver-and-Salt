@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proof Point Treatments — Option A with Logos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FBF8F2;
+  --sand: #F4EFE6;
+  --moss: #2F3E34;
+  --moss-light: #4A5E50;
+  --sage: #7E8E84;
+  --pop: #D16B4F;
+  --text-body: #4A5E50;
+  --border: rgba(47,62,52,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #e8e5df; color: var(--text-body); font-size: 15px; line-height: 1.6; }
+
+.treatment { background: var(--cream); max-width: 700px; margin: 40px auto; border-radius: 20px; padding: 48px 36px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); overflow: hidden; }
+.treatment-label { font-family: 'Satoshi', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: white; background: var(--pop); display: inline-block; padding: 4px 12px; border-radius: 100px; margin-bottom: 24px; }
+
+h3.section-head { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--moss); line-height: 1.2; margin-bottom: 8px; }
+h3.section-head span { color: var(--pop); font-style: italic; }
+
+/* ═══════════════════════════════════════
+   VARIATION 1: Logo left, info right
+   ═══════════════════════════════════════ */
+.v1-list { margin-top: 32px; }
+.v1-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 120px;
+  gap: 16px;
+  align-items: start;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+}
+.v1-row:first-child { border-top: 1px solid var(--border); }
+.v1-logo {
+  width: 48px; height: 48px; border-radius: 10px;
+  object-fit: contain; background: white; padding: 6px;
+  border: 1px solid rgba(47,62,52,0.06);
+  filter: grayscale(60%) opacity(0.7);
+  transition: filter 0.2s;
+}
+.v1-logo:hover { filter: grayscale(0%) opacity(1); }
+.v1-logo-placeholder {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: var(--sand); border: 1px solid rgba(47,62,52,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700;
+  color: var(--sage);
+}
+.v1-info {}
+.v1-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px; font-weight: 600; color: var(--moss); line-height: 1.2;
+}
+.v1-loc {
+  font-family: 'Satoshi', sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--sage);
+  margin-top: 2px; margin-bottom: 6px;
+}
+.v1-desc { font-size: 13px; line-height: 1.55; color: var(--text-body); }
+.v1-stat {
+  font-family: 'Satoshi', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--pop); text-align: right; line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════
+   VARIATION 2: Logo inline with name, alternating bg
+   ═══════════════════════════════════════ */
+.v2-list { margin-top: 32px; }
+.v2-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 16px;
+  align-items: start;
+  padding: 22px 24px;
+  border-radius: 12px;
+  margin-bottom: 6px;
+}
+.v2-row:nth-child(odd) { background: var(--sand); }
+.v2-row:nth-child(even) { background: white; }
+.v2-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.v2-logo {
+  height: 22px; max-width: 100px; object-fit: contain;
+  filter: grayscale(80%) opacity(0.6);
+  transition: filter 0.2s;
+}
+.v2-logo:hover { filter: grayscale(0%) opacity(1); }
+.v2-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600; color: var(--moss);
+}
+.v2-loc {
+  font-family: 'Satoshi', sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--sage);
+  margin-left: auto;
+}
+.v2-desc { font-size: 13px; line-height: 1.55; color: var(--text-body); }
+.v2-stat {
+  font-family: 'Satoshi', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--pop); text-align: right; line-height: 1.6;
+  padding-top: 28px;
+}
+
+/* ═══════════════════════════════════════
+   VARIATION 3: Compact with border-left accent
+   ═══════════════════════════════════════ */
+.v3-list { margin-top: 32px; }
+.v3-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 110px;
+  gap: 14px;
+  align-items: start;
+  padding: 18px 20px;
+  border-left: 3px solid var(--border);
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+.v3-row:hover { border-left-color: var(--pop); }
+.v3-logo {
+  width: 40px; height: 40px; border-radius: 8px;
+  object-fit: contain; background: white; padding: 5px;
+  filter: grayscale(60%) opacity(0.7);
+  transition: filter 0.2s;
+}
+.v3-logo:hover { filter: grayscale(0%) opacity(1); }
+.v3-logo-placeholder {
+  width: 40px; height: 40px; border-radius: 8px;
+  background: var(--sand);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 700;
+  color: var(--sage);
+}
+.v3-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px; font-weight: 600; color: var(--moss); line-height: 1.2;
+}
+.v3-meta {
+  font-family: 'Satoshi', sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--sage);
+  margin-top: 2px; margin-bottom: 4px;
+}
+.v3-desc { font-size: 13px; line-height: 1.5; color: var(--text-body); }
+.v3-stat {
+  font-family: 'Satoshi', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--pop); text-align: right; line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .treatment { padding: 40px 24px; margin: 20px 12px; }
+  .v1-row { grid-template-columns: 48px 1fr; }
+  .v1-stat { grid-column: 2; text-align: left; margin-top: -4px; }
+  .v2-row { grid-template-columns: 1fr; gap: 8px; }
+  .v2-stat { text-align: left; padding-top: 0; }
+  .v3-row { grid-template-columns: 40px 1fr; }
+  .v3-stat { grid-column: 2; text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<!-- VARIATION 1: Logo as square thumbnail on left -->
+<div class="treatment">
+  <div class="treatment-label">Variation 1 — Logo thumbnail left</div>
+  <h3 class="section-head">Not new. <span>Just new to Utah.</span></h3>
+  <div class="v1-list">
+    <div class="v1-row">
+      <a href="https://www.goldenseeds.com/" target="_blank" rel="noopener"><img src="../assets/logos/golden-seeds-logo.svg" alt="Golden Seeds" class="v1-logo"></a>
+      <div class="v1-info">
+        <div class="v1-name">Golden Seeds</div>
+        <div class="v1-loc">National &middot; 9 chapters &middot; 28 states</div>
+        <div class="v1-desc">The largest women-focused angel network. 20+ years of organized deal flow, investor education, and community.</div>
+      </div>
+      <div class="v1-stat">1,150+ investors<br>$195M+ invested<br>20%+ IRR</div>
+    </div>
+    <div class="v1-row">
+      <a href="https://www.pipelineangels.org/" target="_blank" rel="noopener"><img src="../assets/logos/pipeline-angels-logo.jpg" alt="Pipeline Angels" class="v1-logo"></a>
+      <div class="v1-info">
+        <div class="v1-name">Pipeline Angels</div>
+        <div class="v1-loc">National</div>
+        <div class="v1-desc">Trains new angels and helps members make their first startup investments. Often the first check for founders without existing access.</div>
+      </div>
+      <div class="v1-stat">550+ members<br>$7M+ invested</div>
+    </div>
+    <div class="v1-row">
+      <a href="https://www.citrineangels.com/" target="_blank" rel="noopener"><img src="../assets/logos/citrine-angels-logo.png" alt="Citrine Angels" class="v1-logo"></a>
+      <div class="v1-info">
+        <div class="v1-name">Citrine Angels</div>
+        <div class="v1-loc">Washington, D.C.</div>
+        <div class="v1-desc">Women investors backing women-led startups across healthcare, consumer, and technology. A newer regional model demonstrating traction.</div>
+      </div>
+      <div class="v1-stat">80+ members<br>$1.8M+ invested</div>
+    </div>
+    <div class="v1-row">
+      <a href="https://www.impactinvesther.com/" target="_blank" rel="noopener"><img src="../assets/logos/impact-invest-her-logo.png" alt="Impact Invest Her" class="v1-logo"></a>
+      <div class="v1-info">
+        <div class="v1-name">Impact Invest Her</div>
+        <div class="v1-loc">Bay Area</div>
+        <div class="v1-desc">Collaborative diligence, strong values, and an active founder-support community. Members decide individually whether to invest.</div>
+      </div>
+      <div class="v1-stat">Private community</div>
+    </div>
+    <div class="v1-row">
+      <a href="https://joinjosephine.com" target="_blank" rel="noopener"><div class="v1-logo-placeholder">JC</div></a>
+      <div class="v1-info">
+        <div class="v1-name">The Josephine Collective</div>
+        <div class="v1-loc">National</div>
+        <div class="v1-desc">Women-led angel syndicate co-investing from first check through later rounds. No sourcing or management fees, single line on cap table.</div>
+      </div>
+      <div class="v1-stat">51%+ women &amp; POC<br>$1K+ per deal</div>
+    </div>
+  </div>
+</div>
+
+<!-- VARIATION 2: Alternating backgrounds, logo inline -->
+<div class="treatment">
+  <div class="treatment-label">Variation 2 — Alternating rows, inline logo</div>
+  <h3 class="section-head">Not new. <span>Just new to Utah.</span></h3>
+  <div class="v2-list">
+    <div class="v2-row">
+      <div>
+        <div class="v2-header">
+          <a href="https://www.goldenseeds.com/" target="_blank" rel="noopener"><img src="../assets/logos/golden-seeds-logo.svg" alt="Golden Seeds" class="v2-logo"></a>
+          <div class="v2-name">Golden Seeds</div>
+          <div class="v2-loc">National</div>
+        </div>
+        <div class="v2-desc">The largest women-focused angel network. 20+ years of organized deal flow, investor education, and community across 9 chapters and 28 states.</div>
+      </div>
+      <div class="v2-stat">1,150+ investors<br>$195M+ invested<br>20%+ IRR</div>
+    </div>
+    <div class="v2-row">
+      <div>
+        <div class="v2-header">
+          <a href="https://www.pipelineangels.org/" target="_blank" rel="noopener"><img src="../assets/logos/pipeline-angels-logo.jpg" alt="Pipeline Angels" class="v2-logo"></a>
+          <div class="v2-name">Pipeline Angels</div>
+          <div class="v2-loc">National</div>
+        </div>
+        <div class="v2-desc">Trains new angels and helps members make their first startup investments. Often the first check for founders without existing access.</div>
+      </div>
+      <div class="v2-stat">550+ members<br>$7M+ invested</div>
+    </div>
+    <div class="v2-row">
+      <div>
+        <div class="v2-header">
+          <a href="https://www.citrineangels.com/" target="_blank" rel="noopener"><img src="../assets/logos/citrine-angels-logo.png" alt="Citrine Angels" class="v2-logo"></a>
+          <div class="v2-name">Citrine Angels</div>
+          <div class="v2-loc">Washington, D.C.</div>
+        </div>
+        <div class="v2-desc">Women investors backing women-led startups across healthcare, consumer, and technology. A newer regional model demonstrating traction.</div>
+      </div>
+      <div class="v2-stat">80+ members<br>$1.8M+ invested</div>
+    </div>
+    <div class="v2-row">
+      <div>
+        <div class="v2-header">
+          <a href="https://www.impactinvesther.com/" target="_blank" rel="noopener"><img src="../assets/logos/impact-invest-her-logo.png" alt="Impact Invest Her" class="v2-logo"></a>
+          <div class="v2-name">Impact Invest Her</div>
+          <div class="v2-loc">Bay Area</div>
+        </div>
+        <div class="v2-desc">Collaborative diligence, strong values, and an active founder-support community. Members decide individually whether to invest.</div>
+      </div>
+      <div class="v2-stat">Private community</div>
+    </div>
+    <div class="v2-row">
+      <div>
+        <div class="v2-header">
+          <div class="v2-name">The Josephine Collective</div>
+          <div class="v2-loc">National</div>
+        </div>
+        <div class="v2-desc">Women-led angel syndicate co-investing from first check through later rounds. No sourcing or management fees, single line on cap table.</div>
+      </div>
+      <div class="v2-stat">51%+ women &amp; POC<br>$1K+ per deal</div>
+    </div>
+  </div>
+</div>
+
+<!-- VARIATION 3: Border-left accent -->
+<div class="treatment">
+  <div class="treatment-label">Variation 3 — Left accent border</div>
+  <h3 class="section-head">Not new. <span>Just new to Utah.</span></h3>
+  <div class="v3-list">
+    <div class="v3-row">
+      <a href="https://www.goldenseeds.com/" target="_blank" rel="noopener"><img src="../assets/logos/golden-seeds-logo.svg" alt="Golden Seeds" class="v3-logo"></a>
+      <div>
+        <div class="v3-name">Golden Seeds</div>
+        <div class="v3-meta">National &middot; 9 chapters &middot; 28 states</div>
+        <div class="v3-desc">The largest women-focused angel network. 20+ years of organized deal flow, investor education, and community.</div>
+      </div>
+      <div class="v3-stat">1,150+ investors<br>$195M+ invested<br>20%+ IRR</div>
+    </div>
+    <div class="v3-row">
+      <a href="https://www.pipelineangels.org/" target="_blank" rel="noopener"><img src="../assets/logos/pipeline-angels-logo.jpg" alt="Pipeline Angels" class="v3-logo"></a>
+      <div>
+        <div class="v3-name">Pipeline Angels</div>
+        <div class="v3-meta">National</div>
+        <div class="v3-desc">Trains new angels and helps members make their first startup investments. Often the first check for founders without existing access.</div>
+      </div>
+      <div class="v3-stat">550+ members<br>$7M+ invested</div>
+    </div>
+    <div class="v3-row">
+      <a href="https://www.citrineangels.com/" target="_blank" rel="noopener"><img src="../assets/logos/citrine-angels-logo.png" alt="Citrine Angels" class="v3-logo"></a>
+      <div>
+        <div class="v3-name">Citrine Angels</div>
+        <div class="v3-meta">Washington, D.C.</div>
+        <div class="v3-desc">Women investors backing women-led startups across healthcare, consumer, and technology. A newer regional model demonstrating traction.</div>
+      </div>
+      <div class="v3-stat">80+ members<br>$1.8M+ invested</div>
+    </div>
+    <div class="v3-row">
+      <a href="https://www.impactinvesther.com/" target="_blank" rel="noopener"><img src="../assets/logos/impact-invest-her-logo.png" alt="Impact Invest Her" class="v3-logo"></a>
+      <div>
+        <div class="v3-name">Impact Invest Her</div>
+        <div class="v3-meta">Bay Area</div>
+        <div class="v3-desc">Collaborative diligence, strong values, and an active founder-support community. Members decide individually whether to invest.</div>
+      </div>
+      <div class="v3-stat">Private community</div>
+    </div>
+    <div class="v3-row">
+      <a href="https://joinjosephine.com" target="_blank" rel="noopener"><div class="v3-logo-placeholder">JC</div></a>
+      <div>
+        <div class="v3-name">The Josephine Collective</div>
+        <div class="v3-meta">National</div>
+        <div class="v3-desc">Women-led angel syndicate co-investing from first check through later rounds. No sourcing or management fees, single line on cap table.</div>
+      </div>
+      <div class="v3-stat">51%+ women &amp; POC<br>$1K+ per deal</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

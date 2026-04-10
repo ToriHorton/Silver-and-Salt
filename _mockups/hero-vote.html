@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silver &amp; Salt Capital — Help Us Pick</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;
+  --sage:#7E8E84;--rust:#D16B4F;--rust-hover:#E07A5E;
+  --border:rgba(47,62,52,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--sand);font-family:'Satoshi',sans-serif;-webkit-font-smoothing:antialiased}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:0.85em}
+
+/* ── INTRO ── */
+.intro{background:var(--cream);padding:60px 48px 48px;text-align:center;border-bottom:1px solid var(--border)}
+.intro-logo{width:48px;height:48px;border-radius:50%;overflow:hidden;position:relative;margin:0 auto 20px;border:2px solid var(--border)}
+.intro-logo .l{position:absolute;top:0;left:0;width:50%;height:100%;background:var(--moss)}
+.intro-logo .r{position:absolute;top:0;right:0;width:50%;height:100%;background:var(--rust)}
+.intro-logo .a{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:white;z-index:1}
+.intro h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(28px,4vw,40px);color:var(--moss);line-height:1.2;margin-bottom:12px}
+.intro h1 em{font-style:italic;color:var(--rust)}
+.intro p{font-size:16px;color:var(--moss-light);line-height:1.7;font-weight:300;max-width:520px;margin:0 auto}
+.intro .instructions{margin-top:24px;padding:16px 24px;background:var(--sand);border-radius:10px;display:inline-block;font-size:14px;color:var(--moss);font-weight:500}
+
+/* ── CARD WRAPPER ── */
+.card-section{padding:40px 24px}
+.card-wrap{max-width:1100px;margin:0 auto 48px;border-radius:16px;overflow:hidden;box-shadow:0 16px 48px rgba(47,62,52,0.1);position:relative;transition:box-shadow .3s}
+.card-wrap.voted{box-shadow:0 0 0 4px var(--rust),0 16px 48px rgba(47,62,52,0.1)}
+.card-tag{position:absolute;top:16px;left:16px;z-index:10;background:rgba(0,0,0,0.5);
+  color:white;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 14px;border-radius:100px;backdrop-filter:blur(8px)}
+
+/* ── VOTE BAR ── */
+.vote-bar{background:var(--cream);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.vote-btn{font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--rust);color:white;border:none;border-radius:6px;
+  padding:12px 28px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.vote-btn:hover{background:var(--rust-hover);transform:translateY(-1px)}
+.vote-btn:disabled{background:var(--sage);cursor:default;transform:none}
+.vote-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vote-label{font-size:13px;color:var(--sage);font-weight:400}
+.vote-count{font-weight:900;color:var(--moss);font-size:16px;display:inline-flex;align-items:center;gap:6px}
+.vote-check{display:none;color:var(--rust);font-weight:700;font-size:14px;align-items:center;gap:6px}
+.voted .vote-check{display:flex}
+.voted .vote-btn{display:none}
+
+/* ── HERO STYLES ── */
+.hero{position:relative;overflow:hidden}
+.wrap{max-width:800px;margin:0 auto;position:relative;z-index:2}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px}
+h2{font-family:'Cormorant Garamond',serif;font-weight:300;line-height:1.08;letter-spacing:-.03em}
+h2 em{font-style:italic}
+.sub{font-size:17px;line-height:1.7;font-weight:300}
+.cta-row{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap}
+.btn-pop{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--rust);color:white;border:none;border-radius:4px;padding:14px 32px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-light{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:white;color:var(--moss);border:none;border-radius:4px;padding:14px 32px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-outline-light{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:transparent;color:rgba(251,248,242,0.7);border:1px solid rgba(251,248,242,0.2);border-radius:4px;padding:14px 32px;cursor:pointer;text-decoration:none;display:inline-block}
+.amp-bg{position:absolute;font-family:'Cormorant Garamond',serif;font-weight:300;line-height:1;pointer-events:none;user-select:none}
+.nav-mock{padding:16px 48px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3}
+.nav-mock-mark{display:flex;align-items:center;gap:10px}
+.sc{width:30px;height:30px;border-radius:50%;overflow:hidden;position:relative;flex-shrink:0}
+.sc-l{position:absolute;top:0;left:0;width:50%;height:100%;background:var(--moss)}
+.sc-r{position:absolute;top:0;right:0;width:50%;height:100%;background:var(--rust)}
+.sc-a{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:white;z-index:1}
+.nav-wm{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:18px}
+.nav-btn{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:4px;padding:8px 20px;cursor:pointer;text-decoration:none}
+
+/* ── DASHBOARD ── */
+.dashboard{background:var(--cream);padding:56px 48px;border-top:4px solid var(--rust);display:none}
+.dashboard.show{display:block}
+.dash-header{text-align:center;margin-bottom:40px}
+.dash-header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(24px,3.5vw,36px);color:var(--moss);margin-bottom:8px}
+.dash-header p{font-size:15px;color:var(--moss-light);font-weight:300}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:800px;margin:0 auto}
+.dash-card{background:white;border-radius:14px;padding:24px 20px;border:1px solid var(--border);text-align:center;position:relative;transition:all .3s}
+.dash-card.winner{border-color:var(--rust);box-shadow:0 8px 24px rgba(209,107,79,0.15)}
+.dash-card.winner::after{content:'LEADING';position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  background:var(--rust);color:white;font-size:9px;font-weight:900;letter-spacing:.1em;
+  padding:3px 10px;border-radius:100px}
+.dash-option{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:12px}
+.dash-bar-wrap{height:100px;background:var(--sand);border-radius:8px;display:flex;align-items:flex-end;overflow:hidden;margin-bottom:12px}
+.dash-bar{width:100%;border-radius:8px 8px 0 0;background:var(--rust);transition:height .8s ease;min-height:4px}
+.dash-card:nth-child(2) .dash-bar{background:var(--moss)}
+.dash-card:nth-child(3) .dash-bar{background:#8B5E83}
+.dash-card:nth-child(4) .dash-bar{background:#C87F5A}
+.dash-votes{font-weight:900;font-size:28px;color:var(--moss);line-height:1}
+.dash-votes-label{font-size:12px;color:var(--sage);margin-top:4px}
+.dash-pct{font-size:14px;font-weight:700;color:var(--rust);margin-top:8px}
+.dash-name{font-size:12px;color:var(--moss-light);margin-top:8px;font-weight:400;line-height:1.4}
+.dash-total{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
+.dash-total-num{font-weight:900;font-size:36px;color:var(--moss)}
+.dash-total-label{font-size:13px;color:var(--sage);margin-top:4px}
+
+/* Voter log */
+.voter-log{max-width:800px;margin:32px auto 0;background:white;border-radius:12px;border:1px solid var(--border);overflow:hidden}
+.voter-log-header{padding:16px 20px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage)}
+.voter-log-list{max-height:240px;overflow-y:auto}
+.voter-log-item{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.voter-log-item:last-child{border-bottom:none}
+.voter-log-item .vl-name{color:var(--moss);font-weight:500}
+.voter-log-item .vl-choice{font-weight:700;color:var(--rust)}
+.voter-log-item .vl-time{font-size:12px;color:var(--sage)}
+.voter-log-empty{padding:24px 20px;text-align:center;font-size:14px;color:var(--sage);font-style:italic}
+
+/* Footer */
+footer{padding:32px 48px;text-align:center}
+footer p{font-size:12px;color:var(--sage)}
+
+/* ── NAME MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(47,62,52,0.6);z-index:100;
+  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--cream);border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(47,62,52,0.2)}
+.modal h3{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:24px;color:var(--moss);margin-bottom:8px}
+.modal p{font-size:14px;color:var(--moss-light);margin-bottom:20px;line-height:1.6}
+.modal input{width:100%;padding:14px 16px;font-size:16px;font-family:'Satoshi',sans-serif;
+  border:1px solid var(--border);border-radius:8px;background:white;color:var(--moss);
+  outline:none;transition:border-color .2s}
+.modal input:focus{border-color:var(--rust)}
+.modal button{margin-top:16px;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--rust);color:white;border:none;border-radius:6px;
+  padding:14px 36px;cursor:pointer;width:100%}
+.modal-choice{margin-top:12px;font-size:13px;color:var(--sage)}
+
+/* Responsive */
+@media(max-width:768px){
+  .intro{padding:48px 24px 36px}
+  .card-section{padding:24px 12px}
+  .hero{padding-left:24px!important;padding-right:24px!important}
+  .nav-mock{padding:12px 24px}
+  h2{font-size:clamp(28px,7vw,48px)!important}
+  .vote-bar{flex-direction:column;gap:12px;text-align:center}
+  .dash-grid{grid-template-columns:repeat(2,1fr)}
+  .dashboard{padding:40px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAME MODAL ═══ -->
+<div class="modal-overlay" id="nameModal">
+  <div class="modal">
+    <h3>Before you vote&hellip;</h3>
+    <p>Enter your first name so Tori knows who voted.</p>
+    <input type="text" id="voterName" placeholder="Your first name" autocomplete="given-name" autofocus>
+    <div class="modal-choice" id="modalChoice"></div>
+    <button onclick="submitVote()">Submit My Vote</button>
+  </div>
+</div>
+
+<!-- ═══ INTRO ═══ -->
+<div class="intro">
+  <div class="intro-logo">
+    <div class="l"></div><div class="r"></div><div class="a">&amp;</div>
+  </div>
+  <h1>Pssst... <em>Got a minute?</em></h1>
+  <p>We need your help to pick a website opening. Below are 4 options for what people will see when they visit Silver <span class="brand-amp">&amp;</span> Salt Capital. <strong style="font-weight:600;color:var(--moss)">Vote for the one that makes you most want to learn more.</strong></p>
+  <div class="instructions">Scroll through all 4, then click "This One" on your favorite.</div>
+</div>
+
+<!-- ═══ OPTION A ═══ -->
+<div class="card-section">
+<div class="card-wrap" id="card-A">
+  <div class="card-tag">Option A</div>
+  <div class="hero" style="background:var(--moss);padding:100px 48px 80px;text-align:center">
+    <div class="amp-bg" style="top:-40px;right:-40px;font-size:400px;color:rgba(251,248,242,0.02)">&amp;</div>
+    <div class="nav-mock" style="position:absolute;top:0;left:0;right:0">
+      <div class="nav-mock-mark"><div class="sc"><div class="sc-l"></div><div class="sc-r"></div><div class="sc-a">&amp;</div></div><span class="nav-wm" style="color:var(--cream)">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
+      <a class="nav-btn" style="background:var(--rust);color:white">Join Us</a>
+    </div>
+    <div class="wrap">
+      <p class="eyebrow" style="color:var(--rust)">Utah Women's Angel Investment Group</p>
+      <h2 style="font-size:clamp(36px,5.5vw,64px);color:var(--cream)">What if the best investment in Utah is the one <em style="color:var(--rust)">nobody's making?</em></h2>
+      <p class="sub" style="color:rgba(251,248,242,0.55);max-width:500px;margin:24px auto 0">Women-led startups make 2.5&times; more revenue per dollar. They get 1% of venture capital. We're 100 women changing that &mdash; $1,000 at a time.</p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn-pop">Join the Founding 100</a>
+        <a class="btn-outline-light">How It Works</a>
+      </div>
+    </div>
+  </div>
+  <div class="vote-bar">
+    <span class="vote-label">Does this make you want to learn more?</span>
+    <button class="vote-btn" onclick="startVote('A')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> This One</button>
+    <span class="vote-check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> You voted for this one!</span>
+  </div>
+</div>
+
+<!-- ═══ OPTION B ═══ -->
+<div class="card-wrap" id="card-B">
+  <div class="card-tag">Option B</div>
+  <div class="hero" style="background:linear-gradient(135deg, var(--moss) 0%, #1a2a1e 100%);padding:100px 48px 80px;text-align:left">
+    <div class="nav-mock" style="position:absolute;top:0;left:0;right:0">
+      <div class="nav-mock-mark"><div class="sc"><div class="sc-l"></div><div class="sc-r"></div><div class="sc-a">&amp;</div></div><span class="nav-wm" style="color:var(--cream)">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
+      <a class="nav-btn" style="background:var(--rust);color:white">Join Us</a>
+    </div>
+    <div class="wrap">
+      <p class="eyebrow" style="color:var(--rust)">Utah Women's Angel Investment Group</p>
+      <h2 style="font-size:clamp(36px,5.5vw,60px);color:var(--cream)">Five years from now, this will be obvious. Women fund women. Everyone profits. <em style="color:var(--rust)">The first 100 didn't wait for obvious.</em></h2>
+      <p class="sub" style="color:rgba(251,248,242,0.5);max-width:500px;margin-top:24px">Women-led startups return 2.5&times; more per dollar. We're 100 accredited investors pooling $1,000+ each to fund the founders Utah keeps overlooking.</p>
+      <div class="cta-row">
+        <a class="btn-pop">Be One of the First 100</a>
+        <a class="btn-outline-light">See the Thesis</a>
+      </div>
+    </div>
+  </div>
+  <div class="vote-bar">
+    <span class="vote-label">Does this make you want to learn more?</span>
+    <button class="vote-btn" onclick="startVote('B')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> This One</button>
+    <span class="vote-check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> You voted for this one!</span>
+  </div>
+</div>
+
+<!-- ═══ OPTION C ═══ -->
+<div class="card-wrap" id="card-C">
+  <div class="card-tag">Option C</div>
+  <div class="hero" style="background:var(--cream);padding:100px 48px 80px;text-align:center">
+    <div class="amp-bg" style="bottom:-60px;right:60px;font-size:360px;color:var(--moss);opacity:.025">&amp;</div>
+    <div class="nav-mock" style="position:absolute;top:0;left:0;right:0">
+      <div class="nav-mock-mark"><div class="sc"><div class="sc-l"></div><div class="sc-r"></div><div class="sc-a">&amp;</div></div><span class="nav-wm" style="color:var(--moss)">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
+      <a class="nav-btn" style="background:var(--rust);color:white">Join Us</a>
+    </div>
+    <div class="wrap" style="max-width:600px">
+      <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 24px;overflow:hidden;position:relative;border:2px solid var(--border)">
+        <div style="position:absolute;top:0;left:0;width:50%;height:100%;background:var(--moss)"></div>
+        <div style="position:absolute;top:0;right:0;width:50%;height:100%;background:var(--rust)"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:white;z-index:1">&amp;</div>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;font-style:italic;color:var(--sage);margin-bottom:20px">An invitation to the founding cohort</p>
+      <h2 style="font-size:clamp(34px,5vw,52px);color:var(--moss)">100 women will define how Utah funds its next generation. <em style="color:var(--rust)">This is your seat.</em></h2>
+      <p class="sub" style="color:var(--moss-light);max-width:480px;margin:24px auto 0">Women founders outperform by every measure &mdash; and almost none get funded. Silver <span class="brand-amp">&amp;</span> Salt Capital is an angel group of 100 accredited women investors. You invest as little as $1,000 per deal. Together, we fund the founders everyone else is missing.</p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn-pop">Accept the Invitation</a>
+      </div>
+    </div>
+  </div>
+  <div class="vote-bar">
+    <span class="vote-label">Does this make you want to learn more?</span>
+    <button class="vote-btn" onclick="startVote('C')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> This One</button>
+    <span class="vote-check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> You voted for this one!</span>
+  </div>
+</div>
+
+<!-- ═══ OPTION D ═══ -->
+<div class="card-wrap" id="card-D">
+  <div class="card-tag">Option D</div>
+  <div class="hero" style="background:var(--rust);padding:120px 48px 100px;text-align:center">
+    <div class="amp-bg" style="bottom:-40px;left:50%;transform:translateX(-50%);font-size:400px;color:rgba(255,255,255,0.04)">&amp;</div>
+    <div class="nav-mock" style="position:absolute;top:0;left:0;right:0">
+      <div class="nav-mock-mark"><div class="sc"><div class="sc-l" style="background:white"></div><div class="sc-r" style="background:rgba(255,255,255,0.4)"></div><div class="sc-a">&amp;</div></div><span class="nav-wm" style="color:white">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
+      <a class="nav-btn" style="background:white;color:var(--moss)">Join Us</a>
+    </div>
+    <div class="wrap">
+      <h2 style="font-size:clamp(42px,7vw,80px);color:white">Fund her.</h2>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,32px);font-weight:300;color:rgba(255,255,255,0.6);margin-top:12px;line-height:1.4">She returns 2.5&times; more per dollar.<br>She gets 1% of venture capital.<br><strong style="font-weight:600;color:white">100 women are changing that.</strong></p>
+      <div class="cta-row" style="justify-content:center;margin-top:40px">
+        <a class="btn-light">Join the Founding 100</a>
+      </div>
+    </div>
+  </div>
+  <div class="vote-bar">
+    <span class="vote-label">Does this make you want to learn more?</span>
+    <button class="vote-btn" onclick="startVote('D')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> This One</button>
+    <span class="vote-check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> You voted for this one!</span>
+  </div>
+</div>
+</div>
+
+<!-- ═══ THANK YOU (shown to voters, no results) ═══ -->
+<div class="thankyou" id="thankyou" style="display:none;background:var(--cream);padding:64px 48px;text-align:center;border-top:4px solid var(--rust)">
+  <div style="width:56px;height:56px;border-radius:50%;background:rgba(209,107,79,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(24px,3.5vw,36px);color:var(--moss);margin-bottom:12px">You're the best. Seriously.</h2>
+  <p style="font-size:16px;color:var(--moss-light);line-height:1.7;font-weight:300;max-width:440px;margin:0 auto">You might have just shaped the future of women's investing in Utah. Not bad for the day!</p>
+  <p style="font-size:16px;color:var(--moss-light);line-height:1.7;font-weight:300;max-width:440px;margin:12px auto 0">Your vote is locked in and Tori is so grateful for your help.</p>
+</div>
+
+<!-- ═══ DASHBOARD (admin only — ?admin=ssc) ═══ -->
+<div class="dashboard" id="dashboard">
+  <div class="dash-header">
+    <h2>Live Results</h2>
+    <p>Updating as votes come in</p>
+  </div>
+  <div class="dash-grid">
+    <div class="dash-card" id="dash-A">
+      <div class="dash-option">Option A</div>
+      <div class="dash-bar-wrap"><div class="dash-bar" id="dbar-A" style="height:0%"></div></div>
+      <div class="dash-votes" id="dcount-A">0</div>
+      <div class="dash-votes-label">votes</div>
+      <div class="dash-pct" id="dpct-A">0%</div>
+      <div class="dash-name">The Provocative Question</div>
+    </div>
+    <div class="dash-card" id="dash-B">
+      <div class="dash-option">Option B</div>
+      <div class="dash-bar-wrap"><div class="dash-bar" id="dbar-B" style="height:0%"></div></div>
+      <div class="dash-votes" id="dcount-B">0</div>
+      <div class="dash-votes-label">votes</div>
+      <div class="dash-pct" id="dpct-B">0%</div>
+      <div class="dash-name">The Future Looking Back</div>
+    </div>
+    <div class="dash-card" id="dash-C">
+      <div class="dash-option">Option C</div>
+      <div class="dash-bar-wrap"><div class="dash-bar" id="dbar-C" style="height:0%"></div></div>
+      <div class="dash-votes" id="dcount-C">0</div>
+      <div class="dash-votes-label">votes</div>
+      <div class="dash-pct" id="dpct-C">0%</div>
+      <div class="dash-name">The Exclusive Invitation</div>
+    </div>
+    <div class="dash-card" id="dash-D">
+      <div class="dash-option">Option D</div>
+      <div class="dash-bar-wrap"><div class="dash-bar" id="dbar-D" style="height:0%"></div></div>
+      <div class="dash-votes" id="dcount-D">0</div>
+      <div class="dash-votes-label">votes</div>
+      <div class="dash-pct" id="dpct-D">0%</div>
+      <div class="dash-name">Fund Her</div>
+    </div>
+  </div>
+  <div class="dash-total">
+    <div class="dash-total-num" id="dtotal">0</div>
+    <div class="dash-total-label">total votes</div>
+  </div>
+  <div class="voter-log">
+    <div class="voter-log-header">Vote Log</div>
+    <div class="voter-log-list" id="voterLog">
+      <div class="voter-log-empty">No votes yet</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital &middot; Feedback survey</p>
+</footer>
+
+<script>
+/*
+ * Shared voting via Google Apps Script backend.
+ * Votes are stored in a Google Sheet. The Apps Script provides
+ * a CORS-enabled JSON API for reading and writing votes.
+ *
+ * SETUP: Replace API_URL below with your deployed Google Apps Script URL.
+ * See VOTE-BACKEND-SETUP.md for instructions.
+ */
+
+// >>> REPLACE THIS with your Google Apps Script web app URL <<<
+const API_URL = 'https://script.google.com/macros/s/AKfycbzvUGKgWIct2oi2ahstv0Vmtl60D4ZbN1E1wgFUNUcgobnnYNuchNUOlDrD8evx-P4q3A/exec';
+
+let pendingChoice = null;
+const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'ssc';
+
+const OPTION_NAMES = {
+  A: 'The Provocative Question',
+  B: 'The Future Looking Back',
+  C: 'The Exclusive Invitation',
+  D: 'Fund Her'
+};
+
+async function init() {
+  // Load existing results (admin only)
+  if (isAdmin && API_URL) {
+    await loadAndRender();
+    showDashboard();
+  }
+
+  // Check if this device already voted
+  const existingVote = localStorage.getItem('ssc_hero_vote');
+  if (existingVote) {
+    document.getElementById('card-' + existingVote).classList.add('voted');
+    showThankYou();
+  }
+}
+
+async function loadAndRender() {
+  if (!API_URL) return;
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    renderDashboard(data);
+  } catch (e) {
+    console.error('Failed to load results:', e);
+  }
+}
+
+function startVote(option) {
+  const existingVote = localStorage.getItem('ssc_hero_vote');
+  if (existingVote) {
+    alert('You\'ve already voted! Thank you.');
+    return;
+  }
+  pendingChoice = option;
+  document.getElementById('modalChoice').textContent = 'Voting for: Option ' + option + ' — ' + OPTION_NAMES[option];
+  document.getElementById('nameModal').classList.add('show');
+  document.getElementById('voterName').focus();
+}
+
+async function submitVote() {
+  const name = document.getElementById('voterName').value.trim() || 'Anonymous';
+  const option = pendingChoice;
+
+  // Close modal
+  document.getElementById('nameModal').classList.remove('show');
+
+  // Mark voted locally
+  localStorage.setItem('ssc_hero_vote', option);
+  document.getElementById('card-' + option).classList.add('voted');
+
+  // Save to backend
+  if (API_URL) {
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ name, choice: option })
+      });
+      const data = await res.json();
+      renderDashboard(data);
+    } catch (e) {
+      console.error('Failed to save vote:', e);
+    }
+  }
+
+  if (isAdmin) {
+    showDashboard();
+    setTimeout(() => {
+      document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+    }, 300);
+  } else {
+    showThankYou();
+    setTimeout(() => {
+      document.getElementById('thankyou').scrollIntoView({ behavior: 'smooth' });
+    }, 300);
+  }
+}
+
+function showThankYou() {
+  document.getElementById('thankyou').style.display = 'block';
+}
+
+function showDashboard() {
+  document.getElementById('dashboard').classList.add('show');
+  loadAndRender();
+}
+
+function renderDashboard(data) {
+  const votes = data.votes || { A: 0, B: 0, C: 0, D: 0 };
+  const total = votes.A + votes.B + votes.C + votes.D;
+  const max = Math.max(votes.A, votes.B, votes.C, votes.D, 1);
+
+  let winnerOpt = 'A';
+  ['A','B','C','D'].forEach(opt => {
+    if (votes[opt] > votes[winnerOpt]) winnerOpt = opt;
+  });
+
+  ['A','B','C','D'].forEach(opt => {
+    const pct = total > 0 ? Math.round((votes[opt] / total) * 100) : 0;
+    const barPct = max > 0 ? (votes[opt] / max) * 100 : 0;
+    document.getElementById('dbar-' + opt).style.height = Math.max(barPct, 4) + '%';
+    document.getElementById('dcount-' + opt).textContent = votes[opt];
+    document.getElementById('dpct-' + opt).textContent = pct + '%';
+
+    const card = document.getElementById('dash-' + opt);
+    card.classList.toggle('winner', votes[opt] === votes[winnerOpt] && total > 0);
+  });
+
+  document.getElementById('dtotal').textContent = total;
+
+  const log = data.log || [];
+  const logEl = document.getElementById('voterLog');
+  if (log.length === 0) {
+    logEl.innerHTML = '<div class="voter-log-empty">No votes yet</div>';
+  } else {
+    logEl.innerHTML = log.slice().reverse().map(v => {
+      const d = new Date(v.time);
+      const timeStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      return '<div class="voter-log-item">' +
+        '<span class="vl-name">' + v.name + '</span>' +
+        '<span class="vl-choice">Option ' + v.choice + '</span>' +
+        '<span class="vl-time">' + timeStr + '</span>' +
+      '</div>';
+    }).join('');
+  }
+}
+
+// Enter key submits name
+document.getElementById('voterName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitVote();
+});
+
+// Auto-refresh dashboard every 15 seconds if visible
+setInterval(() => {
+  if (document.getElementById('dashboard').classList.contains('show')) {
+    loadAndRender();
+  }
+}, 15000);
+
+init();
+</script>
+
+</body>
+</html>
