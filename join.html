@@ -513,12 +513,32 @@
     }
 
     @media (max-width: 480px) {
+      /* Step 1 */
       .two-col { grid-template-columns: 1fr; }
       .card     { padding: 28px 20px; }
       .hero     { padding: 40px 20px 36px; }
       .hero h1  { font-size: 30px; }
       .logo     { width: 160px; }
       .step-line { width: 28px; }
+
+      /* Step 2 — Calendar */
+      .step2-intro h2 { font-size: 26px; }
+      .step2-intro p  { font-size: 13px; }
+      .cal-header     { padding: 14px 16px; }
+      .cal-header .cal-sub { font-size: 15px; }
+      .calendar-wrap iframe { height: 500px; }
+      .confirm-btn    { font-size: 14px; padding: 14px 20px; margin-top: 20px; }
+
+      /* Step 3 — Confirmation */
+      #step-3         { padding: 28px 0; }
+      .step3-heading  { font-size: 28px; }
+      .step3-body     { font-size: 13px; }
+      .quote-card     { margin-top: 32px; padding-top: 28px; }
+      .quote-text     { font-size: 16px; }
+      .quote-card-top { flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 24px; }
+      .quote-card img { width: 72px; height: 72px; }
+      .quote-name     { font-size: 13px; }
+      .quote-title    { font-size: 11px; }
     }
   </style>
 </head>
