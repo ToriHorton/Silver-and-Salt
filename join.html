@@ -397,7 +397,7 @@
     .calendar-wrap {
       border: 1px solid var(--border);
       border-radius: 8px;
-      overflow: visible;
+      overflow: hidden;
       background: #fff;
     }
 
@@ -617,12 +617,14 @@
       .step-line { width: 28px; }
 
       /* Step 2 — Calendar */
+      #step-2 { padding: 0 4px; }
+      .step2-intro { padding: 0 8px; }
       .step2-intro h2 { font-size: 26px; }
       .step2-intro p  { font-size: 13px; line-height: 1.8; }
       .cal-header     { padding: 14px 16px; }
       .cal-header .cal-sub { font-size: 15px; }
-      .calendar-wrap iframe { height: 600px; min-height: 500px; }
-      .calendar-wrap { overflow: auto; -webkit-overflow-scrolling: touch; }
+      .calendar-wrap { overflow: hidden; -webkit-overflow-scrolling: touch; }
+      .calendar-wrap iframe { width: 100%; max-width: 100%; height: 600px; min-height: 500px; }
       .step2-confirm-area { padding: 20px 16px; margin-top: 24px; }
       .step2-confirm-area h3 { font-size: 20px; }
       .confirm-check-wrap span { font-size: 13px; }
@@ -768,7 +770,9 @@
           <div class="cal-sub">By appointment only</div>
         </div>
         <!-- Google Calendar Appointment Scheduling begin -->
-        <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" style="border: 0" width="100%" height="600" frameborder="0"></iframe>
+        <div style="position: relative; width: 100%; overflow: hidden;">
+          <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" style="border: 0; display: block; width: 100%; max-width: 100%;" height="600" frameborder="0"></iframe>
+        </div>
         <!-- end Google Calendar Appointment Scheduling -->
       </div>
       <div class="step2-confirm-area">
