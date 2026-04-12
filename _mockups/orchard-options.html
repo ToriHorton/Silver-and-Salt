@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orchard — 4 Visual Options</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;
+  --sage:#7E8E84;--rust:#D16B4F;--rust-hover:#E07A5E;
+  --border:rgba(47,62,52,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--cream);color:var(--moss);font-family:'Satoshi',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:.85em;font-style:normal}
+
+/* Page header */
+.page-head{padding:60px 48px 20px;text-align:center;border-bottom:1px solid var(--border)}
+.page-head h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:42px;color:var(--moss);letter-spacing:-.02em}
+.page-head p{font-size:15px;color:var(--sage);margin-top:10px}
+
+/* Option wrapper */
+.option{padding:80px 48px 100px;border-bottom:1px solid var(--border);position:relative}
+.option-label{position:absolute;top:24px;left:48px;font-size:11px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--rust)}
+.option-inner{max-width:1200px;margin:0 auto}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sage);margin-bottom:14px;text-align:center}
+.section-heading{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(32px,4.5vw,52px);color:var(--moss);line-height:1.1;
+  text-align:center;margin-bottom:12px;letter-spacing:-.02em}
+.section-heading em{font-style:italic;color:var(--rust)}
+.section-sub{font-size:17px;color:var(--moss-light);text-align:center;
+  max-width:580px;margin:0 auto 64px;font-weight:300;line-height:1.65}
+
+/* ═══════════════════════════════════════
+   OPTION 1 — Editorial strip (4 botanical plates)
+   ═══════════════════════════════════════ */
+.opt1 .plates{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:32px}
+.opt1 .plate{background:var(--sand);border:1px solid rgba(47,62,52,0.1);border-radius:4px;
+  padding:32px 24px;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
+.opt1 .plate-num{position:absolute;top:14px;left:18px;font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-weight:300;font-size:22px;color:var(--rust);line-height:1}
+.opt1 .plate-svg{width:100%;max-width:200px;height:auto;display:block;margin:12px auto 20px;aspect-ratio:200/180}
+.opt1 .plate-step{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:10px}
+.opt1 .plate-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:20px;
+  color:var(--moss);line-height:1.25;margin-bottom:10px}
+.opt1 .plate-title em{font-style:italic;color:var(--rust)}
+.opt1 .plate-body{font-size:13px;color:var(--moss-light);line-height:1.55}
+
+/* ═══════════════════════════════════════
+   OPTION 2 — Panorama (one landscape, four moments)
+   ═══════════════════════════════════════ */
+.opt2 .panorama-wrap{margin-top:40px;position:relative}
+.opt2 .panorama{width:100%;height:auto;display:block;background:var(--sand);border-radius:4px;
+  border:1px solid rgba(47,62,52,0.1)}
+.opt2 .labels{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:32px;position:relative}
+.opt2 .labels::before{content:'';position:absolute;top:-40px;left:0;right:0;height:1px;background:var(--border)}
+.opt2 .label-col{text-align:center;position:relative}
+.opt2 .label-col::before{content:'';position:absolute;top:-40px;left:50%;width:1px;height:30px;background:var(--rust);opacity:0.4}
+.opt2 .label-step{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:8px}
+.opt2 .label-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:19px;
+  color:var(--moss);line-height:1.25;margin-bottom:8px}
+.opt2 .label-title em{font-style:italic;color:var(--rust)}
+.opt2 .label-body{font-size:13px;color:var(--moss-light);line-height:1.55;max-width:220px;margin:0 auto}
+
+/* ═══════════════════════════════════════
+   OPTION 3 — Grid of many trees (field view)
+   ═══════════════════════════════════════ */
+.opt3 .field{margin-top:40px;background:var(--sand);border:1px solid rgba(47,62,52,0.1);
+  border-radius:4px;padding:56px 48px;display:flex;justify-content:center}
+.opt3 .field svg{width:100%;max-width:900px;height:auto;display:block}
+.opt3 .phases{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:40px;
+  padding-top:32px;border-top:1px solid var(--border)}
+.opt3 .phase{text-align:center}
+.opt3 .phase-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:28px;color:var(--rust);line-height:1;display:block;margin-bottom:10px}
+.opt3 .phase-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:19px;
+  color:var(--moss);margin-bottom:6px}
+.opt3 .phase-title em{font-style:italic;color:var(--rust)}
+.opt3 .phase-body{font-size:13px;color:var(--moss-light);line-height:1.55;max-width:220px;margin:0 auto}
+
+/* ═══════════════════════════════════════
+   OPTION 4 — Pure typography with one bold mark
+   ═══════════════════════════════════════ */
+.opt4 .orchard-word{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:clamp(140px,22vw,280px);line-height:0.82;color:var(--rust);text-align:center;
+  letter-spacing:-.04em;margin:40px 0 20px;display:block}
+.opt4 .orchard-word .amp{color:var(--moss);opacity:.3}
+.opt4 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;max-width:1060px;margin:60px auto 0;
+  padding-top:40px;border-top:1px solid var(--border)}
+.opt4 .step{text-align:left;position:relative;padding-top:24px}
+.opt4 .step::before{content:'';position:absolute;top:0;left:0;width:32px;height:1px;background:var(--rust)}
+.opt4 .step-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:22px;color:var(--rust);line-height:1;display:block;margin-bottom:10px}
+.opt4 .step-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:22px;
+  color:var(--moss);line-height:1.25;margin-bottom:10px}
+.opt4 .step-title em{font-style:italic;color:var(--rust)}
+.opt4 .step-body{font-size:14px;color:var(--moss-light);line-height:1.6}
+
+@media(max-width:820px){
+  .option{padding:60px 22px 80px}
+  .opt1 .plates,.opt2 .labels,.opt3 .phases,.opt4 .steps{grid-template-columns:1fr 1fr;gap:20px}
+  .opt4 .orchard-word{font-size:120px}
+}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>Orchard — Four Visual Directions</h1>
+  <p>Same copy, four different design approaches for the WHAT section.</p>
+</div>
+
+<!-- ═══════════ OPTION 1 — Editorial strip ═══════════ -->
+<section class="option opt1">
+  <div class="option-label">Option 01 · Editorial strip (four plates)</div>
+  <div class="option-inner">
+    <div class="section-label">What it is</div>
+    <h2 class="section-heading">Think of it like investing in <em>an orchard.</em></h2>
+    <p class="section-sub">We plant lots of seeds and tend all of them so that some will bear fruit.</p>
+
+    <div class="plates">
+      <div class="plate">
+        <span class="plate-num">i</span>
+        <svg class="plate-svg" viewBox="0 0 200 180" fill="none">
+          <line x1="12" y1="148" x2="188" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.3"/>
+          <g fill="#2F3E34">
+            <ellipse cx="28" cy="152" rx="3.5" ry="2"/>
+            <ellipse cx="54" cy="153" rx="3.5" ry="2"/>
+            <ellipse cx="80" cy="152" rx="3.5" ry="2"/>
+            <ellipse cx="106" cy="153" rx="3.5" ry="2"/>
+            <ellipse cx="132" cy="152" rx="3.5" ry="2"/>
+            <ellipse cx="158" cy="153" rx="3.5" ry="2"/>
+            <ellipse cx="184" cy="152" rx="3.5" ry="2"/>
+          </g>
+          <g stroke="#2F3E34" stroke-width="1.4" stroke-linecap="round">
+            <path d="M28 148 L28 140"/>
+            <path d="M54 148 L54 138"/>
+            <path d="M80 148 L80 141"/>
+            <path d="M106 148 L106 137"/>
+            <path d="M132 148 L132 140"/>
+            <path d="M158 148 L158 138"/>
+            <path d="M184 148 L184 141"/>
+          </g>
+        </svg>
+        <span class="plate-step">Step 01 · The seeds</span>
+        <h4 class="plate-title">We form a <em>big group</em>.</h4>
+        <p class="plate-body">We all write small checks and collectively make big investments.</p>
+      </div>
+
+      <div class="plate">
+        <span class="plate-num">ii</span>
+        <svg class="plate-svg" viewBox="0 0 200 180" fill="none">
+          <line x1="12" y1="148" x2="188" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.3"/>
+          <g stroke="#2F3E34" stroke-width="1.5" stroke-linecap="round" fill="none">
+            <path d="M28 148 L28 120"/>
+            <path d="M28 128 Q20 124 17 130"/>
+            <path d="M28 128 Q36 124 39 130"/>
+            <path d="M54 148 L54 114"/>
+            <path d="M54 122 Q46 118 43 124"/>
+            <path d="M54 122 Q62 118 65 124"/>
+            <path d="M80 148 L80 122"/>
+            <path d="M80 130 Q72 126 69 132"/>
+            <path d="M80 130 Q88 126 91 132"/>
+            <path d="M106 148 L106 116"/>
+            <path d="M106 124 Q98 120 95 126"/>
+            <path d="M106 124 Q114 120 117 126"/>
+            <path d="M132 148 L132 120"/>
+            <path d="M132 128 Q124 124 121 130"/>
+            <path d="M132 128 Q140 124 143 130"/>
+            <path d="M158 148 L158 114"/>
+            <path d="M158 122 Q150 118 147 124"/>
+            <path d="M158 122 Q166 118 169 124"/>
+            <path d="M184 148 L184 120"/>
+            <path d="M184 128 Q176 124 173 130"/>
+            <path d="M184 128 Q192 124 195 130"/>
+          </g>
+        </svg>
+        <span class="plate-step">Step 02 · The commitment</span>
+        <h4 class="plate-title"><em>$10,000 a year</em>, for five years.</h4>
+        <p class="plate-body">You know your number up front. No surprises.</p>
+      </div>
+
+      <div class="plate">
+        <span class="plate-num">iii</span>
+        <svg class="plate-svg" viewBox="0 0 200 180" fill="none">
+          <line x1="12" y1="148" x2="188" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.3"/>
+          <g>
+            <path d="M30 148 L30 110" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="30" cy="100" r="10" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.3"/>
+            <path d="M60 148 L60 102" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="60" cy="92" r="12" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.3"/>
+            <path d="M92 148 L92 108" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="92" cy="100" r="10" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.3"/>
+            <path d="M124 148 L124 98" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="124" cy="88" r="13" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.3"/>
+            <path d="M156 148 L156 106" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="156" cy="96" r="11" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.3"/>
+            <path d="M184 148 L184 102" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="184" cy="92" r="12" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.3"/>
+          </g>
+        </svg>
+        <span class="plate-step">Step 03 · Tended together</span>
+        <h4 class="plate-title">We <em>back every founder</em> we fund.</h4>
+        <p class="plate-body">Research, customers, network. The full group behind every company.</p>
+      </div>
+
+      <div class="plate">
+        <span class="plate-num">iv</span>
+        <svg class="plate-svg" viewBox="0 0 200 180" fill="none">
+          <line x1="12" y1="148" x2="188" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.3"/>
+          <g>
+            <path d="M30 148 L30 82" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="30" cy="68" r="16" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.4"/>
+            <circle cx="24" cy="64" r="2" fill="#D16B4F"/>
+            <circle cx="34" cy="66" r="2" fill="#D16B4F"/>
+            <circle cx="28" cy="72" r="2" fill="#D16B4F"/>
+            <circle cx="36" cy="74" r="2" fill="#D16B4F"/>
+
+            <path d="M72 148 L72 94" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="72" cy="82" r="12" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.4"/>
+            <circle cx="68" cy="80" r="2" fill="#D16B4F"/>
+            <circle cx="76" cy="84" r="2" fill="#D16B4F"/>
+
+            <path d="M110 148 L110 116" stroke="#2F3E34" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="110" cy="110" r="6" fill="#4A5E50" fill-opacity="0.3" stroke="#2F3E34" stroke-width="1.2"/>
+
+            <path d="M144 148 L144 88" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="144" cy="74" r="15" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.4"/>
+            <circle cx="139" cy="70" r="2" fill="#D16B4F"/>
+            <circle cx="148" cy="72" r="2" fill="#D16B4F"/>
+            <circle cx="142" cy="78" r="2" fill="#D16B4F"/>
+
+            <path d="M180 148 L180 92" stroke="#2F3E34" stroke-width="1.7" stroke-linecap="round"/>
+            <circle cx="180" cy="78" r="14" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.4"/>
+            <circle cx="176" cy="74" r="2" fill="#D16B4F"/>
+            <circle cx="184" cy="76" r="2" fill="#D16B4F"/>
+            <circle cx="179" cy="82" r="2" fill="#D16B4F"/>
+          </g>
+        </svg>
+        <span class="plate-step">Step 04 · The harvest</span>
+        <h4 class="plate-title">Some will <em>bear fruit</em>.</h4>
+        <p class="plate-body">Some will fail. Some will grow into real companies. That's where returns come from.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OPTION 2 — Panorama ═══════════ -->
+<section class="option opt2">
+  <div class="option-label">Option 02 · Panorama (one landscape, four moments)</div>
+  <div class="option-inner">
+    <div class="section-label">What it is</div>
+    <h2 class="section-heading">Think of it like investing in <em>an orchard.</em></h2>
+    <p class="section-sub">We plant lots of seeds and tend all of them so that some will bear fruit.</p>
+
+    <div class="panorama-wrap">
+      <svg class="panorama" viewBox="0 0 1200 320" preserveAspectRatio="xMidYMid meet">
+        <!-- sky (sand) -->
+        <rect width="1200" height="320" fill="#F4EFE6"/>
+        <!-- distant mountains -->
+        <path d="M0 220 L60 180 L140 210 L220 170 L310 200 L400 150 L500 190 L580 160 L680 200 L780 170 L860 200 L940 160 L1040 190 L1120 170 L1200 200 L1200 260 L0 260 Z"
+              fill="#7E8E84" fill-opacity="0.28"/>
+        <!-- soft horizon hill -->
+        <path d="M0 240 L200 220 L400 240 L600 225 L800 245 L1000 225 L1200 240 L1200 280 L0 280 Z"
+              fill="#4A5E50" fill-opacity="0.18"/>
+        <!-- ground line -->
+        <line x1="0" y1="280" x2="1200" y2="280" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.35"/>
+
+        <!-- STAGE 1: seeds (x 0-300) -->
+        <g>
+          <g fill="#2F3E34">
+            <ellipse cx="30" cy="286" rx="4" ry="2.5"/>
+            <ellipse cx="70" cy="284" rx="4" ry="2.5"/>
+            <ellipse cx="115" cy="286" rx="4" ry="2.5"/>
+            <ellipse cx="160" cy="284" rx="4" ry="2.5"/>
+            <ellipse cx="205" cy="286" rx="4" ry="2.5"/>
+            <ellipse cx="250" cy="284" rx="4" ry="2.5"/>
+          </g>
+          <g stroke="#2F3E34" stroke-width="1.5" stroke-linecap="round">
+            <path d="M30 280 L30 272"/>
+            <path d="M70 280 L70 270"/>
+            <path d="M115 280 L115 273"/>
+            <path d="M160 280 L160 268"/>
+            <path d="M205 280 L205 272"/>
+            <path d="M250 280 L250 270"/>
+          </g>
+        </g>
+
+        <!-- STAGE 2: sprouts (x 300-600) -->
+        <g stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round" fill="none">
+          <path d="M320 280 L320 250"/>
+          <path d="M320 258 Q312 252 309 260"/>
+          <path d="M320 258 Q328 252 331 260"/>
+          <path d="M365 280 L365 242"/>
+          <path d="M365 252 Q357 246 354 254"/>
+          <path d="M365 252 Q373 246 376 254"/>
+          <path d="M415 280 L415 248"/>
+          <path d="M415 258 Q407 252 404 260"/>
+          <path d="M415 258 Q423 252 426 260"/>
+          <path d="M465 280 L465 240"/>
+          <path d="M465 250 Q457 244 454 252"/>
+          <path d="M465 250 Q473 244 476 252"/>
+          <path d="M515 280 L515 246"/>
+          <path d="M515 256 Q507 250 504 258"/>
+          <path d="M515 256 Q523 250 526 258"/>
+          <path d="M565 280 L565 242"/>
+          <path d="M565 252 Q557 246 554 254"/>
+          <path d="M565 252 Q573 246 576 254"/>
+        </g>
+
+        <!-- STAGE 3: young trees (x 600-900) -->
+        <g>
+          <path d="M625 280 L625 200" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="625" cy="185" r="20" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.5"/>
+          <path d="M685 280 L685 190" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="685" cy="172" r="22" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.5"/>
+          <path d="M745 280 L745 205" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="745" cy="190" r="18" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.5"/>
+          <path d="M805 280 L805 195" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="805" cy="178" r="21" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.5"/>
+          <path d="M865 280 L865 200" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="865" cy="184" r="20" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.5"/>
+        </g>
+
+        <!-- STAGE 4: mature trees with fruit (x 900-1200) -->
+        <g>
+          <path d="M920 280 L920 150" stroke="#2F3E34" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="920" cy="128" r="30" fill="#4A5E50" fill-opacity="0.5" stroke="#2F3E34" stroke-width="1.7"/>
+          <circle cx="911" cy="120" r="3" fill="#D16B4F"/>
+          <circle cx="928" cy="122" r="3" fill="#D16B4F"/>
+          <circle cx="918" cy="135" r="3" fill="#D16B4F"/>
+          <circle cx="932" cy="135" r="3" fill="#D16B4F"/>
+          <circle cx="906" cy="132" r="3" fill="#D16B4F"/>
+
+          <path d="M1000 280 L1000 172" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="1000" cy="152" r="24" fill="#4A5E50" fill-opacity="0.5" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="994" cy="146" r="3" fill="#D16B4F"/>
+          <circle cx="1006" cy="150" r="3" fill="#D16B4F"/>
+          <circle cx="1000" cy="158" r="3" fill="#D16B4F"/>
+
+          <path d="M1065 280 L1065 220" stroke="#2F3E34" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="1065" cy="210" r="10" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.3"/>
+
+          <path d="M1120 280 L1120 140" stroke="#2F3E34" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="1120" cy="115" r="32" fill="#4A5E50" fill-opacity="0.5" stroke="#2F3E34" stroke-width="1.7"/>
+          <circle cx="1110" cy="108" r="3" fill="#D16B4F"/>
+          <circle cx="1128" cy="110" r="3" fill="#D16B4F"/>
+          <circle cx="1116" cy="120" r="3" fill="#D16B4F"/>
+          <circle cx="1130" cy="122" r="3" fill="#D16B4F"/>
+          <circle cx="1104" cy="120" r="3" fill="#D16B4F"/>
+          <circle cx="1124" cy="132" r="3" fill="#D16B4F"/>
+        </g>
+      </svg>
+
+      <div class="labels">
+        <div class="label-col">
+          <span class="label-step">Step 01 · Seeds</span>
+          <h4 class="label-title">We form a <em>big group</em>.</h4>
+          <p class="label-body">We all write small checks and collectively make big investments.</p>
+        </div>
+        <div class="label-col">
+          <span class="label-step">Step 02 · Planted</span>
+          <h4 class="label-title"><em>$10,000 a year</em>, for five years.</h4>
+          <p class="label-body">You know your number up front. No surprises.</p>
+        </div>
+        <div class="label-col">
+          <span class="label-step">Step 03 · Tended</span>
+          <h4 class="label-title">We <em>back every founder</em> we fund.</h4>
+          <p class="label-body">Research, customers, network. The full group behind every company.</p>
+        </div>
+        <div class="label-col">
+          <span class="label-step">Step 04 · Harvest</span>
+          <h4 class="label-title">Some will <em>bear fruit</em>.</h4>
+          <p class="label-body">Some will fail. Some will grow into real companies. That's where returns come from.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OPTION 3 — Grid of trees (field view) ═══════════ -->
+<section class="option opt3">
+  <div class="option-label">Option 03 · Grid of trees (field view)</div>
+  <div class="option-inner">
+    <div class="section-label">What it is</div>
+    <h2 class="section-heading">Think of it like investing in <em>an orchard.</em></h2>
+    <p class="section-sub">We plant lots of seeds and tend all of them so that some will bear fruit.</p>
+
+    <div class="field">
+      <svg viewBox="0 0 900 260" fill="none" preserveAspectRatio="xMidYMid meet">
+        <!-- 30 positions, mixed stages -->
+        <!-- row 1 (back) - mostly mature -->
+        <g transform="translate(0 40)">
+          <!-- mature with fruit -->
+          <path d="M50 100 L50 60" stroke="#2F3E34" stroke-width="2"/>
+          <circle cx="50" cy="50" r="12" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.3"/>
+          <circle cx="46" cy="46" r="1.6" fill="#D16B4F"/>
+          <circle cx="54" cy="50" r="1.6" fill="#D16B4F"/>
+          <!-- mature with fruit -->
+          <path d="M130 100 L130 65" stroke="#2F3E34" stroke-width="2"/>
+          <circle cx="130" cy="55" r="11" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.3"/>
+          <circle cx="127" cy="52" r="1.6" fill="#D16B4F"/>
+          <circle cx="133" cy="56" r="1.6" fill="#D16B4F"/>
+          <!-- young -->
+          <path d="M210 100 L210 74" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="210" cy="66" r="8" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.2"/>
+          <!-- mature with lots of fruit -->
+          <path d="M290 100 L290 55" stroke="#2F3E34" stroke-width="2.2"/>
+          <circle cx="290" cy="44" r="13" fill="#4A5E50" fill-opacity="0.5" stroke="#2F3E34" stroke-width="1.4"/>
+          <circle cx="285" cy="40" r="1.7" fill="#D16B4F"/>
+          <circle cx="294" cy="42" r="1.7" fill="#D16B4F"/>
+          <circle cx="289" cy="48" r="1.7" fill="#D16B4F"/>
+          <circle cx="296" cy="48" r="1.7" fill="#D16B4F"/>
+          <!-- sprout (didn't grow) -->
+          <path d="M370 100 L370 90" stroke="#2F3E34" stroke-width="1.4"/>
+          <circle cx="370" cy="86" r="3" fill="#4A5E50" fill-opacity="0.3" stroke="#2F3E34" stroke-width="1"/>
+          <!-- mature with fruit -->
+          <path d="M450 100 L450 62" stroke="#2F3E34" stroke-width="2"/>
+          <circle cx="450" cy="52" r="12" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.3"/>
+          <circle cx="446" cy="50" r="1.6" fill="#D16B4F"/>
+          <circle cx="454" cy="54" r="1.6" fill="#D16B4F"/>
+          <!-- young -->
+          <path d="M530 100 L530 72" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="530" cy="64" r="8" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.2"/>
+          <!-- mature lots of fruit -->
+          <path d="M610 100 L610 58" stroke="#2F3E34" stroke-width="2"/>
+          <circle cx="610" cy="46" r="13" fill="#4A5E50" fill-opacity="0.5" stroke="#2F3E34" stroke-width="1.4"/>
+          <circle cx="605" cy="42" r="1.7" fill="#D16B4F"/>
+          <circle cx="614" cy="44" r="1.7" fill="#D16B4F"/>
+          <circle cx="609" cy="50" r="1.7" fill="#D16B4F"/>
+          <!-- empty (failed) -->
+          <circle cx="690" cy="98" r="2.5" fill="#2F3E34" fill-opacity="0.3"/>
+          <!-- young -->
+          <path d="M770 100 L770 74" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="770" cy="66" r="8" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.2"/>
+          <!-- mature with fruit -->
+          <path d="M850 100 L850 60" stroke="#2F3E34" stroke-width="2"/>
+          <circle cx="850" cy="50" r="12" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.3"/>
+          <circle cx="846" cy="48" r="1.6" fill="#D16B4F"/>
+          <circle cx="854" cy="52" r="1.6" fill="#D16B4F"/>
+          <line x1="0" y1="100" x2="900" y2="100" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.3"/>
+        </g>
+        <!-- row 2 (middle) -->
+        <g transform="translate(0 150)">
+          <!-- sprout -->
+          <path d="M50 60 L50 42" stroke="#2F3E34" stroke-width="1.4"/>
+          <path d="M50 48 Q42 44 39 50" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <path d="M50 48 Q58 44 61 50" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <!-- young -->
+          <path d="M130 60 L130 34" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="130" cy="26" r="8" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.2"/>
+          <!-- mature with fruit -->
+          <path d="M210 60 L210 18" stroke="#2F3E34" stroke-width="2"/>
+          <circle cx="210" cy="8" r="12" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.3"/>
+          <circle cx="206" cy="4" r="1.6" fill="#D16B4F"/>
+          <circle cx="214" cy="8" r="1.6" fill="#D16B4F"/>
+          <!-- seed -->
+          <ellipse cx="290" cy="58" rx="3" ry="1.8" fill="#2F3E34"/>
+          <path d="M290 55 L290 52" stroke="#2F3E34" stroke-width="1.2"/>
+          <!-- sprout -->
+          <path d="M370 60 L370 42" stroke="#2F3E34" stroke-width="1.4"/>
+          <path d="M370 48 Q362 44 359 50" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <path d="M370 48 Q378 44 381 50" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <!-- young -->
+          <path d="M450 60 L450 32" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="450" cy="24" r="9" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.2"/>
+          <!-- mature lots -->
+          <path d="M530 60 L530 14" stroke="#2F3E34" stroke-width="2.2"/>
+          <circle cx="530" cy="0" r="14" fill="#4A5E50" fill-opacity="0.5" stroke="#2F3E34" stroke-width="1.4"/>
+          <circle cx="525" cy="-4" r="1.7" fill="#D16B4F"/>
+          <circle cx="534" cy="-2" r="1.7" fill="#D16B4F"/>
+          <circle cx="529" cy="4" r="1.7" fill="#D16B4F"/>
+          <!-- young -->
+          <path d="M610 60 L610 34" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="610" cy="26" r="8" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.2"/>
+          <!-- sprout -->
+          <path d="M690 60 L690 42" stroke="#2F3E34" stroke-width="1.4"/>
+          <path d="M690 48 Q682 44 679 50" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <path d="M690 48 Q698 44 701 50" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <!-- mature -->
+          <path d="M770 60 L770 22" stroke="#2F3E34" stroke-width="2"/>
+          <circle cx="770" cy="12" r="11" fill="#4A5E50" fill-opacity="0.45" stroke="#2F3E34" stroke-width="1.3"/>
+          <circle cx="766" cy="10" r="1.6" fill="#D16B4F"/>
+          <!-- young -->
+          <path d="M850 60 L850 32" stroke="#2F3E34" stroke-width="1.6"/>
+          <circle cx="850" cy="24" r="9" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.2"/>
+          <line x1="0" y1="60" x2="900" y2="60" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.3"/>
+        </g>
+        <!-- row 3 (front) - mostly seeds/sprouts -->
+        <g transform="translate(0 220)">
+          <ellipse cx="50" cy="38" rx="3.5" ry="2" fill="#2F3E34"/>
+          <path d="M50 36 L50 32" stroke="#2F3E34" stroke-width="1.3"/>
+          <ellipse cx="130" cy="38" rx="3.5" ry="2" fill="#2F3E34"/>
+          <path d="M130 36 L130 30" stroke="#2F3E34" stroke-width="1.3"/>
+          <path d="M210 40 L210 22" stroke="#2F3E34" stroke-width="1.4"/>
+          <path d="M210 28 Q202 24 199 30" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <path d="M210 28 Q218 24 221 30" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <ellipse cx="290" cy="38" rx="3.5" ry="2" fill="#2F3E34"/>
+          <path d="M290 36 L290 31" stroke="#2F3E34" stroke-width="1.3"/>
+          <path d="M370 40 L370 20" stroke="#2F3E34" stroke-width="1.4"/>
+          <path d="M370 26 Q362 22 359 28" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <path d="M370 26 Q378 22 381 28" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <ellipse cx="450" cy="38" rx="3.5" ry="2" fill="#2F3E34"/>
+          <path d="M450 36 L450 30" stroke="#2F3E34" stroke-width="1.3"/>
+          <path d="M530 40 L530 22" stroke="#2F3E34" stroke-width="1.4"/>
+          <path d="M530 28 Q522 24 519 30" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <path d="M530 28 Q538 24 541 30" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <ellipse cx="610" cy="38" rx="3.5" ry="2" fill="#2F3E34"/>
+          <path d="M610 36 L610 31" stroke="#2F3E34" stroke-width="1.3"/>
+          <path d="M690 40 L690 20" stroke="#2F3E34" stroke-width="1.4"/>
+          <path d="M690 26 Q682 22 679 28" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <path d="M690 26 Q698 22 701 28" stroke="#2F3E34" stroke-width="1.4" fill="none"/>
+          <ellipse cx="770" cy="38" rx="3.5" ry="2" fill="#2F3E34"/>
+          <path d="M770 36 L770 31" stroke="#2F3E34" stroke-width="1.3"/>
+          <ellipse cx="850" cy="38" rx="3.5" ry="2" fill="#2F3E34"/>
+          <path d="M850 36 L850 30" stroke="#2F3E34" stroke-width="1.3"/>
+          <line x1="0" y1="40" x2="900" y2="40" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.3"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="phases">
+      <div class="phase">
+        <span class="phase-num">i</span>
+        <h4 class="phase-title">We form a <em>big group</em>.</h4>
+        <p class="phase-body">We write small checks and invest together.</p>
+      </div>
+      <div class="phase">
+        <span class="phase-num">ii</span>
+        <h4 class="phase-title"><em>$10K a year</em>, for five years.</h4>
+        <p class="phase-body">Your number is fixed up front.</p>
+      </div>
+      <div class="phase">
+        <span class="phase-num">iii</span>
+        <h4 class="phase-title">We <em>back every founder</em>.</h4>
+        <p class="phase-body">Research, customers, network.</p>
+      </div>
+      <div class="phase">
+        <span class="phase-num">iv</span>
+        <h4 class="phase-title">Some will <em>bear fruit</em>.</h4>
+        <p class="phase-body">That's where returns come from.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OPTION 4 — Pure typography ═══════════ -->
+<section class="option opt4">
+  <div class="option-label">Option 04 · Pure typography, one bold mark</div>
+  <div class="option-inner">
+    <div class="section-label">What it is</div>
+    <h2 class="section-heading">Think of it like investing in</h2>
+    <p class="orchard-word">an orchard.</p>
+    <p class="section-sub">We plant lots of seeds and tend all of them so that some will bear fruit.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h4 class="step-title">We form a <em>big group</em>.</h4>
+        <p class="step-body">We write small checks and invest together.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h4 class="step-title"><em>$10,000 a year</em>, for five years.</h4>
+        <p class="step-body">You know your number up front. No surprises.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h4 class="step-title">We <em>back every founder</em>.</h4>
+        <p class="step-body">Research, customers, network. The full group behind every company.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <h4 class="step-title">Some will <em>bear fruit</em>.</h4>
+        <p class="step-body">Some will fail. Some will grow into real companies. That's where returns come from.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

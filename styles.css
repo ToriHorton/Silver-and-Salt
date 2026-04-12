@@ -758,6 +758,10 @@ footer::after {
 }
 
 @media(max-width: 600px) {
+  .nav-rail { padding-left: 12px; padding-right: 12px; }
+  .nav-tabs { justify-content: space-between; width: 100%; }
+  .nav-tab { font-size: 10px; letter-spacing: .04em; padding: 0; white-space: nowrap; }
+  .nav-top { padding-left: 12px; padding-right: 12px; }
   .f-sitemap { grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
   .f-brand-row { flex-direction: column; gap: var(--space-3); }
   .f-right { text-align: left; }

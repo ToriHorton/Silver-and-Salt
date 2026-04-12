@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home v4 — Orchard</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2;--sand:#F4EFE6;--moss:#2F3E34;--moss-light:#4A5E50;
+  --sage:#7E8E84;--rust:#D16B4F;--rust-hover:#E07A5E;
+  --border:rgba(47,62,52,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--cream);color:var(--moss);font-family:'Satoshi',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:0.85em;font-style:normal}
+
+/* Badge */
+.badge{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;
+  background:#7CB83F;color:white;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--cream);
+  border-bottom:1px solid var(--border);padding:16px 48px;
+  display:flex;align-items:center;justify-content:space-between}
+.nav-mark{display:flex;align-items:center;gap:12px}
+.sc{width:34px;height:34px;border-radius:50%;overflow:hidden;position:relative}
+.sc-l{position:absolute;top:0;left:0;width:50%;height:100%;background:var(--moss)}
+.sc-r{position:absolute;top:0;right:0;width:50%;height:100%;background:var(--rust)}
+.sc-a{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:white;z-index:1}
+.wm{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:20px;color:var(--moss)}
+.nav-cta{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--rust);color:white;border:none;border-radius:4px;padding:10px 24px;text-decoration:none}
+
+/* ─────────── HERO ─────────── */
+.hero{padding:130px 48px 0;position:relative;overflow:hidden;
+  background:linear-gradient(to bottom, #FBF8F2 0%, #FBF8F2 55%, #F4EFE6 100%);
+  display:flex;flex-direction:column}
+/* subtle paper-grain vignette */
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.5) 0%, transparent 60%);
+  z-index:1}
+.hero-inner{max-width:780px;margin:0 auto;position:relative;z-index:2;width:100%}
+.hero-copy{padding-top:0}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:14px;
+  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--rust);margin-bottom:28px;font-family:'Satoshi',sans-serif}
+.hero-eyebrow::before{content:'';display:inline-block;width:32px;height:1px;background:var(--rust)}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(52px,7vw,92px);line-height:1.02;letter-spacing:-.025em;color:var(--moss)}
+.hero h1 em{font-style:italic;color:var(--rust)}
+.hero h1 .money{font-style:normal;font-weight:700;color:var(--moss)}
+.hero-rule{width:56px;height:2px;background:var(--rust);margin:30px 0 22px;border-radius:1px;
+  position:relative}
+.hero-rule::after{content:'';position:absolute;left:68px;top:50%;transform:translateY(-50%) rotate(45deg);
+  width:5px;height:5px;background:var(--rust);border-radius:1px}
+.hero-orient{font-size:16px;color:var(--moss-light);line-height:1.65;
+  font-weight:500;max-width:620px;font-family:'Satoshi',sans-serif;letter-spacing:.005em}
+.hero-orient strong{font-weight:700;color:var(--moss)}
+.hero-sub{color:var(--moss);margin-top:22px;line-height:1.5;
+  font-weight:400;max-width:600px;font-style:italic;
+  font-family:'Cormorant Garamond',serif;font-size:23px}
+.hero-sub em{font-style:italic;color:var(--rust);font-weight:500}
+
+.hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+
+/* Moss band + mountains at bottom of hero */
+.hero-band{position:relative;margin-top:72px;background:var(--moss);padding:0;
+  box-shadow:0 -1px 0 rgba(209,107,79,0.25)}
+.hero-band::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  width:64px;height:2px;background:var(--rust)}
+.hero-horizon{position:relative;width:100%;pointer-events:none;line-height:0;
+  background:var(--moss)}
+.hero-horizon svg{display:block;width:100%;height:auto}
+.hero-band-label{text-align:center;padding:26px 20px 30px;background:var(--moss)}
+.hero-band-label span{font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(251,248,242,0.5)}
+.hero-band-label span em{font-family:'Cormorant Garamond',serif;font-style:normal;font-weight:400;
+  text-transform:none;letter-spacing:0;font-size:13px;color:var(--rust)}
+.btn-pop{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--rust);color:white;border:none;border-radius:4px;
+  padding:18px 40px;cursor:pointer;text-decoration:none;transition:background .2s}
+.btn-pop:hover{background:var(--rust-hover)}
+.btn-outline{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:transparent;color:var(--moss);border:1px solid rgba(47,62,52,0.18);
+  border-radius:4px;padding:18px 40px;cursor:pointer;text-decoration:none}
+
+/* ─────────── SEED TRANSITION ─────────── */
+.seed-strip{background:linear-gradient(to bottom,var(--cream),var(--sand));
+  padding:0;text-align:center;position:relative;height:80px}
+.seed-strip svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:60px}
+
+/* ─────────── WHYS ─────────── */
+.whys{padding:90px 48px 100px;background:var(--cream);position:relative}
+.whys-inner{max-width:760px;margin:0 auto}
+.whys .section-label{text-align:left;margin-bottom:18px}
+.whys .section-heading{text-align:left;margin-bottom:56px}
+.whys .section-sub{text-align:left;margin:0 0 56px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sage);margin-bottom:14px;text-align:center}
+.section-heading{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(32px,4.5vw,52px);color:var(--moss);line-height:1.1;
+  text-align:center;margin-bottom:12px;letter-spacing:-.02em}
+.section-heading em{font-style:normal;color:var(--rust);font-family:'Cormorant Garamond',serif;font-weight:400}
+.section-sub{font-size:17px;color:var(--moss-light);text-align:center;
+  max-width:560px;margin:0 auto 64px;font-weight:300;line-height:1.65}
+
+.why-grid{display:flex;flex-direction:column;max-width:760px;margin:0 auto;gap:52px}
+.why-grid.three{max-width:760px}
+.why-card{display:block;padding:0;border:none;position:relative}
+.why-card::before{display:none}
+.why-num{display:none}
+.why-title{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(28px,3.4vw,38px);color:var(--moss);line-height:1.2;
+  margin-bottom:14px;letter-spacing:-.01em;text-align:left;max-width:680px}
+.why-title em{font-style:italic;color:var(--rust)}
+.why-title .brand-amp{color:var(--moss)}
+.why-body{font-size:17px;color:var(--moss-light);line-height:1.7;font-weight:400;
+  max-width:620px;margin:0;text-align:left}
+
+/* ─────────── HOW IT WORKS — THE ENVELOPE ─────────── */
+.what{padding:100px 48px 120px;background:var(--sand);position:relative;overflow:hidden}
+.what-inner{max-width:1100px;margin:0 auto;position:relative;z-index:2}
+.what .section-label{text-align:center;margin-bottom:14px}
+.what .section-heading{text-align:center;margin-bottom:10px}
+.what-sub{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-weight:400;font-size:18px;color:var(--sage);margin-bottom:56px;letter-spacing:.005em}
+.what-sub .brand-amp{color:var(--sage)}
+
+.hiw-stack{display:flex;flex-direction:column;gap:24px;max-width:820px;margin:0 auto;position:relative}
+.hiw-card{background:var(--cream);border:1px solid rgba(47,62,52,0.12);border-radius:6px;
+  padding:36px 40px;position:relative;display:grid;grid-template-columns:90px 1fr;gap:32px;align-items:start}
+.hiw-card:nth-child(1){margin-left:0;margin-right:120px}
+.hiw-card:nth-child(2){margin-left:40px;margin-right:80px}
+.hiw-card:nth-child(3){margin-left:80px;margin-right:40px}
+.hiw-card:nth-child(4){margin-left:80px;margin-right:40px}
+.hiw-card:nth-child(5){margin-left:40px;margin-right:80px}
+.hiw-card:nth-child(6){margin-left:0;margin-right:120px}
+.hiw-card::after{content:'';position:absolute;bottom:-14px;left:40px;width:2px;height:14px;
+  background:var(--rust);opacity:0.4}
+.hiw-card:last-child::after{display:none}
+.hiw-num{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
+  font-size:44px;color:var(--rust);line-height:1;padding-top:4px;display:block}
+.hiw-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:26px;
+  color:var(--moss);line-height:1.22;margin-bottom:10px;letter-spacing:-.01em}
+.hiw-title em{font-style:italic;color:var(--rust)}
+.hiw-title .brand-amp{color:var(--moss)}
+.hiw-body{font-size:15px;color:var(--moss-light);line-height:1.65;font-weight:400;max-width:560px}
+.hiw-body strong{font-weight:600;color:var(--moss)}
+
+@media(max-width:820px){
+  .hiw-card{grid-template-columns:60px 1fr;gap:20px;padding:28px 24px}
+  .hiw-card:nth-child(1),.hiw-card:nth-child(2),.hiw-card:nth-child(3),
+  .hiw-card:nth-child(4),.hiw-card:nth-child(5),.hiw-card:nth-child(6){margin-left:0;margin-right:0}
+  .hiw-num{font-size:32px}
+  .hiw-title{font-size:22px}
+}
+
+/* ─────────── QUALIFY / ACCREDITED ─────────── */
+.qualify{padding:100px 48px 120px;background:var(--cream);position:relative}
+.qualify-inner{max-width:880px;margin:0 auto}
+.qualify .section-label{text-align:center;margin-bottom:14px}
+.qualify .section-heading{text-align:center;margin-bottom:14px}
+.qualify-sub{text-align:center;font-size:17px;color:var(--moss-light);line-height:1.65;
+  max-width:620px;margin:0 auto 64px;font-weight:400}
+
+.qualify-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:820px;margin:0 auto}
+.qualify-card{background:var(--sand);border:1px solid rgba(47,62,52,0.1);border-radius:6px;
+  padding:40px 36px;position:relative}
+.qualify-card::before{content:'';position:absolute;top:0;left:36px;right:36px;height:2px;background:var(--rust)}
+.qualify-label{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--rust);margin-bottom:16px;display:block}
+.qualify-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;
+  color:var(--moss);line-height:1.2;margin-bottom:16px;letter-spacing:-.01em}
+.qualify-body{font-size:15px;color:var(--moss-light);line-height:1.7}
+.qualify-body strong{font-weight:700;color:var(--moss)}
+
+.qualify-footer{text-align:center;margin-top:48px}
+.qualify-footer p{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+  font-size:22px;color:var(--moss);line-height:1.5;max-width:620px;margin:0 auto 28px}
+.qualify-footer p em{font-style:italic;color:var(--rust);font-weight:400}
+.qualify-footer .btn{display:inline-block;background:var(--rust);color:white;
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;
+  text-transform:uppercase;padding:18px 44px;border-radius:4px;text-decoration:none;
+  transition:background .2s}
+.qualify-footer .btn:hover{background:var(--rust-hover)}
+
+@media(max-width:820px){
+  .qualify{padding:72px 22px 90px}
+  .qualify-grid{grid-template-columns:1fr;gap:16px}
+  .qualify-card{padding:32px 24px}
+  .qualify-footer p{font-size:19px}
+}
+
+/* ─────────── CLOSING SEQUENCE (exact match to index.html) ─────────── */
+.s-dark{background:var(--moss);padding:72px 48px}
+.s-dark .wrap{max-width:760px;margin:0 auto}
+.s-dark p.italic-close{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,3vw,32px);font-weight:400;font-style:italic;
+  color:var(--cream);line-height:1.45;margin:0;text-align:center}
+.s-dark p.italic-close .brand-amp{color:var(--rust);font-weight:400;font-style:normal}
+
+.cohort-strip{background:var(--rust);padding:72px 40px;position:relative;overflow:hidden}
+.cohort-strip::before{content:'';position:absolute;bottom:0;left:0;right:0;height:140px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200' preserveAspectRatio='none'%3E%3Cpath d='M0 200 L0 140 L80 90 L150 120 L220 60 L300 100 L380 40 L440 80 L520 20 L600 70 L680 30 L750 80 L820 50 L900 90 L960 55 L1040 85 L1100 45 L1200 100 L1200 200Z' fill='rgba(255,255,255,0.06)'/%3E%3Cpath d='M0 200 L0 160 L100 130 L200 150 L300 110 L400 140 L500 90 L600 120 L700 80 L800 110 L900 130 L1000 100 L1100 120 L1200 140 L1200 200Z' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size:cover;pointer-events:none}
+.cohort-strip .wrap{text-align:center;position:relative;z-index:2;max-width:640px;margin:0 auto}
+.cohort-strip .kicker{font-family:'Satoshi',sans-serif;font-weight:900;
+  font-size:clamp(20px,3vw,28px);color:white;letter-spacing:-.02em;margin-bottom:8px}
+.cohort-strip .detail{font-size:17px;color:rgba(255,255,255,0.75);max-width:520px;
+  margin:0 auto 24px;line-height:1.6}
+.cohort-strip .btn{display:inline-block;background:white;color:var(--moss);
+  font-family:'Satoshi',sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;
+  text-transform:uppercase;padding:16px 40px;border-radius:4px;text-decoration:none}
+
+.moment-bar{background:var(--moss);text-align:center;padding:20px 48px}
+.moment-bar p{font-family:'Satoshi',sans-serif;font-size:17px;font-weight:700;
+  color:rgba(255,255,255,0.7);letter-spacing:.22em;text-transform:uppercase;margin:0}
+.moment-bar p .brand-amp{color:var(--rust);font-style:normal}
+
+@media(max-width:820px){
+  .s-dark{padding:36px 24px}
+  .cohort-strip{padding:56px 24px}
+  .moment-bar{padding:18px 24px}
+  .moment-bar p{font-size:13px;letter-spacing:.18em}
+}
+
+/* ─────────── Responsive ─────────── */
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .hero{padding:120px 22px 0;min-height:auto}
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .hero h1{font-size:clamp(36px,8.5vw,52px)}
+  .hero-sub{font-size:19px}
+  .hero-mark{order:2;padding-top:0}
+  .hero-mark-frame{max-width:260px;margin:0 auto}
+  .hero-mark-amp{font-size:clamp(180px,42vw,220px)}
+  .hero-horizon{margin-top:40px}
+  .whys,.what,.cta{padding-left:22px;padding-right:22px}
+  .why-grid{grid-template-columns:1fr;gap:20px}
+  .why-card{padding:28px 24px}
+  .garden-row{grid-template-columns:1fr;gap:16px}
+  .plant{flex-direction:row;text-align:left;padding:20px;gap:20px}
+  .plant-svg{width:72px;height:90px;margin-bottom:0;flex-shrink:0}
+  .plant-text{flex:1}
+  .hero-cta{flex-direction:column}
+  .hero-cta a{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="badge">MOCKUP — HOME V4 ORCHARD</div>
+
+<nav>
+  <div class="nav-mark">
+    <div class="sc"><div class="sc-l"></div><div class="sc-r"></div><div class="sc-a">&</div></div>
+    <div class="wm">Silver <span class="brand-amp">&</span> Salt Capital</div>
+  </div>
+  <a href="#join" class="nav-cta">Join Us</a>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">If you are new to investing, start here.</p>
+      <h1>We are investing in <em>Utah women founders</em> to <span class="money">make money</span>.</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-orient">
+        Silver <span class="brand-amp">&amp;</span> Salt Capital members invest <strong>$10,000 a year</strong> in Utah companies founded by women.
+      </p>
+      <p class="hero-sub">
+        If you believe Utah women can do more <em>together</em>, this is the place for you.
+      </p>
+      <div class="hero-cta">
+        <a href="#what" class="btn-pop">Tell me more</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ═══════════ WHYS ═══════════ -->
+<section class="whys" id="why">
+  <div class="whys-inner">
+    <div class="section-label">Why join</div>
+    <h2 class="section-heading">Now is the time <em>&amp;</em> we are the reason.</h2>
+
+    <div class="why-grid three">
+
+      <div class="why-card">
+        <span class="why-num">01</span>
+        <div>
+          <h3 class="why-title">Silver <span class="brand-amp">&amp;</span> Salt Capital is <em>built to make money</em>.</h3>
+          <p class="why-body">
+            Real returns. Real jobs. Real Utah founders getting a yes from someone
+            who actually understands what they're building.
+          </p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <span class="why-num">02</span>
+        <div>
+          <h3 class="why-title">Utah women <em>show up for each other</em>.</h3>
+          <p class="why-body">
+            We have the strongest support networks in the country. It's time to use
+            them to fund each other with real dollars, not just encouragement.
+          </p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <span class="why-num">03</span>
+        <div>
+          <h3 class="why-title"><em>Our daughters and granddaughters</em> need us.</h3>
+          <p class="why-body">
+            Utah wants women to raise families and run companies.
+            It is time that the capital to do both is in our hands.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<section class="what">
+  <div class="what-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-heading">Groups like this <em>exist across the country</em>.</h2>
+    <p class="what-sub">Your first five years with Silver <span class="brand-amp">&amp;</span> Salt Capital</p>
+
+    <div class="hiw-stack">
+
+      <div class="hiw-card">
+        <span class="hiw-num">01</span>
+        <div>
+          <h3 class="hiw-title">You join a group with the mission to <em>fund Utah women founders</em>.</h3>
+          <p class="hiw-body">Silver <span class="brand-amp">&amp;</span> Salt Capital is a membership organization. You become a member alongside other Utah women investing together.</p>
+        </div>
+      </div>
+
+      <div class="hiw-card">
+        <span class="hiw-num">02</span>
+        <div>
+          <h3 class="hiw-title">You commit <em>$10,000 a year, for five years</em>.</h3>
+          <p class="hiw-body">Your number is fixed up front. No surprises, no mystery fees. You know exactly what you're signing up for.</p>
+        </div>
+      </div>
+
+      <div class="hiw-card">
+        <span class="hiw-num">03</span>
+        <div>
+          <h3 class="hiw-title">The group finds and <em>picks Utah founders</em> together.</h3>
+          <p class="hiw-body">We find the companies we want to invest in as a community. We share research and do our homework together. Nobody has to figure it out alone.</p>
+        </div>
+      </div>
+
+      <div class="hiw-card">
+        <span class="hiw-num">04</span>
+        <div>
+          <h3 class="hiw-title">You <em>decide</em> which companies you invest in.</h3>
+          <p class="hiw-body">Each time the group surfaces a deal, you decide whether to participate. Not interested? Skip it. Your money only moves when you say yes.</p>
+        </div>
+      </div>
+
+      <div class="hiw-card">
+        <span class="hiw-num">05</span>
+        <div>
+          <h3 class="hiw-title">We put our money together so we can write <em>a bigger check</em> to the founder.</h3>
+          <p class="hiw-body">You own a small stake in the company. The founder gets one big check. Good for everyone.</p>
+        </div>
+      </div>
+
+      <div class="hiw-card">
+        <span class="hiw-num">06</span>
+        <div>
+          <h3 class="hiw-title">Over five years, you build a <em>portfolio of Utah companies</em>.</h3>
+          <p class="hiw-body">All founded by women. Some will fail. Some might grow. The whole point of investing across many companies is that you don't need every one to win.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OLD ORCHARD (kept, hidden) ═══════════ -->
+<section class="what" style="display:none">
+  <div class="what-inner">
+    <div class="section-label">What it is</div>
+    <h2 class="section-heading">Think of it like <em>an orchard</em>.</h2>
+    <p class="section-sub">
+      We're planting lots of seeds and nurturing all of them so that some will become fruit-bearing trees.
+    </p>
+
+    <div class="orchard">
+      <div class="orchard-row">
+
+        <!-- STEP 1 — SEEDS / the group -->
+        <div class="plant">
+          <svg class="plant-svg" viewBox="0 0 260 180" fill="none" aria-hidden="true">
+            <!-- ground line -->
+            <line x1="14" y1="148" x2="246" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.25"/>
+            <!-- 9 seeds with tiny first-emergence marks, evenly spaced -->
+            <g fill="#2F3E34">
+              <ellipse cx="28" cy="152" rx="4" ry="2.2"/>
+              <ellipse cx="54" cy="153" rx="4" ry="2.2"/>
+              <ellipse cx="80" cy="152" rx="4" ry="2.2"/>
+              <ellipse cx="106" cy="153" rx="4" ry="2.2"/>
+              <ellipse cx="132" cy="152" rx="4" ry="2.2"/>
+              <ellipse cx="158" cy="153" rx="4" ry="2.2"/>
+              <ellipse cx="184" cy="152" rx="4" ry="2.2"/>
+              <ellipse cx="210" cy="153" rx="4" ry="2.2"/>
+              <ellipse cx="236" cy="152" rx="4" ry="2.2"/>
+            </g>
+            <!-- tiny shoots just emerging -->
+            <g stroke="#2F3E34" stroke-width="1.5" stroke-linecap="round">
+              <path d="M28 148 L28 142"/>
+              <path d="M54 148 L54 141"/>
+              <path d="M80 148 L80 143"/>
+              <path d="M106 148 L106 140"/>
+              <path d="M132 148 L132 142"/>
+              <path d="M158 148 L158 141"/>
+              <path d="M184 148 L184 143"/>
+              <path d="M210 148 L210 140"/>
+              <path d="M236 148 L236 142"/>
+            </g>
+          </svg>
+          <span class="plant-step">Step 01 · The seeds</span>
+          <h4 class="plant-title">We form a <em>big group</em>.</h4>
+          <p class="plant-body">We all write small checks and collectively make big investments.</p>
+        </div>
+
+        <!-- STEP 2 — SPROUTS / the commitment -->
+        <div class="plant">
+          <svg class="plant-svg" viewBox="0 0 260 180" fill="none" aria-hidden="true">
+            <line x1="14" y1="148" x2="246" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.25"/>
+            <!-- 9 sprouts with 2 leaves each, varied heights -->
+            <g stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round" fill="none">
+              <!-- sprout 1 -->
+              <path d="M28 148 L28 128"/>
+              <path d="M28 134 Q21 130 18 136" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M28 134 Q35 130 38 136" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 2 -->
+              <path d="M54 148 L54 124"/>
+              <path d="M54 130 Q47 126 44 132" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M54 130 Q61 126 64 132" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 3 -->
+              <path d="M80 148 L80 130"/>
+              <path d="M80 136 Q73 132 70 138" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M80 136 Q87 132 90 138" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 4 -->
+              <path d="M106 148 L106 122"/>
+              <path d="M106 128 Q99 124 96 130" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M106 128 Q113 124 116 130" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 5 -->
+              <path d="M132 148 L132 126"/>
+              <path d="M132 132 Q125 128 122 134" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M132 132 Q139 128 142 134" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 6 -->
+              <path d="M158 148 L158 130"/>
+              <path d="M158 136 Q151 132 148 138" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M158 136 Q165 132 168 138" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 7 -->
+              <path d="M184 148 L184 124"/>
+              <path d="M184 130 Q177 126 174 132" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M184 130 Q191 126 194 132" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 8 -->
+              <path d="M210 148 L210 128"/>
+              <path d="M210 134 Q203 130 200 136" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M210 134 Q217 130 220 136" fill="#4A5E50" fill-opacity="0.3"/>
+              <!-- sprout 9 -->
+              <path d="M236 148 L236 126"/>
+              <path d="M236 132 Q229 128 226 134" fill="#4A5E50" fill-opacity="0.3"/>
+              <path d="M236 132 Q243 128 246 134" fill="#4A5E50" fill-opacity="0.3"/>
+            </g>
+          </svg>
+          <span class="plant-step">Step 02 · The commitment</span>
+          <h4 class="plant-title"><em>$10,000 a year</em>, for five years.</h4>
+          <p class="plant-body">You know your number up front. No surprises.</p>
+        </div>
+
+        <!-- STEP 3 — YOUNG TREES / tended together -->
+        <div class="plant">
+          <svg class="plant-svg" viewBox="0 0 260 180" fill="none" aria-hidden="true">
+            <line x1="14" y1="148" x2="246" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.25"/>
+            <!-- 8 young trees with small canopies, varied heights -->
+            <g>
+              <!-- tree 1 -->
+              <path d="M30 148 L30 108" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="30" cy="100" r="11" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+              <!-- tree 2 -->
+              <path d="M60 148 L60 102" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="60" cy="92" r="13" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+              <!-- tree 3 -->
+              <path d="M90 148 L90 110" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="90" cy="102" r="10" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+              <!-- tree 4 -->
+              <path d="M120 148 L120 100" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="120" cy="90" r="13" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+              <!-- tree 5 -->
+              <path d="M150 148 L150 106" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="150" cy="96" r="12" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+              <!-- tree 6 -->
+              <path d="M180 148 L180 112" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="180" cy="104" r="10" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+              <!-- tree 7 -->
+              <path d="M208 148 L208 100" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="208" cy="90" r="13" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+              <!-- tree 8 -->
+              <path d="M236 148 L236 108" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="236" cy="100" r="11" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+            </g>
+          </svg>
+          <span class="plant-step">Step 03 · Tended together</span>
+          <h4 class="plant-title">We <em>vet every founder</em> and support every company.</h4>
+          <p class="plant-body">You pick which ones get your money. Every time.</p>
+        </div>
+
+        <!-- STEP 4 — MATURE TREES with fruit / the harvest -->
+        <div class="plant">
+          <svg class="plant-svg" viewBox="0 0 260 180" fill="none" aria-hidden="true">
+            <line x1="14" y1="148" x2="246" y2="148" stroke="#2F3E34" stroke-width="1" stroke-opacity="0.25"/>
+            <g>
+              <!-- tree A — tall with lots of fruit -->
+              <path d="M36 148 L36 82" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="36" cy="68" r="18" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.5"/>
+              <circle cx="30" cy="62" r="2" fill="#D16B4F"/>
+              <circle cx="40" cy="66" r="2" fill="#D16B4F"/>
+              <circle cx="34" cy="72" r="2" fill="#D16B4F"/>
+              <circle cx="42" cy="74" r="2" fill="#D16B4F"/>
+              <circle cx="28" cy="72" r="2" fill="#D16B4F"/>
+
+              <!-- tree B — medium with a few fruit -->
+              <path d="M80 148 L80 94" stroke="#2F3E34" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="80" cy="82" r="14" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.5"/>
+              <circle cx="76" cy="78" r="2" fill="#D16B4F"/>
+              <circle cx="84" cy="84" r="2" fill="#D16B4F"/>
+
+              <!-- tree C — small, struggling, no fruit -->
+              <path d="M118 148 L118 118" stroke="#2F3E34" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="118" cy="112" r="7" fill="#4A5E50" fill-opacity="0.3" stroke="#2F3E34" stroke-width="1.3"/>
+
+              <!-- tree D — medium-tall with many fruit -->
+              <path d="M155 148 L155 86" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="155" cy="74" r="16" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.5"/>
+              <circle cx="149" cy="70" r="2" fill="#D16B4F"/>
+              <circle cx="160" cy="72" r="2" fill="#D16B4F"/>
+              <circle cx="152" cy="78" r="2" fill="#D16B4F"/>
+              <circle cx="162" cy="80" r="2" fill="#D16B4F"/>
+
+              <!-- tree E — young, still growing -->
+              <path d="M195 148 L195 108" stroke="#2F3E34" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="195" cy="100" r="10" fill="#4A5E50" fill-opacity="0.35" stroke="#2F3E34" stroke-width="1.4"/>
+
+              <!-- tree F — tall with some fruit -->
+              <path d="M230 148 L230 88" stroke="#2F3E34" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="230" cy="74" r="16" fill="#4A5E50" fill-opacity="0.4" stroke="#2F3E34" stroke-width="1.5"/>
+              <circle cx="225" cy="70" r="2" fill="#D16B4F"/>
+              <circle cx="234" cy="72" r="2" fill="#D16B4F"/>
+              <circle cx="228" cy="78" r="2" fill="#D16B4F"/>
+            </g>
+          </svg>
+          <span class="plant-step">Step 04 · The harvest</span>
+          <h4 class="plant-title">Some will <em>bear fruit</em>.</h4>
+          <p class="plant-body">Some will fail. Some will grow into real companies. That's where returns come from.</p>
+        </div>
+
+      </div>
+      <div class="soil"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ WHO CAN JOIN / ACCREDITED ═══════════ -->
+<section class="qualify">
+  <div class="qualify-inner">
+    <div class="section-label">Who can join</div>
+    <h2 class="section-heading">Two ways to know <em>you're in</em>.</h2>
+    <p class="qualify-sub">Silver <span class="brand-amp">&amp;</span> Salt Capital is for accredited investors. The SEC defines that two ways.</p>
+
+    <div class="qualify-grid">
+      <div class="qualify-card">
+        <span class="qualify-label">By income</span>
+        <h3 class="qualify-title">You earn a certain amount each year.</h3>
+        <p class="qualify-body">More than <strong>$200,000</strong> a year on your own, or more than <strong>$300,000</strong> a year together with your spouse, for each of the last two years.</p>
+      </div>
+
+      <div class="qualify-card">
+        <span class="qualify-label">By net worth</span>
+        <h3 class="qualify-title">You have a certain amount saved.</h3>
+        <p class="qualify-body">More than <strong>$1 million</strong> in assets, not counting the value of your primary home.</p>
+      </div>
+    </div>
+
+    <div class="qualify-footer">
+      <p>Accredited investors get to back real founders and earn real returns. 85% have no idea. Now you know. <em>What will you do?</em></p>
+      <a href="#join" class="btn">Join Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CLOSING — DECLARATION ═══════════ -->
+<section class="s-dark">
+  <div class="wrap">
+    <p class="italic-close">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders &mdash; it's time more of them are women.</p>
+  </div>
+</section>
+
+<!-- ═══════════ CLOSING — COHORT STRIP (from index.html) ═══════════ -->
+<section class="cohort-strip" id="join">
+  <div class="wrap">
+    <p class="kicker">We're starting now.</p>
+    <p class="detail">The first 100 members will shape the culture, influence who gets funded, and define the standards for everything that follows.</p>
+    <a href="https://docs.google.com/forms/d/1k09fN8cASmZHUyLXQDLoCSmuM3JPM0aOScy2JqzjMgw/viewform" target="_blank" rel="noopener" class="btn">Join Us</a>
+  </div>
+</section>
+
+<!-- ═══════════ CLOSING — MOMENT BAR (from index.html) ═══════════ -->
+<div class="moment-bar">
+  <p>This is the place <span class="brand-amp">&amp;</span> now is the moment</p>
+</div>
+
+</body>
+</html>
