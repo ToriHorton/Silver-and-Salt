@@ -789,7 +789,7 @@
             <textarea id="message" name="message" placeholder="What brought you here, and what are you hoping to find?" required></textarea>
           </div>
 
-          <button type="submit" class="submit-btn" id="submit-btn">Submit</button>
+          <button type="submit" class="submit-btn" id="submit-btn" disabled>Submit</button>
           <p class="privacy">Your privacy matters to us. Your information is never sold or shared with third parties.</p>
         </form>
       </div>
@@ -858,9 +858,22 @@
       }
     });
 
-    // Form submit → advance to step 2
+    // Enable submit button only when all required fields are filled
     const form        = document.getElementById('inquiry-form');
     const submitBtn   = document.getElementById('submit-btn');
+
+    function checkFormReady() {
+      const allRequired = form.querySelectorAll('[required]');
+      const allFilled = [...allRequired].every(function(field) {
+        return field.value.trim() !== '';
+      });
+      submitBtn.disabled = !allFilled;
+    }
+
+    form.addEventListener('input', checkFormReady);
+    form.addEventListener('change', checkFormReady);
+
+    // Form submit → advance to step 2
     const step1       = document.getElementById('step-1');
     const step2       = document.getElementById('step-2');
     const step3       = document.getElementById('step-3');
