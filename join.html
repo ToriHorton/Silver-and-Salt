@@ -10,6 +10,8 @@
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
+    body { overflow-x: hidden; }
 
     :root {
       --cream:      #FBF8F2;
@@ -400,6 +402,7 @@
       border-radius: 8px;
       overflow: hidden;
       background: #fff;
+      max-width: 100%;
     }
 
     .cal-header {
@@ -599,14 +602,15 @@
       .back-link {
         position: absolute;
         top: 12px;
-        right: 16px;
+        right: 12px;
         display: inline;
         text-align: right;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 500;
         color: rgba(255,255,255,0.6);
         padding: 0;
         margin-bottom: 0;
+        white-space: nowrap;
       }
 
       /* Step 1 */
