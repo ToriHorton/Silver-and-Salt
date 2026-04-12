@@ -429,33 +429,28 @@
       color: rgba(255,255,255,0.85);
     }
 
-    .cal-body {
-      padding: 32px 28px;
+    .cal-hint {
+      background: var(--lime-soft);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
       text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--moss);
+      line-height: 1.6;
     }
 
-    .cal-instruction {
-      font-size: 14px;
-      color: var(--sage);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .book-btn {
+    .cal-hint-icon {
       display: inline-block;
-      font-family: 'Satoshi', sans-serif;
+      margin-right: 6px;
       font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      color: #fff;
-      background: var(--lime);
-      border: none;
-      border-radius: 6px;
-      padding: 16px 36px;
-      text-decoration: none;
-      transition: background 0.2s;
+      animation: bounce 1.5s ease infinite;
     }
-    .book-btn:hover { background: var(--lime-dark); }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(3px); }
+    }
 
     .step2-note {
       font-size: 12px;
@@ -623,7 +618,7 @@
       .two-col { grid-template-columns: 1fr; }
       .card     { padding: 32px 24px; }
       .hero     { padding: 44px 28px 40px; }
-      .book-btn { width: 100%; }
+      .calendar-wrap iframe { height: 550px; }
       .quote-card-top { gap: 16px; }
     }
 
@@ -659,9 +654,9 @@
       .step2-intro p  { font-size: 13px; line-height: 1.8; }
       .cal-header     { padding: 14px 16px; }
       .cal-header .cal-sub { font-size: 15px; }
-      .cal-body       { padding: 24px 20px; }
-      .cal-instruction { font-size: 13px; }
-      .book-btn       { font-size: 14px; padding: 14px 28px; width: 100%; }
+      .cal-hint       { font-size: 12px; padding: 10px 14px; }
+      .calendar-wrap iframe { width: 100%; max-width: 100%; height: 750px; min-height: 600px; }
+      .calendar-wrap { overflow: hidden; -webkit-overflow-scrolling: touch; }
       .step2-confirm-area { padding: 20px 16px; margin-top: 24px; }
       .step2-confirm-area h3 { font-size: 20px; }
       .confirm-check-wrap span { font-size: 13px; }
@@ -806,10 +801,13 @@
           <div class="cal-label">A Private Introduction</div>
           <div class="cal-sub">By appointment only</div>
         </div>
-        <div class="cal-body">
-          <p class="cal-instruction">Tap below to open our scheduling page. Select a date and time that works for you, then return here to continue.</p>
-          <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" target="_blank" rel="noopener" class="book-btn">Book Your Introduction →</a>
+        <div class="cal-hint">
+          <span class="cal-hint-icon">↓</span>
+          <span>Select a date below, then scroll down to choose an available time.</span>
         </div>
+        <!-- Google Calendar Appointment Scheduling begin -->
+        <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" style="border: 0; display: block; width: 100%; max-width: 100%;" height="600" frameborder="0"></iframe>
+        <!-- end Google Calendar Appointment Scheduling -->
       </div>
       <div class="step2-confirm-area">
         <h3>Have you booked your time?</h3>
@@ -818,7 +816,7 @@
           <span>I have successfully booked a time and received a confirmation.</span>
         </label>
         <button class="confirm-btn" id="confirm-btn" disabled>Continue →</button>
-        <p class="step2-note">Please book your time above, then check the box to continue.</p>
+        <p class="step2-note">Please confirm a date and time, then check the box to continue.</p>
       </div>
     </div>
 
