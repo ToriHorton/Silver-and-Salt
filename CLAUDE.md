@@ -5,6 +5,17 @@
 
 ---
 
+## Brand Rules (always follow)
+
+When writing anything related to the company — copy, HTML, alt text, commit messages, PR titles, documentation, memory entries, anywhere the name appears:
+
+1. **Always write the full name: "Silver & Salt Capital."** Never "Silver & Salt" alone (drops the firm's identity as a capital entity). Never "Silver and Salt Capital" (wrong character).
+2. **Always use the ampersand character `&`, never the word "and."**
+3. **In HTML on the website,** wrap the ampersand in `<span class="brand-amp">&amp;</span>` so it renders in Cormorant Garamond upright — never italic. The italic ampersand is a curly script glyph that is not part of the brand identity.
+4. **Full brand standards live in `_reference/brand-standards.md`** — consult it before any brand-facing work (logo, color, typography, voice).
+
+---
+
 ## Project State (last updated 2026-04-11)
 
 ### Website
