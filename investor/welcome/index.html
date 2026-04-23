@@ -172,6 +172,13 @@
     body.locked{overflow:hidden;}
     body.locked .page-content{visibility:hidden;}
 
+    /* Brand ampersand (see _reference/brand-standards.md) */
+    .brand-amp{
+      font-family:'Cormorant Garamond',serif;
+      font-weight:400;font-size:.8em;font-style:normal;
+      margin:0 -.04em;
+    }
+
     @media (max-width:520px){
       .hero{padding:48px 24px 42px;}
       .task-card{padding:20px 22px;gap:14px;}
@@ -186,7 +193,7 @@
   <div class="gate" id="gate">
     <div class="gate-card">
       <div class="gate-eyebrow">Member Access</div>
-      <div class="gate-title">Silver <em>&amp;</em> Salt Capital</div>
+      <div class="gate-title">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
       <p class="gate-sub">This area is for members only. Enter the password you received with your welcome email.</p>
       <form id="gate-form" autocomplete="off">
         <input type="password" class="gate-input" id="gate-input" placeholder="Password" autofocus spellcheck="false" />
@@ -202,7 +209,7 @@
       <div class="hero-inner">
         <div class="hero-eyebrow">Welcome, Member</div>
         <h1>You're in. <em>Let's get you set up.</em></h1>
-        <p class="hero-sub">A few small things will help you show up as a Silver &amp; Salt investor — and help our community show up stronger together.</p>
+        <p class="hero-sub">A few small things will help you show up as a Silver <span class="brand-amp">&amp;</span> Salt Capital investor, and help our community show up stronger together.</p>
       </div>
     </header>
 
@@ -215,19 +222,20 @@
         <a href="/investor/welcome/linkedin/" class="task-card">
           <div class="task-num">1</div>
           <div class="task-body">
-            <div class="task-title">Add Silver &amp; Salt to your LinkedIn</div>
+            <div class="task-title">Add Silver <span class="brand-amp">&amp;</span> Salt Capital to your LinkedIn</div>
             <div class="task-desc">A quick guide with two ways to add it and copy-ready descriptions.</div>
           </div>
           <div class="task-arrow">→</div>
         </a>
 
-        <div class="task-card task-placeholder">
+        <a href="/investor/welcome/linkedin-post/" class="task-card">
           <div class="task-num">2</div>
           <div class="task-body">
-            <div class="task-title">More coming soon</div>
-            <div class="task-desc">Additional onboarding steps will appear here as the program opens up.</div>
+            <div class="task-title">Tell your network you've joined</div>
+            <div class="task-desc">A ready-to-post announcement and a branded share image, built in your browser.</div>
           </div>
-        </div>
+          <div class="task-arrow">→</div>
+        </a>
 
       </div>
 

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Announce You've Joined Silver &amp; Salt Capital | Member Resource</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{overflow-x:hidden;width:100%;max-width:100vw}
+
+    :root{
+      --cream:#FBF8F2;
+      --moss:#2F3E34;
+      --moss-light:#4A5E50;
+      --sage:#7E8E84;
+      --lime:#7CB83F;
+      --lime-dark:#6aa535;
+      --lime-soft:rgba(124,184,63,0.12);
+      --border:#d6e8d2;
+      --bg:#eef4ea;
+      --pop:#D16B4F;
+      --radius:12px;
+    }
+
+    body{
+      font-family:'Satoshi','Helvetica Neue',Arial,sans-serif;
+      background:var(--bg);color:var(--moss);
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;padding:0 0 80px;
+    }
+
+    .container{width:100%;max-width:760px;margin:0 auto;padding:0 20px;}
+
+    /* Brand ampersand */
+    .brand-amp{
+      font-family:'Cormorant Garamond',serif;
+      font-weight:400;font-size:.8em;font-style:normal;
+      margin:0 -.04em;
+    }
+
+    /* ── Hero ── */
+    .hero{
+      width:100%;max-width:100vw;
+      background:var(--moss);text-align:center;
+      padding:64px 40px 56px 40px;margin-bottom:48px;
+      position:relative;overflow:hidden;
+    }
+    .hero::after{
+      content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,transparent 0%,var(--lime) 50%,transparent 100%);
+    }
+    .hero::before{
+      content:'&';position:absolute;bottom:-80px;right:20px;
+      font-family:'Cormorant Garamond',serif;font-size:380px;font-weight:300;
+      color:rgba(255,255,255,0.04);line-height:1;pointer-events:none;
+    }
+    .back-link{
+      position:absolute;top:20px;left:28px;
+      font-family:'Satoshi',sans-serif;font-size:12px;font-weight:500;
+      letter-spacing:.04em;color:rgba(255,255,255,0.6);text-decoration:none;
+      transition:color .2s;z-index:3;
+    }
+    .back-link:hover{color:var(--lime);}
+    .hero-inner{max-width:600px;margin:0 auto;position:relative;z-index:2;}
+    .hero-eyebrow{
+      font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;
+      letter-spacing:.22em;text-transform:uppercase;
+      color:var(--lime);margin-bottom:20px;
+    }
+    .hero h1{
+      font-family:'Cormorant Garamond',serif;font-weight:300;
+      font-size:clamp(32px,5vw,50px);line-height:1.1;
+      letter-spacing:-.02em;color:var(--cream);margin-bottom:20px;
+    }
+    .hero h1 em{font-style:italic;color:rgba(251,248,242,0.65)}
+    .hero-sub{
+      font-size:16px;line-height:1.75;color:rgba(251,248,242,0.78);
+      font-weight:300;max-width:520px;margin:0 auto;
+    }
+
+    /* ── Section ── */
+    section{margin-bottom:56px;}
+    .eyebrow{
+      font-size:11px;font-weight:700;letter-spacing:.22em;
+      text-transform:uppercase;color:var(--pop);margin-bottom:14px;
+    }
+    h2{
+      font-family:'Cormorant Garamond',serif;font-weight:400;
+      font-size:clamp(26px,3.5vw,34px);line-height:1.2;
+      color:var(--moss);margin-bottom:14px;letter-spacing:-.01em;
+    }
+    h2 em{font-style:italic;color:var(--pop);}
+    .lede{font-size:15px;line-height:1.75;color:var(--moss-light);max-width:620px;}
+
+    /* ── Template cards (posts) ── */
+    .templates{display:flex;flex-direction:column;gap:16px;margin-top:28px;}
+    .tpl{
+      background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+      padding:24px 26px 22px;position:relative;
+    }
+    .tpl-head{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      margin-bottom:14px;flex-wrap:wrap;
+    }
+    .tpl-title{
+      font-family:'Cormorant Garamond',serif;font-weight:600;
+      font-size:20px;color:var(--moss);line-height:1.25;
+    }
+    .tpl-meta{font-size:11px;color:var(--sage);letter-spacing:.04em;}
+    .tpl-body{
+      font-size:14.5px;line-height:1.7;color:var(--moss-light);
+      background:var(--bg);border-radius:8px;padding:18px 20px;
+      border:1px solid rgba(126,142,132,0.12);
+      white-space:pre-wrap;font-family:'Satoshi',sans-serif;
+    }
+    .copy-btn{
+      margin-top:14px;display:inline-flex;align-items:center;gap:8px;
+      padding:10px 18px;background:var(--moss);color:var(--cream);border:none;
+      border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;
+      letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+      transition:background .2s;
+    }
+    .copy-btn:hover{background:#1e2a22;}
+    .copy-btn.copied{background:var(--lime-dark);}
+
+    /* ── Hashtag strip ── */
+    .hashtags{
+      margin-top:20px;padding:16px 20px;background:#fff;
+      border:1px solid var(--border);border-radius:var(--radius);
+      display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    }
+    .hashtag-label{
+      font-size:10px;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--sage);flex-shrink:0;
+    }
+    .hashtag-text{
+      font-size:14px;color:var(--moss);font-weight:500;flex:1;min-width:0;
+      font-family:'Satoshi',sans-serif;
+    }
+
+    /* ── Image generator ── */
+    .gen{
+      background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+      padding:28px 26px;margin-top:24px;
+    }
+    .gen-canvas-wrap{
+      background:var(--bg);border-radius:8px;padding:16px;
+      display:flex;justify-content:center;align-items:center;
+      margin-bottom:24px;overflow:hidden;
+    }
+    canvas#branded-image{
+      width:100%;max-width:440px;height:auto;aspect-ratio:1/1;
+      border-radius:6px;display:block;
+    }
+    .gen-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .gen-field{display:flex;flex-direction:column;gap:8px;}
+    .gen-field > span{
+      font-size:10px;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--sage);
+    }
+    .gen-field input[type="text"]{
+      padding:12px 14px;border:1px solid var(--border);border-radius:6px;
+      font-family:'Satoshi',sans-serif;font-size:14px;color:var(--moss);
+      background:var(--bg);outline:none;transition:border-color .2s;
+    }
+    .gen-field input[type="text"]:focus{border-color:var(--lime);background:#fff;}
+    .gen-file-btn{
+      padding:12px 14px;border:1px dashed var(--sage);border-radius:6px;
+      font-family:'Satoshi',sans-serif;font-size:13px;color:var(--moss-light);
+      background:var(--bg);cursor:pointer;text-align:center;
+      transition:border-color .2s,color .2s;
+    }
+    .gen-file-btn:hover{border-color:var(--lime-dark);color:var(--moss);}
+    .gen-file-btn.has-file{border-style:solid;border-color:var(--lime-dark);color:var(--moss);}
+    .gen-field input[type="file"]{display:none;}
+    .gen-download{
+      margin-top:20px;width:100%;padding:14px 18px;
+      background:var(--moss);color:var(--cream);border:none;border-radius:6px;
+      font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.12em;
+      text-transform:uppercase;cursor:pointer;transition:background .2s,opacity .2s;
+    }
+    .gen-download:hover:not(:disabled){background:#1e2a22;}
+    .gen-download:disabled{opacity:.5;cursor:not-allowed;}
+    .gen-note{
+      font-size:12px;color:var(--sage);line-height:1.55;text-align:center;
+      margin-top:12px;
+    }
+
+    /* ── Footer ── */
+    .page-foot{
+      margin-top:48px;padding-top:32px;text-align:center;
+      border-top:1px solid rgba(126,142,132,0.2);
+    }
+    .foot-link{
+      display:inline-block;font-size:13px;color:var(--sage);
+      text-decoration:none;letter-spacing:.04em;
+      border-bottom:1px solid rgba(126,142,132,0.3);padding-bottom:2px;
+    }
+    .foot-link:hover{color:var(--moss);}
+
+    /* ── Password gate ── */
+    .gate{
+      position:fixed;inset:0;background:var(--moss);
+      display:flex;align-items:center;justify-content:center;
+      padding:24px;z-index:9999;
+    }
+    .gate::before{
+      content:'&';position:absolute;bottom:-80px;right:20px;
+      font-family:'Cormorant Garamond',serif;font-size:420px;font-weight:300;
+      color:rgba(255,255,255,0.03);line-height:1;pointer-events:none;
+    }
+    .gate-card{
+      background:var(--cream);border-radius:14px;
+      padding:44px 40px;max-width:400px;width:100%;
+      text-align:center;position:relative;z-index:2;
+    }
+    .gate-eyebrow{
+      font-size:10px;font-weight:700;letter-spacing:.22em;
+      text-transform:uppercase;color:var(--pop);margin-bottom:14px;
+    }
+    .gate-title{
+      font-family:'Cormorant Garamond',serif;font-weight:300;
+      font-size:28px;color:var(--moss);line-height:1.2;margin-bottom:10px;
+    }
+    .gate-sub{font-size:13px;color:var(--sage);line-height:1.55;margin-bottom:24px;}
+    .gate-input{
+      width:100%;padding:13px 16px;border:1px solid var(--border);
+      border-radius:8px;font-family:inherit;font-size:15px;
+      background:#fff;color:var(--moss);outline:none;
+      transition:border-color .2s;text-align:center;letter-spacing:.02em;
+    }
+    .gate-input:focus{border-color:var(--lime);}
+    .gate-btn{
+      margin-top:12px;width:100%;padding:13px 16px;
+      background:var(--moss);color:var(--cream);border:none;border-radius:8px;
+      font-family:inherit;font-size:14px;font-weight:500;letter-spacing:.04em;
+      cursor:pointer;transition:background .2s;
+    }
+    .gate-btn:hover{background:#1e2a22;}
+    .gate-err{
+      margin-top:12px;font-size:12px;color:var(--pop);
+      min-height:16px;letter-spacing:.02em;
+    }
+    .gate.shake .gate-card{animation:shake .35s ease;}
+    @keyframes shake{
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(-6px)}
+      75%{transform:translateX(6px)}
+    }
+    body.locked{overflow:hidden;}
+    body.locked .page-content{visibility:hidden;}
+
+    @media (max-width:520px){
+      .hero{padding:56px 22px 44px;}
+      .back-link{left:18px;top:16px;}
+      .tpl,.gen{padding:22px 20px;}
+      .gen-fields{grid-template-columns:1fr;}
+      .gate-card{padding:36px 28px;}
+      .hashtags{flex-direction:column;align-items:flex-start;gap:8px;}
+    }
+  </style>
+</head>
+<body class="locked">
+
+  <!-- Password gate -->
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <div class="gate-eyebrow">Member Access</div>
+      <div class="gate-title">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+      <p class="gate-sub">This area is for members only. Enter the password you received with your welcome email.</p>
+      <form id="gate-form" autocomplete="off">
+        <input type="password" class="gate-input" id="gate-input" placeholder="Password" autofocus spellcheck="false" />
+        <button type="submit" class="gate-btn">Unlock</button>
+        <div class="gate-err" id="gate-err" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Hero -->
+    <header class="hero">
+      <a href="/investor/welcome/" class="back-link">← Back to welcome</a>
+      <div class="hero-inner">
+        <div class="hero-eyebrow">Member Resource</div>
+        <h1>Tell your network <em>you've joined.</em></h1>
+        <p class="hero-sub">There are over 100,000 accredited women investors in Utah. Your post shows them this was built for them. Please share your why on LinkedIn.</p>
+      </div>
+    </header>
+
+    <main class="container">
+
+      <!-- Step One: Build image -->
+      <section>
+        <div class="eyebrow">Step One</div>
+        <h2>Build your share image.</h2>
+        <p class="lede">Upload your headshot and we'll frame it as a founding member card, sized for LinkedIn (1200×1200). Everything runs in your browser, so your photo stays on your device.</p>
+
+        <div class="gen">
+          <div class="gen-canvas-wrap">
+            <canvas id="branded-image" width="1200" height="1200" aria-label="Preview of your founding member share image"></canvas>
+          </div>
+
+          <div class="gen-fields">
+            <label class="gen-field">
+              <span>Your name</span>
+              <input type="text" id="gen-name" placeholder="e.g. Jane Doe" maxlength="40" />
+            </label>
+            <label class="gen-field">
+              <span>Your photo</span>
+              <div class="gen-file-btn" id="gen-file-label">Choose a photo</div>
+              <input type="file" id="gen-photo" accept="image/jpeg,image/png,image/webp" />
+            </label>
+          </div>
+
+          <button type="button" class="gen-download" id="gen-download" disabled>Download image</button>
+          <p class="gen-note">Square photos work best. For best results, center your face before uploading.</p>
+        </div>
+      </section>
+
+      <!-- Step Two: Copy post -->
+      <section>
+        <div class="eyebrow">Step Two</div>
+        <h2>Write your post.</h2>
+        <p class="lede">Here are two prompt inspirations you can use to share your participation.</p>
+
+        <div class="templates">
+
+          <div class="tpl">
+            <div class="tpl-head">
+              <div class="tpl-title">Short and direct</div>
+              <div class="tpl-meta">3 paragraphs, for your investor network</div>
+            </div>
+            <div class="tpl-body" data-copy>Excited to share that I've joined Silver &amp; Salt Capital as a founding member.
+
+Silver &amp; Salt Capital is Utah's first angel investment collective of accredited women investors. Together we vet opportunities and individually back the Utah founders we believe in.
+
+Many accredited investors don't realize they already qualify. ($200K+ individual income, $300K+ household, or $1M+ in assets beyond your home all count.) If you've ever wondered what investing in startups could look like for you, I'd love to share what I'm learning.</div>
+            <button class="copy-btn" type="button" data-copy-btn>Copy</button>
+          </div>
+
+          <div class="tpl">
+            <div class="tpl-head">
+              <div class="tpl-title">Tell your story</div>
+              <div class="tpl-meta">A few sentences, more personal</div>
+            </div>
+            <div class="tpl-body" data-copy>I recently said yes to something I didn't know existed: Utah's first angel investment collective of accredited women investors.
+
+Silver &amp; Salt Capital brings together 100 accredited women investors who vet deals as a community and individually fund Utah founders. Our thesis: companies founded by women return more revenue per dollar invested, yet rarely see capital. We're building the infrastructure to change that.
+
+Today, I'm a founding member.
+
+If you're a Utah founder who's been overlooked, or an accredited woman investor ready to join us, let's talk.
+
+silverandsaltcapital.com</div>
+            <button class="copy-btn" type="button" data-copy-btn>Copy</button>
+          </div>
+
+        </div>
+
+        <div class="hashtags">
+          <div class="hashtag-label">Suggested tags</div>
+          <div class="hashtag-text" data-copy>#SilverAndSaltCapital #AngelInvesting #WomenInvestors</div>
+          <button class="copy-btn" type="button" data-copy-btn style="margin-top:0">Copy</button>
+        </div>
+      </section>
+
+      <div class="page-foot">
+        <a href="/investor/welcome/" class="foot-link">← Back to welcome</a>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ── Password gate ──
+    (function(){
+      var PASS = 'bedrock';
+      var KEY = 'ssc_member_unlocked';
+      var gate = document.getElementById('gate');
+      var form = document.getElementById('gate-form');
+      var input = document.getElementById('gate-input');
+      var err = document.getElementById('gate-err');
+      var body = document.body;
+
+      function unlock(){
+        try { sessionStorage.setItem(KEY, 'yes'); } catch(e){}
+        gate.style.display = 'none';
+        body.classList.remove('locked');
+      }
+
+      try {
+        if (sessionStorage.getItem(KEY) === 'yes') { unlock(); return; }
+      } catch(e){}
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var v = (input.value || '').trim().toLowerCase();
+        if (v === PASS) {
+          err.textContent = '';
+          unlock();
+        } else {
+          err.textContent = "That's not quite right. Try again.";
+          gate.classList.remove('shake');
+          void gate.offsetWidth;
+          gate.classList.add('shake');
+          input.select();
+        }
+      });
+    })();
+
+    // ── Copy-to-clipboard ──
+    (function(){
+      document.querySelectorAll('[data-copy-btn]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var source = btn.parentElement.querySelector('[data-copy]') || btn.closest('.tpl, .hashtags').querySelector('[data-copy]');
+          if (!source) return;
+          var text = source.innerText.trim();
+          var done = function(){
+            var original = btn.textContent;
+            btn.classList.add('copied');
+            btn.textContent = 'Copied';
+            setTimeout(function(){
+              btn.classList.remove('copied');
+              btn.textContent = original;
+            }, 1800);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done, function(){ fallbackCopy(text); done(); });
+          } else {
+            fallbackCopy(text); done();
+          }
+        });
+      });
+      function fallbackCopy(text){
+        var ta = document.createElement('textarea');
+        ta.value = text;ta.style.position = 'fixed';ta.style.left = '-9999px';
+        document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');}catch(e){}
+        document.body.removeChild(ta);
+      }
+    })();
+
+    // ── Image generator ──
+    (function(){
+      var canvas = document.getElementById('branded-image');
+      var ctx = canvas.getContext('2d');
+      var W = 1200, H = 1200;
+
+      // Brand tokens
+      var CREAM = '#FBF8F2';
+      var MOSS  = '#2F3E34';
+      var SAGE  = '#7E8E84';
+      var POP   = '#D16B4F';
+
+      // State
+      var state = { name: '', photo: null };
+
+      // Photo position
+      var PX = W / 2;
+      var PY = 430;
+      var PR = 230;
+
+      function drawBackground(){
+        ctx.fillStyle = CREAM;
+        ctx.fillRect(0, 0, W, H);
+
+        // Large & watermark bottom-right
+        ctx.save();
+        ctx.globalAlpha = 0.035;
+        ctx.fillStyle = MOSS;
+        ctx.font = '300 720px "Cormorant Garamond"';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText('&', W + 60, H + 120);
+        ctx.restore();
+      }
+
+      function drawPhoto(){
+        if (state.photo) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(PX, PY, PR, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          var img = state.photo;
+          var ratio = img.width / img.height;
+          var size = PR * 2;
+          var dw, dh;
+          if (ratio > 1) { dh = size; dw = dh * ratio; }
+          else { dw = size; dh = dw / ratio; }
+          ctx.drawImage(img, PX - dw/2, PY - dh/2, dw, dh);
+          ctx.restore();
+        } else {
+          // Placeholder dashed circle
+          ctx.save();
+          ctx.strokeStyle = SAGE;
+          ctx.setLineDash([10, 10]);
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(PX, PY, PR, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          // Placeholder text
+          ctx.fillStyle = SAGE;
+          ctx.font = '400 28px "Satoshi"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('Your photo', PX, PY);
+          ctx.restore();
+        }
+
+        // Ring around photo
+        ctx.save();
+        ctx.strokeStyle = MOSS;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(PX, PY, PR, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Simple letter-spaced text (poor man's tracking)
+      function drawSpacedText(text, cx, y, spacing){
+        var chars = text.split('');
+        var widths = chars.map(function(c){ return ctx.measureText(c).width; });
+        var total = widths.reduce(function(a,b){return a+b;}, 0) + spacing * (chars.length - 1);
+        var x = cx - total / 2;
+        ctx.textAlign = 'left';
+        chars.forEach(function(c, i){
+          ctx.fillText(c, x, y);
+          x += widths[i] + spacing;
+        });
+      }
+
+      function drawSplitCircle(cx, cy, r){
+        // Left half moss
+        ctx.save();
+        ctx.fillStyle = MOSS;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, Math.PI/2, 3 * Math.PI/2);
+        ctx.closePath();
+        ctx.fill();
+        // Right half pop
+        ctx.fillStyle = POP;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, -Math.PI/2, Math.PI/2);
+        ctx.closePath();
+        ctx.fill();
+        // Ampersand center
+        ctx.fillStyle = CREAM;
+        ctx.font = '600 ' + Math.round(r * 1.15) + 'px "Cormorant Garamond"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('&', cx, cy + 2);
+        ctx.restore();
+      }
+
+      function drawTextBlock(){
+        var baseY = PY + PR + 70;
+
+        // "FOUNDING MEMBER" eyebrow
+        ctx.save();
+        ctx.fillStyle = POP;
+        ctx.font = '700 24px "Satoshi"';
+        ctx.textBaseline = 'top';
+        drawSpacedText('FOUNDING MEMBER', PX, baseY, 8);
+        ctx.restore();
+
+        // Name
+        ctx.save();
+        ctx.fillStyle = MOSS;
+        ctx.font = '400 80px "Cormorant Garamond"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        var displayName = (state.name && state.name.trim()) ? state.name.trim() : 'Your name';
+        ctx.globalAlpha = (state.name && state.name.trim()) ? 1 : 0.35;
+        ctx.fillText(displayName, PX, baseY + 46);
+        ctx.restore();
+
+        // Divider
+        ctx.save();
+        ctx.strokeStyle = SAGE;
+        ctx.globalAlpha = 0.4;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(PX - 40, baseY + 170);
+        ctx.lineTo(PX + 40, baseY + 170);
+        ctx.stroke();
+        ctx.restore();
+
+        // Split-circle icon
+        drawSplitCircle(PX, baseY + 222, 28);
+
+        // Wordmark
+        ctx.save();
+        ctx.fillStyle = MOSS;
+        ctx.font = '600 46px "Cormorant Garamond"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText('Silver & Salt Capital', PX, baseY + 268);
+        ctx.restore();
+
+        // Tagline
+        ctx.save();
+        ctx.fillStyle = SAGE;
+        ctx.font = 'italic 300 24px "Cormorant Garamond"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText('Connecting capital to Utah founders who use it best.', PX, baseY + 336);
+        ctx.restore();
+      }
+
+      function render(){
+        ctx.clearRect(0, 0, W, H);
+        drawBackground();
+        drawPhoto();
+        drawTextBlock();
+      }
+
+      // Wait for fonts before first render
+      var fontsReady = Promise.all([
+        document.fonts.load('400 80px "Cormorant Garamond"'),
+        document.fonts.load('600 46px "Cormorant Garamond"'),
+        document.fonts.load('italic 300 24px "Cormorant Garamond"'),
+        document.fonts.load('600 40px "Cormorant Garamond"'),
+        document.fonts.load('700 24px "Satoshi"'),
+        document.fonts.load('300 720px "Cormorant Garamond"')
+      ]).catch(function(){ /* non-fatal */ });
+
+      fontsReady.then(function(){ render(); updateDownloadState(); });
+
+      // Name input
+      var nameInput = document.getElementById('gen-name');
+      nameInput.addEventListener('input', function(){
+        state.name = nameInput.value;
+        render();
+        updateDownloadState();
+      });
+
+      // Photo input
+      var photoInput = document.getElementById('gen-photo');
+      var fileLabel = document.getElementById('gen-file-label');
+      fileLabel.addEventListener('click', function(){ photoInput.click(); });
+      photoInput.addEventListener('change', function(){
+        var file = photoInput.files && photoInput.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev){
+          var img = new Image();
+          img.onload = function(){
+            state.photo = img;
+            fileLabel.classList.add('has-file');
+            fileLabel.textContent = '✓ ' + file.name;
+            render();
+            updateDownloadState();
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // Download
+      var downloadBtn = document.getElementById('gen-download');
+      function updateDownloadState(){
+        downloadBtn.disabled = !(state.photo && state.name && state.name.trim());
+      }
+      downloadBtn.addEventListener('click', function(){
+        if (downloadBtn.disabled) return;
+        var safeName = state.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        var filename = 'silver-and-salt-capital-' + (safeName || 'founding-member') + '.png';
+        var link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    })();
+  </script>
+
+</body>
+</html>
