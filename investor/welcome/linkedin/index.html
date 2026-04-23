@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Add Silver &amp; Salt to LinkedIn | Member Resource</title>
+  <title>Add Silver &amp; Salt Capital to LinkedIn | Member Resource</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
@@ -97,11 +97,19 @@
     .option-card{
       background:#fff;border:1px solid var(--border);border-radius:var(--radius);
       padding:28px 26px;
+      display:flex;flex-direction:column;
     }
     .option-tag{
       display:inline-block;font-size:10px;font-weight:700;letter-spacing:.18em;
       text-transform:uppercase;color:var(--lime-dark);
       background:var(--lime-soft);padding:5px 10px;border-radius:4px;margin-bottom:14px;
+    }
+    .option-tag-rec{
+      background:var(--pop);color:#fff;margin-left:8px;
+    }
+    .option-card-rec{
+      border-color:var(--pop);
+      box-shadow:0 0 0 1px var(--pop) inset;
     }
     .option-title{
       font-family:'Cormorant Garamond',serif;font-weight:600;
@@ -125,7 +133,9 @@
     .option-steps li em{font-style:italic;color:var(--sage);font-size:13px;}
 
     /* ── Field pills (suggested values) ── */
-    .fields{margin-top:20px;padding-top:18px;border-top:1px solid rgba(126,142,132,0.18);}
+    .fields{margin-top:auto;padding-top:20px;border-top:1px solid rgba(126,142,132,0.18);}
+    .fields + *{margin-top:0;}
+    .option-steps + .fields{padding-top:22px;}
     .fields-label{
       font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
       color:var(--sage);margin-bottom:10px;
@@ -186,6 +196,9 @@
     }
     .extra-list li:last-child{border-bottom:none;}
     .extra-list li em{color:var(--sage);font-style:italic;font-size:13px;}
+    .extra-list-cols{column-count:2;column-gap:32px;}
+    .extra-list-cols li{break-inside:avoid;}
+    @media (max-width:520px){.extra-list-cols{column-count:1;}}
 
     /* ── Footer ── */
     .page-foot{
@@ -251,6 +264,13 @@
     body.locked{overflow:hidden;}
     body.locked .page-content{visibility:hidden;}
 
+    /* Brand ampersand (see _reference/brand-standards.md) */
+    .brand-amp{
+      font-family:'Cormorant Garamond',serif;
+      font-weight:400;font-size:.8em;font-style:normal;
+      margin:0 -.04em;
+    }
+
     @media (max-width:720px){
       .options{grid-template-columns:1fr;}
       .extras{grid-template-columns:1fr;}
@@ -270,7 +290,7 @@
   <div class="gate" id="gate">
     <div class="gate-card">
       <div class="gate-eyebrow">Member Access</div>
-      <div class="gate-title">Silver <em>&amp;</em> Salt Capital</div>
+      <div class="gate-title">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
       <p class="gate-sub">This area is for members only. Enter the password you received with your welcome email.</p>
       <form id="gate-form" autocomplete="off">
         <input type="password" class="gate-input" id="gate-input" placeholder="Password" autofocus spellcheck="false" />
@@ -287,25 +307,44 @@
       <a href="/investor/welcome/" class="back-link">← Back to welcome</a>
       <div class="hero-inner">
         <div class="hero-eyebrow">Member Resource</div>
-        <h1>Add Silver <em>&amp;</em> Salt to your LinkedIn</h1>
-        <p class="hero-sub">Your LinkedIn tells founders who you are and what you back. Adding Silver &amp; Salt Capital builds credibility, brings deal flow to our community, and makes the collective visible to the people we want to find us.</p>
+        <h1>Add Silver <span class="brand-amp">&amp;</span> Salt Capital to your LinkedIn</h1>
+        <p class="hero-sub">Your LinkedIn tells your network who you are and what you back. Adding Silver <span class="brand-amp">&amp;</span> Salt Capital builds credibility, brings deal flow to our community, and makes us visible to the founders and investors we want to find us. Please add Silver <span class="brand-amp">&amp;</span> Salt Capital to your profile.</p>
       </div>
     </header>
 
     <main class="container">
 
-      <!-- Two options -->
+      <!-- Headline -->
       <section>
         <div class="eyebrow">Step One</div>
-        <h2>Choose how to add it.</h2>
-        <p class="lede">Two standard placements — pick whichever fits your profile narrative. Experience reads more professional; Volunteer Experience reads more community-driven. Either works.</p>
+        <h2>Update your headline.</h2>
+        <p class="lede">Your headline is the first thing anyone sees on LinkedIn. Paste this after your current title so you show up as a founding member at a glance.</p>
+
+        <div class="tpl" style="margin-top:24px">
+          <div class="tpl-head">
+            <div class="tpl-title">Suggested headline</div>
+            <div class="tpl-meta">Replace [Your title] with your actual title</div>
+          </div>
+          <div class="tpl-body" data-copy>[Your title] | Founding Member, Silver &amp; Salt Capital</div>
+          <button class="copy-btn" type="button" data-copy-btn>Copy</button>
+        </div>
+      </section>
+
+      <!-- Two options -->
+      <section>
+        <div class="eyebrow">Step Two</div>
+        <h2>Choose how to add your involvement.</h2>
+        <p class="lede">Two standard placements. Pick whichever fits your profile narrative. Experience reads more professional; Volunteer Experience reads more community driven. Either works.</p>
 
         <div class="options">
 
           <!-- Option 1 -->
-          <div class="option-card">
-            <div class="option-tag">Option A</div>
-            <div class="option-title">Add as Experience</div>
+          <div class="option-card option-card-rec">
+            <div>
+              <span class="option-tag">Option A</span>
+              <span class="option-tag option-tag-rec">Recommended</span>
+            </div>
+            <div class="option-title" style="margin-top:14px">Add as Experience</div>
             <p class="option-desc">Treats your membership like a professional role. Appears in your main Experience timeline.</p>
             <ol class="option-steps">
               <li>Go to your LinkedIn profile. In the <strong>Experience</strong> section, click the <strong>+</strong> button, then <strong>Add position</strong>.</li>
@@ -314,9 +353,9 @@
             </ol>
             <div class="fields">
               <div class="fields-label">Suggested Fields</div>
-              <div class="field-row"><span class="field-key">Title</span><span class="field-val">Founding Member <em>— or: Investor, Angel Investor</em></span></div>
-              <div class="field-row"><span class="field-key">Company</span><span class="field-val">Silver &amp; Salt Capital</span></div>
-              <div class="field-row"><span class="field-key">Type</span><span class="field-val">Part-time</span></div>
+              <div class="field-row"><span class="field-key">Title</span><span class="field-val">Founding Member</span></div>
+              <div class="field-row"><span class="field-key">Company</span><span class="field-val">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
+              <div class="field-row"><span class="field-key">Type</span><span class="field-val">Remote</span></div>
               <div class="field-row"><span class="field-key">Location</span><span class="field-val">Your city, Utah <em>(or "Remote")</em></span></div>
               <div class="field-row"><span class="field-key">Start date</span><span class="field-val">The month you joined</span></div>
             </div>
@@ -325,7 +364,7 @@
           <!-- Option 2 -->
           <div class="option-card">
             <div class="option-tag">Option B</div>
-            <div class="option-title">Add as Volunteer Experience</div>
+            <div class="option-title">Add as a Volunteer</div>
             <p class="option-desc">Treats your membership as community involvement. Appears in a separate section further down your profile.</p>
             <ol class="option-steps">
               <li>On your profile, click <strong>Add profile section</strong>.</li>
@@ -334,8 +373,8 @@
             </ol>
             <div class="fields">
               <div class="fields-label">Suggested Fields</div>
-              <div class="field-row"><span class="field-key">Organization</span><span class="field-val">Silver &amp; Salt Capital</span></div>
-              <div class="field-row"><span class="field-key">Role</span><span class="field-val">Investor <em>— or: Angel Investor, Founding Member</em></span></div>
+              <div class="field-row"><span class="field-key">Organization</span><span class="field-val">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
+              <div class="field-row"><span class="field-key">Role</span><span class="field-val">Founding Member</span></div>
               <div class="field-row"><span class="field-key">Cause</span><span class="field-val">Economic Empowerment</span></div>
               <div class="field-row"><span class="field-key">Start date</span><span class="field-val">The month you joined</span></div>
             </div>
@@ -346,77 +385,64 @@
 
       <!-- Templates -->
       <section>
-        <div class="eyebrow">Step Two</div>
+        <div class="eyebrow">Step Three</div>
         <h2>Copy a description.</h2>
-        <p class="lede">Three on-brand options — pick the one that matches how you want to show up. Tap <strong>Copy</strong> and paste into the Description field.</p>
+        <p class="lede">Three on-brand options. Pick the one that matches where you're placing Silver <span class="brand-amp">&amp;</span> Salt Capital on your profile, then tap <strong>Copy</strong> and paste into the Description field.</p>
 
         <div class="templates">
 
           <div class="tpl">
             <div class="tpl-head">
-              <div class="tpl-title">Short</div>
-              <div class="tpl-meta">1 line — great for the headline or a brief role</div>
+              <div class="tpl-title">Founding Cohort: Experience</div>
+              <div class="tpl-meta">For the Experience section (recommended)</div>
             </div>
-            <div class="tpl-body" data-copy>Founding member of Silver &amp; Salt Capital — Utah's first women's angel investment collective, connecting capital to Utah founders who use it best.</div>
+            <div class="tpl-body" data-copy>Silver &amp; Salt Capital is Utah's first angel investment collective of accredited women investors.
+
+As a founding member, I vet opportunities alongside our community and individually back the Utah founders we believe in. Members commit $10,000 per year for five years, building a diversified portfolio of more than 30 Utah companies founded by women through shared diligence and individual decisions.
+
+Deals are structured as SPVs on a syndicate platform, so individual checks become a single, clean line on the founder's cap table.
+
+Companies founded by women return more revenue per dollar invested, yet rarely see capital. We exist to connect capital to the Utah founders who use it best.</div>
             <button class="copy-btn" type="button" data-copy-btn>Copy</button>
           </div>
 
           <div class="tpl">
             <div class="tpl-head">
-              <div class="tpl-title">Standard</div>
-              <div class="tpl-meta">3–4 sentences — the default</div>
+              <div class="tpl-title">Founding Cohort: Volunteer</div>
+              <div class="tpl-meta">For the Volunteer section</div>
             </div>
-            <div class="tpl-body" data-copy>Silver &amp; Salt Capital is Utah's first women's angel investment collective — a community of accredited women who vet opportunities together and individually back high-potential Utah founders.
+            <div class="tpl-body" data-copy>Silver &amp; Salt Capital is Utah's first angel investment collective of accredited women investors. As a founding member, I vet deals with our community and individually fund the Utah founders we believe in.
 
-Members commit $10,000+ per year for five years, building a diversified portfolio of 30+ Utah companies founded by women through shared diligence and individual decisions. Deals are structured as SPVs on a syndicate platform, so individual checks become a single, clean line on the founder's cap table.
-
-Women-founded companies return more revenue per dollar invested, yet rarely see capital. We exist to connect capital to the Utah founders who use it best.</div>
+Our thesis: companies founded by women deliver stronger returns per dollar invested, yet rarely see capital. We're building the infrastructure to change that, connecting capital to the Utah founders who use it best, one founder at a time.</div>
             <button class="copy-btn" type="button" data-copy-btn>Copy</button>
           </div>
 
           <div class="tpl">
             <div class="tpl-head">
-              <div class="tpl-title">Founding Cohort</div>
-              <div class="tpl-meta">Emphasizes the first-100 origin story</div>
+              <div class="tpl-title">Founding Cohort: Short</div>
+              <div class="tpl-meta">For your headline or a brief role</div>
             </div>
-            <div class="tpl-body" data-copy>I'm a founding member of Silver &amp; Salt Capital — Utah's first women's angel investment collective. Alongside 100 accredited women, I vet deals with my community and individually fund Utah's highest-potential founders.
-
-Our thesis: women-founded companies deliver stronger returns per dollar invested, yet rarely see capital. We're building the infrastructure to change that — connecting capital to the Utah founders who use it best, one founder at a time.</div>
+            <div class="tpl-body" data-copy>Founding member at Silver &amp; Salt Capital, Utah's first angel investment collective of accredited women investors.</div>
             <button class="copy-btn" type="button" data-copy-btn>Copy</button>
           </div>
 
         </div>
       </section>
 
-      <!-- Extras -->
+      <!-- Skills -->
       <section>
         <div class="eyebrow">Optional</div>
-        <h2>Small extras, <em>big signal.</em></h2>
-        <p class="lede">Two more touches that make your Silver &amp; Salt involvement read clearly to founders, operators, and fellow investors browsing your profile.</p>
+        <h2>Skills that signal <em>what you back.</em></h2>
+        <p class="lede">Add any of these to your Skills section so your Silver <span class="brand-amp">&amp;</span> Salt Capital membership reads clearly to founders, operators, and fellow investors browsing your profile.</p>
 
-        <div class="extras">
-
-          <div class="extra-card">
-            <div class="extra-title">Headline add-ons</div>
-            <ul class="extra-list">
-              <li><strong>[Your title]</strong> <em>| Investor at Silver &amp; Salt Capital</em></li>
-              <li><strong>[Your title]</strong> <em>| Founding Member, Silver &amp; Salt Capital</em></li>
-              <li><strong>[Your title]</strong> <em>| Angel Investor · Utah women founders</em></li>
-            </ul>
-          </div>
-
-          <div class="extra-card">
-            <div class="extra-title">Skills to add</div>
-            <ul class="extra-list">
-              <li>Angel Investing</li>
-              <li>Venture Capital</li>
-              <li>Early-Stage Investing</li>
-              <li>Due Diligence</li>
-              <li>Startup Advisory</li>
-              <li>Women in Business</li>
-            </ul>
-          </div>
-
+        <div class="extra-card" style="margin-top:24px">
+          <ul class="extra-list extra-list-cols">
+            <li>Angel Investing</li>
+            <li>Early-Stage Investing</li>
+            <li>Due Diligence</li>
+            <li>Startup Advisory</li>
+            <li>Women in Business</li>
+          </ul>
         </div>
       </section>
 

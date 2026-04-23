@@ -7,12 +7,14 @@
 
 ## Brand Rules (always follow)
 
-When writing anything related to the company — copy, HTML, alt text, commit messages, PR titles, documentation, memory entries, anywhere the name appears:
+When writing anything related to the company (copy, HTML, alt text, commit messages, PR titles, documentation, memory entries, anywhere the name appears):
 
 1. **Always write the full name: "Silver & Salt Capital."** Never "Silver & Salt" alone (drops the firm's identity as a capital entity). Never "Silver and Salt Capital" (wrong character).
 2. **Always use the ampersand character `&`, never the word "and."**
-3. **In HTML on the website,** wrap the ampersand in `<span class="brand-amp">&amp;</span>` so it renders in Cormorant Garamond upright — never italic. The italic ampersand is a curly script glyph that is not part of the brand identity.
-4. **Full brand standards live in `_reference/brand-standards.md`** — consult it before any brand-facing work (logo, color, typography, voice).
+3. **In HTML on the website,** wrap the ampersand in `<span class="brand-amp">&amp;</span>` so it renders in Cormorant Garamond upright, never italic. The italic ampersand is a curly script glyph that is not part of the brand identity.
+4. **No em dashes (`—`) or en dashes (`–`) in any copy.** Use commas, periods, colons, parentheses, or semicolons instead. Hyphens in compound words (e.g., "women-led") are fine; the rule targets dashes only. Em/en dashes read as breathless; our voice is calm and declarative.
+5. **Define by what something IS, never by what it isn't.** Avoid "isn't X, it's Y" / "not X, but Y" / "this isn't..." constructions in product, brand, or marketing copy. State the positive directly. Personal narrative negations ("I didn't know it existed") are fine; product/concept negations are not.
+6. **Full brand standards live in `_reference/brand-standards.md`.** Consult it before any brand-facing work (logo, color, typography, voice, punctuation).
 
 ---
 
