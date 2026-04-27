@@ -33,6 +33,15 @@
   .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 700; color: var(--moss); line-height: 1; margin-bottom: 4px; }
   .stat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); }
 
+  /* DATA NOTE / CONTACT */
+  .data-note { background: rgba(140,134,255,0.05); border-bottom: 1px solid var(--border); padding: 14px 40px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; text-align: center; }
+  .data-note p { font-size: 13px; color: var(--moss-light); margin: 0; line-height: 1.5; max-width: 640px; }
+  .data-note-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .contact-button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; background: var(--moss); color: white !important; border-radius: 100px; font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.04em; transition: background 0.2s; font-family: 'Satoshi', sans-serif; flex-shrink: 0; }
+  .contact-button:hover { background: var(--pop); color: white !important; }
+  .sheet-button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; background: white; color: var(--moss) !important; border: 1px solid var(--moss); border-radius: 100px; font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: 0.04em; transition: all 0.2s; font-family: 'Satoshi', sans-serif; flex-shrink: 0; }
+  .sheet-button:hover { background: var(--moss); color: white !important; }
+
   /* FILTER BAR */
   .filter-bar { background: var(--sand); border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
   .filter-label { font-size: 12px; font-weight: 600; color: var(--sage); letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px; }
@@ -105,6 +114,11 @@
   .org-full-thesis { display: none; font-size: 12px; color: var(--moss-light); line-height: 1.6; margin-top: 8px; padding: 12px; background: var(--sand); border-radius: 8px; }
   .org-full-thesis.show { display: block; }
 
+  /* COST */
+  .org-cost { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; padding: 10px 12px; background: rgba(45,134,89,0.07); border-left: 3px solid #2D8659; border-radius: 6px; font-size: 12px; line-height: 1.5; color: var(--moss); }
+  .org-cost-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #2D8659; flex-shrink: 0; padding-top: 2px; }
+  .org-cost-value { color: var(--moss-light); }
+
   /* MOBILE */
   @media (max-width: 768px) {
     .hero { padding: 80px 20px 30px; }
@@ -125,7 +139,7 @@
   .mobile-state-select { display: none; }
 </style>
 <meta property="og:title" content="National Landscape Map — Silver &amp; Salt Capital">
-<meta property="og:description" content="An interactive directory of 181 angel groups, syndicates, and venture funds supporting women founders across all 50 states.">
+<meta property="og:description" content="An interactive directory of 184 angel groups, syndicates, venture funds, and education programs supporting women founders across all 50 states, with verified cost-to-participate data.">
 <meta property="og:type" content="article">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8E3B0PFT4"></script>
@@ -165,20 +179,29 @@
 <section class="hero">
   <div class="hero-label">Open Research &middot; Report No. 03</div>
   <h1>The Women's Funding Landscape</h1>
-  <p>An interactive directory of 181 angel groups, syndicates, venture funds, and education programs supporting women founders across all 50 states.</p>
+  <p>An interactive directory of 184 angel groups, syndicates, venture funds, and education programs supporting women founders across all 50 states — now with verified cost-to-participate data.</p>
 </section>
 
 <!-- STATS -->
 <div class="stats-bar">
-  <div class="stat"><div class="stat-number" id="stat-orgs">181</div><div class="stat-label">Organizations</div></div>
+  <div class="stat"><div class="stat-number" id="stat-orgs">184</div><div class="stat-label">Organizations</div></div>
   <div class="stat"><div class="stat-number">50</div><div class="stat-label">States Covered</div></div>
   <div class="stat"><div class="stat-number">4</div><div class="stat-label">Categories</div></div>
+</div>
+
+<!-- DATA NOTE -->
+<div class="data-note">
+  <p>This data was compiled by AI research. If you have a correction or addition, please contact us.</p>
+  <div class="data-note-actions">
+    <a href="https://docs.google.com/spreadsheets/d/1tvX3BCF9POUK79nY_eh7YfRd6DbsNAYDN0s3np6OAow/edit?usp=sharing" target="_blank" rel="noopener" class="sheet-button">⊞ View as spreadsheet</a>
+    <a href="mailto:tori@silverandsaltcapital.com?subject=Landscape%20Map%20—%20Correction%20or%20Addition&body=Hi%20Tori%2C%0A%0AI%27d%20like%20to%20suggest%20a%20%5Bcorrection%20%2F%20addition%5D%20to%20the%20Women%27s%20Funding%20Landscape%20Map.%0A%0AOrganization%20name%3A%0AWebsite%3A%0ASuggested%20update%3A%0A%0AThanks%2C" class="contact-button">✉ Contact us</a>
+  </div>
 </div>
 
 <!-- FILTERS -->
 <div class="filter-bar" id="filter-bar">
   <span class="filter-label">Filter</span>
-  <button class="filter-pill active" data-cat="all">All <span class="count" id="count-all">181</span></button>
+  <button class="filter-pill active" data-cat="all">All <span class="count" id="count-all">184</span></button>
   <button class="filter-pill" data-cat="education">Education <span class="count" id="count-education"></span></button>
   <button class="filter-pill" data-cat="angels">Angels <span class="count" id="count-angels"></span></button>
   <button class="filter-pill" data-cat="funds">Venture Funds <span class="count" id="count-funds"></span></button>
@@ -275,7 +298,7 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header" id="sidebar-header">
       <h3 id="sidebar-title">All Organizations</h3>
-      <p id="sidebar-count">181 organizations</p>
+      <p id="sidebar-count">184 organizations</p>
     </div>
     <div id="sidebar-cards"></div>
   </div>
@@ -283,7 +306,7 @@
 
 <div style="height:60px;"></div>
 
-<script src="org-data.js?v=2"></script>
+<script src="org-data.js?v=6"></script>
 <script>
 // === TOGGLE THESIS ===
 function toggleThesis(el) {
@@ -376,6 +399,7 @@ function renderSidebar(orgs, title, subtitle) {
       '<div class="org-card-top"><div class="org-name">' + esc(org.n) + '</div><span class="org-badge ' + getBadgeClass(catKey) + '">' + getBadgeLabel(catKey) + '</span></div>' +
       '<div class="org-desc">' + esc(org.t) + '</div>' +
       (org.f.length > 160 ? '<div class="org-expand" onclick="toggleThesis(this)">Read more \u25BE</div><div class="org-full-thesis">' + esc(org.f) + '</div>' : '') +
+      (org.cost ? '<div class="org-cost"><div class="org-cost-label">Cost</div><div class="org-cost-value">' + esc(org.cost) + '</div></div>' : '') +
       '<div class="org-links">' +
         (org.w ? '<a href="' + esc(org.w) + '" target="_blank" rel="noopener" class="org-link">\u2197 Website</a>' : '') +
         (linkedinUrl ? '<a href="' + esc(linkedinUrl) + '" target="_blank" rel="noopener" class="org-link-muted">in LinkedIn</a>' : '') +
