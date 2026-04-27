@@ -20,6 +20,22 @@ var HEADERS = [
   "Why Silver & Salt Capital"
 ];
 
+// ── Interest color tags ───────────────────────────────────────
+var INTEREST_TAGS = {
+  "Investing in line with my values":        "🟢",
+  "Finding community with like-minded women": "🟣",
+  "Building financial confidence":           "🔵",
+  "Planning for my family's future":         "🟡",
+  "Starting or growing a business":          "🟠",
+  "Figuring out my next chapter":            "🩷",
+  "Not sure yet — just exploring":           "⚪"
+};
+
+function tagInterest(interest) {
+  var dot = INTEREST_TAGS[interest] || "•";
+  return dot + " " + interest;
+}
+
 // ── Entry point ──────────────────────────────────────────────
 function doPost(e) {
   try {
@@ -35,7 +51,7 @@ function doPost(e) {
       data.referral        || "",
       data.referral_name   || "",
       data.who_you_are     || "",
-      data.focus           || "",   // comma-separated if multiple selected
+      (data.focus ? data.focus.split(",").map(s => tagInterest(s.trim())).join("\n") : ""),
       data.linkedin        || "",
       data.message         || ""
     ];
