@@ -22,10 +22,12 @@
   }
 
   /* HERO */
-  .hero { background: var(--moss); padding: 100px 40px 40px; text-align: center; }
-  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pop); margin-bottom: 16px; }
-  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 700; color: #F0EDE7; max-width: 700px; margin: 0 auto 16px; line-height: 1.15; letter-spacing: -0.02em; }
-  .hero p { color: #B8C4BB; font-size: 16px; max-width: 540px; margin: 0 auto; line-height: 1.7; }
+  .hero { background: var(--moss); padding: 100px 40px 64px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; bottom: -100px; right: -100px; width: 420px; height: 420px; border-radius: 50%; background: rgba(255,255,255,0.03); pointer-events: none; }
+  .hero-label, .hero h1, .hero p { position: relative; z-index: 1; }
+  .hero-label { font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pop); margin-bottom: 24px; }
+  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px, 6vw, 72px); font-weight: 300; color: var(--cream); max-width: 820px; margin: 0 auto 20px; line-height: 1.1; letter-spacing: -0.02em; }
+  .hero p { color: rgba(251,248,242,0.65); font-size: 17px; max-width: 600px; margin: 0 auto; line-height: 1.65; font-weight: 300; }
 
   /* STATS BAR */
   .stats-bar { display: flex; justify-content: center; gap: 60px; padding: 20px 40px; border-bottom: 1px solid var(--border); background: white; }
@@ -131,8 +133,10 @@
     .filter-pill { padding: 5px 10px; font-size: 11px; }
     .filter-search { width: 100%; margin-left: 0; margin-top: 8px; }
     .main-content { display: block; }
-    .map-panel { display: none; }
-    .mobile-state-select { display: block !important; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .map-panel { padding: 16px; }
+    .map-container { height: 320px; border-radius: 12px; }
+    .map-legend { left: 12px; bottom: 12px; padding: 8px 12px; font-size: 10px; }
+    .mobile-state-select { display: block !important; padding: 12px 16px; border-bottom: 1px solid var(--border); }
     .mobile-dropdown { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(47,62,52,0.12); font-size: 14px; font-family: 'Satoshi', sans-serif; font-weight: 500; color: var(--moss); background: white; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237E8E84' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
     .sidebar { border-left: none; max-height: none; }
   }
@@ -179,7 +183,7 @@
 <section class="hero">
   <div class="hero-label">Open Research &middot; Report No. 03</div>
   <h1>The Women's Funding Landscape</h1>
-  <p>An interactive directory of 184 angel groups, syndicates, venture funds, and education programs supporting women founders across all 50 states — now with verified cost-to-participate data.</p>
+  <p>An interactive directory of 184 angel groups, syndicates, venture funds, and education programs supporting women founders across all 50 states, with verified cost-to-participate data.</p>
 </section>
 
 <!-- STATS -->
