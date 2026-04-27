@@ -6,29 +6,32 @@ Method: each homepage fetched directly, parsed for title, meta description, H1/H
 
 ---
 
-## Data quality issues (urgent: these affect the live landscape map)
+## Data quality issues
 
-13 of 53 listings are broken, parked, or pointing at the wrong organization. The map currently sends users to dead pages or unrelated sites.
+_Audit: 13 broken or wrong listings + 4 duplicates._
+_**Resolved in commit on 2026-04-27. `org-data.js` is now 177 orgs (was 184).**_
 
-| Org | URL in `org-data.js` | What you actually get |
-|---|---|---|
-| Iowa AgriTech Accelerator | agritechaccelerator.com | DNS does not resolve |
-| SeaChange Fund | seachange.fund | DNS does not resolve |
-| NO/LA Angel Network | nolaangelnetwork.org | DreamHost "Site not found" placeholder |
-| Falls Angel Fund | fallsangelfund.com | DreamHost "Site not found" placeholder |
-| Hatch Innovation | hatchthefuture.org | Domain is for sale |
-| InvestinKin | investinkin.com | Domain for sale on HugeDomains ($2,995) |
-| Coralus (formerly SheEO) | coralus.world | Live, but copy says "we aren't welcoming new members right now"; org is in "RESET" |
-| Ascending Angels (VA) | ascendingangelsinc.org | **Wrong organization.** This is a funeral/memorial nonprofit, not an angel syndicate |
-| Wyoming Angel Network | wyomingbusiness.org | Wyoming Business Council homepage; angel network is not surfaced |
-| Broad Street Angels | unionleague.org | Union League of Philadelphia (a private city club); angel group is not on the homepage |
-| Gaingels | gaingels.com | 403 bot-blocked, but the site exists; needs a deeper link or a research note |
-| BlueTree Allied Angels | bluetreealliedangels.com | 401, member-gated; no public landing page |
-| X Squared Angels | xsquaredangels.com | Empty `<title>`, no visible content; likely broken |
+| Org | URL in `org-data.js` | What you actually get | Resolution |
+|---|---|---|---|
+| Iowa AgriTech Accelerator | agritechaccelerator.com | DNS does not resolve | **Removed** (defunct; agiowa.com is also for sale) |
+| SeaChange Fund | seachange.fund | DNS does not resolve | **Removed** (no working public site found; seachangefund.com TLS times out) |
+| NO/LA Angel Network | nolaangelnetwork.org | DreamHost "Site not found" placeholder | **Renamed + URL replaced** to Gulf South Angels (rebranded March 2024) → https://gulfsouthangels.com |
+| Falls Angel Fund | fallsangelfund.com | DreamHost "Site not found" placeholder | **Removed** (managed by SDEI/Zeal; no standalone public site) |
+| Hatch Innovation | hatchthefuture.org | Domain is for sale | **Removed** (defunct as an angel syndicate) |
+| InvestinKin | investinkin.com | Domain for sale on HugeDomains ($2,995) | **Removed** (defunct) |
+| Coralus (formerly SheEO) | coralus.world | Live, but copy says "we aren't welcoming new members right now"; org is in "RESET" | **Thesis updated** to note RESET status |
+| Ascending Angels (VA) | ascendingangelsinc.org | Wrong organization. Funeral/memorial nonprofit | **Removed** (no actual angel syndicate by this name found) |
+| Wyoming Angel Network | wyomingbusiness.org | Wyoming Business Council homepage; angel network is not surfaced | **URL replaced** → https://wyomingangels.weebly.com |
+| Broad Street Angels | unionleague.org | Union League of Philadelphia | **URL replaced** → https://broadstreetangels.com (real public site, was Cloudflare-bot-blocked in audit) |
+| Gaingels | gaingels.com | 403 bot-blocked, but the site exists | **Kept** (real public site; bot-protection blocks automated fetches but real users get through) |
+| BlueTree Allied Angels | bluetreealliedangels.com | 401, member-gated | **URL replaced** → https://www.bluetreevc.com (sister/operator site, publicly accessible) |
+| X Squared Angels | xsquaredangels.com | Empty `<title>` | **Removed** (org wound down ~2022). _Note: Accelerating Angels (https://acceleratingangels.com) fills the same Ohio women-led-startup niche and is a candidate for a future addition._ |
 
-**Plus 3 duplicates pointing at goldenseeds.com:** the AZ, Philly, and Chicago chapters all share the national URL. Either link to chapter sub-pages or note the rollup in the data.
+**Plus 3 duplicates pointing at goldenseeds.com:** the AZ, Philly, and Chicago chapters all share the national URL. **Left as-is** — Golden Seeds is a national network with chapter rollups that genuinely share infrastructure.
 
-**Plus 1 duplicate domain:** ATL TrailblazHER Angels and "Women on the Cap Table" both point to atltrailblazherangels.com. May be the same org under two names.
+**Plus 1 duplicate domain:** ATL TrailblazHER Angels and "Women on the Cap Table" both pointed to atltrailblazherangels.com. They are in fact distinct Atlanta-area women's angel groups (WCT was co-founded by Karen Robinson Cope and Jane McCracken). **Women on the Cap Table URL replaced** → https://www.linkedin.com/company/women-on-the-cap-table/ (their only public presence is LinkedIn).
+
+**Net change:** 7 orgs removed, 1 renamed, 5 URLs replaced, 1 thesis updated. Total: 184 → 177. `landscape-map.html` count references updated in the same commit.
 
 ---
 
