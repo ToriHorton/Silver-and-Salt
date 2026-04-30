@@ -1122,6 +1122,7 @@ nav { z-index: 100; }
   <div class="nav-rail">
     <div class="nav-tabs">
       <button class="nav-tab" data-page="start">Start</button>
+      <button class="nav-tab" data-page="welcome">Welcome</button>
       <button class="nav-tab" data-page="home">Home</button>
       <button class="nav-tab" data-page="thesis">The Thesis</button>
       <button class="nav-tab" data-page="how">How It Works</button>
@@ -1407,6 +1408,338 @@ nav { z-index: 100; }
 <!-- ═══════════════════════════════════════
      PAGE 1 — HOME (Rust & Lavender)
      ═══════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     PAGE — WELCOME (personal + thesis + invitation)
+     ═══════════════════════════════════════ -->
+<div class="page" id="page-welcome" data-palette="moss">
+
+<style>
+/* ── WELCOME page scoped styles ── */
+#page-welcome{background:var(--cream)}
+
+/* shared section primitives */
+#page-welcome .w-eyebrow{display:block;font-family:'Satoshi',sans-serif;font-weight:700;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--sage);margin-bottom:24px}
+#page-welcome .w-eyebrow.on-dark{color:rgba(251,248,242,0.55)}
+#page-welcome .w-rule{display:block;width:48px;height:2px;background:var(--moss);
+  margin:0 0 28px;border:0}
+#page-welcome .w-rule.on-dark{background:var(--sage)}
+#page-welcome .w-rule.center{margin-left:auto;margin-right:auto}
+
+/* HERO */
+#page-welcome .w-hero{position:relative;padding:128px 48px 96px;
+  background:linear-gradient(to bottom, var(--cream) 0%, var(--cream) 70%, #F2EEE3 100%);
+  overflow:hidden}
+#page-welcome .w-hero::before{content:'&';position:absolute;
+  top:-60px;right:-40px;font-family:'Cormorant Garamond',serif;font-style:normal;
+  font-weight:400;font-size:560px;line-height:1;color:var(--moss);opacity:.04;
+  pointer-events:none;user-select:none}
+#page-welcome .w-hero-grid{max-width:1180px;margin:0 auto;display:grid;
+  grid-template-columns:1.15fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
+#page-welcome .w-hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(40px,5.4vw,72px);line-height:1.04;letter-spacing:-.02em;
+  color:var(--moss);margin:0 0 28px}
+#page-welcome .w-hero h1 em{font-style:italic;color:var(--moss)}
+#page-welcome .w-hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(20px,2.4vw,26px);color:var(--sage);line-height:1.45;margin:0 0 36px}
+#page-welcome .w-hero-byline{font-family:'Satoshi',sans-serif;font-weight:600;
+  font-size:14px;letter-spacing:.04em;color:var(--moss);margin-bottom:6px}
+#page-welcome .w-hero-byline-role{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:18px;color:var(--sage);margin-bottom:28px}
+#page-welcome .w-cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+#page-welcome .w-btn{display:inline-block;font-family:'Satoshi',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding:18px 42px;
+  border-radius:4px;border:none;cursor:pointer;text-decoration:none;
+  background:var(--moss);color:var(--cream);transition:all .25s}
+#page-welcome .w-btn:hover{background:#1F2A23;transform:translateY(-1px)}
+#page-welcome .w-link{font-family:'Satoshi',sans-serif;font-size:13px;color:var(--sage);
+  text-decoration:none;border-bottom:1px solid var(--sage);padding-bottom:2px;
+  transition:color .2s,border-color .2s}
+#page-welcome .w-link:hover{color:var(--moss);border-color:var(--moss)}
+
+#page-welcome .w-hero-photo{position:relative;aspect-ratio:4/5;border-radius:6px;
+  overflow:hidden;background:#E3E7E4;
+  box-shadow:0 30px 80px -30px rgba(47,62,52,.35),0 12px 24px -12px rgba(47,62,52,.18)}
+#page-welcome .w-hero-photo img{width:100%;height:100%;object-fit:cover;display:block}
+#page-welcome .w-hero-photo::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg, transparent 60%, rgba(47,62,52,0.12) 100%);
+  pointer-events:none}
+
+/* BRIDGE — beginner / experienced diptych */
+#page-welcome .w-bridge{background:var(--cream);padding:64px 48px 96px;
+  border-top:1px solid rgba(126,142,132,.18)}
+#page-welcome .w-bridge-inner{max-width:1020px;margin:0 auto;display:grid;
+  grid-template-columns:1fr 1px 1fr;gap:56px;align-items:start}
+#page-welcome .w-bridge-divider{background:rgba(126,142,132,.30);width:1px;
+  align-self:stretch;min-height:96px}
+#page-welcome .w-bridge-col p{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-weight:300;font-size:clamp(20px,2.2vw,26px);line-height:1.45;color:var(--moss);
+  margin:0;letter-spacing:-.005em}
+
+/* THESIS (dark moss section) */
+#page-welcome .w-thesis{background:var(--moss);padding:120px 48px;color:var(--cream);
+  position:relative}
+#page-welcome .w-thesis-inner{max-width:920px;margin:0 auto}
+#page-welcome .w-thesis h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-style:italic;font-size:clamp(36px,4.6vw,56px);line-height:1.12;
+  color:var(--cream);margin:0 0 64px;letter-spacing:-.01em;max-width:760px}
+#page-welcome .w-beats{display:grid;gap:48px}
+#page-welcome .w-beat{display:grid;grid-template-columns:140px 1fr;gap:32px;
+  align-items:start}
+#page-welcome .w-beat-label{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:22px;color:var(--sage);line-height:1.2}
+#page-welcome .w-beat-body{font-family:'Satoshi',sans-serif;font-weight:300;
+  font-size:18px;line-height:1.7;color:rgba(251,248,242,0.92);max-width:620px}
+#page-welcome .w-beat-body strong{font-weight:600;color:var(--cream)}
+
+/* TEN-YEAR PICTURE (cream, hushed) */
+#page-welcome .w-tenyear{background:var(--cream);padding:120px 48px;text-align:center;
+  position:relative}
+#page-welcome .w-tenyear::before,
+#page-welcome .w-tenyear::after{content:'';position:absolute;left:50%;width:1px;
+  height:48px;background:var(--sage);opacity:.4}
+#page-welcome .w-tenyear::before{top:48px}
+#page-welcome .w-tenyear::after{bottom:48px}
+#page-welcome .w-tenyear-inner{max-width:780px;margin:0 auto}
+#page-welcome .w-tenyear .w-eyebrow{margin-bottom:36px}
+#page-welcome .w-tenyear p{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-style:italic;font-size:clamp(24px,3vw,34px);line-height:1.45;color:var(--moss);
+  margin:0;letter-spacing:-.005em}
+#page-welcome .w-tenyear p .w-accent{font-style:normal;color:var(--sage);
+  font-weight:300}
+
+/* WHY ME */
+#page-welcome .w-whyme{background:var(--cream);padding:96px 0 120px}
+#page-welcome .w-whyme-inner{max-width:980px;margin:0 auto;padding:0 48px}
+#page-welcome .w-whyme h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-style:italic;font-size:clamp(36px,4.6vw,56px);color:var(--moss);margin:0 0 56px;
+  line-height:1.1;letter-spacing:-.01em}
+
+#page-welcome .w-photo-wide{margin:48px -24px;border-radius:6px;overflow:hidden;
+  background:#E3E7E4;aspect-ratio:21/9;
+  box-shadow:0 24px 60px -24px rgba(47,62,52,.28)}
+#page-welcome .w-photo-wide img{width:100%;height:100%;object-fit:cover;display:block}
+#page-welcome .w-photo-caption{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:14px;color:var(--sage);margin:-32px 0 56px;text-align:center}
+
+#page-welcome .w-prose p{font-family:'Satoshi',sans-serif;font-weight:300;
+  font-size:18px;line-height:1.8;color:var(--moss);margin:0 0 28px;max-width:700px}
+#page-welcome .w-prose p strong{font-weight:600}
+
+#page-welcome .w-pullquote{margin:48px auto;max-width:760px;padding:32px 0;
+  border-top:1px solid rgba(126,142,132,.35);border-bottom:1px solid rgba(126,142,132,.35);
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:clamp(22px,2.6vw,30px);line-height:1.4;color:var(--moss);text-align:center}
+
+#page-welcome .w-photo-pair{display:grid;grid-template-columns:5fr 7fr;gap:48px;
+  align-items:center;margin:48px 0 0}
+#page-welcome .w-photo-pair .w-photo-tall{aspect-ratio:3/4;border-radius:6px;
+  overflow:hidden;background:#E3E7E4;
+  box-shadow:0 24px 60px -24px rgba(47,62,52,.28)}
+#page-welcome .w-photo-pair .w-photo-tall img{width:100%;height:100%;object-fit:cover;
+  display:block}
+#page-welcome .w-photo-pair p{margin-bottom:16px}
+
+/* MEMBERSHIP — slim section, sand */
+#page-welcome .w-member{background:#F2EEE3;padding:96px 48px;
+  border-top:1px solid rgba(126,142,132,.25);
+  border-bottom:1px solid rgba(126,142,132,.25)}
+#page-welcome .w-member-inner{max-width:880px;margin:0 auto}
+#page-welcome .w-member h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-style:italic;font-size:clamp(28px,3.4vw,40px);color:var(--moss);
+  margin:0 0 56px;line-height:1.15;letter-spacing:-.01em}
+#page-welcome .w-member-rows{display:grid;gap:32px}
+#page-welcome .w-member-row{display:grid;grid-template-columns:200px 1fr;gap:32px;
+  align-items:baseline;padding-bottom:28px;
+  border-bottom:1px solid rgba(126,142,132,.25)}
+#page-welcome .w-member-row:last-child{border-bottom:0;padding-bottom:0}
+#page-welcome .w-member-label{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:22px;color:var(--sage)}
+#page-welcome .w-member-body{font-family:'Satoshi',sans-serif;font-weight:300;
+  font-size:17px;line-height:1.65;color:var(--moss);max-width:580px}
+
+/* CLOSE — moss dark, single line + CTA */
+#page-welcome .w-close{background:var(--moss);padding:128px 48px;text-align:center;
+  position:relative;overflow:hidden}
+#page-welcome .w-close::before{content:'&';position:absolute;left:-30px;bottom:-160px;
+  font-family:'Cormorant Garamond',serif;font-style:normal;font-weight:400;
+  font-size:600px;line-height:1;color:var(--cream);opacity:.04;
+  pointer-events:none;user-select:none}
+#page-welcome .w-close-inner{max-width:780px;margin:0 auto;position:relative;z-index:1}
+#page-welcome .w-close p{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-style:italic;font-size:clamp(28px,3.6vw,42px);line-height:1.3;color:var(--cream);
+  margin:0 0 48px;letter-spacing:-.01em}
+#page-welcome .w-close .w-btn{background:var(--cream);color:var(--moss)}
+#page-welcome .w-close .w-btn:hover{background:white;color:var(--moss)}
+#page-welcome .w-close .w-link{color:rgba(251,248,242,0.65);
+  border-bottom-color:rgba(251,248,242,0.35);margin-top:24px;display:inline-block}
+#page-welcome .w-close .w-link:hover{color:var(--cream);border-bottom-color:var(--cream)}
+
+/* RESPONSIVE */
+@media (max-width:880px){
+  #page-welcome .w-hero{padding:96px 24px 72px}
+  #page-welcome .w-hero-grid{grid-template-columns:1fr;gap:48px}
+  #page-welcome .w-hero-photo{aspect-ratio:4/5;max-width:420px;margin:0 auto}
+  #page-welcome .w-bridge{padding:48px 24px 72px}
+  #page-welcome .w-bridge-inner{grid-template-columns:1fr;gap:32px}
+  #page-welcome .w-bridge-divider{width:48px;height:1px;min-height:1px;justify-self:start}
+  #page-welcome .w-thesis{padding:96px 24px}
+  #page-welcome .w-tenyear{padding:96px 24px}
+  #page-welcome .w-whyme{padding:80px 0 96px}
+  #page-welcome .w-whyme-inner{padding:0 24px}
+  #page-welcome .w-photo-wide{margin:36px -8px}
+  #page-welcome .w-photo-pair{grid-template-columns:1fr;gap:24px;margin:36px 0 0}
+  #page-welcome .w-photo-pair .w-photo-tall{max-width:340px;margin:0 auto}
+  #page-welcome .w-member{padding:80px 24px}
+  #page-welcome .w-member-row{grid-template-columns:1fr;gap:8px}
+  #page-welcome .w-member-label{font-size:20px}
+  #page-welcome .w-beat{grid-template-columns:1fr;gap:8px}
+  #page-welcome .w-beat-label{font-size:20px}
+  #page-welcome .w-close{padding:96px 24px}
+}
+</style>
+
+<!-- 1 — HERO -->
+<section class="w-hero">
+  <div class="w-hero-grid">
+    <div class="w-hero-copy r">
+      <span class="w-eyebrow">Welcome</span>
+      <h1>We are a community of investors changing the funding landscape for women founders in Utah.</h1>
+      <p class="w-hero-sub">It's simple: 100 investors each write a $1,000 check and a Utah women founder gets startup funding for $100,000.</p>
+      <div class="w-hero-byline">Tori Horton</div>
+      <div class="w-hero-byline-role">Founder, Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+      <div class="w-cta-row">
+        <a href="/join.html" target="_blank" rel="noopener" class="w-btn">Meet me</a>
+        <a href="#" onclick="showPage('thesis');return false;" class="w-link">Read the thesis</a>
+      </div>
+    </div>
+    <div class="w-hero-photo r">
+      <img src="assets/welcome/tori-headshot.jpg" alt="Tori Horton, founder of Silver &amp; Salt Capital">
+    </div>
+  </div>
+</section>
+
+<!-- 1.5 — BRIDGE (beginner / experienced) -->
+<section class="w-bridge">
+  <div class="w-bridge-inner">
+    <div class="w-bridge-col r">
+      <p>If you've never invested before, you're in the right place to learn. We will review the deals together and break down all the finance jargon. (Hint: it's not that hard.)</p>
+    </div>
+    <div class="w-bridge-divider"></div>
+    <div class="w-bridge-col r">
+      <p>If you're an experienced investor, you already know this ecosystem of syndicate investing is working in other states and is needed in Utah.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 — THESIS -->
+<section class="w-thesis">
+  <div class="w-thesis-inner">
+    <span class="w-eyebrow on-dark r">Why Utah women, and why now</span>
+    <hr class="w-rule on-dark">
+    <h2 class="r">Three reasons this is the moment, the place, and the shape.</h2>
+    <div class="w-beats">
+      <div class="w-beat r">
+        <div class="w-beat-label">The moment.</div>
+        <div class="w-beat-body">Utah is where the next generation of American founders is being built. The capital around them does not yet match what they are doing. Closing that gap is the work of this decade, not the next one.</div>
+      </div>
+      <div class="w-beat r">
+        <div class="w-beat-label">The founders.</div>
+        <div class="w-beat-body">Women starting companies here return more revenue per dollar invested than the field average. Far less of that capital is reaching them. The math is plain, and the field is not yet acting on it.</div>
+      </div>
+      <div class="w-beat r">
+        <div class="w-beat-label">The shape.</div>
+        <div class="w-beat-body">A coordinated collective of women, writing checks together, is the natural form for closing that gap. Smaller than a fund. Wider than a single check. Closer to the founder than either.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 — TEN-YEAR PICTURE -->
+<section class="w-tenyear">
+  <div class="w-tenyear-inner">
+    <span class="w-eyebrow r">Ten years from now</span>
+    <p class="r">In ten years, the women funding Utah's next generation of founders will know each other by name. There will be portfolios with thirty companies inside them. A few of those companies will have changed something. <span class="w-accent">None of that is guaranteed. All of it is reachable from where we are.</span></p>
+  </div>
+</section>
+
+<!-- 4 — WHY ME -->
+<section class="w-whyme">
+  <div class="w-whyme-inner">
+    <span class="w-eyebrow r">Why me</span>
+    <hr class="w-rule">
+    <h2 class="r">A short version, in my own voice.</h2>
+
+    <div class="w-prose r">
+      <p>I built businesses before I funded them. I have spent years operating, advising, and writing checks of my own. The reason this is the work for me now is straightforward: I have seen what gets missed when the room of capital looks like one kind of person, and I have seen what changes when the room widens.</p>
+    </div>
+
+    <div class="w-photo-wide r">
+      <img src="assets/welcome/tori-community.jpg" alt="Tori Horton speaking at a gathering of women on growth and strategy">
+    </div>
+    <div class="w-photo-caption">A gathering on growth and strategy. The room of women I have been building toward, for years.</div>
+
+    <div class="w-pullquote r">
+      Investing this way is like surfing. You read the water, you commit early, and you accept that some days the wave does not form. The ones who stay home do not lose. They also do not ride.
+    </div>
+
+    <div class="w-photo-wide r">
+      <img src="assets/welcome/tori-surfing.jpg" alt="Tori Horton surfing">
+    </div>
+
+    <div class="w-prose r">
+      <p>What I bring that a larger fund manager does not: a smaller, more honest scale. One person, one phone, who returns calls. Who knows the founders we back by name. Whose interests stay aligned with the women writing the checks beside her.</p>
+    </div>
+
+    <div class="w-photo-pair r">
+      <div class="w-photo-tall">
+        <img src="assets/welcome/tori-family.jpg" alt="Tori Horton with her family in Utah">
+      </div>
+      <div class="w-prose">
+        <p>And what I am building from: a family in Utah, a partner who has been my first reader for years, and two kids who will grow up in a state I want to look very different by the time they are ten years older. That is the long horizon. The shorter one starts with a conversation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 — MEMBERSHIP (slim) -->
+<section class="w-member">
+  <div class="w-member-inner">
+    <span class="w-eyebrow r">What membership looks like</span>
+    <hr class="w-rule">
+    <h2 class="r">A year inside Silver <span class="brand-amp">&amp;</span> Salt Capital, in three lines.</h2>
+    <div class="w-member-rows">
+      <div class="w-member-row r">
+        <div class="w-member-label">The shape.</div>
+        <div class="w-member-body">Annual membership. Monthly deal review, quarterly dinners, an annual strategy day.</div>
+      </div>
+      <div class="w-member-row r">
+        <div class="w-member-label">The capital.</div>
+        <div class="w-member-body">Members write a handful of checks each year, sized however fits. The group reviews each opportunity together; the decision is yours alone.</div>
+      </div>
+      <div class="w-member-row r">
+        <div class="w-member-label">The first step.</div>
+        <div class="w-member-body">A 30-minute conversation with me.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 — CLOSE -->
+<section class="w-close">
+  <div class="w-close-inner">
+    <p class="r">Most sites in this field are built around a fork in the road. Silver <span class="brand-amp">&amp;</span> Salt Capital is built around a table.</p>
+    <a href="/join.html" target="_blank" rel="noopener" class="w-btn r">Join Us</a>
+    <div>
+      <a href="/join.html" target="_blank" rel="noopener" class="w-link">Just want to talk first? Book a 30-minute call.</a>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#page-welcome -->
+
+
 <div class="page active" id="page-home" data-palette="rust">
 
   <!-- HERO — Statement (Option C) -->
@@ -2372,6 +2705,7 @@ nav { z-index: 100; }
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Navigate</div>
         <a class="f-sitemap-link" onclick="showPage('start')">Start Here</a>
+        <a class="f-sitemap-link" onclick="showPage('welcome')">Welcome</a>
         <a class="f-sitemap-link" onclick="showPage('home')">Home</a>
         <a class="f-sitemap-link" onclick="showPage('thesis')">The Thesis</a>
         <a class="f-sitemap-link" onclick="showPage('how')">How It Works</a>
@@ -2446,6 +2780,10 @@ const palettes = {
   lime: {
     pop:'#7CB83F', popHover:'#8FCD52', popGlow:'rgba(124,184,63,0.16)', popText:'#1A2A1E',
     accent:'#3D3D3D', accentSoft:'rgba(61,61,61,0.08)', highlight:'#A3D55D'
+  },
+  moss: {
+    pop:'#2F3E34', popHover:'#1F2A23', popGlow:'rgba(47,62,52,0.16)', popText:'#FBF8F2',
+    accent:'#7E8E84', accentSoft:'rgba(126,142,132,0.10)', highlight:'#4A6157'
   }
 };
 
@@ -2510,7 +2848,7 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 
 // Initial page load — check URL hash for deep linking
 const hashPage = window.location.hash.replace('#', '');
-const validPages = ['start','home','thesis','how','story','join','about'];
+const validPages = ['start','welcome','home','thesis','how','story','join','about'];
 showPage(validPages.includes(hashPage) ? hashPage : 'home');
 
 /* ═══════════════════════════════════════
