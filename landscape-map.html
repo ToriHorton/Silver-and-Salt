@@ -1,129 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Women's Funding Landscape — Silver &amp; Salt Capital</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="landscape-map-page.css?v=3">
+<meta property="og:title" content="The Women's Funding Landscape — Silver &amp; Salt Capital">
+<meta property="og:description" content="An AI-transparent directory of 177 angel groups, syndicates, venture funds and education programs supporting women founders across the United States.">
+<meta property="og:type" content="article">
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav-standalone">
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="open-research.html" class="active">Research</a></li>
+    <li><a href="/join.html" target="_blank" rel="noopener">Join</a></li>
+  </ul>
+  <a href="/join.html" target="_blank" rel="noopener" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-dropdown">
+    <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="open-research.html">Research</a>
+    <a href="/join.html" target="_blank" rel="noopener">Join</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="lm-hero">
+  <div class="lm-hero-inner">
+    <div class="lm-eyebrow">S&amp;S Capital · Open Research · Report No. 03</div>
+    <h1>The women&rsquo;s<br>funding <em>landscape.</em></h1>
+    <div class="lm-hero-meta">
+      <span><b>Mar 2026</b></span>
+      <span><span id="hero-org-count">177</span> orgs</span>
+      <span>AI-researched, human-reviewed</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AI Transparency note (compact) ═══ -->
+<div class="lm-ai-note">
+  <div class="lm-ai-note-inner">
+    <span class="lm-ai-dot"></span>
+    <span>AI-researched, human-reviewed. Every record carries a confidence rating and source URL.</span>
+    <a href="#methodology">Read the methodology →</a>
+    <a href="https://docs.google.com/spreadsheets/d/1tvX3BCF9POUK79nY_eh7YfRd6DbsNAYDN0s3np6OAow/edit?usp=sharing" target="_blank" rel="noopener">Open the spreadsheet ⊞</a>
+  </div>
+</div>
+
+<!-- ═══ 01 · Find organizations (map + list explorer) ═══ -->
+<section class="lm-section lm-explorer-section" id="explore">
+  <div class="lm-section-inner">
+    <div class="lm-explorer-head">
+      <div class="lm-section-num">Section 01 · Find organizations</div>
+      <h2>Browse <em>by type,</em> then <em>by state.</em></h2>
+      <p class="lm-section-deck">Filter by organization type with the pills below. Click any state on the map to see what exists there. Or scroll the list directly.</p>
+    </div>
+
+    <div class="lm-explorer-toolbar">
+      <div class="lm-map-toolbar" id="lm-cat-pills"></div>
+    </div>
+
+    <div class="lm-map-explorer">
+      <div class="lm-map-pane">
+        <div class="lm-svg-wrap" id="lm-svg-wrap">
+          <div class="lm-tooltip" id="lm-tooltip"></div>
+        </div>
+        <div class="lm-map-legend">
+          <span>Fewer</span>
+          <div class="lm-legend-bar">
+            <div class="lm-legend-swatch lm-d0"></div>
+            <div class="lm-legend-swatch lm-d1"></div>
+            <div class="lm-legend-swatch lm-d2"></div>
+            <div class="lm-legend-swatch lm-d3"></div>
+            <div class="lm-legend-swatch lm-d4"></div>
+            <div class="lm-legend-swatch lm-d5"></div>
+          </div>
+          <span>More orgs</span>
+        </div>
+      </div>
+
+      <aside class="lm-drawer">
+        <div class="lm-drawer-head" id="lm-drawer-head"></div>
+        <div class="lm-drawer-list" id="lm-drawer-list"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 02 · Taxonomy (compact) ═══ -->
+<section class="lm-section lm-types-section" id="taxonomy">
+  <div class="lm-section-inner">
+    <div class="lm-types-head">
+      <div class="lm-section-num">Section 02 · What these organizations are</div>
+      <p class="lm-types-deck">There are 4 types of organizations that focus on early-stage investing for women founders.</p>
+    </div>
+
+    <div class="lm-types-strip">
+      <div class="lm-type-mini">
+        <div class="lm-type-mini-head">
+          <span class="lm-type-mini-num">01</span>
+          <span class="lm-type-mini-name">Venture Funds</span>
+          <span class="lm-type-mini-count" id="cnt-funds">—</span>
+        </div>
+        <p class="lm-type-mini-defn">Pooled money run by professional investors who invest in women-led startups. Outside investors put money in; the fund managers decide where it goes.</p>
+        <div class="lm-type-mini-cost"><b>Cost</b> Free for founders. Investors typically pay a 2% management fee and 20% carry (the industry standard).</div>
+      </div>
+
+      <div class="lm-type-mini">
+        <div class="lm-type-mini-head">
+          <span class="lm-type-mini-num">02</span>
+          <span class="lm-type-mini-name">Angels</span>
+          <span class="lm-type-mini-count" id="cnt-angels">—</span>
+        </div>
+        <p class="lm-type-mini-defn">Networks of individuals who invest their own money in early-stage women-led companies. Members write personal checks, usually starting at about $25,000.</p>
+        <div class="lm-type-mini-cost"><b>Cost</b> Annual dues $500&ndash;$3K to join. Members must be accredited investors.</div>
+      </div>
+
+      <div class="lm-type-mini">
+        <div class="lm-type-mini-head">
+          <span class="lm-type-mini-num">03</span>
+          <span class="lm-type-mini-name">Syndicates</span>
+          <span class="lm-type-mini-count" id="cnt-syndicates">—</span>
+        </div>
+        <p class="lm-type-mini-defn">A community of investors who usually have a deal lead and write small personal checks starting at $1,000 into a shared pool that becomes one large check for the founder.</p>
+        <div class="lm-type-mini-cost"><b>Cost</b> Often a membership fee ($125&ndash;$3,500/yr) plus per-deal carry (~5&ndash;20%) and SPV admin fees.</div>
+      </div>
+
+      <div class="lm-type-mini">
+        <div class="lm-type-mini-head">
+          <span class="lm-type-mini-num">04</span>
+          <span class="lm-type-mini-name">Education</span>
+          <span class="lm-type-mini-count" id="cnt-education">—</span>
+        </div>
+        <p class="lm-type-mini-defn">Programs that train women to become investors, raise capital, or evaluate deals. Cohorts, fellowships, accelerators.</p>
+        <div class="lm-type-mini-cost"><b>Cost</b> Often free; modest tuition $500&ndash;$5K</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
-&
-Silver & Salt Capital
-	•	Home
-	•	The Thesis
-	•	How It Works
-	•	Research
-	•	Join
-Join
-Home The Thesis How It Works Research Join
-S&S Capital · Open Research · Report No. 03
-The women’s funding landscape.
-Mar 2026 177 orgs AI-researched, human-reviewed
-AI-researched, human-reviewed. Every record carries a confidence rating and source URL. Read the methodology → Open the spreadsheet ⊞
-Section 01 · Find organizations
-Browse by type, then by state.
-Filter by organization type with the pills below. Click any state on the map to see what exists there. Or scroll the list directly.
 
+<!-- ═══ 03 · Charts ═══ -->
+<section class="lm-section" id="shape">
+  <div class="lm-section-inner">
+    <div class="lm-section-head">
+      <div>
+        <div class="lm-section-num">Section 03</div>
+        <div style="margin-top:8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);font-weight:700;">The shape of the field</div>
+      </div>
+      <div>
+        <h2>Most funding for women-owned startups is managed through <em>venture funds.</em> <em>Angel investing</em> and <em>syndicates</em> give investors more control over their decisions.</h2>
+      </div>
+    </div>
 
-Fewer
+    <div class="lm-chart-row">
+      <div class="lm-chart">
+        <div class="lm-chart-eyebrow">Composition</div>
+        <div class="lm-chart-title">By organization type</div>
+        <div class="lm-chart-deck">Venture funds dominate the count. Education programs and syndicates are the smallest categories — and the easiest entry points for new investors.</div>
+        <svg id="lm-timeline-svg" class="lm-chart-svg" viewBox="0 0 560 280"></svg>
+        <div class="lm-chart-foot">A timeline by founding year is in scope for the next revision; only ~38% of records currently include a verified founding-year field.</div>
+      </div>
 
+      <div class="lm-chart">
+        <div class="lm-chart-eyebrow">Access</div>
+        <div class="lm-chart-title">Cost to participate, founder side</div>
+        <div class="lm-chart-deck">All 103 venture funds carry standard 2&amp;20 economics for LPs (assumed where undisclosed), so they never sit in the &ldquo;free&rdquo; bucket. The truly-free entries are education programs and syndicate joins.</div>
+        <svg id="lm-cost-svg" class="lm-chart-svg" viewBox="0 0 560 320"></svg>
+        <div class="lm-chart-foot">"Not publicly disclosed" is itself a finding: roughly a third of organizations don&rsquo;t publish member or LP economics on their websites.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- ═══ 04 · Directory ═══ -->
+<section class="lm-section" id="directory" style="background:var(--sand);">
+  <div class="lm-section-inner">
+    <div class="lm-section-head">
+      <div>
+        <div class="lm-section-num">Section 04</div>
+        <div style="margin-top:8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);font-weight:700;">Every organization</div>
+      </div>
+      <div>
+        <h2>The full <em>directory.</em></h2>
+        <p class="lm-section-deck">Search, filter, sort. Click any record for the full profile, including cost detail, named leadership, and a one-click correction link.</p>
+      </div>
+    </div>
 
+    <div class="lm-dir-toolbar">
+      <input type="text" id="lm-dir-search" class="lm-dir-search" placeholder="Search by name, sector, lead, or summary…">
+      <select id="lm-dir-cat" class="lm-dir-select"></select>
+      <select id="lm-dir-state" class="lm-dir-select"></select>
+      <div class="lm-view-toggle">
+        <button data-view="grid" class="active">Cards</button>
+        <button data-view="table">Table</button>
+      </div>
+      <div class="lm-dir-count" id="lm-dir-count">— of —</div>
+    </div>
 
+    <div id="lm-dir-empty"></div>
+    <div id="lm-dir-grid" class="lm-dir-grid"></div>
+    <table id="lm-dir-table" class="lm-dir-table" style="display:none"></table>
+  </div>
+</section>
 
+<!-- ═══ Headline finding ═══ -->
+<section class="lm-kpis">
+  <div class="lm-kpis-inner lm-finding">
+    <div class="lm-finding-eyebrow">Headline finding</div>
+    <div class="lm-finding-num">22<span class="lm-finding-of"> of 51</span></div>
+    <div class="lm-finding-body">
+      <div class="lm-finding-headline">states &amp; territories have <em>no</em> angel group or syndicate dedicated to funding women founders.</div>
+      <div class="lm-finding-list">Alabama · Alaska · Colorado · Delaware · Hawaii · Idaho · Kansas · Kentucky · Minnesota · Mississippi · Nevada · New Jersey · New Mexico · North Dakota · Oklahoma · Rhode Island · South Carolina · <b>Utah</b> · Vermont · Washington&nbsp;DC · West Virginia · Wisconsin</div>
+    </div>
+  </div>
+</section>
 
-More orgs
+<!-- ═══ 05 · Methodology ═══ -->
+<section class="lm-section dark" id="methodology">
+  <div class="lm-section-inner">
+    <div class="lm-section-head">
+      <div>
+        <div class="lm-section-num" style="color:#E8B79C">Section 05</div>
+        <div style="margin-top:8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(251,248,242,0.5);font-weight:700;">How this was made</div>
+      </div>
+      <div>
+        <h2>We show <em>our work,</em> field by field.</h2>
+        <p class="lm-section-deck">Four phases. One AI model. One human editor. One published Google Sheet. Every step is described below in plain language so you can replicate it, audit it, or improve it.</p>
+      </div>
+    </div>
 
+    <div class="lm-meth-grid">
+      <div class="lm-meth-card">
+        <div class="lm-meth-step">Phase 01 · Discovery</div>
+        <div class="lm-meth-title">Build the candidate list.</div>
+        <div class="lm-meth-body">Claude was prompted to surface every U.S. organization built to support women investors and women founders. Output was deduplicated against existing public directories (Project Sage, NVCA, AngelList).</div>
+        <ul class="lm-meth-list">
+          <li>Initial pull: ~340 candidates</li>
+          <li>After dedupe and out-of-scope removal: <span id="meth-final-count">177</span></li>
+          <li>Out-of-scope: men-led funds with one woman partner; corporate diversity programs without check-writing authority</li>
+        </ul>
+        <div class="lm-meth-prompt">"List U.S. organizations whose explicit purpose is to direct capital, training, or deal flow toward women founders or women investors. Include angel groups, syndicates, venture funds, and education programs. Exclude corporate ESG programs."</div>
+      </div>
 
-Section 02 · What these organizations are
-There are 4 types of organizations that focus on early-stage investing for women founders.
-01 Venture Funds —
-Pooled money run by professional investors who invest in women-led startups. Outside investors put money in; the fund managers decide where it goes.
-Cost Free for founders. Investors typically pay a 2% management fee and 20% carry (the industry standard).
-02 Angels —
-Networks of individuals who invest their own money in early-stage women-led companies. Members write personal checks, usually starting at about $25,000.
-Cost Annual dues $500–$3K to join. Members must be accredited investors.
-03 Syndicates —
-A community of investors who usually have a deal lead and write small personal checks starting at $1,000 into a shared pool that becomes one large check for the founder.
-Cost Often a membership fee ($125–$3,500/yr) plus per-deal carry (~5–20%) and SPV admin fees.
-04 Education —
-Programs that train women to become investors, raise capital, or evaluate deals. Cohorts, fellowships, accelerators.
-Cost Often free; modest tuition $500–$5K
-Section 03
-THE SHAPE OF THE FIELD
-Most funding for women-owned startups is managed through venture funds. Angel investing and syndicates give investors more control over their decisions.
-Composition
-By organization type
-Venture funds dominate the count. Education programs and syndicates are the smallest categories — and the easiest entry points for new investors.
-A timeline by founding year is in scope for the next revision; only ~38% of records currently include a verified founding-year field.
-Access
-Cost to participate, founder side
-All 103 venture funds carry standard 2&20 economics for LPs (assumed where undisclosed), so they never sit in the “free” bucket. The truly-free entries are education programs and syndicate joins.
-"Not publicly disclosed" is itself a finding: roughly a third of organizations don’t publish member or LP economics on their websites.
-Section 04
-EVERY ORGANIZATION
-The full directory.
-Search, filter, sort. Click any record for the full profile, including cost detail, named leadership, and a one-click correction link.
-Cards Table
-— of —
+      <div class="lm-meth-card">
+        <div class="lm-meth-step">Phase 02 · Field extraction</div>
+        <div class="lm-meth-title">Pull the same fields, every time.</div>
+        <div class="lm-meth-body">For each candidate, Claude visited the organization&rsquo;s public site and extracted a fixed schema: name, type, state, lead, check size, stage, sectors, cost to founders, cost to LPs, and a one-paragraph summary.</div>
+        <ul class="lm-meth-list">
+          <li>Where the website was silent, the field was marked "not publicly disclosed"</li>
+          <li>No estimates were inserted into name, lead, or URL fields</li>
+          <li>Cost estimates carry the qualifier "industry-standard" or "assumed"</li>
+        </ul>
+      </div>
 
+      <div class="lm-meth-card">
+        <div class="lm-meth-step">Phase 03 · Confidence rating</div>
+        <div class="lm-meth-title">Score every record.</div>
+        <div class="lm-meth-body">Each record is rated on a three-tier scale that you see throughout the directory.</div>
+        <ul class="lm-meth-list">
+          <li><b style="color:#7DD7C4">Verified</b> · live URL, named lead, fully disclosed cost, longer-than-stub description</li>
+          <li><b style="color:#E8B79C">Sourced</b> · live URL plus most fields; one or two gaps</li>
+          <li><b style="color:#F5B193">Estimated</b> · key fields rely on industry-standard assumptions or undisclosed economics</li>
+        </ul>
+      </div>
 
-Headline finding
-22 of 51
-states & territories have no angel group or syndicate dedicated to funding women founders.
-Alabama · Alaska · Colorado · Delaware · Hawaii · Idaho · Kansas · Kentucky · Minnesota · Mississippi · Nevada · New Jersey · New Mexico · North Dakota · Oklahoma · Rhode Island · South Carolina · Utah · Vermont · Washington DC · West Virginia · Wisconsin
-Section 05
-HOW THIS WAS MADE
-We show our work, field by field.
-Four phases. One AI model. One human editor. One published Google Sheet. Every step is described below in plain language so you can replicate it, audit it, or improve it.
-Phase 01 · Discovery
-Build the candidate list.
-Claude was prompted to surface every U.S. organization built to support women investors and women founders. Output was deduplicated against existing public directories (Project Sage, NVCA, AngelList).
-	•	Initial pull: ~340 candidates
-	•	After dedupe and out-of-scope removal: 177
-	•	Out-of-scope: men-led funds with one woman partner; corporate diversity programs without check-writing authority
-"List U.S. organizations whose explicit purpose is to direct capital, training, or deal flow toward women founders or women investors. Include angel groups, syndicates, venture funds, and education programs. Exclude corporate ESG programs."
-Phase 02 · Field extraction
-Pull the same fields, every time.
-For each candidate, Claude visited the organization’s public site and extracted a fixed schema: name, type, state, lead, check size, stage, sectors, cost to founders, cost to LPs, and a one-paragraph summary.
-	•	Where the website was silent, the field was marked "not publicly disclosed"
-	•	No estimates were inserted into name, lead, or URL fields
-	•	Cost estimates carry the qualifier "industry-standard" or "assumed"
-Phase 03 · Confidence rating
-Score every record.
-Each record is rated on a three-tier scale that you see throughout the directory.
-	•	Verified · live URL, named lead, fully disclosed cost, longer-than-stub description
-	•	Sourced · live URL plus most fields; one or two gaps
-	•	Estimated · key fields rely on industry-standard assumptions or undisclosed economics
-Phase 04 · Human review
-A real person reads every row.
-Tori Horton reviews every record before publication. Records flagged "Estimated" are routed back to discovery for a second pass. Corrections from readers are integrated within seven days and re-flagged with a new verification date.
-	•	Verification interval: every 90 days
-	•	Correction route: Email Tori →
-	•	Underlying spreadsheet: live Google Sheet
-Section 06 · Help us make this better
-Found something? Say something.
-This is a living document. If you run one of these organizations, lead one we missed, or have updated data on cost or check size, send it. Corrections are integrated within seven days and credited (unless you ask us not to).
-Email a correction Open the full spreadsheet
-More from S&S Capital Open Research
-01
-Utah Early-Stage Capital Landscape
-$509.6M in pre-seed and seed capital. ~6% to women founders. The numbers behind the gap, by source.
-02
-Accredited Women Investors in Utah
-An original analysis of how many Utah women meet the SEC accreditation threshold, and what that means for collective capacity.
-03
-The Women’s Funding Landscape
-You’re reading it. 177 organizations, all 50 states, every cost line documented.
-04
-References & Citations
-The source bible. Every primary citation behind every claim across every report, in one place.
-Navigate
-Home The Thesis How It Works Join
-About
-Our Story Community Commitments Regenerative Capital FAQs
-Research
-Utah Capital Landscape Accredited Investors National Landscape Map References Open Research
-Press
-Press Contact
+      <div class="lm-meth-card">
+        <div class="lm-meth-step">Phase 04 · Human review</div>
+        <div class="lm-meth-title">A real person reads every row.</div>
+        <div class="lm-meth-body">Tori Horton reviews every record before publication. Records flagged "Estimated" are routed back to discovery for a second pass. Corrections from readers are integrated within seven days and re-flagged with a new verification date.</div>
+        <ul class="lm-meth-list">
+          <li>Verification interval: every 90 days</li>
+          <li>Correction route: <a href="mailto:tori@silverandsaltcapital.com?subject=Landscape%20Map%20%E2%80%94%20Correction%20or%20Addition&body=Hi%20Tori%2C%0A%0AI%27d%20like%20to%20suggest%20a%20%5Bcorrection%20%2F%20addition%5D%20to%20the%20Women%27s%20Funding%20Landscape%20Map.%0A%0AOrganization%20name%3A%0AWebsite%3A%0ASuggested%20update%3A%0A%0AThanks%2C" style="color:#E8B79C">Email Tori →</a></li>
+          <li>Underlying spreadsheet: <a href="https://docs.google.com/spreadsheets/d/1tvX3BCF9POUK79nY_eh7YfRd6DbsNAYDN0s3np6OAow/edit?usp=sharing" target="_blank" rel="noopener" style="color:#E8B79C">live Google Sheet</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- ═══ 06 · Corrections CTA ═══ -->
+<section class="lm-cta">
+  <div class="lm-cta-inner">
+    <div class="lm-cta-eyebrow">Section 06 · Help us make this better</div>
+    <h2>Found <em>something?</em><br>Say <em>something.</em></h2>
+    <p class="lm-cta-body">This is a living document. If you run one of these organizations, lead one we missed, or have updated data on cost or check size, send it. Corrections are integrated within seven days and credited (unless you ask us not to).</p>
+    <div class="lm-cta-actions">
+      <a href="mailto:tori@silverandsaltcapital.com?subject=Landscape%20Map%20%E2%80%94%20Correction%20or%20Addition&body=Hi%20Tori%2C%0A%0AI%27d%20like%20to%20suggest%20a%20%5Bcorrection%20%2F%20addition%5D%20to%20the%20Women%27s%20Funding%20Landscape%20Map.%0A%0AOrganization%20name%3A%0AWebsite%3A%0ASuggested%20update%3A%0A%0AThanks%2C" class="lm-cta-btn primary">Email a correction</a>
+      <a href="https://docs.google.com/spreadsheets/d/1tvX3BCF9POUK79nY_eh7YfRd6DbsNAYDN0s3np6OAow/edit?usp=sharing" target="_blank" rel="noopener" class="lm-cta-btn outline">Open the full spreadsheet</a>
+    </div>
+  </div>
+</section>
 
-&
-Silver & Salt Capital
-Connecting capital to Utah founders who use it best.
-© 2026 Silver & Salt Capital
-Utah
-For accredited investors only. Silver & Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.
+<!-- ═══ Related research ═══ -->
+<section class="lm-related">
+  <div class="lm-related-inner">
+    <div class="lm-related-eyebrow">More from S&amp;S Capital Open Research</div>
+    <div class="lm-related-grid">
+      <a class="lm-related-card" href="utah-funding-research.html">
+        <div class="lm-related-num">01</div>
+        <div class="lm-related-title">Utah Early-Stage Capital Landscape</div>
+        <div class="lm-related-desc">$509.6M in pre-seed and seed capital. ~6% to women founders. The numbers behind the gap, by source.</div>
+      </a>
+      <a class="lm-related-card" href="accredited-women-research.html">
+        <div class="lm-related-num">02</div>
+        <div class="lm-related-title">Accredited Women Investors in Utah</div>
+        <div class="lm-related-desc">An original analysis of how many Utah women meet the SEC accreditation threshold, and what that means for collective capacity.</div>
+      </a>
+      <a class="lm-related-card current" href="landscape-map.html">
+        <div class="lm-related-num">03</div>
+        <div class="lm-related-title">The Women&rsquo;s Funding Landscape</div>
+        <div class="lm-related-desc">You&rsquo;re reading it. <span class="related-org-count">177</span> organizations, all 50 states, every cost line documented.</div>
+      </a>
+      <a class="lm-related-card" href="source-bible.html">
+        <div class="lm-related-num">04</div>
+        <div class="lm-related-title">References &amp; Citations</div>
+        <div class="lm-related-desc">The source bible. Every primary citation behind every claim across every report, in one place.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="/join.html" target="_blank" rel="noopener">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#story">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Regenerative Capital</a>
+        <a class="f-sitemap-link" href="faqs.html">FAQs</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="https://forms.gle/dN1DJgWZs9X7Z8U8A" target="_blank" rel="noopener">Press Contact</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
+
+<!-- data + logic -->
+<script src="us-state-paths.js?v=2"></script>
+<script src="org-data.js?v=2"></script>
+<script>
+// Wire ORG_DATA onto window for the page module
+window.ORG_DATA = ORG_DATA;
+</script>
+<script src="landscape-map-page.js?v=6"></script>
+<script>
+// fill type counts
+document.addEventListener('DOMContentLoaded', ()=>{
+  const cats = { education:0, angels:0, funds:0, syndicates:0 };
+  ORG_DATA.forEach(o=>{
+    const c = o.c||'';
+    if (/Education/i.test(c)) cats.education++;
+    else if (/Angel/i.test(c)) cats.angels++;
+    else if (/Venture/i.test(c)) cats.funds++;
+    else if (/Syndicate/i.test(c)) cats.syndicates++;
+  });
+  document.getElementById('cnt-education').textContent = cats.education;
+  document.getElementById('cnt-angels').textContent = cats.angels;
+  document.getElementById('cnt-funds').textContent = cats.funds;
+  document.getElementById('cnt-syndicates').textContent = cats.syndicates;
+  // hero count + methodology count + related card count
+  const heroCount = document.getElementById('hero-org-count');
+  if (heroCount) heroCount.textContent = ORG_DATA.length;
+  const methCount = document.getElementById('meth-final-count');
+  if (methCount) methCount.textContent = ORG_DATA.length;
+  document.querySelectorAll('.related-org-count').forEach(el => el.textContent = ORG_DATA.length);
+});
+</script>
+</body>
+</html>
