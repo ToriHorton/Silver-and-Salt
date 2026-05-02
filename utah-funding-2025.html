@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utah Startup Funding 2025 — Silver &amp; Salt Capital</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ═══ INFOGRAPHIC: UTAH 2025 ═══ */
+.ig-wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+/* Hero */
+.ig-hero{background:var(--moss);color:var(--cream);padding:120px 24px 72px;position:relative;overflow:hidden;}
+.ig-hero::before{content:'&';position:absolute;top:50%;right:-60px;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-style:normal;font-size:520px;font-weight:300;color:rgba(240,237,231,0.04);line-height:1;pointer-events:none;}
+.ig-hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+.ig-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;font-weight:700;}
+.ig-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,68px);font-weight:300;color:var(--cream);line-height:1.05;margin-bottom:18px;letter-spacing:-0.01em;}
+.ig-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,2.4vw,24px);font-weight:300;color:rgba(240,237,231,0.65);max-width:560px;line-height:1.4;}
+.ig-meta{margin-top:40px;display:flex;gap:24px;flex-wrap:wrap;font-size:11px;letter-spacing:0.06em;color:rgba(240,237,231,0.45);}
+
+/* Section shell */
+.ig-section{padding:88px 0 16px;border-bottom:1px solid var(--border);}
+.ig-section:last-of-type{border-bottom:none;}
+.ig-num-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:12px;}
+.ig-h{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.6vw,36px);font-weight:600;color:var(--moss);line-height:1.15;margin-bottom:32px;letter-spacing:-0.005em;}
+.ig-lede{font-size:16px;line-height:1.7;color:var(--moss-light);font-weight:400;max-width:600px;margin-bottom:32px;}
+
+/* Big-number row */
+.bignum-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(47,62,52,0.08);margin:32px 0;border:1px solid rgba(47,62,52,0.08);}
+.bignum{background:var(--cream);padding:32px 24px;text-align:center;}
+.bignum-val{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6.5vw,68px);font-weight:600;color:var(--moss);line-height:1;letter-spacing:-0.02em;}
+.bignum-val .unit{font-size:0.55em;font-weight:300;color:var(--moss-soft);margin-left:4px;}
+.bignum-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-top:14px;line-height:1.4;font-weight:700;}
+
+/* Deal-size distribution bar */
+.dist-wrap{margin:40px 0 24px;}
+.dist-title{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:16px;}
+.dist-bar{display:flex;height:54px;border-radius:4px;overflow:hidden;}
+.dist-seg{display:flex;align-items:center;justify-content:center;color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;}
+.dist-seg.s1{background:var(--moss);flex:70;}
+.dist-seg.s2{background:var(--ink);flex:25;}
+.dist-seg.s3{background:var(--copper);flex:5;font-size:14px;}
+.dist-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
+.dist-leg{font-size:11px;color:var(--moss-light);line-height:1.5;}
+.dist-leg b{display:block;color:var(--moss);font-size:12px;letter-spacing:0.04em;text-transform:uppercase;font-weight:700;margin-bottom:2px;}
+.dist-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px;}
+
+/* Insight pull */
+.insight{background:var(--sand);border-left:3px solid var(--copper);padding:24px 28px;margin:32px 0;font-size:15px;line-height:1.7;color:var(--moss-light);font-weight:400;}
+.insight strong{color:var(--moss);font-weight:700;}
+
+/* Source citation */
+.source-cite{font-size:11px;color:var(--sage);margin-top:18px;font-style:italic;letter-spacing:0.01em;line-height:1.5;}
+.source-cite a{color:var(--copper);text-decoration:none;border-bottom:1px solid rgba(200,127,90,0.32);transition:border-color 0.2s;}
+.source-cite a:hover{border-bottom-color:var(--copper);}
+
+/* Founder cards (Section 2) */
+.founder-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:32px 0;}
+.founder-card{background:var(--cream);border:1px solid var(--border);padding:24px 20px;text-align:center;border-radius:6px;display:flex;flex-direction:column;gap:6px;align-items:center;transition:border-color 0.2s,transform 0.2s;}
+.founder-card:hover{border-color:var(--copper);transform:translateY(-2px);}
+.founder-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--moss);letter-spacing:-0.01em;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.founder-name:hover{color:var(--copper);}
+.founder-name::after{content:'↗';font-size:13px;font-weight:300;color:var(--sage);transform:translateY(-1px);}
+.founder-name:hover::after{color:var(--copper);}
+.founder-when{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--sage);font-weight:700;}
+.founder-amt{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--copper);letter-spacing:-0.005em;margin-top:2px;}
+.founder-amt .stage{font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);display:block;margin-top:2px;}
+
+.rep-band{background:var(--ink);color:var(--cream);padding:32px 28px;border-radius:6px;margin-top:24px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+.rep-band-num{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:600;color:var(--cream);line-height:1;letter-spacing:-0.02em;}
+.rep-band-text{font-size:13px;line-height:1.6;color:rgba(240,237,231,0.78);max-width:380px;}
+.rep-band-text b{color:var(--cream);font-weight:700;}
+
+/* Trickle-down funnel — left-anchored, proportional, slight taper for funnel feel */
+.prop-wrap{padding:32px 0 16px;}
+.prop-frame{background:var(--cream);border:1px solid var(--border);padding:48px 36px 40px;border-radius:8px;}
+.prop-row{margin-bottom:36px;}
+.prop-row:last-of-type{margin-bottom:0;}
+.prop-head{display:flex;align-items:baseline;gap:14px;margin-bottom:10px;}
+.prop-num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:600;color:var(--moss);line-height:1;letter-spacing:-0.015em;}
+.prop-pct{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;font-weight:300;color:var(--copper);letter-spacing:-0.005em;line-height:1;}
+.prop-pct::before{content:'·';margin-right:10px;color:var(--sage);font-style:normal;}
+.prop-bar{height:42px;clip-path:polygon(0 0,100% 0,93% 100%,0 100%);min-width:6px;transition:width 0.6s ease-out;}
+.prop-bar.f-1{background:var(--moss);}
+.prop-bar.f-2{background:var(--ink);}
+.prop-bar.f-3{background:var(--copper);}
+.prop-bar.f-4{background:var(--rust);}
+.prop-cap{margin-top:10px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);font-weight:700;line-height:1.4;}
+.prop-foot{margin-top:32px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:700;}
+
+/* Capital gap block (Section 4) */
+.cap-block{background:var(--sand);color:var(--moss);padding:56px 32px 48px;border-radius:6px;margin:32px 0 0;text-align:center;position:relative;overflow:hidden;border:1px solid var(--border);}
+.cap-block::before{content:'%';position:absolute;top:50%;right:-20px;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-style:normal;font-size:300px;font-weight:300;color:rgba(47,62,52,0.04);line-height:1;pointer-events:none;}
+.cap-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:14px;position:relative;z-index:1;}
+.cap-num{font-family:'Cormorant Garamond',serif;font-size:clamp(76px,13vw,124px);font-weight:600;color:var(--copper);line-height:1;letter-spacing:-0.03em;margin-bottom:22px;position:relative;z-index:1;}
+.cap-num small{font-size:0.45em;font-weight:300;color:var(--moss-soft);margin-left:6px;letter-spacing:-0.005em;}
+.cap-text{font-size:14px;line-height:1.7;color:var(--moss-light);max-width:500px;margin:0 auto;position:relative;z-index:1;}
+.cap-text strong{color:var(--moss);font-weight:700;}
+
+/* Key insight (Section 5) */
+.key-insight{background:var(--moss);color:var(--cream);padding:72px 32px;text-align:center;border-radius:6px;margin:24px 0;position:relative;overflow:hidden;}
+.key-insight::before{content:'&';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-style:normal;font-size:380px;font-weight:300;color:rgba(240,237,231,0.04);line-height:1;pointer-events:none;}
+.key-insight-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:18px;position:relative;z-index:1;}
+.key-insight-text{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4.4vw,42px);font-weight:300;line-height:1.25;letter-spacing:-0.005em;position:relative;z-index:1;max-width:540px;margin:0 auto;}
+.key-insight-text em{font-style:italic;color:var(--copper);font-weight:400;}
+
+/* Footer line above site footer */
+.ig-tagline{padding:64px 24px 96px;text-align:center;}
+.ig-tagline p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--sage);font-weight:300;max-width:520px;margin:0 auto;line-height:1.5;}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+  .ig-hero{padding:96px 20px 56px;}
+  .ig-hero::before{font-size:340px;right:-40px;}
+  .ig-section{padding:64px 0 8px;}
+  .ig-h{margin-bottom:24px;}
+  .bignum-row{grid-template-columns:1fr;}
+  .dist-legend{grid-template-columns:1fr;}
+  .founder-grid{grid-template-columns:1fr;gap:10px;}
+  .rep-band{flex-direction:column;text-align:center;padding:32px 24px;}
+  .rep-band-num{font-size:56px;}
+  .prop-frame{padding:32px 16px 32px;}
+  .prop-num{font-size:34px;}
+  .prop-track{height:28px;}
+  .prop-cap{flex-direction:column;gap:4px;align-items:flex-start;}
+  .prop-pct{font-size:18px;}
+  .key-insight{padding:56px 24px;}
+  .key-insight::before{font-size:260px;}
+}
+@media(max-width:480px){
+  .ig-eyebrow{margin-bottom:10px;}
+  .ig-meta{gap:10px;}
+  .prop-num{font-size:30px;}
+}
+</style>
+<meta property="og:title" content="Utah Startup Funding 2025 — Silver &amp; Salt Capital">
+<meta property="og:description" content="Who gets funded in Utah, and who scales. A 2025 snapshot of capital concentration and founder representation.">
+<meta property="og:type" content="article">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T8E3B0PFT4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-T8E3B0PFT4');
+</script>
+</head>
+<body>
+<nav class="nav-standalone">
+  <a class="nav-logo nav-mark" href="index.html">
+    <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+    <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#thesis">The Thesis</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="/join.html" target="_blank" rel="noopener">Join</a></li>
+  </ul>
+  <a href="/join.html" target="_blank" rel="noopener" class="nav-cta">Join</a>
+  <button class="nav-menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-dropdown">
+    <a href="index.html">Home</a>
+    <a href="index.html#thesis">The Thesis</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="/join.html" target="_blank" rel="noopener">Join</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="ig-hero">
+  <div class="ig-hero-inner">
+    <p class="ig-eyebrow">S&amp;S Capital · Open Research · 2025 Snapshot</p>
+    <h1 class="ig-title">Utah Startup<br>Funding 2025</h1>
+    <p class="ig-subtitle">$1.86 billion deployed. Less than one percent to women.</p>
+    <div class="ig-meta">
+      <span>Vertical infographic</span>
+      <span>·</span>
+      <span>Mobile-friendly</span>
+      <span>·</span>
+      <span>Subject to revision</span>
+    </div>
+  </div>
+</section>
+
+<div class="ig-wrap">
+
+  <!-- SECTION 1: THE ECOSYSTEM -->
+  <section class="ig-section">
+    <p class="ig-num-label">01 · The Ecosystem</p>
+    <h2 class="ig-h">A high-volume, early-stage ecosystem.</h2>
+
+    <div class="bignum-row">
+      <div class="bignum">
+        <div class="bignum-val">169</div>
+        <div class="bignum-label">Utah deals in 2025 (all stages)</div>
+      </div>
+      <div class="bignum">
+        <div class="bignum-val">$1.86B</div>
+        <div class="bignum-label">Total capital deployed</div>
+      </div>
+    </div>
+    <p class="source-cite">Source: <a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank" rel="noopener">PitchBook · Utah Business 2026 Deal Dispatch</a></p>
+
+    <div class="dist-wrap">
+      <p class="dist-title">Deal-size distribution</p>
+      <div class="dist-bar">
+        <div class="dist-seg s1">70%</div>
+        <div class="dist-seg s2">25%</div>
+        <div class="dist-seg s3">5%</div>
+      </div>
+      <div class="dist-legend">
+        <div class="dist-leg"><b><span class="dist-dot" style="background:var(--moss)"></span>Under $5M</b>The volume of the market: founders raising their first institutional check.</div>
+        <div class="dist-leg"><b><span class="dist-dot" style="background:var(--ink)"></span>$5M to $25M</b>Series A territory. A meaningful step-up, but a much narrower aperture.</div>
+        <div class="dist-leg"><b><span class="dist-dot" style="background:var(--copper)"></span>$25M+</b>The headline rounds. Five percent of deals, a majority of the dollars.</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      A small number of large rounds drive most of the capital. <strong>Most companies in Utah are competing at the early stage</strong>, where the playing field is widest and the network advantage matters most.
+    </div>
+  </section>
+
+  <!-- SECTION 2: FEMALE FOUNDER REPRESENTATION -->
+  <section class="ig-section">
+    <p class="ig-num-label">02 · Female Founder Representation</p>
+    <h2 class="ig-h">Early stage, where the numbers begin to thin.</h2>
+
+    <div class="bignum-row">
+      <div class="bignum">
+        <div class="bignum-val">~5<span class="unit">to</span>9</div>
+        <div class="bignum-label">Startups with a woman on the founding team (estimated)</div>
+      </div>
+      <div class="bignum">
+        <div class="bignum-val">~5%</div>
+        <div class="bignum-label">Estimated share of funded startups with a female founder</div>
+      </div>
+    </div>
+
+    <p class="dist-title" style="margin-top:8px;">Three publicly identified companies</p>
+    <div class="founder-grid">
+      <div class="founder-card">
+        <a class="founder-name" href="https://www.techbuzznews.com/faye-raises-2-5-million-to-redefine-household-support-with-ai-augmented-human-advisors/" target="_blank" rel="noopener">Faye</a>
+        <div class="founder-when">Funded · May 2025</div>
+        <div class="founder-amt">$2.5M<span class="stage">Pre-seed</span></div>
+      </div>
+      <div class="founder-card">
+        <a class="founder-name" href="https://www.utahbusiness.com/press-releases/2025/06/02/university-utah-startup-trace-aq-air-quality-tech-market/" target="_blank" rel="noopener">Trace AQ</a>
+        <div class="founder-when">Funded · May 2025</div>
+        <div class="founder-amt">$1.25M<span class="stage">Seed</span></div>
+      </div>
+      <div class="founder-card">
+        <a class="founder-name" href="https://www.rebelmedicine.com/" target="_blank" rel="noopener">Rebel Medicine</a>
+        <div class="founder-when">Funded · June 2025</div>
+        <div class="founder-amt">$6M<span class="stage">Series A</span></div>
+      </div>
+    </div>
+
+    <div class="rep-band">
+      <div class="rep-band-num">~5%</div>
+      <div class="rep-band-text">A small fraction of Utah's funded companies have a woman on the founding team. <b>This is the early-stage baseline</b>, and it is the widest the aperture gets.</div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: THE FUNNEL (CENTERPIECE) — proportional widths -->
+  <section class="ig-section">
+    <p class="ig-num-label">03 · 2025 by the Numbers</p>
+    <h2 class="ig-h">From 169, to 1.</h2>
+
+    <div class="prop-wrap">
+      <div class="prop-frame">
+
+        <div class="prop-row">
+          <div class="prop-head">
+            <span class="prop-num">169</span>
+            <span class="prop-pct">100%</span>
+          </div>
+          <div class="prop-bar f-1" style="width:100%;"></div>
+          <div class="prop-cap">Utah deals in 2025</div>
+        </div>
+
+        <div class="prop-row">
+          <div class="prop-head">
+            <span class="prop-num">~5 to 9</span>
+            <span class="prop-pct">~5%</span>
+          </div>
+          <div class="prop-bar f-2" style="width:5%;"></div>
+          <div class="prop-cap">Estimated with a woman on the founding team</div>
+        </div>
+
+        <div class="prop-row">
+          <div class="prop-head">
+            <span class="prop-num">3</span>
+            <span class="prop-pct">~2%</span>
+          </div>
+          <div class="prop-bar f-3" style="width:1.78%;"></div>
+          <div class="prop-cap">Publicly identified founding teams</div>
+        </div>
+
+        <div class="prop-row">
+          <div class="prop-head">
+            <span class="prop-num">1</span>
+            <span class="prop-pct">&lt; 1%</span>
+          </div>
+          <div class="prop-bar f-4" style="width:0.59%;"></div>
+          <div class="prop-cap">Publicly identified female CEO</div>
+        </div>
+
+        <p class="prop-foot">Utah · 2025 · Source: PitchBook</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE CAPITAL GAP -->
+  <section class="ig-section">
+    <p class="ig-num-label">04 · The Capital Gap</p>
+    <h2 class="ig-h">How much capital actually reaches women?</h2>
+
+    <div class="cap-block">
+      <p class="cap-eyebrow">The capital share</p>
+      <p class="cap-num">&lt; 1<small>%</small></p>
+      <p class="cap-text">Combined publicly identified funding to women-founded teams totals <strong>~$9.75M</strong> (Faye + Trace AQ + Rebel Medicine). Of <strong>$1.86B</strong> deployed across Utah's 2025 startup ecosystem, that is roughly <strong>0.5%</strong>.</p>
+    </div>
+
+    <div class="bignum-row" style="margin-top:24px;">
+      <div class="bignum">
+        <div class="bignum-val">$1.86B</div>
+        <div class="bignum-label">Total capital deployed in Utah, 2025</div>
+      </div>
+      <div class="bignum">
+        <div class="bignum-val">~$9.75M</div>
+        <div class="bignum-label">Known to publicly identified women-founded teams</div>
+      </div>
+    </div>
+    <p class="source-cite">Source: <a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank" rel="noopener">PitchBook · Utah Business 2026 Deal Dispatch</a> · Founder funding from individual press releases (linked in §02)</p>
+  </section>
+
+  <!-- SECTION 5: THE INSIGHT -->
+  <section class="ig-section">
+    <p class="ig-num-label">05 · The Insight</p>
+    <h2 class="ig-h">The math is simple.</h2>
+
+    <div class="key-insight">
+      <p class="key-insight-eyebrow">Read the data again</p>
+      <p class="key-insight-text">If we want more than <em>1%</em> of women leading,<br>we need to unlock more than <em>1%</em> of available capital for women.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="f-inner" style="flex-direction:column;gap:16px">
+    <div class="f-sitemap">
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Navigate</div>
+        <a class="f-sitemap-link" href="index.html">Home</a>
+        <a class="f-sitemap-link" href="index.html#thesis">The Thesis</a>
+        <a class="f-sitemap-link" href="index.html#how">How It Works</a>
+        <a class="f-sitemap-link" href="/join.html" target="_blank" rel="noopener">Join</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">About</div>
+        <a class="f-sitemap-link" href="index.html#story">Our Story</a>
+        <a class="f-sitemap-link" href="index.html#about">Community Commitments</a>
+        <a class="f-sitemap-link" href="manifesto.html">Regenerative Capital</a>
+        <a class="f-sitemap-link" href="faqs.html">FAQs</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-2025.html">Utah Funding 2025</a>
+        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
+        <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
+        <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="source-bible.html">References</a>
+        <a class="f-sitemap-link" href="open-research.html">Open Research</a>
+      </div>
+      <div class="f-sitemap-col">
+        <div class="f-sitemap-heading">Press</div>
+        <a class="f-sitemap-link" href="https://forms.gle/dN1DJgWZs9X7Z8U8A" target="_blank" rel="noopener">Press Contact</a>
+      </div>
+    </div>
+    <div class="f-brand-row">
+      <div class="f-left">
+        <div class="f-mark">
+          <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
+        </div>
+        <div class="f-content">
+          <div class="f-wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+          <div class="f-tag">Connecting capital to Utah founders who use it best.</div>
+        </div>
+      </div>
+      <div class="f-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="f-copy">&copy; 2026 Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+        <div class="f-copy">Utah</div>
+      </div>
+    </div>
+    <p class="f-legal">For accredited investors only. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+  </div>
+</footer>
+</body>
+</html>

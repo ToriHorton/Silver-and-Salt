@@ -348,6 +348,21 @@
     color: #7E8E84;
   }
 
+  /* ── CITATION LINKS (inline S## codes) ── */
+  .src-link {
+    color: var(--pop);
+    font-weight: 600;
+    font-style: normal;
+    text-decoration: none;
+    border-bottom: 1px dotted var(--pop);
+    transition: color 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .src-link:hover {
+    color: var(--pop-hover);
+    border-bottom-color: var(--pop-hover);
+  }
+
   /* ── PLACEHOLDER HIGHLIGHT ── */
   .placeholder-highlight {
     background: rgba(26,143,125,0.12);
@@ -388,7 +403,28 @@
     font-size: 13px;
     color: #7E8E84;
     line-height: 1.6;
-    padding: 3px 0;
+    padding: 6px 8px;
+    border-radius: 4px;
+    transition: background 0.3s;
+    scroll-margin-top: 100px;
+  }
+  .source-key li:target {
+    background: var(--pop-glow);
+  }
+  .source-key li a.src-ext {
+    color: #7E8E84;
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(126,142,132,0.4);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .source-key li a.src-ext:hover {
+    color: var(--pop);
+    border-bottom-color: var(--pop);
+  }
+  .source-key li a.src-ext::after {
+    content: ' ↗';
+    font-size: 11px;
+    opacity: 0.5;
   }
   .source-key li strong {
     color: #4A5E50;
@@ -1318,6 +1354,7 @@
       </div>
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Research</div>
+        <a class="f-sitemap-link" href="utah-funding-2025.html">Utah Funding 2025</a>
         <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
         <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
         <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
