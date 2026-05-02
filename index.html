@@ -427,9 +427,15 @@ nav { z-index: 100; }
 /* Invitation hero */
 #page-join .join-hero{background:#2A2A2A;padding:120px 48px 80px;position:relative;overflow:hidden}
 #page-join .join-hero::before{
-  content:'&';position:absolute;top:-40px;right:-40px;
-  font-family:'Cormorant Garamond',serif;font-size:400px;font-weight:300;
-  color:rgba(124,184,63,0.04);line-height:1;pointer-events:none;
+  content:'&';position:absolute;top:-80px;right:-40px;
+  font-family:'Cormorant Garamond',serif;font-size:520px;font-weight:300;
+  color:rgba(124,184,63,0.07);line-height:1;pointer-events:none;
+}
+#page-how .hiw-hero{position:relative;overflow:hidden}
+#page-how .hiw-hero::before{
+  content:'&';position:absolute;top:-80px;right:-40px;
+  font-family:'Cormorant Garamond',serif;font-size:520px;font-weight:300;
+  color:rgba(201,168,76,0.07);line-height:1;pointer-events:none;
 }
 #page-join .join-hero .label{
   font-size:17px;letter-spacing:.22em;margin-bottom:20px;color:var(--pop);
@@ -1694,10 +1700,10 @@ nav { z-index: 100; }
 </style>
 
 <!-- 0 — WELCOME BANNER -->
-<section class="w-welcome-banner">
-  <div class="w-welcome-inner">
-    <span class="w-welcome-eyebrow r">Welcome</span>
-    <h1 class="r">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders. <em>It's time more of them are women.</em></h1>
+<section class="w-welcome-banner s-dark" style="background:var(--moss);padding:120px 48px 80px;position:relative;overflow:hidden">
+  <div class="wrap" style="position:relative;z-index:1">
+    <p class="label r" style="color:rgba(255,255,255,0.6);margin-bottom:20px">Welcome</p>
+    <h2 class="r" style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,5.5vw,56px);color:white;line-height:1.15;max-width:720px;margin-bottom:0">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders. <em style="font-style:italic;color:rgba(255,255,255,0.6)">It's time more of them are women.</em></h2>
   </div>
 </section>
 
@@ -1759,21 +1765,20 @@ nav { z-index: 100; }
   <div class="w-whyme-inner">
     <span class="w-eyebrow r">Meet Tori</span>
     <hr class="w-rule">
-    <h2 class="r">I'm starting <span class="brand-amp">&amp;</span> I hope you will join me.</h2>
 
     <div class="w-photo-pair r">
       <div class="w-photo-tall">
         <img src="assets/welcome/tori-headshot2.jpg" alt="Tori Horton, founder of Silver &amp; Salt Capital">
       </div>
       <div class="w-prose">
-        <p>I feel so lucky to have been born and raised in Utah during the 80's. And yet, I sometimes felt contradictory messages: girl power, dream big &mdash; and in the same breath, be smaller, don't make people uncomfortable.</p>
+        <p>I feel so lucky to have been born and raised in Utah during the 80's. Growing up, I sometimes felt contradictory messages: girl power, dream big &mdash; and in the same breath, be smaller, don't make people uncomfortable.</p>
         <p>Maybe I'm the only one who has felt this in Utah, but I don't think so&hellip; and these messages don't stay in childhood. They follow us into choices about college, dating, families, careers, and boardrooms.</p>
       </div>
     </div>
 
     <div class="w-photo-pair w-photo-pair-flip r">
       <div class="w-prose">
-        <p>I've helped found 6 startups, led PayPal's women's economic empowerment program, helped startups raise their first funds, and am an LP with How Women Invest and Portfolia. I realized in my early 40's my work needed to have purpose. I wanted to start dreaming bigger and worry less if it made someone else uncomfortable. I started living louder and learned to surf.</p>
+        <p>I've launched 6 startups, led PayPal's women's economic empowerment program, championed seed raises, and am an LP with How Women Invest and Portfolia. I realized in my early 40's my work needed to have purpose. I wanted to start dreaming bigger and worry less if it made someone else uncomfortable. I started living louder and learned to surf.</p>
         <p>Building Silver <span class="brand-amp">&amp;</span> Salt Capital is my way to give back to Utah &mdash; I'm building it for every woman in Utah who has been told her ambition is too much, her ask is too big, her seat at the table is taken.</p>
       </div>
       <div class="w-photo-tall">
@@ -1797,7 +1802,7 @@ nav { z-index: 100; }
 <section class="w-tenyear">
   <div class="w-tenyear-inner">
     <span class="w-eyebrow r">Ten years from now</span>
-    <p class="r">In ten years, our group will have invested over $10M into more than 60 female-founded Utah startups. We will all know each other by first name. More women will be on founding teams. More women will dream of becoming founders. More small ideas will become real businesses. A few of our companies will exit and return our investment. <span class="w-accent">None of that is guaranteed. All of it is possible.</span></p>
+    <p class="r">In ten years, our group will have invested over $10M into more than 60 female-founded Utah startups. We will all know each other by first name. More women will be on founding teams. More women will dream of becoming founders. More small ideas will become real businesses. A few of our companies will exit and return our investment. <span class="w-accent">Nothing is guaranteed. All of this is possible.</span></p>
   </div>
 </section>
 
@@ -2388,11 +2393,12 @@ nav { z-index: 100; }
 <div class="page" id="page-how" data-palette="plum">
 
   <!-- Hero -->
-  <section class="hiw-hero">
-    <div class="wrap">
-      <div class="label">How It Works</div>
-      <h2>Utah's first women's angel investment collective. <em>We vet together. You invest on your terms.</em></h2>
-      <div class="hiw-rule"></div>
+  <section class="hiw-hero s-dark" style="background:#3A2536;padding:120px 48px 80px">
+    <div class="wrap" style="position:relative;z-index:1">
+      <p class="label" style="font-size:15px;letter-spacing:.14em;color:var(--sage);margin-bottom:20px">How It Works</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,5.5vw,56px);color:white;line-height:1.15;max-width:720px;margin-bottom:28px">Utah's first women's angel investment collective. <em style="font-style:italic;color:#C9A84C">We vet together. You invest on your terms.</em></h2>
+      <p style="font-size:17px;line-height:1.8;color:rgba(255,255,255,0.65);max-width:560px;font-weight:300">Any member can champion a startup. The community sources deals and conducts diligence together. You commit $10K+/year and decide how to allocate it across the companies we vet.</p>
+      <div class="hiw-rule" style="margin-top:40px;margin-bottom:32px"></div>
       <div class="hiw-qa-row">
         <div class="hiw-qa-item">
           <div class="hiw-qa-label">We vet together.</div>
@@ -2682,13 +2688,11 @@ nav { z-index: 100; }
 <div class="page" id="page-join" data-palette="lime">
 
   <!-- ═══ SECTION 1: THE INVITATION ═══ -->
-  <section class="join-hero">
-    <div class="wrap">
-      <div class="narrow r">
-        <p class="label">The Founding Cohort</p>
-        <h2>We understand that collective finance will fund Utah's future. <em>We can't afford to miss this investment.</em></h2>
-        <p>Silver <span class="brand-amp">&amp;</span> Salt Capital is forming with 100 women who will shape the culture, influence who gets funded, and define the standards for everything that follows.</p>
-      </div>
+  <section class="join-hero s-dark" style="background:#2A2A2A;padding:120px 48px 80px">
+    <div class="wrap" style="position:relative;z-index:1">
+      <p class="label r" style="font-size:15px;font-weight:700;letter-spacing:.14em;color:var(--pop);margin-bottom:20px">The Founding Cohort</p>
+      <h2 class="r" style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,5.5vw,56px);color:white;line-height:1.15;max-width:720px;margin-bottom:28px">We understand that collective finance will fund Utah's future. <em style="font-style:italic;color:var(--pop)">We can't afford to miss this investment.</em></h2>
+      <p class="r" style="font-size:17px;line-height:1.8;color:rgba(255,255,255,0.65);max-width:560px;font-weight:300">Silver <span class="brand-amp">&amp;</span> Salt Capital is forming with 100 women who will shape the culture, influence who gets funded, and define the standards for everything that follows.</p>
     </div>
   </section>
 
