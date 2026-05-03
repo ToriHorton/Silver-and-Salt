@@ -49,8 +49,8 @@
       max-width: 100vw;
       background: var(--moss);
       text-align: center;
-      padding: 56px 40px 52px;
-      margin-bottom: 40px;
+      padding: 88px 40px 72px;
+      margin-bottom: 48px;
       position: relative;
       overflow: hidden;
     }
@@ -559,7 +559,18 @@
       font-size: 14px;
       color: var(--sage);
       line-height: 1.8;
+      margin: 0 0 6px;
+    }
+    .step3-body-final {
+      margin-top: 18px;
       margin-bottom: 28px;
+    }
+    .brand-amp {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 0.9em;
+      font-style: normal;
+      margin: 0 -.04em;
     }
     .step3-link {
       display: inline-block;
@@ -627,7 +638,7 @@
       .back-link { top: 16px; right: 20px; font-size: 12px; color: rgba(255,255,255,0.75); }
       .two-col { grid-template-columns: 1fr; }
       .card     { padding: 32px 24px; }
-      .hero     { padding: 44px 28px 40px; }
+      .hero     { padding: 76px 32px 60px; }
       .calendar-wrap iframe { height: 550px; }
       .quote-card-top { gap: 16px; }
     }
@@ -652,7 +663,7 @@
       /* Step 1 */
       .two-col { grid-template-columns: 1fr; }
       .card     { padding: 28px 20px; }
-      .hero     { padding: 24px 28px 36px; }
+      .hero     { padding: 64px 24px 52px; }
       .hero h1  { font-size: 30px; }
       .logo     { width: 160px; margin-bottom: 24px; }
       .step-line { width: 28px; }
@@ -723,7 +734,7 @@
 
         <!-- Replace APPS_SCRIPT_URL with your deployed Google Apps Script Web App URL -->
         <form id="inquiry-form" action="https://script.google.com/macros/s/AKfycbxX7GKDKryz1yKrVlP84F315qB5OHedtnawJH3woRJ19vSoIl6YtTrGQwCw7D_7EdHoJQ/exec" method="POST">
-          <input type="hidden" name="_subject" value="New Membership Inquiry — Silver & Salt Capital" />
+          <input type="hidden" name="_subject" value="New Membership Inquiry: Silver & Salt Capital" />
 
           <div class="two-col">
             <div class="form-group">
@@ -773,7 +784,7 @@
           </div>
 
           <div class="form-group">
-            <label>Interests <span class="opt">— select all that apply</span></label>
+            <label>Interests <span class="opt">(select all that apply)</span></label>
             <div class="checkbox-group">
               <label class="checkbox-option"><input type="checkbox" name="focus" value="Investing in line with my values"> Investing in line with my values</label>
               <label class="checkbox-option"><input type="checkbox" name="focus" value="Finding community with like-minded women"> Finding community with like-minded women</label>
@@ -781,12 +792,12 @@
               <label class="checkbox-option"><input type="checkbox" name="focus" value="Planning for my family’s future"> Planning for my family’s future</label>
               <label class="checkbox-option"><input type="checkbox" name="focus" value="Starting or growing a business"> Starting or growing a business</label>
               <label class="checkbox-option"><input type="checkbox" name="focus" value="Figuring out my next chapter"> Figuring out my next chapter</label>
-              <label class="checkbox-option"><input type="checkbox" name="focus" value="Not sure yet — just exploring"> Not sure yet — just exploring</label>
+              <label class="checkbox-option"><input type="checkbox" name="focus" value="Not sure yet, just exploring"> Not sure yet, just exploring</label>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="linkedin">LinkedIn <span class="opt">— optional</span></label>
+            <label for="linkedin">LinkedIn <span class="opt">(optional)</span></label>
             <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/yourname" />
           </div>
 
@@ -826,7 +837,7 @@
         <h3>Have you booked your time?</h3>
         <label class="confirm-check-wrap">
           <input type="checkbox" id="confirm-check" />
-          <span>I have successfully booked a time and received a confirmation.</span>
+          <span>I’ve booked my time and received a confirmation.</span>
         </label>
         <button class="confirm-btn" id="confirm-btn" disabled>Continue →</button>
         <p class="step2-note">Please confirm a date and time, then check the box to continue.</p>
@@ -836,10 +847,12 @@
     <div id="step-3">
       <div class="step3-icon">✦</div>
       <h2 class="step3-heading">You’re confirmed.</h2>
-      <p class="step3-body">Thank you for applying to Silver &amp; Salt Capital.<br>A calendar invitation has been sent to your email.<br><br>We’ll see you soon.</p>
-      <a href="/" class="step3-link">Return to Silver &amp; Salt Capital</a>
+      <p class="step3-body">Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital.</p>
+      <p class="step3-body">A calendar invitation has been sent to your email.</p>
+      <p class="step3-body step3-body-final">We’ll see you soon.</p>
+      <a href="/" class="step3-link">Return to Silver <span class="brand-amp">&amp;</span> Salt Capital</a>
       <div class="quote-card">
-        <p class="quote-text">"We women don’t care too much about getting our pictures on money as long as we can get our hands on it."</p>
+        <p class="quote-text">“We women don’t care too much about getting our pictures on money as long as we can get our hands on it.”</p>
         <div class="quote-card-top">
           <img src="/assets/ivy-baker-priest.jpg" alt="Ivy Baker Priest" />
           <div class="quote-card-identity">
