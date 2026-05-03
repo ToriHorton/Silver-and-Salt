@@ -1119,7 +1119,7 @@ nav { z-index: 100; }
      ═══════════════════════════════════════ -->
 <nav>
   <div class="nav-top">
-    <div class="nav-mark" onclick="showPage('welcome')">
+    <div class="nav-mark" onclick="showPage('home')">
       <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
       <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
     </div>
@@ -1128,7 +1128,8 @@ nav { z-index: 100; }
   <div class="nav-rail">
     <div class="nav-tabs">
       <button class="nav-tab" data-page="start">Start</button>
-      <button class="nav-tab" data-page="welcome">Home</button>
+      <button class="nav-tab" data-page="welcome">Welcome</button>
+      <button class="nav-tab" data-page="home">Home</button>
       <button class="nav-tab" data-page="thesis">The Thesis</button>
       <button class="nav-tab" data-page="how">How It Works</button>
       <button class="nav-tab" data-page="join">Join</button>
@@ -1442,7 +1443,7 @@ nav { z-index: 100; }
 <!-- ═══════════════════════════════════════
      PAGE — WELCOME (personal + thesis + invitation)
      ═══════════════════════════════════════ -->
-<div class="page active" id="page-welcome" data-palette="moss">
+<div class="page" id="page-welcome" data-palette="moss">
 
 <style>
 /* ── WELCOME page scoped styles ── */
@@ -1927,6 +1928,62 @@ nav { z-index: 100; }
 </section>
 
 </div><!-- /#page-welcome -->
+
+
+<div class="page active" id="page-home" data-palette="rust">
+
+  <!-- HERO — Statement (Option C) -->
+  <section class="hero">
+    <div class="hero-accent-line-left"></div>
+    <div class="hero-accent-line-right"></div>
+    <p class="hero-eyebrow">We Are a Utah Women's Angel Investment Collective</p>
+    <p class="hero-line">Silver <span class="brand-amp">&amp;</span> Salt Capital brings accredited women together to identify quality investment opportunities that are getting missed in the Utah market. As a coordinated community, we find and individually fund great founders.</p>
+    <div class="hero-cta">
+      <a href="/join.html" target="_blank" rel="noopener" class="btn btn-pop" style="text-decoration:none">Join Us</a>
+      <button class="btn btn-outline" onclick="showPage('thesis')">See the Thesis</button>
+    </div>
+  </section>
+
+  <!-- ANCHOR STAT -->
+  <div class="anchor-stat">
+    <div class="anchor-stat-inner">
+      <div class="anchor-stat-num">63<em>%</em></div>
+      <div class="anchor-stat-label">Better performance from companies with a female founder</div>
+      <div class="anchor-stat-src"><a href="source-bible.html">First Round Capital, 10 Year Project</a></div>
+    </div>
+  </div>
+
+  <!-- DECLARATION -->
+  <section class="s-dark" style="padding:40px 48px">
+    <div class="wrap" style="max-width:680px;margin:0 auto">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--text-on-dark);line-height:1.2;margin-bottom:24px">We are creating <em style="font-style:italic;color:var(--highlight)">regenerative capital</em> in Utah.</h3>
+      <p style="font-size:17px;line-height:1.8;color:var(--text-on-dark-body);font-weight:300;margin-bottom:14px">This is smart capital, deployed where it performs best. More capital reaches women founders. More women start companies. More companies succeed. That success attracts more investors. The cycle accelerates.</p>
+      <p style="font-size:17px;line-height:1.8;color:var(--text-on-dark-body);font-weight:300;margin-bottom:24px">Our power isn't in a fund. It's in hundreds of women making informed decisions with a shared pipeline. We are building an ecosystem where women thrive. Our organized community of individual investors will define how Utah funds its next generation of businesses.</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,22px);font-weight:600;font-style:italic;color:var(--cream);line-height:1.5;margin-bottom:0">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders — it's time more of them are women.</p>
+    </div>
+  </section>
+
+  <!-- FOUNDING COHORT URGENCY STRIP -->
+  <section class="cohort-strip">
+    <div class="wrap" style="text-align:center">
+      <p style="font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(20px,3vw,28px);color:white;letter-spacing:-.02em;margin-bottom:8px">We're starting now.</p>
+      <p style="font-size:17px;color:rgba(255,255,255,0.75);max-width:520px;margin:0 auto 24px;line-height:1.6">The first 100 members will shape the culture, influence who gets funded, and define the standards for everything that follows.</p>
+      <a href="/join.html" target="_blank" rel="noopener" class="btn" style="background:white;color:var(--moss);font-weight:700;margin-bottom:0;text-decoration:none">Join Us</a>
+    </div>
+  </section>
+  <div style="background:var(--moss);text-align:center;padding:20px 48px">
+    <p style="font-family:'Satoshi',sans-serif;font-size:17px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:.22em;text-transform:uppercase">This is the place <span class="brand-amp" style="color:var(--pop)">&amp;</span> now is the moment</p>
+  </div>
+
+  <div class="page-sources">
+    <div class="page-sources-heading">Sources &amp; methodology</div>
+    <ul class="page-sources-list">
+      <li><span class="claim">2.5× more revenue per dollar invested</span> <span class="source">— <a href="https://www.bcg.com/publications/2018/why-women-owned-startups-are-better-bet" target="_blank" rel="noopener">BCG / MassChallenge</a></span></li>
+    </ul>
+    <a href="open-research.html" class="page-sources-link">Full research &amp; methodology →</a>
+  </div>
+
+</div>
 
 
 <!-- ═══════════════════════════════════════
@@ -2834,7 +2891,8 @@ nav { z-index: 100; }
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Navigate</div>
         <a class="f-sitemap-link" onclick="showPage('start')">Start Here</a>
-        <a class="f-sitemap-link" onclick="showPage('welcome')">Home</a>
+        <a class="f-sitemap-link" onclick="showPage('welcome')">Welcome</a>
+        <a class="f-sitemap-link" onclick="showPage('home')">Home</a>
         <a class="f-sitemap-link" onclick="showPage('thesis')">The Thesis</a>
         <a class="f-sitemap-link" onclick="showPage('how')">How It Works</a>
         <a class="f-sitemap-link" href="/join.html" target="_blank" rel="noopener">Join</a>
@@ -2977,8 +3035,8 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 
 // Initial page load — check URL hash for deep linking
 const hashPage = window.location.hash.replace('#', '');
-const validPages = ['start','welcome','thesis','how','story','join','about'];
-showPage(validPages.includes(hashPage) ? hashPage : 'welcome');
+const validPages = ['start','welcome','home','thesis','how','story','join','about'];
+showPage(validPages.includes(hashPage) ? hashPage : 'home');
 
 /* ═══════════════════════════════════════
    MEMBER GRID RENDERER
