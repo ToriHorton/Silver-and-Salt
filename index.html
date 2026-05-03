@@ -1486,7 +1486,7 @@ nav { z-index: 100; }
 }
 
 /* HERO */
-#page-welcome .w-hero{position:relative;padding:64px 48px 96px;
+#page-welcome .w-hero{position:relative;padding:64px 48px 80px;
   background:linear-gradient(to bottom, var(--cream) 0%, var(--cream) 70%, #F2EEE3 100%);
   overflow:hidden}
 #page-welcome .w-hero::before{content:'&';position:absolute;
@@ -1563,17 +1563,25 @@ nav { z-index: 100; }
   font-style:italic;font-weight:400;font-size:24px;color:var(--moss);
   line-height:1}
 #page-welcome .w-rail-dots{position:absolute;inset:0;pointer-events:none;z-index:1}
-#page-welcome .w-rail-dot{position:absolute;width:5px;height:5px;
+#page-welcome .w-rail-dot{position:absolute;width:8px;height:8px;
   border-radius:50%;background:#7CB83F;transform:translate(-50%,-50%)}
-/* 1 dot — center bottom of the circle's inner arc */
-#page-welcome .w-rail-dots-1 .w-rail-dot{left:50%;top:75%}
-/* 2 dots — symmetric on the bottom arc */
-#page-welcome .w-rail-dots-2 .w-rail-dot:nth-child(1){left:38%;top:74%}
-#page-welcome .w-rail-dots-2 .w-rail-dot:nth-child(2){left:62%;top:74%}
-/* 3 dots — three points along the bottom arc, center lowest */
-#page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(1){left:30%;top:71%}
-#page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(2){left:50%;top:76%}
-#page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(3){left:70%;top:71%}
+/* Geometry: 48px border-box circle, 1px border, box-sizing:border-box.
+   .w-rail-dots fills the 46×46 padding box. Dot centers (8px dots, dr=4)
+   ride a circle of radius 23−dr=19 around the padding-box center (23,23).
+   Cluster starts at the 4 o'clock position (120° clockwise from 12) and
+   stacks clockwise toward 6 o'clock. Adjacent dots are tangent →
+   angular step Δ where 2(R−dr)·sin(Δ/2)=2·dr → sin(Δ/2)=4/19 → Δ≈24.30°.
+   Position formula: x = 23 + 19·sin(α), y = 23 + 19·(−cos α). */
+/* 1 dot — at 4:00 (α=120°): (23+19·0.866, 23+19·0.5) ≈ (39.45, 32.5)
+   → (85.77%, 70.65%) */
+#page-welcome .w-rail-dots-1 .w-rail-dot{left:85.77%;top:70.65%}
+/* 2 dots — α = 120°, 144.30° */
+#page-welcome .w-rail-dots-2 .w-rail-dot:nth-child(1){left:85.77%;top:70.65%}
+#page-welcome .w-rail-dots-2 .w-rail-dot:nth-child(2){left:74.09%;top:83.56%}
+/* 3 dots — α = 120°, 144.30°, 168.60° */
+#page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(1){left:85.77%;top:70.65%}
+#page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(2){left:74.09%;top:83.56%}
+#page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(3){left:58.17%;top:90.49%}
 #page-welcome .w-rail-headline{font-family:'Cormorant Garamond',serif;
   font-style:italic;font-weight:400;font-size:26px;color:var(--moss);
   margin:0 0 12px;line-height:1.2}
@@ -1585,13 +1593,28 @@ nav { z-index: 100; }
   #page-welcome .w-rail-num{left:-64px;width:40px;height:40px;
     box-shadow:0 0 0 6px var(--cream)}
   #page-welcome .w-rail-num-text{font-size:20px}
-  #page-welcome .w-rail-dot{width:4px;height:4px}
+  /* Mobile: 40px border-box circle, 1px border → 38px padding box.
+     Dot center radius = 19−dr = 16 (for 6px dots, dr=3). Center at (19,19).
+     Same start-at-4:00, stack-clockwise pattern as desktop.
+     Angular step Δ where sin(Δ/2)=3/16 → Δ≈21.614°.
+     α = 120°, 141.614°, 163.228°.
+     Position: x = 19 + 16·sin(α), y = 19 + 16·(−cos α). */
+  #page-welcome .w-rail-dot{width:6px;height:6px}
+  /* 120°: (32.86, 27) → (86.46%, 71.05%) */
+  #page-welcome .w-rail-dots-1 .w-rail-dot{left:86.46%;top:71.05%}
+  #page-welcome .w-rail-dots-2 .w-rail-dot:nth-child(1){left:86.46%;top:71.05%}
+  /* 141.614°: (28.94, 31.54) → (76.15%, 83.00%) */
+  #page-welcome .w-rail-dots-2 .w-rail-dot:nth-child(2){left:76.15%;top:83.00%}
+  #page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(1){left:86.46%;top:71.05%}
+  #page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(2){left:76.15%;top:83.00%}
+  /* 163.228°: (23.62, 34.32) → (62.16%, 90.31%) */
+  #page-welcome .w-rail-dots-3 .w-rail-dot:nth-child(3){left:62.16%;top:90.31%}
   #page-welcome .w-rail-headline{font-size:22px}
   #page-welcome .w-rail-step{padding-bottom:40px}
 }
 
 /* BRIDGE — beginner / experienced diptych */
-#page-welcome .w-bridge{background:var(--cream);padding:64px 48px 96px;
+#page-welcome .w-bridge{background:var(--cream);padding:64px 48px 80px;
   border-top:1px solid rgba(126,142,132,.18)}
 #page-welcome .w-bridge-inner{max-width:1020px;margin:0 auto;display:grid;
   grid-template-columns:1fr 1px 1fr;gap:56px;align-items:start}
@@ -1602,7 +1625,7 @@ nav { z-index: 100; }
   margin:0;letter-spacing:-.005em}
 
 /* THESIS (dark moss section) */
-#page-welcome .w-thesis{background:var(--moss);padding:120px 48px;color:var(--cream);
+#page-welcome .w-thesis{background:var(--moss);padding:64px 48px 80px;color:var(--cream);
   position:relative}
 #page-welcome .w-thesis-inner{max-width:920px;margin:0 auto}
 #page-welcome .w-thesis h2{font-family:'Cormorant Garamond',serif;font-weight:300;
@@ -1617,14 +1640,39 @@ nav { z-index: 100; }
   font-size:18px;line-height:1.7;color:rgba(251,248,242,0.92);max-width:620px}
 #page-welcome .w-beat-body strong{font-weight:600;color:var(--cream)}
 
+/* BIG STAT QUOTE (moved from home hero) — moss bg to break up the cream stack */
+#page-welcome .w-bigstat{background:var(--moss);padding:64px 48px 80px;text-align:center;
+  position:relative;overflow:hidden}
+#page-welcome .w-bigstat::after{content:'&';position:absolute;bottom:-80px;right:40px;
+  font-family:'Cormorant Garamond',serif;font-size:420px;font-weight:300;
+  color:#7CB83F;opacity:.08;line-height:1;pointer-events:none;user-select:none}
+#page-welcome .w-bigstat-inner{max-width:900px;margin:0 auto;position:relative;z-index:2}
+#page-welcome .w-bigstat h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(36px,5.5vw,72px);line-height:1.05;letter-spacing:-.03em;
+  color:var(--cream);margin:0}
+#page-welcome .w-bigstat h2 em{font-style:italic;color:#7CB83F}
+#page-welcome .w-bigstat-closer{font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:700;color:rgba(251,248,242,0.85);margin:16px 0 0;line-height:1.1}
+#page-welcome .w-bigstat-source{font-family:'Satoshi',sans-serif;font-size:11px;
+  color:rgba(251,248,242,0.55);margin:12px 0 0;letter-spacing:.02em;text-align:right}
+#page-welcome .w-bigstat-source a{color:rgba(251,248,242,0.55);text-decoration:none;
+  border-bottom:1px solid rgba(251,248,242,0.25);transition:color .2s}
+#page-welcome .w-bigstat-source a:hover{color:#7CB83F}
+@media (max-width:880px){
+  #page-welcome .w-bigstat{padding:48px 24px 56px}
+  #page-welcome .w-bigstat h2{font-size:32px}
+  #page-welcome .w-bigstat-closer{font-size:22px}
+  #page-welcome .w-bigstat::after{font-size:280px;bottom:-60px;right:20px}
+}
+
 /* TEN-YEAR PICTURE (cream, hushed) */
-#page-welcome .w-tenyear{background:var(--cream);padding:120px 48px;text-align:center;
+#page-welcome .w-tenyear{background:var(--cream);padding:64px 48px 80px;text-align:center;
   position:relative}
 #page-welcome .w-tenyear::before,
 #page-welcome .w-tenyear::after{content:'';position:absolute;left:50%;width:1px;
-  height:48px;background:var(--sage);opacity:.4}
-#page-welcome .w-tenyear::before{top:48px}
-#page-welcome .w-tenyear::after{bottom:48px}
+  height:24px;background:var(--sage);opacity:.4}
+#page-welcome .w-tenyear::before{top:20px}
+#page-welcome .w-tenyear::after{bottom:20px}
 #page-welcome .w-tenyear-inner{max-width:780px;margin:0 auto}
 #page-welcome .w-tenyear .w-eyebrow{margin-bottom:36px}
 #page-welcome .w-tenyear p{font-family:'Cormorant Garamond',serif;font-weight:300;
@@ -1634,7 +1682,7 @@ nav { z-index: 100; }
   font-weight:300}
 
 /* WHY ME */
-#page-welcome .w-whyme{background:var(--cream);padding:96px 0 120px}
+#page-welcome .w-whyme{background:var(--cream);padding:64px 0 80px}
 #page-welcome .w-whyme-inner{max-width:980px;margin:0 auto;padding:0 48px}
 #page-welcome .w-whyme h2{font-family:'Cormorant Garamond',serif;font-weight:300;
   font-style:italic;font-size:clamp(36px,4.6vw,56px);color:var(--moss);margin:0 0 56px;
@@ -1667,7 +1715,7 @@ nav { z-index: 100; }
 #page-welcome .w-photo-pair p{margin-bottom:16px}
 
 /* MEMBERSHIP — slim section, sand */
-#page-welcome .w-member{background:#F2EEE3;padding:96px 48px;
+#page-welcome .w-member{background:#F2EEE3;padding:64px 48px 80px;
   border-top:1px solid rgba(126,142,132,.25);
   border-bottom:1px solid rgba(126,142,132,.25)}
 #page-welcome .w-member-inner{max-width:880px;margin:0 auto}
@@ -1685,7 +1733,7 @@ nav { z-index: 100; }
   font-size:17px;line-height:1.65;color:var(--moss);max-width:580px}
 
 /* CLOSE — moss dark, single line + CTA */
-#page-welcome .w-close{background:var(--moss);padding:128px 48px;text-align:center;
+#page-welcome .w-close{background:var(--moss);padding:96px 48px;text-align:center;
   position:relative;overflow:hidden}
 #page-welcome .w-close::before{content:'&';position:absolute;left:-30px;bottom:-160px;
   font-family:'Cormorant Garamond',serif;font-style:normal;font-weight:400;
@@ -1703,25 +1751,28 @@ nav { z-index: 100; }
 
 /* RESPONSIVE */
 @media (max-width:880px){
-  #page-welcome .w-hero{padding:48px 24px 72px}
+  #page-welcome .w-hero{padding:48px 24px 56px}
   #page-welcome .w-hero-grid{grid-template-columns:1fr;gap:48px}
   #page-welcome .w-hero-photo{aspect-ratio:4/5;max-width:420px;margin:0 auto}
-  #page-welcome .w-bridge{padding:48px 24px 72px}
+  #page-welcome .w-bridge{padding:48px 24px 56px}
   #page-welcome .w-bridge-inner{grid-template-columns:1fr;gap:32px}
   #page-welcome .w-bridge-divider{width:48px;height:1px;min-height:1px;justify-self:start}
-  #page-welcome .w-thesis{padding:96px 24px}
-  #page-welcome .w-tenyear{padding:96px 24px}
-  #page-welcome .w-whyme{padding:80px 0 96px}
+  #page-welcome .w-thesis{padding:48px 24px 64px}
+  #page-welcome .w-tenyear{padding:48px 24px 64px}
+  #page-welcome .w-whyme{padding:48px 0 64px}
   #page-welcome .w-whyme-inner{padding:0 24px}
   #page-welcome .w-photo-wide{margin:36px -8px}
   #page-welcome .w-photo-pair{grid-template-columns:1fr;gap:20px;margin:20px 0 0}
   #page-welcome .w-photo-pair .w-photo-tall{max-width:300px;margin:0 auto}
-  #page-welcome .w-member{padding:80px 24px}
+  /* Flipped pair has prose first in source order to keep photo on the right
+     on desktop. On mobile (single column) we want the photo above the prose. */
+  #page-welcome .w-photo-pair-flip .w-photo-tall{order:-1}
+  #page-welcome .w-member{padding:48px 24px 64px}
   #page-welcome .w-member-row{grid-template-columns:1fr;gap:8px}
   #page-welcome .w-member-label{font-size:20px}
   #page-welcome .w-beat{grid-template-columns:1fr;gap:8px}
   #page-welcome .w-beat-label{font-size:20px}
-  #page-welcome .w-close{padding:96px 24px}
+  #page-welcome .w-close{padding:64px 24px 80px}
 }
 </style>
 
@@ -1729,7 +1780,7 @@ nav { z-index: 100; }
 <section class="w-welcome-banner s-dark" style="background:var(--moss);padding:120px 48px 80px;position:relative;overflow:hidden">
   <div class="wrap" style="position:relative;z-index:1">
     <p class="label r" style="color:rgba(255,255,255,0.6);margin-bottom:20px">Welcome</p>
-    <h2 class="r" style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,5.5vw,56px);color:white;line-height:1.15;max-width:720px;margin-bottom:0">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders. <em style="font-style:italic;color:rgba(255,255,255,0.6)">It's time more of them are women.</em></h2>
+    <h2 class="r" style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,5.5vw,56px);color:white;line-height:1.15;max-width:720px;margin-bottom:0">Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders. <em style="font-style:italic;color:#7CB83F">It's time more of them are women.</em></h2>
   </div>
 </section>
 
@@ -1781,7 +1832,7 @@ nav { z-index: 100; }
     </div>
     <div class="w-bridge-divider"></div>
     <div class="w-bridge-col r">
-      <p>If you're an experienced investor, you already know this ecosystem of syndicate investing is working in other states and is needed in Utah.</p>
+      <p>If you're an experienced investor, you already know this ecosystem of syndicate investing is working in other states and is needed in Utah. This is not a fund, you manage your investments.</p>
     </div>
   </div>
 </section>
@@ -1794,7 +1845,7 @@ nav { z-index: 100; }
 
     <div class="w-photo-pair r">
       <div class="w-photo-tall">
-        <img src="assets/welcome/tori-headshot2.jpg" alt="Tori Horton, founder of Silver &amp; Salt Capital">
+        <img src="assets/welcome/tori-headshot3.jpg" alt="Tori Horton, founder of Silver &amp; Salt Capital">
       </div>
       <div class="w-prose">
         <p>I feel so lucky to have been born and raised in Utah during the 80's. Growing up, I sometimes felt contradictory messages: girl power, dream big &mdash; and in the same breath, be smaller, don't make people uncomfortable.</p>
@@ -1821,6 +1872,15 @@ nav { z-index: 100; }
         <p>It's a 10+ year time horizon, and the only way I know to shift from scarcity to abundance for women investors and founders. It only works if a group of us decide it is inevitable and we invest together.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- 2.5 — STAT: women founders return more (moved from home hero) -->
+<section class="w-bigstat">
+  <div class="w-bigstat-inner">
+    <h2>Women founders return 2.5&times; more revenue per dollar invested. <em>Almost none are getting funded.</em></h2>
+    <p class="w-bigstat-closer">And everyone is missing out.</p>
+    <p class="w-bigstat-source">Source: <a href="https://www.bcg.com/publications/2018/why-women-owned-startups-are-better-bet" target="_blank" rel="noopener">BCG <span class="brand-amp">&amp;</span> MassChallenge</a></p>
   </div>
 </section>
 
@@ -1877,9 +1937,6 @@ nav { z-index: 100; }
     <div class="hero-accent-line-left"></div>
     <div class="hero-accent-line-right"></div>
     <p class="hero-eyebrow">We Are a Utah Women's Angel Investment Collective</p>
-    <h1>Women founders return 2.5&times; more revenue per dollar invested. <em>Almost none are getting funded.</em></h1>
-    <p class="hero-closer">And everyone is missing out.</p>
-    <p class="hero-source">Source: <a href="https://www.bcg.com/publications/2018/why-women-owned-startups-are-better-bet" target="_blank" rel="noopener">BCG &amp; MassChallenge</a></p>
     <p class="hero-line">Silver <span class="brand-amp">&amp;</span> Salt Capital brings accredited women together to identify quality investment opportunities that are getting missed in the Utah market. As a coordinated community, we find and individually fund great founders.</p>
     <div class="hero-cta">
       <a href="/join.html" target="_blank" rel="noopener" class="btn btn-pop" style="text-decoration:none">Join Us</a>
