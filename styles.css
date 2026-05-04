@@ -435,7 +435,7 @@ body.nav-open .nav-dropdown { display: flex; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-3) var(--space-10) var(--space-3);
+  padding: 18px 48px 12px;
 }
 .nav-mark {
   display: flex;
@@ -467,7 +467,7 @@ body.nav-open .nav-dropdown { display: flex; }
 }
 .nav-mark .wordmark {
   font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--text-h6);
   color: var(--moss);
   letter-spacing: var(--tracking-normal);
@@ -856,6 +856,15 @@ footer::after {
   .nav-standalone .nav-cta { display: none; }
   .nav-standalone .nav-menu-btn { display: block; }
 
+  /* Site nav at tablet — promoted from index.html so every page matches */
+  .nav-top { padding: 14px 20px 10px; }
+  .nav-mark .wordmark { font-size: 22px; }
+  .nav-mark .split-circle { width: 30px; height: 30px; }
+  .nav-mark .sc-amp { font-size: 16px; }
+  .nav-rail { padding: 0 16px; height: 44px; }
+  .nav-tab { font-size: 10px; letter-spacing: .06em; padding: 0 10px; min-height: 44px; white-space: nowrap; }
+  .nav-apply { font-size: 10px; padding: 7px 14px; }
+
   /* Sources table: stack vertically on mobile */
   .page-sources-list li { flex-direction: column; gap: 2px; }
   .page-sources-list .source { white-space: normal; }
@@ -863,8 +872,10 @@ footer::after {
 }
 
 @media(max-width: 600px) {
-  .nav-rail { padding-left: 12px; padding-right: 12px; }
-  .nav-tabs { justify-content: space-between; width: 100%; }
+  .nav-rail { padding-left: 12px; padding-right: 12px; position: relative; }
+  .nav-tabs { justify-content: space-between; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-rail::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 32px; background: linear-gradient(to right, transparent, rgba(251,248,242,.92)); pointer-events: none; z-index: 2; }
   .nav-tab { font-size: 10px; letter-spacing: .04em; padding: 0; white-space: nowrap; }
   .nav-top { padding-left: 12px; padding-right: 12px; }
   .f-sitemap { grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
@@ -873,5 +884,12 @@ footer::after {
 }
 
 @media(max-width: 480px) {
+  /* Site nav at phone — promoted from index.html */
+  .nav-top { padding: 12px 16px 8px; }
+  .nav-mark { gap: 8px; }
+  .nav-mark .wordmark { font-size: 19px; }
+  .nav-mark .split-circle { width: 26px; height: 26px; }
+  .nav-mark .sc-amp { font-size: 14px; }
+
   section { padding-left: var(--space-4); padding-right: var(--space-4); }
 }

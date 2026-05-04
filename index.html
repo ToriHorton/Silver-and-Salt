@@ -6,7 +6,7 @@
 <title>Silver &amp; Salt Capital</title>
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2026-05-04d">
+<link rel="stylesheet" href="styles.css?v=2026-05-04g">
 <style>
 /* ═══════════════════════════════════════
    INDEX.HTML — Page-specific styles only
@@ -16,8 +16,6 @@
 
 /* Index nav uses z-index 100 (higher than standalone pages) */
 nav { z-index: 100; }
-/* Index nav top tier uses slightly different padding than shared default */
-.nav-top { padding: 18px 48px 12px; }
 
 /* Home tab only: lime right half over moss left (other tabs keep dynamic palette) */
 body:has(#page-welcome.active) .nav-mark .sc-right,
@@ -765,31 +763,13 @@ body:has(#page-welcome.active) .f-mark .sc-right { background: #7CB83F; }
   .scale-seg+.scale-seg{padding-left:0;border-left:none}
   .bridge{padding:32px 24px}
 }
-@media(max-width:768px){
-  .nav-top{padding:14px 20px 10px}
-  .nav-mark .wordmark{font-size:22px}
-  .nav-mark .split-circle{width:30px;height:30px}
-  .nav-mark .sc-amp{font-size:16px}
-  .nav-rail{padding:0 16px;height:44px}
-  .nav-tab{font-size:10px;letter-spacing:.06em;padding:0 10px;min-height:44px;white-space:nowrap}
-  .nav-apply{font-size:10px;padding:7px 14px}
-}
 @media(max-width:600px){
-  .nav-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
-  .nav-tabs::-webkit-scrollbar{display:none}
-  .nav-rail{position:relative}
-  .nav-rail::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,rgba(251,248,242,.92));pointer-events:none;z-index:2}
   .hero h1{font-size:32px;line-height:1.15}
   .hero h1 em{font-size:30px}
   h2{font-size:28px}
-  /* f-sitemap, f-brand-row, f-right responsive — see styles.css */
+  /* nav, f-sitemap, f-brand-row, f-right responsive — see styles.css */
 }
 @media(max-width:480px){
-  .nav-top{padding:12px 16px 8px}
-  .nav-mark .wordmark{font-size:19px}
-  .nav-mark{gap:8px}
-  .nav-mark .split-circle{width:26px;height:26px}
-  .nav-mark .sc-amp{font-size:14px}
   .hero{padding-top:112px}
   .hero h1{font-size:26px;line-height:1.2}
   .hero h1 em{font-size:24px}
