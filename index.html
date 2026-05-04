@@ -19,10 +19,9 @@ nav { z-index: 100; }
 /* Index nav top tier uses slightly different padding than shared default */
 .nav-top { padding: 18px 48px 12px; }
 
-/* Home-page split-circle mark: moss left, lime right (matches Welcome dark-green) */
-.nav-mark .sc-left, .f-mark .sc-left { background: var(--moss); }
-.nav-mark .sc-right, .f-mark .sc-right { background: #7CB83F; }
-.s-dark .nav-mark .sc-left, .s-dark .f-mark .sc-left { background: var(--moss); }
+/* Home tab only: lime right half over moss left (other tabs keep dynamic palette) */
+body:has(#page-welcome.active) .nav-mark .sc-right,
+body:has(#page-welcome.active) .f-mark .sc-right { background: #7CB83F; }
 
 /* ═══════════════════════════════════════
    HERO (Page 1)
