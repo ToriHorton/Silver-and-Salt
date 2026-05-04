@@ -467,7 +467,7 @@ body.nav-open .nav-dropdown { display: flex; }
 }
 .nav-mark .wordmark {
   font-family: 'Cormorant Garamond', serif;
-  font-weight: 700;
+  font-weight: 400;
   font-size: var(--text-h6);
   color: var(--moss);
   letter-spacing: var(--tracking-normal);
