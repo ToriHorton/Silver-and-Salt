@@ -424,56 +424,13 @@ nav { z-index: 100; }
 /* ═══════════════════════════════════════
    JOIN PAGE
    ═══════════════════════════════════════ */
-/* Invitation hero */
-#page-join .join-hero{background:#2A2A2A;padding:120px 48px 80px;position:relative;overflow:hidden}
-#page-join .join-hero::before{
-  content:'&';position:absolute;top:-80px;right:-40px;
-  font-family:'Cormorant Garamond',serif;font-size:520px;font-weight:300;
-  color:rgba(124,184,63,0.07);line-height:1;pointer-events:none;
-}
+/* How It Works hero ampersand watermark */
 #page-how .hiw-hero{position:relative;overflow:hidden}
 #page-how .hiw-hero::before{
   content:'&';position:absolute;top:-80px;right:-40px;
   font-family:'Cormorant Garamond',serif;font-size:520px;font-weight:300;
   color:rgba(201,168,76,0.07);line-height:1;pointer-events:none;
 }
-#page-join .join-hero .label{
-  font-size:17px;letter-spacing:.22em;margin-bottom:20px;color:var(--pop);
-}
-#page-join .join-hero h2{
-  font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-size:clamp(36px,5.5vw,56px);color:var(--cream);line-height:1.15;
-  max-width:720px;margin-bottom:28px;
-}
-#page-join .join-hero h2 em{font-style:italic;color:var(--pop)}
-#page-join .join-hero p{font-size:17px;line-height:1.8;color:rgba(251,248,242,0.6);max-width:560px;font-weight:300}
-#page-join .join-hero p strong{color:var(--cream);font-weight:600}
-
-/* Growth timeline */
-.growth-timeline{max-width:720px}
-.growth-year{
-  display:grid;grid-template-columns:80px 1fr;gap:0;
-  padding:36px 0;border-bottom:1px solid var(--border);
-}
-.growth-year:first-child{padding-top:0}
-.growth-year:last-child{border-bottom:none}
-.gy-badge{
-  font-family:'Satoshi',sans-serif;font-weight:900;font-size:17px;
-  color:var(--pop);letter-spacing:.04em;padding-top:4px;
-}
-.gy-members{
-  font-family:'Satoshi',sans-serif;font-weight:900;
-  font-size:clamp(32px,4vw,42px);color:var(--text-primary);line-height:1.1;margin-bottom:4px;
-}
-.gy-members em{font-style:normal;color:var(--pop)}
-.gy-subtitle{
-  font-family:'Satoshi',sans-serif;font-weight:700;font-size:16px;
-  color:var(--text-muted);letter-spacing:.02em;margin-bottom:16px;
-}
-.gy-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-bottom:14px}
-.gy-stat-num{font-family:'Satoshi',sans-serif;font-weight:900;font-size:20px;color:var(--text-primary);line-height:1.2}
-.gy-stat-label{font-family:'Satoshi',sans-serif;font-weight:400;font-size:var(--text-base);color:var(--text-body);line-height:1.4}
-.gy-narrative{font-family:'Satoshi',sans-serif;font-weight:400;font-size:var(--text-lg);color:var(--text-body);line-height:var(--leading-relaxed)}
 
 /* Commit / Get */
 .join-commit-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -497,29 +454,6 @@ nav { z-index: 100; }
   flex-shrink:0;margin-top:7px;
 }
 .join-card li strong{font-weight:600;color:var(--moss)}
-
-/* Community values */
-#page-join .join-values{background:#2A2A2A;padding:48px 48px}
-#page-join .join-values-inner{max-width:1100px;margin:0 auto}
-#page-join .join-values .label{color:var(--pop)}
-#page-join .join-values-declaration{
-  font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-size:clamp(22px,3vw,30px);color:var(--cream);line-height:1.3;
-  margin-bottom:20px;
-}
-#page-join .join-values-declaration em{font-style:italic;color:var(--pop)}
-.join-commitment{
-  padding:12px 0;border-top:1px solid rgba(251,248,242,0.08);
-  display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;
-}
-.join-commitment-num{
-  font-family:'Satoshi',sans-serif;font-weight:900;font-size:17px;
-  color:var(--pop);padding-top:2px;
-}
-.join-commitment-text{
-  font-size:16px;line-height:1.7;color:rgba(251,248,242,0.65);font-weight:300;
-}
-.join-commitment-text strong{color:var(--cream);font-weight:700}
 
 /* People grid */
 .join-people{max-width:1100px}
@@ -602,49 +536,16 @@ nav { z-index: 100; }
   .vic-cl-amp{font-size:28px}
 }
 
-/* Apply CTA */
-#page-join .join-apply{background:var(--pop);padding:100px 48px;text-align:center;position:relative;overflow:hidden}
-#page-join .join-apply::before{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:140px;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200' preserveAspectRatio='none'%3E%3Cpath d='M0 200 L0 140 L80 90 L150 120 L220 60 L300 100 L380 40 L440 80 L520 20 L600 70 L680 30 L750 80 L820 50 L900 90 L960 55 L1040 85 L1100 45 L1200 100 L1200 200Z' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E") no-repeat bottom center;
-  background-size:cover;pointer-events:none;
-}
-#page-join .join-apply h2{
-  font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-size:clamp(32px,4.5vw,48px);color:white;line-height:1.2;
-  max-width:700px;margin:0 auto 28px;
-}
-#page-join .join-apply h2 em{font-style:italic;color:rgba(255,255,255,0.7)}
-#page-join .join-apply p{font-size:16px;color:rgba(255,255,255,0.8);max-width:480px;margin:0 auto 32px;line-height:1.7;font-weight:300}
-#page-join .join-apply-btn{
-  display:inline-block;font-size:17px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--moss);background:white;border:none;border-radius:4px;padding:18px 40px;
-  cursor:pointer;text-decoration:none;transition:background .2s,transform .15s;position:relative;z-index:1;
-}
-#page-join .join-apply-btn:hover{background:var(--cream);transform:translateY(-1px)}
-#page-join .join-apply-note{font-size:17px;color:rgba(255,255,255,0.6);margin-top:16px;position:relative;z-index:1}
-
-/* JOIN responsive */
+/* Commit/Get + People grid responsive */
 @media(max-width:768px){
-  #page-join .join-hero{padding:120px 24px 64px}
   .join-commit-grid{grid-template-columns:1fr}
-  .growth-year{grid-template-columns:1fr;gap:4px}
-  .gy-badge{margin-bottom:4px}
-  .gy-stats{grid-template-columns:1fr 1fr;gap:10px 16px}
-  #page-join .join-values{padding:56px 24px}
   .join-people-grid{grid-template-columns:repeat(3,1fr);gap:16px}
-  #page-join .join-apply{padding:72px 24px}
 }
 @media(max-width:480px){
-  #page-join .join-hero{padding:112px 16px 48px}
-  #page-join .join-hero h2{font-size:clamp(28px,7vw,36px)}
-  #page-join .join-hero .label{font-size:11px;letter-spacing:.16em}
   .join-commit-grid{gap:20px}
   .join-card{padding:28px 24px}
   .join-people-grid{grid-template-columns:repeat(3,1fr);gap:12px}
   .join-person-photo{width:64px;height:64px}
-  #page-join .join-values{padding:40px 16px}
-  #page-join .join-apply{padding:56px 16px}
 }
 
 /* ═══════════════════════════════════════
