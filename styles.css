@@ -532,6 +532,41 @@ body.nav-open .nav-dropdown { display: flex; }
 .nav-tab:hover { color: var(--pop); }
 .nav-tab.active { color: var(--moss); border-bottom-color: var(--moss); cursor: default; }
 
+/* Section tab + hover dropdown (About / Research / Press) */
+.nav-tab.section-tab { position: relative; cursor: default; }
+.nav-tab.section-tab:hover { color: var(--moss); }
+.nav-tab.section-tab .section-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-top: none;
+  box-shadow: 0 8px 24px rgba(47, 62, 52, 0.10);
+  padding: var(--space-2) 0;
+  display: none;
+  z-index: 1000;
+  flex-direction: column;
+}
+.nav-tab.section-tab:hover .section-dropdown,
+.nav-tab.section-tab:focus-within .section-dropdown { display: flex; }
+.section-dd-link {
+  font-family: 'Satoshi', sans-serif;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--moss);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-4);
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.section-dd-link:hover { background: var(--sand); color: var(--pop); }
+.section-dd-link.current { color: var(--pop); font-weight: 700; }
+
 /* ─── 8. COMPONENTS ─────────────────────────────────────────── */
 /* 8a. Page system (index.html) */
 .page { display: none; min-height: 100vh; padding-top: 0; }
