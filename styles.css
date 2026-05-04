@@ -503,7 +503,7 @@ body.nav-open .nav-dropdown { display: flex; }
   align-items: center;
   gap: 0;
   padding: 0 var(--space-10);
-  height: 36px;
+  height: 30px;
   border-bottom: 1px solid var(--border);
 }
 .nav-tabs { display: flex; gap: 0; height: 100%; }
@@ -515,7 +515,7 @@ body.nav-open .nav-dropdown { display: flex; }
   text-transform: uppercase;
   color: var(--moss);
   text-decoration: none;
-  padding: 0 var(--space-5) 0 0;
+  padding: 0 var(--space-4);
   height: 100%;
   display: flex;
   align-items: center;
@@ -528,7 +528,7 @@ body.nav-open .nav-dropdown { display: flex; }
   border-right: none;
 }
 .nav-tab:hover { color: var(--pop); }
-.nav-tab.active { color: var(--moss); border-bottom-color: var(--moss); }
+.nav-tab.active { color: var(--moss); border-bottom-color: var(--moss); cursor: default; }
 
 /* ─── 8. COMPONENTS ─────────────────────────────────────────── */
 /* 8a. Page system (index.html) */
