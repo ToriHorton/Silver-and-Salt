@@ -442,6 +442,8 @@ body.nav-open .nav-dropdown { display: flex; }
   align-items: center;
   gap: var(--space-3);
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 .nav-mark .split-circle {
   width: 36px; height: 36px;
