@@ -14,7 +14,8 @@ When writing anything related to the company (copy, HTML, alt text, commit messa
 3. **In HTML on the website,** wrap the ampersand in `<span class="brand-amp">&amp;</span>` so it renders in Cormorant Garamond upright, never italic. The italic ampersand is a curly script glyph that is not part of the brand identity.
 4. **No em dashes (`—`) or en dashes (`–`) in any copy.** Use commas, periods, colons, parentheses, or semicolons instead. Hyphens in compound words (e.g., "women-led") are fine; the rule targets dashes only. Em/en dashes read as breathless; our voice is calm and declarative.
 5. **Define by what something IS, never by what it isn't.** Avoid "isn't X, it's Y" / "not X, but Y" / "this isn't..." constructions in product, brand, or marketing copy. State the positive directly. Personal narrative negations ("I didn't know it existed") are fine; product/concept negations are not.
-6. **Full brand standards live in `_reference/brand-standards.md`.** Consult it before any brand-facing work (logo, color, typography, voice, punctuation).
+6. **Digits 0-9 always render in Cormorant Infant, never Cormorant Garamond.** This is enforced automatically by the `unicode-range` `@font-face` override at the top of `styles.css` (section "0. NUMERAL OVERRIDE"). Do not delete that block, do not wrap digits in `<span class="num">`, and do not introduce new serif display fonts without applying the same override pattern. If a font-loading change is made, spot-check [utah-funding-2025.html](utah-funding-2025.html) afterward, since that page is digit-heavy and the regression would be visible at a glance.
+7. **Full brand standards live in `_reference/brand-standards.md`.** Consult it before any brand-facing work (logo, color, typography, voice, punctuation).
 
 ---
 

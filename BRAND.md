@@ -9,12 +9,17 @@ A reference for maintaining visual consistency across the site.
 | Role | Family | Weights | Source |
 |------|--------|---------|--------|
 | **Display / Serif** | Cormorant Garamond | 300, 400, 600, 700 (+ italics) | Google Fonts |
+| **Display digits 0-9** | Cormorant Infant | 300, 400, 600, 700 (+ italics) | Google Fonts |
 | **Body / UI** | Satoshi | 400, 500, 700, 900 | Fontshare |
 
 **Rules:**
-- Cormorant Garamond is used for hero headlines, section headings, stat numbers, blockquotes, and the wordmark
+- Cormorant Garamond is used for hero headlines, section headings, blockquotes, and the wordmark
+- **Digits 0-9 always render in Cormorant Infant, never Cormorant Garamond.** Cormorant Garamond's "1" is an unflagged stem that misreads as capital I or lowercase l, which is unacceptable in a brand built around showing numbers (deal counts, dollar amounts, percentages, dates). The substitution is automatic via a `unicode-range` `@font-face` override at the top of `styles.css`. Anywhere a designer writes `font-family: 'Cormorant Garamond'`, digits silently render in Infant. No `<span>` wrappers, no opt-in classes, no per-page work.
 - Satoshi is used for body text, labels, buttons, nav links, and all UI elements
 - No other fonts should be added. Inter and Libre Caslon Display have been removed.
+
+**The digit override (how it works):**
+The override lives at the top of `styles.css` as a numbered section labeled **"0. NUMERAL OVERRIDE"**. It re-declares `font-family: 'Cormorant Garamond'` for `unicode-range: U+0030-0039` only, sourcing glyphs from Cormorant Infant's latin subset on Google Fonts. The browser stitches the two fonts together at render time. If you ever change or upgrade Cormorant Garamond's font loading, **do not delete this override block**, and verify on the 2025 snapshot ([utah-funding-2025.html](utah-funding-2025.html)) afterward, since that page is digit-heavy.
 
 ---
 

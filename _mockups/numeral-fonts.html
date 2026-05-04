@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numeral Font Comparison — Silver &amp; Salt Capital</title>
+
+<!-- Candidates -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --cream:#FBF8F2;
+  --sand:#F4EFE6;
+  --moss:#2F3E34;
+  --moss-light:#4A5E50;
+  --moss-soft:#6B7E72;
+  --sage:#7E8E84;
+  --rust:#D16B4F;
+  --ink:#3D5A99;
+  --copper:#C87F5A;
+  --border:rgba(47,62,52,0.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Satoshi',sans-serif;
+  background:var(--cream);
+  color:var(--moss);
+  line-height:1.5;
+  padding:64px 32px 96px;
+}
+
+/* ── Top bar ── */
+.intro{max-width:1320px;margin:0 auto 48px;}
+.intro-eyebrow{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:14px;}
+.intro-title{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;line-height:1.05;color:var(--moss);margin-bottom:14px;letter-spacing:-0.01em;}
+.intro-sub{font-size:15px;line-height:1.7;color:var(--moss-light);max-width:680px;}
+.intro-sub b{color:var(--moss);font-weight:700;}
+
+/* Quick-jump nav */
+.jump{display:flex;flex-wrap:wrap;gap:6px;margin-top:24px;}
+.jump a{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;color:var(--moss);background:white;border:1px solid var(--border);padding:8px 12px;border-radius:4px;text-decoration:none;}
+.jump a:hover{border-color:var(--copper);color:var(--copper);}
+
+/* ── Card grid ── */
+.grid{
+  max-width:1320px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
+  gap:24px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:32px 28px 28px;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  position:relative;
+}
+.card.current{border:1.5px solid var(--rust);}
+.card.current::before{
+  content:'CURRENT';
+  position:absolute;top:-1px;right:24px;
+  background:var(--rust);color:white;
+  font-size:9px;letter-spacing:0.18em;font-weight:700;
+  padding:5px 10px;border-radius:0 0 4px 4px;
+}
+
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding-bottom:16px;}
+.card-name{font-family:'Satoshi',sans-serif;font-size:14px;letter-spacing:0.06em;font-weight:700;color:var(--moss);text-transform:uppercase;}
+.card-note{font-size:11px;color:var(--sage);line-height:1.5;font-style:italic;text-align:right;max-width:60%;}
+
+/* Glyph close-up — the 1 problem in isolation */
+.glyph-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  background:var(--sand);
+  border-radius:6px;
+  padding:18px 10px 14px;
+}
+.glyph-cell{text-align:center;}
+.glyph-big{font-size:72px;line-height:1;color:var(--moss);font-weight:600;letter-spacing:-0.01em;}
+.glyph-lbl{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-top:8px;}
+
+/* Headline sample (editorial register check) */
+.head-sample{
+  font-size:42px;
+  font-weight:300;
+  line-height:1.05;
+  color:var(--moss);
+  letter-spacing:-0.01em;
+}
+.head-sample em{font-style:italic;font-weight:400;color:var(--copper);}
+
+/* Real numerals from the 2025 snapshot */
+.snapshot{display:flex;flex-direction:column;gap:18px;}
+.snap-row{display:flex;align-items:baseline;gap:14px;border-top:1px solid var(--border);padding-top:14px;}
+.snap-row:first-child{border-top:none;padding-top:0;}
+.snap-num{font-weight:600;color:var(--moss);line-height:1;letter-spacing:-0.02em;}
+.snap-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);font-weight:700;line-height:1.4;flex:1;}
+.snap-num .unit{font-size:0.55em;font-weight:300;color:var(--moss-soft);}
+
+.s-xl{font-size:64px;}
+.s-lg{font-size:48px;}
+.s-md{font-size:32px;}
+.s-cap{font-size:88px;color:var(--copper);}
+
+/* Per-card font scope — only digits adopt the candidate font.
+   Headline text inherits from .head-sample (Cormorant Garamond) by default.  */
+.card.cormorant .head-sample,
+.card.cormorant .glyph-big,
+.card.cormorant .snap-num{font-family:'Cormorant Garamond',serif;}
+
+.card.cormorant-infant .head-sample,
+.card.cormorant-infant .glyph-big,
+.card.cormorant-infant .snap-num{font-family:'Cormorant Infant',serif;}
+
+.card.fraunces .head-sample,
+.card.fraunces .glyph-big,
+.card.fraunces .snap-num{font-family:'Fraunces',serif;}
+
+.card.newsreader .head-sample,
+.card.newsreader .glyph-big,
+.card.newsreader .snap-num{font-family:'Newsreader',serif;}
+
+.card.eb .head-sample,
+.card.eb .glyph-big,
+.card.eb .snap-num{font-family:'EB Garamond',serif;font-variant-numeric:lining-nums;}
+
+.card.source .head-sample,
+.card.source .glyph-big,
+.card.source .snap-num{font-family:'Source Serif 4',serif;}
+
+/* Hybrid: Cormorant for words, Satoshi for digits */
+.card.hybrid .head-sample{font-family:'Cormorant Garamond',serif;}
+.card.hybrid .glyph-big,
+.card.hybrid .snap-num{font-family:'Satoshi',sans-serif;font-weight:700;}
+.card.hybrid .head-sample .num{font-family:'Satoshi',sans-serif;font-weight:700;font-size:0.82em;letter-spacing:-0.02em;}
+
+/* Hybrid Fraunces digits */
+.card.hybrid-fraunces .head-sample{font-family:'Cormorant Garamond',serif;}
+.card.hybrid-fraunces .glyph-big,
+.card.hybrid-fraunces .snap-num{font-family:'Fraunces',serif;}
+.card.hybrid-fraunces .head-sample .num{font-family:'Fraunces',serif;font-weight:600;}
+
+/* Verdict bar */
+.verdict{margin-top:auto;padding-top:18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;}
+.tag{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;padding:5px 9px;border-radius:3px;}
+.tag.good{background:rgba(47,62,52,0.08);color:var(--moss);}
+.tag.warn{background:rgba(209,107,79,0.12);color:var(--rust);}
+.tag.note{background:rgba(200,127,90,0.14);color:var(--copper);}
+
+/* Footer note */
+footer.note{
+  max-width:1320px;margin:64px auto 0;
+  padding:32px;background:var(--moss);color:var(--cream);border-radius:8px;
+}
+footer.note h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;margin-bottom:10px;}
+footer.note p{font-size:14px;line-height:1.7;color:rgba(240,237,231,0.78);max-width:760px;}
+footer.note p + p{margin-top:10px;}
+
+@media(max-width:560px){
+  body{padding:32px 16px 64px;}
+  .intro-title{font-size:36px;}
+  .head-sample{font-size:34px;}
+  .s-xl{font-size:52px;}
+  .s-cap{font-size:68px;}
+}
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <p class="intro-eyebrow">Mockup · Numeral Font Audit</p>
+  <h1 class="intro-title">Pick a numeral.</h1>
+  <p class="intro-sub">Cormorant Garamond reads beautifully for editorial copy, but its <b>1</b> is essentially an unflagged stem. It misreads as a capital <b>I</b> or lowercase <b>l</b>. Below are seven candidates rendered with the actual numerals from the 2025 Utah Funding snapshot. The headline sample is the same in each card so you can judge editorial register alongside legibility.</p>
+  <div class="jump">
+    <a href="#cormorant">Cormorant Garamond</a>
+    <a href="#cormorant-infant">Cormorant Infant</a>
+    <a href="#fraunces">Fraunces</a>
+    <a href="#newsreader">Newsreader</a>
+    <a href="#eb">EB Garamond</a>
+    <a href="#source">Source Serif 4</a>
+    <a href="#hybrid">Hybrid · Satoshi digits</a>
+    <a href="#hybrid-fraunces">Hybrid · Fraunces digits</a>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- ─────────── 1. CURRENT ─────────── -->
+  <section class="card cormorant current" id="cormorant">
+    <div class="card-head">
+      <div class="card-name">Cormorant Garamond</div>
+      <div class="card-note">In use sitewide. The "1" reads as a serifed I.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big">I</div><div class="glyph-lbl">Cap I</div></div>
+      <div class="glyph-cell"><div class="glyph-big">l</div><div class="glyph-lbl">Lower L</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <em>169</em>, to <em>1</em>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag warn">1 ≈ I</span>
+      <span class="tag warn">Ambiguous data</span>
+    </div>
+  </section>
+
+  <!-- ─────────── 2. CORMORANT INFANT ─────────── -->
+  <section class="card cormorant-infant" id="cormorant-infant">
+    <div class="card-head">
+      <div class="card-name">Cormorant Infant</div>
+      <div class="card-note">Same family, softer terminals. Closest swap.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big">I</div><div class="glyph-lbl">Cap I</div></div>
+      <div class="glyph-cell"><div class="glyph-big">l</div><div class="glyph-lbl">Lower L</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <em>169</em>, to <em>1</em>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag note">Inspect 1 closely</span>
+      <span class="tag good">Family match</span>
+    </div>
+  </section>
+
+  <!-- ─────────── 3. FRAUNCES ─────────── -->
+  <section class="card fraunces" id="fraunces">
+    <div class="card-head">
+      <div class="card-name">Fraunces</div>
+      <div class="card-note">Garamond-adjacent, distinctly flagged 1, characterful.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big">I</div><div class="glyph-lbl">Cap I</div></div>
+      <div class="glyph-cell"><div class="glyph-big">l</div><div class="glyph-lbl">Lower L</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <em>169</em>, to <em>1</em>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag good">Clear 1</span>
+      <span class="tag good">Editorial</span>
+      <span class="tag note">Variable opsz</span>
+    </div>
+  </section>
+
+  <!-- ─────────── 4. NEWSREADER ─────────── -->
+  <section class="card newsreader" id="newsreader">
+    <div class="card-head">
+      <div class="card-name">Newsreader</div>
+      <div class="card-note">Literary, neutral, designed for screen reading.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big">I</div><div class="glyph-lbl">Cap I</div></div>
+      <div class="glyph-cell"><div class="glyph-big">l</div><div class="glyph-lbl">Lower L</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <em>169</em>, to <em>1</em>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag good">Clear 1</span>
+      <span class="tag good">Calm</span>
+    </div>
+  </section>
+
+  <!-- ─────────── 5. EB GARAMOND ─────────── -->
+  <section class="card eb" id="eb">
+    <div class="card-head">
+      <div class="card-name">EB Garamond</div>
+      <div class="card-note">True Garamond revival, lining-figures forced on.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big">I</div><div class="glyph-lbl">Cap I</div></div>
+      <div class="glyph-cell"><div class="glyph-big">l</div><div class="glyph-lbl">Lower L</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <em>169</em>, to <em>1</em>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag note">Same family roots</span>
+      <span class="tag good">Lining figures</span>
+    </div>
+  </section>
+
+  <!-- ─────────── 6. SOURCE SERIF 4 ─────────── -->
+  <section class="card source" id="source">
+    <div class="card-head">
+      <div class="card-name">Source Serif 4</div>
+      <div class="card-note">Modern, neutral, very legible at small sizes.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big">I</div><div class="glyph-lbl">Cap I</div></div>
+      <div class="glyph-cell"><div class="glyph-big">l</div><div class="glyph-lbl">Lower L</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <em>169</em>, to <em>1</em>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag good">Clear 1</span>
+      <span class="tag note">Drier register</span>
+    </div>
+  </section>
+
+  <!-- ─────────── 7. HYBRID — Satoshi digits ─────────── -->
+  <section class="card hybrid" id="hybrid">
+    <div class="card-head">
+      <div class="card-name">Cormorant headlines + Satoshi digits</div>
+      <div class="card-note">Surgical: keep the entire site as-is, swap only digit-display class.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big" style="font-family:'Cormorant Garamond',serif;">I</div><div class="glyph-lbl">Cap I (Cormorant)</div></div>
+      <div class="glyph-cell"><div class="glyph-big" style="font-family:'Cormorant Garamond',serif;">l</div><div class="glyph-lbl">Lower L (Cormorant)</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <span class="num">169</span>, to <span class="num">1</span>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit" style="font-family:'Cormorant Garamond',serif;font-weight:300;">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag good">Crisp</span>
+      <span class="tag good">Minimal change</span>
+      <span class="tag warn">Tonal mismatch</span>
+    </div>
+  </section>
+
+  <!-- ─────────── 8. HYBRID — Fraunces digits inside Cormorant text ─────────── -->
+  <section class="card hybrid-fraunces" id="hybrid-fraunces">
+    <div class="card-head">
+      <div class="card-name">Cormorant headlines + Fraunces digits</div>
+      <div class="card-note">Stays serif. Adds one font, fixes the 1.</div>
+    </div>
+
+    <div class="glyph-row">
+      <div class="glyph-cell"><div class="glyph-big">1</div><div class="glyph-lbl">One</div></div>
+      <div class="glyph-cell"><div class="glyph-big" style="font-family:'Cormorant Garamond',serif;">I</div><div class="glyph-lbl">Cap I (Cormorant)</div></div>
+      <div class="glyph-cell"><div class="glyph-big" style="font-family:'Cormorant Garamond',serif;">l</div><div class="glyph-lbl">Lower L (Cormorant)</div></div>
+      <div class="glyph-cell"><div class="glyph-big">7</div><div class="glyph-lbl">Seven</div></div>
+    </div>
+
+    <div class="head-sample">From <span class="num">169</span>, to <span class="num">1</span>.</div>
+
+    <div class="snapshot">
+      <div class="snap-row"><div class="snap-num s-xl">169</div><div class="snap-lbl">Utah deals in 2025</div></div>
+      <div class="snap-row"><div class="snap-num s-xl">$1.86B</div><div class="snap-lbl">Total capital deployed</div></div>
+      <div class="snap-row"><div class="snap-num s-lg">~5<span class="unit" style="font-family:'Cormorant Garamond',serif;font-weight:300;">to</span>9</div><div class="snap-lbl">Startups w/ a woman on founding team</div></div>
+      <div class="snap-row"><div class="snap-num s-md">$2.5M · $1.25M · $6M</div><div class="snap-lbl">Founder card amounts</div></div>
+      <div class="snap-row"><div class="snap-num s-cap">&lt; 1%</div><div class="snap-lbl">The capital share</div></div>
+    </div>
+
+    <div class="verdict">
+      <span class="tag good">Clear 1</span>
+      <span class="tag good">Stays serif</span>
+      <span class="tag note">Two display fonts</span>
+    </div>
+  </section>
+
+</div>
+
+<footer class="note">
+  <h3>How to read this page.</h3>
+  <p>Each card uses the candidate font <b>only</b> for the headline sample, the four-glyph row at the top, and the snapshot numerals. All other text on the page is Satoshi (body) or Cormorant Garamond (intro headline). That isolates exactly what would change in a sitewide swap.</p>
+  <p>The first card is the current state — there for comparison. Look at the <b>1</b> in each four-glyph row first, then the headline sample, then the small "$1.25M · $6M" line where digits sit next to letters at body size. If the candidate fails any of those, it is not the answer.</p>
+  <p>Pick a winner and I will update <b>styles.css</b> and the snapshot CSS in one pass, then verify on mobile and desktop.</p>
+</footer>
+
+</body>
+</html>
