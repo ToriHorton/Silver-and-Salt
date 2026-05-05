@@ -29,8 +29,8 @@ const SECTIONS = {
   about: {
     label: 'About',
     pages: [
-      { label: 'Our Story', href: 'index.html#story' },
-      { label: 'Community Commitments', href: 'index.html#about' },
+      { label: 'Our Story', href: 'index.html#story', homeTab: 'story' },
+      { label: 'Community Commitments', href: 'index.html#about', homeTab: 'about' },
       { label: 'Regenerative Capital', href: 'manifesto.html' },
       { label: 'FAQs', href: 'faqs.html' },
     ],
@@ -60,18 +60,29 @@ const SECTIONS = {
 class SiteHeader extends HTMLElement {
   connectedCallback() {
     const sectionKey = (this.getAttribute('section') || '').toLowerCase();
-    const section = SECTIONS[sectionKey] || null;
     const currentFile = location.pathname.split('/').pop() || 'index.html';
+    const isHome = currentFile === 'index.html' || currentFile === '';
+
+    // On the home page, render the About section tab so SPA pages "story"
+    // and "about" can light it up the same way Research/Press tabs light
+    // up on their standalone pages.
+    const effectiveSection = sectionKey || (isHome ? 'about' : '');
+    const section = SECTIONS[effectiveSection] || null;
 
     let sectionTabHTML = '';
     if (section) {
       const items = section.pages.map(p => {
-        const isCurrent = !p.external && p.href === currentFile;
+        const isCurrent = !p.external && !isHome && p.href === currentFile;
         const targetAttr = p.external ? ' target="_blank" rel="noopener"' : '';
-        return `<a class="section-dd-link${isCurrent ? ' current' : ''}" href="${p.href}"${targetAttr}>${p.label}</a>`;
+        const homeTabAttr = (isHome && p.homeTab) ? ` data-home-tab="${p.homeTab}"` : '';
+        return `<a class="section-dd-link${isCurrent ? ' current' : ''}" href="${p.href}"${targetAttr}${homeTabAttr}>${p.label}</a>`;
       }).join('');
+      // On home, the section tab starts inactive — showPage activates it
+      // when the SPA page (story/about) belongs to this section.
+      const activeAttr = isHome ? '' : ' active';
+      const ariaAttr = isHome ? '' : ' aria-current="page"';
       sectionTabHTML = `
-      <div class="nav-tab section-tab active" aria-current="page">
+      <div class="nav-tab section-tab${activeAttr}" data-section="${effectiveSection}"${ariaAttr}>
         <span class="section-tab-label">${section.label}</span>
         <div class="section-dropdown" role="menu">${items}</div>
       </div>`;
@@ -111,6 +122,15 @@ class SiteHeader extends HTMLElement {
         const id = activePage.id.replace(/^page-/, '');
         const tab = this.querySelector(`.nav-tab[data-page="${id}"]`);
         if (tab) tab.classList.add('active');
+        // Light up the About section tab when on a story/about SPA page.
+        if (id === 'story' || id === 'about') {
+          const sectionTab = this.querySelector('.nav-tab.section-tab[data-section="about"]');
+          if (sectionTab) {
+            sectionTab.classList.add('active');
+            const ddLink = sectionTab.querySelector(`.section-dd-link[data-home-tab="${id}"]`);
+            if (ddLink) ddLink.classList.add('current');
+          }
+        }
       }
     }
   }

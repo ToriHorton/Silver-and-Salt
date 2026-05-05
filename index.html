@@ -1007,7 +1007,7 @@ body:has(#page-welcome.active) .f-mark .sc-right { background: #7CB83F; }
      NAVIGATION
      ═══════════════════════════════════════ -->
 <site-header></site-header>
-<script src="assets/site-header.js?v=3" defer></script>
+<script src="assets/site-header.js?v=4" defer></script>
 
 
 <!-- ═══════════════════════════════════════
@@ -2736,6 +2736,16 @@ function showPage(id) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   const tab = document.querySelector(`.nav-tab[data-page="${id}"]`);
   if (tab) tab.classList.add('active');
+  // About section tab — light it up when the SPA page is in the about section
+  const sectionTab = document.querySelector('.nav-tab.section-tab[data-section="about"]');
+  if (sectionTab) {
+    sectionTab.querySelectorAll('.section-dd-link').forEach(a => a.classList.remove('current'));
+    if (id === 'story' || id === 'about') {
+      sectionTab.classList.add('active');
+      const ddLink = sectionTab.querySelector(`.section-dd-link[data-home-tab="${id}"]`);
+      if (ddLink) ddLink.classList.add('current');
+    }
+  }
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
