@@ -533,7 +533,11 @@ body.nav-open .nav-dropdown { display: flex; }
 .nav-tab.active { color: var(--moss); border-bottom-color: var(--moss); cursor: default; }
 
 /* Section tab + hover dropdown (About / Research / Press) */
+/* Section tabs only appear when their section is active — on home, the
+   About tab is hidden until showPage() lights it up for story/about. On
+   standalone pages the tab is rendered with .active so it always shows. */
 .nav-tab.section-tab { position: relative; cursor: default; }
+.nav-tab.section-tab:not(.active) { display: none; }
 .nav-tab.section-tab:hover { color: var(--moss); }
 .nav-tab.section-tab .section-dropdown {
   position: absolute;
