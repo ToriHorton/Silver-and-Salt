@@ -2723,29 +2723,21 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   // Show target
   const target = document.getElementById('page-' + id);
-  if (target) {
-    target.classList.add('active');
-    // Apply page's default palette
-    const pal = target.dataset.palette;
-    if (pal) applyPalette(pal);
-  }
+  if (!target) return;
+  target.classList.add('active');
+  // Reveal all .r elements immediately — no fade-in on a deliberate tab click.
+  // (The original logic forced a layout reflow per .r element and spun up a
+  //  fresh IntersectionObserver on every switch, which added ~200ms of jank.)
+  target.querySelectorAll('.r').forEach(el => el.classList.add('v'));
+  // Apply page's default palette
+  const pal = target.dataset.palette;
+  if (pal) applyPalette(pal);
   // Update tabs
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   const tab = document.querySelector(`.nav-tab[data-page="${id}"]`);
   if (tab) tab.classList.add('active');
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'instant' });
-  // Trigger reveals
-  setTimeout(() => {
-    document.querySelectorAll('.page.active .r').forEach(el => {
-      el.classList.remove('v');
-      void el.offsetWidth;
-    });
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); obs.unobserve(e.target); }});
-    }, { threshold: 0.06, rootMargin: '0px 0px -36px 0px' });
-    document.querySelectorAll('.page.active .r').forEach(el => obs.observe(el));
-  }, 50);
 }
 
 /* ═══════════════════════════════════════
