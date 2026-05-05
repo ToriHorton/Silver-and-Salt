@@ -3,3 +3,9 @@ node_modules/
 .claude/settings.json
 .claude/worktrees/
 Connection Hub/
+_differentiation-project/
+
+# Work-in-progress mockups (kept local, not deployed)
+sketch-fonts.html
+typography.html
+watch-style.html
