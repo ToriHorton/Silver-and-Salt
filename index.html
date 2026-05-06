@@ -2929,8 +2929,12 @@ showPage(validPages.includes(hashPage) ? hashPage : 'welcome');
     });
   });
 
-  // Initial render
-  tmUpdateMap();
+  // Initial render — wait for ORG_DATA (deferred script) to be available.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tmUpdateMap);
+  } else {
+    tmUpdateMap();
+  }
 })();
 </script>
 
