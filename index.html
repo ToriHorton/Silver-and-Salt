@@ -1586,24 +1586,6 @@ body:has(#page-welcome.active) .f-mark .sc-right { background: #7CB83F; }
   display:block}
 #page-welcome .w-photo-pair p{margin-bottom:16px}
 
-/* MEMBERSHIP — slim section, sand */
-#page-welcome .w-member{background:#F2EEE3;padding:64px 48px 80px;
-  border-top:1px solid rgba(126,142,132,.25);
-  border-bottom:1px solid rgba(126,142,132,.25)}
-#page-welcome .w-member-inner{max-width:880px;margin:0 auto}
-#page-welcome .w-member h2{font-family:'Cormorant Garamond',serif;font-weight:300;
-  font-style:italic;font-size:clamp(28px,3.4vw,40px);color:var(--moss);
-  margin:0 0 56px;line-height:1.15;letter-spacing:-.01em}
-#page-welcome .w-member-rows{display:grid;gap:32px}
-#page-welcome .w-member-row{display:grid;grid-template-columns:200px 1fr;gap:32px;
-  align-items:baseline;padding-bottom:28px;
-  border-bottom:1px solid rgba(126,142,132,.25)}
-#page-welcome .w-member-row:last-child{border-bottom:0;padding-bottom:0}
-#page-welcome .w-member-label{font-family:'Cormorant Garamond',serif;font-style:italic;
-  font-size:22px;color:var(--sage)}
-#page-welcome .w-member-body{font-family:'Satoshi',sans-serif;font-weight:300;
-  font-size:17px;line-height:1.65;color:var(--moss);max-width:580px}
-
 /* CLOSE — moss dark, single line + CTA */
 #page-welcome .w-close{background:var(--moss);padding:96px 48px;text-align:center;
   position:relative;overflow:hidden}
@@ -1639,9 +1621,6 @@ body:has(#page-welcome.active) .f-mark .sc-right { background: #7CB83F; }
   /* Flipped pair has prose first in source order to keep photo on the right
      on desktop. On mobile (single column) we want the photo above the prose. */
   #page-welcome .w-photo-pair-flip .w-photo-tall{order:-1}
-  #page-welcome .w-member{padding:48px 24px 64px}
-  #page-welcome .w-member-row{grid-template-columns:1fr;gap:8px}
-  #page-welcome .w-member-label{font-size:20px}
   #page-welcome .w-beat{grid-template-columns:1fr;gap:8px}
   #page-welcome .w-beat-label{font-size:20px}
   #page-welcome .w-close{padding:64px 24px 80px}
@@ -1764,29 +1743,6 @@ body:has(#page-welcome.active) .f-mark .sc-right { background: #7CB83F; }
   </div>
 </section>
 
-
-<!-- 5 — MEMBERSHIP (slim) -->
-<section class="w-member">
-  <div class="w-member-inner">
-    <span class="w-eyebrow r">What membership looks like</span>
-    <hr class="w-rule">
-    <h2 class="r">A year inside Silver <span class="brand-amp">&amp;</span> Salt Capital, in three lines.</h2>
-    <div class="w-member-rows">
-      <div class="w-member-row r">
-        <div class="w-member-label">The shape.</div>
-        <div class="w-member-body">Annual membership. Quarterly deal review, optional dinners, Invest For Better training, and an annual strategy day.</div>
-      </div>
-      <div class="w-member-row r">
-        <div class="w-member-label">The capital.</div>
-        <div class="w-member-body">Members write a handful of checks each year, sized however fits. The group reviews each opportunity together; the decision is yours alone.</div>
-      </div>
-      <div class="w-member-row r">
-        <div class="w-member-label">The first step.</div>
-        <div class="w-member-body">A 30-minute conversation with me.</div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- 9 — CLOSE -->
 <section class="w-close">
