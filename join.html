@@ -937,16 +937,30 @@
         const formData = new FormData(form);
         const checked  = [...form.querySelectorAll('input[name="focus"]:checked')].map(cb => cb.value);
         formData.delete('focus');
-        formData.append('focus', checked.join(', '));
+        formData.set('focus', checked.join(', '));
 
-        // Google Apps Script requires no-cors — data still submits, we just can't read the response
-        await fetch(form.action, {
-          method: 'POST',
-          body: formData,
-          mode: 'no-cors'
-        });
+        // Send as application/x-www-form-urlencoded — the format Apps Script
+        // reliably parses into e.parameter (FormData/multipart can arrive empty).
+        const params = new URLSearchParams();
+        for (const [key, value] of formData.entries()) params.append(key, value);
 
-        // Always advance to step 2 — submission went through
+        // A urlencoded POST is a "simple request": it always reaches Apps Script,
+        // even if the browser can't read the response — so the submission is never
+        // lost or duplicated. When the response IS readable we confirm the row was
+        // written; when it isn't (CORS), we degrade gracefully rather than alarm.
+        let confirmed = null; // true = server confirmed, false = server rejected, null = couldn't read
+        try {
+          const res  = await fetch(form.action, { method: 'POST', body: params, redirect: 'follow' });
+          const json = await res.json();
+          confirmed  = json.result === 'success';
+        } catch (readErr) {
+          if (!navigator.onLine) throw readErr; // genuine network failure — surface it
+          console.warn('Submission sent, but the response could not be read (likely CORS). Proceeding.', readErr);
+        }
+
+        if (confirmed === false) throw new Error('The server rejected the submission.');
+
+        // confirmed === true (verified) or null (delivered, unverifiable) — advance
         step1.style.display = 'none';
         step2.style.display = 'block';
         dot1.className = 'step complete';
