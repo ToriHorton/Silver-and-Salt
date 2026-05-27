@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Brand Book · Silver &amp; Salt Capital</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════
+   Numeral override — digits use Cormorant Infant, not Garamond.
+   See brand-standards.md > Numeral Override for the why.
+   ══════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');
+  unicode-range: U+0030-0039;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');
+  unicode-range: U+0030-0039;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');
+  unicode-range: U+0030-0039;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');
+  unicode-range: U+0030-0039;
+}
+
+:root {
+  --cream: #FBF8F2;
+  --sand: #F4EFE6;
+  --moss: #2F3E34;
+  --moss-light: #4A5E50;
+  --sage: #7E8E84;
+  --rust: #D16B4F;
+  --ink: #3D5A99;
+  --plum: #8B5E83;
+  --lime: #7CB83F;
+  --teal: #1A8F7D;
+  --warm: #C4A47E;
+  --pop: #D16B4F;
+  --border: rgba(47,62,52,0.08);
+  --border-strong: rgba(47,62,52,0.16);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 32px; }
+
+body {
+  margin: 0;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cream);
+  color: var(--moss);
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.brand-amp {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal !important;
+}
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.book {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* ── Sidebar TOC ────────────────────────────────────────────── */
+.toc {
+  background: var(--sand);
+  border-right: 1px solid var(--border);
+  padding: 48px 32px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.toc-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  text-decoration: none;
+  color: inherit;
+}
+.toc-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.toc-mark::before, .toc-mark::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; width: 50%;
+}
+.toc-mark::before { left: 0; background: var(--moss); }
+.toc-mark::after { right: 0; background: var(--rust); }
+.toc-mark span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  color: #fff;
+  z-index: 1;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+.toc-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.toc-title small {
+  display: block;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 2px;
+}
+
+.toc-section {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin: 24px 0 8px;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--moss-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+  border-left: 2px solid transparent;
+  padding-left: 10px;
+  margin-left: -10px;
+}
+.toc-list a:hover {
+  color: var(--rust);
+  border-left-color: var(--rust);
+}
+
+/* ── Main content ───────────────────────────────────────────── */
+.main {
+  padding: 0;
+  background: var(--cream);
+}
+
+.cover {
+  background: var(--moss);
+  color: var(--cream);
+  padding: 120px 80px 100px;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '&';
+  position: absolute;
+  bottom: -80px;
+  right: -40px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 480px;
+  color: rgba(240,237,231,0.06);
+  line-height: 1;
+  pointer-events: none;
+}
+.cover .eyebrow {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(240,237,231,0.55);
+  margin-bottom: 24px;
+}
+.cover h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 1.05;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+  max-width: 720px;
+  position: relative;
+  z-index: 1;
+}
+.cover .lede {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 560px;
+  color: rgba(240,237,231,0.85);
+  position: relative;
+  z-index: 1;
+}
+.cover .meta {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(240,237,231,0.15);
+  display: flex;
+  gap: 48px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(240,237,231,0.55);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+.cover .meta strong {
+  display: block;
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-top: 6px;
+}
+
+section {
+  padding: 96px 80px;
+  border-bottom: 1px solid var(--border);
+  max-width: 1100px;
+}
+
+section:nth-of-type(even) { background: var(--sand); max-width: none; }
+section:nth-of-type(even) > * { max-width: 1100px; }
+
+.section-label {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 16px;
+}
+h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 4.5vw, 52px);
+  line-height: 1.1;
+  margin: 0 0 16px;
+  letter-spacing: -0.015em;
+  color: var(--moss);
+}
+h2 em {
+  font-style: italic;
+  font-weight: 300;
+}
+.section-intro {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--moss-light);
+  font-weight: 300;
+  max-width: 680px;
+  margin-bottom: 48px;
+}
+h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.25;
+  margin: 48px 0 12px;
+  color: var(--moss);
+  letter-spacing: -0.01em;
+}
+h4 {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin: 24px 0 12px;
+}
+p { margin: 0 0 16px; color: var(--moss-light); font-weight: 400; }
+p.body { font-size: 16px; }
+strong { color: var(--moss); font-weight: 600; }
+
+.rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+  counter-reset: rule;
+}
+.rule-list li {
+  counter-increment: rule;
+  padding: 16px 0 16px 48px;
+  border-top: 1px solid var(--border);
+  position: relative;
+  color: var(--moss-light);
+  font-size: 15px;
+  line-height: 1.65;
+}
+.rule-list li:last-child { border-bottom: 1px solid var(--border); }
+.rule-list li::before {
+  content: counter(rule, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 18px;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 20px;
+  color: var(--sage);
+  letter-spacing: -0.02em;
+}
+
+/* ── Cards / Grids ──────────────────────────────────────────── */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+.do, .dont {
+  padding: 20px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.do {
+  background: rgba(124, 184, 63, 0.08);
+  border-left: 3px solid var(--lime);
+  color: var(--moss);
+}
+.dont {
+  background: rgba(209, 107, 79, 0.06);
+  border-left: 3px solid var(--rust);
+  color: var(--moss);
+}
+.do-label, .dont-label {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+.do-label { color: #5A8C2E; }
+.dont-label { color: var(--rust); }
+
+/* ── Logo plates ────────────────────────────────────────────── */
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 32px 0;
+}
+.logo-plate {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.logo-plate .stage {
+  padding: 56px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+.logo-plate .stage.light { background: var(--cream); }
+.logo-plate .stage.sand { background: var(--sand); }
+.logo-plate .stage.dark { background: var(--moss); }
+.logo-plate .stage.ink { background: var(--ink); }
+.logo-plate .stage img {
+  max-width: 100%;
+  max-height: 140px;
+  width: auto;
+  height: auto;
+}
+.logo-plate .stage.compact img { max-height: 180px; }
+.logo-plate .caption {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.logo-plate .caption strong {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+.logo-plate .caption .spec {
+  font-size: 11px;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+/* ── Color swatches ─────────────────────────────────────────── */
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 32px 0;
+}
+.swatch {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.swatch .chip {
+  height: 120px;
+  position: relative;
+}
+.swatch .chip.bordered { border-bottom: 1px solid var(--border); }
+.swatch .meta {
+  padding: 14px 16px;
+}
+.swatch .meta .name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--moss);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.swatch .meta .hex {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.swatch .meta .token {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  color: var(--sage);
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+  font-weight: 500;
+}
+.swatch .meta .use {
+  font-size: 11px;
+  color: var(--moss-light);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* ── Type specimens ─────────────────────────────────────────── */
+.type-specimen {
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+}
+.type-specimen:last-child { border-bottom: 1px solid var(--border); }
+.type-specimen-meta {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: baseline;
+}
+.type-specimen-meta .label {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+.type-specimen-meta .spec {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  color: var(--sage);
+  letter-spacing: 0.02em;
+  margin-top: 4px;
+}
+.specimen-cormorant-h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 64px;
+  line-height: 1.05;
+  color: var(--moss);
+  margin: 8px 0 0;
+  letter-spacing: -0.02em;
+}
+.specimen-cormorant-h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.1;
+  color: var(--moss);
+  margin: 8px 0 0;
+  letter-spacing: -0.015em;
+}
+.specimen-cormorant-italic {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 1.3;
+  color: var(--sage);
+  margin: 8px 0 0;
+}
+.specimen-satoshi-label {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin: 8px 0 0;
+}
+.specimen-satoshi-heading {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 900;
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--moss);
+  margin: 8px 0 0;
+}
+.specimen-satoshi-body {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--moss-light);
+  margin: 8px 0 0;
+  max-width: 540px;
+}
+
+.numeral-demo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0 8px;
+}
+.numeral-demo .panel {
+  padding: 32px 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.numeral-demo .panel.correct { border-left: 3px solid var(--lime); }
+.numeral-demo .panel.wrong { border-left: 3px solid var(--rust); }
+.numeral-demo .digits {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 1;
+  color: var(--moss);
+  letter-spacing: -0.01em;
+}
+.numeral-demo .panel.wrong .digits {
+  font-family: 'EB Garamond', 'Cormorant Garamond Fallback', serif;
+}
+.numeral-demo .panel small {
+  display: block;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+}
+
+/* ── Watermark example ──────────────────────────────────────── */
+.watermark-stage {
+  position: relative;
+  background: var(--sand);
+  border-radius: 12px;
+  padding: 80px 48px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin: 24px 0;
+}
+.watermark-stage::before {
+  content: '&';
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 360px;
+  color: rgba(47,62,52,0.04);
+  line-height: 1;
+  pointer-events: none;
+}
+.watermark-stage .copy {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+}
+.watermark-stage h3 {
+  margin-top: 0;
+}
+
+/* ── Voice examples ─────────────────────────────────────────── */
+.voice-example {
+  padding: 20px 24px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--moss);
+}
+.voice-example.bad {
+  background: rgba(209, 107, 79, 0.06);
+  border-left: 3px solid var(--rust);
+}
+.voice-example.good {
+  background: rgba(124, 184, 63, 0.08);
+  border-left: 3px solid var(--lime);
+}
+.voice-example small {
+  display: block;
+  font-family: 'Satoshi', sans-serif;
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.voice-example.bad small { color: var(--rust); }
+.voice-example.good small { color: #5A8C2E; }
+
+/* ── Tables ─────────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 14px;
+}
+th, td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+th {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  border-bottom: 1px solid var(--border-strong);
+}
+td { color: var(--moss-light); }
+td:first-child { color: var(--moss); font-weight: 500; }
+td code {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
+  background: var(--sand);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--moss);
+}
+
+/* ── Inline code / callouts ─────────────────────────────────── */
+code {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--sand);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--moss);
+}
+section:nth-of-type(even) code {
+  background: var(--cream);
+}
+.callout {
+  padding: 20px 24px;
+  border-radius: 8px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  margin: 24px 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--moss-light);
+}
+section:nth-of-type(even) .callout { background: #fff; }
+.callout strong { color: var(--moss); }
+
+/* ── Asset download list ────────────────────────────────────── */
+.asset-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.asset-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--moss);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.asset-row:hover {
+  border-color: var(--rust);
+  transform: translateX(2px);
+}
+.asset-row .filename {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: var(--moss);
+  flex: 1;
+}
+.asset-row .dim {
+  font-size: 11px;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.book-footer {
+  background: var(--moss);
+  color: var(--cream);
+  padding: 64px 80px;
+  font-size: 13px;
+}
+.book-footer .meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.book-footer h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+.book-footer p {
+  color: rgba(240,237,231,0.7);
+  max-width: 420px;
+  margin: 0;
+}
+.book-footer .version {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(240,237,231,0.5);
+  font-weight: 500;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .book { grid-template-columns: 1fr; }
+  .toc {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 32px;
+  }
+  .cover { padding: 80px 32px 64px; }
+  section { padding: 64px 32px; }
+  .book-footer { padding: 48px 32px; }
+}
+@media (max-width: 720px) {
+  .logo-grid, .do-dont, .numeral-demo, .asset-list { grid-template-columns: 1fr; }
+  .type-specimen-meta { grid-template-columns: 1fr; gap: 12px; }
+  .cover h1 { font-size: 40px; }
+  .cover .meta { flex-direction: column; gap: 16px; }
+  section { padding: 48px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="book">
+
+<!-- ══════════════════════ TABLE OF CONTENTS ══════════════════════ -->
+<aside class="toc">
+  <a href="#cover" class="toc-brand">
+    <span class="toc-mark"><span>&amp;</span></span>
+    <span class="toc-title">
+      <small>Silver <span class="brand-amp">&amp;</span> Salt Capital</small>
+      Brand Book
+    </span>
+  </a>
+
+  <div class="toc-section">Foundations</div>
+  <ul class="toc-list">
+    <li><a href="#north-star">North Star</a></li>
+    <li><a href="#voice">Voice <span class="brand-amp">&amp;</span> Tone</a></li>
+    <li><a href="#name">Brand Name Rules</a></li>
+  </ul>
+
+  <div class="toc-section">Visual System</div>
+  <ul class="toc-list">
+    <li><a href="#logo">Logo System</a></li>
+    <li><a href="#logo-donts">Logo Don'ts</a></li>
+    <li><a href="#color">Color Palette</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#numerals">Numeral Rule</a></li>
+    <li><a href="#watermark">Ampersand Watermark</a></li>
+  </ul>
+
+  <div class="toc-section">Application</div>
+  <ul class="toc-list">
+    <li><a href="#layout">Layout <span class="brand-amp">&amp;</span> Spacing</a></li>
+    <li><a href="#copy">Copy Standards</a></li>
+    <li><a href="#assets">Brand Asset Files</a></li>
+  </ul>
+
+  <div class="toc-section">Working With This Book</div>
+  <ul class="toc-list">
+    <li><a href="#maintain">How To Update</a></li>
+  </ul>
+</aside>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<main class="main">
+
+<!-- ── COVER ─────────────────────────────────────────────────── -->
+<header class="cover" id="cover">
+  <p class="eyebrow">Silver <span class="brand-amp">&amp;</span> Salt Capital · Brand Book</p>
+  <h1>The brand, gathered in one place.</h1>
+  <p class="lede">Everything a designer, writer, or partner needs to make work that looks and sounds like Silver <span class="brand-amp">&amp;</span> Salt Capital. Logos, color, type, voice, and the rules behind them. Built to share, built to keep current.</p>
+  <div class="meta">
+    <div>Version<strong>1.0</strong></div>
+    <div>Last updated<strong>May 2026</strong></div>
+    <div>Maintained by<strong>Tori Horton</strong></div>
+  </div>
+</header>
+
+<!-- ── NORTH STAR ────────────────────────────────────────────── -->
+<section id="north-star">
+  <p class="section-label">01 · Foundations</p>
+  <h2>North Star.</h2>
+  <p class="section-intro">Before the visuals, the rules. Silver <span class="brand-amp">&amp;</span> Salt Capital is an investment collective for accredited women investors in Utah. The brand should feel like a dispatch from something already underway, not a pitch for something we hope to build.</p>
+
+  <h3>What we are building toward</h3>
+  <ol class="rule-list">
+    <li><strong>Make the movement feel inevitable.</strong> Before she understands the model, she should feel that something important is forming in Utah and the women who get in early will shape it.</li>
+    <li><strong>Make the model undeniable.</strong> She controls her money. $10,000 a year, into companies she selects. Over five years, a diversified portfolio of 30+ investments. Power is in the structure, not the pitch.</li>
+    <li><strong>Earn trust through substance.</strong> Trust is not a section of the site. It is the texture of every sentence. Show, never tell.</li>
+    <li><strong>Arm her with conviction.</strong> She should leave smarter than when she arrived, able to explain this opportunity to her spouse, her advisor, her friends.</li>
+    <li><strong>Compel her to act now.</strong> The founding cohort is forming. Founding members don't join later.</li>
+  </ol>
+
+  <h3>What we will not do</h3>
+  <ol class="rule-list">
+    <li><strong>We will not plead.</strong> No "please consider," no "we need your help." The founders need capital. The investors need returns. We built the bridge.</li>
+    <li><strong>We will not guilt.</strong> The funding gap is real, but shame is not our tool. The reason to join is that this is a smart investment that also builds something meaningful.</li>
+    <li><strong>We will not hedge.</strong> No "we hope to" or "if all goes well." State what we're building. Where there's real risk, name it plainly.</li>
+    <li><strong>We will not sound like a nonprofit.</strong> No "giving back," no "supporting women." We deploy capital into high-performing founders for returns. The social impact is a consequence of good investing, not the other way around.</li>
+    <li><strong>We will not infantilize.</strong> No "girl boss." No "ladies." No pink. No diminutives. No cutesy financial metaphors.</li>
+    <li><strong>We will not be vague about money.</strong> Every fee disclosed. Every structure explained. Every number sourced.</li>
+    <li><strong>We will not oversell returns.</strong> Angel investing is high-risk. We frame this as informed risk-taking, never a sure thing.</li>
+    <li><strong>We will not sound like a pitch deck.</strong> No TAM, no "disrupting," no "10x." Warm, direct, grounded.</li>
+  </ol>
+</section>
+
+<!-- ── VOICE ─────────────────────────────────────────────────── -->
+<section id="voice">
+  <p class="section-label">02 · Foundations</p>
+  <h2>Voice <span class="brand-amp">&amp;</span> tone.</h2>
+  <p class="section-intro">Premium, composed, precise. Goldman Sachs private wealth meets Patagonia mission clarity. Never preachy. Never apologetic. Calm cadence, full stops, quiet confidence.</p>
+
+  <h3>Voice principles</h3>
+  <ul class="rule-list">
+    <li><strong>State facts, don't plead.</strong> The data is the argument.</li>
+    <li><strong>Use "we" to signal insider status,</strong> not a sales pitch.</li>
+    <li><strong>Short sentences for impact.</strong> Longer ones only when the complexity demands it.</li>
+    <li><strong>No jargon without context.</strong> No buzzwords ("synergy," "ecosystem," "empower").</li>
+    <li><strong>"Women founders outperform" is a market thesis, not a social statement.</strong> Frame it that way.</li>
+  </ul>
+
+  <h3>Punctuation: no em dashes, no en dashes</h3>
+  <p class="body">Em dashes (<code>—</code>) and en dashes (<code>–</code>) are not used in body copy, headings, template text, metadata, or UI strings. They read as improvised or breathless. Our voice is closer to Kinfolk than Bloomberg. Use commas, periods, colons, parentheses, or semicolons instead.</p>
+  <p class="body">Hyphens in compound words are fine (<code>women-led</code>, <code>high-potential</code>, <code>community-driven</code>). Hyphens are lexical; dashes are punctuation. The rule targets dashes only.</p>
+
+  <div class="voice-example bad">
+    <small>Don't</small>
+    Two standard placements — pick whichever fits your profile.
+  </div>
+  <div class="voice-example good">
+    <small>Do</small>
+    Two standard placements. Pick whichever fits your profile.
+  </div>
+  <div class="voice-example good">
+    <small>Do</small>
+    Two standard placements: pick whichever fits your profile.
+  </div>
+
+  <h3>Define by what it IS, never by what it isn't</h3>
+  <p class="body">Avoid "isn't X, it's Y" or "not X, but Y" constructions in product, brand, or marketing copy. Negation invites the reader to picture the thing you're denying. State what something is directly.</p>
+
+  <div class="voice-example bad">
+    <small>Don't</small>
+    Posting isn't self-promotion. It's how people find us.
+  </div>
+  <div class="voice-example good">
+    <small>Do</small>
+    Posting is how the founders and investors in your network find Silver <span class="brand-amp">&amp;</span> Salt Capital.
+  </div>
+  <div class="voice-example bad">
+    <small>Don't</small>
+    Silver <span class="brand-amp">&amp;</span> Salt Capital is not a fund.
+  </div>
+  <div class="voice-example good">
+    <small>Do</small>
+    Silver <span class="brand-amp">&amp;</span> Salt Capital is a collective of accredited women investors.
+  </div>
+
+  <div class="callout">
+    <strong>Exception:</strong> Personal-narrative negations are fine ("I didn't know it existed," "I'd never considered this before"). The rule targets how we describe the brand, product, or concepts, not how a member describes her own story.
+  </div>
+</section>
+
+<!-- ── NAME ──────────────────────────────────────────────────── -->
+<section id="name">
+  <p class="section-label">03 · Foundations</p>
+  <h2>Brand name rules.</h2>
+  <p class="section-intro">Non-negotiable. These rules apply everywhere the brand name appears: copy, HTML, alt text, social posts, presentations, email signatures, partner materials, contracts.</p>
+
+  <ol class="rule-list">
+    <li><strong>Always use the full name: "Silver <span class="brand-amp">&amp;</span> Salt Capital."</strong> Never "Silver <span class="brand-amp">&amp;</span> Salt" alone (drops the firm's identity as a capital entity). Never "Silver and Salt Capital" (wrong character).</li>
+    <li><strong>Always use the ampersand character <code>&amp;</code>,</strong> never the word "and."</li>
+    <li><strong>In HTML, wrap the ampersand in <code>&lt;span class="brand-amp"&gt;&amp;amp;&lt;/span&gt;</code></strong> so it renders in Cormorant Garamond upright, never italic. The italic ampersand is a curly script glyph that is not part of the brand identity.</li>
+    <li><strong>The wordmark must always appear on a single line.</strong> Never split or wrap "Silver <span class="brand-amp">&amp;</span> Salt Capital" across two lines.</li>
+    <li><strong>The wordmark and split-circle should always appear together</strong> in horizontal marks. Never the wordmark alone.</li>
+  </ol>
+
+  <div class="do-dont">
+    <div class="do">
+      <span class="do-label">Correct</span>
+      Silver <span class="brand-amp">&amp;</span> Salt Capital<br>
+      <small style="color:var(--sage); font-family:'Satoshi',sans-serif; font-size:11px; letter-spacing:0.04em;">Full name. Upright ampersand glyph. Cormorant Garamond.</small>
+    </div>
+    <div class="dont">
+      <span class="dont-label">Incorrect</span>
+      Silver and Salt Capital<br>
+      Silver <span class="brand-amp">&amp;</span> Salt<br>
+      <em>Silver &amp; Salt Capital</em> (italic ampersand)
+    </div>
+  </div>
+</section>
+
+<!-- ── LOGO ──────────────────────────────────────────────────── -->
+<section id="logo">
+  <p class="section-label">04 · Visual System</p>
+  <h2>Logo system.</h2>
+  <p class="section-intro">The logo pairs the <strong>split-circle icon</strong> with the <strong>wordmark</strong>. Three treatments cover every application: primary for visibility, secondary for restraint, compact for partnership marks. Two colorways: rust (default) and plum (alternate).</p>
+
+  <h3>Primary logo</h3>
+  <p class="body">Use in navigation, hero sections, page headers, and anywhere the logo needs to hold presence against busy content. Cormorant Garamond, weight 600, 28px wordmark with 36px split-circle.</p>
+
+  <div class="logo-grid">
+    <div class="logo-plate">
+      <div class="stage light">
+        <img src="assets/logos/brand-assets/ssc-primary-logo.png" alt="Primary logo, rust colorway, on light">
+      </div>
+      <div class="caption">
+        <strong>Primary · Rust</strong>
+        <span class="spec">On cream / light · ssc-primary-logo.png</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage dark">
+        <img src="assets/logos/brand-assets/ssc-primary-logo-light.png" alt="Primary logo, rust colorway, on dark">
+      </div>
+      <div class="caption">
+        <strong>Primary · Rust on Dark</strong>
+        <span class="spec">Sage left half · ssc-primary-logo-light.png</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage light">
+        <img src="assets/logos/brand-assets/ssc-primary-plum.png" alt="Primary logo, plum colorway, on light">
+      </div>
+      <div class="caption">
+        <strong>Primary · Plum</strong>
+        <span class="spec">Alternate colorway · ssc-primary-plum.png</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage dark">
+        <img src="assets/logos/brand-assets/ssc-primary-plum-light.png" alt="Primary logo, plum colorway, on dark">
+      </div>
+      <div class="caption">
+        <strong>Primary · Plum on Dark</strong>
+        <span class="spec">Sage left half · ssc-primary-plum-light.png</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Secondary logo</h3>
+  <p class="body">Use in footers, stationery, business cards, presentation closings, and any quiet, grounded context. Cormorant Garamond, weight 300 (light), 22px wordmark with 40px split-circle. The lighter weight reads as luxury restraint.</p>
+
+  <div class="logo-grid">
+    <div class="logo-plate">
+      <div class="stage sand">
+        <img src="assets/logos/brand-assets/ssc-secondary-logo.png" alt="Secondary logo, rust colorway">
+      </div>
+      <div class="caption">
+        <strong>Secondary · Rust</strong>
+        <span class="spec">Footer / stationery · ssc-secondary-logo.png</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage sand">
+        <img src="assets/logos/brand-assets/ssc-secondary-plum.png" alt="Secondary logo, plum colorway">
+      </div>
+      <div class="caption">
+        <strong>Secondary · Plum</strong>
+        <span class="spec">Alternate colorway · ssc-secondary-plum.png</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Compact / partnership mark</h3>
+  <p class="body">Use in co-branding strips, partner postcards, event materials, or any context that needs less horizontal space than the wordmark. Layout: <code>S [split-circle] S</code> on one row, italic "Capital" centered below.</p>
+
+  <div class="logo-grid">
+    <div class="logo-plate">
+      <div class="stage light compact">
+        <img src="assets/logos/brand-assets/ssc-compact-mark.png" alt="Compact mark, rust, on light">
+      </div>
+      <div class="caption">
+        <strong>Compact · Rust</strong>
+        <span class="spec">Partnership use · ssc-compact-mark.png</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage dark compact">
+        <img src="assets/logos/brand-assets/ssc-compact-mark-dark.png" alt="Compact mark, rust, on dark">
+      </div>
+      <div class="caption">
+        <strong>Compact · Rust on Dark</strong>
+        <span class="spec">Sage left · ssc-compact-mark-dark.png</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage light compact">
+        <img src="assets/logos/brand-assets/ssc-compact-plum.png" alt="Compact mark, plum, on light">
+      </div>
+      <div class="caption">
+        <strong>Compact · Plum</strong>
+        <span class="spec">Alternate colorway · ssc-compact-plum.png</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage dark compact">
+        <img src="assets/logos/brand-assets/ssc-compact-plum-dark.png" alt="Compact mark, plum, on dark">
+      </div>
+      <div class="caption">
+        <strong>Compact · Plum on Dark</strong>
+        <span class="spec">Sage left · ssc-compact-plum-dark.png</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Split-circle icon (standalone)</h3>
+  <p class="body">Half moss, half rust (or plum), with a white upright ampersand centered. Use as a favicon, social avatar, or app icon. May appear alone only at icon scale; never substitute for the full logo in nav or hero contexts.</p>
+
+  <div class="logo-grid">
+    <div class="logo-plate">
+      <div class="stage light">
+        <img src="assets/logos/brand-assets/ssc-icon.png" alt="Split-circle icon, rust" style="max-height: 140px;">
+      </div>
+      <div class="caption">
+        <strong>Icon · Rust</strong>
+        <span class="spec">Favicon / social · ssc-icon.png · 1024×1024</span>
+      </div>
+    </div>
+    <div class="logo-plate">
+      <div class="stage light">
+        <img src="assets/logos/brand-assets/ssc-icon-plum.png" alt="Split-circle icon, plum" style="max-height: 140px;">
+      </div>
+      <div class="caption">
+        <strong>Icon · Plum</strong>
+        <span class="spec">Alternate colorway · ssc-icon-plum.png · 1024×1024</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>On dark backgrounds</h3>
+  <p class="body">On dark surfaces, the standard moss left half of the split-circle disappears. The preferred treatment is <strong>sage left / accent right</strong> (the on-dark logos above). The left half stays in the green family but provides visible contrast.</p>
+  <p class="body">Other approved on-dark treatments: standard moss left when the background has enough contrast (e.g., ink blue), or a cream outline on the left half when refinement matters most.</p>
+</section>
+
+<!-- ── LOGO DON'TS ───────────────────────────────────────────── -->
+<section id="logo-donts">
+  <p class="section-label">05 · Visual System</p>
+  <h2>Logo don'ts.</h2>
+  <p class="section-intro">A short, strict list. These treatments are not part of the brand. They appear in early sketches and rejected variants but should not ship in any deliverable.</p>
+
+  <ul class="rule-list">
+    <li><strong>Never recolor the wordmark.</strong> No rust-colored ampersand. The ampersand stays muted (moss or sage), never accent-colored.</li>
+    <li><strong>Never use a cream-filled or white-filled left half on dark backgrounds.</strong> Too much contrast, reads as a different logo.</li>
+    <li><strong>Never use the full wordmark in pure white.</strong> Breaks the warmth of the brand.</li>
+    <li><strong>Never italicize the ampersand in the wordmark.</strong> The Cormorant Garamond italic ampersand is a curly script form that is not the brand glyph.</li>
+    <li><strong>Never split the wordmark across two lines.</strong> "Silver <span class="brand-amp">&amp;</span> Salt Capital" is one line.</li>
+    <li><strong>Never use the wordmark without the split-circle</strong> in horizontal logo treatments.</li>
+    <li><strong>Never use the split-circle icon at large display sizes</strong> in place of the full logo. Icon is for favicon / avatar scale.</li>
+    <li><strong>Never stretch, skew, rotate, or apply effects.</strong> No drop shadows, no gradients, no outlines on the wordmark.</li>
+    <li><strong>Never re-render the logo in a different serif</strong> (Fraunces, Newsreader, EB Garamond). Cormorant Garamond only.</li>
+    <li><strong>Always maintain clear space</strong> equal to the height of the ampersand symbol around the mark.</li>
+  </ul>
+</section>
+
+<!-- ── COLOR ─────────────────────────────────────────────────── -->
+<section id="color">
+  <p class="section-label">06 · Visual System</p>
+  <h2>Color palette.</h2>
+  <p class="section-intro">A warm, grounded palette anchored in moss and cream. Pop colors carry the energy and shift by context. Use moss for primary text, cream for primary backgrounds, and one accent at a time within a given surface.</p>
+
+  <h3>Core palette</h3>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="chip bordered" style="background:#FBF8F2;"></div>
+      <div class="meta">
+        <div class="name">Cream</div>
+        <div class="hex">#FBF8F2</div>
+        <div class="token">--cream</div>
+        <div class="use">Primary page background.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip bordered" style="background:#F4EFE6;"></div>
+      <div class="meta">
+        <div class="name">Sand</div>
+        <div class="hex">#F4EFE6</div>
+        <div class="token">--sand</div>
+        <div class="use">Secondary background, footer, cards.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#2F3E34;"></div>
+      <div class="meta">
+        <div class="name">Moss</div>
+        <div class="hex">#2F3E34</div>
+        <div class="token">--moss</div>
+        <div class="use">Primary text, dark surfaces.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#4A5E50;"></div>
+      <div class="meta">
+        <div class="name">Moss Light</div>
+        <div class="hex">#4A5E50</div>
+        <div class="token">--moss-light</div>
+        <div class="use">Body copy.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#7E8E84;"></div>
+      <div class="meta">
+        <div class="name">Sage</div>
+        <div class="hex">#7E8E84</div>
+        <div class="token">--sage</div>
+        <div class="use">Muted text, tagline, labels.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Accent / pop palette</h3>
+  <p class="body">Each section of the site uses a different accent through the <code>--pop</code> token. One accent per surface. Rust is the default; ink blue, plum, lime, and teal are page-specific.</p>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="chip" style="background:#D16B4F;"></div>
+      <div class="meta">
+        <div class="name">Rust</div>
+        <div class="hex">#D16B4F</div>
+        <div class="token">--rust / --pop default</div>
+        <div class="use">Home, About, default accent. Split-circle right.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#3D5A99;"></div>
+      <div class="meta">
+        <div class="name">Ink</div>
+        <div class="hex">#3D5A99</div>
+        <div class="token">--ink</div>
+        <div class="use">The Thesis page.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#8B5E83;"></div>
+      <div class="meta">
+        <div class="name">Plum</div>
+        <div class="hex">#8B5E83</div>
+        <div class="token">--plum</div>
+        <div class="use">How It Works page, alternate logo colorway.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#7CB83F;"></div>
+      <div class="meta">
+        <div class="name">Lime</div>
+        <div class="hex">#7CB83F</div>
+        <div class="token">--lime</div>
+        <div class="use">Join page, Welcome tab accent.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#1A8F7D;"></div>
+      <div class="meta">
+        <div class="name">Teal</div>
+        <div class="hex">#1A8F7D</div>
+        <div class="token">--teal</div>
+        <div class="use">Opportunity page.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#C4A47E;"></div>
+      <div class="meta">
+        <div class="name">Warm</div>
+        <div class="hex">#C4A47E</div>
+        <div class="token">--warm</div>
+        <div class="use">Gold accent, sparingly.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Rule of one accent:</strong> never combine two pops on the same surface. If a page is "ink," buttons, links, and headlines all draw from ink. Mixing pops reads as confusion.
+  </div>
+</section>
+
+<!-- ── TYPOGRAPHY ────────────────────────────────────────────── -->
+<section id="typography">
+  <p class="section-label">07 · Visual System</p>
+  <h2>Typography.</h2>
+  <p class="section-intro">Three families, working together. Cormorant Garamond for editorial voice. Cormorant Infant for digits only. Satoshi for the UI layer. No other fonts.</p>
+
+  <h3>Cormorant Garamond · Display <span class="brand-amp">&amp;</span> serif</h3>
+  <p class="body">Used for hero headlines, section headings, blockquotes, the wordmark, and the tagline. Weights 300, 400, 600, 700 plus italics. Source: Google Fonts.</p>
+
+  <div class="type-specimen">
+    <div class="type-specimen-meta">
+      <div>
+        <div class="label">Hero · Light</div>
+        <div class="spec">Cormorant Garamond · 300 · 64px · -0.02em</div>
+      </div>
+      <div>
+        <p class="specimen-cormorant-h1">Capital, gathered intentionally.</p>
+      </div>
+    </div>
+  </div>
+  <div class="type-specimen">
+    <div class="type-specimen-meta">
+      <div>
+        <div class="label">Section · Regular</div>
+        <div class="spec">Cormorant Garamond · 400 · 40px · -0.015em</div>
+      </div>
+      <div>
+        <p class="specimen-cormorant-h2">Utah's high-performing founders are underfunded.</p>
+      </div>
+    </div>
+  </div>
+  <div class="type-specimen">
+    <div class="type-specimen-meta">
+      <div>
+        <div class="label">Tagline · Italic</div>
+        <div class="spec">Cormorant Garamond · 300 italic · 28px · sage</div>
+      </div>
+      <div>
+        <p class="specimen-cormorant-italic">Connecting capital to Utah founders who use it best.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Satoshi · UI <span class="brand-amp">&amp;</span> body</h3>
+  <p class="body">Used for body text, navigation, labels, buttons, captions, and all UI elements. Weights 400, 500, 700, 900. Source: Fontshare.</p>
+
+  <div class="type-specimen">
+    <div class="type-specimen-meta">
+      <div>
+        <div class="label">Eyebrow · 700</div>
+        <div class="spec">Satoshi · 13px · 0.18em tracking · uppercase</div>
+      </div>
+      <div>
+        <p class="specimen-satoshi-label">The Founding Cohort</p>
+      </div>
+    </div>
+  </div>
+  <div class="type-specimen">
+    <div class="type-specimen-meta">
+      <div>
+        <div class="label">Heading · 900</div>
+        <div class="spec">Satoshi · 900 · 32px · -0.015em</div>
+      </div>
+      <div>
+        <p class="specimen-satoshi-heading">Women founders generate 78¢ per dollar.</p>
+      </div>
+    </div>
+  </div>
+  <div class="type-specimen">
+    <div class="type-specimen-meta">
+      <div>
+        <div class="label">Body · 400</div>
+        <div class="spec">Satoshi · 400 · 17px · 1.65 line-height</div>
+      </div>
+      <div>
+        <p class="specimen-satoshi-body">Silver <span class="brand-amp">&amp;</span> Salt Capital is a collective of accredited women investors in Utah. Members commit ten thousand dollars a year, choose their own investments, and build a diversified portfolio across five years.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Type scale (CSS tokens)</h3>
+  <table>
+    <thead><tr><th>Token</th><th>Size</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td><code>--text-display</code></td><td>52-108px</td><td>Statement numbers, hero stats</td></tr>
+      <tr><td><code>--text-h1</code></td><td>48-72px</td><td>Main hero titles</td></tr>
+      <tr><td><code>--text-h2</code></td><td>36-56px</td><td>Page heroes</td></tr>
+      <tr><td><code>--text-h3</code></td><td>28-42px</td><td>Section headings</td></tr>
+      <tr><td><code>--text-h4</code></td><td>26-36px</td><td>Section sub-headings</td></tr>
+      <tr><td><code>--text-h5</code></td><td>22-32px</td><td>Medium headings</td></tr>
+      <tr><td><code>--text-h6</code></td><td>20-28px</td><td>Card titles</td></tr>
+      <tr><td><code>--text-2xl</code></td><td>17px</td><td>Primary body text</td></tr>
+      <tr><td><code>--text-xl</code></td><td>16px</td><td>Section body</td></tr>
+      <tr><td><code>--text-lg</code></td><td>15px</td><td>Body alternate</td></tr>
+      <tr><td><code>--text-base</code></td><td>13px</td><td>Body small, CTAs</td></tr>
+      <tr><td><code>--text-sm</code></td><td>11px</td><td>Nav links, small labels</td></tr>
+      <tr><td><code>--text-xs</code></td><td>10px</td><td>Eyebrow labels</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── NUMERALS ──────────────────────────────────────────────── -->
+<section id="numerals">
+  <p class="section-label">08 · Visual System</p>
+  <h2>The numeral rule.</h2>
+  <p class="section-intro">Digits 0-9 always render in <strong>Cormorant Infant</strong>, never Cormorant Garamond. This is a brand built around showing numbers (deal counts, dollar amounts, percentages, dates). Numerical clarity is non-negotiable.</p>
+
+  <h3>Why</h3>
+  <p class="body">Cormorant Garamond's "1" is an unflagged stem. It misreads as a capital I or lowercase l. In a hero stat or a dollar amount, that ambiguity is unacceptable. Cormorant Infant is the same editorial family with a small flag on the "1" that distinguishes it cleanly. We use Infant for digits only and keep Garamond for letterforms.</p>
+
+  <div class="numeral-demo">
+    <div class="panel correct">
+      <div class="digits">169 · 78¢ · 2026</div>
+      <small>Correct · Cormorant Infant via override</small>
+    </div>
+    <div class="panel wrong">
+      <div class="digits" style="font-family: 'EB Garamond', serif;">169 · 78¢ · 2026</div>
+      <small>Wrong · unflagged stem, "1" reads as "l"</small>
+    </div>
+  </div>
+
+  <h3>How it's applied</h3>
+  <p class="body">Automatic. The override lives at the top of <code>styles.css</code> in <strong>section "0. NUMERAL OVERRIDE"</strong> and uses CSS <code>unicode-range</code> to re-source the digit code points (<code>U+0030-0039</code>) from Cormorant Infant. No <code>&lt;span class="num"&gt;</code> wrappers. No opt-in classes. Anywhere a designer writes <code>font-family: 'Cormorant Garamond'</code>, digits silently render in Infant.</p>
+
+  <div class="callout">
+    <strong>Designer note:</strong> if you introduce a new serif (Fraunces, Newsreader, EB Garamond, anything else), the rule does <strong>not</strong> automatically apply. Add a matching <code>unicode-range</code> override for that family, or stick to Cormorant Garamond.
+  </div>
+</section>
+
+<!-- ── WATERMARK ─────────────────────────────────────────────── -->
+<section id="watermark">
+  <p class="section-label">09 · Visual System</p>
+  <h2>Ampersand watermark.</h2>
+  <p class="section-intro">The ampersand "&amp;" is a signature design element used as a large-scale background watermark. Felt more than seen. A whisper, not a shout.</p>
+
+  <div class="watermark-stage">
+    <div class="copy">
+      <h3 style="margin-bottom: 8px;">Example surface.</h3>
+      <p class="body" style="margin-bottom: 0;">The watermark sits at 3-4% opacity, right-aligned and vertically centered. It creates brand presence without competing with content.</p>
+    </div>
+  </div>
+
+  <h3>Specifications</h3>
+  <table>
+    <tbody>
+      <tr><td>Font</td><td>Cormorant Garamond, weight 300, upright</td></tr>
+      <tr><td>Opacity</td><td>3-4% (never higher)</td></tr>
+      <tr><td>Color</td><td>Moss on light backgrounds, cream on dark backgrounds</td></tr>
+      <tr><td>Size</td><td>280-400px, scaled to container (should feel monumental)</td></tr>
+      <tr><td>Position</td><td>Right-aligned or right-of-center, vertically centered. Can also be centered.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Approved uses</h3>
+  <ul class="rule-list">
+    <li>Footer background, right-aligned, partially cropped by edge</li>
+    <li>Section dividers or transition areas</li>
+    <li>Presentation slide backgrounds</li>
+    <li>Print materials (letterhead, report covers)</li>
+    <li>Email signatures or headers</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Never at full opacity.</strong> Never used as a foreground element. Never positioned where it interferes with text readability.
+  </div>
+</section>
+
+<!-- ── LAYOUT ────────────────────────────────────────────────── -->
+<section id="layout">
+  <p class="section-label">10 · Application</p>
+  <h2>Layout <span class="brand-amp">&amp;</span> spacing.</h2>
+  <p class="section-intro">The site uses a single horizontal padding standard and a single max-width. Per-page personality comes from palette, not layout.</p>
+
+  <h3>Horizontal padding</h3>
+  <table>
+    <thead><tr><th>Breakpoint</th><th>Padding</th></tr></thead>
+    <tbody>
+      <tr><td>Desktop (&gt;900px)</td><td>48px</td></tr>
+      <tr><td>Tablet (768px)</td><td>24px</td></tr>
+      <tr><td>Mobile (480px)</td><td>16px</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Content max-width</h3>
+  <p class="body">All main content containers use <strong>max-width: 1100px</strong> with <code>margin: 0 auto</code>. The <code>.wrap</code> class provides this. Intentionally narrower containers (for readability) may use 680px or 720px, but the parent section must still use 48px padding and full-width backgrounds.</p>
+
+  <h3>Spacing scale</h3>
+  <p class="body">All spacing uses CSS custom properties. Section padding uses large values (80-120px vertical). Component padding uses mid-range (16-48px). Inline spacing uses small (4-12px).</p>
+  <table>
+    <thead><tr><th>Token</th><th>Value</th><th>Token</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td><code>--space-1</code></td><td>4px</td><td><code>--space-9</code></td><td>40px</td></tr>
+      <tr><td><code>--space-2</code></td><td>8px</td><td><code>--space-10</code></td><td>48px</td></tr>
+      <tr><td><code>--space-3</code></td><td>12px</td><td><code>--space-11</code></td><td>56px</td></tr>
+      <tr><td><code>--space-4</code></td><td>16px</td><td><code>--space-12</code></td><td>64px</td></tr>
+      <tr><td><code>--space-5</code></td><td>20px</td><td><code>--space-13</code></td><td>80px</td></tr>
+      <tr><td><code>--space-6</code></td><td>24px</td><td><code>--space-14</code></td><td>96px</td></tr>
+      <tr><td><code>--space-7</code></td><td>28px</td><td><code>--space-15</code></td><td>112px</td></tr>
+      <tr><td><code>--space-8</code></td><td>32px</td><td><code>--space-16</code></td><td>120px</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Text alignment by page type</h3>
+  <table>
+    <thead><tr><th>Page</th><th>Alignment</th></tr></thead>
+    <tbody>
+      <tr><td>Home</td><td>Centered hero and CTAs</td></tr>
+      <tr><td>The Thesis, How It Works, Join</td><td>Left-aligned inside <code>.wrap</code></td></tr>
+      <tr><td>Standalone pages (Manifesto, Opportunity, Networks, Open Research)</td><td>Left-aligned</td></tr>
+      <tr><td>CTA sections (anywhere)</td><td>Always centered</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Border radius</h3>
+  <table>
+    <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td><code>--radius-sm</code></td><td>4px</td><td>Buttons, badges</td></tr>
+      <tr><td><code>--radius-md</code></td><td>8px</td><td>Cards, inputs</td></tr>
+      <tr><td><code>--radius-lg</code></td><td>12px</td><td>Large cards</td></tr>
+      <tr><td><code>--radius-full</code></td><td>50%</td><td>Circles, avatars</td></tr>
+      <tr><td><code>--radius-pill</code></td><td>100px</td><td>Pill shapes</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Buttons</h3>
+  <table>
+    <thead><tr><th>Class</th><th>Style</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td><code>.btn .btn-primary</code></td><td>Solid <code>--pop</code> background</td><td>Primary CTAs</td></tr>
+      <tr><td><code>.btn .btn-outline</code></td><td>Transparent, moss border</td><td>Secondary actions</td></tr>
+      <tr><td><code>.btn .btn-ghost</code></td><td>Text-only with underline</td><td>Inline links</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── COPY STANDARDS ────────────────────────────────────────── -->
+<section id="copy">
+  <p class="section-label">11 · Application</p>
+  <h2>Copy standards.</h2>
+  <p class="section-intro">Consistent language across every surface. Designers and writers should adopt these phrasings verbatim where listed.</p>
+
+  <h3>CTA language</h3>
+  <p class="body">All primary CTA buttons use <strong>"Join Us"</strong>. Never "Apply Now," "Sign Up," or other variants.</p>
+
+  <h3>Key terminology</h3>
+  <ul class="rule-list">
+    <li><strong>"Exit (return your investment) faster"</strong> — always parenthetically define "exit" for non-investor audiences on first use.</li>
+    <li><strong>"Accredited investor"</strong> — define on first use per SEC rules ($200K income / $1M net assets).</li>
+    <li><strong>Angel investing, syndicate, SPV, SAFE, IRR</strong> — defined in the Angel Investing 101 accordion on the How It Works page. Link there rather than redefining inline.</li>
+  </ul>
+
+  <h3>Utah Paradox framing</h3>
+  <p class="body">Preferred phrasing:</p>
+  <div class="voice-example good">
+    <small>Approved</small>
+    In the United States, Utah is ranked #3 to start a business. #50 for women's equality. The gap between being a great place to start a business and being challenging for women's equality is exactly what makes the opportunity so exciting.
+  </div>
+  <p class="body">Avoid dismissive framings of the inequality ("that's not a contradiction" or similar).</p>
+
+  <h3>Recurring lines</h3>
+  <table>
+    <thead><tr><th>Where</th><th>Copy</th></tr></thead>
+    <tbody>
+      <tr><td>Home CTA strip</td><td>"We're starting now."</td></tr>
+      <tr><td>Home CTA subtext</td><td>"The first 100 members will set the thesis, shape the culture, and define what comes next."</td></tr>
+      <tr><td>Tagline (always italic, sage)</td><td>"Connecting capital to Utah founders who use it best."</td></tr>
+      <tr><td>Closing line (Home, Manifesto, Join)</td><td>"Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders. It's time more of them are women."</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Sources <span class="brand-amp">&amp;</span> citations</h3>
+  <p class="body">Clean and confident. No inline citation numbers. Two patterns:</p>
+  <ol class="rule-list">
+    <li><strong>Stat cards</strong> — source name in small gray text directly on the card (e.g., "BCG / MassChallenge").</li>
+    <li><strong>Page-level sources section</strong> — a single "Sources <span class="brand-amp">&amp;</span> methodology" block at the bottom of each page, listing claims with their sources, plus a link to the Open Research page.</li>
+  </ol>
+</section>
+
+<!-- ── ASSETS ────────────────────────────────────────────────── -->
+<section id="assets">
+  <p class="section-label">12 · Application</p>
+  <h2>Brand asset files.</h2>
+  <p class="section-intro">All downloadable brand assets live in <code>assets/logos/brand-assets/</code>. Transparent PNGs rendered with Cormorant Garamond. The public-facing download page is <a href="brand-assets.html" style="color:var(--rust); text-decoration:none; border-bottom:1px solid var(--rust);">brand-assets.html</a>.</p>
+
+  <h3>Rust colorway</h3>
+  <div class="asset-list">
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-primary-logo.png" download>
+      <span class="filename">ssc-primary-logo.png</span>
+      <span class="dim">1126 × 205</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-primary-logo-light.png" download>
+      <span class="filename">ssc-primary-logo-light.png</span>
+      <span class="dim">1126 × 205</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-secondary-logo.png" download>
+      <span class="filename">ssc-secondary-logo.png</span>
+      <span class="dim">958 × 221</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-icon.png" download>
+      <span class="filename">ssc-icon.png</span>
+      <span class="dim">1024 × 1024</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-compact-mark.png" download>
+      <span class="filename">ssc-compact-mark.png</span>
+      <span class="dim">342 × 334</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-compact-mark-dark.png" download>
+      <span class="filename">ssc-compact-mark-dark.png</span>
+      <span class="dim">342 × 334</span>
+    </a>
+  </div>
+
+  <h3>Plum colorway</h3>
+  <div class="asset-list">
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-primary-plum.png" download>
+      <span class="filename">ssc-primary-plum.png</span>
+      <span class="dim">1126 × 205</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-primary-plum-light.png" download>
+      <span class="filename">ssc-primary-plum-light.png</span>
+      <span class="dim">1126 × 205</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-secondary-plum.png" download>
+      <span class="filename">ssc-secondary-plum.png</span>
+      <span class="dim">958 × 221</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-icon-plum.png" download>
+      <span class="filename">ssc-icon-plum.png</span>
+      <span class="dim">1024 × 1024</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-compact-plum.png" download>
+      <span class="filename">ssc-compact-plum.png</span>
+      <span class="dim">342 × 334</span>
+    </a>
+    <a class="asset-row" href="assets/logos/brand-assets/ssc-compact-plum-dark.png" download>
+      <span class="filename">ssc-compact-plum-dark.png</span>
+      <span class="dim">342 × 334</span>
+    </a>
+  </div>
+
+  <div class="callout">
+    <strong>Notes for contractors:</strong> All assets are transparent PNG (RGBA). Icons are 1024×1024 for Retina sharpness at any display size. Horizontal logos are auto-cropped to content (no excess whitespace). Font source files live in <code>assets/fonts/</code> (Cormorant Garamond). If you need a vector (SVG, EPS, AI) version that isn't here, reach out to Tori before substituting another format.
+  </div>
+</section>
+
+<!-- ── MAINTAIN ──────────────────────────────────────────────── -->
+<section id="maintain">
+  <p class="section-label">13 · Working With This Book</p>
+  <h2>How to update this book.</h2>
+  <p class="section-intro">This brand book is the consolidated, designer-facing source of truth. Two things to keep in mind as it evolves.</p>
+
+  <h3>Source of truth</h3>
+  <p class="body">The brand book (<code>brand-book.html</code>) consolidates everything from the underlying source files into one shareable document. The source files remain authoritative for internal/developer reference:</p>
+  <table>
+    <tbody>
+      <tr><td><code>_reference/brand-standards.md</code></td><td>Full canonical standards (logo specs, on-dark treatments, type, color, copy).</td></tr>
+      <tr><td><code>_reference/brand-north-star.md</code></td><td>Voice principles and brand guardrails.</td></tr>
+      <tr><td><code>_reference/copy-strategy.md</code></td><td>Audience, voice, key messages.</td></tr>
+      <tr><td><code>BRAND.md</code></td><td>Technical standards (CSS tokens, spacing scale, breakpoints).</td></tr>
+      <tr><td><code>CLAUDE.md</code></td><td>Project-level rules enforced in every Claude Code session.</td></tr>
+      <tr><td><code>styles.css</code></td><td>The numeral override block (section "0. NUMERAL OVERRIDE") is load-bearing. Do not delete.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>When a brand decision changes</h3>
+  <ol class="rule-list">
+    <li><strong>Update the source file first</strong> (<code>brand-standards.md</code>, <code>brand-north-star.md</code>, etc.).</li>
+    <li><strong>Then update this brand book</strong> so the consolidated version matches.</li>
+    <li><strong>Bump the version</strong> in the cover meta block (currently 1.0) and the "Last updated" date.</li>
+    <li><strong>If the change affects the live site</strong> (new color, new font, new logo treatment), update <code>styles.css</code> and re-verify on a digit-heavy page like <code>utah-funding-2025.html</code>.</li>
+  </ol>
+
+  <h3>Sharing with a contractor</h3>
+  <p class="body">Two ways:</p>
+  <ul class="rule-list">
+    <li><strong>Send the file directly</strong> (zip <code>brand-book.html</code> plus the <code>assets/logos/brand-assets/</code> folder and the <code>assets/fonts/</code> folder). Self-contained, no internet required for the logo previews.</li>
+    <li><strong>Send the URL</strong> (<code>silverandsaltcapital.com/brand-book.html</code> once live). The page is set to <code>noindex, nofollow</code> so it won't surface in search results.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>One ask of any contractor:</strong> before shipping a deliverable, run it past the four non-negotiables. Is the brand name written in full with the upright ampersand? Is the body copy free of em and en dashes? Are digits rendered in Cormorant Infant? Does the logo follow the approved treatment for its background? If all four are clean, the work is brand-safe.
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer class="book-footer">
+  <div class="meta">
+    <div>
+      <h3>Silver <span class="brand-amp">&amp;</span> Salt Capital · Brand Book</h3>
+      <p>Maintained internally. Share with contractors as needed. Update the source files first, then this book.</p>
+    </div>
+    <div class="version">Version 1.0 · May 2026</div>
+  </div>
+</footer>
+
+</main>
+</div>
+
+</body>
+</html>
