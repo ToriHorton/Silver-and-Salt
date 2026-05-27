@@ -487,10 +487,11 @@
             <td>There is no payment step today. This build inserts the $900 charge as the new middle step.</td>
         </tr>
     </table>
+    <p>This is one page (<code>join.html</code>) that moves through three screens client-side, with no reload between them. The journey:</p>
     <div class="flow-container">
-        <strong>Step 1: About you.</strong> &bull; A short form under the heading "Apply for Membership" (tagged "By Application Only") collects First Name, Last Name, Email, "How did you find Silver <span class="brand-amp">&amp;</span> Salt Capital?" (a referral dropdown), focus areas, and a short message. It submits to the Apps Script Web App.<br><br>
-        <strong>Step 2: Your introduction ("Reserve your time").</strong> &bull; A Google Calendar appointment iframe to book the intro call, with the line "This is a conversation to learn more about you and explore whether Silver <span class="brand-amp">&amp;</span> Salt Capital is the right fit." A confirm checkbox ("I've booked my time and received a confirmation") enables the Continue button.<br><br>
-        <strong>Step 3: You're confirmed.</strong> &bull; A confirmation screen: "Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital. A calendar invitation has been sent to your email. We'll see you soon," closing with an Ivy Baker Priest quote card.
+        <strong>Screen 1: About you.</strong> &bull; A short form under the heading "Apply for Membership" (tagged "By Application Only") collects First Name, Last Name, Email, "How did you find Silver <span class="brand-amp">&amp;</span> Salt Capital?" (a referral dropdown), focus areas, and a short message. It submits to the Apps Script Web App.<br><br>
+        <strong>Screen 2: Your introduction ("Reserve your time").</strong> &bull; A Google Calendar appointment iframe to book the intro call, with the line "This is a conversation to learn more about you and explore whether Silver <span class="brand-amp">&amp;</span> Salt Capital is the right fit." A confirm checkbox ("I've booked my time and received a confirmation") enables the Continue button.<br><br>
+        <strong>Screen 3: You're confirmed.</strong> &bull; A confirmation screen: "Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital. A calendar invitation has been sent to your email. We'll see you soon," closing with an Ivy Baker Priest quote card.
     </div>
     <p class="note">How the new build changes this: the 3-step tracker becomes Apply &rarr; Secure Your Place &rarr; Book Your Conversation, with the Stripe charge (Task 2) added as the new Step 2 between the form and the calendar. The existing form and booking screens are the pieces to preserve; payment is the new middle.</p>
 
@@ -510,12 +511,20 @@
             <td>This is a convenience gate, not real security: the password sits in client-side source. Fine as is; no change needed for this build.</td>
         </tr>
     </table>
+    <p>The welcome area is three pages. A member enters at the hub and moves out to each resource. Walk all three in order.</p>
     <div class="flow-container">
-        <strong>The welcome hub.</strong> &bull; A page headed "You're in. Let's get you set up," inviting the member to work through a short task list at their own pace.<br><br>
-        <strong>Resource 1: Add Silver <span class="brand-amp">&amp;</span> Salt Capital to your LinkedIn.</strong> &bull; A guide (<code>investor/welcome/linkedin/</code>) with two ways to add the membership to a LinkedIn profile and copy-ready descriptions.<br><br>
-        <strong>Resource 2: Tell your network you've joined.</strong> &bull; A ready-to-post announcement and a branded share image generated in the browser (<code>investor/welcome/linkedin-post/</code>).
+        <strong>Page 1: The welcome hub.</strong> &bull; <code>investor/welcome/</code><br>
+        Headed "You're in. Let's get you set up," with the line "A few small things will help you show up as a Silver <span class="brand-amp">&amp;</span> Salt Capital investor." It presents a short task list the member works through at their own pace, linking out to the two resource pages below. This is the page Task 5's onboarding panel most directly replaces.
     </div>
-    <p class="note">How the new build relates: Task 5's post-call onboarding panel is where material like this should live for approved members, gated behind approval. Use these resources as the reference for that panel's tone and welcome, rather than something to rebuild now.</p>
+    <div class="flow-container">
+        <strong>Page 2: Add Silver <span class="brand-amp">&amp;</span> Salt Capital to your LinkedIn.</strong> &bull; <code>investor/welcome/linkedin/</code><br>
+        A guided page, "Your LinkedIn tells your network who you are and what you back." The member moves through: <em>Step One,</em> update your headline (copy-ready text with a Copy button); <em>Step Two,</em> choose how to add the involvement (Add as Experience or Add as a Volunteer); <em>Step Three,</em> copy a description (several copy-ready options); and an <em>Optional</em> set of skills to add. Every block has a one-tap Copy button.
+    </div>
+    <div class="flow-container">
+        <strong>Page 3: Tell your network you've joined.</strong> &bull; <code>investor/welcome/linkedin-post/</code><br>
+        An announcement page, "There are over 100,000 accredited women investors in Utah. Your post shows them this was built for them." The member moves through: <em>Step One,</em> build your share image (fill a couple of fields, then a Download image button generates a branded image in the browser); <em>Step Two,</em> write your post (copy-ready post options with Copy buttons).
+    </div>
+    <p class="note">How the new build relates: Task 5's post-call onboarding panel is where material like this should live for approved members, gated behind approval. Use these three pages as the reference for that panel's tone and welcome, rather than something to rebuild now.</p>
 
 </body>
 </html>
