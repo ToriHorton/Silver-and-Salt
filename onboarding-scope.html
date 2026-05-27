@@ -460,8 +460,62 @@
         <li>The accounts and costs are mine. I will cover Stripe, hosting, and anything else the build needs.</li>
     </ul>
 
+    <h3>6.6 Try the existing experience first</h3>
+    <p>Before building, please walk through what already exists so the new flow feels like a natural continuation of it, in voice, pacing, and brand. Two live reference flows are documented in the appendixes below:</p>
+    <ul>
+        <li><strong>Appendix A</strong> is the live application (Join) path: the form-and-booking flow this build extends by adding the payment step in the middle.</li>
+        <li><strong>Appendix B</strong> is the member welcome area: what someone receives after they join, and the reference for the post-call onboarding panel in Task 5.</li>
+    </ul>
+    <p>Open each on both a desktop and a phone, move through them with fake details, and notice the calm, declarative voice and the cream, moss, and lime brand. The goal is for the new charge-and-book flow to feel like it has always belonged alongside these.</p>
+
     <p style="margin-top:24px;">Truly, thank you for lending your talent to this. It means more than I can easily say, and you will have my lasting gratitude and full credit for helping bring Silver <span class="brand-amp">&amp;</span> Salt Capital to life.</p>
     <p>With appreciation,<br>Tori</p>
+
+    <h2>Appendix A: The Existing Join Path (live today)</h2>
+    <p>This is the membership application as it runs today, before this build adds payment. It is the flow to walk first, and the one the new pipeline extends. Treat its voice, layout, and brand as the reference the new steps should match.</p>
+    <table class="meta-table">
+        <tr>
+            <td class="meta-label">Try it at:</td>
+            <td><a href="https://silverandsaltcapital.com/join.html">silverandsaltcapital.com/join.html</a></td>
+            <td class="meta-label">Source file:</td>
+            <td><code>join.html</code></td>
+        </tr>
+        <tr>
+            <td class="meta-label">How it works:</td>
+            <td>Static page plus a Google Apps Script Web App writing to a Google Sheet, with a Google Calendar appointment iframe for booking. This is the same architecture the new build extends.</td>
+            <td class="meta-label">What is missing:</td>
+            <td>There is no payment step today. This build inserts the $900 charge as the new middle step.</td>
+        </tr>
+    </table>
+    <div class="flow-container">
+        <strong>Step 1: About you.</strong> &bull; A short form under the heading "Apply for Membership" (tagged "By Application Only") collects First Name, Last Name, Email, "How did you find Silver <span class="brand-amp">&amp;</span> Salt Capital?" (a referral dropdown), focus areas, and a short message. It submits to the Apps Script Web App.<br><br>
+        <strong>Step 2: Your introduction ("Reserve your time").</strong> &bull; A Google Calendar appointment iframe to book the intro call, with the line "This is a conversation to learn more about you and explore whether Silver <span class="brand-amp">&amp;</span> Salt Capital is the right fit." A confirm checkbox ("I've booked my time and received a confirmation") enables the Continue button.<br><br>
+        <strong>Step 3: You're confirmed.</strong> &bull; A confirmation screen: "Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital. A calendar invitation has been sent to your email. We'll see you soon," closing with an Ivy Baker Priest quote card.
+    </div>
+    <p class="note">How the new build changes this: the 3-step tracker becomes Apply &rarr; Secure Your Place &rarr; Book Your Conversation, with the Stripe charge (Task 2) added as the new Step 2 between the form and the calendar. The existing form and booking screens are the pieces to preserve; payment is the new middle.</p>
+
+    <h2>Appendix B: The Member Welcome Materials (what a new member receives)</h2>
+    <p>This is what someone lands in once they have joined: a small set of welcome resources to help them show up as a Silver <span class="brand-amp">&amp;</span> Salt Capital member. Today these live in a member-only area; under this build, the post-call onboarding panel (Task 5) becomes their eventual home. The contractor does not need to rebuild these; they are the reference for the tone and the kind of welcome an approved member should arrive in.</p>
+    <table class="meta-table">
+        <tr>
+            <td class="meta-label">Try it at:</td>
+            <td><a href="https://silverandsaltcapital.com/investor/welcome/">silverandsaltcapital.com/investor/welcome/</a></td>
+            <td class="meta-label">Source file:</td>
+            <td><code>investor/welcome/index.html</code></td>
+        </tr>
+        <tr>
+            <td class="meta-label">Access:</td>
+            <td>A light password gate. The password is shared in the welcome email (currently <code>bedrock</code>).</td>
+            <td class="meta-label">Note:</td>
+            <td>This is a convenience gate, not real security: the password sits in client-side source. Fine as is; no change needed for this build.</td>
+        </tr>
+    </table>
+    <div class="flow-container">
+        <strong>The welcome hub.</strong> &bull; A page headed "You're in. Let's get you set up," inviting the member to work through a short task list at their own pace.<br><br>
+        <strong>Resource 1: Add Silver <span class="brand-amp">&amp;</span> Salt Capital to your LinkedIn.</strong> &bull; A guide (<code>investor/welcome/linkedin/</code>) with two ways to add the membership to a LinkedIn profile and copy-ready descriptions.<br><br>
+        <strong>Resource 2: Tell your network you've joined.</strong> &bull; A ready-to-post announcement and a branded share image generated in the browser (<code>investor/welcome/linkedin-post/</code>).
+    </div>
+    <p class="note">How the new build relates: Task 5's post-call onboarding panel is where material like this should live for approved members, gated behind approval. Use these resources as the reference for that panel's tone and welcome, rather than something to rebuild now.</p>
 
 </body>
 </html>
