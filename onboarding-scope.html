@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Brief: Silver &amp; Salt Capital Member Onboarding</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Cormorant+Infant:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+    <style>
+        /* 0. NUMERAL OVERRIDE. Digits 0-9 always render in Cormorant Infant,
+           never Cormorant Garamond, per brand standard. Re-sources the digit
+           unicode range only, pulling glyphs from Cormorant Infant. */
+        @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 300; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+        @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+        @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+        @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 700; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+        @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyJU44g9vKiM1sORYSiWeAsLN997_Il2xMEbK0UPg.woff2) format('woff2'); unicode-range: U+0030-0039; }
+        :root {
+            --cream: #FBF8F2;
+            --sand:  #F4EFE6;
+            --moss:  #2F3E34;
+            --moss-light: #4A5E50;
+            --sage:  #7E8E84;
+            --lime:  #7CB83F;
+            --rust:  #D16B4F;
+            --warm:  #C4A47E;
+        }
+        body {
+            font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.7;
+            color: var(--moss-light);
+            background: var(--cream);
+            max-width: 820px;
+            margin: 48px auto;
+            padding: 24px;
+        }
+        .header-container {
+            border-bottom: 3px solid var(--moss);
+            padding-bottom: 20px;
+            margin-bottom: 36px;
+        }
+        .company-title {
+            font-size: 11pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--moss);
+            letter-spacing: 0.14em;
+            margin: 0 0 6px 0;
+        }
+        .doc-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 30pt;
+            font-weight: 600;
+            line-height: 1.1;
+            color: var(--moss);
+            margin: 0 0 18px 0;
+        }
+        .brand-amp {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: normal;
+        }
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5pt;
+            background: var(--sand);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .meta-table td { padding: 8px 14px; vertical-align: top; }
+        .meta-label { font-weight: 700; color: var(--moss); width: 18%; }
+        h2 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 21pt;
+            font-weight: 600;
+            color: var(--moss);
+            margin-top: 44px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--sand);
+            padding-bottom: 8px;
+        }
+        h3 {
+            font-size: 11pt;
+            color: var(--moss);
+            margin-top: 24px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+        }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+        code {
+            background: var(--sand);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 9.5pt;
+            color: var(--moss);
+        }
+        .flow-container {
+            background-color: var(--sand);
+            border-left: 5px solid var(--lime);
+            padding: 18px;
+            margin: 18px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 10pt;
+        }
+        .disclaimer-box {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 13pt;
+            line-height: 1.5;
+            color: var(--moss);
+            background-color: var(--cream);
+            border: 1px solid var(--sage);
+            padding: 18px;
+            margin: 16px 0;
+            border-radius: 8px;
+        }
+        .ui-guideline-box {
+            background-color: var(--sand);
+            border: 1px dashed var(--sage);
+            padding: 18px;
+            margin: 16px 0;
+            font-size: 10pt;
+            border-radius: 8px;
+        }
+        .ui-guideline-box strong { color: var(--moss); }
+        .legal-clause {
+            background-color: var(--cream);
+            border: 1px dashed var(--rust);
+            padding: 14px;
+            font-size: 9.5pt;
+            margin: 16px 0;
+            border-radius: 8px;
+        }
+        .constraint-box {
+            background-color: var(--moss);
+            color: var(--cream);
+            padding: 18px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-size: 10pt;
+        }
+        .constraint-box strong { color: #fff; }
+        .constraint-box a { color: var(--lime); }
+        .definition-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .definition-table th {
+            background-color: var(--moss);
+            color: var(--cream);
+            text-align: left;
+            padding: 11px;
+            font-size: 10pt;
+        }
+        .definition-table td {
+            padding: 11px;
+            border-bottom: 1px solid var(--sand);
+            vertical-align: top;
+            font-size: 10pt;
+        }
+        .note { color: var(--sage); font-size: 9.5pt; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="company-title">Monarch Capital Collective, PBC &nbsp;|&nbsp; operating the Silver <span class="brand-amp">&amp;</span> Salt Capital brand</div>
+        <div class="doc-title">Member Onboarding: Project Brief</div>
+
+        <table class="meta-table">
+            <tr>
+                <td class="meta-label">Project Title:</td>
+                <td>Phase 1a Google Workspace &amp; Stripe Member Onboarding Pipeline</td>
+                <td class="meta-label">Date:</td>
+                <td>May 26, 2026</td>
+            </tr>
+            <tr>
+                <td class="meta-label">Author / CEO:</td>
+                <td>Tori Horton</td>
+                <td class="meta-label">Rough Effort:</td>
+                <td>About 10 to 14 days, no rush</td>
+            </tr>
+            <tr>
+                <td class="meta-label">Tech Stack:</td>
+                <td>Static frontend (GitHub Pages) + Google Apps Script + Google Workspace + Stripe (Payment Element)</td>
+                <td class="meta-label">Visual Standard:</td>
+                <td>Silver <span class="brand-amp">&amp;</span> Salt Capital brand system</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>1. Project Objective &amp; Strategic Context</h2>
+    <p>The objective of this project is to build a functional, maintainable, low-code prototype of the member onboarding and payment workflow for the regional membership club operating under the brand name <strong>Silver <span class="brand-amp">&amp;</span> Salt Capital</strong>.</p>
+    <p>To support compliance under Rule 506(b) of Regulation D and maintain a clear legal separation between membership activity and investment activity, the pipeline enforces data segmentation, presents a required compliance disclaimer before submission, and supports a two-stage manual vetting mechanism: <strong>Charge Card &rarr; Vet and Meet Applicant &rarr; Approve or Refund</strong>. The $900 founding-member fee is charged at application; on the rare occasion an applicant is not a mutual fit after the conversation, the payment is fully refunded.</p>
+    <p>The experience should feel premium, calm, and considered, matching the founding-member price point. Standard membership is $1,000; founding members receive a $100 founding-member discount, so they pay $900. The backend uses Google Workspace tools so the system stays owner-maintainable after handover, with editable copy, pricing, and email text that do not require ongoing engineering support.</p>
+
+    <div class="constraint-box">
+        <strong>Read first: four constraints that shape this build.</strong><br><br>
+        <strong>1. This needs a backend.</strong> The live site is static HTML on GitHub Pages and cannot create Stripe sessions or receive webhooks on its own. A Google Apps Script Web App serves as the backend glue (creating the Stripe PaymentIntent and receiving the payment and refund webhooks). This keeps the system low-code and owner-maintainable.<br><br>
+        <strong>2. Payment is collected on-domain with the Stripe Payment Element.</strong> The payment step uses the embedded Stripe Payment Element (Stripe.js), rather than the off-site Hosted Checkout, so the applicant completes the $900 payment without ever leaving the Silver <span class="brand-amp">&amp;</span> Salt Capital site. The element is brand-styled via Stripe's Appearance API (fonts toward Cormorant Garamond and Satoshi where the element allows, lime focus states, cream surfaces, brand border radius), and Apple Pay / Google Pay are offered via the Express Checkout Element. PCI burden stays at SAQ A because card fields remain inside Stripe-hosted iframes. This is a deliberate trade: more build effort (roughly 3 to 5 days) and a payment component that is developer-maintained rather than dashboard-editable, in exchange for full brand continuity at the founding-member price point.<br><br>
+        <strong>3. Payment is charged at application, then refunded if the applicant is not a fit.</strong> The $900 is captured immediately when the applicant pays (a standard automatic-capture charge), so there is no authorization-hold clock to race. After the vetting conversation, the CEO either approves the member or, on the rare non-fit, issues a full refund in Stripe. Refunds can be issued for months, so the decision window is comfortable; aim to complete the call and any refund within 30 days. One cost to note in the brief so it is expected: Stripe keeps its processing fee (about 2.9% + $0.30, roughly $26 on $900) on a refund, so each refunded applicant carries that small non-recoverable cost. This is expected to be infrequent.<br><br>
+        <strong>4. Legal language requires counsel sign-off.</strong> The disclaimer wording, the 506(b) separation, and the referral-credit restraint below are drafted for the contractor to implement, but their legal sufficiency is to be confirmed by Silver <span class="brand-amp">&amp;</span> Salt Capital's securities counsel before launch.
+    </div>
+
+    <h2>2. System Architecture &amp; Data Flow</h2>
+    <p><strong>Platform model.</strong> Monarch Capital Collective is the platform that operates one or more membership groups. Silver <span class="brand-amp">&amp;</span> Salt Capital is the first group. Each group has its own brand, site, price, copy, and onboarding flow, while sharing one Monarch backend, one member database, one payment system, and one health dashboard. Members only ever see their own group's brand; Monarch stays invisible to them. Build this group-aware from day one: every record carries a group identifier, and per-group settings live in a configuration tab, so launching a second group later means adding a settings row and a branded page rather than rewriting the backend. Only Silver <span class="brand-amp">&amp;</span> Salt Capital launches now.</p>
+    <p>The system is composed of a static brand frontend, a Google Apps Script Web App acting as the backend, a Google Sheet CRM, and Stripe. The flow:</p>
+    <div class="flow-container">
+        <strong>Stage 1: Intake Application (pre-call)</strong> &bull; The prospective member submits a short intake form on the brand site, capturing minimal contact details, a referral indicator, and a required compliance disclaimer.<br><br>
+        <strong>Stage 2: CRM Record Ingestion</strong> &bull; The submission is written to the master Google Sheet CRM via the Apps Script Web App, tagged with its group (for launch, Silver <span class="brand-amp">&amp;</span> Salt Capital). The record status defaults to <em>Pending Vetting</em> and that group's admin notification email is sent.<br><br>
+        <strong>Stage 3: Stripe Payment</strong> &bull; The applicant completes payment in the embedded Stripe Payment Element on the brand site. The Apps Script backend creates a <code>PaymentIntent</code> for $900 (standard automatic capture) and returns its client secret; the frontend confirms it. The $900 is charged immediately. A webhook on <code>charge.succeeded</code> records the payment and sets the row status to <em>Paid, Pending Vetting</em>. The funds are held by approval, not by Stripe: they are charged now and refunded later only if the applicant is not a fit.<br><br>
+        <strong>Stage 4: Booking Step</strong> &bull; On a confirmed payment, the page advances the applicant (client-side, after Stripe confirms the PaymentIntent) to the booking step on the brand site to schedule the required intake conversation.<br><br>
+        <strong>Stage 5: Vetting, Approval or Refund</strong> &bull; After the one-on-one conversation, the CEO records the decision in the CRM. On a fit, marking the row <em>Approved</em> sends the onboarding invite, appends <code>[Active Member]</code>, and gates the <strong>investor accreditation questionnaire</strong> inside the post-call member setup panel. On the rare non-fit, the CEO issues a full refund in Stripe; a <code>charge.refunded</code> webhook sets the row to <em>Refunded</em> and confirms no funds were retained.
+    </div>
+    <p class="note">Architecture note for the contractor: the Apps Script Web App must hold the Stripe secret key server-side (never in client JavaScript), expose one endpoint to create a PaymentIntent (returning its client secret), and one endpoint to receive the Stripe webhook (handling both the payment and the refund events). The static frontend only ever calls these endpoints; it never touches Stripe secrets. Every submission carries a group identifier, and the backend reads that group's settings (price, theme, notification email, Stripe product, calendar, disclaimer) from the Groups configuration tab rather than hardcoding any single group's values.</p>
+    <p class="note">CORS gotcha worth knowing up front: an Apps Script Web App does not return the CORS headers a browser expects, so a normal JSON <code>fetch</code> from the static GitHub Pages site triggers a preflight that fails. The standard workaround is to POST with <code>Content-Type: text/plain</code> (which skips the preflight) and parse the JSON string inside <code>doPost</code>, and to deploy the Web App with access set to "Anyone." Build the frontend calls this way from the start to avoid a day lost to opaque CORS errors. The Stripe webhook does not hit this, since Stripe calls the endpoint server-to-server, not from a browser.</p>
+
+    <h2>3. Brand UI/UX Standards (Silver <span class="brand-amp">&amp;</span> Salt Capital)</h2>
+    <p>The standards below define the Silver <span class="brand-amp">&amp;</span> Salt Capital theme, which is group #1. Treat them as a theme the page loads per group (colors, fonts, logo, copy), rather than values baked into the markup, so a future group can supply its own theme on the same page structure.</p>
+    <div class="ui-guideline-box">
+        <strong>A. Typography</strong><br>
+        &bull; <em>Headings and display:</em> Cormorant Garamond (weights 300, 400, 600, 700).<br>
+        &bull; <em>Body, inputs, labels, buttons, and all UI:</em> Satoshi (weights 400, 500, 700, 900).<br>
+        &bull; <em>Digits 0 to 9:</em> always render in Cormorant Infant, never Cormorant Garamond. On the live site this is enforced automatically by a <code>unicode-range</code> font-face override. Any display number (prices like $1,000 and $900, step counts, dates) must follow this rule. Do not introduce any other fonts; Inter, Montserrat, Playfair, and Merriweather are not part of the system.<br><br>
+        <strong>B. Color (60-30-10)</strong><br>
+        &bull; <em>60% dominant:</em> cream <code>#FBF8F2</code> page background, with sand <code>#F4EFE6</code> for section backgrounds and cards.<br>
+        &bull; <em>30% structural:</em> moss <code>#2F3E34</code> for primary text and dark surfaces, moss-light <code>#4A5E50</code> for body, sage <code>#7E8E84</code> for muted labels.<br>
+        &bull; <em>10% accent:</em> lime <code>#7CB83F</code> (the Join-flow accent) restricted to active CTAs, progress highlights, and focus states. Gold <code>#C4A47E</code> and rust <code>#D16B4F</code> are available as secondary accents. No navy, no neon, no primary blues.<br><br>
+        <strong>C. Layout &amp; Whitespace</strong><br>
+        &bull; Generous vertical spacing between sections (80 to 120px at desktop). Horizontal padding of 48px at desktop, 24px at tablet, 16px at mobile. Content max-width 1100px, with narrower 680px reading columns where helpful.<br>
+        &bull; Border radius: 4px for buttons and badges, 8px for cards and inputs, 12px for large cards.<br><br>
+        <strong>D. Interactive Micro-Engagements</strong><br>
+        &bull; <em>Inline validation:</em> form fields validate format (email shape, character limits) the moment focus leaves the field, surfacing a quiet localized note beneath the field. No full-page reload error states.<br>
+        &bull; <em>Focus states:</em> active inputs show a subtle border color transition toward lime to give immediate tactile feedback on desktop and mobile.<br><br>
+        <strong>E. Voice</strong><br>
+        &bull; Calm, declarative, and approachable. Use the Join page reference: "A few questions, followed by a brief conversation." Always write the full name "Silver <span class="brand-amp">&amp;</span> Salt Capital" with the ampersand character. No em dashes or en dashes anywhere in copy. State what something is, rather than what it is not (legal disclaimers excepted).
+    </div>
+
+    <h2>4. Detailed Technical Deliverables</h2>
+
+    <h3>Task 1: Frontend Intake Interface (brand portal)</h3>
+    <ul>
+        <li>Build a minimal intake wrapper on the brand site with a visible <strong>3-step progress tracker</strong> in the header: <code>[1 Apply] &rarr; [2 Secure Your Place] &rarr; [3 Book Your Conversation]</code>.</li>
+        <li><strong>Build it as a brandable template.</strong> The intake page loads its group's theme (colors, fonts, logo, copy) from the Groups settings and submits a hidden group identifier with every application, so the same structure can serve future groups. For launch it is themed and set to Silver <span class="brand-amp">&amp;</span> Salt Capital, group #1.</li>
+        <li>Keep intake fields to the essentials to reduce mobile friction: First Name, Last Name, Email, Phone, State, and Referral Source. Full residential address is not collected here; it is deferred to the post-approval onboarding panel (Task 5), and Stripe collects a billing address during payment regardless. This keeps intake light, matches the brand voice, and means full address PII is only stored once someone is a committed member. (Note: Phone and State are new relative to the current live form, which collects name, email, org, referral, focus areas, and message.)</li>
+        <li>Include a required, clearly visible disclaimer confirmation block. The submit button stays disabled until the applicant checks the confirmation box beneath this compliance text:</li>
+    </ul>
+    <div class="disclaimer-box">
+        "Membership provides access to education, networking, and community benefits. Membership does not guarantee access to private investment opportunities, nor does it constitute an offer to sell or a solicitation of an offer to buy any securities."
+    </div>
+    <p class="note">Disclaimer wording is subject to securities counsel approval before launch.</p>
+
+    <h3>Task 2: Stripe Integration (Payment Element, charge and refund)</h3>
+    <ul>
+        <li><strong>Pricing and the founding-member discount.</strong> Standard membership is $1,000. Founding members receive a $100 founding-member discount, so the amount charged is $900. The payment step must display this as a visible line-item breakdown, not just a final number: <code>Membership $1,000</code>, <code>Founding-member discount &minus;$100</code>, <code>Total due today $900</code>. The Stripe PaymentIntent amount is $900. Store the standard price and the discount per group in the Groups configuration tab (Task 3), which both the PaymentIntent and the displayed breakdown read from, so prices are set per group and changing one never requires editing payment code. Silver <span class="brand-amp">&amp;</span> Salt Capital's values are $1,000 standard and $900 founding.</li>
+        <li>Mount the Stripe Payment Element on the brand payment page using Stripe.js. The Apps Script backend creates a $900 <code>PaymentIntent</code> with standard automatic capture and returns its client secret; the frontend confirms the payment client-side. This charges the $900 founding-member fee immediately. There is no authorization-hold window to manage: the fee is captured now and, on a non-fit, refunded later.</li>
+        <li><strong>Carry the join key in PaymentIntent metadata.</strong> When the backend creates the <code>PaymentIntent</code>, write the application's identifier into its <code>metadata</code> (the CRM row reference, plus email as a fallback) alongside the group identifier and the referrer code if one is present. This is the key every webhook uses to locate the matching Sheet row; without it the payment and refund lookups have nothing to match on. The webhook reads <code>metadata</code> to find the row rather than guessing from name or email alone.</li>
+        <li><strong>Brand styling via the Appearance API:</strong> match the element to the brand using Stripe's Appearance API, fonts toward Cormorant Garamond and Satoshi where the element allows (via <code>fonts</code> / <code>fontSrc</code>), lime <code>#7CB83F</code> focus and accent states, cream and sand surfaces, and the brand border radius. The surrounding page is fully brand-controlled (Cormorant headings, your layout, your spacing).</li>
+        <li>Offer Apple Pay and Google Pay via the Express Checkout Element, positioned above the card fields. Note that Apple Pay does not appear until the domain is verified: register the live domain in the Stripe dashboard and host Stripe's domain-association file at <code>/.well-known/apple-developer-merchantid-domain-association</code> on the GitHub Pages site. This is a one-time setup step rather than code, but the wallet buttons stay hidden until it is done, so do it early to avoid a confusing "missing on iPhone" result during testing.</li>
+        <li><strong>Trust copy beside the element:</strong> "Founding-member rate: $900 (standard membership $1,000, less a $100 founding-member discount). Your card is charged $900.00 today to hold your founding-member place. After our conversation, if we decide membership is not the right fit, your $900 is refunded in full."</li>
+        <li><strong>Refund policy, shown and acknowledged before the charge.</strong> Display the full refund policy (text below) at the payment step, directly beneath the Payment Element. A required checkbox keeps the Pay button disabled until the applicant acknowledges it, exactly as the compliance disclaimer gates the intake form. Include the same policy text in the payment-received confirmation email. The policy text is stored per group in the Groups configuration tab (Task 3) so it stays owner-editable and a future group can supply its own. Record the acknowledgment (timestamp) on the CRM row.</li>
+    </ul>
+    <div class="disclaimer-box">
+        <strong style="font-style:normal;">Founding-Member Refund Policy.</strong> Your $900 founding-member fee is charged when you submit your application, before your introductory conversation with Silver <span class="brand-amp">&amp;</span> Salt Capital. If, after that conversation, Silver <span class="brand-amp">&amp;</span> Salt Capital determines that membership is not a mutual fit, your full $900 is refunded to your original payment method. Refunds are issued within five business days of that decision and typically appear on your statement within five to ten business days, depending on your bank. Every application is reviewed and resolved within 30 days. Once your membership is approved and active, the founding-member fee covers your membership term and is non-refundable.
+    </div>
+    <p class="note">Refund policy wording is subject to securities counsel and bookkeeper review before launch.</p>
+    <ul>
+        <li>Handle the full client-side lifecycle: a loading state while the intent is created, inline error messages styled to brand, the confirmation result, and advancing to the booking step only on a confirmed payment.</li>
+        <li>Build an Apps Script webhook endpoint that handles two events, locating the matching Sheet row from PaymentIntent metadata in both cases:
+            <br>&bull; <code>charge.succeeded</code>: when the $900 is charged, set Membership Vetting Status to <em>Paid, Pending Vetting</em>, store the Stripe Transaction ID, and send the admin notification and the applicant's payment-received confirmation. (Approval is a separate, deliberate CRM action after the call, described in Task 3, not an automatic result of payment.)
+            <br>&bull; <code>charge.refunded</code>: when the CEO issues a refund in Stripe for a non-fit, set Membership Vetting Status to <em>Refunded</em>, confirm the full $900 was returned, and reverse any pending referral credit tied to this applicant (Task 6).
+        </li>
+        <li><strong>Verify the Stripe webhook signature on every call.</strong> Apps Script has no Stripe library, so the signature check is hand-rolled: read the <code>Stripe-Signature</code> header, recompute the HMAC-SHA256 of the timestamped payload with the endpoint signing secret using <code>Utilities.computeHmacSignature</code>, and reject the request on mismatch. Budget a little time for this; it is the one piece of the webhook that cannot be copied from Stripe's standard sample code.</li>
+        <li>The Stripe secret key lives only in the Apps Script backend, never in client JavaScript. The frontend receives only the publishable key and the PaymentIntent client secret.</li>
+        <li><strong>Multi-group payments.</strong> Use one Stripe account with a product and price per group, and tag the group on every PaymentIntent via metadata so payments and the health dashboard can be filtered per group. Move to Stripe Connect only if a future group needs its own legal entity and separate payouts.</li>
+    </ul>
+
+    <h3>Task 3: Backend CRM (Google Sheets)</h3>
+    <ul>
+        <li>Build a master Google Sheet as the unified CRM. Columns map to: <em>Timestamp, Group, Legal Name, Email, Phone, Residential Address, State, Referral Source, Membership Vetting Status (Pending Vetting / Paid, Pending Vetting / Approved / Refunded), Stripe Transaction ID, Refund Policy Acknowledged (timestamp), Investor Qualification Status (Pending Questionnaire / Accredited / Non-Accredited),</em> and <em>System Tags</em>. The <em>Group</em> column tags every record with the group it belongs to (for launch, Silver <span class="brand-amp">&amp;</span> Salt Capital).</li>
+        <li><strong>Approval is a deliberate CRM action, decoupled from payment.</strong> Because the $900 is charged at application, payment alone never approves anyone. After the vetting call, the CEO sets the row's Membership Vetting Status to <em>Approved</em> (a status dropdown). An installable <code>onEdit</code> trigger watches for that change and then sends the onboarding invite, appends the <code>[Active Member]</code> tag, opens the accreditation gate (Task 5), and writes any referral credit (Task 6). The non-fit path is handled in Stripe: the CEO issues the refund, and the <code>charge.refunded</code> webhook flips the row to <em>Refunded</em>. Guard the trigger so it fires once per row and only on a transition into <em>Approved</em>.</li>
+        <li><strong>Groups configuration tab.</strong> Add a <code>Groups</code> tab holding the per-group settings the backend reads at runtime: group name, theme reference (colors, fonts, logo, copy), standard price and any founding discount, Stripe product or price ID, notification email, booking calendar link, disclaimer text, and refund policy text. The backend never hardcodes a single group's values. For launch this tab has one row, Silver <span class="brand-amp">&amp;</span> Salt Capital.</li>
+        <li>Apply conditional formatting and separate structural views so membership lists stay distinct from any future deal-flow or accredited-investor tracking, and so each group's records filter cleanly with no cross-group leakage. The goal is to keep general membership data segmented from investment data, per group, to support the 506(b) separation.</li>
+    </ul>
+    <p class="note">Residential Address is populated at the post-approval onboarding step (Task 5), not at intake, so this column stays empty until a member is approved and onboarded.</p>
+
+    <h3>Task 4: Post-Submission Routing &amp; Booking Gateway</h3>
+    <ul>
+        <li>On a successful payment, route the applicant to Step 3 of the tracker. Display a clear status callout: <code>Status: Payment received, application pending review. If we are not the right fit after our conversation, your $900 is refunded in full.</code></li>
+        <li>Embed a scheduling calendar (Google Calendar appointment slots or a Calendly link) on the booking page so the applicant can lock in the required one-on-one review call. Encourage booking promptly so the conversation, and any refund, happens well inside the 30-day window.</li>
+    </ul>
+
+    <h3>Task 5: Post-Call Accreditation Questionnaire (delayed)</h3>
+    <ul>
+        <li>Build a post-call destination panel reachable only by applicants the CEO has approved (status <em>Approved</em>, $900 already charged and not refunded). This panel is the primary onboarding hub.</li>
+        <li>Embed a two-part onboarding questionnaire:
+            <br>&bull; <em>Part A (Community &amp; profile):</em> full residential address (deferred from intake), chapter choice, educational stream preferences, and event interests.
+            <br>&bull; <em>Part B (Regulatory Compliance Gate):</em> self-certification against the accreditation criteria of Rule 501 of Regulation D.
+        </li>
+        <li>Backend routing: if the member self-certifies as accredited and opts into deal information, apply the <code>[Accredited Investor]</code> tag and add their email to the separate investment communication platform. If they select "No," keep them in the insulated <code>[Active Member]</code> community pipeline only.</li>
+    </ul>
+
+    <h3>Task 6: Community Referral Tracking</h3>
+    <ul>
+        <li><strong>Unique referral codes.</strong> Each active member is assigned a unique referral code and shareable link (for example <code>.../join?ref=CODE</code>). The intake form reads the <code>?ref=</code> parameter and pre-fills the referral field, with the labeled question <em>"Who introduced you to the Silver <span class="brand-amp">&amp;</span> Salt Capital community?"</em> and a typed name or email accepted as a fallback. Matching on a code rather than a free-text name avoids the ambiguity that breaks name matching.</li>
+        <li><strong>Credit is earned on approved membership only.</strong> Because the $900 is charged at application (before vetting), payment alone does not earn a referral credit. The credit is written only when the referred person is marked <em>Approved</em> and becomes an <code>[Active Member]</code>, which is the same approval action described in Task 3 that fires the onboarding invite. Applications, paid-but-not-yet-vetted records, and refunded non-fits earn nothing.</li>
+        <li><strong>Reverse on refund.</strong> If an approved member is later refunded (a rare reversal), the <code>charge.refunded</code> webhook voids the matching pending credit so the referrer is not credited for someone who did not stay. Only credits whose referred member remains an active, non-refunded member survive.</li>
+        <li><strong>Reward: a flat $100 membership renewal credit.</strong> Each successful referral records a flat $100 credit applied toward the referrer's own next membership renewal. It is account credit toward renewal, never a cash payout, and it never scales with anything the referred member does beyond joining.</li>
+        <li><strong>Guards.</strong> Block self-referral (a member cannot refer themselves) and duplicate credits (one credit per successfully converted referral). Support a configurable cap on total credits per referrer for periodic review.</li>
+        <li><strong>Scoped per group.</strong> Referral codes and the credit ledger belong to a group: a code maps to one group, and a credit applies to that group's renewals. Record the group on every ledger entry.</li>
+        <li><strong>Ledger.</strong> Maintain a dedicated admin tab recording: group, referrer name and code, referred member, conversion date, credit amount, and status (Pending / Applied at renewal). This is the audit trail.</li>
+    </ul>
+    <p class="note">A flat membership credit keeps bookkeeping simple; confirm accounting treatment with your bookkeeper, and confirm the restraint below with securities counsel.</p>
+    <div class="legal-clause">
+        <strong>Regulatory compliance restraint:</strong> This referral tracking exists only to measure community membership growth. No referral fees, transaction percentages, or finder's bonuses shall be mapped, computed, or paid based on any individual's eventual participation in, or capital allocation to, any private placement or Special Purpose Vehicle operated by the investment entity. This restraint is subject to securities counsel review.
+    </div>
+
+    <h3>Task 7: Self-Monitoring, Health Checks &amp; Alerting</h3>
+    <p>The pipeline must continuously verify its own health and raise attention the moment any link breaks. This is a first-class requirement, not an afterthought: a silent failure (a dead endpoint, a reset deployment, a webhook that stops arriving) must never go unnoticed.</p>
+    <ul>
+        <li><strong>Automated heartbeat.</strong> A time-driven Apps Script trigger runs a scheduled end-to-end self-test (at least hourly) that checks each link in the chain: the Web App endpoint responds, a test record can be written to and removed from the CRM, the Stripe API is reachable, the webhook endpoint is live, and the email service is within quota. Each run writes a timestamped pass or fail result to a <code>System Health</code> tab.</li>
+        <li><strong>Health dashboard report.</strong> A dedicated <code>System Health</code> tab (and a simple owner-readable view) summarizes status with clear green, amber, and red indicators: time of the last successful applicant submission, time of the last Stripe webhook received, the last heartbeat result per component, and the current count of paid records still awaiting a vetting decision (<em>Paid, Pending Vetting</em>), broken out per group so a failure can be traced to a specific group. Readable at a glance with no technical knowledge.</li>
+        <li><strong>Staleness detection.</strong> Because a silent stop is the primary risk, the dashboard flags when no successful heartbeat has occurred within the expected interval, or when no real end-to-end submission has landed within a configurable number of days. Absence of activity is itself treated as a warning state.</li>
+        <li><strong>Alerting that triggers attention.</strong> Any failed check or staleness flag sends an immediate alert email (with optional SMS) to tori@silverandsaltcapital.com that names the specific component that failed and its likely cause, so the message is actionable rather than a generic "something broke."</li>
+        <li><strong>Frontend acknowledgment.</strong> The intake frontend must read and record the backend's success or failure response for every submission rather than assuming success, so a broken endpoint surfaces immediately. This closes the silent-failure gap where submissions appear to succeed in the browser while nothing is written.</li>
+        <li><strong>Leverage Stripe's native monitoring.</strong> Enable Stripe's built-in failed-webhook email alerts, and include a periodic reconciliation check that compares Stripe against the CRM, so every Stripe charge maps to a <em>Paid, Pending Vetting</em> or <em>Approved</em> row and every Stripe refund maps to a <em>Refunded</em> row, catching any drift between the two systems.</li>
+    </ul>
+
+    <h2>5. Acceptance Criteria &amp; Definition of Done</h2>
+    <table class="definition-table">
+        <thead>
+            <tr>
+                <th>System Matrix</th>
+                <th>Verification Standard</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Processing Verification</strong></td>
+                <td>A mock user completes Step 1, is charged the $900 in Stripe Test Mode at Step 2, and lands on the Step 3 booking page with no broken transitions or layout shift on mobile browsers. The <code>charge.succeeded</code> webhook flips the matching Sheet row to <em>Paid, Pending Vetting</em> and stores the Stripe Transaction ID. The webhook validates Stripe's signature.</td>
+            </tr>
+            <tr>
+                <td><strong>Approval Test</strong></td>
+                <td>Setting a paid row's status to <em>Approved</em> in the CRM fires the onboarding invite, appends <code>[Active Member]</code>, and opens the accreditation gate. The trigger fires once and only on the transition into <em>Approved</em>, never from payment alone.</td>
+            </tr>
+            <tr>
+                <td><strong>Refund Test</strong></td>
+                <td>Refunding the $900 charge in Stripe triggers the <code>charge.refunded</code> webhook, sets the Sheet status to <em>Refunded</em>, confirms the full $900 was returned, and reverses any pending referral credit tied to that applicant.</td>
+            </tr>
+            <tr>
+                <td><strong>Brand Fidelity</strong></td>
+                <td>The intake portal renders Cormorant Garamond headings, Satoshi body, the cream / sand / moss palette with a lime accent, and digits in Cormorant Infant. The applicant completes the $900 payment in the embedded Payment Element without leaving the site; the element is styled via the Appearance API (lime focus states, cream surfaces, brand radius) and Apple Pay / Google Pay appear above the card fields. The founding-member discount is shown as a line item ($1,000 standard, minus $100 founding-member discount, $900 due today), not just a final price.</td>
+            </tr>
+            <tr>
+                <td><strong>Data Segmentation</strong></td>
+                <td>Membership records and accredited-investor fields occupy distinct views. A non-accredited member never appears in a deal-flow or investor filter.</td>
+            </tr>
+            <tr>
+                <td><strong>Compliance Gate</strong></td>
+                <td>The disclaimer checkbox blocks submission until checked. The refund policy is shown at the payment step and its checkbox keeps the Pay button disabled until acknowledged, with the acknowledgment timestamp recorded on the CRM row. The accreditation questionnaire is reachable only after the member is approved.</td>
+            </tr>
+            <tr>
+                <td><strong>Referral Tracking</strong></td>
+                <td>A <code>?ref=CODE</code> link pre-fills the referral field. When a referred applicant is marked <em>Approved</em>, a $100 membership renewal credit is written to the referrer's ledger row with status Pending. A self-referral, a not-yet-approved applicant, or a refunded member produces no surviving credit. No credit is ever tied to investment activity, and the amount never scales beyond the flat $100.</td>
+            </tr>
+            <tr>
+                <td><strong>Owner Maintainability</strong></td>
+                <td>Tori can edit copy, the price, and email text without a developer. A short handover document explains how to approve a member and how to refund a non-fit, and how to read the CRM.</td>
+            </tr>
+            <tr>
+                <td><strong>Refund Window</strong></td>
+                <td>The full $900 can be refunded from Stripe at any point in the 30-day decision window, the refund webhook flips the row to <em>Refunded</em>, and the applicant's record is preserved for the audit trail rather than deleted.</td>
+            </tr>
+            <tr>
+                <td><strong>Self-Monitoring &amp; Alerting</strong></td>
+                <td>Deliberately breaking any single component (for example, pointing the form at a dead URL or disabling the webhook) turns that component red on the System Health dashboard and sends an actionable alert email to Tori within one heartbeat interval. The dashboard always shows the timestamp of the last successful end-to-end submission, and a configured period of no activity raises a staleness warning on its own.</td>
+            </tr>
+            <tr>
+                <td><strong>Multi-Group Readiness</strong></td>
+                <td>A second test group can be added by inserting one row in the <code>Groups</code> settings tab and pointing a branded page at the same backend, producing working signups tagged to that group with no code changes. Records, referral credits, and notifications stay scoped to their group, with no leakage between groups.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>6. Working Together (and a Big Thank You)</h2>
+    <p>First, thank you. You are lending your time and skill to build this as a favor, and that generosity means a great deal to me. Think of this as our shared plan: what we are aiming for, in what rough order, and how we will know it is working. The timeline is a gentle guide, so please move at whatever pace suits your life, and tell me anytime something should shift.</p>
+
+    <table class="meta-table">
+        <tr>
+            <td class="meta-label">With thanks to:</td>
+            <td>Jackie Cook, Momentum Group</td>
+            <td class="meta-label">Reach me at:</td>
+            <td>Tori Horton, tori@silverandsaltcapital.com</td>
+        </tr>
+        <tr>
+            <td class="meta-label">Rough effort:</td>
+            <td>About 10 to 14 days of work, whenever it suits you</td>
+            <td class="meta-label">Brand:</td>
+            <td>Silver <span class="brand-amp">&amp;</span> Salt Capital</td>
+        </tr>
+    </table>
+
+    <h3>6.1 What I am hoping you can build</h3>
+    <p>Everything is detailed in Tasks 1 through 7 above. In short:</p>
+    <ul>
+        <li>The branded intake form and 3-step tracker (Task 1).</li>
+        <li>The Stripe Payment Element that charges the $900, the founding-member discount display, and the payment and refund webhooks (Task 2).</li>
+        <li>The Google Sheet CRM, with membership and investor views kept separate (Task 3).</li>
+        <li>The booking gateway after payment (Task 4).</li>
+        <li>The post-call onboarding panel and accreditation questions (Task 5).</li>
+        <li>The referral-code engine and credit ledger (Task 6).</li>
+        <li>The self-monitoring dashboard and alerts (Task 7).</li>
+    </ul>
+
+    <h3>6.2 A natural order to tackle it</h3>
+    <p>If it helps, here is a sequence that builds cleanly. Treat these as gentle suggestions and reorder freely.</p>
+    <table class="definition-table">
+        <thead>
+            <tr>
+                <th>Stage</th>
+                <th>What it covers</th>
+                <th>Roughly</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>First</strong></td>
+                <td>The intake form, the Apps Script backend, and the Sheet CRM wired together, with submissions landing reliably and the form confirming they went through.</td>
+                <td>Early days</td>
+            </tr>
+            <tr>
+                <td><strong>Next</strong></td>
+                <td>The Stripe Payment Element that charges the $900, the discount line, Apple Pay and Google Pay, the booking handoff, and the payment and refund webhooks, shown working in Stripe Test Mode.</td>
+                <td>Middle stretch</td>
+            </tr>
+            <tr>
+                <td><strong>Last</strong></td>
+                <td>The onboarding panel, the referral engine, the self-monitoring, and a short handover, with a friendly walk through everything in section 5.</td>
+                <td>Final stretch</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>6.3 How we will know it is working</h3>
+    <p>Section 5 above lists what "done and working" looks like, piece by piece. We can go through it together in Stripe Test Mode before anything goes live, just the two of us confirming each part does what it should. No formal ritual, only a shared green light.</p>
+
+    <h3>6.4 Handing it back to me</h3>
+    <ul>
+        <li>When it is running, a short note or a quick recorded walkthrough, whatever is easier for you, on how to approve a member and how to refund a non-fit, read the CRM and the health dashboard, and change the price or copy.</li>
+        <li>Transfer the accounts and access to me so I can run it day to day and you are free of it afterward.</li>
+        <li>If something hiccups in the first couple of weeks, I would be grateful for a hand, though you are under no obligation at all. I want this to stay a kind favor.</li>
+    </ul>
+
+    <h3>6.5 A few small asks</h3>
+    <ul>
+        <li>Please build and test with fake data, and keep real applicant details out of it.</li>
+        <li>Card details stay inside Stripe (the build never stores card numbers), and please keep any member information private.</li>
+        <li>Build to the spec as written. The legal wording (the disclaimer, the 506(b) separation, the referral restraint) is on me and my counsel, so you never have to worry about getting the legal language right.</li>
+        <li>The accounts and costs are mine. I will cover Stripe, hosting, and anything else the build needs.</li>
+    </ul>
+
+    <p style="margin-top:24px;">Truly, thank you for lending your talent to this. It means more than I can easily say, and you will have my lasting gratitude and full credit for helping bring Silver <span class="brand-amp">&amp;</span> Salt Capital to life.</p>
+    <p>With appreciation,<br>Tori</p>
+
+</body>
+</html>
