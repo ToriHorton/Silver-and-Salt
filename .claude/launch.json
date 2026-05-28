@@ -12,6 +12,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "3000", "--directory", "/Users/tori_horton/Projects/Silver-and-Salt/.claude/worktrees/eager-goodall"],
       "port": 3000
+    },
+    {
+      "name": "monarch-preview",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "/Users/tori/Projects/monarch-capital-collective"],
+      "port": 8765
     }
   ]
 }
