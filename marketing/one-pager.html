@@ -81,9 +81,10 @@ body{font-family:'Inter',sans-serif;font-weight:300;background:#E5DFD3;color:var
 
 /* ─── COMMUNITY BANNER (cinematic) ─── */
 .community-banner{position:relative;flex:1;min-height:150px;overflow:hidden;}
-.community-banner img{width:100%;height:100%;object-fit:cover;object-position:center 38%;display:block;}
-.community-banner .veil{position:absolute;left:0;top:0;bottom:0;width:44%;background:rgba(47,62,52,0.86);display:flex;align-items:center;}
-.community-banner .veil p{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:25px;line-height:1.32;color:var(--cream);padding:0 40px 0 60px;}
+.cb-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 38%;display:block;}
+.cb-fade{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;}
+.community-banner .veil{position:absolute;inset:0;display:flex;align-items:center;}
+.community-banner .veil p{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:25px;line-height:1.32;color:var(--cream);padding:0 60px;max-width:28ch;position:relative;}
 
 /* ─── FOUNDER BAND (horizontal) ─── */
 .founder-band{background:var(--cream);padding:18px 60px;display:grid;grid-template-columns:1.55fr 1fr;align-items:center;border-top:1px solid rgba(47,62,52,0.12);border-bottom:1px solid rgba(47,62,52,0.1);flex-shrink:0;}
@@ -155,7 +156,8 @@ body{font-family:'Inter',sans-serif;font-weight:300;background:#E5DFD3;color:var
 
     <!-- COMMUNITY BANNER (cinematic) -->
     <div class="community-banner">
-      <img src="../assets/welcome/tori-community.jpg" alt="Women gathered at a Silver & Salt Capital community event in Utah">
+      <img class="cb-photo" src="../assets/welcome/tori-community.jpg" alt="Women gathered at a Silver & Salt Capital community event in Utah">
+      <img class="cb-fade" src="photo-fade.png" alt="" aria-hidden="true">
       <div class="veil"><p>If you believe Utah women can do more together, this is the place for you.</p></div>
     </div>
 
