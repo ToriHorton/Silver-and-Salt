@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silver &amp; Salt Capital — Invest in Utah Women Founders</title>
+<meta name="description" content="Silver & Salt Capital is an angel investment collective where accredited investors pool capital to fund early-stage companies founded by women in Utah.">
+<link rel="icon" type="image/png" href="../assets/logos/brand-assets/ssc-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Infant:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ─── NUMERAL OVERRIDE (digits 0-9 render in Cormorant Infant) ─── */
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:300;font-display:swap;src:url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');unicode-range:U+0030-0039;}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');unicode-range:U+0030-0039;}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:600;font-display:swap;src:url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');unicode-range:U+0030-0039;}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:700;font-display:swap;src:url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2');unicode-range:U+0030-0039;}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:300;font-display:swap;src:url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyJU44g9vKiM1sORYSiWeAsLN997_Il2xMEbK0UPg.woff2) format('woff2');unicode-range:U+0030-0039;}
+
+:root{
+  --cream:#FBF8F2; --sand:#F4EFE6; --moss:#2F3E34; --moss-light:#4A5E50;
+  --sage:#7E8E84; --pop:#D16B4F; --pop-hover:#E07A5E; --lime:#7CB83F;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;font-weight:300;background:#E5DFD3;color:var(--moss-light);-webkit-font-smoothing:antialiased;}
+.brand-amp{font-family:'Cormorant Garamond',serif;font-style:normal;}
+
+/* ─── PAGE CANVAS (8.5 x 11 proportions) ─── */
+.stage{position:relative;margin:24px auto;}
+.sheet{
+  position:absolute;top:0;left:0;transform-origin:top left;
+  width:1100px;height:1424px;background:var(--cream);
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 24px 70px rgba(47,62,52,0.22);
+}
+
+/* ─── HERO BAND ─── */
+.hero{
+  background:var(--moss);color:var(--cream);
+  padding:26px 60px 20px;position:relative;overflow:hidden;flex-shrink:0;
+}
+.hero .wm{
+  position:absolute;right:-40px;top:50%;transform:translateY(-50%);
+  font-family:'Cormorant Garamond',serif;font-weight:300;font-size:440px;
+  line-height:1;color:#fff;opacity:0.045;pointer-events:none;
+}
+.brandline{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.sc{width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(90deg,var(--sage) 0 50%,var(--pop) 50% 100%);
+  display:flex;align-items:center;justify-content:center;}
+.sc span{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:#fff;line-height:1;}
+.wordmark{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:28px;letter-spacing:-0.01em;color:var(--cream);white-space:nowrap;}
+.hero .lead-in{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:22px;color:var(--sage);margin-bottom:6px;position:relative;z-index:1;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:47px;line-height:1.05;letter-spacing:-0.01em;color:var(--cream);max-width:30ch;position:relative;z-index:1;}
+.hero .sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:19px;line-height:1.38;color:var(--sage);margin-top:13px;max-width:88ch;position:relative;z-index:1;}
+.hero .sub em{color:var(--cream);font-weight:500;font-style:italic;}
+
+/* ─── THESIS (highlighted) ─── */
+.thesis{background:var(--sand);padding:20px 60px 18px 54px;border-top:1px solid rgba(47,62,52,0.1);border-bottom:1px solid rgba(47,62,52,0.1);box-shadow:inset 8px 0 0 var(--pop);flex-shrink:0;}
+.thesis-head{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:31px;line-height:1.1;letter-spacing:-0.01em;color:var(--moss);margin-bottom:10px;}
+.thesis-head em{font-style:normal;color:var(--pop);}
+.thesis .lead{font-size:15px;line-height:1.45;color:var(--moss);}
+.thesis .lead strong{color:var(--pop);}
+
+/* ─── STAT COLUMN (paired with founder) ─── */
+.stat-col{padding-left:40px;border-left:1px solid rgba(47,62,52,0.16);}
+.stat-col .fig{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:52px;line-height:1;color:var(--moss);letter-spacing:-0.01em;}
+.stat-col .fig .pop{color:var(--pop);font-style:italic;font-weight:400;}
+.stat-col .cap{font-size:14px;line-height:1.4;color:var(--moss-light);margin-top:9px;max-width:30ch;}
+.stat-col .cap strong{color:var(--moss);font-weight:600;}
+
+/* ─── SHARED TEXT ─── */
+.kicker{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--pop);margin-bottom:10px;}
+.lead{font-size:15px;line-height:1.5;color:var(--moss-light);}
+.lead strong{color:var(--moss);font-weight:600;}
+.ask{margin:10px 0 0;padding:10px 0 0;border-top:1px solid rgba(47,62,52,0.16);
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:18.5px;line-height:1.28;color:var(--moss);}
+.ask strong{font-style:normal;font-weight:600;color:var(--pop);}
+
+/* ─── COMMUNITY BANNER (cinematic) ─── */
+.community-banner{position:relative;flex:1;min-height:150px;overflow:hidden;}
+.community-banner img{width:100%;height:100%;object-fit:cover;object-position:center 38%;display:block;}
+.community-banner .veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(47,62,52,0.8) 0%,rgba(47,62,52,0.38) 46%,rgba(47,62,52,0) 78%);display:flex;align-items:center;}
+.community-banner .veil p{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:27px;line-height:1.3;color:var(--cream);padding:0 60px;max-width:23ch;}
+
+/* ─── FOUNDER BAND (horizontal) ─── */
+.founder-band{background:var(--cream);padding:18px 60px;display:grid;grid-template-columns:1.55fr 1fr;align-items:center;border-top:1px solid rgba(47,62,52,0.12);border-bottom:1px solid rgba(47,62,52,0.1);flex-shrink:0;}
+.founder-col{display:flex;gap:26px;align-items:center;padding-right:40px;}
+.founder-band img{width:92px;height:112px;object-fit:cover;object-position:center top;border-radius:3px;flex-shrink:0;box-shadow:0 8px 20px rgba(47,62,52,0.2);}
+.founder-text{flex:1;}
+.founder-text .kicker{margin-bottom:6px;}
+.founder-text .name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;color:var(--moss);line-height:1;}
+.founder-text .role{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:15px;color:var(--sage);margin-left:9px;}
+.founder-bio{font-size:14.5px;line-height:1.52;margin-top:9px;}
+
+/* ─── WHY JOIN (full width, two columns) ─── */
+.why-section{padding:12px 60px;flex-shrink:0;}
+.why-section h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;color:var(--moss);letter-spacing:-0.01em;margin-bottom:9px;}
+.reasons{column-count:2;column-gap:46px;}
+.reason{display:flex;gap:12px;align-items:flex-start;break-inside:avoid;margin-bottom:9px;}
+.reason:last-child{margin-bottom:0;}
+.reason .dot{width:7px;height:7px;border-radius:50%;background:var(--pop);margin-top:6px;flex-shrink:0;}
+.reason .txt{font-size:13.5px;line-height:1.42;}
+.reason .txt b{font-family:'Inter',sans-serif;font-weight:600;color:var(--moss);}
+
+/* ─── CTA BAND ─── */
+.cta{background:var(--moss);color:var(--cream);padding:24px 60px;position:relative;overflow:hidden;flex-shrink:0;
+  display:grid;grid-template-columns:1.55fr 1fr;gap:44px;align-items:center;}
+.cta .wm{position:absolute;right:-30px;bottom:-120px;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:340px;line-height:1;color:#fff;opacity:0.045;pointer-events:none;}
+.cta-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:12px;position:relative;z-index:1;}
+.cta h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:33px;line-height:1.16;letter-spacing:-0.01em;color:#fff;position:relative;z-index:1;}
+.cta h2 em{font-style:italic;color:var(--lime);}
+.contact{position:relative;z-index:1;border-left:1px solid rgba(240,237,231,0.22);padding-left:40px;}
+.contact .name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--cream);margin-bottom:8px;}
+.contact a{display:block;color:var(--pop-hover);text-decoration:none;font-weight:500;font-size:15px;margin-top:4px;}
+
+/* ─── LEGAL ─── */
+.legal{background:var(--cream);padding:14px 60px;font-size:11px;color:var(--sage);line-height:1.45;text-align:center;flex-shrink:0;}
+
+/* ─── PRINT: scale canvas to one Letter page ─── */
+@media print{
+  @page{size:8.5in 11in;margin:0;}
+  html,body{background:#fff;margin:0;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .stage{margin:0!important;width:8.5in!important;height:11in!important;overflow:hidden!important;}
+  .sheet{transform:scale(0.738)!important;box-shadow:none;}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="sheet">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="wm">&amp;</div>
+      <div class="brandline">
+        <div class="sc"><span>&amp;</span></div>
+        <div class="wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+      </div>
+      <p class="lead-in">The idea is simple.</p>
+      <h1>We invest in Utah women founders to make money.</h1>
+      <p class="sub">When a group of women commits to <em>work together</em>, there's no broken system we can't fix. Let's fund Utah's overlooked founders and <em>win together</em> as women in Utah.</p>
+    </header>
+
+    <!-- THESIS (highlighted) -->
+    <section class="thesis">
+      <h2 class="thesis-head">You're already investing. <em>Learn how to do it better.</em></h2>
+      <p class="lead">Silver <span class="brand-amp">&amp;</span> Salt Capital is an angel investment collective where accredited investors pool their capital to fund early-stage companies founded by women in Utah. We commit <strong>$10,000 a year for five years</strong> (a total of $50,000), vet deals together, and make our own individual investment decisions, building a diversified portfolio across <strong>30+ companies</strong>. The model is simple and is working in other parts of the country.</p>
+      <p class="ask">The gap in Utah startups founded by women is the investment opportunity. We are seeking <strong>100 women</strong> to join as founding members.</p>
+    </section>
+
+    <!-- COMMUNITY BANNER (cinematic) -->
+    <div class="community-banner">
+      <img src="../assets/welcome/tori-community.jpg" alt="Women gathered at a Silver & Salt Capital community event in Utah">
+      <div class="veil"><p>If you believe Utah women can do more together, this is the place for you.</p></div>
+    </div>
+
+    <!-- FOUNDER + STAT -->
+    <section class="founder-band">
+      <div class="founder-col">
+        <img src="../assets/welcome/tori-headshot.jpg" alt="Tori Horton, founder of Silver & Salt Capital">
+        <div class="founder-text">
+          <span class="name">Tori Horton</span><span class="role">Founder</span>
+          <p class="founder-bio">Tori is a builder and an operator who has spent her career at the intersection of capital and women's economic power. She has launched six startups, led PayPal's women's economic empowerment program, and invests as a limited partner with How Women Invest and Portfolia.</p>
+        </div>
+      </div>
+      <div class="stat-col">
+        <div class="fig">1 <span class="pop">of</span> 169</div>
+        <div class="cap">In 2025, only <strong>1 funded Utah startup</strong> was founded by a woman.</div>
+      </div>
+    </section>
+
+    <!-- WHY JOIN (after the founder) -->
+    <section class="why-section">
+      <h2>Why join</h2>
+      <div class="reasons">
+        <div class="reason"><div class="dot"></div><div class="txt"><b>Make money while you move the needle.</b> This is an investment thesis first. Women-founded companies are out-earning the field on every dollar invested, and you get diversified exposure to 30+ startups in an underfunded, high-upside market.</div></div>
+        <div class="reason"><div class="dot"></div><div class="txt"><b>Invest with conviction and community.</b> You get collective sourcing, shared diligence, and a room full of sharp women. Every investment decision stays yours.</div></div>
+        <div class="reason"><div class="dot"></div><div class="txt"><b>Get in early on Utah's next generation.</b> The state's innovation wave is being built. Move your existing investments to invest in your community.</div></div>
+        <div class="reason"><div class="dot"></div><div class="txt"><b>Build the network as you build the portfolio.</b> We're investing and growing all our capital: relationships, knowledge, and finance to advocate for one another.</div></div>
+        <div class="reason"><div class="dot"></div><div class="txt"><b>Be the 1% that changes the 1%.</b> Capital is the most direct form of belief. This is where you put yours to work.</div></div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="wm">&amp;</div>
+      <div>
+        <p class="cta-label">The opportunity</p>
+        <h2>Utah's next generation of innovation will be shaped by founders <span class="brand-amp">&amp;</span> determined by funders. <em>It's time more of them are women.</em></h2>
+      </div>
+      <div class="contact">
+        <p class="cta-label">Get in touch</p>
+        <div class="name">Tori Horton</div>
+        <a href="mailto:Tori@silverandsaltcapital.com">Tori@silverandsaltcapital.com</a>
+        <a href="https://www.silverandsaltcapital.com">www.silverandsaltcapital.com</a>
+      </div>
+    </section>
+
+    <div class="legal">
+      Silver <span class="brand-amp">&amp;</span> Salt Capital · For accredited investors. Annual income exceeding $200,000 individually ($300,000 jointly), or net worth exceeding $1 million excluding primary residence. This material is for informational purposes and is not an offer to sell or a solicitation to buy any security.
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var stage=document.querySelector('.stage');
+  var sheet=document.querySelector('.sheet');
+  var W=1100, H=1424;
+  function fit(){
+    if(window.matchMedia('print').matches) return;
+    var s=Math.min(1,(window.innerWidth-48)/W);
+    sheet.style.transform='scale('+s+')';
+    stage.style.width=(W*s)+'px';
+    stage.style.height=(H*s)+'px';
+  }
+  fit();
+  window.addEventListener('resize',fit);
+})();
+</script>
+</body>
+</html>
