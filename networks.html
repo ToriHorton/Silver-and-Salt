@@ -14,14 +14,14 @@
 <link rel="stylesheet" href="styles.css?v=2026-06-29">
 <style>
 /* ── Networks-specific styles ── */
-.hero{background:var(--moss);padding:120px 48px 60px;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(26,143,125,0.08);}
-.hero-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;}
+.hero{background:linear-gradient(135deg, var(--teal) 0%, #0d6b5c 100%);padding:120px 48px 60px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.05);}
+.hero-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:16px;}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,80px);font-weight:300;color:var(--cream);line-height:1.0;margin-bottom:20px;}
 .hero-sub{font-size:15px;color:rgba(251,248,242,0.65);max-width:560px;line-height:1.7;font-weight:300;}
 .stats-row{display:flex;gap:48px;margin-top:40px;flex-wrap:wrap;}
 .hero-stat .n{font-size:36px;font-weight:900;color:var(--cream);}
-.hero-stat .l{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);}
+.hero-stat .l{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,248,242,0.7);}
 .map-section{background:var(--sand);padding:48px;}
 .map-wrap{max-width:900px;margin:0 auto;}
 .map-title{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);margin-bottom:20px;}
@@ -46,7 +46,7 @@
 .net-link{font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(26,143,125,0.3);padding-bottom:2px;}
 .net-link:hover{border-color:var(--teal);}
 .ss-card{background:var(--moss);border-radius:10px;padding:32px;color:var(--cream);grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;}
-.ss-eyebrow{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+.ss-eyebrow{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--warm);margin-bottom:8px;}
 .ss-name{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;margin-bottom:12px;}
 .ss-desc{font-size:14px;color:rgba(251,248,242,0.7);line-height:1.7;}
 .ss-cta{display:inline-block;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--moss);background:var(--cream);border:none;border-radius:4px;padding:12px 24px;text-decoration:none;margin-top:16px;}
@@ -105,7 +105,7 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
 </head>
 <body>
 <site-header section="research"></site-header>
-<script src="assets/site-header.js?v=5" defer></script>
+<script src="assets/site-header.js?v=6" defer></script>
 
 <div class="hero">
   <p class="hero-eyebrow">S&amp;S Capital Research · Report No. 05</p>
@@ -142,10 +142,10 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
       <circle cx="720" cy="240" r="5" fill="#1A8F7D"/>
       <text x="720" y="264" text-anchor="middle" font-family="Satoshi,sans-serif" font-size="10" fill="#2F3E34" font-weight="700">DC/Metro</text>
       <!-- Salt Lake City (S&S) -->
-      <circle cx="235" cy="245" r="20" fill="rgba(209,107,79,0.15)" stroke="#D16B4F" stroke-width="2"/>
-      <circle cx="235" cy="245" r="7" fill="#D16B4F"/>
-      <text x="235" y="276" text-anchor="middle" font-family="Satoshi,sans-serif" font-size="10" fill="#D16B4F" font-weight="700">Salt Lake City</text>
-      <text x="235" y="289" text-anchor="middle" font-family="Satoshi,sans-serif" font-size="9" fill="#D16B4F">(Silver &amp; Salt Capital, forming)</text>
+      <circle cx="235" cy="245" r="20" fill="rgba(47,62,52,0.12)" stroke="#2F3E34" stroke-width="2"/>
+      <circle cx="235" cy="245" r="7" fill="#2F3E34"/>
+      <text x="235" y="276" text-anchor="middle" font-family="Satoshi,sans-serif" font-size="10" fill="#2F3E34" font-weight="700">Salt Lake City</text>
+      <text x="235" y="289" text-anchor="middle" font-family="Satoshi,sans-serif" font-size="9" fill="#2F3E34">(Silver &amp; Salt Capital, forming)</text>
       <!-- National orgs note -->
       <rect x="20" y="460" width="220" height="60" rx="6" fill="rgba(47,62,52,0.05)" stroke="rgba(47,62,52,0.1)" stroke-width="1"/>
       <text x="30" y="480" font-family="Satoshi,sans-serif" font-size="10" fill="#7E8E84" font-weight="700">NATIONAL ORGS</text>
@@ -154,7 +154,7 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
     </svg>
     <div class="map-legend">
       <div class="ml-item"><div class="ml-dot" style="background:var(--teal)"></div>Existing collective</div>
-      <div class="ml-item"><div class="ml-dot" style="background:var(--rust)"></div>Silver &amp; Salt Capital (forming)</div>
+      <div class="ml-item"><div class="ml-dot" style="background:var(--moss)"></div>Silver &amp; Salt Capital (forming)</div>
     </div>
   </div>
 </div>
@@ -332,7 +332,7 @@ nav.nav-open .nav-menu-btn span:nth-child(3){transform:rotate(-45deg) translate(
 </div>
 
 <site-footer></site-footer>
-<script src="assets/site-footer.js?v=2" defer></script>
+<script src="assets/site-footer.js?v=3" defer></script>
 
 </body>
 </html>

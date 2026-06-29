@@ -13,19 +13,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=2026-06-29">
 <style>
-body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); }
-.hero{background:var(--moss);padding:80px 40px 64px;text-align:center;position:relative;overflow:hidden}
+.hero{background:linear-gradient(135deg, var(--teal) 0%, #0d6b5c 100%);padding:80px 40px 64px;text-align:center;position:relative;overflow:hidden}
 .hero::after{display:none}
-.hero-eyebrow{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
-.hero h1{font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(32px,5vw,52px);letter-spacing:-.03em;color:var(--white);margin-bottom:16px;line-height:1.1;max-width:740px;margin-left:auto;margin-right:auto}
-.hero p{font-size:17px;line-height:1.65;color:var(--sage);max-width:580px;margin:0 auto}
+.hero-eyebrow{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--warm);margin-bottom:16px}
+.hero h1{font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(32px,5vw,52px);letter-spacing:-.03em;color:var(--cream);margin-bottom:16px;line-height:1.1;max-width:740px;margin-left:auto;margin-right:auto}
+.hero p{font-size:17px;line-height:1.65;color:var(--cream);max-width:580px;margin:0 auto}
 
 .content{max-width:860px;margin:0 auto;padding:0 40px}
 
 /* Big Stats */
 .big-stat-section{margin:-32px auto 64px;max-width:860px;padding:0 40px;position:relative;z-index:2}
 .big-stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.big-stat{background:var(--white);border-radius:16px;padding:32px 24px;text-align:center;box-shadow:0 8px 32px rgba(47,62,52,0.06);border:1px solid rgba(47,62,52,0.04)}
+.big-stat{background:var(--cream);border-radius:16px;padding:32px 24px;text-align:center;box-shadow:0 8px 32px rgba(47,62,52,0.06);border:1px solid rgba(47,62,52,0.04)}
 .big-stat.highlight{border:2px solid var(--accent);background:rgba(26,143,125,0.02)}
 .bs-val{font-family:'Satoshi',sans-serif;font-weight:900;font-size:clamp(28px,4vw,44px);color:var(--moss);letter-spacing:-.02em;line-height:1}
 .bs-val.accent{color:var(--accent)}
@@ -49,7 +48,7 @@ body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); 
 }
 .step-num{
   width:40px;height:40px;border-radius:50%;
-  background:var(--moss);color:var(--white);
+  background:var(--moss);color:var(--cream);
   font-family:'Satoshi',sans-serif;font-weight:900;font-size:16px;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
@@ -57,7 +56,7 @@ body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); 
 .step-line{width:2px;flex:1;background:rgba(47,62,52,0.08);margin:4px auto}
 .step:last-child .step-line{display:none}
 .step-content{
-  background:var(--white);border-radius:12px;
+  background:var(--cream);border-radius:12px;
   padding:20px 24px;margin-bottom:12px;
   border:1px solid rgba(47,62,52,0.04);
 }
@@ -70,7 +69,7 @@ body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); 
   color:var(--accent);margin-bottom:6px;letter-spacing:-.02em;
 }
 .step-explain{font-size:13px;color:var(--sage);line-height:1.6}
-.step-source{font-size:11px;color:var(--silver);margin-top:6px}
+.step-source{font-size:11px;color:var(--sage);margin-top:6px}
 .step-source a{color:var(--accent);text-decoration:none}
 .step-source a:hover{text-decoration:underline}
 .step-math{
@@ -81,20 +80,20 @@ body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); 
 
 /* Scenario box */
 .scenario-box{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:14px;overflow:hidden;margin:32px 0;border:1px solid rgba(47,62,52,0.06)}
-.scenario{padding:24px;text-align:center;background:var(--white)}
+.scenario{padding:24px;text-align:center;background:var(--cream)}
 .scenario.base{background:var(--moss);color:var(--sand)}
 .sc-val{font-family:'Satoshi',sans-serif;font-weight:900;font-size:28px;letter-spacing:-.02em;line-height:1}
-.sc-val.base-val{color:var(--white)}
+.sc-val.base-val{color:var(--cream)}
 .sc-range{font-size:11px;color:var(--sage);margin-top:4px}
 .scenario.base .sc-range{color:rgba(240,237,231,0.6)}
 .sc-label{font-family:'Satoshi',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
-.scenario.base .sc-label{color:var(--accent)}
+.scenario.base .sc-label{color:var(--warm)}
 
 /* Callout */
 .callout{padding:28px 32px;border-radius:14px;margin:40px 0}
 .callout.moss{background:var(--moss);color:var(--sand)}
 .callout h3{font-family:'Satoshi',sans-serif;font-weight:900;font-size:20px;margin-bottom:8px;letter-spacing:-.02em}
-.callout.moss h3{color:var(--white)}
+.callout.moss h3{color:var(--cream)}
 .callout p{font-size:14px;line-height:1.65}
 .callout.moss p{color:var(--sage)}
 .callout.moss strong{color:var(--sand)}
@@ -140,7 +139,7 @@ body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); 
 <body>
 
 <site-header section="research"></site-header>
-<script src="assets/site-header.js?v=5" defer></script>
+<script src="assets/site-header.js?v=6" defer></script>
 
 <div class="hero">
   <div class="hero-eyebrow">S&amp;S Capital Research · Report No. 04</div>
@@ -345,7 +344,7 @@ body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); 
 
   </div>
 
-  <div style="background:var(--accent);border-radius:14px;padding:28px 32px;margin:40px 0;color:var(--white)">
+  <div style="background:var(--accent);border-radius:14px;padding:28px 32px;margin:40px 0;color:var(--cream)">
     <h3 style="font-family:Satoshi,sans-serif;font-weight:900;font-size:20px;margin-bottom:8px;letter-spacing:-.02em">Park City's real number: likely 8,000 to 15,000 accredited women.</h3>
     <p style="font-size:14px;line-height:1.65;color:rgba(255,255,255,0.8)">Counting residents only, the estimate is ~4,000 to 5,000. But when you include the women who <strong>own second homes, visit seasonally, and have economic ties to the community</strong>, the functional pool likely doubles or triples. Park City may be the single highest-density concentration of accredited women in the state, in a town of 8,300 people.</p>
   </div>
@@ -422,7 +421,7 @@ body { --pop: #1A8F7D; --pop-hover: #22A893; --pop-glow: rgba(26,143,125,0.16); 
 </div>
 
 <site-footer></site-footer>
-<script src="assets/site-footer.js?v=2" defer></script>
+<script src="assets/site-footer.js?v=3" defer></script>
 
 </body>
 </html>

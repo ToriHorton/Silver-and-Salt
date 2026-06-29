@@ -13,9 +13,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=2026-06-29">
 <style>
-.hero{background:var(--teal);padding:120px 48px 60px;position:relative;overflow:hidden;}
+.hero{background:linear-gradient(135deg, var(--teal) 0%, #0d6b5c 100%);padding:120px 48px 60px;position:relative;overflow:hidden;}
 .hero::before{content:'02';position:absolute;bottom:-40px;right:-20px;font-family:'Cormorant Garamond',serif;font-size:280px;font-weight:600;color:rgba(255,255,255,0.05);line-height:1;}
-.report-badge{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;}
+.report-badge{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--warm);margin-bottom:16px;}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,64px);font-weight:300;color:white;line-height:1.1;margin-bottom:16px;}
 .hero-meta{display:flex;gap:24px;flex-wrap:wrap;font-size:11px;color:rgba(255,255,255,0.5);}
 .hero-meta span{display:flex;align-items:center;gap:6px;}
@@ -30,7 +30,7 @@
 .body{font-size:15px;line-height:1.85;color:var(--moss-light);font-weight:300;}
 .body+.body{margin-top:16px;}
 .callout{background:var(--moss);color:var(--cream);border-radius:8px;padding:28px 32px;margin:32px 0;}
-.callout-num{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:600;color:var(--copper);line-height:1;margin-bottom:8px;}
+.callout-num{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:600;color:var(--warm);line-height:1;margin-bottom:8px;}
 .callout-text{font-size:14px;color:rgba(251,248,242,0.75);line-height:1.7;}
 .data-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:12px;}
 .data-table th{background:var(--moss);color:var(--cream);padding:10px 12px;text-align:left;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;}
@@ -78,7 +78,7 @@
 </head>
 <body>
 <site-header section="research"></site-header>
-<script src="assets/site-header.js?v=5" defer></script>
+<script src="assets/site-header.js?v=6" defer></script>
 
 <div class="hero">
   <p class="report-badge">S&amp;S Capital Research · Report No. 02</p>
@@ -134,8 +134,8 @@
     <p class="body">The data reveals something important: Utah has both the capital and the women-led companies. Utah has 129,429 women-owned businesses. It has an estimated ~100,000 accredited women investors in the Salt Lake to Park City corridor alone. The capital is here. The founders are here.</p>
     <p class="body">What's missing is the infrastructure that connects them: the networks, the deal flow, the diligence community, the trust. That's what Silver &amp; Salt Capital is built to provide.</p>
 
-    <div class="callout" style="background:var(--ink)">
-      <div class="callout-num" style="color:var(--copper)">100+</div>
+    <div class="callout" style="background:var(--moss)">
+      <div class="callout-num" style="color:var(--warm)">100+</div>
       <div class="callout-text">Accredited women investors in the Salt Lake to Park City corridor. Boulder and Austin are precedents; both activated similar-sized pools through targeted collective models.</div>
     </div>
   </div>
@@ -165,6 +165,6 @@
 </div>
 
 <site-footer></site-footer>
-<script src="assets/site-footer.js?v=2" defer></script>
+<script src="assets/site-footer.js?v=3" defer></script>
 </body>
 </html>

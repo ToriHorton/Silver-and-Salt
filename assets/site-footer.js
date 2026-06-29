@@ -42,7 +42,7 @@ const SITE_FOOTER_HTML = `
         <a class="f-sitemap-link" href="networks.html">The Networks</a>
         <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
         <a class="f-sitemap-link" href="recommendations.html">Recommendations</a>
-        <a class="f-sitemap-link" href="open-research.html">Research Methods &amp; References</a>
+        <a class="f-sitemap-link" href="open-research.html">References</a>
       </div>
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Press</div>

@@ -45,7 +45,7 @@ const SECTIONS = {
       { label: 'The Networks', href: 'networks.html' },
       { label: 'National Landscape Map', href: 'landscape-map.html' },
       { label: 'Recommendations', href: 'recommendations.html' },
-      { label: 'Research Methods &amp; References', href: 'open-research.html' },
+      { label: 'References', href: 'open-research.html' },
     ],
   },
   press: {

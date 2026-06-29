@@ -236,7 +236,7 @@
         <div class="lm-drawer-empty">
           <b>Coverage gap detected.</b>
           We have no organizations recorded in this slice. If you know of one,
-          <a href="mailto:tori@silverandsaltcapital.com?subject=Landscape%20Map%20—%20Addition%20(${encodeURIComponent(selectedState||'National')})" style="color:var(--rust)">tell us</a>
+          <a href="mailto:tori@silverandsaltcapital.com?subject=Landscape%20Map%20—%20Addition%20(${encodeURIComponent(selectedState||'National')})" style="color:var(--teal)">tell us</a>
           and we'll add it.
         </div>`;
       return;
@@ -340,7 +340,7 @@
     const bw = (W - P.l - P.r) / data.length - 16;
     const chartH = H - P.t - P.b;
     const yTicks = 5;
-    const colors = { education:'#C4A47E', angels:'#D16B4F', funds:'#1A8F7D', syndicates:'#3D5A99' };
+    const colors = { education:'#C4A47E', angels:'#7E8E84', funds:'#1A8F7D', syndicates:'#2F3E34' };
     let html = '';
     // gridlines
     for (let i=0;i<=yTicks;i++){
@@ -369,8 +369,8 @@
       {k:'free',   label:'Free to participate',     color:'#1A8F7D', n:0},
       {k:'low',    label:'Under $500 / year',       color:'#7E8E84', n:0},
       {k:'mid',    label:'$500–$3,000 / year',      color:'#C4A47E', n:0},
-      {k:'high',   label:'$3,000+ or LP minimums',  color:'#D16B4F', n:0},
-      {k:'fund',   label:'Fund economics (2 & 20)', color:'#3D5A99', n:0},
+      {k:'high',   label:'$3,000+ or LP minimums',  color:'#2F3E34', n:0},
+      {k:'fund',   label:'Fund economics (2 & 20)', color:'#4A5E50', n:0},
       {k:'unknown',label:'Not publicly disclosed',  color:'#3A4A3F', n:0}
     ];
     RAW.forEach(o=>{
