@@ -41,6 +41,12 @@
 .principle{background:rgba(255,255,255,0.06);border-radius:var(--radius-md);padding:14px;}
 .pr-title{font-size:var(--text-base);font-weight:700;color:var(--cream);margin-bottom:var(--space-1);}
 .pr-text{font-size:var(--text-sm);color:rgba(251,248,242,0.6);line-height:1.5;}
+.context-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-13);}
+.context-card{background:var(--sand);border:1px solid rgba(47,62,52,0.1);border-radius:var(--radius-md);padding:var(--space-7);text-decoration:none;color:inherit;transition:box-shadow 0.2s,transform 0.2s;display:flex;flex-direction:column;gap:var(--space-3);}
+.context-card:hover{box-shadow:0 4px 20px rgba(47,62,52,0.1);transform:translateY(-2px);}
+.cc-title{font-size:var(--text-3xl);font-weight:900;color:var(--moss);}
+.cc-desc{font-size:var(--text-base);color:var(--moss-light);line-height:1.6;}
+.cc-go{font-size:var(--text-sm);font-weight:700;color:var(--rust);letter-spacing:0.04em;margin-top:auto;}
 .contribute{text-align:center;padding:var(--space-10) 0;}
 .contribute h3{font-family:'Cormorant Garamond',serif;font-size:var(--text-h6);font-weight:600;margin-bottom:var(--space-3);}
 .contribute p{font-size:var(--text-md);color:var(--moss-light);max-width:480px;margin:0 auto var(--space-6);}
@@ -57,6 +63,7 @@
   .intro{font-size:18px;padding-left:16px;}
   .report-card{grid-template-columns:1fr;gap:16px;}
   .report-num{font-size:36px;width:auto;}
+  .context-row{grid-template-columns:1fr;}
   .principles{grid-template-columns:1fr;}
   .methodology{padding:28px 20px;}
 }
@@ -90,12 +97,12 @@
 
 <div class="stats-bar">
   <div class="sb-stat"><div class="n">4</div><div class="l">Published Reports</div></div>
-  <div class="sb-stat"><div class="n">255+</div><div class="l">Sources Cited</div></div>
+  <div class="sb-stat"><div class="n">60</div><div class="l">Sources Cited</div></div>
   <div class="sb-stat"><div class="n">May 2026</div><div class="l">Latest Update</div></div>
 </div>
 
 <div class="main">
-  <p class="intro">"Utah's investment ecosystem produces extraordinary data — but most of it lives in expensive databases or academic papers that never reach the founders and investors who need it most. We built this research series to change that."</p>
+  <p class="intro">"Utah's investment ecosystem produces extraordinary data, but most of it lives in expensive databases or academic papers that never reach the founders and investors who need it most. We built this research series to change that."</p>
 
   <div class="reports-label">Published Reports</div>
   <div class="reports">
@@ -103,7 +110,7 @@
       <div class="report-num">01</div>
       <div>
         <div class="report-title">Utah Early-Stage Capital Landscape</div>
-        <div class="report-desc">A comprehensive analysis of pre-seed and seed capital flow in Utah in 2025 — who gets it, who doesn't, and what the data reveals about the gender funding gap in one of America's top startup states.</div>
+        <div class="report-desc">A comprehensive analysis of pre-seed and seed capital flow in Utah in 2025: who gets it, who doesn't, and what the data reveals about the gender funding gap in one of America's top startup states.</div>
         <div class="findings">
           <span class="finding">$509.6M total pool</span>
           <span class="finding">~6% to women founders</span>
@@ -121,9 +128,9 @@
       <div class="report-num">02</div>
       <div>
         <div class="report-title">Accredited Women Investors in Utah</div>
-        <div class="report-desc">How many women in Utah meet the SEC's accredited investor threshold — and what does that mean for the potential size of a women's angel collective? An original analysis using IRS income data, Census household data, and Utah labor statistics.</div>
+        <div class="report-desc">How many women in Utah meet the SEC's accredited investor threshold, and what does that mean for the potential size of a women's angel collective? An original analysis using IRS income data, Census household data, and Utah labor statistics.</div>
         <div class="findings">
-          <span class="finding">~92K–103K accredited women</span>
+          <span class="finding">~92K to 103K accredited women</span>
           <span class="finding">~100K working estimate</span>
           <span class="finding">5% activation = 1,000+ investors</span>
           <span class="finding">Wasatch Front focus</span>
@@ -173,13 +180,27 @@
     </a>
   </div>
 
+  <div class="reports-label">The Bigger Picture</div>
+  <div class="context-row">
+    <a class="context-card" href="opportunity.html">
+      <div class="cc-title">The Opportunity</div>
+      <div class="cc-desc">Why Utah, why women, why now. The thesis behind the data: two sides of one funding gap, and the collective model built to close it.</div>
+      <span class="cc-go">Read the thesis &rarr;</span>
+    </a>
+    <a class="context-card" href="networks.html">
+      <div class="cc-title">The Networks</div>
+      <div class="cc-desc">The women-led angel collectives that came before us. The proof that the model works, and where Silver &amp; Salt Capital fits among them.</div>
+      <span class="cc-go">See the landscape &rarr;</span>
+    </a>
+  </div>
+
   <div class="methodology">
     <div class="meth-title">Our Methodology</div>
-    <div class="meth-text">Silver &amp; Salt Capital uses AI tools — primarily Claude (Anthropic) — to assist with research synthesis and analysis. AI is a starting point, not an endpoint. Every significant claim is verified against primary sources before publication. We name the tools we use. We publish our source lists. We flag estimates as estimates.</div>
+    <div class="meth-text">Silver &amp; Salt Capital uses AI tools, primarily Claude (Anthropic), to assist with research synthesis and analysis. AI is a starting point for the work. Every significant claim is then verified against primary sources before publication. We name the tools we use. We publish our source lists. We flag estimates as estimates.</div>
     <div class="principles">
       <div class="principle"><div class="pr-title">Show the work</div><div class="pr-text">Methodology is documented in every report. You can see exactly how we got here.</div></div>
       <div class="principle"><div class="pr-title">Credit the tools</div><div class="pr-text">AI tools are named and described. No pretending this is traditional research.</div></div>
-      <div class="principle"><div class="pr-title">Link the sources</div><div class="pr-text">Every primary source is cited. Our full references page is available to members.</div></div>
+      <div class="principle"><div class="pr-title">Link the sources</div><div class="pr-text">Every primary source is cited in our <a href="source-bible.html" style="color:var(--rust);border-bottom:1px solid rgba(184,92,56,0.45);text-decoration:none;">full references page</a>, open to anyone.</div></div>
       <div class="principle"><div class="pr-title">Invite the challenge</div><div class="pr-text">Found an error? Have better data? We want to know. This is a living document.</div></div>
     </div>
   </div>
@@ -187,7 +208,7 @@
   <div class="contribute">
     <h3>Have data we should know about?</h3>
     <p>We're actively seeking better Utah-specific data on angel investing, women founder outcomes, and accredited investor demographics. If you work in research, policy, or financial services, we'd love to hear from you.</p>
-    <a href="mailto:tori@letsplaymoney.com" class="btn">Contribute Data</a>
+    <a href="mailto:tori@silverandsaltcapital.com" class="btn">Contribute Data</a>
   </div>
 </div>
 
