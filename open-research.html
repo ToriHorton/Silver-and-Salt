@@ -14,21 +14,21 @@
 <link rel="stylesheet" href="styles.css?v=2026-06-29">
 <style>
 /* ── References — page-specific styles ── */
-.hero{background:var(--moss);padding:var(--space-16) var(--space-10) var(--space-13);position:relative;overflow:hidden;}
+.hero{background:linear-gradient(135deg, var(--teal) 0%, #0d6b5c 100%);padding:var(--space-16) var(--space-10) var(--space-13);position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border-radius:var(--radius-full);background:rgba(255,255,255,0.03);}
-.hero-eyebrow{font-size:var(--text-xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);margin-bottom:var(--space-4);}
+.hero-eyebrow{font-size:var(--text-xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);margin-bottom:var(--space-4);}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,80px);font-weight:300;color:var(--cream);line-height:var(--leading-none);margin-bottom:var(--space-5);}
 .hero-sub{font-size:var(--text-lg);color:rgba(251,248,242,0.65);max-width:560px;line-height:var(--leading-relaxed);font-weight:300;}
-.stats-bar{background:var(--rust);padding:var(--space-5) var(--space-10);display:flex;gap:var(--space-10);}
+.stats-bar{background:var(--moss);padding:var(--space-5) var(--space-10);display:flex;gap:var(--space-10);}
 .sb-stat .n{font-size:var(--text-h6);font-weight:900;color:white;}
 .sb-stat .l{font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.7);}
 .main{max-width:1100px;margin:0 auto;padding:var(--space-13) var(--space-10);}
-.intro{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;line-height:1.5;color:var(--moss);max-width:700px;margin-bottom:var(--space-12);border-left:2px solid var(--rust);padding-left:var(--space-6);font-style:italic;}
+.intro{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;line-height:1.5;color:var(--moss);max-width:700px;margin-bottom:var(--space-12);border-left:2px solid var(--teal);padding-left:var(--space-6);font-style:italic;}
 .reports-label{font-size:var(--text-xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--sage);margin-bottom:var(--space-5);}
 .reports{display:flex;flex-direction:column;gap:var(--space-4);margin-bottom:var(--space-13);}
 .report-card{background:white;border:1px solid rgba(47,62,52,0.1);border-radius:var(--radius-md);padding:var(--space-8);display:grid;grid-template-columns:auto 1fr;gap:var(--space-6);transition:box-shadow 0.2s;text-decoration:none;color:inherit;}
 .report-card:hover{box-shadow:0 4px 20px rgba(47,62,52,0.1);}
-.report-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;color:var(--rust);line-height:var(--leading-none);width:60px;}
+.report-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;color:var(--teal);line-height:var(--leading-none);width:60px;}
 .report-title{font-size:var(--text-3xl);font-weight:900;margin-bottom:var(--space-2);}
 .report-desc{font-size:var(--text-base);color:var(--moss-light);line-height:1.6;margin-bottom:var(--space-4);}
 .findings{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-bottom:var(--space-4);}
@@ -46,14 +46,14 @@
 .context-card:hover{box-shadow:0 4px 20px rgba(47,62,52,0.1);transform:translateY(-2px);}
 .cc-title{font-size:var(--text-3xl);font-weight:900;color:var(--moss);}
 .cc-desc{font-size:var(--text-base);color:var(--moss-light);line-height:1.6;}
-.cc-go{font-size:var(--text-sm);font-weight:700;color:var(--rust);letter-spacing:0.04em;margin-top:auto;}
+.cc-go{font-size:var(--text-sm);font-weight:700;color:var(--teal);letter-spacing:0.04em;margin-top:auto;}
 .contribute{text-align:center;padding:var(--space-10) 0;}
 .contribute h3{font-family:'Cormorant Garamond',serif;font-size:var(--text-h6);font-weight:600;margin-bottom:var(--space-3);}
 .contribute p{font-size:var(--text-md);color:var(--moss-light);max-width:480px;margin:0 auto var(--space-6);}
 
 /* References btn override — dark style, not pop */
 .btn.btn-dark-alt{color:var(--cream);background:var(--moss);padding:var(--space-3) var(--space-7);}
-.btn.btn-dark-alt:hover{background:var(--rust);}
+.btn.btn-dark-alt:hover{background:var(--teal);}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){.hero{padding:100px 20px 48px;}
@@ -77,7 +77,7 @@
 .ref-section{border-top:1px solid rgba(47,62,52,0.1);background:var(--cream);padding:var(--space-13) 0 var(--space-10);}
 .ref-wrap{max-width:1000px;margin:0 auto;padding:0 var(--space-10);}
 .ref-intro{font-size:var(--text-md);color:var(--moss-light);line-height:1.7;max-width:680px;margin:var(--space-3) 0 var(--space-8);}
-.ref-intro a{color:var(--rust);text-decoration:none;border-bottom:1px solid rgba(184,92,56,0.4);}
+.ref-intro a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(184,92,56,0.4);}
 .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
 .filter-btn{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(47,62,52,0.1);background:white;color:#7E8E84;cursor:pointer;transition:all .2s;}
 .filter-btn:hover{border-color:#7E8E84;color:#2F3E34;}
@@ -88,7 +88,7 @@
 .source{background:white;border:1px solid rgba(47,62,52,0.06);border-radius:12px;padding:20px 24px;margin-bottom:10px;transition:box-shadow .2s;scroll-margin-top:120px;}
 .source:hover{box-shadow:0 4px 16px rgba(47,62,52,0.05);}
 .source-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
-.source-id{font-family:'Satoshi',sans-serif;font-weight:900;font-size:14px;color:#D16B4F;flex-shrink:0;min-width:36px;}
+.source-id{font-family:'Satoshi',sans-serif;font-weight:900;font-size:14px;color:#1A8F7D;flex-shrink:0;min-width:36px;}
 .source-title{font-family:'Satoshi',sans-serif;font-weight:700;font-size:15px;color:#2F3E34;flex:1;letter-spacing:-.01em;}
 .source-year{font-family:'Satoshi',sans-serif;font-weight:700;font-size:12px;color:#7E8E84;background:#F4EFE6;padding:2px 8px;border-radius:4px;flex-shrink:0;}
 .source-org{font-size:12px;color:#7E8E84;margin-bottom:10px;}
@@ -97,16 +97,16 @@
 .source-url a:hover{text-decoration:underline;}
 .claims{list-style:none;padding:0;margin-bottom:12px;}
 .claim{padding:8px 12px;margin-bottom:4px;border-radius:8px;background:rgba(47,62,52,0.02);display:grid;grid-template-columns:auto 1fr;gap:8px;}
-.claim-bullet{width:6px;height:6px;border-radius:50%;background:#D16B4F;margin-top:6px;flex-shrink:0;}
+.claim-bullet{width:6px;height:6px;border-radius:50%;background:#1A8F7D;margin-top:6px;flex-shrink:0;}
 .claim-text{font-size:13px;color:#4A5E50;line-height:1.55;}
 .claim-data{font-weight:600;color:#2F3E34;}
 .used-on{display:flex;gap:6px;flex-wrap:wrap;}
 .used-tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;letter-spacing:.04em;}
-.used-home{background:#FDEAE6;color:#D16B4F;}
-.used-opportunity{background:#E0F2EE;color:#1A8F7D;}
-.used-data{background:#E3EAF5;color:#3D5A99;}
-.used-how{background:#F0E4EE;color:#8B5E83;}
-.used-join{background:#EEF5E4;color:#5A8A2F;}
+.used-home{background:rgba(26,143,125,0.10);color:#1A8F7D;}
+.used-opportunity{background:rgba(26,143,125,0.10);color:#1A8F7D;}
+.used-data{background:rgba(26,143,125,0.10);color:#1A8F7D;}
+.used-how{background:rgba(26,143,125,0.10);color:#1A8F7D;}
+.used-join{background:rgba(26,143,125,0.10);color:#1A8F7D;}
 .used-none{background:#F4EFE6;color:#7E8E84;}
 @media(max-width:768px){
   .ref-wrap{padding:0 16px;}
@@ -275,7 +275,7 @@
     <div class="principles">
       <div class="principle"><div class="pr-title">Show the work</div><div class="pr-text">Methodology is documented in every report. You can see exactly how we got here.</div></div>
       <div class="principle"><div class="pr-title">Credit the tools</div><div class="pr-text">AI tools are named and described. No pretending this is traditional research.</div></div>
-      <div class="principle"><div class="pr-title">Link the sources</div><div class="pr-text">Every primary source is cited in our <a href="#references" style="color:var(--rust);border-bottom:1px solid rgba(184,92,56,0.45);text-decoration:none;">full references page</a>, open to anyone.</div></div>
+      <div class="principle"><div class="pr-title">Link the sources</div><div class="pr-text">Every primary source is cited in our <a href="#references" style="color:var(--warm);border-bottom:1px solid rgba(196,164,126,0.45);text-decoration:none;">full references page</a>, open to anyone.</div></div>
       <div class="principle"><div class="pr-title">Invite the challenge</div><div class="pr-text">Found an error? Have better data? We want to know. This is a living document.</div></div>
     </div>
   </div>
