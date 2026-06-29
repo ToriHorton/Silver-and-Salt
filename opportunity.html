@@ -11,7 +11,7 @@
 <link rel="prefetch" href="index.html">
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2026-05-04h">
+<link rel="stylesheet" href="styles.css?v=2026-06-29">
 <style>
   /* ── Opportunity-specific overrides ── */
   :root { --teal-light: rgba(26,143,125,0.12); }
@@ -213,6 +213,16 @@
     .cta-section { padding: 56px 16px; }
     .why-preview { padding: 48px 16px; }
   }
+
+/* ── Report sources box (elevation chrome) ── */
+.rpt-sources-wrap{max-width:800px;margin:0 auto;padding:48px 24px 72px;}
+.rpt-sources{background:var(--sand);border-radius:8px;padding:24px;}
+.rpt-sources-title{font-family:'Satoshi',sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);margin-bottom:12px;font-weight:700;}
+.rpt-sources p{font-size:13px;color:var(--moss-light);line-height:1.8;margin:0 0 16px;}
+.rpt-sources a{color:var(--teal);text-decoration:none;font-weight:700;}
+.rpt-sources a:hover{text-decoration:underline;}
+.rpt-ainote{background:rgba(47,62,52,0.06);border:1px solid rgba(47,62,52,0.15);border-radius:6px;padding:16px;font-size:12px;color:var(--moss-light);line-height:1.6;}
+.rpt-ainote strong{color:var(--moss);}
 </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8E3B0PFT4"></script>
@@ -227,14 +237,14 @@
 
 <!-- ══ NAV ══ -->
 <site-header section="research"></site-header>
-<script src="assets/site-header.js?v=4" defer></script>
+<script src="assets/site-header.js?v=5" defer></script>
 
 <!-- ══ HERO ══ -->
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-circle"></div>
   <div class="hero-circle2"></div>
-  <p class="hero-eyebrow fade fd1">The Opportunity</p>
+  <p class="hero-eyebrow fade fd1">S&amp;S Capital Research · Report No. 01</p>
   <h1 class="hero-title fade fd2">Two sides.<br><em>One solution.</em></h1>
   <p class="hero-sub fade fd3">Women founders who can't get funded. Women investors who aren't at the table. Utah has both, and the infrastructure to connect them has been missing. Until now.</p>
   <div class="hero-scroll">Scroll</div>
@@ -441,8 +451,16 @@
   </div>
 </div>
 
+<div class="rpt-sources-wrap">
+  <div class="rpt-sources">
+    <div class="rpt-sources-title">Sources &amp; Methodology · Report No. 01</div>
+    <p>This report synthesizes Silver &amp; Salt Capital's primary research. Key sources: <a href="open-research.html#S06">S06</a>, <a href="open-research.html#S10">S10</a>, <a href="open-research.html#S11">S11</a>, <a href="open-research.html#S12">S12</a>, <a href="open-research.html#S13">S13</a>, <a href="open-research.html#S46">S46</a>, <a href="open-research.html#S47">S47</a>, <a href="open-research.html#S48">S48</a>, <a href="open-research.html#S51">S51</a>. See the <a href="open-research.html#references">full references</a> for every source on the site.</p>
+    <div class="rpt-ainote"><strong>AI Transparency:</strong> Researched and drafted with assistance from Claude (Anthropic). Every significant claim was verified against primary sources before publication. Estimates are labeled as estimates.</div>
+  </div>
+</div>
+
 <site-footer></site-footer>
-<script src="assets/site-footer.js?v=1" defer></script>
+<script src="assets/site-footer.js?v=2" defer></script>
 
 </body>
 </html>

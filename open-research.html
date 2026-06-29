@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Open Research — Silver &amp; Salt Capital</title>
+<title>Research Methods &amp; References — Silver &amp; Salt Capital</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://api.fontshare.com">
@@ -11,9 +11,9 @@
 <link rel="prefetch" href="index.html">
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2026-05-04h">
+<link rel="stylesheet" href="styles.css?v=2026-06-29">
 <style>
-/* ── Open Research — page-specific styles ── */
+/* ── Research Methods & References — page-specific styles ── */
 .hero{background:var(--moss);padding:var(--space-16) var(--space-10) var(--space-13);position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border-radius:var(--radius-full);background:rgba(255,255,255,0.03);}
 .hero-eyebrow{font-size:var(--text-xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);margin-bottom:var(--space-4);}
@@ -51,7 +51,7 @@
 .contribute h3{font-family:'Cormorant Garamond',serif;font-size:var(--text-h6);font-weight:600;margin-bottom:var(--space-3);}
 .contribute p{font-size:var(--text-md);color:var(--moss-light);max-width:480px;margin:0 auto var(--space-6);}
 
-/* Open Research btn override — dark style, not pop */
+/* Research Methods & References btn override — dark style, not pop */
 .btn.btn-dark-alt{color:var(--cream);background:var(--moss);padding:var(--space-3) var(--space-7);}
 .btn.btn-dark-alt:hover{background:var(--rust);}
 
@@ -72,8 +72,54 @@
   .sb-stat .n{font-size:18px;}
   .report-title{font-size:16px;}
 }
+
+/* ── References (merged from the old References page) ── */
+.ref-section{border-top:1px solid rgba(47,62,52,0.1);background:var(--cream);padding:var(--space-13) 0 var(--space-10);}
+.ref-wrap{max-width:1000px;margin:0 auto;padding:0 var(--space-10);}
+.ref-intro{font-size:var(--text-md);color:var(--moss-light);line-height:1.7;max-width:680px;margin:var(--space-3) 0 var(--space-8);}
+.ref-intro a{color:var(--rust);text-decoration:none;border-bottom:1px solid rgba(184,92,56,0.4);}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.filter-btn{font-family:'Satoshi',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(47,62,52,0.1);background:white;color:#7E8E84;cursor:pointer;transition:all .2s;}
+.filter-btn:hover{border-color:#7E8E84;color:#2F3E34;}
+.filter-btn.active{background:#2F3E34;color:#F0EDE7;border-color:#2F3E34;}
+.topic{margin-bottom:48px;}
+.topic-header{font-family:'Satoshi',sans-serif;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7E8E84;padding-bottom:10px;border-bottom:1px solid rgba(47,62,52,0.08);margin-bottom:16px;display:flex;justify-content:space-between;align-items:baseline;}
+.topic-count{font-size:11px;font-weight:500;color:#B0B0B0;letter-spacing:normal;text-transform:none;}
+.source{background:white;border:1px solid rgba(47,62,52,0.06);border-radius:12px;padding:20px 24px;margin-bottom:10px;transition:box-shadow .2s;scroll-margin-top:120px;}
+.source:hover{box-shadow:0 4px 16px rgba(47,62,52,0.05);}
+.source-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.source-id{font-family:'Satoshi',sans-serif;font-weight:900;font-size:14px;color:#D16B4F;flex-shrink:0;min-width:36px;}
+.source-title{font-family:'Satoshi',sans-serif;font-weight:700;font-size:15px;color:#2F3E34;flex:1;letter-spacing:-.01em;}
+.source-year{font-family:'Satoshi',sans-serif;font-weight:700;font-size:12px;color:#7E8E84;background:#F4EFE6;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+.source-org{font-size:12px;color:#7E8E84;margin-bottom:10px;}
+.source-url{font-size:11px;margin-bottom:12px;}
+.source-url a{color:#1A8F7D;text-decoration:none;word-break:break-all;}
+.source-url a:hover{text-decoration:underline;}
+.claims{list-style:none;padding:0;margin-bottom:12px;}
+.claim{padding:8px 12px;margin-bottom:4px;border-radius:8px;background:rgba(47,62,52,0.02);display:grid;grid-template-columns:auto 1fr;gap:8px;}
+.claim-bullet{width:6px;height:6px;border-radius:50%;background:#D16B4F;margin-top:6px;flex-shrink:0;}
+.claim-text{font-size:13px;color:#4A5E50;line-height:1.55;}
+.claim-data{font-weight:600;color:#2F3E34;}
+.used-on{display:flex;gap:6px;flex-wrap:wrap;}
+.used-tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;letter-spacing:.04em;}
+.used-home{background:#FDEAE6;color:#D16B4F;}
+.used-opportunity{background:#E0F2EE;color:#1A8F7D;}
+.used-data{background:#E3EAF5;color:#3D5A99;}
+.used-how{background:#F0E4EE;color:#8B5E83;}
+.used-join{background:#EEF5E4;color:#5A8A2F;}
+.used-none{background:#F4EFE6;color:#7E8E84;}
+@media(max-width:768px){
+  .ref-wrap{padding:0 16px;}
+  .source{padding:16px 18px;}
+  .filter-bar{gap:4px;}
+  .filter-btn{padding:6px 10px;font-size:10px;}
+}
+@media(max-width:480px){
+  .filter-btn{font-size:9px;padding:5px 8px;}
+  .source{padding:14px 14px;}
+}
 </style>
-<meta property="og:title" content="Open Research — Silver &amp; Salt Capital">
+<meta property="og:title" content="Research Methods &amp; References — Silver &amp; Salt Capital">
 <meta property="og:description" content="AI-assisted research, verified against public data, published openly. Every claim traced to a source.">
 <meta property="og:type" content="article">
   <!-- Google tag (gtag.js) -->
@@ -87,16 +133,16 @@
 </head>
 <body>
 <site-header section="research"></site-header>
-<script src="assets/site-header.js?v=4" defer></script>
+<script src="assets/site-header.js?v=5" defer></script>
 
 <div class="hero">
-  <p class="hero-eyebrow">S&amp;S Capital Open Research</p>
+  <p class="hero-eyebrow">Silver &amp; Salt Capital Research Methods &amp; References</p>
   <h1 class="hero-title">We show<br>our work.</h1>
   <p class="hero-sub">AI-assisted research, verified against public data, published openly. Every claim traced to a source. Every methodology documented. Invite the challenge.</p>
 </div>
 
 <div class="stats-bar">
-  <div class="sb-stat"><div class="n">4</div><div class="l">Published Reports</div></div>
+  <div class="sb-stat"><div class="n">6</div><div class="l">Published Reports</div></div>
   <div class="sb-stat"><div class="n">60</div><div class="l">Sources Cited</div></div>
   <div class="sb-stat"><div class="n">May 2026</div><div class="l">Latest Update</div></div>
 </div>
@@ -106,8 +152,26 @@
 
   <div class="reports-label">Published Reports</div>
   <div class="reports">
-    <a class="report-card" href="utah-funding-research.html">
+    <a class="report-card" href="opportunity.html">
       <div class="report-num">01</div>
+      <div>
+        <div class="report-title">The Opportunity</div>
+        <div class="report-desc">The thesis behind the data. Two sides of one funding gap, the women founders and the women investors Utah already has, and the collective model built to connect them.</div>
+        <div class="findings">
+          <span class="finding">129,429 women-owned businesses</span>
+          <span class="finding">~100K accredited women</span>
+          <span class="finding">78¢ vs 31¢ revenue per dollar</span>
+          <span class="finding">$10.9T women's wealth</span>
+        </div>
+        <div class="report-meta">
+          <span>AI Tool: Claude (Anthropic)</span>
+          <span>9 primary sources</span>
+          <span>Updated 2026</span>
+        </div>
+      </div>
+    </a>
+    <a class="report-card" href="utah-funding-research.html">
+      <div class="report-num">02</div>
       <div>
         <div class="report-title">Utah Early-Stage Capital Landscape</div>
         <div class="report-desc">A comprehensive analysis of pre-seed and seed capital flow in Utah in 2025: who gets it, who doesn't, and what the data reveals about the gender funding gap in one of America's top startup states.</div>
@@ -124,44 +188,8 @@
         </div>
       </div>
     </a>
-    <a class="report-card" href="accredited-women-research.html">
-      <div class="report-num">02</div>
-      <div>
-        <div class="report-title">Accredited Women Investors in Utah</div>
-        <div class="report-desc">How many women in Utah meet the SEC's accredited investor threshold, and what does that mean for the potential size of a women's angel collective? An original analysis using IRS income data, Census household data, and Utah labor statistics.</div>
-        <div class="findings">
-          <span class="finding">~92K to 103K accredited women</span>
-          <span class="finding">~100K working estimate</span>
-          <span class="finding">5% activation = 1,000+ investors</span>
-          <span class="finding">Wasatch Front focus</span>
-        </div>
-        <div class="report-meta">
-          <span>AI Tool: Claude (Anthropic)</span>
-          <span>8 primary sources</span>
-          <span>Validated March 2026</span>
-        </div>
-      </div>
-    </a>
-    <a class="report-card" href="landscape-map.html">
-      <div class="report-num">03</div>
-      <div>
-        <div class="report-title">The Women's Funding Landscape</div>
-        <div class="report-desc">An interactive map and directory of 203 angel groups, syndicates, venture funds, education programs, and micro-funds supporting women founders across all 50 states. The most comprehensive public resource mapping women's investment infrastructure in the US.</div>
-        <div class="findings">
-          <span class="finding">203 organizations</span>
-          <span class="finding">50 states covered</span>
-          <span class="finding">7 categories</span>
-          <span class="finding">Interactive choropleth map</span>
-        </div>
-        <div class="report-meta">
-          <span>AI Tool: Claude (Anthropic)</span>
-          <span>203 organizations researched</span>
-          <span>Published March 2026</span>
-        </div>
-      </div>
-    </a>
     <a class="report-card" href="utah-funding-2025.html">
-      <div class="report-num">04</div>
+      <div class="report-num">03</div>
       <div>
         <div class="report-title">Utah Funding 2025: From 169 to 1</div>
         <div class="report-desc">A vertical infographic tracking how Utah's $1.86B startup capital flowed in 2025. From 169 funded startups to a single publicly identified female CEO, with the capital share that explains the cliff and the math behind the lever.</div>
@@ -178,21 +206,68 @@
         </div>
       </div>
     </a>
+    <a class="report-card" href="accredited-women-research.html">
+      <div class="report-num">04</div>
+      <div>
+        <div class="report-title">Accredited Women Investors in Utah</div>
+        <div class="report-desc">How many women in Utah meet the SEC's accredited investor threshold, and what does that mean for the potential size of a women's angel collective? An original analysis using IRS income data, Census household data, and Utah labor statistics.</div>
+        <div class="findings">
+          <span class="finding">~92K to 103K accredited women</span>
+          <span class="finding">~100K working estimate</span>
+          <span class="finding">5% activation = 1,000+ investors</span>
+          <span class="finding">Wasatch Front focus</span>
+        </div>
+        <div class="report-meta">
+          <span>AI Tool: Claude (Anthropic)</span>
+          <span>8 primary sources</span>
+          <span>Validated March 2026</span>
+        </div>
+      </div>
+    </a>
+    <a class="report-card" href="networks.html">
+      <div class="report-num">05</div>
+      <div>
+        <div class="report-title">The Networks</div>
+        <div class="report-desc">A comparative analysis of nine women-led angel collectives, from Golden Seeds to the JumpFund. The proof the model works across the country, and where Silver &amp; Salt Capital fits among them.</div>
+        <div class="findings">
+          <span class="finding">9 collectives profiled</span>
+          <span class="finding">$200M+ deployed</span>
+          <span class="finding">1,500+ women angels</span>
+          <span class="finding">Golden Seeds to JumpFund</span>
+        </div>
+        <div class="report-meta">
+          <span>AI Tool: Claude (Anthropic)</span>
+          <span>Sources S22 to S30</span>
+          <span>Updated 2026</span>
+        </div>
+      </div>
+    </a>
+    <a class="report-card" href="landscape-map.html">
+      <div class="report-num">06</div>
+      <div>
+        <div class="report-title">The Women's Funding Landscape</div>
+        <div class="report-desc">An interactive map and directory of 177 angel groups, syndicates, venture funds, education programs, and micro-funds supporting women founders across all 50 states. The most comprehensive public resource mapping women's investment infrastructure in the US.</div>
+        <div class="findings">
+          <span class="finding">177 organizations</span>
+          <span class="finding">50 states covered</span>
+          <span class="finding">7 categories</span>
+          <span class="finding">Interactive choropleth map</span>
+        </div>
+        <div class="report-meta">
+          <span>AI Tool: Claude (Anthropic)</span>
+          <span>177 organizations researched</span>
+          <span>Published March 2026</span>
+        </div>
+      </div>
+    </a>
   </div>
 
-  <div class="reports-label">The Bigger Picture</div>
-  <div class="context-row">
-    <a class="context-card" href="opportunity.html">
-      <div class="cc-title">The Opportunity</div>
-      <div class="cc-desc">Why Utah, why women, why now. The thesis behind the data: two sides of one funding gap, and the collective model built to close it.</div>
-      <span class="cc-go">Read the thesis &rarr;</span>
-    </a>
-    <a class="context-card" href="networks.html">
-      <div class="cc-title">The Networks</div>
-      <div class="cc-desc">The women-led angel collectives that came before us. The proof that the model works, and where Silver &amp; Salt Capital fits among them.</div>
-      <span class="cc-go">See the landscape &rarr;</span>
-    </a>
-  </div>
+  <div class="reports-label">Where to Start</div>
+  <a class="context-card" href="recommendations.html" style="margin-bottom:var(--space-13);">
+    <div class="cc-title">Recommendations</div>
+    <div class="cc-desc">A curated start-here guide: the organizations, programs, books, and podcasts we recommend for women investors, founders, and the ecosystem.</div>
+    <span class="cc-go">See the recommendations &rarr;</span>
+  </a>
 
   <div class="methodology">
     <div class="meth-title">Our Methodology</div>
@@ -200,7 +275,7 @@
     <div class="principles">
       <div class="principle"><div class="pr-title">Show the work</div><div class="pr-text">Methodology is documented in every report. You can see exactly how we got here.</div></div>
       <div class="principle"><div class="pr-title">Credit the tools</div><div class="pr-text">AI tools are named and described. No pretending this is traditional research.</div></div>
-      <div class="principle"><div class="pr-title">Link the sources</div><div class="pr-text">Every primary source is cited in our <a href="source-bible.html" style="color:var(--rust);border-bottom:1px solid rgba(184,92,56,0.45);text-decoration:none;">full references page</a>, open to anyone.</div></div>
+      <div class="principle"><div class="pr-title">Link the sources</div><div class="pr-text">Every primary source is cited in our <a href="#references" style="color:var(--rust);border-bottom:1px solid rgba(184,92,56,0.45);text-decoration:none;">full references page</a>, open to anyone.</div></div>
       <div class="principle"><div class="pr-title">Invite the challenge</div><div class="pr-text">Found an error? Have better data? We want to know. This is a living document.</div></div>
     </div>
   </div>
@@ -212,7 +287,1103 @@
   </div>
 </div>
 
+<section class="ref-section" id="references">
+<div class="ref-wrap">
+<div class="reports-label">Every Source We Cite</div>
+<p class="ref-intro">Every fact and data point on this site traces back to a numbered source below. Filter by topic, follow any link to the original, and check the tag on each card to see where it appears on the site. Found an error or have newer data? Email <a href="mailto:tori@silverandsaltcapital.com">tori@silverandsaltcapital.com</a> and we'll update it.</p>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterAll(this)">All Sources</button>
+  <button class="filter-btn" onclick="filterTopic('utah', this)">Utah Stats</button>
+  <button class="filter-btn" onclick="filterTopic('performance', this)">Performance</button>
+  <button class="filter-btn" onclick="filterTopic('funding', this)">Funding Gap</button>
+  <button class="filter-btn" onclick="filterTopic('women-biz', this)">Women's Businesses</button>
+  <button class="filter-btn" onclick="filterTopic('ecosystem', this)">Utah Ecosystem</button>
+  <button class="filter-btn" onclick="filterTopic('angel', this)">Angel Networks</button>
+  <button class="filter-btn" onclick="filterTopic('support', this)">Support Orgs</button>
+  <button class="filter-btn" onclick="filterTopic('mentoring', this)">Mentoring</button>
+  <button class="filter-btn" onclick="filterTopic('national', this)">National Data</button>
+  <button class="filter-btn" onclick="filterTopic('investor', this)">Investor Behavior</button>
+  <button class="filter-btn" onclick="filterTopic('utah-leadership', this)">Utah Leadership</button>
+  <button class="filter-btn" onclick="filterTopic('playbooks', this)">Playbooks</button>
+  <button class="filter-btn" onclick="filterTopic('landscape', this)">Landscape</button>
+  <button class="filter-btn" onclick="filterTopic('utah-angel', this)">Utah Angel Research</button>
+  <button class="filter-btn" onclick="filterTopic('angel-market', this)">Angel Market</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: UTAH GENDER & ECONOMIC STATS
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="utah">
+<div class="topic-header">Utah Gender &amp; Economic Stats <span class="topic-count">5 sources</span></div>
+
+<div class="source" id="S01" data-topic="utah">
+  <div class="source-header">
+    <div class="source-id">S01</div>
+    <div class="source-title">Best &amp; Worst States to Start a Business</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">WalletHub · Cited in UWLP Brief No. 66</div>
+  <div class="source-url"><a href="https://www.usu.edu/uwlp/files/briefs/66-women-and-entrepreneurship-utah-2025.pdf" target="_blank">usu.edu/uwlp/files/briefs/66-women-and-entrepreneurship-utah-2025.pdf</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">Utah ranked #3</span> best state to start a business</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Home</span><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S02" data-topic="utah">
+  <div class="source-header">
+    <div class="source-id">S02</div>
+    <div class="source-title">Best &amp; Worst States for Women's Equality</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">WalletHub · Cited in UWLP Brief No. 68</div>
+  <div class="source-url"><a href="https://www.usu.edu/today/story/usu-uwlp-releases-research-on-best-practices-among-utah-companies-championing-women-in-2025" target="_blank">usu.edu → UWLP Brief No. 68</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">Utah ranked #50</span> for women's equality, 11 consecutive years</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S03" data-topic="utah">
+  <div class="source-header">
+    <div class="source-id">S03</div>
+    <div class="source-title">Utah Gender Pay Gap: A 2025 Update</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">UWLP, Utah State University</div>
+  <div class="source-url"><a href="https://www.usu.edu/uwlp/files/snapshot/61.pdf" target="_blank">usu.edu/uwlp/files/snapshot/61.pdf</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Full-time working women earn <span class="claim-data">73 cents per dollar</span> men earn, worst in U.S.</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Lifetime earnings gap: <span class="claim-data">$755,120</span> over a 40-year career</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S04" data-topic="utah">
+  <div class="source-header">
+    <div class="source-id">S04</div>
+    <div class="source-title">Status of Women and Entrepreneurship in Utah</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Townsend &amp; Madsen, UWLP Brief No. 66</div>
+  <div class="source-url"><a href="https://www.usu.edu/uwlp/files/briefs/66-women-and-entrepreneurship-utah-2025.pdf" target="_blank">usu.edu/uwlp/files/briefs/66</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Utah ranked <span class="claim-data">45th</span> for female-owned businesses (15.8%)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">SLC ranked <span class="claim-data">dead last</span> among 50 most populous metros for female-owned businesses (14.8%)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Utah ranked <span class="claim-data">6th in economic clout</span> for women-owned businesses despite ranking 35th in share</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+<div class="source" id="S05" data-topic="utah">
+  <div class="source-header">
+    <div class="source-id">S05</div>
+    <div class="source-title">UWLP Childcare Research</div>
+    <div class="source-year">2023</div>
+  </div>
+  <div class="source-org">UWLP, Utah State University</div>
+  <div class="source-url"><a href="https://www.usu.edu/uwlp/research/briefs" target="_blank">usu.edu/uwlp/research/briefs</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Licensed childcare meets <span class="claim-data">21%</span> of demand in Utah</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">68%+</span> of working Utah mothers have children under 6</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: WOMEN-OWNED BUSINESS GROWTH
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="women-biz">
+<div class="topic-header">Women-Owned Business Growth <span class="topic-count">2 sources</span></div>
+
+<div class="source" id="S06" data-topic="women-biz">
+  <div class="source-header">
+    <div class="source-id">S06</div>
+    <div class="source-title">2025 Small Business Profile: Utah</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">U.S. SBA, Office of Advocacy</div>
+  <div class="source-url"><a href="https://advocacy.sba.gov/wp-content/uploads/2025/06/Utah_2025-State-Profile.pdf" target="_blank">SBA 2025 Small Business Profile</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">129,429</span> women-owned businesses in Utah</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Women are <span class="claim-data">44.5%</span> of all small business owners (up from 31% in 2020)</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Home</span><span class="used-tag used-opportunity">Opportunity</span><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S07" data-topic="women-biz">
+  <div class="source-header">
+    <div class="source-id">S07</div>
+    <div class="source-title">The 2025 Impact of Women-Owned Businesses</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Wells Fargo / WIPP</div>
+  <div class="source-url"><a href="#" target="_blank">Cited in UWLP Brief No. 66</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">14.5 million</span> women-owned firms nationally</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Employment grew <span class="claim-data">37.2%</span> to 12.9 million workers</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Revenue surged <span class="claim-data">73.7%</span> to $3.3 trillion</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Revenue growth <span class="claim-data">3× the rate</span> of male-owned firms</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-opportunity">Opportunity</span><span class="used-tag used-data">Data</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: FUNDING GAP
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="funding">
+<div class="topic-header">Funding Gap <span class="topic-count">3 sources</span></div>
+
+<div class="source" id="S08" data-topic="funding">
+  <div class="source-header">
+    <div class="source-id">S08</div>
+    <div class="source-title">Women in VC and Startup Funding Statistics</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Founders Forum Group</div>
+  <div class="source-url"><a href="https://ff.co/women-funding-statistics-2025/" target="_blank">ff.co/women-funding-statistics-2025</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">All-female teams received <span class="claim-data">2.3%</span> of global VC ($6.7B of $289B)</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S09" data-topic="funding">
+  <div class="source-header">
+    <div class="source-id">S09</div>
+    <div class="source-title">2024 All In: Female Founders in the VC Ecosystem</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">PitchBook</div>
+  <div class="source-url"><a href="https://pitchbook.com/news/reports/2024-us-all-in-female-founders-in-the-vc-ecosystem" target="_blank">pitchbook.com → 2024 All In Report</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">All-female teams: <span class="claim-data">1% of U.S. VC in 2024</span>, down from 2% in 2023</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Record <span class="claim-data">24.3% of exit count</span> in 2024</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">13 new unicorns</span> (43 total female-founded)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Median female-founded unicorn reached status in <span class="claim-data">4.2 years</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Active female angel investors at <span class="claim-data">decade low</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">VC deal count for female founders declined <span class="claim-data">3rd straight year</span> to lowest since 2018</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Home</span><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S10" data-topic="funding">
+  <div class="source-header">
+    <div class="source-id">S10</div>
+    <div class="source-title">Project DEEP: Utah VC Dataset</div>
+    <div class="source-year">2024</div>
+  </div>
+  <div class="source-org">Sorenson Impact Institute / University of Utah</div>
+  <div class="source-url"><a href="https://sorensonimpactinstitute.com/project/project-deep/" target="_blank">sorensonimpactinstitute.com/project/project-deep</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Utah VC to female founders: <span class="claim-data">$21M of $1.1B (1.92%)</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span><span class="used-tag used-join">Join</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: PERFORMANCE DATA
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="performance">
+<div class="topic-header">Women-Founded Performance Data <span class="topic-count">5 sources</span></div>
+
+<div class="source" id="S11" data-topic="performance">
+  <div class="source-header">
+    <div class="source-id">S11</div>
+    <div class="source-title">Why Women-Owned Startups Are a Better Bet</div>
+    <div class="source-year">2018</div>
+  </div>
+  <div class="source-org">BCG / MassChallenge (Abouzahr et al.)</div>
+  <div class="source-url"><a href="https://www.bcg.com/publications/2018/why-women-owned-startups-are-better-bet" target="_blank">bcg.com → Why Women-Owned Startups Are a Better Bet</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Women-founded: <span class="claim-data">78¢ revenue per $1 invested</span> vs. 31¢ for male-founded</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">2.5× more revenue</span> per dollar invested</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Women raised <span class="claim-data">$935K avg</span> vs. $2.1M for men</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">10% more cumulative revenue</span> over 5 years</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Home</span><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S12" data-topic="performance">
+  <div class="source-header">
+    <div class="source-id">S12</div>
+    <div class="source-title">10 Year Project</div>
+    <div class="source-year">2015</div>
+  </div>
+  <div class="source-org">First Round Capital</div>
+  <div class="source-url"><a href="http://10years.firstround.com/" target="_blank">10years.firstround.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Companies with female founder performed <span class="claim-data">63% better</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">3 of top 10</span> investments by value had at least one female founder</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Analysis of <span class="claim-data">300 investments, ~600 founders</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S13" data-topic="performance">
+  <div class="source-header">
+    <div class="source-id">S13</div>
+    <div class="source-title">Women-Led Private Tech: ROI Study</div>
+    <div class="source-year">2013</div>
+  </div>
+  <div class="source-org">Kauffman Foundation / Stanford Law (Wadhwa &amp; Mitchell)</div>
+  <div class="source-url"><a href="https://www.kauffmanfellows.org/journal/data-show-that-gender-inclusive-founding-teams-have-greater-success-in-fundraising-and-innovation" target="_blank">kauffmanfellows.org → Gender Inclusive Teams</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Women-led private tech companies: <span class="claim-data">35% higher ROI</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">12% higher revenue</span> when VC-backed</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S14" data-topic="performance">
+  <div class="source-header">
+    <div class="source-id">S14</div>
+    <div class="source-title">2025 Review of Funding for Female Founders</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Female Founders Fund</div>
+  <div class="source-url"><a href="https://blog.femalefoundersfund.com/2025-review-of-funding-for-female-founders-d7bda299ddba" target="_blank">femalefoundersfund.com → 2025 Review</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">15% less capital burned</span> consistently, even in bull markets</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Burn rate: <span class="claim-data">$270K/mo vs. $320K avg</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">7× jump</span> in female-led IPOs 2014 to 2024</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S15" data-topic="performance">
+  <div class="source-header">
+    <div class="source-id">S15</div>
+    <div class="source-title">Diversity Matters Even More</div>
+    <div class="source-year">2023</div>
+  </div>
+  <div class="source-org">McKinsey &amp; Company</div>
+  <div class="source-url"><a href="https://www.mckinsey.com/featured-insights/diversity-and-inclusion/diversity-matters-even-more-the-case-for-holistic-impact" target="_blank">mckinsey.com → Diversity Matters Even More</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Top quartile gender diversity: <span class="claim-data">39% more likely to outperform</span> (up from 15% in 2015)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Note: <span class="claim-data">correlation, not causation</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: UTAH ECOSYSTEM
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="ecosystem">
+<div class="topic-header">Utah Ecosystem <span class="topic-count">2 sources</span></div>
+
+<div class="source" id="S16" data-topic="ecosystem">
+  <div class="source-header">
+    <div class="source-id">S16</div>
+    <div class="source-title">Deal Dispatch: Utah Raised Billions in 2025</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Utah Business</div>
+  <div class="source-url"><a href="https://www.utahbusiness.com/deal-dispatch/2025/12/08/deal-dispatch-utah-tech-ecosystem-raised-billions-2025-nucleus-institute/" target="_blank">utahbusiness.com → Deal Dispatch</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Pelion: <span class="claim-data">$500M Fund VIII</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Sorenson Capital: <span class="claim-data">$150M Fund III</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Epic Ventures: <span class="claim-data">$200M</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+<div class="source" id="S17" data-topic="ecosystem">
+  <div class="source-header">
+    <div class="source-id">S17</div>
+    <div class="source-title">Women-Owned Businesses in Utah (Survey)</div>
+    <div class="source-year">2022</div>
+  </div>
+  <div class="source-org">Madsen &amp; Townsend, UWLP White Paper</div>
+  <div class="source-url"><a href="https://digitalcommons.usu.edu/marketing_facpub/465/" target="_blank">digitalcommons.usu.edu → UWLP White Paper</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Survey of <span class="claim-data">251 Utah women owners</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">65.7%</span> used personal savings to start</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">52.8%</span> in business 5 years or less</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Most common industries: services, consulting, IT, food services</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: MENTORING & SUPPORT
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="mentoring">
+<div class="topic-header">Mentoring &amp; Business Support <span class="topic-count">2 sources</span></div>
+
+<div class="source" id="S18" data-topic="mentoring">
+  <div class="source-header">
+    <div class="source-id">S18</div>
+    <div class="source-title">Mentoring: The Missing Link to Small Business Growth and Survival</div>
+    <div class="source-year">2019</div>
+  </div>
+  <div class="source-org">U.S. Small Business Administration</div>
+  <div class="source-url"><a href="#" target="_blank">SBA report, Feb. 2019</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Business failure drops from <span class="claim-data">25% to 13%</span> with mentoring</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-how">How It Works</span></div>
+</div>
+
+<div class="source" id="S19" data-topic="mentoring">
+  <div class="source-header">
+    <div class="source-id">S19</div>
+    <div class="source-title">What Women's Networks and Groups Can Do</div>
+    <div class="source-year">2018</div>
+  </div>
+  <div class="source-org">UWLP, WCID Series No. 4</div>
+  <div class="source-url"><a href="https://www.usu.edu/uwlp/files/wcid/women-networks.pdf" target="_blank">usu.edu/uwlp → women-networks.pdf</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Research supporting the value of organized women's investment and business networks</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-how">How It Works</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: SUPPORT ORGANIZATIONS
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="support">
+<div class="topic-header">Utah Support Organizations <span class="topic-count">2 sources</span></div>
+
+<div class="source" id="S20" data-topic="support">
+  <div class="source-header">
+    <div class="source-id">S20</div>
+    <div class="source-title">Women's Business Center of Utah</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">WBCUtah</div>
+  <div class="source-url"><a href="https://utahwomenowned.com" target="_blank">utahwomenowned.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">3,300+</span> listings in the women-owned business directory</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Named <span class="claim-data">2025 SBA Women's Business Center of Excellence</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+<div class="source" id="S21" data-topic="support">
+  <div class="source-header">
+    <div class="source-id">S21</div>
+    <div class="source-title">Empowering Women Entrepreneurs (Utah Financial Institutions)</div>
+    <div class="source-year">2024</div>
+  </div>
+  <div class="source-org">Sorenson Impact Institute</div>
+  <div class="source-url"><a href="https://sorensonimpactinstitute.com/empowering-women-entrepreneurs-how-utahs-financial-institutions-are-breaking-barriers-and-driving-economic-growth/" target="_blank">sorensonimpactinstitute.com → Empowering Women Entrepreneurs</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Utah policy leadership aimed at increasing employer-scale women-owned firms</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: ANGEL NETWORKS (COMPS)
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="angel">
+<div class="topic-header">Angel Networks: Comparable Models <span class="topic-count">9 sources</span></div>
+
+<div class="source" id="S22" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S22</div>
+    <div class="source-title">Golden Seeds Angel Network</div>
+    <div class="source-year">2004 to 2025</div>
+  </div>
+  <div class="source-org">Golden Seeds</div>
+  <div class="source-url"><a href="https://goldenseeds.com" target="_blank">goldenseeds.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Founded 2004. <span class="claim-data">1,100+ investors over 20 years</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Currently <span class="claim-data">~290 members across 9 chapters</span> in 28 states</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Invested <span class="claim-data">$190M+ in 260+ women-led companies</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Investments catalyzed <span class="claim-data">$2B+ in follow-on funding</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Knowledge Institute: <span class="claim-data">9-course investor education curriculum</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Investors spending 40+ hours on due diligence: <span class="claim-data">7.1× returns</span> vs. 1.1× for &lt;20 hours</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S23" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S23</div>
+    <div class="source-title">The JumpFund</div>
+    <div class="source-year">2013 to 2025</div>
+  </div>
+  <div class="source-org">The JumpFund, Chattanooga TN</div>
+  <div class="source-url"><a href="https://www.thejumpfund.com" target="_blank">thejumpfund.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Founded 2013 in Chattanooga. <span class="claim-data">$7.7M under management</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Invested in <span class="claim-data">30 women-led companies</span> across the Southeast</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Engaged capital of <span class="claim-data">100+ women investors (83% female)</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Investments leveraged <span class="claim-data">19× additional capital</span> from co-investors</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">First checks: <span class="claim-data">$100K to $250K</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Book: "Jump In" by Kristina Montague chronicles the model</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S24" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S24</div>
+    <div class="source-title">37 Angels</div>
+    <div class="source-year">2012 to 2025</div>
+  </div>
+  <div class="source-org">37 Angels, New York</div>
+  <div class="source-url"><a href="https://www.37angels.com" target="_blank">37angels.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">80+ women angel investors</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Portfolio IRR <span class="claim-data">above 20%</span>, top decile for early-stage investors</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S25" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S25</div>
+    <div class="source-title">Pipeline Angels</div>
+    <div class="source-year">2011 to 2025</div>
+  </div>
+  <div class="source-org">Pipeline Angels (acquired by IFEL)</div>
+  <div class="source-url"><a href="https://www.pipelineangels.com" target="_blank">pipelineangels.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">200+ members</span> trained through "Angels-in-the-Making" bootcamp</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">$4M+ invested in 40+ companies</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Serves as "friends and family" funding round for founders without wealthy networks</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S26" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S26</div>
+    <div class="source-title">Portfolia</div>
+    <div class="source-year">2014 to 2025</div>
+  </div>
+  <div class="source-org">Portfolia</div>
+  <div class="source-url"><a href="https://www.portfolia.com" target="_blank">portfolia.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">"Learn-by-investing" model, the closest match for the member-investor experience Silver &amp; Salt Capital is building</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Thematic funds: FemTech, Active Aging, Consumer, Rising America. <span class="claim-data">Women investors choose themes they know.</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Collaborative decision-making among women investors</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S27" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S27</div>
+    <div class="source-title">How Women Invest</div>
+    <div class="source-year">2020 to 2025</div>
+  </div>
+  <div class="source-org">How Women Invest / How Women Lead</div>
+  <div class="source-url"><a href="https://www.howwomeninvest.com" target="_blank">howwomeninvest.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">"New Table" campaign: goal to bring <span class="claim-data">10,000 new women into venture investing</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Leverages network of <span class="claim-data">25,000+ senior executive women</span> from How Women Lead</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">100% women-led/founded portfolio</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S28" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S28</div>
+    <div class="source-title">Next Wave Impact</div>
+    <div class="source-year">2017 to 2025</div>
+  </div>
+  <div class="source-org">Next Wave Impact</div>
+  <div class="source-url"><a href="https://www.nextwaveimpact.com" target="_blank">nextwaveimpact.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Trained <span class="claim-data">~200 women angels</span> through pilot programs</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Partnered with Portfolia, ACA, <span class="claim-data">Kauffman Foundation</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Launched funds in both <span class="claim-data">US and Europe</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S29" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S29</div>
+    <div class="source-title">Citrine Angels</div>
+    <div class="source-year">2015 to 2025</div>
+  </div>
+  <div class="source-org">Citrine Angels, Mid-Atlantic</div>
+  <div class="source-url"><a href="https://www.citrineangels.com" target="_blank">citrineangels.com</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Regional membership group for female investors. <span class="claim-data">No minimum investment barrier</span>, lowers the on-ramp</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Member of <span class="claim-data">Angel Capital Association</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Prescreened deal flow + education model, similar approach to Silver &amp; Salt Capital</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S30" data-topic="angel">
+  <div class="source-header">
+    <div class="source-id">S30</div>
+    <div class="source-title">Angel Capital Association: Angel Returns Data</div>
+    <div class="source-year">2007 to 2025</div>
+  </div>
+  <div class="source-org">Angel Capital Association</div>
+  <div class="source-url"><a href="https://www.angelcapitalassociation.org" target="_blank">angelcapitalassociation.org</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Largest professional org for accredited angel investors in North America</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Members deploy <span class="claim-data">$650M+ annually</span> in angel investments</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Average angel return: <span class="claim-data">2.5× in 4.5 years</span> (Wiltbank/Boeker study)</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: NATIONAL WOMEN'S BUSINESS DATA
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="national">
+<div class="topic-header">National Women's Business Data <span class="topic-count">4 sources</span></div>
+
+<div class="source" id="S31" data-topic="national">
+  <div class="source-header">
+    <div class="source-id">S31</div>
+    <div class="source-title">2023 Annual Report</div>
+    <div class="source-year">2023</div>
+  </div>
+  <div class="source-org">National Women's Business Council (NWBC)</div>
+  <div class="source-url"><a href="#" target="_blank">nwbc.gov → 2023 Annual Report</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Pull key national stats on women-owned business growth, access to capital barriers, and policy recommendations. Cross-reference with S06 (SBA data) and S07 (Wells Fargo) for complementary stats.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S32" data-topic="national">
+  <div class="source-header">
+    <div class="source-id">S32</div>
+    <div class="source-title">2022 Annual Report / By The Numbers</div>
+    <div class="source-year">2022</div>
+  </div>
+  <div class="source-org">National Women's Business Council (NWBC)</div>
+  <div class="source-url"><a href="#" target="_blank">nwbc.gov → 2022 Annual Report</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Baseline year-over-year comparison data. Use NWBC "By The Numbers" for quick-reference national stats.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S33" data-topic="national">
+  <div class="source-header">
+    <div class="source-id">S33</div>
+    <div class="source-title">2024 Impact of Women-Owned Businesses Research</div>
+    <div class="source-year">2024</div>
+  </div>
+  <div class="source-org">WIPP Education Institute (WEI)</div>
+  <div class="source-url"><a href="#" target="_blank">wipp.org → 2024 Impact Research</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Updated version of the Wells Fargo/WIPP study (S07). Should contain latest revenue, employment, and growth rate data for women-owned firms nationally.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S34" data-topic="national">
+  <div class="source-header">
+    <div class="source-id">S34</div>
+    <div class="source-title">Female Founder Statistics 2026: Funding, Growth &amp; Key Trends</div>
+    <div class="source-year">2026</div>
+  </div>
+  <div class="source-org">Theanna</div>
+  <div class="source-url"><a href="#" target="_blank">theanna.com → Female Founder Statistics 2026</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Most current aggregate stats on female founder funding, growth, and trends. Could update or replace older data points from S08, S09.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: INVESTOR BEHAVIOR & RESEARCH
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="investor">
+<div class="topic-header">Investor Behavior &amp; Research <span class="topic-count">5 sources</span></div>
+
+<div class="source" id="S35" data-topic="investor">
+  <div class="source-header">
+    <div class="source-id">S35</div>
+    <div class="source-title">The Female Alpha: Capitalizing on the Gender Funding Gap</div>
+    <div class="source-year">2024</div>
+  </div>
+  <div class="source-org">Unknown (likely research paper or report)</div>
+  <div class="source-url"><a href="#" target="_blank">Needs URL verification</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Title suggests alpha returns from investing in women-founded companies. Framing the funding gap as an investment opportunity, directly aligned with Silver &amp; Salt Capital's "pricing error" thesis.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S36" data-topic="investor">
+  <div class="source-header">
+    <div class="source-id">S36</div>
+    <div class="source-title">How Women (and Men) Invest in Startups</div>
+    <div class="source-year">2020</div>
+  </div>
+  <div class="source-org">Ventureneer / SWITCH</div>
+  <div class="source-url"><a href="#" target="_blank">ventureneer.com → How Women and Men Invest</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Study on gender differences in angel/startup investing behavior. Likely contains data on women's investment motivations, check sizes, sector preferences, and risk tolerance; critical for positioning Silver &amp; Salt Capital's model.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S37" data-topic="investor">
+  <div class="source-header">
+    <div class="source-id">S37</div>
+    <div class="source-title">Revelatory Research Identifies Roadmap to Unlock Women's Wealth by Motivating More Women to Invest in Startups</div>
+    <div class="source-year">2020</div>
+  </div>
+  <div class="source-org">Business Wire (press release for Ventureneer study)</div>
+  <div class="source-url"><a href="#" target="_blank">businesswire.com → Unlock Women's Wealth</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Press release summarizing S36 findings. Likely contains the headline stats and quotable framing; "roadmap to unlock women's wealth" language could be useful for site copy.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S38" data-topic="investor">
+  <div class="source-header">
+    <div class="source-id">S38</div>
+    <div class="source-title">67% of Women Investors Plan New Venture Fund Commitments in 2026</div>
+    <div class="source-year">2026</div>
+  </div>
+  <div class="source-org">Unknown (likely industry report or survey)</div>
+  <div class="source-url"><a href="#" target="_blank">Needs URL verification</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">67% of women investors</span> plan new venture fund commitments in 2026</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> If verified, this is a powerful "timing is right" data point; demand exists NOW. Use on Join page and Opportunity page.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S39" data-topic="investor">
+  <div class="source-header">
+    <div class="source-id">S39</div>
+    <div class="source-title">Banu Ozkazanc-Pan: Research on Gender &amp; Entrepreneurship</div>
+    <div class="source-year">2020 to 2025</div>
+  </div>
+  <div class="source-org">Brown University</div>
+  <div class="source-url"><a href="#" target="_blank">brown.edu → Banu Ozkazanc-Pan</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Academic research on gender, entrepreneurship, and venture ecosystems. May provide peer-reviewed backing for claims about structural barriers and funding inequality.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: UTAH LEADERSHIP
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="utah-leadership">
+<div class="topic-header">Utah Women's Leadership <span class="topic-count">2 sources</span></div>
+
+<div class="source" id="S40" data-topic="utah-leadership">
+  <div class="source-header">
+    <div class="source-id">S40</div>
+    <div class="source-title">Status of Women Leaders in Utah Business 2024</div>
+    <div class="source-year">2024</div>
+  </div>
+  <div class="source-org">UWLP, Utah State University, Brief No. 61</div>
+  <div class="source-url"><a href="https://www.usu.edu/uwlp/files/briefs/61-status-women-leaders-utah-business-2024.pdf" target="_blank">usu.edu/uwlp/files/briefs/61</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Data on women in C-suite, board seats, and leadership positions at Utah companies. Strengthens the "infrastructure exists but women are locked out" argument on the Opportunity page.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S41" data-topic="utah-leadership">
+  <div class="source-header">
+    <div class="source-id">S41</div>
+    <div class="source-title">2024 Economic Blueprint</div>
+    <div class="source-year">2024</div>
+  </div>
+  <div class="source-org">Unknown (likely Utah-specific economic report)</div>
+  <div class="source-url"><a href="#" target="_blank">Needs URL verification</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Likely contains Utah economic growth data, industry composition, and workforce stats. Context for the "why Utah, why now" story.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: ANGEL INVESTING EDUCATION & PLAYBOOKS
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="playbooks">
+<div class="topic-header">Angel Investing Education &amp; Playbooks <span class="topic-count">4 sources</span></div>
+
+<div class="source" id="S42" data-topic="playbooks">
+  <div class="source-header">
+    <div class="source-id">S42</div>
+    <div class="source-title">Golden Seeds Marks 20 Years of Investing in Female Entrepreneurs</div>
+    <div class="source-year">2024</div>
+  </div>
+  <div class="source-org">Dallas Innovates</div>
+  <div class="source-url"><a href="#" target="_blank">dallasinnovates.com → Golden Seeds 20 Years</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> 20-year retrospective on Golden Seeds. Likely contains updated investment totals, member growth, lessons learned, and return data beyond what's in S22. Quote: <span class="claim-data">"We think the returns are better."</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S43" data-topic="playbooks">
+  <div class="source-header">
+    <div class="source-id">S43</div>
+    <div class="source-title">Angel Investing Playbook: Insights from 45+ Investments</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">VITALIZE Venture Capital</div>
+  <div class="source-url"><a href="#" target="_blank">vitalize.vc → Angel Investing Playbook</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Practical guide from a working investor. 45+ investments analyzed. Could inform Silver &amp; Salt Capital's investor education curriculum and due diligence framework.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S44" data-topic="playbooks">
+  <div class="source-header">
+    <div class="source-id">S44</div>
+    <div class="source-title">Is Angel Investing for Beginners Actually Possible in 2026?</div>
+    <div class="source-year">2026</div>
+  </div>
+  <div class="source-org">Hustle Fund</div>
+  <div class="source-url"><a href="#" target="_blank">hustlefund.vc → Angel Investing for Beginners</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Beginner-accessible framing of angel investing. May contain data on minimum check sizes, platforms, and trends that support Silver &amp; Salt Capital's accessible entry point ($10K+ commitment).</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S45" data-topic="playbooks">
+  <div class="source-header">
+    <div class="source-id">S45</div>
+    <div class="source-title">Impact Finance Center: Investor Accelerators &amp; Clubs</div>
+    <div class="source-year">2026</div>
+  </div>
+  <div class="source-org">Impact Finance Center</div>
+  <div class="source-url"><a href="#" target="_blank">impactfinancecenter.org → Investor Accelerators</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Programs training new impact investors. 2026 Learning Lineup includes structured investor education. Could be a model for Silver &amp; Salt Capital's member education programming or a direct partnership.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: GLOBAL & LANDSCAPE
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="landscape">
+<div class="topic-header">Landscape &amp; Industry Reports <span class="topic-count">2 sources</span></div>
+
+<div class="source" id="S46" data-topic="landscape">
+  <div class="source-header">
+    <div class="source-id">S46</div>
+    <div class="source-title">Complete List of Women-Led Venture Funds Raised in 2025</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Unknown aggregator</div>
+  <div class="source-url"><a href="#" target="_blank">Needs URL verification</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Full roster of women-led funds. Useful for competitive landscape analysis and for showing momentum; "X new women-led funds launched in 2025 alone."</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+<div class="source" id="S47" data-topic="landscape">
+  <div class="source-header">
+    <div class="source-id">S47</div>
+    <div class="source-title">IFC Alliance to Expand Opportunities for Young Women Entrepreneurs Across Africa</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">International Finance Corporation (World Bank)</div>
+  <div class="source-url"><a href="#" target="_blank">ifc.org → Young Women Entrepreneurs Africa</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">⚠️ <strong>Needs review:</strong> Global context; even the World Bank is building infrastructure for women entrepreneurs. Shows Silver &amp; Salt Capital is part of a worldwide movement, with global precedent.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-none">Not yet used</span></div>
+</div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     TOPIC: UTAH ANGEL FUNDING RESEARCH (ORIGINAL)
+     ═══════════════════════════════════════════════════ -->
+<div class="topic" data-topic="utah-angel">
+<div class="topic-header">Utah Angel Funding Research: Original Analysis <span class="topic-count">8 sources</span></div>
+
+<div class="source" id="S48" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S48</div>
+    <div class="source-title">Utah 2025 Venture Deal Data: Pre-Seed/Seed Stage Share</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Utah Business / PitchBook (data pull Nov 25, 2025)</div>
+  <div class="source-url"><a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank">utahbusiness.com → 2026 Deal Dispatch</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Total Utah deal value 2025: <span class="claim-data">$1.86B</span> (169 transactions)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Pre-seed + seed share: <span class="claim-data">27.4%</span> of invested capital (lowest since 2017)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Implied Utah pre-seed/seed pool: <span class="claim-data">~$509.6M</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">December typically busiest deal month, so $509.6M is likely a floor</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Many more rounds were unannounced or below $1M threshold</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+<div class="source" id="S49" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S49</div>
+    <div class="source-title">Faye: $2.5M Pre-Seed (Female Co-Founded)</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">TechBuzz News / PR Newswire</div>
+  <div class="source-url"><a href="https://www.techbuzznews.com/faye-raises-2-5-million-to-redefine-household-support-with-ai-augmented-human-advisors/" target="_blank">techbuzznews.com → Faye raises $2.5M</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">$2.5M pre-seed</span> raised May 2025</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Co-founded by <span class="claim-data">Emily King</span> (CEO, Ogden, UT) and Kip Kaehler</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Led by Unusual Ventures (Sarah Leary, Nextdoor co-founder)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">AI-augmented human advisors for household management. Active in 20 cities, 12,000+ tasks completed</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">1 of only 2 female-co-founded Utah pre-seed/seed raises in 2025 sample</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S50" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S50</div>
+    <div class="source-title">Trace AQ: $1.25M Seed (Female Co-Founded)</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Utah Business / Trace AQ / TechBuzz News</div>
+  <div class="source-url"><a href="https://www.utahbusiness.com/press-releases/2025/06/02/university-utah-startup-trace-aq-air-quality-tech-market/" target="_blank">utahbusiness.com → Trace AQ</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">$1.25M seed</span> raised May 2025</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Co-founded by <span class="claim-data">Dr. Heather Holmes</span> (Assoc. Prof, Chemical Engineering, U of U)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Led by Rusheen Capital Management (LA). Air quality forecasting from NSF-funded research</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Named 2025 "Startup of the Year" by U of U Technology Licensing Office</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">1 of only 2 female-co-founded Utah pre-seed/seed raises in 2025 sample</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S51" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S51</div>
+    <div class="source-title">S&amp;S Capital Original Analysis: 2025 Utah Angel-Stage Female Founder Estimate</div>
+    <div class="source-year">2026</div>
+  </div>
+  <div class="source-org">Silver &amp; Salt Capital / ChatGPT Deep Research</div>
+  <div class="source-url"><a href="#" target="_blank">utah-funding-research.html (site page)</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">18-round disclosed sample totaling <span class="claim-data">$72.65M</span>. Only <span class="claim-data">$3.75M (5.2%)</span> went to female-co-founded startups</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Best estimate: <span class="claim-data">~$31M</span> of $509.6M Utah pre-seed/seed pool went to female-founded startups (range: $20M to $51M)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Utah's 5.2% is roughly <span class="claim-data">one-quarter to one-third of national benchmarks</span> (Carta: 24.2%, SEC: 19%)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Methodology: PitchBook denominator, publicly disclosed deal sample, founder gender verified through press releases and bios (not name inference)</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span><span class="used-tag used-home">Home</span><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+<div class="source" id="S52" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S52</div>
+    <div class="source-title">SEC: Exploring Accredited Investors &amp; Private Market Securities Ownership</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">SEC Office of the Investor Advocate (OIAD Working Paper 2025 No. 1)</div>
+  <div class="source-url"><a href="https://www.sec.gov/files/exploring-accredited-investors-june-2025.pdf" target="_blank">sec.gov → Exploring Accredited Investors</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">12.6% of U.S. adults</span> qualify as accredited investors (~33.6 million people)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">If retirement accounts excluded from net worth: <span class="claim-data">9.4%</span> (~25.1 million adults)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Current ownership of private-market securities among accredited investors: only <span class="claim-data">4.3%</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Measured at individual level (not household); 7,500 surveyed Jan 2024</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+<div class="source" id="S53" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S53</div>
+    <div class="source-title">Kem C. Gardner Policy Institute: Utah Population Estimates 2025</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">Kem C. Gardner Policy Institute, University of Utah</div>
+  <div class="source-url"><a href="https://gardner.utah.edu/news/utahs-population-reaches-3-55-million-in-2025/" target="_blank">gardner.utah.edu → Utah population 2025</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Utah population: <span class="claim-data">3,551,150</span> as of July 1, 2025</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Added 44,351 residents since 2024. Growth rate slowed to <span class="claim-data">1.3%</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Natural change (births > deaths) now primary driver, first time this decade</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span></div>
+</div>
+
+<div class="source" id="S54" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S54</div>
+    <div class="source-title">Park City / Summit County Economic &amp; Demographic Profile</div>
+    <div class="source-year">2023 to 2025</div>
+  </div>
+  <div class="source-org">Data USA / Census ACS / Census Reporter / World Population Review</div>
+  <div class="source-url"><a href="https://datausa.io/profile/geo/park-city-ut/" target="_blank">datausa.io → Park City</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Park City population: <span class="claim-data">~8,300</span>. Summit County: <span class="claim-data">~43,000</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Median household income: <span class="claim-data">$140,875</span> (nearly 2× national). Average: <span class="claim-data">$247,300</span>. Top 5%: <span class="claim-data">$1,294,042</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Median property value: <span class="claim-data">$1.74M</span> (5.73× national average)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text"><span class="claim-data">57.3% of housing units vacant</span> (second homes, seasonal residences). Owners not counted in resident population</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Per capita income in Summit County: <span class="claim-data">$74,755</span> (nearly 2× Utah average)</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span><span class="used-tag used-opportunity">Opportunity</span></div>
+</div>
+
+<div class="source" id="S55" data-topic="utah-angel">
+  <div class="source-header">
+    <div class="source-id">S55</div>
+    <div class="source-title">S&amp;S Capital Research: Accredited Women Investors in Utah</div>
+    <div class="source-year">2026</div>
+  </div>
+  <div class="source-org">Silver &amp; Salt Capital / Claude AI-Assisted Research</div>
+  <div class="source-url"><a href="#" target="_blank">accredited-women-research.html (site page)</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Wasatch Front base estimate: <span class="claim-data">~88,000 accredited women</span> (range: 55,000 to 120,000)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Park City / Summit County: <span class="claim-data">~4,000 to 15,000 accredited women</span> (residents + second-home owners)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Combined estimate: <span class="claim-data">~92,000 to 103,000</span> accredited women in the S&amp;S Capital market area</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">The stated "100+" figure is <span class="claim-data">deliberately conservative</span> relative to the combined estimate</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-data">Data</span><span class="used-tag used-home">Home</span><span class="used-tag used-opportunity">Opportunity</span><span class="used-tag used-join">Join</span></div>
+</div>
+
+</div>
+
+<div class="topic" data-topic="angel-market">
+<div class="topic-header">Angel Market Participation &amp; Returns <span class="topic-count">5 sources</span></div>
+
+<div class="source" id="S56" data-topic="angel-market">
+  <div class="source-header">
+    <div class="source-id">S56</div>
+    <div class="source-title">Convergence of Median and Mean Fund Returns As a Function of Portfolio Size</div>
+    <div class="source-year">2016</div>
+  </div>
+  <div class="source-org">David Coats, Correlation Ventures</div>
+  <div class="source-url"><a href="https://medium.com/correlation-ventures/thiel-vs-angellist-who-is-right-e5a4209ba8ec" target="_blank">medium.com/correlation-ventures</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Monte Carlo simulation of U.S. venture vintages 2001+: <span class="claim-data">median returns converge toward mean at 50+ portfolio companies</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Investors with <span class="claim-data">fewer than 5 deals had a median return of zero</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">At 50+ deals, median return approached <span class="claim-data">14% IRR</span> (asset class average)</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Thesis</span></div>
+</div>
+
+<div class="source" id="S57" data-topic="angel-market">
+  <div class="source-header">
+    <div class="source-id">S57</div>
+    <div class="source-title">Returns to Angel Investors in Groups</div>
+    <div class="source-year">2007</div>
+  </div>
+  <div class="source-org">Robert Wiltbank &amp; Warren Boeker, Ewing Marion Kauffman Foundation / Angel Capital Education Foundation</div>
+  <div class="source-url"><a href="https://www.angelcapitalassociation.org" target="_blank">angelcapitalassociation.org</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Group-affiliated angel investments produced <span class="claim-data">average 2.6&times; return over 3.5 years</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Investments with 40+ hours of due diligence produced <span class="claim-data">7.1&times; multiple</span></div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Thesis</span></div>
+</div>
+
+<div class="source" id="S58" data-topic="angel-market">
+  <div class="source-header">
+    <div class="source-id">S58</div>
+    <div class="source-title">The Angel Market in 2023: An Inflection Point for Women Angels</div>
+    <div class="source-year">2023</div>
+  </div>
+  <div class="source-org">Jeffrey E. Sohl, Center for Venture Research, University of New Hampshire</div>
+  <div class="source-url"><a href="https://paulcollege.unh.edu/center-venture-research" target="_blank">paulcollege.unh.edu/center-venture-research</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Female participation in angel investing grew from <span class="claim-data">5.0% in 2004 to 46.7% in 2023</span></div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Women-owned ventures accounted for <span class="claim-data">46.3% of entrepreneurs seeking angel capital</span> in 2023</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Thesis</span></div>
+</div>
+
+<div class="source" id="S59" data-topic="angel-market">
+  <div class="source-header">
+    <div class="source-id">S59</div>
+    <div class="source-title">Angel Returns Beat All Asset Classes But Pose Greater Risk</div>
+    <div class="source-year">2023</div>
+  </div>
+  <div class="source-org">John Harbison, Angel Capital Association</div>
+  <div class="source-url"><a href="https://www.angelcapitalassociation.org" target="_blank">angelcapitalassociation.org</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Central Texas Angel Network: <span class="claim-data">31% IRR across 115 outcomes</span> (2006 to 2022)</div></li>
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Tech Coast Angels: <span class="claim-data">25% IRR across 247 outcomes</span> (1997 to 2022)</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Thesis</span></div>
+</div>
+
+<div class="source" id="S60" data-topic="angel-market">
+  <div class="source-header">
+    <div class="source-id">S60</div>
+    <div class="source-title">Exploring Accredited Investors</div>
+    <div class="source-year">2025</div>
+  </div>
+  <div class="source-org">U.S. Securities and Exchange Commission, Division of Economic and Risk Analysis</div>
+  <div class="source-url"><a href="https://www.sec.gov/files/exploring-accredited-investors-june-2025.pdf" target="_blank">sec.gov → Exploring Accredited Investors (June 2025)</a></div>
+  <ul class="claims">
+    <li class="claim"><div class="claim-bullet"></div><div class="claim-text">Most U.S. accredited investors have not participated in private securities offerings.</div></li>
+  </ul>
+  <div class="used-on"><span class="used-tag used-home">Start</span></div>
+</div>
+</div>
+
+</div>
+</section>
+
+<script>
+function filterAll(btn){
+  document.querySelectorAll('.topic').forEach(t=>t.style.display='');
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  (btn||document.querySelector('.filter-btn')).classList.add('active');
+}
+function filterTopic(topic, btn){
+  document.querySelectorAll('.topic').forEach(t=>{
+    t.style.display=t.dataset.topic===topic?'':'none';
+  });
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+</script>
+
 <site-footer></site-footer>
-<script src="assets/site-footer.js?v=1" defer></script>
+<script src="assets/site-footer.js?v=2" defer></script>
 </body>
 </html>

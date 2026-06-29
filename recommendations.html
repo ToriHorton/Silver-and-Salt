@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recommendations — Silver &amp; Salt Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link rel="prefetch" href="index.html">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-06-29">
+<style>
+/* ── Recommendations — page-specific styles ── */
+.hero{background:var(--moss);padding:var(--space-16) var(--space-10) var(--space-13);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border-radius:var(--radius-full);background:rgba(255,255,255,0.03);}
+.hero-eyebrow{font-size:var(--text-xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);margin-bottom:var(--space-4);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,80px);font-weight:300;color:var(--cream);line-height:var(--leading-none);margin-bottom:var(--space-5);}
+.hero-sub{font-size:var(--text-lg);color:rgba(251,248,242,0.65);max-width:600px;line-height:var(--leading-relaxed);font-weight:300;}
+
+.main{max-width:1040px;margin:0 auto;padding:var(--space-13) var(--space-10);}
+.intro{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;line-height:1.5;color:var(--moss);max-width:720px;margin-bottom:var(--space-13);border-left:2px solid var(--rust);padding-left:var(--space-6);font-style:italic;}
+
+.aud{margin-bottom:var(--space-13);}
+.aud-eyebrow{font-size:var(--text-xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:var(--space-3);}
+.aud-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.6vw,40px);font-weight:600;color:var(--moss);line-height:1.15;margin-bottom:var(--space-4);}
+.aud-intro{font-size:var(--text-md);color:var(--moss-light);line-height:1.7;max-width:700px;margin-bottom:var(--space-7);}
+
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-4);}
+.rec-card{background:white;border:1px solid rgba(47,62,52,0.1);border-radius:var(--radius-md);padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-2);text-decoration:none;color:inherit;transition:box-shadow .2s,transform .2s;}
+.rec-card:hover{box-shadow:0 4px 20px rgba(47,62,52,0.1);transform:translateY(-2px);}
+.rec-tag{font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--sage);font-weight:700;}
+.rec-name{font-size:var(--text-lg);font-weight:700;color:var(--moss);line-height:1.25;}
+.rec-desc{font-size:var(--text-sm);color:var(--moss-light);line-height:1.6;flex:1;}
+.rec-go{font-size:var(--text-sm);font-weight:700;color:var(--rust);margin-top:var(--space-2);}
+.rec-card.featured{background:var(--moss);border-color:var(--moss);}
+.rec-card.featured .rec-name{color:var(--cream);}
+.rec-card.featured .rec-tag{color:var(--copper);}
+.rec-card.featured .rec-desc{color:rgba(251,248,242,0.72);}
+.rec-card.featured .rec-go{color:var(--copper);}
+
+/* Ecosystem levers */
+.levers{display:flex;flex-direction:column;gap:var(--space-4);margin-bottom:var(--space-7);}
+.lever{background:var(--sand);border-radius:var(--radius-md);padding:var(--space-6);display:grid;grid-template-columns:auto 1fr;gap:var(--space-5);align-items:start;}
+.lever-num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;color:var(--rust);line-height:1;}
+.lever-title{font-size:var(--text-lg);font-weight:700;color:var(--moss);margin-bottom:var(--space-2);}
+.lever-text{font-size:var(--text-sm);color:var(--moss-light);line-height:1.7;}
+
+/* Library: books + podcasts */
+.library{background:var(--moss);border-radius:var(--radius-md);padding:var(--space-10);margin-bottom:var(--space-13);}
+.lib-eyebrow{font-size:var(--text-xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:var(--space-3);}
+.lib-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.4vw,38px);font-weight:600;color:var(--cream);margin-bottom:var(--space-3);}
+.lib-intro{font-size:var(--text-md);color:rgba(251,248,242,0.7);line-height:1.7;max-width:640px;margin-bottom:var(--space-8);}
+.lib-sub{font-size:var(--text-xs);letter-spacing:0.16em;text-transform:uppercase;color:rgba(251,248,242,0.55);font-weight:700;margin:var(--space-6) 0 var(--space-4);}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-3);}
+.lib-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-md);padding:var(--space-5);display:flex;flex-direction:column;gap:6px;}
+.lib-name{font-size:var(--text-base);font-weight:700;color:var(--cream);line-height:1.3;}
+.lib-by{font-size:var(--text-xs);letter-spacing:0.04em;text-transform:uppercase;color:var(--copper);font-weight:700;}
+.lib-why{font-size:var(--text-sm);color:rgba(251,248,242,0.65);line-height:1.55;}
+
+/* Closing */
+.close{text-align:center;padding:var(--space-6) 0 var(--space-10);}
+.close h3{font-family:'Cormorant Garamond',serif;font-size:var(--text-h6);font-weight:600;margin-bottom:var(--space-3);color:var(--moss);}
+.close p{font-size:var(--text-md);color:var(--moss-light);max-width:520px;margin:0 auto var(--space-6);line-height:1.7;}
+.close-btns{display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap;}
+.btn-ghost{display:inline-block;padding:var(--space-3) var(--space-7);border:1.5px solid var(--moss);border-radius:var(--radius-full);color:var(--moss);text-decoration:none;font-weight:700;font-size:var(--text-sm);transition:all .2s;}
+.btn-ghost:hover{background:var(--moss);color:var(--cream);}
+.curate{font-size:var(--text-sm);color:var(--sage);max-width:560px;margin:var(--space-8) auto 0;text-align:center;line-height:1.7;}
+.curate a{color:var(--rust);text-decoration:none;border-bottom:1px solid rgba(209,107,79,0.4);}
+
+@media(max-width:768px){
+  .hero{padding:100px 20px 48px;}
+  .main{padding:48px 16px;}
+  .intro{font-size:18px;padding-left:16px;}
+  .library{padding:28px 20px;}
+  .lever{grid-template-columns:1fr;gap:8px;}
+}
+@media(max-width:480px){
+  .hero-title{font-size:34px;}
+}
+</style>
+<meta property="og:title" content="Recommendations — Silver &amp; Salt Capital">
+<meta property="og:description" content="A curated start-here guide for women investors, founders, and the ecosystem: the organizations, programs, books, and podcasts we recommend.">
+<meta property="og:type" content="article">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8E3B0PFT4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-T8E3B0PFT4');
+  </script>
+</head>
+<body>
+<site-header section="research"></site-header>
+<script src="assets/site-header.js?v=5" defer></script>
+
+<div class="hero">
+  <p class="hero-eyebrow">S&amp;S Capital Research · Recommendations</p>
+  <h1 class="hero-title">Where to start.</h1>
+  <p class="hero-sub">The research shows a clear gap. These are the people, programs, books, and podcasts we recommend for closing it, whether you invest, build, or shape the ecosystem.</p>
+</div>
+
+<div class="main">
+  <p class="intro">"Every report on this site ends in the same place: the capital and the talent are already here. What's missing is the connective tissue. This page is the connective tissue, the shortest path from reading about the gap to doing something about it."</p>
+
+  <!-- AUDIENCE 1: INVESTORS -->
+  <section class="aud">
+    <p class="aud-eyebrow">If you're ready to invest</p>
+    <h2 class="aud-title">Becoming an angel starts with three things.</h2>
+    <p class="aud-intro">A community to learn alongside, a curriculum to learn from, and a first check. These are the places to find each.</p>
+    <div class="rec-grid">
+      <a class="rec-card featured" href="join.html" target="_blank" rel="noopener">
+        <span class="rec-tag">Start here</span>
+        <span class="rec-name">Silver &amp; Salt Capital</span>
+        <span class="rec-desc">The most direct path. A Utah community of women who learn together, vet deals together, and write their own checks. Applications are open now.</span>
+        <span class="rec-go">Apply to join &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://www.angelcapitalassociation.org" target="_blank" rel="noopener">
+        <span class="rec-tag">Education · Standards</span>
+        <span class="rec-name">Angel Capital Association</span>
+        <span class="rec-desc">The professional home for accredited angels in North America. Standards, education, and the returns data behind the asset class.</span>
+        <span class="rec-go">angelcapitalassociation.org &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://goldenseeds.com" target="_blank" rel="noopener">
+        <span class="rec-tag">Women's angel network</span>
+        <span class="rec-name">Golden Seeds</span>
+        <span class="rec-desc">Twenty years investing in women-led companies, with a nine-course Knowledge Institute curriculum built for new investors.</span>
+        <span class="rec-go">goldenseeds.com &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://www.pipelineangels.com" target="_blank" rel="noopener">
+        <span class="rec-tag">Investor training</span>
+        <span class="rec-name">Pipeline Angels</span>
+        <span class="rec-desc">An Angels-in-the-Making bootcamp that has trained 200+ new women investors before their first check.</span>
+        <span class="rec-go">pipelineangels.com &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://www.howwomeninvest.com" target="_blank" rel="noopener">
+        <span class="rec-tag">National network</span>
+        <span class="rec-name">How Women Invest</span>
+        <span class="rec-desc">A national network on a mission to bring thousands of new women into venture investing.</span>
+        <span class="rec-go">howwomeninvest.com &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://www.portfolia.com" target="_blank" rel="noopener">
+        <span class="rec-tag">Learn by investing</span>
+        <span class="rec-name">Portfolia</span>
+        <span class="rec-desc">Themed funds, from FemTech to active aging, that let women invest in the sectors they know best.</span>
+        <span class="rec-go">portfolia.com &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- AUDIENCE 2: FOUNDERS -->
+  <section class="aud">
+    <p class="aud-eyebrow">If you're raising capital</p>
+    <h2 class="aud-title">Utah has more support than most founders realize.</h2>
+    <p class="aud-intro">Start with the organizations that fund, train, and connect women founders, then browse the full national directory.</p>
+    <div class="rec-grid">
+      <a class="rec-card" href="https://utahwomenowned.com" target="_blank" rel="noopener">
+        <span class="rec-tag">Utah · Support</span>
+        <span class="rec-name">Women's Business Center of Utah</span>
+        <span class="rec-desc">Counseling, training, and a 3,300+ company directory. Named a 2025 SBA Women's Business Center of Excellence.</span>
+        <span class="rec-go">utahwomenowned.com &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://sorensonimpactinstitute.com" target="_blank" rel="noopener">
+        <span class="rec-tag">Utah · Research &amp; capital</span>
+        <span class="rec-name">Sorenson Impact Institute</span>
+        <span class="rec-desc">A University of Utah institute connecting women entrepreneurs to research, capital, and growth programs.</span>
+        <span class="rec-go">sorensonimpactinstitute.com &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://advocacy.sba.gov/wp-content/uploads/2025/06/Utah_2025-State-Profile.pdf" target="_blank" rel="noopener">
+        <span class="rec-tag">Federal · Programs</span>
+        <span class="rec-name">U.S. Small Business Administration</span>
+        <span class="rec-desc">Federal mentoring and lending programs, and the data behind Utah's 129,429 women-owned businesses.</span>
+        <span class="rec-go">sba.gov &rarr;</span>
+      </a>
+      <a class="rec-card featured" href="landscape-map.html">
+        <span class="rec-tag">Our directory</span>
+        <span class="rec-name">National Landscape Map</span>
+        <span class="rec-desc">Our directory of 177 angel groups, syndicates, venture funds, and programs backing women founders across all 50 states.</span>
+        <span class="rec-go">Open the map &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- AUDIENCE 3: ECOSYSTEM -->
+  <section class="aud">
+    <p class="aud-eyebrow">If you shape the ecosystem</p>
+    <h2 class="aud-title">The performance case is settled. The gap is structural.</h2>
+    <p class="aud-intro">The research points to three levers for funders, institutions, and policymakers.</p>
+    <div class="levers">
+      <div class="lever">
+        <div class="lever-num">01</div>
+        <div>
+          <div class="lever-title">Lower the on-ramp</div>
+          <div class="lever-text">Utah's binding constraint is participation. The capital and the founders are already here; the gap is the on-ramp between them. Models like Citrine Angels, with no investment minimum, and Pipeline Angels, with training first, widen that door before the first check.</div>
+        </div>
+      </div>
+      <div class="lever">
+        <div class="lever-num">02</div>
+        <div>
+          <div class="lever-title">Fund the funders</div>
+          <div class="lever-text">Every women-led fund and collective multiplies capital. The JumpFund's investments attracted 19x in co-investment. Backing the vehicles, not only the deals, compounds the effect across a whole ecosystem.</div>
+        </div>
+      </div>
+      <div class="lever">
+        <div class="lever-num">03</div>
+        <div>
+          <div class="lever-title">Keep measuring</div>
+          <div class="lever-text">Utah-specific gender funding data is thin. Sustained tracking, like Sorenson's Project DEEP and the Utah Women &amp; Leadership Project, keeps the gap visible and therefore fixable.</div>
+        </div>
+      </div>
+    </div>
+    <div class="rec-grid">
+      <a class="rec-card" href="https://www.usu.edu/uwlp/" target="_blank" rel="noopener">
+        <span class="rec-tag">Research</span>
+        <span class="rec-name">Utah Women &amp; Leadership Project</span>
+        <span class="rec-desc">The most thorough research on Utah women in business, leadership, and entrepreneurship.</span>
+        <span class="rec-go">usu.edu/uwlp &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://sorensonimpactinstitute.com/project/project-deep/" target="_blank" rel="noopener">
+        <span class="rec-tag">Data</span>
+        <span class="rec-name">Project DEEP, Sorenson Impact</span>
+        <span class="rec-desc">The dataset tracking how much Utah venture capital actually reaches female founders.</span>
+        <span class="rec-go">sorensonimpactinstitute.com &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://www.nwbc.gov" target="_blank" rel="noopener">
+        <span class="rec-tag">Policy</span>
+        <span class="rec-name">National Women's Business Council</span>
+        <span class="rec-desc">Federal policy research on women-owned business growth and access to capital.</span>
+        <span class="rec-go">nwbc.gov &rarr;</span>
+      </a>
+      <a class="rec-card" href="https://www.impactfinancecenter.org" target="_blank" rel="noopener">
+        <span class="rec-tag">Investor training</span>
+        <span class="rec-name">Impact Finance Center</span>
+        <span class="rec-desc">Programs that train new impact investors, a model for scaling investor education.</span>
+        <span class="rec-go">impactfinancecenter.org &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- LIBRARY: BOOKS + PODCASTS -->
+  <section class="library">
+    <p class="lib-eyebrow">The library</p>
+    <h2 class="lib-title">Books &amp; podcasts to start with.</h2>
+    <p class="lib-intro">A starting shelf for the mindset, the mechanics, and the bigger picture. We add to it as we read and listen.</p>
+
+    <div class="lib-sub">Books</div>
+    <div class="lib-grid">
+      <div class="lib-card">
+        <div class="lib-name">The XX Edge</div>
+        <div class="lib-by">Patience Marime-Ball &amp; Ruth Shaber</div>
+        <div class="lib-why">The data case for putting capital in women's hands: higher returns and lower risk.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">Angel</div>
+        <div class="lib-by">Jason Calacanis</div>
+        <div class="lib-why">The canonical how-to on investing in early-stage startups, from sourcing to checks.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">Brotopia</div>
+        <div class="lib-by">Emily Chang</div>
+        <div class="lib-why">How the venture world got so closed, and why opening it matters.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">We Should All Be Millionaires</div>
+        <div class="lib-by">Rachel Rodgers</div>
+        <div class="lib-why">A blueprint for women building wealth and economic power on their own terms.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">Jump In</div>
+        <div class="lib-by">Kristina Montague</div>
+        <div class="lib-why">The story of building the JumpFund, a women's angel collective outside the big metros.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">Geek Girl Rising</div>
+        <div class="lib-by">Heather Cabot &amp; Samantha Walravens</div>
+        <div class="lib-why">The women remaking technology and venture from the inside.</div>
+      </div>
+    </div>
+
+    <div class="lib-sub">Podcasts</div>
+    <div class="lib-grid">
+      <div class="lib-card">
+        <div class="lib-name">The Pitch</div>
+        <div class="lib-by">Gimlet Media</div>
+        <div class="lib-why">Real founders pitch real investors. The clearest window into how a deal actually sounds.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">How I Built This</div>
+        <div class="lib-by">NPR · Guy Raz</div>
+        <div class="lib-why">Founder origin stories, including many women who built category leaders.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">The Twenty Minute VC</div>
+        <div class="lib-by">Harry Stebbings</div>
+        <div class="lib-why">Short, frequent conversations with venture investors and operators.</div>
+      </div>
+      <div class="lib-card">
+        <div class="lib-name">Acquired</div>
+        <div class="lib-by">Ben Gilbert &amp; David Rosenthal</div>
+        <div class="lib-why">Deep histories of how the biggest companies and investments were built.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSE -->
+  <div class="close">
+    <h3>Start where you stand.</h3>
+    <p>Read the research, then pick one thing on this page and act on it. That is how the gap closes, one investor, one founder, one check at a time.</p>
+    <div class="close-btns">
+      <a href="join.html" target="_blank" rel="noopener" class="btn">Apply to join</a>
+      <a href="open-research.html" class="btn-ghost">See the research</a>
+    </div>
+    <p class="curate">Every organization here appears in our research and references. Know a person, program, book, or podcast we should add? Email <a href="mailto:tori@silverandsaltcapital.com">tori@silverandsaltcapital.com</a> and we'll consider it for the list.</p>
+  </div>
+</div>
+
+<site-footer></site-footer>
+<script src="assets/site-footer.js?v=2" defer></script>
+</body>
+</html>
