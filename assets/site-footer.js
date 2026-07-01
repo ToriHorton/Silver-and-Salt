@@ -36,11 +36,10 @@ const SITE_FOOTER_HTML = `
       <div class="f-sitemap-col">
         <div class="f-sitemap-heading">Research</div>
         <a class="f-sitemap-link" href="opportunity.html">The Opportunity</a>
-        <a class="f-sitemap-link" href="utah-funding-research.html">Utah Capital Landscape</a>
         <a class="f-sitemap-link" href="utah-funding-2025.html">Utah Funding 2025</a>
         <a class="f-sitemap-link" href="accredited-women-research.html">Accredited Investors</a>
-        <a class="f-sitemap-link" href="networks.html">The Networks</a>
         <a class="f-sitemap-link" href="landscape-map.html">National Landscape Map</a>
+        <a class="f-sitemap-link" href="networks.html">The Networks</a>
         <a class="f-sitemap-link" href="recommendations.html">Recommendations</a>
         <a class="f-sitemap-link" href="open-research.html">References</a>
       </div>

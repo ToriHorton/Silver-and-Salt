@@ -39,11 +39,10 @@ const SECTIONS = {
     label: 'Research',
     pages: [
       { label: 'The Opportunity', href: 'opportunity.html' },
-      { label: 'Utah Capital Landscape', href: 'utah-funding-research.html' },
       { label: 'Utah Funding 2025', href: 'utah-funding-2025.html' },
       { label: 'Accredited Investors', href: 'accredited-women-research.html' },
-      { label: 'The Networks', href: 'networks.html' },
       { label: 'National Landscape Map', href: 'landscape-map.html' },
+      { label: 'The Networks', href: 'networks.html' },
       { label: 'Recommendations', href: 'recommendations.html' },
       { label: 'References', href: 'open-research.html' },
     ],
