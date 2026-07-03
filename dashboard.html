@@ -855,6 +855,283 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
 }
 .wf-step-text { color: rgba(251,248,242,0.85); }
 .wf-step-text strong { color: var(--cream); }
+
+/* ── TAB NAVIGATION ── */
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  background: var(--moss);
+  padding: 0 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.tab-btn {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sage);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn:hover { color: var(--cream); }
+.tab-btn.active {
+  color: var(--cream);
+  border-bottom-color: var(--rust);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── ACTIONS TAB ── */
+.actions-main { padding: 36px 48px 64px; max-width: 1100px; margin: 0 auto; }
+.actions-intro {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--moss);
+  margin-bottom: 4px;
+}
+.actions-sub { font-size: 12px; color: var(--sage); margin-bottom: 28px; }
+
+.act-section { margin-bottom: 44px; }
+.act-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--moss);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+.act-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--moss);
+}
+.act-btn {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--cream);
+  background: var(--moss);
+  border: none;
+  border-radius: 4px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.act-btn:hover { background: var(--moss-light); }
+.act-btn.ghost {
+  background: transparent;
+  color: var(--moss);
+  border: 1px solid rgba(47,62,52,0.25);
+}
+.act-btn.ghost:hover { background: rgba(47,62,52,0.05); }
+
+/* Staging inbox */
+.staging-block {
+  background: var(--sand);
+  border: 1px solid rgba(47,62,52,0.12);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 30px;
+}
+.staging-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px;
+}
+.staging-head .review-col-title { display: flex; align-items: center; gap: 8px; }
+.staging-sub { font-size: 11.5px; color: var(--sage); margin-bottom: 12px; }
+.stage-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: #fff; border: 1px solid rgba(47,62,52,0.1);
+  border-radius: 6px; padding: 11px 14px; margin-bottom: 8px;
+}
+.stage-body { flex: 1; min-width: 0; }
+.stage-assign { display: flex; gap: 3px; margin-right: 4px; }
+.stage-assign .act-ctrl {
+  width: 22px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 14px;
+}
+.stage-assign .act-ctrl.aA:hover { background: rgba(209,107,79,0.12); color: var(--rust); border-color: var(--rust); }
+.stage-assign .act-ctrl.aB:hover { background: rgba(196,164,126,0.15); color: var(--warm); border-color: var(--warm); }
+.stage-assign .act-ctrl.aC:hover { background: rgba(126,142,132,0.12); color: var(--sage); border-color: var(--sage); }
+.src-tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--sage); border: 1px solid rgba(126,142,132,0.4);
+  border-radius: 3px; padding: 1px 5px; margin-left: 6px; vertical-align: middle;
+}
+
+/* Assigned to others (delegation tracker) */
+.deleg-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: #fff; border: 1px solid rgba(47,62,52,0.1);
+  border-radius: 6px; padding: 11px 14px; margin-bottom: 8px;
+}
+.deleg-item.done { opacity: 0.55; }
+.deleg-item.done .act-text { text-decoration: line-through; color: var(--sage); }
+.deleg-body { flex: 1; min-width: 0; }
+.deleg-owner {
+  display: inline-block; font-size: 11px; font-weight: 700; color: var(--moss);
+  background: rgba(196,164,126,0.18); border: 1px solid rgba(196,164,126,0.5);
+  border-radius: 3px; padding: 1px 7px; margin-top: 5px;
+}
+.deleg-owner .who { color: var(--moss-light); font-weight: 500; }
+
+/* ABC priority groups */
+.abc-group { margin-bottom: 24px; }
+.abc-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.abc-badge {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  width: 34px;
+  text-align: center;
+}
+.abc-A .abc-badge { color: var(--rust); }
+.abc-B .abc-badge { color: var(--warm); }
+.abc-C .abc-badge { color: var(--sage); }
+.abc-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); }
+.abc-group-body {
+  border-left: 3px solid rgba(47,62,52,0.08);
+  padding-left: 14px;
+  min-height: 8px;
+}
+.abc-A .abc-group-body { border-left-color: rgba(209,107,79,0.4); }
+.abc-B .abc-group-body { border-left-color: rgba(196,164,126,0.5); }
+.abc-C .abc-group-body { border-left-color: rgba(126,142,132,0.4); }
+
+.act-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid rgba(47,62,52,0.1);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.act-item.done { opacity: 0.55; }
+.act-item.done .act-text { text-decoration: line-through; color: var(--sage); }
+.act-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--moss);
+  min-width: 30px;
+  padding-top: 1px;
+}
+.act-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--sage);
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: var(--dash-green);
+  line-height: 1;
+}
+.act-check.on { border-color: var(--dash-green); background: var(--dash-green-bg); }
+.act-body { flex: 1; min-width: 0; }
+.act-text { font-size: 13.5px; color: var(--moss); line-height: 1.4; }
+.act-context { font-size: 11.5px; color: var(--sage); margin-top: 3px; line-height: 1.4; }
+.act-controls { display: flex; gap: 4px; flex-shrink: 0; align-items: center; }
+.act-ctrl {
+  background: transparent;
+  border: 1px solid rgba(47,62,52,0.15);
+  border-radius: 4px;
+  width: 24px; height: 24px;
+  font-size: 12px;
+  color: var(--moss-light);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+}
+.act-ctrl:hover { background: rgba(47,62,52,0.06); }
+.act-ctrl.danger:hover { background: var(--dash-red-bg); color: var(--dash-red); border-color: var(--dash-red); }
+.act-ctrl select { border: none; background: transparent; font-size: 11px; cursor: pointer; color: var(--moss-light); }
+.act-empty { font-size: 12px; color: var(--sage); font-style: italic; padding: 4px 0; }
+
+/* Weekly review */
+.week-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.week-bar .week-label { font-size: 13px; color: var(--moss); font-weight: 500; }
+.goal-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: #fff; border: 1px solid rgba(47,62,52,0.1);
+  border-radius: 6px; padding: 10px 14px; margin-bottom: 8px;
+}
+.goal-item.done .goal-text { text-decoration: line-through; color: var(--sage); }
+.goal-text { flex: 1; font-size: 13.5px; color: var(--moss); line-height: 1.4; }
+
+.review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+.review-col-head {
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(47,62,52,0.12);
+  padding-bottom: 8px; margin-bottom: 12px;
+}
+.review-col-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); font-weight: 700; }
+.acc-tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.05em;
+  color: var(--sage); border: 1px solid rgba(126,142,132,0.4);
+  border-radius: 3px; padding: 1px 5px; margin-left: 6px; vertical-align: middle;
+}
+@media (max-width: 640px) { .review-grid { grid-template-columns: 1fr; } }
+
+/* Monthly reports */
+.report-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.report-card {
+  background: #fff; border: 1px solid rgba(47,62,52,0.12);
+  border-radius: 8px; padding: 22px 26px;
+}
+.report-stats { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 22px; }
+.report-stat .num {
+  font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 600; color: var(--moss); line-height: 1;
+}
+.report-stat .lbl { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sage); margin-top: 4px; }
+.report-block-title { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); margin: 18px 0 8px; }
+.report-list { list-style: none; }
+.report-list li { font-size: 13px; color: var(--moss); padding: 5px 0; border-bottom: 1px solid rgba(47,62,52,0.06); }
+.report-list li:last-child { border-bottom: none; }
+.report-notes {
+  width: 100%; min-height: 90px; margin-top: 10px;
+  font-family: 'Satoshi', sans-serif; font-size: 13px; color: var(--moss);
+  border: 1px solid rgba(47,62,52,0.15); border-radius: 6px; padding: 10px 12px; resize: vertical;
+}
+.act-input, .act-select {
+  font-family: 'Satoshi', sans-serif; font-size: 13px; color: var(--moss);
+  border: 1px solid rgba(47,62,52,0.2); border-radius: 5px; padding: 8px 10px;
+}
+select.act-select { cursor: pointer; }
+
+/* Inline add / edit forms */
+.act-addform {
+  background: #fff; border: 1px dashed rgba(47,62,52,0.3);
+  border-radius: 6px; padding: 14px; margin-bottom: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.addform-row { display: flex; gap: 8px; }
+.addform-row .act-input { flex: 1; }
+.addform-actions { display: flex; gap: 8px; }
+.act-item.editing .act-body { display: flex; flex-direction: column; gap: 6px; }
+.act-item.editing .act-input { width: 100%; }
+.act-ctrl.wide { width: auto; padding: 0 10px; font-weight: 700; }
+
+@media (max-width: 640px) {
+  .actions-main { padding: 24px 20px 48px; }
+  .tab-nav { padding: 0 16px; }
+  .act-item { flex-wrap: wrap; }
+}
 </style>
 </head>
 <body>
@@ -890,8 +1167,15 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
   <span class="status-pill pill-green"><span class="dot"></span>Maggie Messages</span>
 </nav>
 
-<!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
-<main class="dash-main">
+<!-- ══ TAB NAV ═════════════════════════════════════════════════════════════ -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+  <button class="tab-btn" data-tab="actions" onclick="switchTab('actions')">Actions</button>
+  <button class="tab-btn" data-tab="newsletter" onclick="switchTab('newsletter')">Monthly Newsletter</button>
+</nav>
+
+<!-- ══ MAIN (OVERVIEW TAB) ═════════════════════════════════════════════════ -->
+<main class="dash-main tab-panel active" id="tab-overview">
 
   <!-- THIS WEEK -->
   <div class="this-week">
@@ -1906,6 +2190,115 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
 
 </main>
 
+<!-- ══ ACTIONS TAB ═════════════════════════════════════════════════════════ -->
+<section class="tab-panel" id="tab-actions">
+  <div class="actions-main">
+
+    <!-- Action items -->
+    <div class="act-section">
+      <div class="act-section-head">
+        <div>
+          <div class="actions-intro">Action Items</div>
+          <div class="actions-sub">ABC prioritized. A is must do, B is should do, C is nice to do. Numbered within each group.</div>
+        </div>
+        <button class="act-btn" onclick="addAction()">+ Add action</button>
+      </div>
+
+      <div class="staging-block">
+        <div class="staging-head">
+          <span class="review-col-title">Staging <span id="staging-count" class="acc-tag"></span></span>
+          <button class="act-btn ghost" onclick="addStaged()">+ Capture</button>
+        </div>
+        <div class="staging-sub">Unsorted actions captured from Granola, email, and Claude work, including items owned by others. Review, edit, then assign a priority to move each into the list below.</div>
+        <div id="staging-list"></div>
+      </div>
+
+      <div id="abc-groups"></div>
+    </div>
+
+    <!-- Weekly review -->
+    <div class="act-section">
+      <div class="act-section-head">
+        <div class="act-section-title">Weekly Review</div>
+        <div class="week-bar" style="margin:0">
+          <button class="act-ctrl" onclick="shiftWeek(-1)" title="Previous week">‹</button>
+          <span class="week-label" id="week-label">Week of</span>
+          <button class="act-ctrl" onclick="shiftWeek(1)" title="Next week">›</button>
+          <button class="act-btn ghost" onclick="thisWeek()">This week</button>
+        </div>
+      </div>
+      <div class="review-grid">
+        <div class="review-col">
+          <div class="review-col-head">
+            <span class="review-col-title">Accomplishments this week</span>
+            <button class="act-btn ghost" onclick="addAccomplishment()">+ Add</button>
+          </div>
+          <div id="accomplishment-list"></div>
+        </div>
+        <div class="review-col">
+          <div class="review-col-head">
+            <span class="review-col-title">Key tasks for next week</span>
+            <button class="act-btn ghost" onclick="addKeyTask()">+ Add</button>
+          </div>
+          <div id="keytask-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly report -->
+    <div class="act-section">
+      <div class="act-section-head">
+        <div class="act-section-title">Monthly Report</div>
+        <div style="display:flex; gap:8px">
+          <button class="act-btn ghost" onclick="switchTab('newsletter')" style="border-color:var(--plum); color:var(--plum)">Open newsletter &rarr;</button>
+          <button class="act-btn ghost" onclick="window.print()">Print / Save PDF</button>
+        </div>
+      </div>
+      <div class="report-controls">
+        <button class="act-ctrl" onclick="shiftMonth(-1)" title="Previous month">‹</button>
+        <span class="week-label" id="month-label">Month</span>
+        <button class="act-ctrl" onclick="shiftMonth(1)" title="Next month">›</button>
+        <button class="act-btn ghost" onclick="thisMonth()">This month</button>
+      </div>
+      <div class="report-card" id="report-card"></div>
+    </div>
+
+    <!-- Assigned to others -->
+    <div class="act-section">
+      <div class="act-section-head">
+        <div>
+          <div class="act-section-title">Assigned to Others</div>
+          <div class="actions-sub">Tasks other people own. Track who is responsible and check them off when done.</div>
+        </div>
+        <button class="act-btn" onclick="addDelegated()">+ Add</button>
+      </div>
+      <div id="delegated-list"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ MONTHLY NEWSLETTER TAB ═══════════════════════════════════════════════ -->
+<section class="tab-panel" id="tab-newsletter">
+  <div class="actions-main">
+    <div class="act-section">
+      <div class="act-section-head">
+        <div>
+          <div class="actions-intro">Monthly Newsletter</div>
+          <div class="actions-sub">The month's themes assemble into your investor update. It drafts on the last Wednesday and is ready to send the first Monday.</div>
+        </div>
+        <div class="report-controls" style="margin:0">
+          <button class="act-ctrl" onclick="shiftMonth(-1)" title="Previous month">&lsaquo;</button>
+          <span class="week-label" id="news-month-label">Month</span>
+          <button class="act-ctrl" onclick="shiftMonth(1)" title="Next month">&rsaquo;</button>
+          <button class="act-btn ghost" onclick="thisMonth()">This month</button>
+        </div>
+      </div>
+      <div id="newsletter-body"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
 <footer class="dash-footer">
   <span>Silver &amp; Salt Capital · CEO Dashboard · Internal Only</span>
@@ -1916,6 +2309,10 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
   </span>
 </footer>
 
+<!-- Daily Granola pull output (written by the scheduled task; absent until first run) -->
+<script src="granola-inbox.js" onerror="void 0"></script>
+<!-- Monthly newsletter feed (written by the ssc-monthly-update-draft task; absent until first run) -->
+<script src="newsletter-data.js" onerror="void 0"></script>
 <script>
 // ── Live date ──
 (function() {
@@ -1948,6 +2345,887 @@ document.querySelectorAll('.cb').forEach(function(cb) {
     cb.textContent = cb.classList.contains('done') ? '✓' : '';
   });
 });
+
+// ════════════════════════════════════════════════════════════════════════
+//  ACTIONS TAB
+// ════════════════════════════════════════════════════════════════════════
+const STORE_KEY = 'ssc_actions_v1';
+
+// Seed data — the 10 action items pulled from Granola (July 2026)
+const SEED = {
+  items: [
+    { id:'a1', text:'Confirm collective investor group intentions', context:'For Sibley (Santa Cruz Catalyst Fund). Due end of July 2026. Pool accredited investors into a single LLC check; 2027 rollout.', priority:'A', order:0, done:false, created:'2026-06-30', completedDate:null },
+    { id:'a2', text:"Access Sibley's investor portal and review fund documents", context:'Review full Santa Cruz Catalyst Fund deck and legal agreements. Sibley to send link.', priority:'A', order:1, done:false, created:'2026-06-30', completedDate:null },
+    { id:'a3', text:'Send Jenny Kassan the Silver & Salt Capital deck', context:'For Jenny to review and share with her network.', priority:'A', order:2, done:false, created:'2026-06-30', completedDate:null },
+    { id:'b1', text:'Reach out to Jenny Kassan on securities law questions', context:'She offered to help; current lawyer is not a securities specialist.', priority:'B', order:0, done:false, created:'2026-06-30', completedDate:null },
+    { id:'b2', text:'Send Melissa the Utah 2025 funding research', context:'For Melissa to map categories and find where women-led startups can compete.', priority:'B', order:1, done:false, created:'2026-06-30', completedDate:null },
+    { id:'b3', text:'Follow up with Melissa on the BYU workshop opportunity', context:'Contingent on her conversation with Jill at BYU.', priority:'B', order:2, done:false, created:'2026-06-30', completedDate:null },
+    { id:'b4', text:'Invite Sibley to present to the investor group', context:'She offered to present in person.', priority:'B', order:3, done:false, created:'2026-06-30', completedDate:null },
+    { id:'c1', text:'Tell Annie to look out for Melissa at the Oxford SEU conference', context:'For Annie.', priority:'C', order:0, done:false, created:'2026-06-30', completedDate:null },
+    { id:'c2', text:"Follow Tracey Lam's jewelry Instagram", context:'Tracey to drop the handle.', priority:'C', order:1, done:false, created:'2026-06-19', completedDate:null },
+    { id:'c3', text:'Get Josh started on college essays', context:'Personal. Lisa advised starting right after his return from Chile (Jun 22).', priority:'C', order:2, done:false, created:'2026-06-19', completedDate:null }
+  ],
+  staging: [],         // [ {id, text, context, source, created} ] captured, unprioritized
+  delegated: [],       // [ {id, text, owner, context, source, done, created} ] tasks owned by others
+  accomplishments: {}, // { "2026-W27": [ {id, text, date} ] } manual wins logged for a week
+  keyTasks: {},        // { "2026-W27": [ {id, text} ] } prioritized; array order = priority
+  monthlyNotes: {}     // { "2026-07": "..." }
+};
+
+let DATA = loadData();
+let curWeek = new Date();   // reference date for weekly goals view
+let curMonth = new Date();  // reference date for monthly report view
+
+// Inline-edit UI state (avoids native prompt/confirm dialogs)
+let editingId = null, confirmDelId = null, addingAction = false;
+let editStageId = null, confirmStageId = null, addingStage = false;
+let editDelId = null, confirmDelegId = null, addingDeleg = false;
+let editAccId = null, confirmAccId = null, addingAcc = false;
+let editKtId = null, confirmKtId = null, addingKt = false;
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return normalize(JSON.parse(raw));
+  } catch (e) {}
+  return normalize(JSON.parse(JSON.stringify(SEED)));
+}
+function normalize(d) {
+  if (!d.items) d.items = [];
+  if (!d.staging) d.staging = [];
+  if (!d.delegated) d.delegated = [];
+  if (!d.importedInbox) d.importedInbox = {}; // { normalizedText: syncDate } to avoid re-importing
+  if (!d.monthlyNotes) d.monthlyNotes = {};
+  if (!d.accomplishments) d.accomplishments = {};
+  // Migrate legacy weekly goals -> key tasks
+  if (!d.keyTasks) d.keyTasks = d.goals ? d.goals : {};
+  delete d.goals;
+  return d;
+}
+function saveData() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(DATA)); } catch (e) {}
+}
+function uid() { return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function esc(s) { return (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// ── Tabs ──
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="' + name + '"]').classList.add('active');
+  if (name === 'actions') { renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
+  if (name === 'newsletter') renderNewsletter();
+}
+
+// ── Staging inbox (captured, unprioritized actions) ──
+// Programmatic capture — used by manual "+ Capture" and, later, the daily Granola pull.
+// Dedupes against existing staged items and active to-dos. Returns true if added.
+function stageAction(text, context, source) {
+  const n = (text || '').trim().toLowerCase();
+  if (!n) return false;
+  const inStaging = DATA.staging.some(s => s.text.trim().toLowerCase() === n);
+  const inActive = DATA.items.some(i => !i.done && i.text.trim().toLowerCase() === n);
+  if (inStaging || inActive) return false;
+  DATA.staging.push({ id:uid(), text:text.trim(), context:(context||'').trim(), source:(source||'manual'), created:new Date().toISOString().slice(0,10) });
+  return true;
+}
+
+// Import the daily Granola pull (window.GRANOLA_INBOX, loaded from granola-inbox.js).
+// Keyed by normalized text so an item is imported once; discarding it later won't bring it back.
+function importInbox() {
+  const inbox = (typeof window !== 'undefined') ? window.GRANOLA_INBOX : null;
+  if (!inbox || !Array.isArray(inbox.items)) return 0;
+  let added = 0, touched = false;
+  inbox.items.forEach(it => {
+    const key = ((it && it.text) || '').trim().toLowerCase();
+    if (!key || DATA.importedInbox[key]) return;
+    DATA.importedInbox[key] = inbox.generated || new Date().toISOString().slice(0,10);
+    touched = true;
+    // Items owned by someone else go to the delegation tracker; the rest go to staging.
+    const isDelegated = it.source === 'delegated' || (it.owner && String(it.owner).trim());
+    const ok = isDelegated
+      ? delegateAction(it.text, it.owner, it.context, it.source || 'delegated')
+      : stageAction(it.text, it.context, it.source || 'granola');
+    if (ok) added++;
+  });
+  if (touched) saveData();
+  return added;
+}
+
+function renderStaging() {
+  const list = document.getElementById('staging-list');
+  if (!list) return;
+  const cnt = document.getElementById('staging-count');
+  list.innerHTML = '';
+  if (addingStage) list.appendChild(stageAddForm());
+  const items = DATA.staging || [];
+  if (cnt) cnt.textContent = items.length ? items.length : '';
+  if (!items.length && !addingStage) {
+    list.innerHTML = '<div class="act-empty">Nothing staged. Captured actions land here for review before you prioritize them.</div>';
+    return;
+  }
+  items.forEach(it => list.appendChild(stageItem(it)));
+}
+function stageItem(it) {
+  const el = document.createElement('div');
+  if (editStageId === it.id) {
+    el.className = 'stage-item';
+    el.innerHTML =
+      '<div class="stage-body" style="display:flex;flex-direction:column;gap:6px">' +
+        '<input class="act-input" id="edit-stage-text" value="' + esc(it.text) + '" placeholder="Action" onkeydown="stageEditKey(event,\'' + it.id + '\')">' +
+        '<input class="act-input" id="edit-stage-ctx" value="' + esc(it.context) + '" placeholder="Context (optional)" onkeydown="stageEditKey(event,\'' + it.id + '\')">' +
+      '</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl" title="Save" onclick="saveStageEdit(\'' + it.id + '\')">✓</button>' +
+        '<button class="act-ctrl" title="Cancel" onclick="cancelStageEdit()">✕</button>' +
+      '</div>';
+    return el;
+  }
+  if (confirmStageId === it.id) {
+    el.className = 'stage-item';
+    el.innerHTML =
+      '<div class="stage-body"><div class="act-text">' + esc(it.text) + '</div>' +
+        '<div class="act-context">Discard this staged item?</div></div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl danger wide" onclick="confirmStageRemove(\'' + it.id + '\')">Yes</button>' +
+        '<button class="act-ctrl wide" onclick="cancelStageDel()">No</button>' +
+      '</div>';
+    return el;
+  }
+  el.className = 'stage-item';
+  el.innerHTML =
+    '<div class="stage-body">' +
+      '<div class="act-text">' + esc(it.text) + (it.source ? '<span class="src-tag">' + esc(it.source) + '</span>' : '') + '</div>' +
+      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<span class="stage-assign">' +
+        '<button class="act-ctrl aA" title="Assign to A (must do)" onclick="assignStaged(\'' + it.id + '\',\'A\')">A</button>' +
+        '<button class="act-ctrl aB" title="Assign to B (should do)" onclick="assignStaged(\'' + it.id + '\',\'B\')">B</button>' +
+        '<button class="act-ctrl aC" title="Assign to C (nice to do)" onclick="assignStaged(\'' + it.id + '\',\'C\')">C</button>' +
+      '</span>' +
+      '<button class="act-ctrl" title="Edit" onclick="editStaged(\'' + it.id + '\')">✎</button>' +
+      '<button class="act-ctrl danger" title="Discard" onclick="removeStaged(\'' + it.id + '\')">✕</button>' +
+    '</div>';
+  return el;
+}
+function stageAddForm() {
+  const el = document.createElement('div');
+  el.className = 'act-addform';
+  el.innerHTML =
+    '<input class="act-input" id="add-stage-text" placeholder="Capture an action to sort later" onkeydown="stageAddKey(event)">' +
+    '<div class="addform-row">' +
+      '<input class="act-input" id="add-stage-ctx" placeholder="Context: source, who it is for (optional)" onkeydown="stageAddKey(event)">' +
+    '</div>' +
+    '<div class="addform-actions">' +
+      '<button class="act-btn" onclick="saveNewStaged()">Capture</button>' +
+      '<button class="act-btn ghost" onclick="cancelStageAdd()">Cancel</button>' +
+    '</div>';
+  return el;
+}
+function addStaged() { addingStage = true; editStageId = null; confirmStageId = null; renderStaging(); const t = document.getElementById('add-stage-text'); if (t) t.focus(); }
+function cancelStageAdd() { addingStage = false; renderStaging(); }
+function saveNewStaged() {
+  const t = document.getElementById('add-stage-text');
+  const text = (t.value || '').trim();
+  if (!text) { t.focus(); return; }
+  const ctx = (document.getElementById('add-stage-ctx').value || '').trim();
+  if (!stageAction(text, ctx, 'manual')) { addingStage = false; renderStaging(); return; }
+  addingStage = false; saveData(); renderStaging();
+}
+function stageAddKey(e) { if (e.key === 'Enter') saveNewStaged(); else if (e.key === 'Escape') cancelStageAdd(); }
+function editStaged(id) { editStageId = id; confirmStageId = null; addingStage = false; renderStaging(); const t = document.getElementById('edit-stage-text'); if (t) { t.focus(); t.select(); } }
+function cancelStageEdit() { editStageId = null; renderStaging(); }
+function saveStageEdit(id) {
+  const it = DATA.staging.find(x => x.id === id); if (!it) return;
+  const t = document.getElementById('edit-stage-text');
+  const text = (t.value || '').trim();
+  if (!text) { t.focus(); return; }
+  it.text = text;
+  it.context = (document.getElementById('edit-stage-ctx').value || '').trim();
+  editStageId = null; saveData(); renderStaging();
+}
+function stageEditKey(e, id) { if (e.key === 'Enter') saveStageEdit(id); else if (e.key === 'Escape') cancelStageEdit(); }
+function removeStaged(id) { confirmStageId = id; editStageId = null; addingStage = false; renderStaging(); }
+function cancelStageDel() { confirmStageId = null; renderStaging(); }
+function confirmStageRemove(id) {
+  DATA.staging = DATA.staging.filter(x => x.id !== id);
+  confirmStageId = null; saveData(); renderStaging();
+}
+function assignStaged(id, p) {
+  const it = DATA.staging.find(x => x.id === id); if (!it) return;
+  DATA.items.push({ id:uid(), text:it.text, context:it.context || '', priority:p, order:nextOrder(p), done:false, created:new Date().toISOString().slice(0,10), completedDate:null });
+  DATA.staging = DATA.staging.filter(x => x.id !== id);
+  saveData(); renderStaging(); renderActions();
+}
+
+// ── Assigned to others (delegation tracker) ──
+// Programmatic add — used by "+ Add" and the daily pull. Dedupes by text. Returns true if added.
+function delegateAction(text, owner, context, source) {
+  const n = (text || '').trim().toLowerCase();
+  if (!n) return false;
+  if (DATA.delegated.some(x => x.text.trim().toLowerCase() === n)) return false;
+  DATA.delegated.push({ id:uid(), text:text.trim(), owner:(owner||'').trim(), context:(context||'').trim(), source:(source||'delegated'), done:false, created:new Date().toISOString().slice(0,10) });
+  return true;
+}
+function renderDelegated() {
+  const list = document.getElementById('delegated-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (addingDeleg) list.appendChild(delegAddForm());
+  const items = DATA.delegated || [];
+  if (!items.length && !addingDeleg) {
+    list.innerHTML = '<div class="act-empty">No delegated tasks tracked. Add one, or let the daily pull surface items owned by others.</div>';
+    return;
+  }
+  items.forEach(it => list.appendChild(delegItem(it)));
+}
+function delegItem(it) {
+  const el = document.createElement('div');
+  if (editDelId === it.id) {
+    el.className = 'deleg-item';
+    el.innerHTML =
+      '<div class="deleg-body" style="display:flex;flex-direction:column;gap:6px">' +
+        '<input class="act-input" id="edit-deleg-text" value="' + esc(it.text) + '" placeholder="Task" onkeydown="delegEditKey(event,\'' + it.id + '\')">' +
+        '<input class="act-input" id="edit-deleg-owner" value="' + esc(it.owner) + '" placeholder="Who is responsible" onkeydown="delegEditKey(event,\'' + it.id + '\')">' +
+      '</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl" title="Save" onclick="saveDelegEdit(\'' + it.id + '\')">✓</button>' +
+        '<button class="act-ctrl" title="Cancel" onclick="cancelDelegEdit()">✕</button>' +
+      '</div>';
+    return el;
+  }
+  if (confirmDelegId === it.id) {
+    el.className = 'deleg-item';
+    el.innerHTML =
+      '<div class="deleg-body"><div class="act-text">' + esc(it.text) + '</div>' +
+        '<div class="act-context">Remove this tracked task?</div></div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl danger wide" onclick="confirmDelegRemove(\'' + it.id + '\')">Yes</button>' +
+        '<button class="act-ctrl wide" onclick="cancelDelegDel()">No</button>' +
+      '</div>';
+    return el;
+  }
+  el.className = 'deleg-item' + (it.done ? ' done' : '');
+  el.innerHTML =
+    '<div class="act-check ' + (it.done ? 'on' : '') + '" title="Mark done" onclick="toggleDeleg(\'' + it.id + '\')">' + (it.done ? '✓' : '') + '</div>' +
+    '<div class="deleg-body">' +
+      '<div class="act-text">' + esc(it.text) + (it.source ? '<span class="src-tag">' + esc(it.source) + '</span>' : '') + '</div>' +
+      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
+      '<div class="deleg-owner">Owner: <span class="who">' + esc(it.owner || 'unassigned') + '</span></div>' +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Edit" onclick="editDeleg(\'' + it.id + '\')">✎</button>' +
+      '<button class="act-ctrl danger" title="Remove" onclick="removeDeleg(\'' + it.id + '\')">✕</button>' +
+    '</div>';
+  return el;
+}
+function delegAddForm() {
+  const el = document.createElement('div');
+  el.className = 'act-addform';
+  el.innerHTML =
+    '<input class="act-input" id="add-deleg-text" placeholder="Task owned by someone else" onkeydown="delegAddKey(event)">' +
+    '<div class="addform-row">' +
+      '<input class="act-input" id="add-deleg-owner" placeholder="Who is responsible" onkeydown="delegAddKey(event)">' +
+    '</div>' +
+    '<div class="addform-actions">' +
+      '<button class="act-btn" onclick="saveNewDeleg()">Add</button>' +
+      '<button class="act-btn ghost" onclick="cancelDelegAdd()">Cancel</button>' +
+    '</div>';
+  return el;
+}
+function addDelegated() { addingDeleg = true; editDelId = null; confirmDelegId = null; renderDelegated(); const t = document.getElementById('add-deleg-text'); if (t) t.focus(); }
+function cancelDelegAdd() { addingDeleg = false; renderDelegated(); }
+function saveNewDeleg() {
+  const t = document.getElementById('add-deleg-text');
+  const text = (t.value || '').trim();
+  if (!text) { t.focus(); return; }
+  const owner = (document.getElementById('add-deleg-owner').value || '').trim();
+  if (!delegateAction(text, owner, '', 'manual')) { addingDeleg = false; renderDelegated(); return; }
+  addingDeleg = false; saveData(); renderDelegated();
+}
+function delegAddKey(e) { if (e.key === 'Enter') saveNewDeleg(); else if (e.key === 'Escape') cancelDelegAdd(); }
+function editDeleg(id) { editDelId = id; confirmDelegId = null; addingDeleg = false; renderDelegated(); const t = document.getElementById('edit-deleg-text'); if (t) { t.focus(); t.select(); } }
+function cancelDelegEdit() { editDelId = null; renderDelegated(); }
+function saveDelegEdit(id) {
+  const it = DATA.delegated.find(x => x.id === id); if (!it) return;
+  const t = document.getElementById('edit-deleg-text');
+  const text = (t.value || '').trim();
+  if (!text) { t.focus(); return; }
+  it.text = text; it.owner = (document.getElementById('edit-deleg-owner').value || '').trim();
+  editDelId = null; saveData(); renderDelegated();
+}
+function delegEditKey(e, id) { if (e.key === 'Enter') saveDelegEdit(id); else if (e.key === 'Escape') cancelDelegEdit(); }
+function removeDeleg(id) { confirmDelegId = id; editDelId = null; addingDeleg = false; renderDelegated(); }
+function cancelDelegDel() { confirmDelegId = null; renderDelegated(); }
+function confirmDelegRemove(id) { DATA.delegated = DATA.delegated.filter(x => x.id !== id); confirmDelegId = null; saveData(); renderDelegated(); }
+function toggleDeleg(id) { const it = DATA.delegated.find(x => x.id === id); if (!it) return; it.done = !it.done; saveData(); renderDelegated(); }
+
+// ── ABC action items ──
+const PRIOS = { A:'Must Do', B:'Should Do', C:'Nice To Do' };
+
+function renderActions() {
+  const root = document.getElementById('abc-groups');
+  root.innerHTML = '';
+  if (addingAction) root.appendChild(renderAddForm());
+  ['A','B','C'].forEach(p => {
+    const group = document.createElement('div');
+    group.className = 'abc-group abc-' + p;
+    group.innerHTML =
+      '<div class="abc-header"><span class="abc-badge">' + p + '</span>' +
+      '<span class="abc-label">' + PRIOS[p] + '</span></div>' +
+      '<div class="abc-group-body" id="grp-' + p + '"></div>';
+    root.appendChild(group);
+    const body = group.querySelector('#grp-' + p);
+    const items = DATA.items.filter(i => i.priority === p).sort((a,b) => a.order - b.order);
+    if (!items.length) { body.innerHTML = '<div class="act-empty">No ' + p + ' items.</div>'; return; }
+    items.forEach((it, idx) => body.appendChild(renderItem(it, p, idx + 1, idx, items.length)));
+  });
+}
+
+function renderItem(it, p, num, idx, count) {
+  const el = document.createElement('div');
+
+  // Edit mode — inline inputs
+  if (editingId === it.id) {
+    el.className = 'act-item editing';
+    el.innerHTML =
+      '<div class="act-num">' + p + num + '</div>' +
+      '<div class="act-body">' +
+        '<input class="act-input" id="edit-text" value="' + esc(it.text) + '" placeholder="Action" onkeydown="editKey(event,\'' + it.id + '\')">' +
+        '<input class="act-input" id="edit-ctx" value="' + esc(it.context) + '" placeholder="Context: who it is for, due date (optional)" onkeydown="editKey(event,\'' + it.id + '\')">' +
+      '</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl" title="Save" onclick="saveEdit(\'' + it.id + '\')">✓</button>' +
+        '<button class="act-ctrl" title="Cancel" onclick="cancelEdit()">✕</button>' +
+      '</div>';
+    return el;
+  }
+
+  // Delete-confirm mode — inline
+  if (confirmDelId === it.id) {
+    el.className = 'act-item';
+    el.innerHTML =
+      '<div class="act-num">' + p + num + '</div>' +
+      '<div class="act-body"><div class="act-text">' + esc(it.text) + '</div>' +
+        '<div class="act-context">Remove this action?</div></div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl danger wide" title="Confirm remove" onclick="confirmRemove(\'' + it.id + '\')">Yes</button>' +
+        '<button class="act-ctrl wide" title="Keep" onclick="cancelDel()">No</button>' +
+      '</div>';
+    return el;
+  }
+
+  // Normal mode
+  el.className = 'act-item' + (it.done ? ' done' : '');
+  el.innerHTML =
+    '<div class="act-check ' + (it.done ? 'on' : '') + '" onclick="toggleDone(\'' + it.id + '\')">' + (it.done ? '✓' : '') + '</div>' +
+    '<div class="act-num">' + p + num + '</div>' +
+    '<div class="act-body">' +
+      '<div class="act-text">' + esc(it.text) + '</div>' +
+      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Move up" onclick="moveItem(\'' + it.id + '\',-1)"' + (idx === 0 ? ' disabled style="opacity:.3"' : '') + '>▲</button>' +
+      '<button class="act-ctrl" title="Move down" onclick="moveItem(\'' + it.id + '\',1)"' + (idx === count - 1 ? ' disabled style="opacity:.3"' : '') + '>▼</button>' +
+      '<select class="act-ctrl" title="Priority" onchange="setPriority(\'' + it.id + '\',this.value)">' +
+        ['A','B','C'].map(x => '<option value="' + x + '"' + (x === p ? ' selected' : '') + '>' + x + '</option>').join('') +
+      '</select>' +
+      '<button class="act-ctrl" title="Edit" onclick="editItem(\'' + it.id + '\')">✎</button>' +
+      '<button class="act-ctrl danger" title="Remove" onclick="removeItem(\'' + it.id + '\')">✕</button>' +
+    '</div>';
+  return el;
+}
+
+function renderAddForm() {
+  const el = document.createElement('div');
+  el.className = 'act-addform';
+  el.innerHTML =
+    '<input class="act-input" id="add-text" placeholder="New action item" onkeydown="addKey(event)">' +
+    '<div class="addform-row">' +
+      '<select class="act-select" id="add-prio">' +
+        '<option value="A">A: Must do</option>' +
+        '<option value="B">B: Should do</option>' +
+        '<option value="C">C: Nice to do</option>' +
+      '</select>' +
+      '<input class="act-input" id="add-ctx" placeholder="Context: who it is for, due date (optional)" onkeydown="addKey(event)">' +
+    '</div>' +
+    '<div class="addform-actions">' +
+      '<button class="act-btn" onclick="saveNewAction()">Add</button>' +
+      '<button class="act-btn ghost" onclick="cancelAdd()">Cancel</button>' +
+    '</div>';
+  return el;
+}
+
+function nextOrder(p) {
+  const items = DATA.items.filter(i => i.priority === p);
+  return items.length ? Math.max(...items.map(i => i.order)) + 1 : 0;
+}
+function reindex(p) {
+  DATA.items.filter(i => i.priority === p).sort((a,b) => a.order - b.order)
+    .forEach((it, i) => it.order = i);
+}
+
+function addAction() {
+  addingAction = true; editingId = null; confirmDelId = null;
+  renderActions();
+  const t = document.getElementById('add-text'); if (t) t.focus();
+}
+function cancelAdd() { addingAction = false; renderActions(); }
+function saveNewAction() {
+  const t = document.getElementById('add-text');
+  const text = (t.value || '').trim();
+  if (!text) { t.focus(); return; }
+  const prio = document.getElementById('add-prio').value;
+  const context = (document.getElementById('add-ctx').value || '').trim();
+  DATA.items.push({ id:uid(), text, context, priority:prio, order:nextOrder(prio), done:false, created:new Date().toISOString().slice(0,10), completedDate:null });
+  addingAction = false; saveData(); renderActions();
+}
+function addKey(e) { if (e.key === 'Enter') saveNewAction(); else if (e.key === 'Escape') cancelAdd(); }
+
+function editItem(id) {
+  editingId = id; confirmDelId = null; addingAction = false;
+  renderActions();
+  const t = document.getElementById('edit-text'); if (t) { t.focus(); t.select(); }
+}
+function cancelEdit() { editingId = null; renderActions(); }
+function saveEdit(id) {
+  const it = DATA.items.find(i => i.id === id); if (!it) return;
+  const t = document.getElementById('edit-text');
+  const text = (t.value || '').trim();
+  if (!text) { t.focus(); return; }
+  it.text = text;
+  it.context = (document.getElementById('edit-ctx').value || '').trim();
+  editingId = null; saveData(); renderActions();
+}
+function editKey(e, id) { if (e.key === 'Enter') saveEdit(id); else if (e.key === 'Escape') cancelEdit(); }
+
+function removeItem(id) { confirmDelId = id; editingId = null; addingAction = false; renderActions(); }
+function cancelDel() { confirmDelId = null; renderActions(); }
+function confirmRemove(id) {
+  const it = DATA.items.find(i => i.id === id); if (!it) return;
+  const p = it.priority;
+  DATA.items = DATA.items.filter(i => i.id !== id);
+  reindex(p); confirmDelId = null; saveData(); renderActions();
+}
+function toggleDone(id) {
+  const it = DATA.items.find(i => i.id === id); if (!it) return;
+  it.done = !it.done;
+  it.completedDate = it.done ? new Date().toISOString().slice(0,10) : null;
+  saveData(); renderActions(); renderWeekly(); renderReport();
+}
+function setPriority(id, p) {
+  const it = DATA.items.find(i => i.id === id); if (!it || it.priority === p) return;
+  const old = it.priority;
+  it.priority = p; it.order = nextOrder(p);
+  reindex(old); saveData(); renderActions();
+}
+function moveItem(id, dir) {
+  const it = DATA.items.find(i => i.id === id); if (!it) return;
+  const sibs = DATA.items.filter(i => i.priority === it.priority).sort((a,b) => a.order - b.order);
+  const idx = sibs.findIndex(i => i.id === id);
+  const swap = idx + dir;
+  if (swap < 0 || swap >= sibs.length) return;
+  const tmp = sibs[idx].order; sibs[idx].order = sibs[swap].order; sibs[swap].order = tmp;
+  saveData(); renderActions();
+}
+
+// ── Weekly goals ──
+function weekKey(d) {
+  const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = dt.getUTCDay() || 7;
+  dt.setUTCDate(dt.getUTCDate() + 4 - day);
+  const yStart = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil((((dt - yStart) / 86400000) + 1) / 7);
+  return dt.getUTCFullYear() + '-W' + String(wk).padStart(2, '0');
+}
+function mondayOf(d) {
+  const x = new Date(d); const day = (x.getDay() + 6) % 7;
+  x.setDate(x.getDate() - day); return x;
+}
+function fmtDate(d) {
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return m[d.getMonth()] + ' ' + d.getDate();
+}
+function weekKeyFromStr(s) { return weekKey(new Date(s + 'T12:00:00')); }
+// The Thursday of a date's ISO week — the day that determines which month/year owns the week.
+function isoThursday(d) {
+  const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = dt.getUTCDay() || 7;
+  dt.setUTCDate(dt.getUTCDate() + 4 - day);
+  return dt;
+}
+
+function renderWeekly() {
+  const mon = mondayOf(curWeek);
+  const lbl = document.getElementById('week-label');
+  if (lbl) lbl.textContent = 'Week of ' + fmtDate(mon) + ', ' + mon.getFullYear();
+  renderAccomplishments();
+  renderKeyTasks();
+}
+
+/* ── Accomplishments this week (auto from completed actions + manual) ── */
+function renderAccomplishments() {
+  const key = weekKey(curWeek);
+  const list = document.getElementById('accomplishment-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (addingAcc) list.appendChild(accAddForm());
+  const autos = DATA.items
+    .filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) === key)
+    .sort((a,b) => (a.priority + a.order).localeCompare(b.priority + b.order));
+  const manual = DATA.accomplishments[key] || [];
+  if (!autos.length && !manual.length && !addingAcc) {
+    list.innerHTML = '<div class="act-empty">Nothing logged yet. Complete an action or add a win.</div>';
+    return;
+  }
+  autos.forEach(it => list.appendChild(autoAccItem(it)));
+  manual.forEach(a => list.appendChild(accItem(key, a)));
+}
+function autoAccItem(it) {
+  const el = document.createElement('div');
+  el.className = 'goal-item done';
+  el.innerHTML =
+    '<div class="act-check on" title="Mark not done" onclick="toggleDone(\'' + it.id + '\')">✓</div>' +
+    '<div class="goal-text">' + esc(it.text) + '<span class="acc-tag">' + it.priority + '</span></div>';
+  return el;
+}
+function accItem(key, a) {
+  const el = document.createElement('div');
+  if (editAccId === a.id) {
+    el.className = 'goal-item';
+    el.innerHTML =
+      '<input class="act-input" style="flex:1" id="edit-acc" value="' + esc(a.text) + '" onkeydown="accEditKey(event,\'' + key + '\',\'' + a.id + '\')">' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl" title="Save" onclick="saveAccEdit(\'' + key + '\',\'' + a.id + '\')">✓</button>' +
+        '<button class="act-ctrl" title="Cancel" onclick="cancelAccEdit()">✕</button>' +
+      '</div>';
+    return el;
+  }
+  if (confirmAccId === a.id) {
+    el.className = 'goal-item';
+    el.innerHTML =
+      '<div class="goal-text">Remove this?</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl danger wide" onclick="confirmAccRemove(\'' + key + '\',\'' + a.id + '\')">Yes</button>' +
+        '<button class="act-ctrl wide" onclick="cancelAccDel()">No</button>' +
+      '</div>';
+    return el;
+  }
+  el.className = 'goal-item done';
+  el.innerHTML =
+    '<div class="act-check on" title="Manual entry">✓</div>' +
+    '<div class="goal-text">' + esc(a.text) + '<span class="acc-tag">added</span></div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Edit" onclick="editAcc(\'' + key + '\',\'' + a.id + '\')">✎</button>' +
+      '<button class="act-ctrl danger" title="Remove" onclick="removeAcc(\'' + key + '\',\'' + a.id + '\')">✕</button>' +
+    '</div>';
+  return el;
+}
+function accAddForm() {
+  const el = document.createElement('div');
+  el.className = 'goal-item';
+  el.innerHTML =
+    '<input class="act-input" style="flex:1" id="add-acc" placeholder="Something you accomplished" onkeydown="accAddKey(event)">' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Add" onclick="saveNewAcc()">✓</button>' +
+      '<button class="act-ctrl" title="Cancel" onclick="cancelAccAdd()">✕</button>' +
+    '</div>';
+  return el;
+}
+function addAccomplishment() { addingAcc = true; editAccId = null; confirmAccId = null; renderAccomplishments(); const t = document.getElementById('add-acc'); if (t) t.focus(); }
+function cancelAccAdd() { addingAcc = false; renderAccomplishments(); }
+function saveNewAcc() {
+  const key = weekKey(curWeek);
+  const t = document.getElementById('add-acc');
+  const v = (t.value || '').trim();
+  if (!v) { t.focus(); return; }
+  if (!DATA.accomplishments[key]) DATA.accomplishments[key] = [];
+  DATA.accomplishments[key].push({ id:uid(), text:v, date: isoThursday(curWeek).toISOString().slice(0,10) });
+  addingAcc = false; saveData(); renderAccomplishments(); renderReport();
+}
+function accAddKey(e) { if (e.key === 'Enter') saveNewAcc(); else if (e.key === 'Escape') cancelAccAdd(); }
+function editAcc(key, id) { editAccId = id; confirmAccId = null; addingAcc = false; renderAccomplishments(); const t = document.getElementById('edit-acc'); if (t) { t.focus(); t.select(); } }
+function cancelAccEdit() { editAccId = null; renderAccomplishments(); }
+function saveAccEdit(key, id) {
+  const a = (DATA.accomplishments[key]||[]).find(x => x.id === id); if (!a) return;
+  const t = document.getElementById('edit-acc');
+  const v = (t.value || '').trim();
+  if (!v) { t.focus(); return; }
+  a.text = v; editAccId = null; saveData(); renderAccomplishments(); renderReport();
+}
+function accEditKey(e, key, id) { if (e.key === 'Enter') saveAccEdit(key, id); else if (e.key === 'Escape') cancelAccEdit(); }
+function removeAcc(key, id) { confirmAccId = id; editAccId = null; addingAcc = false; renderAccomplishments(); }
+function cancelAccDel() { confirmAccId = null; renderAccomplishments(); }
+function confirmAccRemove(key, id) {
+  DATA.accomplishments[key] = (DATA.accomplishments[key]||[]).filter(x => x.id !== id);
+  confirmAccId = null; saveData(); renderAccomplishments(); renderReport();
+}
+
+/* ── Key tasks for next week (prioritized, numbered, reorderable) ── */
+// Find an active (not done) action item matching this text.
+function findActiveAction(text) {
+  const n = text.trim().toLowerCase();
+  return DATA.items.find(i => !i.done && i.text.trim().toLowerCase() === n);
+}
+// Ensure a key task exists in the ABC to-dos. Returns the linked action id.
+function ensureActionForKeyTask(text) {
+  const existing = findActiveAction(text);
+  if (existing) return existing.id;
+  const item = {
+    id: uid(), text: text.trim(), context: 'From weekly key tasks',
+    priority: 'A', order: nextOrder('A'), done: false,
+    created: new Date().toISOString().slice(0,10), completedDate: null
+  };
+  DATA.items.push(item);
+  return item.id;
+}
+// Resolve the action a key task points to (for the status tag).
+function linkedAction(t) {
+  let a = t.actionId ? DATA.items.find(i => i.id === t.actionId) : null;
+  if (!a) { const n = t.text.trim().toLowerCase(); a = DATA.items.find(i => i.text.trim().toLowerCase() === n); }
+  return a || null;
+}
+
+function renderKeyTasks() {
+  const key = weekKey(curWeek);
+  const list = document.getElementById('keytask-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (addingKt) list.appendChild(ktAddForm());
+  const tasks = DATA.keyTasks[key] || [];
+  if (!tasks.length && !addingKt) {
+    list.innerHTML = '<div class="act-empty">No key tasks set. Add your top priorities for next week.</div>';
+    return;
+  }
+  tasks.forEach((t, i) => list.appendChild(ktItem(key, t, i, tasks.length)));
+}
+function ktItem(key, t, idx, count) {
+  const el = document.createElement('div');
+  if (editKtId === t.id) {
+    el.className = 'goal-item';
+    el.innerHTML =
+      '<input class="act-input" style="flex:1" id="edit-kt" value="' + esc(t.text) + '" onkeydown="ktEditKey(event,\'' + key + '\',\'' + t.id + '\')">' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl" title="Save" onclick="saveKtEdit(\'' + key + '\',\'' + t.id + '\')">✓</button>' +
+        '<button class="act-ctrl" title="Cancel" onclick="cancelKtEdit()">✕</button>' +
+      '</div>';
+    return el;
+  }
+  if (confirmKtId === t.id) {
+    el.className = 'goal-item';
+    el.innerHTML =
+      '<div class="goal-text">Remove this task?</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl danger wide" onclick="confirmKtRemove(\'' + key + '\',\'' + t.id + '\')">Yes</button>' +
+        '<button class="act-ctrl wide" onclick="cancelKtDel()">No</button>' +
+      '</div>';
+    return el;
+  }
+  const a = linkedAction(t);
+  const tag = a
+    ? '<span class="acc-tag" title="In your to-dos">' + (a.done ? 'done' : a.priority) + '</span>'
+    : '<span class="acc-tag" title="Not in your to-dos">?</span>';
+  el.className = 'goal-item';
+  el.innerHTML =
+    '<div class="act-num">' + (idx + 1) + '</div>' +
+    '<div class="goal-text">' + esc(t.text) + tag + '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Move up" onclick="moveKt(\'' + key + '\',\'' + t.id + '\',-1)"' + (idx === 0 ? ' disabled style="opacity:.3"' : '') + '>▲</button>' +
+      '<button class="act-ctrl" title="Move down" onclick="moveKt(\'' + key + '\',\'' + t.id + '\',1)"' + (idx === count - 1 ? ' disabled style="opacity:.3"' : '') + '>▼</button>' +
+      '<button class="act-ctrl" title="Edit" onclick="editKt(\'' + key + '\',\'' + t.id + '\')">✎</button>' +
+      '<button class="act-ctrl danger" title="Remove" onclick="removeKt(\'' + key + '\',\'' + t.id + '\')">✕</button>' +
+    '</div>';
+  return el;
+}
+function ktAddForm() {
+  const el = document.createElement('div');
+  el.className = 'goal-item';
+  el.innerHTML =
+    '<input class="act-input" style="flex:1" id="add-kt" placeholder="A key task for next week" onkeydown="ktAddKey(event)">' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Add" onclick="saveNewKt()">✓</button>' +
+      '<button class="act-ctrl" title="Cancel" onclick="cancelKtAdd()">✕</button>' +
+    '</div>';
+  return el;
+}
+function addKeyTask() { addingKt = true; editKtId = null; confirmKtId = null; renderKeyTasks(); const t = document.getElementById('add-kt'); if (t) t.focus(); }
+function cancelKtAdd() { addingKt = false; renderKeyTasks(); }
+function saveNewKt() {
+  const key = weekKey(curWeek);
+  const t = document.getElementById('add-kt');
+  const v = (t.value || '').trim();
+  if (!v) { t.focus(); return; }
+  if (!DATA.keyTasks[key]) DATA.keyTasks[key] = [];
+  // Ensure this task exists as an A-priority to-do (or link to the existing one).
+  const actionId = ensureActionForKeyTask(v);
+  DATA.keyTasks[key].push({ id:uid(), text:v, actionId });
+  addingKt = false; saveData(); renderKeyTasks(); renderActions();
+}
+function ktAddKey(e) { if (e.key === 'Enter') saveNewKt(); else if (e.key === 'Escape') cancelKtAdd(); }
+function editKt(key, id) { editKtId = id; confirmKtId = null; addingKt = false; renderKeyTasks(); const t = document.getElementById('edit-kt'); if (t) { t.focus(); t.select(); } }
+function cancelKtEdit() { editKtId = null; renderKeyTasks(); }
+function saveKtEdit(key, id) {
+  const t = (DATA.keyTasks[key]||[]).find(x => x.id === id); if (!t) return;
+  const el = document.getElementById('edit-kt');
+  const v = (el.value || '').trim();
+  if (!v) { el.focus(); return; }
+  t.text = v; editKtId = null; saveData(); renderKeyTasks();
+}
+function ktEditKey(e, key, id) { if (e.key === 'Enter') saveKtEdit(key, id); else if (e.key === 'Escape') cancelKtEdit(); }
+function removeKt(key, id) { confirmKtId = id; editKtId = null; addingKt = false; renderKeyTasks(); }
+function cancelKtDel() { confirmKtId = null; renderKeyTasks(); }
+function confirmKtRemove(key, id) {
+  DATA.keyTasks[key] = (DATA.keyTasks[key]||[]).filter(x => x.id !== id);
+  confirmKtId = null; saveData(); renderKeyTasks();
+}
+function moveKt(key, id, dir) {
+  const arr = DATA.keyTasks[key] || [];
+  const idx = arr.findIndex(x => x.id === id);
+  const swap = idx + dir;
+  if (idx < 0 || swap < 0 || swap >= arr.length) return;
+  const tmp = arr[idx]; arr[idx] = arr[swap]; arr[swap] = tmp;
+  saveData(); renderKeyTasks();
+}
+function shiftWeek(n) { curWeek.setDate(curWeek.getDate() + n * 7); addingAcc = addingKt = false; editAccId = editKtId = confirmAccId = confirmKtId = null; renderWeekly(); }
+function thisWeek() { curWeek = new Date(); addingAcc = addingKt = false; editAccId = editKtId = confirmAccId = confirmKtId = null; renderWeekly(); }
+
+// ── Monthly report ──
+function monthKey(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+function renderReport() {
+  const d = curMonth;
+  const key = monthKey(d);
+  const monNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('month-label').textContent = monNames[d.getMonth()] + ' ' + d.getFullYear();
+
+  // Completed actions in this month
+  const completed = DATA.items.filter(i => i.done && i.completedDate && i.completedDate.slice(0,7) === key);
+  const openCount = DATA.items.filter(i => !i.done).length;
+
+  // Manual accomplishments logged in this month (by their date)
+  let manualAcc = [];
+  Object.keys(DATA.accomplishments).forEach(wk => {
+    (DATA.accomplishments[wk]||[]).forEach(a => {
+      if (a.date && a.date.slice(0,7) === key) manualAcc.push(a);
+    });
+  });
+  const totalWins = completed.length + manualAcc.length;
+
+  const card = document.getElementById('report-card');
+  card.innerHTML =
+    '<div class="report-stats">' +
+      '<div class="report-stat"><div class="num">' + totalWins + '</div><div class="lbl">Accomplishments</div></div>' +
+      '<div class="report-stat"><div class="num">' + completed.length + '</div><div class="lbl">Actions completed</div></div>' +
+      '<div class="report-stat"><div class="num">' + openCount + '</div><div class="lbl">Still open</div></div>' +
+    '</div>' +
+    '<div class="report-block-title">Accomplishments this month</div>' +
+    (totalWins
+      ? '<ul class="report-list">' +
+          completed.map(i => '<li>' + i.priority + ' &middot; ' + esc(i.text) + '</li>').join('') +
+          manualAcc.map(a => '<li>' + esc(a.text) + '</li>').join('') +
+        '</ul>'
+      : '<div class="act-empty">Nothing logged in ' + monNames[d.getMonth()] + ' yet.</div>') +
+    '<div class="report-block-title">Notes &amp; reflections</div>' +
+    '<textarea class="report-notes" placeholder="What moved forward this month? What is the focus for next month?" onchange="saveNote(\'' + key + '\', this.value)">' + esc(DATA.monthlyNotes[key] || '') + '</textarea>';
+}
+function saveNote(key, val) { DATA.monthlyNotes[key] = val; saveData(); }
+function shiftMonth(n) { curMonth.setMonth(curMonth.getMonth() + n); renderReport(); renderNewsletter(); }
+function thisMonth() { curMonth = new Date(); renderReport(); renderNewsletter(); }
+
+// ── Monthly newsletter tab ──
+// Themes come live from this month's accomplishments (same source as the Monthly Report).
+// Funnel + draft links come from window.SSC_NEWSLETTER, written by the ssc-monthly-update-draft task.
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const NEWS_FALLBACK = {
+  logsFolderUrl: 'https://drive.google.com/drive/folders/18OvoqQLS7nMzBZrzPUNCydKZikUazu9C',
+  templateUrl:  'https://drive.google.com/file/d/1hR0mENkihaMhL_gWk810BQn-t1YQRH70/view',
+  gmailUrl:     'https://mail.google.com/mail/u/0/#drafts'
+};
+function monthThemes(key) {
+  const completed = DATA.items.filter(i => i.done && i.completedDate && i.completedDate.slice(0,7) === key);
+  const manual = [];
+  Object.keys(DATA.accomplishments).forEach(wk => {
+    (DATA.accomplishments[wk] || []).forEach(a => { if (a.date && a.date.slice(0,7) === key) manual.push(a); });
+  });
+  return completed.map(i => i.text).concat(manual.map(a => a.text));
+}
+function renderNewsletter() {
+  const d = curMonth;
+  const key = monthKey(d);
+  const lbl = document.getElementById('news-month-label');
+  if (lbl) lbl.textContent = MONTH_NAMES[d.getMonth()] + ' ' + d.getFullYear();
+  const body = document.getElementById('newsletter-body');
+  if (!body) return;
+
+  const nd = (typeof window !== 'undefined' && window.SSC_NEWSLETTER) ? window.SSC_NEWSLETTER : null;
+  const links = Object.assign({}, NEWS_FALLBACK, nd || {});
+  const themes = monthThemes(key);
+
+  // 1. Status banner
+  const draftReady = nd && nd.draftUrl;
+  const gmail = (nd && nd.draftUrl) ? nd.draftUrl : links.gmailUrl;
+  let status =
+    '<div style="border:1px solid ' + (draftReady ? 'var(--plum)' : 'rgba(47,62,52,0.12)') + '; border-left:4px solid var(--plum); background:white; border-radius:8px; padding:18px 20px; margin-bottom:20px">' +
+      '<div style="font-weight:700; color:var(--moss); font-size:15px; margin-bottom:4px">' +
+        (draftReady ? MONTH_NAMES[d.getMonth()] + ' draft is ready in Gmail' : 'No draft generated yet for ' + MONTH_NAMES[d.getMonth()]) +
+      '</div>' +
+      '<div style="color:var(--sage); font-size:13px; line-height:1.5">' +
+        (draftReady
+          ? 'Review, add your investor distribution list, then send. ' + (nd && nd.draftSubject ? 'Subject: ' + esc(nd.draftSubject) : '')
+          : 'The draft assembles automatically on the last Wednesday of the month, ready to send the first Monday.') +
+      '</div>' +
+      (nd && nd.generated ? '<div style="color:var(--sage); font-size:11px; margin-top:8px">Last synced ' + esc(nd.generated) + '</div>' : '') +
+    '</div>';
+
+  // 2. This month's themes (from monthly accomplishments)
+  let themesHtml =
+    '<div class="report-block-title">This month’s themes</div>' +
+    '<div class="actions-sub" style="margin-bottom:10px">Pulled from your monthly accomplishments. These become the TL;DR and updates in the newsletter.</div>' +
+    (themes.length
+      ? '<ul class="report-list">' + themes.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul>'
+      : '<div class="act-empty">No accomplishments logged for this month yet. Add them under Actions &rarr; Weekly Review.</div>');
+
+  // 3. Commitment funnel (Connection Hub)
+  const f = nd && nd.funnel ? nd.funnel : null;
+  let funnelHtml = '<div class="report-block-title" style="margin-top:24px">Commitment funnel (Connection Hub)</div>';
+  if (f) {
+    funnelHtml +=
+      '<div class="report-stats">' +
+        '<div class="report-stat"><div class="num" style="color:var(--plum)">' + (f.committed != null ? f.committed : '-') + '</div><div class="lbl">Committed</div></div>' +
+        '<div class="report-stat"><div class="num" style="color:var(--plum)">' + (f.paid != null ? f.paid : '-') + '</div><div class="lbl">Signed up &amp; paid</div></div>' +
+        '<div class="report-stat"><div class="num">' + (f.interested != null ? f.interested : '-') + '</div><div class="lbl">Interested</div></div>' +
+      '</div>' +
+      (nd.committedDollars ? '<div class="actions-sub" style="margin-top:8px">Committed dollars: ' + esc(nd.committedDollars) + '</div>' : '') +
+      (nd.newThisMonth ? '<div class="actions-sub">New this month: ' + esc(nd.newThisMonth) + '</div>' : '') +
+      (nd.committedNames && nd.committedNames.length ? '<div class="actions-sub">Committed: ' + esc(nd.committedNames.join(', ')) + '</div>' : '');
+  } else {
+    funnelHtml += '<div class="act-empty">Funnel syncs from the monthly newsletter task (last Wednesday). It reads the Connection Hub Pipeline tab.</div>';
+  }
+
+  // 4. Links
+  let linksHtml =
+    '<div class="report-block-title" style="margin-top:24px">Open</div>' +
+    '<div style="display:flex; flex-wrap:wrap; gap:8px">' +
+      '<a class="act-btn ghost" style="text-decoration:none; border-color:var(--plum); color:var(--plum)" href="' + gmail + '" target="_blank" rel="noopener">Gmail draft</a>' +
+      '<a class="act-btn ghost" style="text-decoration:none" href="' + links.logsFolderUrl + '" target="_blank" rel="noopener">Weekly KTA logs</a>' +
+      '<a class="act-btn ghost" style="text-decoration:none" href="' + links.templateUrl + '" target="_blank" rel="noopener">Email template</a>' +
+    '</div>';
+
+  body.innerHTML = status + themesHtml + funnelHtml + linksHtml;
+}
+
+// ── Import the daily Granola pull on load ──
+importInbox();
+(function() {
+  const inbox = window.GRANOLA_INBOX;
+  const sub = document.querySelector('.staging-sub');
+  if (inbox && inbox.generated && sub) {
+    sub.innerHTML += ' <span style="color:var(--teal)">Last Granola sync: ' + inbox.generated + '.</span>';
+  }
+})();
+renderStaging();
+renderDelegated();
 </script>
 
 </body>
