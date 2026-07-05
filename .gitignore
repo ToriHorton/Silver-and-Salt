@@ -9,3 +9,6 @@ _differentiation-project/
 sketch-fonts.html
 typography.html
 watch-style.html
+
+# Daily deploy self-check log (kept local, never published)
+.deploy-log.json
