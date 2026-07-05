@@ -14,9 +14,9 @@
       "port": 3000
     },
     {
-      "name": "monarch-preview",
+      "name": "built-not-found-preview",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "/Users/tori/Projects/monarch-capital-collective"],
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "/Users/tori/Projects/built-not-found-capital"],
       "port": 8765
     }
   ]
