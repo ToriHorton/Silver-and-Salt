@@ -12,3 +12,11 @@ watch-style.html
 
 # Daily deploy self-check log (kept local, never published)
 .deploy-log.json
+
+# Private (local-only) CEO tools + data — pulled from public site, pending a protected host
+dashboard.html
+ecosystem.html
+granola-inbox.js
+newsletter-data.js
+network/people.js
+network/people-utah.js
