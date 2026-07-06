@@ -63,15 +63,41 @@
 
 /* Founder cards (Section 2) */
 .founder-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:32px 0;}
-.founder-card{background:var(--cream);border:1px solid var(--border);padding:24px 20px;text-align:center;border-radius:6px;display:flex;flex-direction:column;gap:6px;align-items:center;transition:border-color 0.2s,transform 0.2s;}
+.founder-card{background:var(--cream);border:1px solid var(--border);padding:24px 20px;text-align:center;border-radius:6px;display:flex;flex-direction:column;gap:6px;align-items:center;transition:border-color 0.2s,transform 0.2s;text-decoration:none;color:inherit;}
 .founder-card:hover{border-color:var(--teal);transform:translateY(-2px);}
-.founder-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--moss);letter-spacing:-0.01em;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
-.founder-name:hover{color:var(--teal);}
+.founder-logo{height:40px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.founder-logo img{max-height:40px;max-width:170px;width:auto;object-fit:contain;}
+.founder-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--moss);letter-spacing:-0.01em;display:inline-flex;align-items:center;gap:6px;}
 .founder-name::after{content:'↗';font-size:13px;font-weight:300;color:var(--sage);transform:translateY(-1px);}
-.founder-name:hover::after{color:var(--teal);}
+.founder-card:hover .founder-name{color:var(--teal);}
+.founder-card:hover .founder-name::after{color:var(--teal);}
 .founder-when{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--sage);font-weight:700;}
 .founder-amt{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--teal);letter-spacing:-0.005em;margin-top:2px;}
 .founder-amt .stage{font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);display:block;margin-top:2px;}
+.founder-toplink{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:inherit;width:100%;}
+.founder-person{margin-top:6px;padding-top:12px;border-top:1px solid var(--border);width:100%;line-height:1.4;}
+.founder-person .fp-name{display:block;color:var(--moss);font-weight:700;font-size:13px;text-decoration:none;transition:color 0.2s;}
+.founder-person .fp-name:hover{color:var(--teal);}
+.founder-person .fp-role{display:block;color:var(--sage);font-size:12px;margin-top:1px;}
+.li-icon{width:11px;height:11px;fill:var(--sage);vertical-align:-1px;margin-left:5px;transition:fill 0.2s;}
+.founder-person .fp-name:hover .li-icon{fill:var(--teal);}
+.faye-detail{margin-top:28px;}
+.faye-detail-inner{background:var(--sand);border:1px solid var(--border);border-top:3px solid var(--rust);border-radius:8px;padding:32px 32px 28px;}
+.fd-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:10px;}
+.fd-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,28px);font-weight:600;color:var(--moss);line-height:1.2;margin-bottom:14px;letter-spacing:-0.005em;}
+.fd-intro{font-size:15px;line-height:1.7;color:var(--moss-light);margin-bottom:26px;max-width:660px;}
+.fd-intro strong{color:var(--moss);font-weight:700;}
+.fd-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:26px;}
+.fd-firm-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--moss);text-decoration:none;display:inline-flex;align-items:center;gap:6px;letter-spacing:-0.005em;}
+.fd-firm-name::after{content:'↗';font-size:12px;font-weight:300;color:var(--sage);}
+.fd-firm-name:hover{color:var(--teal);}
+.fd-firm-name:hover::after{color:var(--teal);}
+.fd-firm-loc{font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--sage);font-weight:700;margin:5px 0 10px;}
+.fd-firm p{font-size:13px;line-height:1.65;color:var(--moss-light);}
+.fd-close{font-size:14px;line-height:1.7;color:var(--moss-light);border-top:1px solid var(--border);padding-top:20px;margin-bottom:18px;max-width:660px;}
+.fd-close strong{color:var(--moss);font-weight:700;}
+.fd-visit{display:inline-block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(26,143,125,0.32);padding-bottom:2px;}
+.fd-visit:hover{border-bottom-color:var(--teal);}
 
 .rep-band{background:var(--moss);color:var(--cream);padding:32px 28px;border-radius:6px;margin-top:24px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
 .rep-band-num{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:600;color:var(--cream);line-height:1;letter-spacing:-0.02em;}
@@ -115,15 +141,136 @@
 .ig-tagline{padding:64px 24px 96px;text-align:center;}
 .ig-tagline p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--sage);font-weight:300;max-width:520px;margin:0 auto;line-height:1.5;}
 
+/* Funnel snapshot (top of page) */
+.fnl{padding:56px 0 8px;}
+.fnl-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:30px;text-align:center;}
+.fnl-stack{display:flex;flex-direction:column;gap:10px;max-width:600px;margin:0 auto;}
+.fnl-tier{display:grid;grid-template-columns:300px 1fr;align-items:center;gap:28px;}
+.fnl-band{height:118px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;margin:0 auto;}
+.fnl-tier.t1 .fnl-band{max-width:320px;clip-path:polygon(0 0,100% 0,90% 100%,10% 100%);background:var(--moss);}
+.fnl-tier.t2 .fnl-band{max-width:238px;clip-path:polygon(0 0,100% 0,87% 100%,13% 100%);background:var(--teal);}
+.fnl-tier.t3 .fnl-band{max-width:158px;clip-path:polygon(0 0,100% 0,82% 100%,18% 100%);background:#0d6b5c;}
+.fnl-count{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;color:var(--cream);line-height:1;letter-spacing:-0.02em;}
+.fnl-dollar{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--warm);line-height:1;letter-spacing:-0.005em;}
+.fnl-lead{display:block;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--moss);line-height:1.2;letter-spacing:-0.005em;}
+.fnl-cap{display:block;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-top:6px;}
+.fnl-note{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--sage);line-height:1.4;margin-top:8px;max-width:300px;}
+.fnl-foot{max-width:520px;margin:36px auto 0;text-align:center;font-size:13px;line-height:1.65;color:var(--moss-light);}
+.fnl-foot b{color:var(--moss);font-weight:700;}
+
+/* Snapshot images (top): dot field + capital bar */
+.snap{padding:56px 0 8px;--hl:var(--rust);}
+.snap-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:30px;text-align:center;}
+.snap-head{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.2vw,22px);font-weight:400;color:var(--moss-light);line-height:1.45;max-width:600px;margin-bottom:34px;}
+.dotfield{display:flex;flex-wrap:wrap;gap:3px;position:relative;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--sage);flex:0 0 auto;}
+.dot.g{background:var(--hl);}
+.dot-ring{position:absolute;left:-1.5px;top:-6px;width:24px;height:17px;border:2px solid var(--hl);border-radius:50%;pointer-events:none;}
+.snap-cap{margin-top:22px;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--moss);line-height:1.3;letter-spacing:-0.005em;}
+.snap-cap b{color:var(--hl);font-weight:600;}
+.capbar-wrap{margin-top:52px;}
+.capbar-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:14px;}
+.capbar-card{border:1px solid var(--border);border-radius:10px;padding:20px;background:var(--sand);--hl:var(--rust);}
+.capbar{position:relative;height:48px;border-radius:6px;overflow:hidden;background:var(--teal);}
+.capbar-in{position:absolute;right:18px;top:0;height:100%;display:flex;align-items:center;color:var(--cream);font-size:14px;font-weight:600;letter-spacing:0.01em;}
+.capbar-sliver{position:absolute;top:0;left:0;height:100%;width:0.5%;min-width:8px;background:var(--hl);}
+.capbar-connector{display:block;width:1.5px;height:20px;background:var(--hl);margin:0 0 0 3.25px;}
+.capbar-note{margin:0;font-size:13px;color:var(--moss-light);line-height:1.6;display:flex;align-items:flex-start;gap:8px;}
+.capbar-note strong{color:var(--moss);font-weight:700;}
+.gold-dot{width:8px;height:8px;border-radius:50%;background:var(--hl);flex:0 0 auto;margin-top:1px;}
+
+/* Money story (scroll reveal) */
+.story{padding:100px 0 72px;}
+.story-kicker{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:16px;}
+.story-lede{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,2.6vw,26px);font-weight:400;color:var(--moss-light);line-height:1.4;max-width:560px;margin-bottom:8px;}
+.ebeat{position:relative;border-top:1px solid var(--border);padding:54px 0 54px 108px;}
+.ebeat-index{position:absolute;left:0;top:56px;width:88px;}
+.ebeat-num{display:block;font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--sage);line-height:1;letter-spacing:-0.01em;margin-bottom:12px;}
+.ebeat-kicker{display:block;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--sage);font-weight:700;line-height:1.35;}
+.ebeat-fig{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--moss);line-height:0.9;letter-spacing:-0.02em;font-size:clamp(52px,10vw,104px);}
+.ebeat-fig--xl{font-size:clamp(72px,15vw,150px);}
+.ebeat-fig--sm{font-size:clamp(38px,6vw,72px);}
+.ebeat-fig.rust{color:var(--rust);}
+.ebeat-fig--teal{color:var(--teal);}
+.teams-row{display:flex;align-items:center;gap:40px;}
+.teams-dots{position:relative;display:flex;flex-wrap:wrap;column-gap:5px;row-gap:16px;flex:1;min-width:0;}
+.teams-dots .dot{width:6px;height:6px;}
+.teams-dots .dot.sep{margin-right:10px;}
+.dot.tl{background:var(--teal);}
+.dot-circle{position:absolute;left:-10px;top:-14px;width:48px;height:34px;overflow:visible;pointer-events:none;}
+.dot-circle--one{left:-10px;top:-12px;width:26px;height:30px;}
+.teams-dots .dot.rl{background:var(--rust);}
+.one-row{margin-top:46px;}
+.one-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,19px);color:var(--sage);margin-top:16px;line-height:1.45;max-width:560px;}
+.ebeat-cap{font-size:clamp(16px,1.8vw,19px);color:var(--moss-light);line-height:1.6;max-width:540px;margin-top:20px;}
+.ebeat-cap a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(26,143,125,0.32);transition:border-color 0.2s;}
+.ebeat-cap a:hover{border-bottom-color:var(--teal);}
+.share-rule{position:relative;height:10px;max-width:560px;background:var(--sand);border:1px solid var(--border);border-radius:5px;overflow:hidden;margin:26px 0 12px;}
+.share-sliver{position:absolute;left:0;top:0;height:100%;width:0.5%;min-width:6px;background:var(--rust);}
+.share-note{font-size:13px;color:var(--moss-light);display:flex;align-items:center;gap:8px;line-height:1.5;}
+.share-dot{width:9px;height:9px;border-radius:50%;background:var(--rust);flex:0 0 auto;}
+.team-logos{display:flex;gap:30px;align-items:center;flex-wrap:wrap;margin-top:28px;}
+.tlogo img{height:32px;width:auto;max-width:150px;object-fit:contain;display:block;}
+.tlogo.lit{padding-bottom:10px;border-bottom:2px solid var(--rust);}
+.team-logos.narrowed .tlogo.dim img{opacity:0.26;filter:grayscale(1);}
+.origins{display:grid;grid-template-columns:1fr 1fr 0.8fr;gap:32px;align-items:start;margin-top:36px;}
+.origin-loc{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:10px;display:inline-flex;align-items:center;gap:9px;}
+.origin-loc::before{content:'';width:16px;height:2px;background:var(--teal);flex:0 0 auto;}
+.origin-head{font-family:'Cormorant Garamond',serif;font-size:23px;color:var(--moss);line-height:1.15;margin-bottom:11px;}
+.origin-head a{color:var(--moss);text-decoration:none;border-bottom:1px solid rgba(26,143,125,0.32);transition:color 0.2s;}
+.origin-head a:hover{color:var(--teal);}
+.origin-note{font-size:13px;line-height:1.7;color:var(--moss-light);}
+.origin--zero .origin-loc::before{background:var(--rust);}
+.origin-zero-num{font-family:'Cormorant Garamond',serif;font-size:clamp(54px,8vw,92px);font-weight:600;color:var(--rust);line-height:0.82;letter-spacing:-0.02em;}
+.founder-card.flagged{box-shadow:0 0 0 5px var(--cream),0 0 0 7px var(--rust);}
+.ceo-connect{position:relative;margin-top:26px;}
+.ceo-line{position:absolute;left:91px;top:-44px;width:2px;height:104px;background:var(--rust);}
+.ceo-box{display:block;max-width:540px;margin-top:60px;background:var(--moss);border-radius:12px;padding:30px 34px;}
+.ceo-line1{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,2.8vw,30px);font-weight:600;color:var(--cream);line-height:1.15;letter-spacing:-0.005em;}
+.ceo-num{font-size:1.7em;color:var(--warm);letter-spacing:-0.01em;}
+.ceo-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;font-weight:400;color:rgba(240,237,231,0.72);margin-top:14px;line-height:1.45;}
+.beat-turn{position:relative;border-top:none;padding:44px 0 8px 108px;}
+.turn-lead{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,2.2vw,22px);color:var(--sage);margin-bottom:18px;}
+.turn-statement{font-family:'Cormorant Garamond',serif;font-size:clamp(46px,8.5vw,92px);font-weight:600;color:var(--moss);line-height:1.0;letter-spacing:-0.02em;}
+.turn-statement em{font-style:normal;color:var(--rust);}
+.turn-sub{font-size:clamp(15px,1.7vw,17px);line-height:1.7;color:var(--moss-light);max-width:540px;margin-top:22px;}
+.story-close{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,46px);font-weight:600;color:var(--moss);line-height:1.14;letter-spacing:-0.01em;max-width:620px;padding-left:108px;}
+.story-close em{font-style:normal;color:var(--rust);}
+.insight-section{position:relative;border-top:1px solid var(--border);padding-top:54px;padding-left:108px;}
+.insight-section .ebeat-index{top:54px;}
+.story.reveal-ready [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.story.reveal-ready [data-reveal].in{opacity:1;transform:none;}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
   .ig-hero{padding:96px 20px 56px;}
+  .story{padding:64px 0 48px;}
+  .ebeat{padding:40px 0;}
+  .ebeat-index{position:static;width:auto;margin-bottom:16px;}
+  .ebeat-num{font-size:24px;margin-bottom:5px;}
+  .teams-row{flex-direction:column;align-items:flex-start;gap:18px;}
+  .ceo-line{display:none;}
+  .ceo-connect{margin-top:14px;}
+  .ceo-box{margin-top:0;}
+  .beat-turn{padding:32px 0 4px;}
+  .insight-section{padding-left:0 !important;}
+  .insight-section .ebeat-index{position:static;width:auto;margin-bottom:16px;}
+  .origins{grid-template-columns:1fr;gap:24px;}
+  .story-close{padding-left:0;}
+  .origins{gap:16px;}
+  .tlogo img{height:26px;}
   .ig-hero::before{font-size:340px;right:-40px;}
+  .fnl-tier{grid-template-columns:1fr;gap:10px;justify-items:center;text-align:center;}
+  .fnl-band{height:78px;}
+  .fnl-count{font-size:46px;}
+  .fnl-stack{gap:16px;}
   .ig-section{padding:64px 0 8px;}
   .ig-h{margin-bottom:24px;}
   .bignum-row{grid-template-columns:1fr;}
   .dist-legend{grid-template-columns:1fr;}
   .founder-grid{grid-template-columns:1fr;gap:10px;}
+  .fd-grid{grid-template-columns:1fr;gap:20px;}
+  .faye-detail-inner{padding:24px 20px;}
   .rep-band{flex-direction:column;text-align:center;padding:32px 24px;}
   .rep-band-num{font-size:56px;}
   .prop-frame{padding:32px 16px 32px;}
@@ -157,172 +304,140 @@
 <script src="assets/site-header.js?v=8" defer></script>
 
 <!-- HERO -->
-<report-header number="02" name="Utah Funding 2025" title="1 out of 169. We can" emphasis="do better." summary="Utah startups raised $1.86 billion across 169 deals in 2025. We trace the money and found only one female CEO. Explore the full funding funnel and follow the money that supported women." updated="May 2026"></report-header>
+<report-header number="02" name="Utah Funding 2025" title="1 out of 169. We can" emphasis="do better." summary="Utah startups raised $1.86 billion across 169 deals in 2025. We traced the money and found only one female CEO. Explore the full funding funnel and follow the money that supported women." updated="July 2026"></report-header>
 <script src="assets/report-header.js?v=3" defer></script>
 
 <div class="ig-wrap">
 
-  <!-- SECTION 1: THE ECOSYSTEM -->
-  <section class="ig-section">
-    <p class="ig-num-label">01 · The Ecosystem</p>
-    <h2 class="ig-h">A high-volume, early-stage ecosystem.</h2>
+  <!-- MONEY STORY (scroll reveal) -->
+  <section class="story" aria-label="Where Utah's 2025 startup capital went">
+    <p class="story-kicker" data-reveal>Let's talk about money</p>
+    <p class="story-lede" data-reveal>How much money went to Utah startups in 2025 and who did it reach?</p>
 
-    <div class="bignum-row">
-      <div class="bignum">
-        <div class="bignum-val">169</div>
-        <div class="bignum-label">Utah deals in 2025 (all stages)</div>
-      </div>
-      <div class="bignum">
-        <div class="bignum-val">$1.86B</div>
-        <div class="bignum-label">Total capital deployed</div>
-      </div>
-    </div>
-    <p class="source-cite">Source: <a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank" rel="noopener">PitchBook · Utah Business 2026 Deal Dispatch</a></p>
-
-    <div class="dist-wrap">
-      <p class="dist-title">Deal-size distribution</p>
-      <div class="dist-bar">
-        <div class="dist-seg s1">70%</div>
-        <div class="dist-seg s2">25%</div>
-        <div class="dist-seg s3">5%</div>
-      </div>
-      <div class="dist-legend">
-        <div class="dist-leg"><b><span class="dist-dot" style="background:var(--moss)"></span>Under $5M</b>The volume of the market: founders raising their first institutional check.</div>
-        <div class="dist-leg"><b><span class="dist-dot" style="background:var(--moss-light)"></span>$5M to $25M</b>Series A territory. A meaningful step-up, but a much narrower aperture.</div>
-        <div class="dist-leg"><b><span class="dist-dot" style="background:var(--teal)"></span>$25M+</b>The headline rounds. Five percent of deals, a majority of the dollars.</div>
-      </div>
+    <div class="ebeat" data-reveal>
+      <div class="ebeat-index"><span class="ebeat-num">01</span><span class="ebeat-kicker">The pool</span></div>
+      <p class="ebeat-fig ebeat-fig--xl">$1.86B</p>
+      <p class="ebeat-cap">raised publicly, according to <a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank" rel="noopener">PitchBook · Utah Business 2026 Deal Dispatch</a>.</p>
     </div>
 
-    <div class="insight">
-      A small number of large rounds drive most of the capital. <strong>Most companies in Utah are competing at the early stage</strong>, where the playing field is widest and the network advantage matters most.
-    </div>
-  </section>
-
-  <!-- SECTION 2: FEMALE FOUNDER REPRESENTATION -->
-  <section class="ig-section">
-    <p class="ig-num-label">02 · Female Founder Representation</p>
-    <h2 class="ig-h">Early stage, where the numbers begin to thin.</h2>
-
-    <div class="bignum-row">
-      <div class="bignum">
-        <div class="bignum-val">~5<span class="unit">to</span>9</div>
-        <div class="bignum-label">Startups with a woman on the founding team (estimated)</div>
-      </div>
-      <div class="bignum">
-        <div class="bignum-val">~5%</div>
-        <div class="bignum-label">Estimated share of funded startups with a female founder</div>
-      </div>
-    </div>
-
-    <p class="dist-title" style="margin-top:8px;">Three publicly identified companies</p>
-    <div class="founder-grid">
-      <div class="founder-card">
-        <a class="founder-name" href="https://www.techbuzznews.com/faye-raises-2-5-million-to-redefine-household-support-with-ai-augmented-human-advisors/" target="_blank" rel="noopener">Faye</a>
-        <div class="founder-when">Funded · May 2025</div>
-        <div class="founder-amt">$2.5M<span class="stage">Pre-seed</span></div>
-      </div>
-      <div class="founder-card">
-        <a class="founder-name" href="https://www.utahbusiness.com/press-releases/2025/06/02/university-utah-startup-trace-aq-air-quality-tech-market/" target="_blank" rel="noopener">Trace AQ</a>
-        <div class="founder-when">Funded · May 2025</div>
-        <div class="founder-amt">$1.25M<span class="stage">Seed</span></div>
-      </div>
-      <div class="founder-card">
-        <a class="founder-name" href="https://www.rebelmedicine.com/" target="_blank" rel="noopener">Rebel Medicine</a>
-        <div class="founder-when">Funded · June 2025</div>
-        <div class="founder-amt">$6M<span class="stage">Series A</span></div>
-      </div>
-    </div>
-
-    <div class="rep-band">
-      <div class="rep-band-num">~5%</div>
-      <div class="rep-band-text">A small fraction of Utah's funded companies have a woman on the founding team. <b>This is the early-stage baseline</b>, and it is the widest the aperture gets.</div>
-    </div>
-  </section>
-
-  <!-- SECTION 3: THE FUNNEL (CENTERPIECE) — proportional widths -->
-  <section class="ig-section">
-    <p class="ig-num-label">03 · 2025 by the Numbers</p>
-    <h2 class="ig-h">From 169, to 1.</h2>
-
-    <div class="prop-wrap">
-      <div class="prop-frame">
-
-        <div class="prop-row">
-          <div class="prop-head">
-            <span class="prop-num">169</span>
-            <span class="prop-pct">100%</span>
-          </div>
-          <div class="prop-bar f-1" style="width:100%;"></div>
-          <div class="prop-cap">Utah deals in 2025</div>
+    <div class="ebeat" data-reveal>
+      <div class="ebeat-index"><span class="ebeat-num">02</span><span class="ebeat-kicker">The share</span></div>
+      <p class="ebeat-fig ebeat-fig--sm rust">0.5%</p>
+      <p class="ebeat-cap">of it reached a woman-founded team. Half a cent on the dollar.</p>
+      <div class="capbar-card" style="margin-top:26px;max-width:600px;">
+        <div class="capbar">
+          <span class="capbar-in">$1.86B deployed across Utah, 2025</span>
+          <span class="capbar-sliver"></span>
         </div>
-
-        <div class="prop-row">
-          <div class="prop-head">
-            <span class="prop-num">~5 to 9</span>
-            <span class="prop-pct">~5%</span>
-          </div>
-          <div class="prop-bar f-2" style="width:5%;"></div>
-          <div class="prop-cap">Estimated with a woman on the founding team</div>
-        </div>
-
-        <div class="prop-row">
-          <div class="prop-head">
-            <span class="prop-num">3</span>
-            <span class="prop-pct">~2%</span>
-          </div>
-          <div class="prop-bar f-3" style="width:1.78%;"></div>
-          <div class="prop-cap">Publicly identified founding teams</div>
-        </div>
-
-        <div class="prop-row">
-          <div class="prop-head">
-            <span class="prop-num">1</span>
-            <span class="prop-pct">&lt; 1%</span>
-          </div>
-          <div class="prop-bar f-4" style="width:0.59%;"></div>
-          <div class="prop-cap">Publicly identified female CEO</div>
-        </div>
-
-        <p class="prop-foot">Utah · 2025 · Source: PitchBook</p>
+        <span class="capbar-connector"></span>
+        <p class="capbar-note"><span class="gold-dot"></span><span>This represents the <strong>$9.75M</strong> (or about <strong>0.5%</strong> of funds) that went to companies with women founders on the team.</span></p>
       </div>
     </div>
+
+    <div class="ebeat" data-reveal>
+      <div class="ebeat-index"><span class="ebeat-num">03</span><span class="ebeat-kicker">The teams</span></div>
+      <div class="teams-row">
+        <p class="ebeat-fig ebeat-fig--teal">3</p>
+        <div class="teams-dots" id="teamsdots" role="img" aria-label="169 dots, one per funded startup. Three are circled for the companies with women on the founding team."><svg class="dot-circle" viewBox="0 0 48 34" aria-hidden="true"><defs><filter id="feltrough" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/></filter></defs><path d="M27 6 C39 6 46 11 44 17 C42 25 31 30 21 29 C10 28 3 22 5 15 C7 8 18 5 29 6 C34 6 40 8 42 10" fill="none" stroke="#1A8F7D" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#feltrough)"/></svg></div>
+      </div>
+      <p class="ebeat-cap">companies had a woman on the founding team, out of 169 total funded startups.</p>
+      <div class="founder-grid">
+        <div class="founder-card flagged">
+          <a class="founder-toplink" href="https://findfaye.com" target="_blank" rel="noopener">
+            <div class="founder-logo"><img src="assets/logos/faye-logo.svg" alt="Faye" loading="lazy" decoding="async"></div>
+            <div class="founder-name">Faye</div>
+          </a>
+          <div class="founder-when">Funded · May 2025</div>
+          <div class="founder-amt">$2.5M<span class="stage">Pre-seed</span></div>
+          <div class="founder-person"><a class="fp-name" href="https://www.linkedin.com/in/eking22/" target="_blank" rel="noopener">Emily King<svg class="li-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.73v20.53C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .78 23.2 0 22.22 0z"></path></svg></a><span class="fp-role">CEO</span></div>
+        </div>
+        <div class="founder-card">
+          <a class="founder-toplink" href="https://www.traceaq.com" target="_blank" rel="noopener">
+            <div class="founder-logo"><img src="assets/logos/trace-aq-logo.png" alt="Trace AQ" loading="lazy" decoding="async"></div>
+            <div class="founder-name">Trace AQ</div>
+          </a>
+          <div class="founder-when">Funded · May 2025</div>
+          <div class="founder-amt">$1.25M<span class="stage">Seed</span></div>
+          <div class="founder-person"><a class="fp-name" href="https://www.linkedin.com/in/hholmesutah/" target="_blank" rel="noopener">Heather Holmes<svg class="li-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.73v20.53C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .78 23.2 0 22.22 0z"></path></svg></a><span class="fp-role">Co-Chief Science Officer</span></div>
+        </div>
+        <div class="founder-card">
+          <a class="founder-toplink" href="https://www.rebelmedicine.com" target="_blank" rel="noopener">
+            <div class="founder-logo"><img src="assets/logos/rebel-medicine-logo.png" alt="Rebel Medicine" loading="lazy" decoding="async"></div>
+            <div class="founder-name">Rebel Medicine</div>
+          </a>
+          <div class="founder-when">Funded · June 2025</div>
+          <div class="founder-amt">$6M<span class="stage">Series A</span></div>
+          <div class="founder-person"><a class="fp-name" href="https://www.linkedin.com/in/susan-wojtalewicz/" target="_blank" rel="noopener">Susan Wojtalewicz<svg class="li-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.73v20.53C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .78 23.2 0 22.22 0z"></path></svg></a><span class="fp-role">Co-Founder and Director of R&amp;D</span></div>
+        </div>
+      </div>
+      <div class="teams-row one-row">
+        <p class="ebeat-fig rust">1</p>
+        <div class="teams-dots" id="onedots" role="img" aria-label="169 dots, one per funded startup. One is circled in rust for the company with a woman as CEO."><svg class="dot-circle dot-circle--one" viewBox="0 0 26 30" aria-hidden="true"><defs><filter id="feltrough1" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="6" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter></defs><path d="M15 4 C22 4 25 9 24 15 C23 22 17 26 12 25 C6 24 2 19 3 13 C4 7 9 4 15 4 C18 4 21 5 22 7" fill="none" stroke="#D16B4F" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#feltrough1)"/></svg></div>
+      </div>
+      <p class="ebeat-cap">startup had a woman as CEO.</p>
+      <p class="one-note">1 out of 169 isn't a good look for Utah, but the story gets worse.</p>
+    </div>
+
+    <div class="beat-turn" data-reveal>
+      <div class="ebeat-index"><span class="ebeat-num">04</span><span class="ebeat-kicker">The reality</span></div>
+      <p class="turn-statement">Faye raised <em>$0</em> from Utah investors.</p>
+      <p class="turn-sub">Every dollar of Faye's $2.5M came from out of state.</p>
+      <div class="origins">
+        <div class="origin">
+          <p class="origin-loc">California</p>
+          <p class="origin-head"><a href="https://www.unusual.vc/our-story/" target="_blank" rel="noopener">Unusual Ventures</a></p>
+          <p class="origin-note">A concentrated firm founded in 2017, Unusual embeds a full-time operations team alongside its founders, from customer discovery through go-to-market. Faye's round was led by venture partner Sarah Leary.</p>
+        </div>
+        <div class="origin">
+          <p class="origin-loc">New York</p>
+          <p class="origin-head"><a href="https://www.springbank.vc/" target="_blank" rel="noopener">Springbank</a></p>
+          <p class="origin-note">Founded by Courtney Leimkuhler, Elana Berkowitz, and Jen Lee Koss, Springbank backs the infrastructure of how we work, live, and care, and invests in world-class teams of all genders and backgrounds.</p>
+        </div>
+        <div class="origin origin--zero">
+          <p class="origin-loc">Utah</p>
+          <p class="origin-zero-num">$0</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="story-close" data-reveal>This is what a <em>structural</em> gap looks like.</p>
   </section>
+  <script>
+  (function(){
+    var section=document.querySelector('.story');
+    if(!section)return;
+    var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce)return;
+    var els=[].slice.call(section.querySelectorAll('[data-reveal]'));
+    section.classList.add('reveal-ready');
+    function reveal(){
+      var vh=window.innerHeight||document.documentElement.clientHeight;
+      els.forEach(function(e){
+        if(e.classList.contains('in'))return;
+        var r=e.getBoundingClientRect();
+        if(r.top<vh*0.9&&r.bottom>0)e.classList.add('in');
+      });
+    }
+    reveal();
+    window.addEventListener('scroll',reveal,{passive:true});
+    window.addEventListener('resize',reveal);
+    window.addEventListener('load',reveal);
+    setTimeout(function(){els.forEach(function(e){e.classList.add('in');});},3000);
+  })();
+  </script>
+  <script>
+  (function(){var f=document.getElementById('teamsdots');if(!f)return;for(var i=0;i<169;i++){var d=document.createElement('span');d.className=i<3?'dot tl':'dot';if(i===2)d.classList.add('sep');f.appendChild(d);}})();
+  (function(){var f=document.getElementById('onedots');if(!f)return;for(var i=0;i<169;i++){var d=document.createElement('span');d.className=i<1?'dot rl':'dot';if(i===0)d.classList.add('sep');f.appendChild(d);}})();
+  </script>
 
-  <!-- SECTION 4: THE CAPITAL GAP -->
-  <section class="ig-section">
-    <p class="ig-num-label">04 · The Capital Gap</p>
-    <h2 class="ig-h">How much capital actually reaches women?</h2>
-
-    <div class="cap-block">
-      <p class="cap-eyebrow">The capital share</p>
-      <p class="cap-num">&lt; 1<small>%</small></p>
-      <p class="cap-text">Combined publicly identified funding to women-founded teams totals <strong>~$9.75M</strong> (Faye + Trace AQ + Rebel Medicine). Of <strong>$1.86B</strong> deployed across Utah's 2025 startup ecosystem, that is roughly <strong>0.5%</strong>.</p>
-    </div>
-
-    <div class="bignum-row" style="margin-top:24px;">
-      <div class="bignum">
-        <div class="bignum-val">$1.86B</div>
-        <div class="bignum-label">Total capital deployed in Utah, 2025</div>
-      </div>
-      <div class="bignum">
-        <div class="bignum-val">~$9.75M</div>
-        <div class="bignum-label">Known to publicly identified women-founded teams</div>
-      </div>
-    </div>
-    <p class="source-cite">Source: <a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank" rel="noopener">PitchBook · Utah Business 2026 Deal Dispatch</a> · Founder funding from individual press releases (linked in §02)</p>
-
-    <div class="insight">Zoom in on the earliest stage, where the playing field is widest, and the gap holds. Of Utah's roughly <strong>$509.6M</strong> pre-seed and seed pool (about 27% of the $1.86B total), an estimated <strong>6%</strong> reached female-founded startups. Across all stages, Sorenson's Project DEEP puts Utah venture capital to female founders at just <strong>1.92%</strong>.</div>
-    <p class="source-cite">Source: <a href="open-research.html#S48" target="_blank" rel="noopener">PitchBook pre-seed/seed estimate</a>, <a href="open-research.html#S51" target="_blank" rel="noopener">S&amp;S Capital analysis</a>, <a href="open-research.html#S10" target="_blank" rel="noopener">Sorenson Project DEEP</a></p>
-  </section>
-
-  <!-- SECTION 5: THE INSIGHT -->
-  <section class="ig-section">
-    <p class="ig-num-label">05 · The Insight</p>
+  <!-- SECTION 05: THE INSIGHT -->
+  <section class="ig-section insight-section">
+    <div class="ebeat-index"><span class="ebeat-num">05</span><span class="ebeat-kicker">The insight</span></div>
     <h2 class="ig-h">The math is simple.</h2>
 
     <div class="key-insight">
       <p class="key-insight-eyebrow">Read the data again</p>
-      <p class="key-insight-text">If we want more than <em>1%</em> of women leading,<br>we need to unlock more than <em>1%</em> of available capital for women.</p>
+      <p class="key-insight-text">If we want more<br>than <em>1%</em> of women leading,<br>we need to unlock more than <em>1%</em> of available capital for women.</p>
     </div>
   </section>
 
