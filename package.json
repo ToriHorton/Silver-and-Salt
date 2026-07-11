@@ -4,6 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "python3 -m http.server 3000",
-    "build": "bash _scripts/build-site.sh"
+    "build": "bash _scripts/build-site.sh",
+    "dev:worker": "npm run build && wrangler dev --env dev",
+    "deploy:app:dev": "npm run build && wrangler deploy --env dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.110.0"
   }
 }
