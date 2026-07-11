@@ -479,6 +479,11 @@ body.nav-open .nav-dropdown { display: flex; }
   font-weight: 400;
   margin: 0 -.08em;
 }
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
 .nav-apply {
   font-family: 'Satoshi', sans-serif;
   font-weight: 700;
@@ -492,6 +497,26 @@ body.nav-open .nav-dropdown { display: flex; }
   border: none;
   cursor: pointer;
   transition: all .25s;
+}
+/* Quiet twin of .nav-apply: same geometry, ghost treatment. */
+.nav-members {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid rgba(47,62,52,0.22);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .25s;
+}
+.nav-members:hover {
+  border-color: var(--pop);
+  color: var(--pop);
+  transform: translateY(-1px);
 }
 .nav-apply:hover {
   background: var(--pop-hover);
@@ -867,7 +892,8 @@ footer::after {
   .nav-mark .sc-amp { font-size: 16px; }
   .nav-rail { padding: 0 16px; height: 44px; }
   .nav-tab { font-size: 10px; letter-spacing: .06em; padding: 0 10px; min-height: 44px; white-space: nowrap; }
-  .nav-apply { font-size: 10px; padding: 7px 14px; }
+  .nav-apply, .nav-members { font-size: 10px; padding: 7px 14px; }
+  .nav-auth { gap: var(--space-2); }
 
   /* Sources table: stack vertically on mobile */
   .page-sources-list li { flex-direction: column; gap: 2px; }

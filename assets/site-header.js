@@ -94,7 +94,11 @@ class SiteHeader extends HTMLElement {
       <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
       <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
     </a>
-    <a href="/join.html" target="_blank" rel="noopener" class="nav-apply">Join</a>
+    <div class="nav-auth">
+      <a href="/members/" class="nav-members" data-auth="out">Member Sign In</a>
+      <a href="/join.html" target="_blank" rel="noopener" class="nav-apply" data-auth="out">Join</a>
+      <a href="/members/" class="nav-apply" data-auth="in" hidden>Members</a>
+    </div>
   </div>
   <div class="nav-rail">
     <div class="nav-tabs">
@@ -106,6 +110,17 @@ class SiteHeader extends HTMLElement {
   </div>
 </nav>
 `;
+
+    // Signed-in visitors see one "Members" link; signed-out see
+    // "Member Sign In" + "Join". Clerk maintains a __client_uat cookie on
+    // this origin: "0" (or absent) means signed out, a timestamp means a
+    // session exists. Cheap to read; no Clerk script loads on these pages.
+    const uat = document.cookie.match(/(?:^|;\s*)__client_uat=([^;]*)/);
+    const signedIn = Boolean(uat && uat[1] && uat[1] !== '0');
+    if (signedIn) {
+      this.querySelectorAll('[data-auth="out"]').forEach(el => { el.hidden = true; });
+      this.querySelectorAll('[data-auth="in"]').forEach(el => { el.hidden = false; });
+    }
 
     if (typeof window.showPage === 'function') {
       this.querySelectorAll('a[data-home-tab]').forEach(a => {
