@@ -8,9 +8,10 @@ build the mirror yourself — the platform does it. This phase enables it.
 Goal: signed-in users appear as rows in the app's `$users`, kept in sync with
 Clerk (create/update/delete). Dev first, then prod.
 
-Human obligation: create a Clerk webhook endpoint and paste its signing secret
-(`whsec_…`) into Studio (write-only). That plus the Phase-3 `clerk auth login`
-are the only human Clerk steps.
+Human obligation: create a Clerk webhook endpoint and get its signing secret
+(`whsec_…`) into the tenant vault — piped through `secrets set` when a command
+can print it, or pasted into Studio (both write-only). That plus the Phase-3
+`clerk auth login` are the only human Clerk steps.
 
 ## How `$users` fills — two paths
 
@@ -37,12 +38,18 @@ Enable it here.
    Clerk dashboard → Webhooks → Add Endpoint. (`whsec_` is a real secret — never
    print/commit it; it is the only thing you paste, and it goes into the vault,
    not chat.)
-2. **Store the secret in the tenant vault** as `clerk_webhook_secret`, write-only,
-   via Studio's secret UI (`odla.ai/studio` → the app → the env → secrets). The server
-   decrypts it only to verify inbound events (svix HMAC over `id.timestamp.body`).
+2. **Store the secret in the tenant vault** as `clerk_webhook_secret`, write-only.
+   If any command can print the `whsec_` (Clerk CLI, Svix API), pipe it without
+   it ever being displayed:
+   `<command that prints whsec_…> | npx @odla-ai/cli secrets set clerk_webhook_secret --env dev --stdin`.
+   Otherwise a human pastes it into Studio's secret UI (`odla.ai/studio` → the
+   app → the env → secrets) — same write-only slot. The server decrypts it only
+   to verify inbound events (svix HMAC over `id.timestamp.body`).
 3. **(Optional) `sk_…`** — the webhook payload already carries email/name/image,
-   so the basic mirror needs only `whsec_`. Add the Clerk backend key `sk_…` to
-   the vault only if you later need to resolve data the webhook doesn't send.
+   so the basic mirror needs only `whsec_`. Add the Clerk backend key only if
+   you later need to resolve data the webhook doesn't send (invites, member
+   lookups): `npx @odla-ai/cli secrets set-clerk-key --env dev --from-env CLERK_SECRET_KEY`
+   stores it in the reserved `$clerk_secret` slot, write-only.
 
 ## Verify
 

@@ -5,8 +5,8 @@
 | Value | Lives in | Handling |
 |---|---|---|
 | Clerk publishable key (`pk_test_`/`pk_live_`) | registry, via provision → setAuth | public by design; the one value a human may paste into chat; fine inline in odla.config.mjs |
-| Clerk webhook secret (`whsec_…`) | tenant vault (`clerk_webhook_secret`) | only for auth mode "full"; entered in Studio, never wrangler, never chat |
-| Clerk secret key (`sk_test_`/`sk_live_`) | not used in this journey | never ask for it |
+| Clerk webhook secret (`whsec_…`) | tenant vault (`clerk_webhook_secret`) | only for auth mode "full"; piped with `secrets set clerk_webhook_secret --env <env> --stdin`, or entered in Studio; never wrangler, never chat |
+| Clerk secret key (`sk_test_`/`sk_live_`) | not needed for this journey | if a later feature needs user resolution/invites, pipe it with `secrets set-clerk-key --env <env>` (reserved `$clerk_secret`, write-only); never chat |
 | LLM provider key | tenant vault | env var in the HUMAN's shell for one provision run; never wrangler vars, never git, never chat |
 | `odla_sk_…` (tenant db key) | wrangler secret `ODLA_API_KEY` + `.odla/credentials.local.json` (0600) + `.dev.vars` | present when db is enabled; move it only with the pipeline below |
 | `odla_dev_…` (developer token) | `.odla/dev-token.json` (0600) | ~24h lifetime, provision-time only; never deployed |
@@ -41,6 +41,20 @@ Manual fallback (identical mechanics, if the CLI is unavailable):
 
 (For prod, use `c.envs.prod.dbKey` and drop `--env` — the top-level
 wrangler env is prod.)
+
+## Moving a tenant-vault secret (never through the transcript)
+
+`secrets set` fills the same write-only vault slot as Studio's Secrets panel,
+reading the value only from stdin or a named env var — never argv — so a
+producer command pipes straight into the vault:
+
+    <command that prints the value> | npx @odla-ai/cli secrets set clerk_webhook_secret --env dev --stdin
+    npx @odla-ai/cli secrets set-clerk-key --env dev --from-env CLERK_SECRET_KEY
+
+The value cannot be read back by the CLI, Studio, or the developer token —
+only by that tenant's app API key (reserved `$` secrets not even then). Studio
+remains the fallback when no producer command exists (a human copies from the
+Clerk dashboard between two browser tabs). Prod-named envs require `--yes`.
 
 ## Standing rules
 

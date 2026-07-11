@@ -218,11 +218,14 @@ Known intentional differences (flag at cutover review):
   `user.created`, `user.updated`, `user.deleted`. The signing secret was
   never printed or fetched.
 - Signing secret pasted into Studio by the owner 2026-07-11 (write-only
-  vault, `clerk_webhook_secret`). Note for future agents: there is NO
-  CLI/API write path into the tenant vault (CLI has no vault command, SDK
-  `secrets` is get-only, admin endpoints 404) — the Studio UI paste is the
-  designed, human-checkpointed ingress. Sync verified: `user.updated`
-  events mirrored both dev accounts into `$users` within seconds.
+  vault, `clerk_webhook_secret`). UPDATE 2026-07-11 (CLI 0.9.0): the vault
+  now HAS a pipeable write path:
+  `<producer> | npx @odla-ai/cli secrets set <name> --env dev --stdin`
+  (and `secrets set-clerk-key` for the reserved `$clerk_secret` slot).
+  Use the pipe whenever a command can print the secret; Studio remains the
+  fallback for dashboard-only values. The old "no write path" note
+  predates 0.9.0. Sync verified: `user.updated` events mirrored both dev
+  accounts into `$users` within seconds.
 - **Schema v2:** applications gained `meetingAt` (epoch ms, admin-set; the
   Google Calendar booking widget cannot call us back) and `clerkUserId`
   (linked lazily when a signed-in user's email matches). Pushed to dev.
