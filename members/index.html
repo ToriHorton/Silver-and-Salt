@@ -158,9 +158,13 @@
       line-height: 1.8;
     }
 
-    /* Clerk mounts inside this; keep overflow visible so labels never clip */
-    #signin-mount { overflow: visible; }
-    #signin-mount > div { width: 100%; }
+    /* Clerk renders its own card here (brand applied via appearance
+       variables); keep overflow visible so it never clips itself. */
+    #signin-mount {
+      display: flex;
+      justify-content: center;
+      overflow: visible;
+    }
 
     /* ── Signed-in panel ── */
     .member-row {
@@ -246,11 +250,10 @@
   </div>
 
   <div class="container">
-    <div class="card">
-      <div class="card-label" id="card-label">Sign In</div>
+    <div class="card" id="status-card">
+      <div class="card-label" id="card-label">Members</div>
 
       <div class="auth-status" id="auth-loading">Preparing sign in…</div>
-      <div id="signin-mount" class="hidden"></div>
 
       <div id="member-panel" class="hidden">
         <div class="member-row">
@@ -262,6 +265,8 @@
         <button class="signout-btn" id="signout-btn">Sign out</button>
       </div>
     </div>
+
+    <div id="signin-mount" class="hidden"></div>
   </div>
 
   <script>
@@ -301,29 +306,41 @@
       }
     }
 
+    // Brand carried by variables only: Clerk keeps its own layout (fighting
+    // its internal card with element overrides is what breaks it), and both
+    // sign-in and sign-up stay on this page so the styling always matches.
+    const APPEARANCE = {
+      variables: {
+        colorPrimary: '#7CB83F',
+        colorText: '#2F3E34',
+        colorTextSecondary: '#7E8E84',
+        colorBackground: '#ffffff',
+        fontFamily: "'Satoshi', 'Helvetica Neue', Arial, sans-serif",
+        borderRadius: '4px',
+      },
+    };
+
     function showSignIn() {
       document.getElementById('auth-loading').classList.add('hidden');
+      document.getElementById('status-card').classList.add('hidden');
       const mount = document.getElementById('signin-mount');
       mount.classList.remove('hidden');
-      window.Clerk.mountSignIn(mount, {
-        fallbackRedirectUrl: '/members/',
-        signUpFallbackRedirectUrl: '/members/',
-        appearance: {
-          variables: {
-            colorPrimary: '#7CB83F',
-            colorText: '#2F3E34',
-            colorTextSecondary: '#7E8E84',
-            colorBackground: '#ffffff',
-            fontFamily: "'Satoshi', 'Helvetica Neue', Arial, sans-serif",
-            borderRadius: '4px',
-          },
-          elements: {
-            rootBox: { width: '100%' },
-            card: { boxShadow: 'none', border: 'none', padding: '0', width: '100%' },
-            header: { display: 'none' },
-          },
-        },
-      });
+
+      const wantSignUp = new URLSearchParams(location.search).get('view') === 'sign-up';
+      if (wantSignUp) {
+        window.Clerk.mountSignUp(mount, {
+          appearance: APPEARANCE,
+          signInUrl: '/members/',
+          fallbackRedirectUrl: '/members/',
+        });
+      } else {
+        window.Clerk.mountSignIn(mount, {
+          appearance: APPEARANCE,
+          signUpUrl: '/members/?view=sign-up',
+          fallbackRedirectUrl: '/members/',
+          signUpFallbackRedirectUrl: '/members/',
+        });
+      }
     }
 
     async function showMemberPanel() {

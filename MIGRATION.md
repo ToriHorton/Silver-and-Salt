@@ -173,13 +173,34 @@ Known intentional differences (flag at cutover review):
   from `public_metadata.role`. (Note: the first, deleted instance 404'd on
   all `clerk config *` commands; this instance supports them, so claims are
   config-as-code after all.)
+- First visual round (2026-07-11): owner reported the Clerk widget layout
+  broken and the sign-up page off-brand. Causes and fixes: (1) element-level
+  appearance overrides (card padding 0, hidden header) fought Clerk's
+  internal layout; now brand is carried by appearance VARIABLES only and
+  Clerk renders its own card directly on the page field (the white host card
+  shows only for loading and the member panel). Lesson for future agents: do
+  not override Clerk `elements`, theme with `variables`. (2) The "Sign up"
+  link led to Clerk's HOSTED page, which uses dashboard theming (dark,
+  purple); sign-up now mounts locally at `/members/?view=sign-up` with the
+  same appearance.
+- Owner's account: `user_3GMsLnTbZAfN5p6Qxv4b4cFRvH6`
+  (cory.ondrejka@gmail.com, verified). Sign-up HAD succeeded; the hosted
+  page just lost the redirect. `public_metadata.role` set to `"admin"` via
+  `clerk api` 2026-07-11.
+- Role metadata note: new sign-ups carry NO role metadata; the worker treats
+  that as provisional by design. P3b (user sync) is the right place to stamp
+  `role: "provisional"` onto the mirrored record at sign-up.
 - **Human steps outstanding:**
-  1. Sign up / sign in at
+  1. Sign IN (account exists) at
      https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev/members/
-     and confirm the page looks right (agent cannot see the render).
-  2. To grant admin: set the user's `public_metadata.role` to `"admin"`
-     (agent can run `npx clerk api /users` to find the id and PATCH metadata
-     once a user exists).
+     and confirm: on-brand widget, member panel with admin badge and
+     applications count.
+- **Open product decision (owner raised 2026-07-11):** the join.html
+  application flow does not create a login account today (it still posts to
+  Google Apps Script; unchanged since before the migration). Wiring it up
+  (application -> odla-db row -> invite to create the provisional account)
+  is scoped but needs the owner's go-ahead since it changes the production
+  form's backend at cutover.
 
 ## Auth and roles design (owner-specified 2026-07-11)
 
