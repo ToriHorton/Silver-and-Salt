@@ -290,6 +290,43 @@ Known intentional differences (flag at cutover review):
   2026-07-20 15:00 UTC). Session-mint pattern for API testing:
   `clerk api /sessions -X POST` then `/sessions/<id>/tokens`.
 
+## Payment flow P1 (2026-07-11, built; awaiting Stripe keys)
+
+PAYMENT-SPEC.md P1 is implemented on the dev worker:
+- Schema: applications gained phone/state/groupId/stripe ids/renewalAt/
+  ack timestamps/prepEmailSentAt/canceled; new `groups` (per-brand settings
+  and copy, seeded via `_scripts/seed-groups-dev.mjs`) and `emailLog`
+  entities. Status enum now includes paid_pending_vetting and refunded.
+- Worker: GET /api/groups/:id/join-config (public copy + line items +
+  paymentsReady), POST /api/payments/subscription (vault
+  `stripe_secret_key`; 503 until pasted), POST /api/webhooks/stripe
+  (HMAC-verified; invoice.paid / charge.refunded /
+  customer.subscription.deleted; idempotent by event id), admin
+  POST .../approve (status + role promotion with Clerk email-lookup
+  fallback + onboarding email; fires once, never from payment) and
+  POST .../refund (full refund + subscription cancel; webhook flips
+  status). Booking route now also sends the prep email once and accepts
+  paid_pending_vetting.
+- Email: @odla-ai/email construction behind an EmailSender seam;
+  transport is log-only until Phase 5 wiring; dev sends redirect to
+  cory.ondrejka+debug@gmail.com with a [dev] prefix; all sends audited in
+  emailLog. Templates live on the group row.
+- join.html: three-step tracker (payment step appears only when
+  paymentsReady, so GitHub Pages behavior is unchanged), phone/state
+  fields, disclaimer checkbox gating submit, refund-policy checkbox
+  gating the Payment Element reveal, Express Checkout + Payment Element
+  with brand Appearance, redirect-return handling, paid status callout on
+  the booking step.
+- Admin console: Payment column (paid/refunded/unpaid + renewal), Approve
+  and Refund row actions. Member area: membership/renewal line and a
+  refunded state.
+- Clerk users now carry public_metadata.profile (phone, state, whoYouAre,
+  focus, linkedin) from the application (owner-directed).
+- NEXT: owner pastes `stripe_secret_key` (Test Mode) into Studio dev ->
+  run `node _scripts/setup-stripe-dev.mjs <pk_test_...>` -> owner pastes
+  the webhook signing secret as `stripe_webhook_secret` -> full Test Mode
+  E2E per PAYMENT-SPEC.md section 11.
+
 ## Booking capture (2026-07-11)
 
 Google's appointment widget is a sealed iframe: no callback ever reaches the

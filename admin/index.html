@@ -241,6 +241,33 @@
     .row-save:hover { background-color: var(--lime-dark); }
     .row-save:disabled { background-color: #b0cc9e; cursor: default; }
 
+    .row-approve {
+      background-color: var(--moss);
+      color: var(--cream);
+    }
+    .row-approve:hover { background-color: var(--moss-light); }
+    .row-refund {
+      background: none;
+      border: 1px solid #d9b3a6;
+      color: #a4442c;
+    }
+    .row-refund:hover { background: #fbf0ec; }
+    .row-actions { display: flex; gap: 6px; align-items: center; }
+
+    .pay-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 4px 12px;
+    }
+    .pay-badge.paid { color: #fff; background: var(--lime); }
+    .pay-badge.refunded { color: #a4442c; background: #fbf0ec; border: 1px solid #d9b3a6; }
+    .pay-badge.unpaid { color: var(--sage); background: #eef2ec; border: 1px solid #dde5da; }
+    .pay-renewal { font-size: 12px; color: var(--sage); margin-left: 6px; }
+
     .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
 
     .hidden { display: none; }
@@ -292,7 +319,7 @@
         <div class="table-wrap">
           <table id="people-table">
             <thead>
-              <tr><th>Person</th><th>Email</th><th>Role</th><th>Status</th><th>Introduction call</th><th></th></tr>
+              <tr><th>Person</th><th>Email</th><th>Role</th><th>Status</th><th>Payment</th><th>Introduction call</th><th></th></tr>
             </thead>
             <tbody></tbody>
           </table>
@@ -311,11 +338,14 @@
     const ROLES = ['provisional', 'member', 'admin'];
     const STATUS_LABELS = {
       submitted: 'Submitted',
+      paid_pending_vetting: 'Paid, pending vetting',
       call_scheduled: 'Call scheduled',
       interviewed: 'Interviewed',
       approved: 'Approved',
       declined: 'Declined',
+      refunded: 'Refunded',
     };
+    const APPROVABLE = ['paid_pending_vetting', 'call_scheduled', 'interviewed'];
 
     let myUserId = null;
 
@@ -405,6 +435,30 @@
       }
       tr.appendChild(roleTd);
 
+      // Payment state (webhook-maintained; read-only here).
+      const payTd = document.createElement('td');
+      if (p.application) {
+        const badge = document.createElement('span');
+        badge.className = 'pay-badge';
+        if (p.application.status === 'refunded') {
+          badge.classList.add('refunded');
+          badge.textContent = 'Refunded';
+        } else if (p.application.paid) {
+          badge.classList.add('paid');
+          badge.textContent = 'Paid';
+        } else {
+          badge.classList.add('unpaid');
+          badge.textContent = 'Unpaid';
+        }
+        payTd.appendChild(badge);
+        if (p.application.renewalAt && p.application.paid) {
+          const ren = document.createElement('span');
+          ren.className = 'pay-renewal';
+          ren.textContent = 'renews ' + new Date(p.application.renewalAt).toLocaleDateString();
+          payTd.appendChild(ren);
+        }
+      }
+
       // Status + meeting: editable when an application exists.
       const statusTd = document.createElement('td');
       const meetingTd = document.createElement('td');
@@ -429,10 +483,66 @@
         statusTd.innerHTML = '<span class="muted">No application</span>';
       }
       tr.appendChild(statusTd);
+      tr.appendChild(payTd);
       tr.appendChild(meetingTd);
 
       // Save: applies role change (if any) and application change (if any).
       const saveTd = document.createElement('td');
+      saveTd.className = 'row-actions-td';
+      const actions = document.createElement('div');
+      actions.className = 'row-actions';
+      saveTd.appendChild(actions);
+
+      // Approve: the deliberate action (status -> approved, role -> member,
+      // onboarding invite). Payment alone never triggers it.
+      if (p.application && APPROVABLE.includes(p.application.status)) {
+        const approve = document.createElement('button');
+        approve.className = 'row-save row-approve';
+        approve.textContent = 'Approve';
+        approve.addEventListener('click', async () => {
+          approve.disabled = true;
+          approve.textContent = 'Approving…';
+          try {
+            await api('/api/admin/applications/' + p.application.id + '/approve', {
+              method: 'POST', body: '{}',
+            });
+            await loadPeople();
+          } catch (e) {
+            console.error(e);
+            approve.textContent = 'Retry';
+            approve.disabled = false;
+          }
+        });
+        actions.appendChild(approve);
+      }
+
+      // Refund and cancel: the non-fit action. Confirmed, then handled by
+      // Stripe; the webhook flips the row to Refunded.
+      if (p.application && p.application.paid && !['approved', 'refunded'].includes(p.application.status)) {
+        const refund = document.createElement('button');
+        refund.className = 'row-save row-refund';
+        refund.textContent = 'Refund';
+        refund.addEventListener('click', async () => {
+          const sure = confirm(
+            'Refund ' + (p.name || p.email) + ' in full and cancel their subscription? ' +
+            'Their membership will not renew. This is the non-fit action.');
+          if (!sure) return;
+          refund.disabled = true;
+          refund.textContent = 'Refunding…';
+          try {
+            await api('/api/admin/applications/' + p.application.id + '/refund', {
+              method: 'POST', body: '{}',
+            });
+            await loadPeople();
+          } catch (e) {
+            console.error(e);
+            refund.textContent = 'Retry';
+            refund.disabled = false;
+          }
+        });
+        actions.appendChild(refund);
+      }
+
       const canSave = roleSelect && !roleSelect.disabled || p.application;
       if (canSave) {
         const save = document.createElement('button');
@@ -469,7 +579,7 @@
             save.disabled = false;
           }
         });
-        saveTd.appendChild(save);
+        actions.appendChild(save);
       }
       tr.appendChild(saveTd);
 

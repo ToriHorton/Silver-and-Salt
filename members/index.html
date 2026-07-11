@@ -457,18 +457,32 @@
 
     function renderProvisional(application) {
       const body = $('provisional-body');
+      const membershipLine = application && application.paid
+        ? `<div class="meeting-note" style="margin-top:16px;">Your founding membership is active${application.renewalAt ? ' and renews ' + new Date(application.renewalAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : ''}.</div>`
+        : '';
+      if (application && application.status === 'refunded') {
+        body.innerHTML = `
+          <div class="meeting-block">
+            <div class="meeting-kicker">Membership refunded</div>
+            <div class="meeting-note">Your founding-member fee has been refunded in full and your membership is canceled. Thank you for your interest in Silver <span class="brand-amp">&amp;</span> Salt Capital.</div>
+          </div>`;
+        $('provisional-card').classList.remove('hidden');
+        return;
+      }
       if (application && application.meetingAt) {
         body.innerHTML = `
           <div class="meeting-block">
             <div class="meeting-kicker">Your introduction call</div>
             <div class="meeting-date">${fmtMeeting(application.meetingAt)}</div>
             <div class="meeting-note">A calendar invitation is in your email. We look forward to meeting you.</div>
+            ${membershipLine}
           </div>`;
       } else if (application) {
         body.innerHTML = `
           <div class="meeting-block">
             <div class="meeting-kicker">Application received</div>
             <div class="meeting-note">Your application is in. Your introduction call details will appear here once your time is confirmed, and a calendar invitation will reach your email.</div>
+            ${membershipLine}
           </div>`;
       } else {
         body.innerHTML = `
