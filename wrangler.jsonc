@@ -10,6 +10,16 @@
   "main": "src/worker.ts",
   "compatibility_date": "2026-07-11",
   "compatibility_flags": ["nodejs_compat"],
+  // Plain vars, not secrets. The secret (ODLA_API_KEY) is pushed by the odla
+  // CLI via wrangler stdin and never appears in this file or the repo.
+  // Top level = prod tenant, used only from Phase 5 on.
+  "vars": {
+    "ODLA_ENDPOINT": "https://db.odla.ai",
+    "ODLA_TENANT": "silver-and-salt-capital",
+    "ODLA_PLATFORM": "https://odla.ai",
+    "ODLA_APP_ID": "silver-and-salt-capital",
+    "ODLA_ENV": "prod"
+  },
   "assets": {
     // Always the Phase 0 build dir (npm run build), never the repo root.
     "directory": "dist",
@@ -26,6 +36,13 @@
   "env": {
     "dev": {
       "name": "silver-and-salt-capital-dev",
+      "vars": {
+        "ODLA_ENDPOINT": "https://db.odla.ai",
+        "ODLA_TENANT": "silver-and-salt-capital--dev",
+        "ODLA_PLATFORM": "https://odla.ai",
+        "ODLA_APP_ID": "silver-and-salt-capital",
+        "ODLA_ENV": "dev"
+      },
       "assets": {
         "directory": "dist",
         "binding": "ASSETS",

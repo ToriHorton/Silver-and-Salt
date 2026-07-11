@@ -26,3 +26,7 @@ dist/
 
 # wrangler local state
 .wrangler/
+.odla/*.local.json
+.odla/dev-token.json
+.dev.vars
+.odla/credentials.local.json

@@ -14,8 +14,8 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
 ## Phase checklist
 
 - [x] **P0: Preflight** (completed 2026-07-11, human approved)
-- [x] **P1: Static site on Cloudflare (dev tenant only)** (completed 2026-07-11, awaiting human approval to enter P2)
-- [ ] **P2: Database (odla-db)**
+- [x] **P1: Static site on Cloudflare (dev tenant only)** (completed 2026-07-11, human approved)
+- [x] **P2: Database (odla-db)** (completed 2026-07-11, awaiting human approval to enter P3)
 - [ ] **P3: Login (Clerk)**
 - [ ] **P3b: User sync (mirror Clerk users into $users)** (optional)
 - [ ] **P4: AI** (optional)
@@ -112,6 +112,49 @@ Known intentional differences (flag at cutover review):
 4. Agent-infra files (`CLAUDE.md`, `.claude/`) are excluded (owner-confirmed
    bug fix).
 
+## P2 results (2026-07-11)
+
+- App registered on the platform: `silver-and-salt-capital`. Dev db tenant:
+  **`silver-and-salt-capital--dev`**. `links.dev` set to the workers.dev URL.
+- `odla.config.mjs` at repo root; schema `src/odla/schema.mjs` (entity
+  `applications`, modeling the join.html form); rules `src/odla/rules.mjs`
+  stay **deny-all** (the Worker mediates with the app key; browsers get no
+  direct db access). The scaffolded `ai` block was removed from the config:
+  AI is off until Phase 4, and smoke compares config vs platform.
+- Credentials: `.odla/credentials.local.json` (0600) and `.dev.vars` written
+  by provision, both gitignored; `ODLA_API_KEY` pushed to the dev Worker as a
+  Wrangler secret over stdin (never echoed). Non-secret `ODLA_*` vars live in
+  `wrangler.jsonc` (top level = prod tenant for Phase 5; `env.dev` = dev).
+- Routes (in `src/worker.ts`, before the assets fall-through):
+  - `POST /api/applications`: validates the join-form fields, writes one row
+    (status "submitted", uuidv7 id mirrored as attr). Optional client
+    `submissionId` becomes mutationId `join:<id>` for exactly-once dedupe.
+  - `GET /api/applications/count`: `{ count }` aggregate.
+  - `GET /api/health`: unchanged from P1.
+- Verified 2026-07-11: all routes exercised locally via `wrangler dev` and on
+  the deployed dev worker (create, dedupe across deploys, 400 validation,
+  api 404, assets still serving). `npx @odla-ai/cli smoke --env dev` passes:
+  public-config ok, schema live (5 entities incl. reserved), count aggregate.
+  One test row exists in the dev tenant (submissionId `dev-smoke-001`).
+- join.html still posts to Google Apps Script; the form frontend moves to
+  `/api/applications` in a later phase (production behavior unchanged).
+
+## Auth and roles design (owner-specified 2026-07-11)
+
+Clerk is the auth provider. Three user states, stored as a role on the
+mirrored user record and enforced by db rules:
+
+1. **provisional**: signed up but has not completed the intro interview.
+2. **member**: completed the interview.
+3. **admin**: everything members get, plus internal stats, dashboards,
+   member lists, and similar internal tooling.
+
+Implications for later phases: the gitignored local-only CEO tools
+(`dashboard.html`, `ecosystem.html`, private network data) are candidates to
+return to the site behind the admin role once P3 rules enforce it. Promotion
+provisional to member happens after the interview; member to admin is
+owner-managed.
+
 ## Non-negotiable rules (from the runbook, restated)
 1. Old site stays live and untouched until Phase 5 sign-off.
 2. Dev only until Phase 5: `envs: ["dev"]` in `odla.config.mjs`; dev tenant is
@@ -141,3 +184,12 @@ Known intentional differences (flag at cutover review):
   locally with no watcher errors, and GitHub Pages still serving unchanged.
   Next human obligations: approve entering P2 (database), sign in at
   https://odla.ai/studio, and approve a handshake code when the CLI asks.
+- **2026-07-11 (P2):** Owner approved P2 and specified the three-state role
+  model (provisional/member/admin, recorded above). Installed pinned
+  @odla-ai/cli 0.8.0 + @odla-ai/db. `init` scaffolded config/schema/rules;
+  owner approved handshake code SAV4-3DR4 in Studio; provision created the
+  app, dev tenant, key, and pushed schema + deny-all rules. Added ODLA_* vars
+  to wrangler.jsonc and /api/applications routes to the worker; all verified
+  locally and deployed; smoke passes. Next human obligations: approve entering
+  P3 (Clerk login), create a Clerk account/app, and paste the publishable key
+  (pk_..., not the secret key) when asked.
