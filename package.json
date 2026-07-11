@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "python3 -m http.server 3000"
+    "dev": "python3 -m http.server 3000",
+    "build": "bash _scripts/build-site.sh"
   }
 }
