@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Members | Silver & Salt Capital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    /* Styling follows join.html (the design reference): moss hero, white
+       card on the soft green field, lime primary actions. */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
+
+    :root {
+      --cream:      #FBF8F2;
+      --moss:       #2F3E34;
+      --moss-light: #4A5E50;
+      --sage:       #7E8E84;
+      --lime:       #7CB83F;
+      --lime-dark:  #6aa535;
+      --lime-soft:  rgba(124, 184, 63, 0.12);
+      --border:     #d6e8d2;
+      --bg:         #eef4ea;
+    }
+
+    body {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--moss);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 80px;
+    }
+
+    .container { width: 100%; max-width: 480px; padding: 0 20px; }
+
+    /* ── Hero ── */
+    .hero {
+      width: 100%;
+      max-width: 100vw;
+      background: var(--moss);
+      text-align: center;
+      padding: 88px 40px 72px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, var(--lime) 50%, transparent 100%);
+    }
+    .hero-inner { max-width: 480px; margin: 0 auto; }
+
+    .back-link {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-family: 'Satoshi', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--cream); }
+
+    .wordmark {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+      margin-bottom: 28px;
+    }
+    .brand-amp { font-family: 'Cormorant Garamond', Georgia, serif; font-style: normal; }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 38px;
+      font-weight: 300;
+      font-style: italic;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .hero-rule {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      max-width: 200px;
+    }
+    .hero-rule::before, .hero-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+    .hero-diamond {
+      width: 5px; height: 5px;
+      background: var(--lime);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .hero p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      margin-bottom: 22px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--lime);
+      border: 1px solid rgba(124,184,63,0.35);
+      border-radius: 100px;
+      padding: 5px 16px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px;
+      overflow: visible;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 28px;
+    }
+
+    .auth-status {
+      font-size: 14px;
+      color: var(--sage);
+      text-align: center;
+      padding: 24px 0;
+      line-height: 1.8;
+    }
+
+    /* Clerk mounts inside this; keep overflow visible so labels never clip */
+    #signin-mount { overflow: visible; }
+    #signin-mount > div { width: 100%; }
+
+    /* ── Signed-in panel ── */
+    .member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .member-email { font-size: 15px; font-weight: 500; color: var(--moss); }
+
+    .role-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 5px 16px;
+    }
+    .role-badge.provisional { color: var(--sage); background: #eef2ec; border: 1px solid #dde5da; }
+    .role-badge.member      { color: #fff; background: var(--lime); }
+    .role-badge.admin       { color: var(--cream); background: var(--moss); }
+
+    .member-message {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--moss-light);
+      background: var(--lime-soft);
+      border-radius: 4px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+
+    .admin-stats {
+      font-size: 14px;
+      color: var(--moss-light);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+    .admin-stats strong { color: var(--moss); }
+
+    .signout-btn {
+      background: none;
+      border: none;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .signout-btn:hover { color: var(--moss); text-decoration: underline; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 480px) {
+      .hero { padding: 64px 24px 52px; }
+      .hero h1 { font-size: 30px; }
+      .back-link { position: static; display: block; text-align: left; margin-bottom: 24px; }
+      .card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <a href="/" class="back-link">← Return to site</a>
+    <div class="hero-inner">
+      <div class="wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+      <h1>Member Sign In</h1>
+      <div class="hero-rule"><div class="hero-diamond"></div></div>
+      <p>Welcome back. Sign in to reach your member area.</p>
+      <span class="tag">Members Only</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-label" id="card-label">Sign In</div>
+
+      <div class="auth-status" id="auth-loading">Preparing sign in…</div>
+      <div id="signin-mount" class="hidden"></div>
+
+      <div id="member-panel" class="hidden">
+        <div class="member-row">
+          <span class="member-email" id="member-email"></span>
+          <span class="role-badge" id="role-badge"></span>
+        </div>
+        <div class="member-message" id="member-message"></div>
+        <div class="admin-stats hidden" id="admin-stats"></div>
+        <button class="signout-btn" id="signout-btn">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ROLE_COPY = {
+      provisional: 'Thank you for joining us. Your membership becomes full after a brief introduction call with our team. We will reach out to schedule it.',
+      member: 'You have full member access. Member resources and the directory arrive here as we build out this area.',
+      admin: 'You have administrator access.',
+    };
+
+    async function boot() {
+      const loading = document.getElementById('auth-loading');
+      try {
+        const cfg = await fetch('/api/auth/config').then(r => r.json());
+        const pk = cfg.publishableKey;
+        if (!pk) throw new Error('no publishable key');
+
+        // The Clerk frontend API host is encoded in the publishable key.
+        const frontendApi = atob(pk.split('_')[2]).replace(/\$$/, '');
+        await new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = `https://${frontendApi}/npm/@clerk/clerk-js@5/dist/clerk.browser.js`;
+          s.setAttribute('data-clerk-publishable-key', pk);
+          s.onload = resolve;
+          s.onerror = () => reject(new Error('clerk-js failed to load'));
+          document.head.appendChild(s);
+        });
+        await window.Clerk.load();
+
+        if (window.Clerk.user) {
+          await showMemberPanel();
+        } else {
+          showSignIn();
+        }
+      } catch (err) {
+        loading.textContent = 'Sign in is briefly unavailable. Please refresh, or return to the site and try again.';
+        console.error(err);
+      }
+    }
+
+    function showSignIn() {
+      document.getElementById('auth-loading').classList.add('hidden');
+      const mount = document.getElementById('signin-mount');
+      mount.classList.remove('hidden');
+      window.Clerk.mountSignIn(mount, {
+        fallbackRedirectUrl: '/members/',
+        signUpFallbackRedirectUrl: '/members/',
+        appearance: {
+          variables: {
+            colorPrimary: '#7CB83F',
+            colorText: '#2F3E34',
+            colorTextSecondary: '#7E8E84',
+            colorBackground: '#ffffff',
+            fontFamily: "'Satoshi', 'Helvetica Neue', Arial, sans-serif",
+            borderRadius: '4px',
+          },
+          elements: {
+            rootBox: { width: '100%' },
+            card: { boxShadow: 'none', border: 'none', padding: '0', width: '100%' },
+            header: { display: 'none' },
+          },
+        },
+      });
+    }
+
+    async function showMemberPanel() {
+      document.getElementById('auth-loading').classList.add('hidden');
+      document.getElementById('card-label').textContent = 'Member Area';
+
+      const token = await window.Clerk.session.getToken();
+      let me = { email: null, role: 'provisional' };
+      try {
+        const res = await fetch('/api/me', { headers: { authorization: `Bearer ${token}` } });
+        if (res.ok) me = await res.json();
+      } catch (e) { console.error(e); }
+
+      const email = me.email
+        || window.Clerk.user.primaryEmailAddress?.emailAddress
+        || window.Clerk.user.id;
+      const role = me.role || 'provisional';
+
+      document.getElementById('member-email').textContent = email;
+      const badge = document.getElementById('role-badge');
+      badge.textContent = role;
+      badge.classList.add(role);
+      document.getElementById('member-message').textContent = ROLE_COPY[role] || ROLE_COPY.provisional;
+
+      if (role === 'admin') {
+        try {
+          const res = await fetch('/api/applications/count', { headers: { authorization: `Bearer ${token}` } });
+          if (res.ok) {
+            const { count } = await res.json();
+            const stats = document.getElementById('admin-stats');
+            stats.innerHTML = `Applications received: <strong>${count}</strong>`;
+            stats.classList.remove('hidden');
+          }
+        } catch (e) { console.error(e); }
+      }
+
+      document.getElementById('member-panel').classList.remove('hidden');
+      document.getElementById('signout-btn').addEventListener('click', async () => {
+        await window.Clerk.signOut();
+        window.location.reload();
+      });
+    }
+
+    boot();
+  </script>
+</body>
+</html>
