@@ -353,17 +353,24 @@ and alert to `groups.notificationEmail`.
 
 1. **Counsel sign-off** on: the intake disclaimer, the refund policy text,
    the trust copy, the 506(b) segregation approach, and the referral
-   restraint (before launch; tracked from the brief).
-2. **Stripe account setup** (owner): create the Product and yearly Price
-   ($900 founding) in Test Mode, then two Studio pastes per env
-   (`stripe_secret_key`, `stripe_webhook_secret`) and the webhook endpoint
-   registration pointing at the dev worker.
-3. **Intake field delta** (owner decision): the brief trims intake to
-   name/email/phone/state/referral; the live form also has who-you-are,
-   focus areas, LinkedIn, and message. Keep or drop?
-4. **Email transport verification**: whether Cloudflare `send_email` can
-   reach applicant addresses in prod, or the API-adapter fallback is used
-   (section 8). Also: which debug inbox receives dev mail.
+   restraint. RESOLVED 2026-07-11 (owner): pre-launch timing is fine;
+   remains a launch gate.
+2. **Stripe account setup** (owner): RESOLVED path 2026-07-11. Owner
+   creates the Test Mode account and pastes `stripe_secret_key` into
+   Studio (dev). `_scripts/setup-stripe-dev.mjs <pk_test_...>` then creates
+   the Product, the $900 yearly Price, and the webhook endpoint
+   programmatically and writes the price id and publishable key onto the
+   group row; the owner's second paste is the endpoint's signing secret
+   (Stripe dashboard -> Developers -> Webhooks -> endpoint -> Signing
+   secret) into Studio as `stripe_webhook_secret`.
+3. **Intake field delta**: RESOLVED 2026-07-11 (owner): keep the
+   additional fields (who-you-are, focus, LinkedIn, message) alongside the
+   new Phone and State, and store the profile on the Clerk user too
+   (public_metadata.profile; the intro message stays db-only).
+4. **Email transport verification**: dev mail redirects to
+   cory.ondrejka+debug@gmail.com with a [dev] prefix (owner-designated,
+   built). Whether Cloudflare `send_email` can reach applicant addresses in
+   prod is still to verify at Phase 5; the API-adapter fallback stands.
 5. **Apple Pay domain verification timing**: workers.dev for dev testing,
    the real domain at Phase 5 cutover.
 6. **Calendar integration point**: when @odla-ai/calendar ships, its

@@ -8,6 +8,7 @@
 
 import { initAdmin, tx, uuidv7, OdlaError } from "@odla-ai/db";
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import { sendTemplated, type GroupRow } from "./email";
 
 interface Env {
   ASSETS: Fetcher;
@@ -95,10 +96,11 @@ const json = (body: unknown, status = 200, headers: Record<string, string> = {})
 // join.html form fields (see src/odla/schema.mjs). Optional scalars are
 // omitted when blank: odla-db has no NULL.
 const REQUIRED = ["firstName", "lastName", "email", "referral", "whoYouAre", "message"] as const;
-const OPTIONAL = ["referralName", "linkedin"] as const;
+const OPTIONAL = ["referralName", "linkedin", "phone", "state"] as const;
 const MAX_LEN: Record<string, number> = {
   firstName: 200, lastName: 200, email: 320, referral: 100,
   referralName: 200, whoYouAre: 100, linkedin: 500, message: 5000,
+  phone: 40, state: 60,
 };
 
 function parseApplication(body: Record<string, unknown>):
@@ -126,9 +128,105 @@ function parseApplication(body: Record<string, unknown>):
   return { ok: true, attrs };
 }
 
-const STATUSES = ["submitted", "call_scheduled", "interviewed", "approved", "declined"] as const;
+const STATUSES = [
+  "submitted",
+  "paid_pending_vetting",
+  "call_scheduled",
+  "interviewed",
+  "approved",
+  "declined",
+  "refunded",
+] as const;
+
+// The default (and at launch, only) group. Applications may carry another
+// groupId when a second brand exists (PAYMENT-SPEC.md lift-and-shift).
+const DEFAULT_GROUP_ID = "silver-and-salt-capital";
 
 type Db = ReturnType<typeof initAdmin>;
+
+// ── Groups (per-brand settings, odla-db) ───────────────────────────
+let groupCache: { value: GroupRow; at: number } | null = null;
+
+async function getGroup(db: Db, groupId: string): Promise<GroupRow | null> {
+  if (groupCache && groupCache.value.id === groupId && Date.now() - groupCache.at < 60_000) {
+    return groupCache.value;
+  }
+  const { groups } = await db.query({ groups: { $: { where: { id: groupId }, limit: 1 } } });
+  const row = (groups?.[0] as unknown as GroupRow) ?? null;
+  if (row) groupCache = { value: row, at: Date.now() };
+  return row;
+}
+
+const groupLineItems = (g: GroupRow) => ({
+  standardCents: g.standardPriceCents,
+  discountCents: g.foundingDiscountCents,
+  dueTodayCents: g.standardPriceCents - g.foundingDiscountCents,
+  renews: "annually",
+});
+
+// ── Stripe (REST via fetch; secret key from the tenant vault) ──────
+async function getVaultSecret(db: Db, name: string): Promise<string | null> {
+  try {
+    return await db.secrets.get(name);
+  } catch {
+    return null;
+  }
+}
+
+// Form-encode with Stripe's bracket syntax for nested params.
+function stripeForm(params: Record<string, string | number | Record<string, string>>): string {
+  const out = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (typeof v === "object") {
+      for (const [k2, v2] of Object.entries(v)) out.append(`${k}[${k2}]`, v2);
+    } else {
+      out.append(k, String(v));
+    }
+  }
+  return out.toString();
+}
+
+async function stripeCall(
+  sk: string,
+  method: "GET" | "POST" | "DELETE",
+  path: string,
+  params?: Record<string, string | number | Record<string, string>>,
+): Promise<{ ok: boolean; status: number; body: Record<string, unknown> }> {
+  const url = `https://api.stripe.com${path}${method === "GET" && params ? `?${stripeForm(params)}` : ""}`;
+  const res = await fetch(url, {
+    method,
+    headers: {
+      authorization: `Bearer ${sk}`,
+      ...(method === "POST" ? { "content-type": "application/x-www-form-urlencoded" } : {}),
+    },
+    body: method === "POST" && params ? stripeForm(params) : undefined,
+  });
+  const body = (await res.json()) as Record<string, unknown>;
+  return { ok: res.ok, status: res.status, body };
+}
+
+// Verify a Stripe webhook signature: HMAC-SHA256 over `${t}.${payload}`
+// with the endpoint signing secret, constant-time compare, 5 min tolerance.
+async function verifyStripeSignature(payload: string, header: string, secret: string): Promise<boolean> {
+  const parts = Object.fromEntries(
+    header.split(",").map((p) => p.split("=", 2) as [string, string]),
+  );
+  const t = parts.t;
+  const v1 = parts.v1;
+  if (!t || !v1) return false;
+  if (Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
+
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+  );
+  const mac = await crypto.subtle.sign("HMAC", key, enc.encode(`${t}.${payload}`));
+  const expected = [...new Uint8Array(mac)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  if (expected.length !== v1.length) return false;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ v1.charCodeAt(i);
+  return diff === 0;
+}
 
 // Latest application for an email (a person may reapply; newest wins).
 async function findApplicationByEmail(db: Db, email: string) {
@@ -150,6 +248,10 @@ async function ensureClerkAccount(
   email: string,
   firstName: string,
   lastName: string,
+  // Application profile stored on the Clerk user too (owner-directed):
+  // phone, state, whoYouAre, focus, linkedin. Readable client-side as
+  // user.publicMetadata.profile; the intro message stays db-only.
+  profile?: Record<string, unknown>,
 ): Promise<boolean> {
   let sk: string;
   try {
@@ -166,11 +268,32 @@ async function ensureClerkAccount(
         first_name: firstName,
         last_name: lastName,
         skip_password_requirement: true,
+        ...(profile ? { public_metadata: { profile } } : {}),
       }),
     });
     if (res.ok) return true;
-    // 422 means the email already has an account, which is the goal state.
-    if (res.status === 422) return true;
+    if (res.status === 422) {
+      // The email already has an account: refresh its profile metadata.
+      if (profile) {
+        try {
+          const found = await fetch(
+            `https://api.clerk.com/v1/users?email_address=${encodeURIComponent(email)}`,
+            { headers: { authorization: `Bearer ${sk}` } },
+          );
+          const users = (await found.json()) as Array<{ id: string }>;
+          if (users?.[0]?.id) {
+            await fetch(`https://api.clerk.com/v1/users/${users[0].id}/metadata`, {
+              method: "PATCH",
+              headers: { authorization: `Bearer ${sk}`, "content-type": "application/json" },
+              body: JSON.stringify({ public_metadata: { profile } }),
+            });
+          }
+        } catch (err) {
+          console.error("clerk profile refresh failed", err);
+        }
+      }
+      return true;
+    }
     console.error("clerk account create failed", res.status);
     return false;
   } catch (err) {
@@ -218,6 +341,9 @@ const applicationSummary = (a: Record<string, unknown>) => ({
   status: a.status,
   meetingAt: a.meetingAt ?? null,
   createdAt: a.createdAt,
+  paid: Boolean(a.stripeSubscriptionId) && a.status !== "refunded",
+  renewalAt: a.renewalAt ?? null,
+  canceled: a.canceled === true,
 });
 
 async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
@@ -233,6 +359,235 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     adminToken: env.ODLA_API_KEY,
     endpoint: env.ODLA_ENDPOINT,
   });
+
+  // Public: everything the join page needs to render its compliance and
+  // payment steps. Copy comes from the group row, never code; paymentsReady
+  // stays false until Stripe is configured, and the page then skips the
+  // payment step entirely (also the GitHub Pages behavior, where /api 404s).
+  const joinConfigMatch = url.pathname.match(/^\/api\/groups\/([a-z0-9-]+)\/join-config$/);
+  if (req.method === "GET" && joinConfigMatch) {
+    const group = await getGroup(db, joinConfigMatch[1]);
+    if (!group) return json({ error: "not found" }, 404);
+    const stripeKey = await getVaultSecret(db, "stripe_secret_key");
+    return json({
+      groupId: group.id,
+      name: group.name,
+      disclaimerText: group.disclaimerText,
+      refundPolicyText: group.refundPolicyText,
+      trustCopy: group.trustCopy,
+      lineItems: groupLineItems(group),
+      publishableKey: group.stripePublishableKey ?? null,
+      paymentsReady: Boolean(group.stripePublishableKey && group.stripePriceId && stripeKey),
+    });
+  }
+
+  // Public: create the annual subscription for a submitted application and
+  // return the first invoice's payment client secret. The application id is
+  // the capability (unguessable uuid known to the submitting browser).
+  if (req.method === "POST" && url.pathname === "/api/payments/subscription") {
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return json({ error: "invalid JSON body" }, 400);
+    }
+    const applicationId = typeof body.applicationId === "string" ? body.applicationId : "";
+    if (!applicationId) return json({ error: "missing applicationId" }, 400);
+    if (body.refundPolicyAck !== true) {
+      return json({ error: "refund policy must be acknowledged" }, 400);
+    }
+
+    const { applications } = await db.query({
+      applications: { $: { where: { id: applicationId }, limit: 1 } },
+    });
+    const app = applications?.[0];
+    if (!app) return json({ error: "not found" }, 404);
+    if (app.status !== "submitted") return json({ error: "already processed" }, 409);
+
+    const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
+    if (!group?.stripePriceId) return json({ error: "payments not configured" }, 503);
+    const sk = await getVaultSecret(db, "stripe_secret_key");
+    if (!sk) return json({ error: "payments not configured" }, 503);
+
+    const meta = {
+      applicationId,
+      groupId: group.id,
+      email: app.email as string,
+    };
+
+    let customerId = app.stripeCustomerId as string | undefined;
+    if (!customerId) {
+      const customer = await stripeCall(sk, "POST", "/v1/customers", {
+        email: app.email as string,
+        name: `${app.firstName} ${app.lastName}`,
+        metadata: meta,
+      });
+      if (!customer.ok) {
+        console.error("stripe customer create failed", customer.status, customer.body?.error);
+        return json({ error: "payment setup failed" }, 502);
+      }
+      customerId = customer.body.id as string;
+    }
+
+    const sub = await stripeCall(sk, "POST", "/v1/subscriptions", {
+      customer: customerId,
+      "items[0][price]": group.stripePriceId,
+      payment_behavior: "default_incomplete",
+      "payment_settings[save_default_payment_method]": "on_subscription",
+      "expand[]": "latest_invoice.payment_intent",
+      metadata: meta,
+    });
+    if (!sub.ok) {
+      console.error("stripe subscription create failed", sub.status, sub.body?.error);
+      return json({ error: "payment setup failed" }, 502);
+    }
+    const invoice = sub.body.latest_invoice as Record<string, unknown> | undefined;
+    const intent = invoice?.payment_intent as Record<string, unknown> | undefined;
+    const clientSecret = intent?.client_secret as string | undefined;
+    if (!clientSecret) {
+      console.error("stripe subscription missing client secret");
+      return json({ error: "payment setup failed" }, 502);
+    }
+
+    await db.transact(
+      tx.applications[applicationId].update({
+        stripeCustomerId: customerId,
+        stripeSubscriptionId: sub.body.id as string,
+        refundPolicyAckAt: Date.now(),
+      }),
+    );
+
+    return json({
+      clientSecret,
+      publishableKey: group.stripePublishableKey ?? null,
+      lineItems: groupLineItems(group),
+    });
+  }
+
+  // Public, signature-verified: the Stripe webhook.
+  if (req.method === "POST" && url.pathname === "/api/webhooks/stripe") {
+    const whsec = await getVaultSecret(db, "stripe_webhook_secret");
+    if (!whsec) return json({ error: "webhook not configured" }, 503);
+    const payload = await req.text();
+    const sigHeader = req.headers.get("stripe-signature") ?? "";
+    if (!(await verifyStripeSignature(payload, sigHeader, whsec))) {
+      return json({ error: "invalid signature" }, 400);
+    }
+
+    const event = JSON.parse(payload) as {
+      id: string;
+      type: string;
+      data: { object: Record<string, unknown> };
+    };
+    const obj = event.data.object;
+
+    // Locate the application. Subscription metadata is the join key; the
+    // customer id and email are fallbacks (PAYMENT-SPEC.md 5.2).
+    async function findApplication(): Promise<Record<string, unknown> | null> {
+      const metaHolders = [
+        obj.metadata,
+        (obj.subscription_details as Record<string, unknown> | undefined)?.metadata,
+        ((obj.parent as Record<string, unknown> | undefined)?.subscription_details as
+          | Record<string, unknown>
+          | undefined)?.metadata,
+      ];
+      for (const m of metaHolders) {
+        const appId = (m as Record<string, unknown> | undefined)?.applicationId;
+        if (typeof appId === "string" && appId) {
+          const { applications } = await db.query({
+            applications: { $: { where: { id: appId }, limit: 1 } },
+          });
+          if (applications?.[0]) return applications[0];
+        }
+      }
+      const customerId = typeof obj.customer === "string" ? obj.customer : "";
+      if (customerId) {
+        const { applications } = await db.query({
+          applications: {
+            $: { where: { stripeCustomerId: customerId }, order: { createdAt: "desc" }, limit: 1 },
+          },
+        });
+        if (applications?.[0]) return applications[0];
+      }
+      return null;
+    }
+
+    if (event.type === "invoice.paid") {
+      const app = await findApplication();
+      if (!app) {
+        console.error("webhook: no application for invoice", event.id);
+        return json({ ok: true, matched: false });
+      }
+      const lines = (obj.lines as { data?: Array<Record<string, unknown>> } | undefined)?.data;
+      const period = lines?.[0]?.period as { end?: number } | undefined;
+      const renewalAt = period?.end ? period.end * 1000 : undefined;
+      const first = obj.billing_reason === "subscription_create";
+
+      if (first) {
+        const attrs: Record<string, unknown> = {
+          ...(app.status === "submitted" ? { status: "paid_pending_vetting" } : {}),
+          ...(renewalAt ? { renewalAt } : {}),
+        };
+        if (Object.keys(attrs).length) {
+          await db.transact(tx.applications[app.id as string].update(attrs), {
+            mutationId: `stripe:${event.id}`,
+          });
+        }
+        const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
+        if (group) {
+          const vars = {
+            firstName: app.firstName as string,
+            lastName: app.lastName as string,
+            email: app.email as string,
+            phone: (app.phone as string) ?? "",
+            state: (app.state as string) ?? "",
+            adminUrl: `${url.origin}/admin/`,
+            membersUrl: `${url.origin}/members/`,
+          };
+          await sendTemplated(db, env.ODLA_ENV, group, {
+            template: "adminNotification",
+            to: group.notificationEmail,
+            vars,
+            applicationId: app.id as string,
+            dedupeKey: `${event.id}:admin`,
+          });
+          await sendTemplated(db, env.ODLA_ENV, group, {
+            template: "paymentConfirmation",
+            to: app.email as string,
+            vars,
+            applicationId: app.id as string,
+            dedupeKey: `${event.id}:confirm`,
+          });
+        }
+      } else if (renewalAt) {
+        await db.transact(tx.applications[app.id as string].update({ renewalAt }), {
+          mutationId: `stripe:${event.id}`,
+        });
+      }
+      return json({ ok: true });
+    }
+
+    if (event.type === "charge.refunded") {
+      const app = await findApplication();
+      if (!app) return json({ ok: true, matched: false });
+      await db.transact(tx.applications[app.id as string].update({ status: "refunded" }), {
+        mutationId: `stripe:${event.id}`,
+      });
+      // Phase R hook: reverse any pending referral credit here.
+      return json({ ok: true });
+    }
+
+    if (event.type === "customer.subscription.deleted") {
+      const app = await findApplication();
+      if (!app) return json({ ok: true, matched: false });
+      await db.transact(tx.applications[app.id as string].update({ canceled: true }), {
+        mutationId: `stripe:${event.id}`,
+      });
+      return json({ ok: true });
+    }
+
+    return json({ ok: true, ignored: event.type });
+  }
 
   // Gated: any verified session. Returns the user plus their application
   // (matched by email) so the member area can show status and meeting time.
@@ -363,6 +718,133 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ ok: true });
     }
 
+    // The deliberate approval action (PAYMENT-SPEC.md 5.3): status ->
+    // approved, Clerk role -> member, onboarding invite. Fires once; never
+    // triggered by payment alone.
+    const approveMatch = url.pathname.match(/^\/api\/admin\/applications\/([0-9a-f-]+)\/approve$/);
+    if (req.method === "POST" && approveMatch) {
+      const id = approveMatch[1];
+      const { applications } = await db.query({
+        applications: { $: { where: { id }, limit: 1 } },
+      });
+      const app = applications?.[0];
+      if (!app) return json({ error: "not found" }, 404);
+      const from = app.status as string;
+      if (!["paid_pending_vetting", "call_scheduled", "interviewed"].includes(from)) {
+        return json({ error: `cannot approve from status "${from}"` }, 409);
+      }
+
+      await db.transact(tx.applications[id].update({ status: "approved" }));
+
+      // Promote the linked account to member (best effort; reported).
+      // clerkUserId links lazily at first sign-in, so fall back to a Clerk
+      // lookup by email for accounts that have never signed in.
+      let rolePromoted = false;
+      const sk = await getVaultSecret(db, "clerk_secret_key");
+      if (sk) {
+        let targetUserId = (app.clerkUserId as string) || null;
+        if (!targetUserId) {
+          try {
+            const found = await fetch(
+              `https://api.clerk.com/v1/users?email_address=${encodeURIComponent(app.email as string)}`,
+              { headers: { authorization: `Bearer ${sk}` } },
+            );
+            const users = (await found.json()) as Array<{ id: string }>;
+            targetUserId = users?.[0]?.id ?? null;
+            if (targetUserId) {
+              await db.transact(tx.applications[id].update({ clerkUserId: targetUserId }));
+            }
+          } catch (err) {
+            console.error("approve: clerk lookup failed", err);
+          }
+        }
+        if (targetUserId) {
+          const res = await fetch(`https://api.clerk.com/v1/users/${targetUserId}/metadata`, {
+            method: "PATCH",
+            headers: { authorization: `Bearer ${sk}`, "content-type": "application/json" },
+            body: JSON.stringify({ public_metadata: { role: "member" } }),
+          });
+          rolePromoted = res.ok;
+          if (!res.ok) console.error("approve: role promotion failed", res.status);
+        }
+      }
+
+      let emailLogged = false;
+      const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
+      if (group) {
+        await sendTemplated(db, env.ODLA_ENV, group, {
+          template: "onboardingInvite",
+          to: app.email as string,
+          vars: {
+            firstName: app.firstName as string,
+            membersUrl: `${url.origin}/members/`,
+          },
+          applicationId: id,
+          dedupeKey: `approve:${id}`,
+        });
+        emailLogged = true;
+      }
+
+      // Phase R hook: write the referral credit here.
+      return json({ ok: true, status: "approved", rolePromoted, emailLogged });
+    }
+
+    // The non-fit action (PAYMENT-SPEC.md 5.4): refund the first invoice in
+    // full and cancel the subscription. The status flip to "refunded" comes
+    // from the charge.refunded webhook, keeping Stripe the source of truth.
+    const refundMatch = url.pathname.match(/^\/api\/admin\/applications\/([0-9a-f-]+)\/refund$/);
+    if (req.method === "POST" && refundMatch) {
+      const id = refundMatch[1];
+      const { applications } = await db.query({
+        applications: { $: { where: { id }, limit: 1 } },
+      });
+      const app = applications?.[0];
+      if (!app) return json({ error: "not found" }, 404);
+      if (app.status === "refunded") return json({ error: "already refunded" }, 409);
+      if (app.status === "approved") {
+        return json({ error: "approved memberships are non-refundable per policy; handle in Stripe if truly needed" }, 409);
+      }
+      const subscriptionId = app.stripeSubscriptionId as string | undefined;
+      if (!subscriptionId) return json({ error: "no subscription on file" }, 409);
+      const sk = await getVaultSecret(db, "stripe_secret_key");
+      if (!sk) return json({ error: "payments not configured" }, 503);
+
+      // The first (earliest) paid invoice of the subscription.
+      const invoices = await stripeCall(sk, "GET", "/v1/invoices", {
+        subscription: subscriptionId,
+        status: "paid",
+        limit: 100,
+      });
+      if (!invoices.ok) {
+        console.error("refund: invoice list failed", invoices.status);
+        return json({ error: "refund failed upstream" }, 502);
+      }
+      const data = (invoices.body.data as Array<Record<string, unknown>>) ?? [];
+      const first = data[data.length - 1];
+      const paymentIntent =
+        typeof first?.payment_intent === "string"
+          ? first.payment_intent
+          : (first?.payment_intent as Record<string, unknown> | undefined)?.id as string | undefined;
+      if (!paymentIntent) return json({ error: "no paid invoice to refund" }, 409);
+
+      const refund = await stripeCall(sk, "POST", "/v1/refunds", {
+        payment_intent: paymentIntent,
+      });
+      if (!refund.ok) {
+        console.error("refund failed", refund.status, refund.body?.error);
+        return json({ error: "refund failed upstream" }, 502);
+      }
+
+      const cancel = await stripeCall(sk, "DELETE", `/v1/subscriptions/${subscriptionId}`);
+      if (!cancel.ok) console.error("subscription cancel failed", cancel.status);
+
+      return json({
+        ok: true,
+        refundedCents: (refund.body.amount as number) ?? null,
+        subscriptionCanceled: cancel.ok,
+      });
+    }
+
     const patchMatch = url.pathname.match(/^\/api\/admin\/applications\/([0-9a-f-]+)$/);
     if (req.method === "PATCH" && patchMatch) {
       const id = patchMatch[1];
@@ -427,8 +909,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       tx.applications[id].update({
         id, // mirrored as an attr per @odla-ai/db porting notes
         ...parsed.attrs,
+        groupId: DEFAULT_GROUP_ID,
         status: "submitted",
         createdAt: Date.now(),
+        ...(body.disclaimerAck === true ? { disclaimerAckAt: Date.now() } : {}),
       }),
       submissionId ? { mutationId: `join:${submissionId}` } : undefined,
     );
@@ -438,6 +922,13 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       parsed.attrs.email as string,
       parsed.attrs.firstName as string,
       parsed.attrs.lastName as string,
+      {
+        phone: parsed.attrs.phone ?? "",
+        state: parsed.attrs.state ?? "",
+        whoYouAre: parsed.attrs.whoYouAre ?? "",
+        focus: parsed.attrs.focus ?? [],
+        linkedin: parsed.attrs.linkedin ?? "",
+      },
     );
 
     return json({ ok: true, id, duplicate: duplicate ?? false, accountCreated }, 201);
@@ -475,7 +966,9 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     const existing = applications?.[0];
     if (!existing) return json({ error: "not found" }, 404);
 
-    if (existing.status !== "submitted" && existing.status !== "call_scheduled") {
+    // In the payment flow, booking follows payment (paid_pending_vetting).
+    const bookable = ["submitted", "paid_pending_vetting", "call_scheduled"];
+    if (!bookable.includes(existing.status as string)) {
       return json({ ok: true, applied: false });
     }
 
@@ -485,6 +978,22 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         ...(meetingAt !== undefined ? { meetingAt } : {}),
       }),
     );
+
+    // Pre-meeting prep email, once per application (PAYMENT-SPEC.md 8.3).
+    if (!existing.prepEmailSentAt) {
+      const group = await getGroup(db, (existing.groupId as string) ?? DEFAULT_GROUP_ID);
+      if (group) {
+        await sendTemplated(db, env.ODLA_ENV, group, {
+          template: "prepEmail",
+          to: existing.email as string,
+          vars: { firstName: existing.firstName as string },
+          applicationId: id,
+          dedupeKey: `prep:${id}`,
+        });
+        await db.transact(tx.applications[id].update({ prepEmailSentAt: Date.now() }));
+      }
+    }
+
     return json({ ok: true, applied: true });
   }
 

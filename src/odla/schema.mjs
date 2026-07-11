@@ -37,6 +37,58 @@ export const schema = {
         meetingAt: { type: "number", unique: false, indexed: true, optional: true },
         // Clerk user id, linked lazily when a signed-in user's email matches.
         clerkUserId: { type: "string", unique: false, indexed: true, optional: true },
+        // ── Payment flow (PAYMENT-SPEC.md P1) ──
+        phone: { type: "string", unique: false, indexed: false, optional: true },
+        state: { type: "string", unique: false, indexed: false, optional: true },
+        groupId: { type: "string", unique: false, indexed: true, optional: true },
+        stripeCustomerId: { type: "string", unique: false, indexed: true, optional: true },
+        stripeSubscriptionId: { type: "string", unique: false, indexed: true, optional: true },
+        renewalAt: { type: "number", unique: false, indexed: false, optional: true },
+        disclaimerAckAt: { type: "number", unique: false, indexed: false, optional: true },
+        refundPolicyAckAt: { type: "number", unique: false, indexed: false, optional: true },
+        prepEmailSentAt: { type: "number", unique: false, indexed: false, optional: true },
+        canceled: { type: "boolean", unique: false, indexed: false, optional: true },
+      },
+    },
+    // Per-group settings: prices, policy copy, and email templates live here,
+    // never in code (PAYMENT-SPEC.md section 3.2). One row at launch:
+    // Silver & Salt Capital, group #1.
+    groups: {
+      attrs: {
+        id: { type: "string", unique: true, indexed: true, optional: false },
+        name: { type: "string", unique: false, indexed: false, optional: false },
+        standardPriceCents: { type: "number", unique: false, indexed: false, optional: false },
+        foundingDiscountCents: { type: "number", unique: false, indexed: false, optional: false },
+        stripePriceId: { type: "string", unique: false, indexed: false, optional: true },
+        stripePublishableKey: { type: "string", unique: false, indexed: false, optional: true },
+        notificationEmail: { type: "string", unique: false, indexed: false, optional: false },
+        replyTo: { type: "string", unique: false, indexed: false, optional: false },
+        // Dev-tenant sends all redirect here (subject gets a [dev] prefix).
+        debugEmail: { type: "string", unique: false, indexed: false, optional: true },
+        calendarLink: { type: "string", unique: false, indexed: false, optional: true },
+        disclaimerText: { type: "string", unique: false, indexed: false, optional: false },
+        refundPolicyText: { type: "string", unique: false, indexed: false, optional: false },
+        trustCopy: { type: "string", unique: false, indexed: false, optional: false },
+        commitmentText: { type: "string", unique: false, indexed: false, optional: true },
+        normsText: { type: "string", unique: false, indexed: false, optional: true },
+        // { adminNotification, paymentConfirmation, prepEmail,
+        //   onboardingInvite }, each { subject, text } with {{placeholders}}.
+        emailTemplates: { type: "json", unique: false, indexed: false, optional: false },
+        createdAt: { type: "number", unique: false, indexed: true, optional: false },
+      },
+    },
+    // Audit of every transactional send (PAYMENT-SPEC.md section 3.3).
+    emailLog: {
+      attrs: {
+        id: { type: "string", unique: true, indexed: true, optional: false },
+        groupId: { type: "string", unique: false, indexed: true, optional: false },
+        applicationId: { type: "string", unique: false, indexed: true, optional: true },
+        to: { type: "string", unique: false, indexed: true, optional: false },
+        template: { type: "string", unique: false, indexed: true, optional: false },
+        subject: { type: "string", unique: false, indexed: false, optional: false },
+        transport: { type: "string", unique: false, indexed: false, optional: false },
+        redirected: { type: "boolean", unique: false, indexed: false, optional: true },
+        sentAt: { type: "number", unique: false, indexed: true, optional: false },
       },
     },
   },

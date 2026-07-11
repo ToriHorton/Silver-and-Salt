@@ -8,4 +8,16 @@ export const rules = {
     update: "false",
     delete: "false",
   },
+  groups: {
+    view: "false",
+    create: "false",
+    update: "false",
+    delete: "false",
+  },
+  emailLog: {
+    view: "false",
+    create: "false",
+    update: "false",
+    delete: "false",
+  },
 };
