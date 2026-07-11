@@ -19,9 +19,15 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
 - [ ] **P3: Login (Clerk)** in progress 2026-07-11: code shipped and verified
   (401 gates, deployed, smoke ok); waiting on human browser verification and
   the Clerk dashboard session-claims step (see P3 status below)
-- [ ] **P3b: User sync (mirror Clerk users into $users)** (optional)
-- [ ] **P4: AI** (optional)
-- [ ] **P5: Production + DNS cutover** (this is the ONLY phase that touches production)
+- [ ] **P3b: User sync (mirror Clerk users into $users)** in progress
+  2026-07-11: webhook endpoint created; waiting on the owner to paste the
+  signing secret into Studio (see P3b status below)
+- [x] **P4: AI** SKIPPED per owner decision 2026-07-11. Replaced with member
+  area build-out (provisional page, members page, admin table), done.
+- [ ] **P5: Production + DNS cutover** (the ONLY phase that touches
+  production). Owner pre-requisite 2026-07-11: a payment flow in the join
+  flow must be designed and built BEFORE cutover; details to be worked out
+  when the earlier work is complete.
 
 ## P0 inventory findings (2026-07-11)
 
@@ -201,6 +207,50 @@ Known intentional differences (flag at cutover review):
   (application -> odla-db row -> invite to create the provisional account)
   is scoped but needs the owner's go-ahead since it changes the production
   form's backend at cutover.
+
+## P3b status and member-area build (2026-07-11)
+
+- **Webhook endpoint created programmatically** (Svix portal token exchange
+  via `npx clerk api /webhooks/svix`): endpoint
+  `ep_3GMvkTIxg3P44be17rq72i6mtx7`, url
+  `https://db.odla.ai/webhooks/clerk/silver-and-salt-capital--dev`, events
+  `user.created`, `user.updated`, `user.deleted`. The signing secret was
+  never printed or fetched.
+- **Human step outstanding:** copy the endpoint's signing secret from the
+  Clerk dashboard (Configure -> Webhooks -> the endpoint -> Signing Secret)
+  and paste it into Studio at odla.ai/studio -> the app -> dev -> secrets as
+  `clerk_webhook_secret` (write-only vault). $users stays empty until then;
+  verify afterwards by editing a user in Clerk and checking
+  `/api/admin/members`.
+- **Schema v2:** applications gained `meetingAt` (epoch ms, admin-set; the
+  Google Calendar booking widget cannot call us back) and `clerkUserId`
+  (linked lazily when a signed-in user's email matches). Pushed to dev.
+- **Worker routes added:** `/api/me` now returns the caller's application
+  summary (status, meetingAt) matched by email, and lazily stamps
+  `clerkUserId`. New admin-gated routes: `GET /api/admin/applications`
+  (newest 200), `PATCH /api/admin/applications/:id` (status and/or
+  meetingAt; validates status enum; 404s on unknown id so upsert cannot
+  create phantom rows), `GET /api/admin/members` ($users mirror).
+- **Join flow wired (owner-approved):** join.html now ALSO posts the
+  application as JSON to `/api/applications` (best effort; Apps Script keeps
+  the Sheet row and both emails; on GitHub Pages the API call 404s
+  harmlessly). Step 3 gained a "Create your member account" button to
+  `/members/?view=sign-up&email=...` with the email prefilled.
+- **Member area (members/index.html) role views:** provisional sees their
+  application status and, once set, the introduction call date; member sees
+  Training Material and Upcoming Events placeholders; admin additionally
+  sees Internal Stats, an editable applications table (status dropdown,
+  meeting datetime, save per row), and the member accounts mirror.
+- **Verified 2026-07-11** (local + deployed dev): admin JWT (minted via
+  Clerk BAPI sessions API) passes /api/me with role admin; applications
+  list/patch round-trips (bad status 400, unknown id 404); provisional JWT
+  sees their application with meetingAt and gets 403 on admin routes;
+  unauthenticated requests 401; smoke passes.
+- **Dev test fixtures:** Clerk user test.applicant@example.com
+  (`user_3GMxDnbTiVSiCwog8oNyrNZuPCW`) matching the seeded application row
+  (submissionId `dev-smoke-001`, status call_scheduled, meeting
+  2026-07-20 15:00 UTC). Session-mint pattern for API testing:
+  `clerk api /sessions -X POST` then `/sessions/<id>/tokens`.
 
 ## Auth and roles design (owner-specified 2026-07-11)
 

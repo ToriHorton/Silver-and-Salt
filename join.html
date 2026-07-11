@@ -565,6 +565,24 @@
       margin-top: 18px;
       margin-bottom: 28px;
     }
+    .step3-account-btn {
+      display: inline-block;
+      background-color: var(--lime);
+      color: #fff;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      padding: 15px 34px;
+      text-decoration: none;
+      margin: 4px 0 18px;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .step3-account-btn:hover  { background-color: var(--lime-dark); }
+    .step3-account-btn:active { transform: scale(0.99); }
+
     .brand-amp {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 400;
@@ -850,6 +868,8 @@
       <p class="step3-body">Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital.</p>
       <p class="step3-body">A calendar invitation has been sent to your email.</p>
       <p class="step3-body step3-body-final">We’ll see you soon.</p>
+      <p class="step3-body">While you wait, set up your member account. It is where your application status and call details live.</p>
+      <a href="/members/?view=sign-up" class="step3-account-btn" id="account-cta">Create your member account</a><br>
       <a href="/" class="step3-link">Return to Silver <span class="brand-amp">&amp;</span> Salt Capital</a>
       <div class="quote-card">
         <p class="quote-text">“We women don’t care too much about getting our pictures on money as long as we can get our hands on it.”</p>
@@ -897,6 +917,10 @@
     form.addEventListener('input', checkFormReady);
     form.addEventListener('change', checkFormReady);
 
+    // Applicant email, captured at submit so the Step 3 account button can
+    // prefill sign-up.
+    let applicantEmail = '';
+
     // Form submit → advance to step 2
     const step1       = document.getElementById('step-1');
     const step2       = document.getElementById('step-2');
@@ -914,6 +938,10 @@
     // Confirm button → advance to step 3 (thank you screen)
     confirmBtn.addEventListener('click', function() {
       if (!confirmCheck.checked) return;
+      if (applicantEmail) {
+        document.getElementById('account-cta').href =
+          '/members/?view=sign-up&email=' + encodeURIComponent(applicantEmail);
+      }
       step2.style.display = 'none';
       step3.style.display = 'block';
       dot2.className = 'step complete';
@@ -943,6 +971,31 @@
         // reliably parses into e.parameter (FormData/multipart can arrive empty).
         const params = new URLSearchParams();
         for (const [key, value] of formData.entries()) params.append(key, value);
+
+        applicantEmail = formData.get('email') || '';
+
+        // Also record the application in the member database, best effort:
+        // Apps Script remains the source of the Sheet row and both emails.
+        // On hosts without the API route this resolves as a 404 and the
+        // application flow is unaffected.
+        fetch('/api/applications', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            firstName:    formData.get('first_name') || '',
+            lastName:     formData.get('last_name') || '',
+            email:        applicantEmail,
+            referral:     formData.get('referral') || '',
+            referralName: formData.get('referral_name') || '',
+            whoYouAre:    formData.get('who_you_are') || '',
+            linkedin:     formData.get('linkedin') || '',
+            message:      formData.get('message') || '',
+            focus:        checked,
+            submissionId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
+          }),
+        }).catch(function(err) {
+          console.warn('Member database submission skipped (non-blocking).', err);
+        });
 
         // A urlencoded POST is a "simple request": it always reaches Apps Script,
         // even if the browser can't read the response — so the submission is never
