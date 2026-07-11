@@ -434,7 +434,9 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       "items[0][price]": group.stripePriceId,
       payment_behavior: "default_incomplete",
       "payment_settings[save_default_payment_method]": "on_subscription",
-      "expand[]": "latest_invoice.payment_intent",
+      // 2025+ Stripe API: the first invoice's client secret lives on
+      // confirmation_secret (invoices no longer carry payment_intent).
+      "expand[]": "latest_invoice.confirmation_secret",
       metadata: meta,
     });
     if (!sub.ok) {
@@ -442,8 +444,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ error: "payment setup failed" }, 502);
     }
     const invoice = sub.body.latest_invoice as Record<string, unknown> | undefined;
+    const confirmation = invoice?.confirmation_secret as Record<string, unknown> | undefined;
     const intent = invoice?.payment_intent as Record<string, unknown> | undefined;
-    const clientSecret = intent?.client_secret as string | undefined;
+    const clientSecret =
+      (confirmation?.client_secret as string | undefined) ??
+      (intent?.client_secret as string | undefined);
     if (!clientSecret) {
       console.error("stripe subscription missing client secret");
       return json({ error: "payment setup failed" }, 502);
@@ -809,26 +814,25 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       const sk = await getVaultSecret(db, "stripe_secret_key");
       if (!sk) return json({ error: "payments not configured" }, 503);
 
-      // The first (earliest) paid invoice of the subscription.
-      const invoices = await stripeCall(sk, "GET", "/v1/invoices", {
-        subscription: subscriptionId,
-        status: "paid",
+      // 2025+ Stripe API: invoices no longer expose payment_intent, so
+      // find the earliest succeeded, unrefunded charge on the customer.
+      const customerId = app.stripeCustomerId as string | undefined;
+      if (!customerId) return json({ error: "no customer on file" }, 409);
+      const charges = await stripeCall(sk, "GET", "/v1/charges", {
+        customer: customerId,
         limit: 100,
       });
-      if (!invoices.ok) {
-        console.error("refund: invoice list failed", invoices.status);
+      if (!charges.ok) {
+        console.error("refund: charge list failed", charges.status);
         return json({ error: "refund failed upstream" }, 502);
       }
-      const data = (invoices.body.data as Array<Record<string, unknown>>) ?? [];
-      const first = data[data.length - 1];
-      const paymentIntent =
-        typeof first?.payment_intent === "string"
-          ? first.payment_intent
-          : (first?.payment_intent as Record<string, unknown> | undefined)?.id as string | undefined;
-      if (!paymentIntent) return json({ error: "no paid invoice to refund" }, 409);
+      const chargeRows = ((charges.body.data as Array<Record<string, unknown>>) ?? [])
+        .filter((c) => c.status === "succeeded" && c.refunded !== true);
+      const firstCharge = chargeRows[chargeRows.length - 1];
+      if (!firstCharge) return json({ error: "no paid charge to refund" }, 409);
 
       const refund = await stripeCall(sk, "POST", "/v1/refunds", {
-        payment_intent: paymentIntent,
+        charge: firstCharge.id as string,
       });
       if (!refund.ok) {
         console.error("refund failed", refund.status, refund.body?.error);
