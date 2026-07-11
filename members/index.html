@@ -38,7 +38,6 @@
     }
 
     .container { width: 100%; max-width: 520px; padding: 0 20px; }
-    .container.wide { max-width: 920px; }
 
     /* ── Hero ── */
     .hero {
@@ -160,8 +159,7 @@
       line-height: 1.8;
     }
 
-    /* Clerk renders its own card here (brand applied via appearance
-       variables); keep overflow visible so it never clips itself. */
+    /* Clerk renders its own card here; keep overflow visible. */
     #signin-mount {
       display: flex;
       justify-content: center;
@@ -192,6 +190,14 @@
     .role-badge.member      { color: #fff; background: var(--lime); }
     .role-badge.admin       { color: var(--cream); background: var(--moss); }
 
+    .account-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .signout-btn {
       background: none;
       border: none;
@@ -207,13 +213,28 @@
     }
     .signout-btn:hover { color: var(--moss); text-decoration: underline; }
 
+    .admin-console-link {
+      display: inline-block;
+      background: var(--moss);
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      padding: 10px 18px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .admin-console-link:hover { background: var(--moss-light); }
+
     /* ── Provisional view ── */
     .meeting-block {
       text-align: center;
       background: var(--lime-soft);
       border-radius: 8px;
       padding: 28px 24px;
-      margin-bottom: 24px;
+      margin-bottom: 4px;
     }
     .meeting-kicker {
       font-size: 11px;
@@ -279,81 +300,6 @@
       padding: 3px 10px;
     }
 
-    /* ── Admin view ── */
-    .stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; }
-    .stat {
-      flex: 1;
-      min-width: 140px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 18px 20px;
-    }
-    .stat-num {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-weight: 400;
-      font-size: 34px;
-      color: var(--moss);
-      line-height: 1.1;
-    }
-    .stat-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--sage);
-      margin-top: 4px;
-    }
-
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th {
-      text-align: left;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--sage);
-      padding: 10px 12px 10px 0;
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    td {
-      padding: 12px 12px 12px 0;
-      border-bottom: 1px solid var(--border);
-      color: var(--moss-light);
-      vertical-align: middle;
-      white-space: nowrap;
-    }
-    td.applicant { color: var(--moss); font-weight: 500; }
-
-    select, input[type="datetime-local"] {
-      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
-      font-size: 13px;
-      color: var(--moss);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 7px 8px;
-      background: #fff;
-    }
-    select:focus, input[type="datetime-local"]:focus { outline: 2px solid var(--lime-soft); border-color: var(--lime); }
-
-    .row-save {
-      background-color: var(--lime);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .row-save:hover { background-color: var(--lime-dark); }
-    .row-save:disabled { background-color: #b0cc9e; cursor: default; }
-
     .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
 
     .hidden { display: none; }
@@ -380,7 +326,7 @@
     </div>
   </div>
 
-  <div class="container" id="page-container">
+  <div class="container">
 
     <div class="card" id="status-card">
       <div class="card-label">Members</div>
@@ -389,13 +335,16 @@
 
     <div id="signin-mount" class="hidden"></div>
 
-    <!-- Shared signed-in header -->
+    <!-- Signed-in account header -->
     <div class="card hidden" id="account-card">
       <div class="member-row">
         <span class="member-email" id="member-email"></span>
         <span class="role-badge" id="role-badge"></span>
       </div>
-      <button class="signout-btn" id="signout-btn">Sign out</button>
+      <div class="account-actions">
+        <button class="signout-btn" id="signout-btn">Sign out</button>
+        <a class="admin-console-link hidden" id="admin-link" href="/admin/">Admin console</a>
+      </div>
     </div>
 
     <!-- Provisional view -->
@@ -420,112 +369,17 @@
       </div>
     </div>
 
-    <!-- Admin view -->
-    <div id="admin-view" class="hidden">
-      <div class="card">
-        <div class="card-label">Internal Stats</div>
-        <div class="stats-row">
-          <div class="stat"><div class="stat-num" id="stat-applications">–</div><div class="stat-label">Applications</div></div>
-          <div class="stat"><div class="stat-num" id="stat-members">–</div><div class="stat-label">Accounts</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-label">Applications</div>
-        <div class="table-wrap">
-          <table id="applications-table">
-            <thead>
-              <tr><th>Applicant</th><th>Email</th><th>Status</th><th>Introduction call</th><th></th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <p class="empty-note hidden" id="applications-empty">Applications will appear here as they arrive.</p>
-      </div>
-      <div class="card">
-        <div class="card-label">Member Accounts</div>
-        <div class="table-wrap">
-          <table id="members-table">
-            <thead>
-              <tr><th>Email</th><th>Name</th><th>User ID</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <p class="empty-note hidden" id="members-empty">Accounts sync here from Clerk once the webhook secret is in place.</p>
-      </div>
-    </div>
-
   </div>
 
+  <script src="/assets/member-auth.js?v=1"></script>
   <script>
-    const STATUS_LABELS = {
-      submitted: 'Submitted',
-      call_scheduled: 'Call scheduled',
-      interviewed: 'Interviewed',
-      approved: 'Approved',
-      declined: 'Declined',
-    };
-
-    // Brand carried by variables only: Clerk keeps its own layout (fighting
-    // its internal card with element overrides is what breaks it), and both
-    // sign-in and sign-up stay on this page so the styling always matches.
-    const APPEARANCE = {
-      variables: {
-        colorPrimary: '#7CB83F',
-        colorText: '#2F3E34',
-        colorTextSecondary: '#7E8E84',
-        colorBackground: '#ffffff',
-        fontFamily: "'Satoshi', 'Helvetica Neue', Arial, sans-serif",
-        borderRadius: '4px',
-      },
-    };
-
+    const { APPEARANCE, loadClerk, api, fmtMeeting } = window.SSCAuth;
     const $ = (id) => document.getElementById(id);
-    let sessionToken = null;
-
-    async function api(path, opts = {}) {
-      const res = await fetch(path, {
-        ...opts,
-        headers: {
-          ...(opts.headers || {}),
-          ...(sessionToken ? { authorization: `Bearer ${sessionToken}` } : {}),
-          ...(opts.body ? { 'content-type': 'application/json' } : {}),
-        },
-      });
-      if (!res.ok) throw new Error(`${path} -> ${res.status}`);
-      return res.json();
-    }
-
-    const fmtMeeting = (ms) => new Date(ms).toLocaleString(undefined, {
-      weekday: 'long', month: 'long', day: 'numeric',
-      hour: 'numeric', minute: '2-digit',
-    });
-
-    function toLocalInputValue(ms) {
-      const d = new Date(ms);
-      const p = (n) => String(n).padStart(2, '0');
-      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
-    }
 
     async function boot() {
       try {
-        const cfg = await fetch('/api/auth/config').then(r => r.json());
-        const pk = cfg.publishableKey;
-        if (!pk) throw new Error('no publishable key');
-
-        // The Clerk frontend API host is encoded in the publishable key.
-        const frontendApi = atob(pk.split('_')[2]).replace(/\$$/, '');
-        await new Promise((resolve, reject) => {
-          const s = document.createElement('script');
-          s.src = `https://${frontendApi}/npm/@clerk/clerk-js@5/dist/clerk.browser.js`;
-          s.setAttribute('data-clerk-publishable-key', pk);
-          s.onload = resolve;
-          s.onerror = () => reject(new Error('clerk-js failed to load'));
-          document.head.appendChild(s);
-        });
-        await window.Clerk.load();
-
-        if (window.Clerk.user) {
+        const clerk = await loadClerk();
+        if (clerk.user) {
           await showSignedIn();
         } else {
           showSignIn();
@@ -565,7 +419,6 @@
 
     async function showSignedIn() {
       $('status-card').classList.add('hidden');
-      sessionToken = await window.Clerk.session.getToken();
 
       let me = { email: null, role: 'provisional', application: null };
       try {
@@ -598,9 +451,7 @@
       }
 
       if (role === 'admin') {
-        $('page-container').classList.add('wide');
-        $('admin-view').classList.remove('hidden');
-        loadAdmin();
+        $('admin-link').classList.remove('hidden');
       }
     }
 
@@ -628,95 +479,6 @@
           </div>`;
       }
       $('provisional-card').classList.remove('hidden');
-    }
-
-    async function loadAdmin() {
-      try {
-        const { applications } = await api('/api/admin/applications');
-        $('stat-applications').textContent = applications.length;
-        const tbody = document.querySelector('#applications-table tbody');
-        tbody.innerHTML = '';
-        if (!applications.length) {
-          $('applications-empty').classList.remove('hidden');
-        }
-        for (const a of applications) {
-          const tr = document.createElement('tr');
-
-          const name = document.createElement('td');
-          name.className = 'applicant';
-          name.textContent = `${a.firstName} ${a.lastName}`;
-          tr.appendChild(name);
-
-          const email = document.createElement('td');
-          email.textContent = a.email;
-          tr.appendChild(email);
-
-          const statusTd = document.createElement('td');
-          const select = document.createElement('select');
-          for (const [value, label] of Object.entries(STATUS_LABELS)) {
-            const opt = document.createElement('option');
-            opt.value = value;
-            opt.textContent = label;
-            if (value === a.status) opt.selected = true;
-            select.appendChild(opt);
-          }
-          statusTd.appendChild(select);
-          tr.appendChild(statusTd);
-
-          const meetingTd = document.createElement('td');
-          const meeting = document.createElement('input');
-          meeting.type = 'datetime-local';
-          if (a.meetingAt) meeting.value = toLocalInputValue(a.meetingAt);
-          meetingTd.appendChild(meeting);
-          tr.appendChild(meetingTd);
-
-          const saveTd = document.createElement('td');
-          const save = document.createElement('button');
-          save.className = 'row-save';
-          save.textContent = 'Save';
-          save.addEventListener('click', async () => {
-            save.disabled = true;
-            save.textContent = 'Saving…';
-            try {
-              const payload = { status: select.value };
-              if (meeting.value) payload.meetingAt = new Date(meeting.value).getTime();
-              await api(`/api/admin/applications/${a.id}`, {
-                method: 'PATCH',
-                body: JSON.stringify(payload),
-              });
-              save.textContent = 'Saved';
-              setTimeout(() => { save.textContent = 'Save'; save.disabled = false; }, 1500);
-            } catch (e) {
-              console.error(e);
-              save.textContent = 'Retry';
-              save.disabled = false;
-            }
-          });
-          saveTd.appendChild(save);
-          tr.appendChild(saveTd);
-
-          tbody.appendChild(tr);
-        }
-      } catch (e) { console.error(e); }
-
-      try {
-        const { members } = await api('/api/admin/members');
-        $('stat-members').textContent = members.length;
-        const tbody = document.querySelector('#members-table tbody');
-        tbody.innerHTML = '';
-        if (!members.length) {
-          $('members-empty').classList.remove('hidden');
-        }
-        for (const m of members) {
-          const tr = document.createElement('tr');
-          for (const value of [m.email || '', m.name || '', m.id || '']) {
-            const td = document.createElement('td');
-            td.textContent = value;
-            tr.appendChild(td);
-          }
-          tbody.appendChild(tr);
-        }
-      } catch (e) { console.error(e); }
     }
 
     boot();

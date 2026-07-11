@@ -259,9 +259,24 @@ Known intentional differences (flag at cutover review):
   with the prod instance key.
 - **Member area (members/index.html) role views:** provisional sees their
   application status and, once set, the introduction call date; member sees
-  Training Material and Upcoming Events placeholders; admin additionally
-  sees Internal Stats, an editable applications table (status dropdown,
-  meeting datetime, save per row), and the member accounts mirror.
+  Training Material and Upcoming Events placeholders.
+- **Split pages (owner-directed 2026-07-11):** the admin console moved to
+  its own page at `/admin/` (admin/index.html); `/members/` is member-only
+  and shows admins an "Admin console" button. Shared auth bootstrap lives
+  in `assets/member-auth.js?v=1` (bump the ?v= on change). The console's
+  two former tables (Applications, Member Accounts) were duplicative
+  (auto account creation put everyone in both) and merged into ONE People
+  table: person, email, role select, application status select, meeting
+  datetime, one Save per row.
+- **Unified people API:** `GET /api/admin/people` joins applications,
+  live `$users` rows (tombstoned `deleted: true` rows are skipped: the
+  webhook keeps deleted Clerk users as tombstones), and roles fetched from
+  Clerk BAPI with the vault key (single page of 100; paginate when the
+  community outgrows it). `POST /api/admin/people/role` updates
+  `public_metadata.role` (enum-validated; admins cannot change their own
+  role; 503 if the vault key is missing). The old
+  `GET /api/admin/applications` and `GET /api/admin/members` routes were
+  REMOVED; `PATCH /api/admin/applications/:id` remains for row saves.
 - **Verified 2026-07-11** (local + deployed dev): admin JWT (minted via
   Clerk BAPI sessions API) passes /api/me with role admin; applications
   list/patch round-trips (bad status 400, unknown id 404); provisional JWT

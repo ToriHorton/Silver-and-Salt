@@ -179,6 +179,37 @@ async function ensureClerkAccount(
   }
 }
 
+// Roles live in Clerk publicMetadata (the source of truth). Read them in
+// bulk with the vault secret key; a missing key degrades to "everyone with
+// an account is provisional" rather than failing the console.
+// Note: single page of 100; paginate when the community outgrows it.
+async function fetchClerkRoles(db: Db): Promise<Map<string, Role> | null> {
+  let sk: string;
+  try {
+    sk = await db.secrets.get("clerk_secret_key");
+  } catch {
+    return null;
+  }
+  try {
+    const res = await fetch("https://api.clerk.com/v1/users?limit=100", {
+      headers: { authorization: `Bearer ${sk}` },
+    });
+    if (!res.ok) return null;
+    const users = (await res.json()) as Array<{
+      id: string;
+      public_metadata?: Record<string, unknown>;
+    }>;
+    const map = new Map<string, Role>();
+    for (const u of users) {
+      const r = u.public_metadata?.role;
+      map.set(u.id, r === "admin" || r === "member" ? r : "provisional");
+    }
+    return map;
+  } catch {
+    return null;
+  }
+}
+
 const applicationSummary = (a: Record<string, unknown>) => ({
   id: a.id,
   firstName: a.firstName,
@@ -232,11 +263,104 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     if (!user) return json({ error: "unauthorized" }, 401);
     if (user.role !== "admin") return json({ error: "forbidden" }, 403);
 
-    if (req.method === "GET" && url.pathname === "/api/admin/applications") {
-      const { applications } = await db.query({
-        applications: { $: { order: { createdAt: "desc" }, limit: 200 } },
+    // One row per person, joined by lowercased email: the $users mirror
+    // (accounts), applications (pipeline), and Clerk roles. Replaces the
+    // former separate applications/members listings.
+    if (req.method === "GET" && url.pathname === "/api/admin/people") {
+      const [appsRes, usersRes, roles] = await Promise.all([
+        db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 200 } } }),
+        db.query({ $users: { $: { limit: 200 } } }),
+        fetchClerkRoles(db),
+      ]);
+
+      type PersonRow = {
+        email: string;
+        name: string;
+        userId: string | null;
+        role: Role | null;
+        application: ReturnType<typeof applicationSummary> | null;
+      };
+      const people = new Map<string, PersonRow>();
+
+      for (const u of (usersRes.$users ?? []) as Array<Record<string, unknown>>) {
+        // Deleted Clerk users stay in the mirror as tombstones; they are
+        // not accounts any more.
+        if (u.deleted === true) continue;
+        const email = typeof u.email === "string" ? u.email : "";
+        if (!email) continue;
+        people.set(email.toLowerCase(), {
+          email,
+          name: typeof u.name === "string" ? u.name : "",
+          userId: u.id as string,
+          role: roles?.get(u.id as string) ?? "provisional",
+          application: null,
+        });
+      }
+
+      for (const a of (appsRes.applications ?? []) as Array<Record<string, unknown>>) {
+        const key = (a.email as string).toLowerCase();
+        const row = people.get(key);
+        const name = `${a.firstName} ${a.lastName}`;
+        if (row) {
+          // Applications are newest-first; keep only the latest per person.
+          if (!row.application) row.application = applicationSummary(a);
+          if (!row.name) row.name = name;
+        } else {
+          people.set(key, {
+            email: a.email as string,
+            name,
+            userId: null,
+            role: null,
+            application: applicationSummary(a),
+          });
+        }
+      }
+
+      // Applications first (newest on top), account-only rows after.
+      const rows = [...people.values()].sort((x, y) => {
+        const xc = (x.application?.createdAt as number) ?? -1;
+        const yc = (y.application?.createdAt as number) ?? -1;
+        return yc - xc;
       });
-      return json({ applications: (applications ?? []).map(applicationSummary) });
+      return json({ people: rows });
+    }
+
+    // Change a person's role (Clerk publicMetadata, the source of truth).
+    if (req.method === "POST" && url.pathname === "/api/admin/people/role") {
+      let body: Record<string, unknown>;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "invalid JSON body" }, 400);
+      }
+      const targetId = typeof body.userId === "string" ? body.userId : "";
+      const role = body.role;
+      if (!targetId.startsWith("user_")) return json({ error: "invalid userId" }, 400);
+      if (role !== "provisional" && role !== "member" && role !== "admin") {
+        return json({ error: "role must be provisional, member, or admin" }, 400);
+      }
+      // Self-demotion lockout guard: admins change other people's roles.
+      if (targetId === user.userId) {
+        return json({ error: "you cannot change your own role" }, 400);
+      }
+
+      let sk: string;
+      try {
+        sk = await db.secrets.get("clerk_secret_key");
+      } catch {
+        return json({ error: "role management unavailable: clerk_secret_key missing from vault" }, 503);
+      }
+      const res = await fetch(`https://api.clerk.com/v1/users/${targetId}/metadata`, {
+        method: "PATCH",
+        headers: { authorization: `Bearer ${sk}`, "content-type": "application/json" },
+        body: JSON.stringify({ public_metadata: { role } }),
+      });
+      if (res.status === 404) return json({ error: "user not found" }, 404);
+      if (!res.ok) {
+        console.error("clerk role update failed", res.status);
+        return json({ error: "role update failed upstream" }, 502);
+      }
+      return json({ ok: true });
     }
 
     const patchMatch = url.pathname.match(/^\/api\/admin\/applications\/([0-9a-f-]+)$/);
@@ -273,12 +397,6 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
 
       await db.transact(tx.applications[id].update(attrs));
       return json({ ok: true });
-    }
-
-    if (req.method === "GET" && url.pathname === "/api/admin/members") {
-      // The platform-managed Clerk mirror; fills via the Phase 3b webhook.
-      const { $users } = await db.query({ $users: { $: { limit: 200 } } });
-      return json({ members: $users ?? [] });
     }
 
     return json({ error: "not found" }, 404);
