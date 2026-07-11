@@ -9,10 +9,11 @@
     "deploy:app:dev": "npm run build && wrangler deploy --env dev"
   },
   "devDependencies": {
-    "@odla-ai/cli": "0.9.0",
+    "@odla-ai/cli": "0.10.0",
     "wrangler": "^4.110.0"
   },
   "dependencies": {
+    "@odla-ai/calendar": "0.1.0",
     "@odla-ai/db": "^0.6.2",
     "@odla-ai/email": "^0.3.0",
     "jose": "^6.2.3"

@@ -31,6 +31,35 @@ Worker/admin side: `init({ appId: tenantId, adminToken: env.ODLA_API_KEY, endpoi
 The publishable key is public; `provision` stores it (`setAuth`). Rules evaluate
 the signed-in user's JWT as `auth` — e.g. `auth.signedIn`, `auth.email`.
 
+## @odla-ai/calendar — read-only Google booking mirror
+
+Calendar requires `services: ["db", "calendar"]` plus a `calendar.google`
+block. Normal provision opens a second, state-bound Google checkpoint issued by the platform for the
+human to grant `calendar.events.readonly`; Google tokens stay in the hosted
+connector and never become app/CLI secrets.
+
+```ts
+// Trusted Worker only — the admin key must never enter browser code.
+const calendar = initCalendar({
+  appId: env.ODLA_TENANT,
+  adminToken: env.ODLA_API_KEY,
+  endpoint: env.ODLA_ENDPOINT,
+});
+const next = await calendar.bookings.next("member@example.com");
+```
+
+Browser code may query `$bookings` with `@odla-ai/db/client` only under an
+explicit view rule, and may import pure formatting helpers from
+`@odla-ai/calendar/client`. Do not import `initCalendar` or expose
+`ODLA_API_KEY` in a browser. Provider actions are not part of the read-only
+slice; a `calendar_not_connected`/501 action response is not a reason to widen
+credentials or request a Google token.
+
+After consent, use `odla-ai calendar calendars --env dev --json` to discover
+selectable ids, edit the checked-in list, and optionally set a public per-env
+`bookingPageUrl` for Appointment Schedule embed/link mode. Re-provision, then verify with
+`calendar status --json` and `smoke`.
+
 ## @odla-ai/ai — inference (Claude / GPT / Gemini)
 
 ```ts

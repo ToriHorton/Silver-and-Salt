@@ -2,13 +2,14 @@
 name: odla-migrate
 description: >
   Migrate a static site (e.g. GitHub Pages) to odla on Cloudflare in safe
-  phases, then add a database, Clerk login, and AI. Use when the user wants to
+  phases, then add a database, optional read-only calendar mirror, Clerk login, and AI. Use when the user wants to
   move a static or GitHub Pages site to Cloudflare/odla, or to add a backend,
   database, login/auth, or AI features to a static site via odla.
 runbookOrder:
   - references/phase-0-preflight.md
   - references/phase-1-static.md
   - references/phase-2-db.md
+  - references/phase-2b-calendar.md
   - references/phase-3-auth.md
   - references/phase-3b-user-sync.md
   - references/phase-4-ai.md
@@ -45,12 +46,16 @@ installed skill at `../odla/SKILL.md` instead.
    approved o11y rotation with `--push-secrets` so the Worker is updated in the
    same run. If the final Wrangler transfer fails, use the CLI's printed
    non-rotating `secrets push` retry; never rotate again just to retry delivery.
+7. Existing calendar embeds are public links, not proof of a booking. Preserve
+   them via `bookingPageUrl`; never claim reconciliation until the read-only
+   mirror is connected and the app correlates `$bookings` deliberately. Google
+   OAuth tokens never enter the repo, CLI, or chat.
 
 ## Phase state machine
 
 Phases run strictly in order; each has a verification gate:
 
-  P0 preflight -> P1 static-on-cloudflare -> P2 database -> P3 login
+  P0 preflight -> P1 static-on-cloudflare -> P2 database -> P2b calendar (optional) -> P3 login
   -> P4 ai (optional) -> P5 prod + DNS cutover
 
 `MIGRATION.md` at the user's repo root is the durable state: create it in
@@ -100,6 +105,7 @@ Read the current phase's file when you enter it — not before:
 - references/phase-0-preflight.md
 - references/phase-1-static.md
 - references/phase-2-db.md
+- references/phase-2b-calendar.md (optional: preserve an embed and add authoritative read-only reconciliation)
 - references/phase-3-auth.md
 - references/phase-3b-user-sync.md (optional: mirror Clerk users into $users)
 - references/phase-4-ai.md

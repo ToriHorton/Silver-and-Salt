@@ -6,7 +6,31 @@ export default {
     name: "Silver & Salt Capital",
   },
   envs: ["dev"],
+  // "calendar" is configured below and ready to enable, but the platform
+  // registry rejects the service ("unsupported service: calendar") and the
+  // connector API 404s as of 2026-07-11: the @odla-ai/calendar 0.1.0 release
+  // and runbooks shipped ahead of the server rollout. Add "calendar" back to
+  // services and run provision + `calendar connect --env dev` once the
+  // platform accepts it (keeping it listed breaks every provision run).
   services: ["db"],
+  calendar: {
+    google: {
+      // The owner's calendar hosting the appointment schedule. Read-only
+      // mirror into $bookings; refine ids after `calendar calendars`.
+      calendars: { dev: ["primary"] },
+      // Primary is a general calendar: mirror only self-organized events
+      // with attendees (appointment bookings), not unrelated meetings.
+      match: { organizerSelf: true, requireAttendees: true },
+      // Attendee emails are required to correlate bookings to applications
+      // (owner reviews retention at the checkpoint).
+      attendeePolicy: "full",
+      // The existing public Appointment Schedule embed, preserved as the
+      // booking UI (public configuration, not a secret).
+      bookingPageUrl: {
+        dev: "https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true",
+      },
+    },
+  },
   db: {
     schema: "./src/odla/schema.mjs",
     rules: "./src/odla/rules.mjs",

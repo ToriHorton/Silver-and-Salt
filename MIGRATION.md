@@ -356,12 +356,22 @@ page or the worker, so bookings were invisible to the db. Two-layer answer:
    validates the time to a sane range, and NEVER moves status backwards
    (applies only from submitted/call_scheduled, so admin progression wins;
    verified). The member area and admin table show it immediately.
-2. **Authoritative calendar sync (PROPOSED, needs owner):** extend the
-   existing Google Apps Script with a time-driven trigger that reads the
-   appointment events from the owner's calendar and pushes
-   email/start-time (and cancellations) to a worker sync route guarded by
-   a shared vault secret. Corrects self-reports and catches reschedules.
-   Details to be agreed with the owner before building.
+2. **Authoritative calendar sync: @odla-ai/calendar (Phase 2b), BLOCKED ON
+   PLATFORM as of 2026-07-11.** The package (0.1.0, pinned) and CLI 0.10.0
+   calendar verbs are installed, `odla.config.mjs` carries the full
+   `calendar.google` block (primary calendar, organizerSelf +
+   requireAttendees filters, attendeePolicy "full", the appointment page as
+   bookingPageUrl.dev), doctor validates it, and the owner approved a fresh
+   device handshake. But the platform registry rejects the service
+   ("unsupported service: calendar") and `calendar connect/status` 404:
+   the server rollout lags the npm release. "calendar" is therefore parked
+   OUT of `services` (leaving it in breaks every provision run). TO RESUME:
+   add "calendar" back to services, run provision, complete the Google
+   consent (owner's calendar account; consent is read-only
+   calendar.events.readonly), then `calendar calendars/status` + smoke, then
+   wire $bookings-to-application correlation by attendee email (respect the
+   existing no-status-regression guard) and remove the join step 2
+   self-report field. The Apps Script bridge idea is superseded.
 
 ## Auth and roles design (owner-specified 2026-07-11)
 
