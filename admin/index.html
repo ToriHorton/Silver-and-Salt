@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin | Silver & Salt Capital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    /* Styling follows join.html (the design reference): moss hero, white
+       cards on the soft green field, lime primary actions. */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
+
+    :root {
+      --cream:      #FBF8F2;
+      --moss:       #2F3E34;
+      --moss-light: #4A5E50;
+      --sage:       #7E8E84;
+      --lime:       #7CB83F;
+      --lime-dark:  #6aa535;
+      --lime-soft:  rgba(124, 184, 63, 0.12);
+      --border:     #d6e8d2;
+      --bg:         #eef4ea;
+    }
+
+    body {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--moss);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 80px;
+    }
+
+    .container { width: 100%; max-width: 960px; padding: 0 20px; }
+
+    /* ── Hero (compact variant for the console) ── */
+    .hero {
+      width: 100%;
+      max-width: 100vw;
+      background: var(--moss);
+      text-align: center;
+      padding: 56px 40px 44px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, var(--lime) 50%, transparent 100%);
+    }
+
+    .back-link {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-family: 'Satoshi', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--cream); }
+
+    .wordmark {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+      margin-bottom: 18px;
+    }
+    .brand-amp { font-family: 'Cormorant Garamond', Georgia, serif; font-style: normal; }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 32px;
+      font-weight: 300;
+      font-style: italic;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--lime);
+      border: 1px solid rgba(124,184,63,0.35);
+      border-radius: 100px;
+      padding: 5px 16px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px 36px;
+      overflow: visible;
+      margin-bottom: 24px;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 22px;
+    }
+
+    .auth-status {
+      font-size: 14px;
+      color: var(--sage);
+      text-align: center;
+      padding: 24px 0;
+      line-height: 1.8;
+    }
+    .auth-status a { color: var(--lime-dark); font-weight: 700; text-decoration: none; }
+    .auth-status a:hover { text-decoration: underline; }
+
+    #signin-mount {
+      display: flex;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    /* ── Console header row ── */
+    .console-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .member-email { font-size: 15px; font-weight: 500; color: var(--moss); }
+    .signout-btn {
+      background: none;
+      border: none;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .signout-btn:hover { color: var(--moss); text-decoration: underline; }
+
+    /* ── Stats ── */
+    .stats-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .stat {
+      flex: 1;
+      min-width: 140px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      font-size: 34px;
+      color: var(--moss);
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-top: 4px;
+    }
+
+    /* ── People table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      padding: 10px 14px 10px 0;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 14px 12px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--moss-light);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    td.person { color: var(--moss); font-weight: 500; }
+    td .muted { color: var(--sage); font-size: 13px; }
+
+    select, input[type="datetime-local"] {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
+      color: var(--moss);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 7px 8px;
+      background: #fff;
+    }
+    select:focus, input[type="datetime-local"]:focus { outline: 2px solid var(--lime-soft); border-color: var(--lime); }
+    select:disabled { color: var(--sage); background: #f6f8f5; }
+
+    .row-save {
+      background-color: var(--lime);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .row-save:hover { background-color: var(--lime-dark); }
+    .row-save:disabled { background-color: #b0cc9e; cursor: default; }
+
+    .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 480px) {
+      .hero { padding: 48px 24px 40px; }
+      .back-link { position: static; display: block; text-align: left; margin-bottom: 20px; }
+      .card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <a href="/members/" class="back-link">← Member area</a>
+    <div class="wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+    <h1>Admin Console</h1>
+    <span class="tag">Internal</span>
+  </div>
+
+  <div class="container">
+
+    <div class="card" id="status-card">
+      <div class="card-label">Admin</div>
+      <div class="auth-status" id="auth-loading">Preparing sign in…</div>
+    </div>
+
+    <div id="signin-mount" class="hidden"></div>
+
+    <div id="console" class="hidden">
+      <div class="card">
+        <div class="console-row">
+          <span class="member-email" id="member-email"></span>
+          <button class="signout-btn" id="signout-btn">Sign out</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Internal Stats</div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-num" id="stat-people">–</div><div class="stat-label">People</div></div>
+          <div class="stat"><div class="stat-num" id="stat-applications">–</div><div class="stat-label">Applications</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">People</div>
+        <div class="table-wrap">
+          <table id="people-table">
+            <thead>
+              <tr><th>Person</th><th>Email</th><th>Role</th><th>Status</th><th>Introduction call</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-note hidden" id="people-empty">People appear here as applications and accounts arrive.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/assets/member-auth.js?v=1"></script>
+  <script>
+    const { APPEARANCE, loadClerk, api, toLocalInputValue } = window.SSCAuth;
+    const $ = (id) => document.getElementById(id);
+
+    const ROLES = ['provisional', 'member', 'admin'];
+    const STATUS_LABELS = {
+      submitted: 'Submitted',
+      call_scheduled: 'Call scheduled',
+      interviewed: 'Interviewed',
+      approved: 'Approved',
+      declined: 'Declined',
+    };
+
+    let myUserId = null;
+
+    async function boot() {
+      try {
+        const clerk = await loadClerk();
+        if (!clerk.user) {
+          showSignIn();
+          return;
+        }
+        const me = await api('/api/me');
+        myUserId = me.userId;
+        if (me.role !== 'admin') {
+          $('auth-loading').innerHTML =
+            'This area is for administrators. Your member area is at <a href="/members/">silverandsaltcapital.com/members</a>.';
+          return;
+        }
+        $('status-card').classList.add('hidden');
+        $('console').classList.remove('hidden');
+        $('member-email').textContent = me.email || clerk.user.id;
+        $('signout-btn').addEventListener('click', async () => {
+          await window.Clerk.signOut();
+          window.location.href = '/members/';
+        });
+        await loadPeople();
+      } catch (err) {
+        $('auth-loading').textContent = 'The console is briefly unavailable. Please refresh.';
+        console.error(err);
+      }
+    }
+
+    function showSignIn() {
+      $('status-card').classList.add('hidden');
+      const mount = $('signin-mount');
+      mount.classList.remove('hidden');
+      window.Clerk.mountSignIn(mount, {
+        appearance: APPEARANCE,
+        fallbackRedirectUrl: '/admin/',
+      });
+    }
+
+    async function loadPeople() {
+      const { people } = await api('/api/admin/people');
+      $('stat-people').textContent = people.length;
+      $('stat-applications').textContent = people.filter(p => p.application).length;
+
+      const tbody = document.querySelector('#people-table tbody');
+      tbody.innerHTML = '';
+      if (!people.length) {
+        $('people-empty').classList.remove('hidden');
+        return;
+      }
+      for (const p of people) tbody.appendChild(renderRow(p));
+    }
+
+    function renderRow(p) {
+      const tr = document.createElement('tr');
+
+      const name = document.createElement('td');
+      name.className = 'person';
+      name.textContent = p.name || '(no name)';
+      tr.appendChild(name);
+
+      const email = document.createElement('td');
+      email.textContent = p.email;
+      tr.appendChild(email);
+
+      // Role: editable select when an account exists (and it is not me).
+      const roleTd = document.createElement('td');
+      let roleSelect = null;
+      if (p.userId) {
+        roleSelect = document.createElement('select');
+        for (const r of ROLES) {
+          const opt = document.createElement('option');
+          opt.value = r;
+          opt.textContent = r.charAt(0).toUpperCase() + r.slice(1);
+          if (r === p.role) opt.selected = true;
+          roleSelect.appendChild(opt);
+        }
+        if (p.userId === myUserId) {
+          roleSelect.disabled = true;
+          roleSelect.title = 'You cannot change your own role.';
+        }
+        roleTd.appendChild(roleSelect);
+      } else {
+        roleTd.innerHTML = '<span class="muted">No account</span>';
+      }
+      tr.appendChild(roleTd);
+
+      // Status + meeting: editable when an application exists.
+      const statusTd = document.createElement('td');
+      const meetingTd = document.createElement('td');
+      let statusSelect = null;
+      let meetingInput = null;
+      if (p.application) {
+        statusSelect = document.createElement('select');
+        for (const [value, label] of Object.entries(STATUS_LABELS)) {
+          const opt = document.createElement('option');
+          opt.value = value;
+          opt.textContent = label;
+          if (value === p.application.status) opt.selected = true;
+          statusSelect.appendChild(opt);
+        }
+        statusTd.appendChild(statusSelect);
+
+        meetingInput = document.createElement('input');
+        meetingInput.type = 'datetime-local';
+        if (p.application.meetingAt) meetingInput.value = toLocalInputValue(p.application.meetingAt);
+        meetingTd.appendChild(meetingInput);
+      } else {
+        statusTd.innerHTML = '<span class="muted">No application</span>';
+      }
+      tr.appendChild(statusTd);
+      tr.appendChild(meetingTd);
+
+      // Save: applies role change (if any) and application change (if any).
+      const saveTd = document.createElement('td');
+      const canSave = roleSelect && !roleSelect.disabled || p.application;
+      if (canSave) {
+        const save = document.createElement('button');
+        save.className = 'row-save';
+        save.textContent = 'Save';
+        save.addEventListener('click', async () => {
+          save.disabled = true;
+          save.textContent = 'Saving…';
+          try {
+            const work = [];
+            if (roleSelect && !roleSelect.disabled && roleSelect.value !== p.role) {
+              work.push(api('/api/admin/people/role', {
+                method: 'POST',
+                body: JSON.stringify({ userId: p.userId, role: roleSelect.value }),
+              }).then(() => { p.role = roleSelect.value; }));
+            }
+            if (p.application) {
+              const payload = { status: statusSelect.value };
+              if (meetingInput.value) {
+                const ms = new Date(meetingInput.value).getTime();
+                if (Number.isFinite(ms)) payload.meetingAt = ms;
+              }
+              work.push(api('/api/admin/applications/' + p.application.id, {
+                method: 'PATCH',
+                body: JSON.stringify(payload),
+              }));
+            }
+            await Promise.all(work);
+            save.textContent = 'Saved';
+            setTimeout(() => { save.textContent = 'Save'; save.disabled = false; }, 1500);
+          } catch (e) {
+            console.error(e);
+            save.textContent = 'Retry';
+            save.disabled = false;
+          }
+        });
+        saveTd.appendChild(save);
+      }
+      tr.appendChild(saveTd);
+
+      return tr;
+    }
+
+    boot();
+  </script>
+</body>
+</html>
