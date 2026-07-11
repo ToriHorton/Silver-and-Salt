@@ -10,8 +10,8 @@ in the browser in interactive terminals).
 
 ## Steps
 
-1. Require `npm view @odla-ai/cli@0.8.0 version` to succeed, then run
-   `npm i -D --save-exact @odla-ai/cli@0.8.0` and `npm i @odla-ai/db`.
+1. Require `npm view @odla-ai/cli@0.10.0 version` to succeed, then run
+   `npm i -D --save-exact @odla-ai/cli@0.10.0` and `npm i @odla-ai/db`.
 2. `npx @odla-ai/cli init --app-id <id> --name "<Name>" --env dev --services db`
    Review `odla.config.mjs`. Keep `envs: ["dev"]` — prod is Phase 5. Set
    `links.dev` to the URL the Phase 1 `wrangler deploy` **actually printed** —

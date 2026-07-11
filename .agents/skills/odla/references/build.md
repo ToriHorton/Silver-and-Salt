@@ -15,6 +15,13 @@ deny-all rules from the schema. To turn on auth/observability, add `"o11y"` to
 `services` and an `auth.clerk` block in `odla.config.mjs` (init leaves it
 commented).
 
+For a Google booking mirror, include both `"db"` and `"calendar"`. Configure
+`calendar.google.calendars` for every env (start with `"primary"`), optional
+match filters, and `attendeePolicy: "full" | "hashed"`. This release is
+read-only; do not add OAuth credentials or action scopes to config.
+For static Appointment Schedule parity, add the public per-env
+`bookingPageUrl`; it is link/embed configuration, never a credential.
+
 ## 2. Build the Worker shell
 
 `npm i` only the SDKs you need and use the local `references/sdks.md` as the
@@ -43,6 +50,13 @@ Local credential files are `0600` and gitignored. Verify with
 anything unset. `--push-secrets` preflights the Wrangler config and login before
 issuing or rotating a shown-once credential.
 
+Calendar adds a second ⏸ checkpoint after the odla device approval: provision
+prints/opens a state-bound Google URL issued by the platform and waits while the human grants
+`calendar.events.readonly` and the hosted connector performs initial sync. The
+CLI never receives the Google callback code or tokens. Once connected, run
+`npx @odla-ai/cli calendar calendars --env dev --json`, refine the checked-in
+calendar ids if needed, re-provision, and verify `calendar status --json`.
+
 The CLI stops at the source boundary: it verifies but does not invent your
 application semantics. Do not use Studio to mint a routine o11y token. Manual
 Studio rotation is recovery-only;
@@ -60,6 +74,11 @@ npx wrangler dev
 means the namespace has no rule yet — add one in `src/odla/rules.mjs`
 (deliberately; e.g. `{ notes: { view: "auth.signedIn", create: "auth.signedIn" } }`),
 re-provision to push it, and retry.
+
+Calendar uses the same `ODLA_ENDPOINT`, `ODLA_TENANT`, and server-only
+`ODLA_API_KEY`; it adds no Worker secret. Keep `initCalendar` in trusted Worker
+code. Browser code uses db subscriptions under explicit rules or pure
+`@odla-ai/calendar/client` helpers, never the admin key.
 
 ## 5. Security preflight
 

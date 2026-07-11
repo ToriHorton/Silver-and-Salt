@@ -2,7 +2,7 @@
 name: odla
 description: >
   Build a new app on odla — a realtime database (odla-db) plus AI, Clerk auth,
-  and observability on Cloudflare, provisioned by @odla-ai/cli. Use when the user
+  read-only Google Calendar mirrors, and observability on Cloudflare, provisioned by @odla-ai/cli. Use when the user
   wants to create/scaffold an odla app, add odla-db/ai/auth/o11y to a repo, or
   "get started with odla". For moving an existing static or GitHub Pages site to
   odla, use the odla-migrate skill instead.
@@ -15,7 +15,7 @@ runbookOrder:
 
 You drive setup and building on **odla** — an agent-operable app platform on
 Cloudflare: a realtime graph database (**odla-db**), multi-provider **AI**,
-**Clerk** auth, and OpenTelemetry **observability**, all provisioned by the
+**Clerk** auth, read-only **Google Calendar** mirrors, and OpenTelemetry **observability**, all provisioned by the
 `@odla-ai/cli`. The human approves a couple of browser-only checkpoints; you do
 everything else.
 
@@ -48,6 +48,9 @@ State which path you're taking and what you'll build in one line; get a nod.
 4. Never `git add -A` without reading `git status` first. Never run
    `provision --rotate-keys` or `provision --rotate-o11y-token` unless the human
    explicitly asks.
+5. Google OAuth is a distinct human checkpoint. Never request, paste, print, or
+   store a Google authorization code/refresh token. Open only the state-bound
+   platform/Google consent URL returned by odla; calendar actions remain unavailable in the read-only slice.
 
 ## The flow
 
@@ -67,7 +70,9 @@ guessing which platform/credential steps need manual work. Then:
    prints; the human approves it at https://odla.ai/studio. It creates the app,
    enables services, issues or reuses configured credentials (db key + o11y
    ingest token when enabled), pushes schema + rules, writes `.dev.vars`, and
-   transfers Worker secrets through Wrangler stdin.
+   transfers Worker secrets through Wrangler stdin. With calendar enabled it
+   then prints a second, server-issued Google URL; the human grants read-only consent
+   and the CLI follows initial sync.
 4. **run** — `npx wrangler dev` (auto-loads `.dev.vars`); verify locally.
 5. **security** — run the passive `@odla-ai/security` odla profile; inspect
    every lead and keep critical candidate gating enabled. If the human approves
@@ -88,6 +93,10 @@ guessing which platform/credential steps need manual work. Then:
 
 `npx @odla-ai/cli doctor` is an offline config check anytime;
 `npx @odla-ai/cli smoke --env dev` verifies a live deployment.
+Use `calendar status --json` for safe connection/sync state and `calendar
+calendars --json` to discover ids after consent; update checked-in config and
+re-provision. Resync production only with `--yes`; disconnect always requires
+`--yes` and leaves retained rows potentially stale.
 
 The CLI owns deterministic platform work from `odla.config.mjs`: service
 enablement, credential issuance/storage, `.dev.vars`, and Wrangler secret
