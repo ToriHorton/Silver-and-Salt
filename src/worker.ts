@@ -138,6 +138,47 @@ async function findApplicationByEmail(db: Db, email: string) {
   return applications?.[0] ?? null;
 }
 
+// Create (or find) the applicant's Clerk account at application time, so
+// their member account exists without a separate sign-up step. The email
+// stays unverified until their first sign-in; Clerk's email-code flow
+// verifies it then. The Clerk secret key lives in the tenant vault
+// (Studio-pasted, name "clerk_secret_key", never in the repo or Wrangler);
+// while it is absent this quietly no-ops and applicants can still sign up
+// by hand at /members/.
+async function ensureClerkAccount(
+  db: Db,
+  email: string,
+  firstName: string,
+  lastName: string,
+): Promise<boolean> {
+  let sk: string;
+  try {
+    sk = await db.secrets.get("clerk_secret_key");
+  } catch {
+    return false;
+  }
+  try {
+    const res = await fetch("https://api.clerk.com/v1/users", {
+      method: "POST",
+      headers: { authorization: `Bearer ${sk}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        email_address: [email],
+        first_name: firstName,
+        last_name: lastName,
+        skip_password_requirement: true,
+      }),
+    });
+    if (res.ok) return true;
+    // 422 means the email already has an account, which is the goal state.
+    if (res.status === 422) return true;
+    console.error("clerk account create failed", res.status);
+    return false;
+  } catch (err) {
+    console.error("clerk account create errored", err);
+    return false;
+  }
+}
+
 const applicationSummary = (a: Record<string, unknown>) => ({
   id: a.id,
   firstName: a.firstName,
@@ -273,7 +314,15 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       }),
       submissionId ? { mutationId: `join:${submissionId}` } : undefined,
     );
-    return json({ ok: true, id, duplicate: duplicate ?? false }, 201);
+
+    const accountCreated = await ensureClerkAccount(
+      db,
+      parsed.attrs.email as string,
+      parsed.attrs.firstName as string,
+      parsed.attrs.lastName as string,
+    );
+
+    return json({ ok: true, id, duplicate: duplicate ?? false, accountCreated }, 201);
   }
 
   // Gated: admins only (an internal stat per the owner's role model).

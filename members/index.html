@@ -558,6 +558,7 @@
           signUpUrl: '/members/?view=sign-up',
           fallbackRedirectUrl: '/members/',
           signUpFallbackRedirectUrl: '/members/',
+          initialValues: params.get('email') ? { emailAddress: params.get('email') } : undefined,
         });
       }
     }
