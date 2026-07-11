@@ -10,7 +10,7 @@
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <style>
     /* Styling follows join.html (the design reference): moss hero, white
-       card on the soft green field, lime primary actions. */
+       cards on the soft green field, lime primary actions. */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
 
@@ -37,7 +37,8 @@
       padding: 0 0 80px;
     }
 
-    .container { width: 100%; max-width: 480px; padding: 0 20px; }
+    .container { width: 100%; max-width: 520px; padding: 0 20px; }
+    .container.wide { max-width: 920px; }
 
     /* ── Hero ── */
     .hero {
@@ -133,13 +134,14 @@
       padding: 5px 16px;
     }
 
-    /* ── Card ── */
+    /* ── Cards ── */
     .card {
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 40px;
       overflow: visible;
+      margin-bottom: 24px;
     }
     .card-label {
       font-size: 11px;
@@ -147,7 +149,7 @@
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--sage);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .auth-status {
@@ -166,7 +168,7 @@
       overflow: visible;
     }
 
-    /* ── Signed-in panel ── */
+    /* ── Signed-in chrome ── */
     .member-row {
       display: flex;
       align-items: center;
@@ -190,26 +192,6 @@
     .role-badge.member      { color: #fff; background: var(--lime); }
     .role-badge.admin       { color: var(--cream); background: var(--moss); }
 
-    .member-message {
-      font-size: 14px;
-      line-height: 1.8;
-      color: var(--moss-light);
-      background: var(--lime-soft);
-      border-radius: 4px;
-      padding: 16px 18px;
-      margin-bottom: 24px;
-    }
-
-    .admin-stats {
-      font-size: 14px;
-      color: var(--moss-light);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 16px 18px;
-      margin-bottom: 24px;
-    }
-    .admin-stats strong { color: var(--moss); }
-
     .signout-btn {
       background: none;
       border: none;
@@ -224,6 +206,155 @@
       transition: color 0.2s;
     }
     .signout-btn:hover { color: var(--moss); text-decoration: underline; }
+
+    /* ── Provisional view ── */
+    .meeting-block {
+      text-align: center;
+      background: var(--lime-soft);
+      border-radius: 8px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+    }
+    .meeting-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--lime-dark);
+      margin-bottom: 10px;
+    }
+    .meeting-date {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 1.25;
+      color: var(--moss);
+    }
+    .meeting-note {
+      font-size: 14px;
+      color: var(--moss-light);
+      line-height: 1.8;
+      margin-top: 12px;
+    }
+    .apply-link {
+      display: inline-block;
+      background-color: var(--lime);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      padding: 14px 30px;
+      text-decoration: none;
+      margin-top: 14px;
+      transition: background-color 0.2s;
+    }
+    .apply-link:hover { background-color: var(--lime-dark); }
+
+    /* ── Member view ── */
+    .section-list { list-style: none; }
+    .section-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      color: var(--moss-light);
+      line-height: 1.6;
+    }
+    .section-list li:last-child { border-bottom: none; }
+    .section-list .item-mark { color: var(--lime); flex-shrink: 0; }
+    .section-list .soon {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    /* ── Admin view ── */
+    .stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; }
+    .stat {
+      flex: 1;
+      min-width: 140px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      font-size: 34px;
+      color: var(--moss);
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-top: 4px;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      padding: 10px 12px 10px 0;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 12px 12px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--moss-light);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    td.applicant { color: var(--moss); font-weight: 500; }
+
+    select, input[type="datetime-local"] {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
+      color: var(--moss);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 7px 8px;
+      background: #fff;
+    }
+    select:focus, input[type="datetime-local"]:focus { outline: 2px solid var(--lime-soft); border-color: var(--lime); }
+
+    .row-save {
+      background-color: var(--lime);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .row-save:hover { background-color: var(--lime-dark); }
+    .row-save:disabled { background-color: #b0cc9e; cursor: default; }
+
+    .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
 
     .hidden { display: none; }
 
@@ -242,42 +373,141 @@
     <a href="/" class="back-link">← Return to site</a>
     <div class="hero-inner">
       <div class="wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
-      <h1>Member Sign In</h1>
+      <h1 id="hero-title">Member Sign In</h1>
       <div class="hero-rule"><div class="hero-diamond"></div></div>
-      <p>Welcome back. Sign in to reach your member area.</p>
+      <p id="hero-sub">Welcome back. Sign in to reach your member area.</p>
       <span class="tag">Members Only</span>
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="page-container">
+
     <div class="card" id="status-card">
-      <div class="card-label" id="card-label">Members</div>
-
+      <div class="card-label">Members</div>
       <div class="auth-status" id="auth-loading">Preparing sign in…</div>
-
-      <div id="member-panel" class="hidden">
-        <div class="member-row">
-          <span class="member-email" id="member-email"></span>
-          <span class="role-badge" id="role-badge"></span>
-        </div>
-        <div class="member-message" id="member-message"></div>
-        <div class="admin-stats hidden" id="admin-stats"></div>
-        <button class="signout-btn" id="signout-btn">Sign out</button>
-      </div>
     </div>
 
     <div id="signin-mount" class="hidden"></div>
+
+    <!-- Shared signed-in header -->
+    <div class="card hidden" id="account-card">
+      <div class="member-row">
+        <span class="member-email" id="member-email"></span>
+        <span class="role-badge" id="role-badge"></span>
+      </div>
+      <button class="signout-btn" id="signout-btn">Sign out</button>
+    </div>
+
+    <!-- Provisional view -->
+    <div class="card hidden" id="provisional-card">
+      <div class="card-label">Your Application</div>
+      <div id="provisional-body"></div>
+    </div>
+
+    <!-- Member view -->
+    <div id="member-view" class="hidden">
+      <div class="card">
+        <div class="card-label">Training Material</div>
+        <ul class="section-list">
+          <li><span class="item-mark">✦</span> Foundations of angel investing <span class="soon">Coming soon</span></li>
+          <li><span class="item-mark">✦</span> Reading a term sheet with confidence <span class="soon">Coming soon</span></li>
+          <li><span class="item-mark">✦</span> How Silver <span class="brand-amp">&amp;</span> Salt Capital evaluates opportunities <span class="soon">Coming soon</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Upcoming Events</div>
+        <p class="empty-note">Member gatherings and salon evenings will be announced here. Watch this space and your inbox.</p>
+      </div>
+    </div>
+
+    <!-- Admin view -->
+    <div id="admin-view" class="hidden">
+      <div class="card">
+        <div class="card-label">Internal Stats</div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-num" id="stat-applications">–</div><div class="stat-label">Applications</div></div>
+          <div class="stat"><div class="stat-num" id="stat-members">–</div><div class="stat-label">Accounts</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Applications</div>
+        <div class="table-wrap">
+          <table id="applications-table">
+            <thead>
+              <tr><th>Applicant</th><th>Email</th><th>Status</th><th>Introduction call</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-note hidden" id="applications-empty">Applications will appear here as they arrive.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Member Accounts</div>
+        <div class="table-wrap">
+          <table id="members-table">
+            <thead>
+              <tr><th>Email</th><th>Name</th><th>User ID</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-note hidden" id="members-empty">Accounts sync here from Clerk once the webhook secret is in place.</p>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    const ROLE_COPY = {
-      provisional: 'Thank you for joining us. Your membership becomes full after a brief introduction call with our team. We will reach out to schedule it.',
-      member: 'You have full member access. Member resources and the directory arrive here as we build out this area.',
-      admin: 'You have administrator access.',
+    const STATUS_LABELS = {
+      submitted: 'Submitted',
+      call_scheduled: 'Call scheduled',
+      interviewed: 'Interviewed',
+      approved: 'Approved',
+      declined: 'Declined',
     };
 
+    // Brand carried by variables only: Clerk keeps its own layout (fighting
+    // its internal card with element overrides is what breaks it), and both
+    // sign-in and sign-up stay on this page so the styling always matches.
+    const APPEARANCE = {
+      variables: {
+        colorPrimary: '#7CB83F',
+        colorText: '#2F3E34',
+        colorTextSecondary: '#7E8E84',
+        colorBackground: '#ffffff',
+        fontFamily: "'Satoshi', 'Helvetica Neue', Arial, sans-serif",
+        borderRadius: '4px',
+      },
+    };
+
+    const $ = (id) => document.getElementById(id);
+    let sessionToken = null;
+
+    async function api(path, opts = {}) {
+      const res = await fetch(path, {
+        ...opts,
+        headers: {
+          ...(opts.headers || {}),
+          ...(sessionToken ? { authorization: `Bearer ${sessionToken}` } : {}),
+          ...(opts.body ? { 'content-type': 'application/json' } : {}),
+        },
+      });
+      if (!res.ok) throw new Error(`${path} -> ${res.status}`);
+      return res.json();
+    }
+
+    const fmtMeeting = (ms) => new Date(ms).toLocaleString(undefined, {
+      weekday: 'long', month: 'long', day: 'numeric',
+      hour: 'numeric', minute: '2-digit',
+    });
+
+    function toLocalInputValue(ms) {
+      const d = new Date(ms);
+      const p = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+
     async function boot() {
-      const loading = document.getElementById('auth-loading');
       try {
         const cfg = await fetch('/api/auth/config').then(r => r.json());
         const pk = cfg.publishableKey;
@@ -296,42 +526,31 @@
         await window.Clerk.load();
 
         if (window.Clerk.user) {
-          await showMemberPanel();
+          await showSignedIn();
         } else {
           showSignIn();
         }
       } catch (err) {
-        loading.textContent = 'Sign in is briefly unavailable. Please refresh, or return to the site and try again.';
+        $('auth-loading').textContent = 'Sign in is briefly unavailable. Please refresh, or return to the site and try again.';
         console.error(err);
       }
     }
 
-    // Brand carried by variables only: Clerk keeps its own layout (fighting
-    // its internal card with element overrides is what breaks it), and both
-    // sign-in and sign-up stay on this page so the styling always matches.
-    const APPEARANCE = {
-      variables: {
-        colorPrimary: '#7CB83F',
-        colorText: '#2F3E34',
-        colorTextSecondary: '#7E8E84',
-        colorBackground: '#ffffff',
-        fontFamily: "'Satoshi', 'Helvetica Neue', Arial, sans-serif",
-        borderRadius: '4px',
-      },
-    };
-
     function showSignIn() {
-      document.getElementById('auth-loading').classList.add('hidden');
-      document.getElementById('status-card').classList.add('hidden');
-      const mount = document.getElementById('signin-mount');
+      $('status-card').classList.add('hidden');
+      const mount = $('signin-mount');
       mount.classList.remove('hidden');
 
-      const wantSignUp = new URLSearchParams(location.search).get('view') === 'sign-up';
+      const params = new URLSearchParams(location.search);
+      const wantSignUp = params.get('view') === 'sign-up';
       if (wantSignUp) {
+        $('hero-title').textContent = 'Create Your Account';
+        $('hero-sub').textContent = 'Your member account keeps your application status and call details in one place.';
         window.Clerk.mountSignUp(mount, {
           appearance: APPEARANCE,
           signInUrl: '/members/',
           fallbackRedirectUrl: '/members/',
+          initialValues: params.get('email') ? { emailAddress: params.get('email') } : undefined,
         });
       } else {
         window.Clerk.mountSignIn(mount, {
@@ -343,15 +562,13 @@
       }
     }
 
-    async function showMemberPanel() {
-      document.getElementById('auth-loading').classList.add('hidden');
-      document.getElementById('card-label').textContent = 'Member Area';
+    async function showSignedIn() {
+      $('status-card').classList.add('hidden');
+      sessionToken = await window.Clerk.session.getToken();
 
-      const token = await window.Clerk.session.getToken();
-      let me = { email: null, role: 'provisional' };
+      let me = { email: null, role: 'provisional', application: null };
       try {
-        const res = await fetch('/api/me', { headers: { authorization: `Bearer ${token}` } });
-        if (res.ok) me = await res.json();
+        me = await api('/api/me');
       } catch (e) { console.error(e); }
 
       const email = me.email
@@ -359,29 +576,146 @@
         || window.Clerk.user.id;
       const role = me.role || 'provisional';
 
-      document.getElementById('member-email').textContent = email;
-      const badge = document.getElementById('role-badge');
+      $('member-email').textContent = email;
+      const badge = $('role-badge');
       badge.textContent = role;
       badge.classList.add(role);
-      document.getElementById('member-message').textContent = ROLE_COPY[role] || ROLE_COPY.provisional;
+      $('account-card').classList.remove('hidden');
+      $('signout-btn').addEventListener('click', async () => {
+        await window.Clerk.signOut();
+        window.location.href = '/members/';
+      });
 
-      if (role === 'admin') {
-        try {
-          const res = await fetch('/api/applications/count', { headers: { authorization: `Bearer ${token}` } });
-          if (res.ok) {
-            const { count } = await res.json();
-            const stats = document.getElementById('admin-stats');
-            stats.innerHTML = `Applications received: <strong>${count}</strong>`;
-            stats.classList.remove('hidden');
-          }
-        } catch (e) { console.error(e); }
+      $('hero-title').textContent = 'Member Area';
+
+      if (role === 'provisional') {
+        $('hero-sub').textContent = 'Thank you for joining us. Full membership follows your introduction call.';
+        renderProvisional(me.application);
+      } else {
+        $('hero-sub').textContent = 'Welcome back.';
+        $('member-view').classList.remove('hidden');
       }
 
-      document.getElementById('member-panel').classList.remove('hidden');
-      document.getElementById('signout-btn').addEventListener('click', async () => {
-        await window.Clerk.signOut();
-        window.location.reload();
-      });
+      if (role === 'admin') {
+        $('page-container').classList.add('wide');
+        $('admin-view').classList.remove('hidden');
+        loadAdmin();
+      }
+    }
+
+    function renderProvisional(application) {
+      const body = $('provisional-body');
+      if (application && application.meetingAt) {
+        body.innerHTML = `
+          <div class="meeting-block">
+            <div class="meeting-kicker">Your introduction call</div>
+            <div class="meeting-date">${fmtMeeting(application.meetingAt)}</div>
+            <div class="meeting-note">A calendar invitation is in your email. We look forward to meeting you.</div>
+          </div>`;
+      } else if (application) {
+        body.innerHTML = `
+          <div class="meeting-block">
+            <div class="meeting-kicker">Application received</div>
+            <div class="meeting-note">Your application is in. Your introduction call details will appear here once your time is confirmed, and a calendar invitation will reach your email.</div>
+          </div>`;
+      } else {
+        body.innerHTML = `
+          <div class="meeting-block">
+            <div class="meeting-kicker">One step remains</div>
+            <div class="meeting-note">Your account is ready, and the application that completes it takes a few minutes.</div>
+            <a class="apply-link" href="/join.html">Apply for membership</a>
+          </div>`;
+      }
+      $('provisional-card').classList.remove('hidden');
+    }
+
+    async function loadAdmin() {
+      try {
+        const { applications } = await api('/api/admin/applications');
+        $('stat-applications').textContent = applications.length;
+        const tbody = document.querySelector('#applications-table tbody');
+        tbody.innerHTML = '';
+        if (!applications.length) {
+          $('applications-empty').classList.remove('hidden');
+        }
+        for (const a of applications) {
+          const tr = document.createElement('tr');
+
+          const name = document.createElement('td');
+          name.className = 'applicant';
+          name.textContent = `${a.firstName} ${a.lastName}`;
+          tr.appendChild(name);
+
+          const email = document.createElement('td');
+          email.textContent = a.email;
+          tr.appendChild(email);
+
+          const statusTd = document.createElement('td');
+          const select = document.createElement('select');
+          for (const [value, label] of Object.entries(STATUS_LABELS)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = label;
+            if (value === a.status) opt.selected = true;
+            select.appendChild(opt);
+          }
+          statusTd.appendChild(select);
+          tr.appendChild(statusTd);
+
+          const meetingTd = document.createElement('td');
+          const meeting = document.createElement('input');
+          meeting.type = 'datetime-local';
+          if (a.meetingAt) meeting.value = toLocalInputValue(a.meetingAt);
+          meetingTd.appendChild(meeting);
+          tr.appendChild(meetingTd);
+
+          const saveTd = document.createElement('td');
+          const save = document.createElement('button');
+          save.className = 'row-save';
+          save.textContent = 'Save';
+          save.addEventListener('click', async () => {
+            save.disabled = true;
+            save.textContent = 'Saving…';
+            try {
+              const payload = { status: select.value };
+              if (meeting.value) payload.meetingAt = new Date(meeting.value).getTime();
+              await api(`/api/admin/applications/${a.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify(payload),
+              });
+              save.textContent = 'Saved';
+              setTimeout(() => { save.textContent = 'Save'; save.disabled = false; }, 1500);
+            } catch (e) {
+              console.error(e);
+              save.textContent = 'Retry';
+              save.disabled = false;
+            }
+          });
+          saveTd.appendChild(save);
+          tr.appendChild(saveTd);
+
+          tbody.appendChild(tr);
+        }
+      } catch (e) { console.error(e); }
+
+      try {
+        const { members } = await api('/api/admin/members');
+        $('stat-members').textContent = members.length;
+        const tbody = document.querySelector('#members-table tbody');
+        tbody.innerHTML = '';
+        if (!members.length) {
+          $('members-empty').classList.remove('hidden');
+        }
+        for (const m of members) {
+          const tr = document.createElement('tr');
+          for (const value of [m.email || '', m.name || '', m.id || '']) {
+            const td = document.createElement('td');
+            td.textContent = value;
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+      } catch (e) { console.error(e); }
     }
 
     boot();

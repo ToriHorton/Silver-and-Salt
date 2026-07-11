@@ -126,6 +126,28 @@ function parseApplication(body: Record<string, unknown>):
   return { ok: true, attrs };
 }
 
+const STATUSES = ["submitted", "call_scheduled", "interviewed", "approved", "declined"] as const;
+
+type Db = ReturnType<typeof initAdmin>;
+
+// Latest application for an email (a person may reapply; newest wins).
+async function findApplicationByEmail(db: Db, email: string) {
+  const { applications } = await db.query({
+    applications: { $: { where: { email }, order: { createdAt: "desc" }, limit: 1 } },
+  });
+  return applications?.[0] ?? null;
+}
+
+const applicationSummary = (a: Record<string, unknown>) => ({
+  id: a.id,
+  firstName: a.firstName,
+  lastName: a.lastName,
+  email: a.email,
+  status: a.status,
+  meetingAt: a.meetingAt ?? null,
+  createdAt: a.createdAt,
+});
+
 async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   // Public: the sign-in page bootstraps ClerkJS from this (same-origin, so
   // the page needs no hardcoded key and prod picks up its own config).
@@ -134,18 +156,92 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     return json({ publishableKey: clerkPublishableKey ?? null, issuer: issuer ?? null });
   }
 
-  // Gated: any verified session.
-  if (req.method === "GET" && url.pathname === "/api/me") {
-    const user = await verifyUser(req, env);
-    if (!user) return json({ error: "unauthorized" }, 401);
-    return json(user);
-  }
-
   const db = initAdmin({
     appId: env.ODLA_TENANT,
     adminToken: env.ODLA_API_KEY,
     endpoint: env.ODLA_ENDPOINT,
   });
+
+  // Gated: any verified session. Returns the user plus their application
+  // (matched by email) so the member area can show status and meeting time.
+  if (req.method === "GET" && url.pathname === "/api/me") {
+    const user = await verifyUser(req, env);
+    if (!user) return json({ error: "unauthorized" }, 401);
+
+    let application = null;
+    if (user.email) {
+      const a = await findApplicationByEmail(db, user.email);
+      if (a) {
+        application = applicationSummary(a);
+        if (a.clerkUserId !== user.userId) {
+          // Lazy link; mutationId makes retries exactly-once.
+          await db.transact(
+            tx.applications[a.id as string].update({ clerkUserId: user.userId }),
+            { mutationId: `link:${a.id}:${user.userId}` },
+          );
+        }
+      }
+    }
+    return json({ ...user, application });
+  }
+
+  // ── Admin routes ────────────────────────────────────────────────
+  if (url.pathname.startsWith("/api/admin/")) {
+    const user = await verifyUser(req, env);
+    if (!user) return json({ error: "unauthorized" }, 401);
+    if (user.role !== "admin") return json({ error: "forbidden" }, 403);
+
+    if (req.method === "GET" && url.pathname === "/api/admin/applications") {
+      const { applications } = await db.query({
+        applications: { $: { order: { createdAt: "desc" }, limit: 200 } },
+      });
+      return json({ applications: (applications ?? []).map(applicationSummary) });
+    }
+
+    const patchMatch = url.pathname.match(/^\/api\/admin\/applications\/([0-9a-f-]+)$/);
+    if (req.method === "PATCH" && patchMatch) {
+      const id = patchMatch[1];
+      let body: Record<string, unknown>;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "invalid JSON body" }, 400);
+      }
+
+      const attrs: Record<string, unknown> = {};
+      if (body.status !== undefined) {
+        if (!STATUSES.includes(body.status as (typeof STATUSES)[number])) {
+          return json({ error: `status must be one of: ${STATUSES.join(", ")}` }, 400);
+        }
+        attrs.status = body.status;
+      }
+      if (body.meetingAt !== undefined) {
+        if (typeof body.meetingAt !== "number" || !Number.isFinite(body.meetingAt)) {
+          return json({ error: "meetingAt must be epoch milliseconds" }, 400);
+        }
+        attrs.meetingAt = body.meetingAt;
+      }
+      if (Object.keys(attrs).length === 0) return json({ error: "nothing to update" }, 400);
+
+      // Verify the row exists first: update() upserts, and a typo'd id must
+      // not create a phantom partial row.
+      const { applications } = await db.query({
+        applications: { $: { where: { id }, limit: 1 } },
+      });
+      if (!applications?.length) return json({ error: "not found" }, 404);
+
+      await db.transact(tx.applications[id].update(attrs));
+      return json({ ok: true });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/admin/members") {
+      // The platform-managed Clerk mirror; fills via the Phase 3b webhook.
+      const { $users } = await db.query({ $users: { $: { limit: 200 } } });
+      return json({ members: $users ?? [] });
+    }
+
+    return json({ error: "not found" }, 404);
+  }
 
   if (req.method === "POST" && url.pathname === "/api/applications") {
     const len = Number(req.headers.get("content-length") ?? 0);
