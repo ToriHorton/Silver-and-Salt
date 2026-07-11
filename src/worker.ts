@@ -7,6 +7,7 @@
 // Browsers never receive a db credential.
 
 import { initAdmin, tx, uuidv7, OdlaError } from "@odla-ai/db";
+import { createRemoteJWKSet, jwtVerify } from "jose";
 
 interface Env {
   ASSETS: Fetcher;
@@ -16,6 +17,73 @@ interface Env {
   ODLA_APP_ID: string;
   ODLA_ENV: string;
   ODLA_API_KEY: string;
+}
+
+// ── Auth (Phase 3) ─────────────────────────────────────────────────
+// Clerk is the source of truth for identity. The worker verifies session
+// JWTs itself: issuer comes from the platform's public-config (cached ~5
+// minutes per isolate, so a key rotation propagates without a redeploy),
+// keys from the issuer's JWKS (cached per issuer).
+//
+// Roles (owner-specified): provisional | member | admin. The role rides in
+// the session token's `role` claim (Clerk publicMetadata.role); a missing
+// or unknown claim means provisional, the safest default.
+
+type PublicConfig = {
+  env?: string;
+  clerkPublishableKey?: string | null;
+  issuer?: string | null;
+  link?: string;
+};
+
+type Role = "provisional" | "member" | "admin";
+type AuthedUser = { userId: string; email?: string; role: Role };
+
+let publicConfigCache: { value: PublicConfig; at: number } | null = null;
+const jwksByIssuer = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
+
+async function getPublicConfig(env: Env): Promise<PublicConfig> {
+  if (publicConfigCache && Date.now() - publicConfigCache.at < 5 * 60_000) {
+    return publicConfigCache.value;
+  }
+  const res = await fetch(
+    `${env.ODLA_PLATFORM}/registry/apps/${env.ODLA_APP_ID}/public-config?env=${env.ODLA_ENV}`,
+  );
+  if (!res.ok) throw new Error(`public-config fetch failed: ${res.status}`);
+  const value = (await res.json()) as PublicConfig;
+  publicConfigCache = { value, at: Date.now() };
+  return value;
+}
+
+async function verifyUser(req: Request, env: Env): Promise<AuthedUser | null> {
+  const header = req.headers.get("authorization") ?? "";
+  if (!header.startsWith("Bearer ")) return null;
+  const token = header.slice(7);
+
+  const { issuer } = await getPublicConfig(env);
+  if (!issuer) return null;
+
+  let jwks = jwksByIssuer.get(issuer);
+  if (!jwks) {
+    jwks = createRemoteJWKSet(new URL(`${issuer}/.well-known/jwks.json`));
+    jwksByIssuer.set(issuer, jwks);
+  }
+
+  try {
+    const { payload } = await jwtVerify(token, jwks, { issuer });
+    if (!payload.sub) return null;
+    const role: Role =
+      payload.role === "admin" || payload.role === "member"
+        ? payload.role
+        : "provisional";
+    return {
+      userId: payload.sub,
+      email: typeof payload.email === "string" ? payload.email : undefined,
+      role,
+    };
+  } catch {
+    return null;
+  }
 }
 
 const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
@@ -59,6 +127,20 @@ function parseApplication(body: Record<string, unknown>):
 }
 
 async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
+  // Public: the sign-in page bootstraps ClerkJS from this (same-origin, so
+  // the page needs no hardcoded key and prod picks up its own config).
+  if (req.method === "GET" && url.pathname === "/api/auth/config") {
+    const { clerkPublishableKey, issuer } = await getPublicConfig(env);
+    return json({ publishableKey: clerkPublishableKey ?? null, issuer: issuer ?? null });
+  }
+
+  // Gated: any verified session.
+  if (req.method === "GET" && url.pathname === "/api/me") {
+    const user = await verifyUser(req, env);
+    if (!user) return json({ error: "unauthorized" }, 401);
+    return json(user);
+  }
+
   const db = initAdmin({
     appId: env.ODLA_TENANT,
     adminToken: env.ODLA_API_KEY,
@@ -98,7 +180,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     return json({ ok: true, id, duplicate: duplicate ?? false }, 201);
   }
 
+  // Gated: admins only (an internal stat per the owner's role model).
   if (req.method === "GET" && url.pathname === "/api/applications/count") {
+    const user = await verifyUser(req, env);
+    if (!user) return json({ error: "unauthorized" }, 401);
+    if (user.role !== "admin") return json({ error: "forbidden" }, 403);
     const { count } = await db.aggregate("applications", { count: true });
     return json({ count });
   }

@@ -17,8 +17,9 @@ export default {
   // smoke's config-vs-platform comparison honest (platform has ai "none").
   auth: {
     clerk: {
-      // dev: "$CLERK_PUBLISHABLE_KEY",
-      // prod: "$CLERK_PUBLISHABLE_KEY",
+      // Publishable key (public by design). Clerk app "Silver & Salt Capital",
+      // app_3GMor24zmc0WwlcPwmf4obMUGPr, dev instance. prod pk is set at Phase 5.
+      dev: "pk_test_YWJvdmUtdmlwZXItMTUuY2xlcmsuYWNjb3VudHMuZGV2JA",
     },
   },
   // Add "o11y" to services to enable observability; provision then mints the

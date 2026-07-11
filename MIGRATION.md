@@ -16,7 +16,9 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
 - [x] **P0: Preflight** (completed 2026-07-11, human approved)
 - [x] **P1: Static site on Cloudflare (dev tenant only)** (completed 2026-07-11, human approved)
 - [x] **P2: Database (odla-db)** (completed 2026-07-11, awaiting human approval to enter P3)
-- [ ] **P3: Login (Clerk)**
+- [ ] **P3: Login (Clerk)** in progress 2026-07-11: code shipped and verified
+  (401 gates, deployed, smoke ok); waiting on human browser verification and
+  the Clerk dashboard session-claims step (see P3 status below)
 - [ ] **P3b: User sync (mirror Clerk users into $users)** (optional)
 - [ ] **P4: AI** (optional)
 - [ ] **P5: Production + DNS cutover** (this is the ONLY phase that touches production)
@@ -138,6 +140,42 @@ Known intentional differences (flag at cutover review):
   One test row exists in the dev tenant (submissionId `dev-smoke-001`).
 - join.html still posts to Google Apps Script; the form frontend moves to
   `/api/applications` in a later phase (production behavior unchanged).
+
+## P3 status (2026-07-11, in progress)
+
+- Clerk app: **"Silver & Salt Capital"**, `app_3GMor24zmc0WwlcPwmf4obMUGPr`,
+  dev instance `ins_3GMor48pHxXbCydyuRxUmHOGnlI`, frontend API
+  `above-viper-15.clerk.accounts.dev`. Repo is `clerk link`ed. The dev
+  publishable key is inline in `odla.config.mjs` (public by design);
+  provision registered it (setAuth) and public-config now serves
+  `{ publishableKey, issuer }`.
+- Worker (src/worker.ts): verifies Clerk session JWTs itself with `jose`
+  (issuer from public-config, cached 5 min; JWKS cached per issuer). Role
+  read from the session token `role` claim; absent or unknown claim means
+  **provisional** (safe default).
+- Routes: `GET /api/auth/config` (public bootstrap for the sign-in page),
+  `GET /api/me` (any verified session; 401 otherwise),
+  `GET /api/applications/count` (admin only; 401 unauth / 403 non-admin).
+  `POST /api/applications` stays public: it is the application form.
+- UI: `members/index.html` (served at `/members/`), styled after join.html
+  (moss hero, text wordmark with brand-amp, white card, lime primary, Clerk
+  appearance themed to the brand with card chrome stripped). Loads clerk-js
+  v5 from the frontend API host derived from the publishable key fetched at
+  `/api/auth/config`; post-login redirect target is `/members/` (a real URL).
+- **Build gotcha for future agents:** `npm run build` copies git-TRACKED
+  files only. A brand-new page 404s until `git add`ed.
+- **Clerk CLI limitation:** this instance 404s on all `clerk config *`
+  commands (config-as-code API not enabled), so session-token claims cannot
+  be set from the CLI. Human dashboard step required (below).
+- **Human steps outstanding:**
+  1. Clerk dashboard -> Sessions -> Customize session token, set claims to
+     `{"email": "{{user.primary_email_address}}", "role": "{{user.public_metadata.role}}"}`.
+  2. Sign up / sign in at
+     https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev/members/
+     and confirm the page looks right (agent cannot see the render).
+  3. To grant admin: set the user's `public_metadata.role` to `"admin"`
+     (agent can run `npx clerk api /users` to find the id and PATCH metadata
+     once a user exists).
 
 ## Auth and roles design (owner-specified 2026-07-11)
 
