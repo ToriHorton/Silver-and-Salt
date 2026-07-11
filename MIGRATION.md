@@ -13,8 +13,8 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
 
 ## Phase checklist
 
-- [x] **P0: Preflight** (completed 2026-07-11, awaiting human approval to enter P1)
-- [ ] **P1: Static site on Cloudflare (dev tenant only)** blocked on human: Cloudflare account + `wrangler login`
+- [x] **P0: Preflight** (completed 2026-07-11, human approved)
+- [x] **P1: Static site on Cloudflare (dev tenant only)** (completed 2026-07-11, awaiting human approval to enter P2)
 - [ ] **P2: Database (odla-db)**
 - [ ] **P3: Login (Clerk)**
 - [ ] **P3b: User sync (mirror Clerk users into $users)** (optional)
@@ -59,10 +59,10 @@ directory. The build script therefore copies git-tracked files only (via
   `dist/` (removed and rebuilt every run). `dist/` is gitignored.
 - Copies git-tracked files only. Excludes agent/migration infrastructure:
   `.github/`, `.agents/`, `.claude/`, `.cursor/`, `.gitignore`, `AGENTS.md`,
-  `GEMINI.md`, `CLAUDE.md`, `MIGRATION.md`. (Note: `CLAUDE.md` and two
-  `.claude/` files were technically reachable on GitHub Pages before; they are
-  deliberately excluded from the new host as agent infra, so exact parity has
-  these small intentional gaps. Flag to the human if this matters.)
+  `GEMINI.md`, `CLAUDE.md`, `MIGRATION.md`. (`CLAUDE.md` and two `.claude/`
+  files were technically reachable on GitHub Pages; the owner confirmed
+  2026-07-11 that this is a bug in the current site, and the odla version
+  fixes it by excluding them. Keep excluding agent infra from `dist/`.)
 - Verified 2026-07-11: 151 files in `dist/`, `index.html` and `CNAME` and
   `styles.css` present, none of the gitignored private files present, and the
   only tracked files absent from `dist/` are the intentional exclusions above.
@@ -71,6 +71,46 @@ directory. The build script therefore copies git-tracked files only (via
 Word-boundary grep over all tracked files for key-shaped strings (`sk-`,
 `sk_live_`, `whsec_`, `ghp_`, `github_pat_`, `AKIA`, `-----BEGIN`): clean.
 (An earlier pass flagged `task-placeholder` CSS class names; false positive.)
+
+## P1 results (2026-07-11)
+
+- Dev worker deployed: **https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev**
+  (worker name `silver-and-salt-capital-dev`, Cloudflare account
+  c4f7c2b79a8ec203b50e1e36790ef038, wrangler OAuth as cory.ondrejka@gmail.com).
+- Config: `wrangler.jsonc` (assets binding on `dist/`), entry `src/worker.ts`
+  (health endpoint + assets pass-through). Deploy with
+  `npm run deploy:app:dev` ONLY; the top-level (prod) config must not be
+  deployed before Phase 5.
+- `/api/health` on the dev worker returns `{ ok: true }` with header
+  `x-odla-worker: silver-and-salt-capital`.
+- Owner decision 2026-07-11: `.claude`/agent-infra files being publicly
+  served on GitHub Pages is a bug; the odla build intentionally excludes them.
+
+### Parity (live silverandsaltcapital.com vs dev worker, 2026-07-11)
+
+| Path | Old | New | Notes |
+|---|---|---|---|
+| `/` | 200 | 200 | body byte-identical |
+| `/join.html` | 200 | 307 then 200 | body byte-identical; see html_handling note |
+| `/join` | 200 | 200 | both hosts serve extensionless |
+| `/manifesto.html` | 200 | 307 then 200 | title matches |
+| `/utah-funding-2025.html` | 200 | 307 then 200 | title matches |
+| `/styles.css` | 200 | 200 | byte-identical |
+| `/org-data.js` | 200 | 200 | byte-identical; type text/javascript vs application/javascript (equivalent) |
+| `/assets/ivy-baker-priest.jpg` | 200 | 200 | image/jpeg both |
+| `/definitely-missing-xyz` | 404 | 404 | old shows GitHub's 404 page, new has empty body (no 404.html in repo) |
+| `/api/health` | 404 | 200 | new endpoint, by design |
+
+Known intentional differences (flag at cutover review):
+1. `.html` URLs 307-redirect to extensionless on the worker
+   (`html_handling: "auto-trailing-slash"`; GitHub Pages served both forms
+   directly with 200). Every URL form stays reachable.
+2. New content-type headers omit `; charset=utf-8` (pages declare
+   `<meta charset>`, so rendering is unaffected).
+3. 404 body is empty rather than GitHub's branded page. A branded
+   `404.html` would be a nice addition later.
+4. Agent-infra files (`CLAUDE.md`, `.claude/`) are excluded (owner-confirmed
+   bug fix).
 
 ## Non-negotiable rules (from the runbook, restated)
 1. Old site stays live and untouched until Phase 5 sign-off.
@@ -94,3 +134,10 @@ Word-boundary grep over all tracked files for key-shaped strings (`sk-`,
   obligations: approve entering P1, sign in at https://odla.ai/studio (open
   Docs, "Moving your site to odla"), create a Cloudflare account, and run
   `wrangler login`.
+- **2026-07-11 (P1):** Owner approved P1; wrangler already logged in. Added
+  `wrangler.jsonc`, `src/worker.ts`, npm scripts `dev:worker` and
+  `deploy:app:dev`. Deployed dev worker and recorded parity table (all paths
+  match; four intentional differences listed above). Verified `wrangler dev`
+  locally with no watcher errors, and GitHub Pages still serving unchanged.
+  Next human obligations: approve entering P2 (database), sign in at
+  https://odla.ai/studio, and approve a handshake code when the CLI asks.

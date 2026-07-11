@@ -1,0 +1,37 @@
+// Cloudflare Worker config for the Silver & Salt Capital site (odla migration).
+// Phase 1: serve the static build from dist/ via an assets binding.
+//
+// IMPORTANT (until Phase 5 sign-off): deploy ONLY the dev environment
+//   npx wrangler deploy --env dev
+// Never deploy the top-level (prod) config before Phase 5.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "silver-and-salt-capital",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-07-11",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    // Always the Phase 0 build dir (npm run build), never the repo root.
+    "directory": "dist",
+    "binding": "ASSETS",
+    // Matches the current site: no custom 404.html exists, so missing
+    // paths return a plain 404 (GitHub Pages serves its own default page).
+    "not_found_handling": "404-page",
+    // GitHub Pages serves /join.html AND /join both as 200. Cloudflare has
+    // no exact equivalent; this default keeps both forms reachable
+    // (.html URLs 307-redirect to extensionless). "none" would 404 any
+    // extensionless link, so it is the wrong trade.
+    "html_handling": "auto-trailing-slash"
+  },
+  "env": {
+    "dev": {
+      "name": "silver-and-salt-capital-dev",
+      "assets": {
+        "directory": "dist",
+        "binding": "ASSETS",
+        "not_found_handling": "404-page",
+        "html_handling": "auto-trailing-slash"
+      }
+    }
+  }
+}
