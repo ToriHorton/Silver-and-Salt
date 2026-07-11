@@ -87,6 +87,8 @@ export const schema = {
         template: { type: "string", unique: false, indexed: true, optional: false },
         subject: { type: "string", unique: false, indexed: false, optional: false },
         transport: { type: "string", unique: false, indexed: false, optional: false },
+        // The transport receipt (synthesized "log-only-…" until Phase 5).
+        messageId: { type: "string", unique: false, indexed: false, optional: true },
         redirected: { type: "boolean", unique: false, indexed: false, optional: true },
         sentAt: { type: "number", unique: false, indexed: true, optional: false },
       },
