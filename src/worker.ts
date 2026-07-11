@@ -326,6 +326,50 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   }
 
   // Gated: admins only (an internal stat per the owner's role model).
+  // Public, capability-guarded: the application id is an unguessable uuid
+  // known only to the browser that submitted it. Reports that the applicant
+  // booked their introduction call (time optional). Never moves status
+  // backwards: it only applies while the application sits in
+  // submitted/call_scheduled, so admin progression wins.
+  const bookingMatch = url.pathname.match(/^\/api\/applications\/([0-9a-f-]+)\/booking$/);
+  if (req.method === "POST" && bookingMatch) {
+    const id = bookingMatch[1];
+    let body: Record<string, unknown> = {};
+    try {
+      body = await req.json();
+    } catch {
+      // an empty body is fine: "booked, time unknown"
+    }
+
+    let meetingAt: number | undefined;
+    if (body.meetingAt !== undefined) {
+      const ms = Number(body.meetingAt);
+      const now = Date.now();
+      if (!Number.isFinite(ms) || ms < now - 86_400_000 || ms > now + 2 * 365 * 86_400_000) {
+        return json({ error: "meetingAt out of range" }, 400);
+      }
+      meetingAt = ms;
+    }
+
+    const { applications } = await db.query({
+      applications: { $: { where: { id }, limit: 1 } },
+    });
+    const existing = applications?.[0];
+    if (!existing) return json({ error: "not found" }, 404);
+
+    if (existing.status !== "submitted" && existing.status !== "call_scheduled") {
+      return json({ ok: true, applied: false });
+    }
+
+    await db.transact(
+      tx.applications[id].update({
+        status: "call_scheduled",
+        ...(meetingAt !== undefined ? { meetingAt } : {}),
+      }),
+    );
+    return json({ ok: true, applied: true });
+  }
+
   if (req.method === "GET" && url.pathname === "/api/applications/count") {
     const user = await verifyUser(req, env);
     if (!user) return json({ error: "unauthorized" }, 401);
