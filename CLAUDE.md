@@ -19,6 +19,16 @@ When writing anything related to the company (copy, HTML, alt text, commit messa
 
 ---
 
+## odla Migration (branch `odla-conversion-test` only)
+
+A phased test migration to odla.ai/Cloudflare is in progress on the branch
+`odla-conversion-test`. Durable state lives in `MIGRATION.md` at the repo
+root; the runbook is `.agents/skills/odla-migrate/SKILL.md`. Read
+`MIGRATION.md` before touching migration work. Production (GitHub Pages on
+`main`) stays untouched until Phase 5 sign-off.
+
+---
+
 ## Project State (last updated 2026-04-11)
 
 ### Website
