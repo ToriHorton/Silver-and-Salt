@@ -273,6 +273,27 @@ Known intentional differences (flag at cutover review):
   2026-07-20 15:00 UTC). Session-mint pattern for API testing:
   `clerk api /sessions -X POST` then `/sessions/<id>/tokens`.
 
+## Booking capture (2026-07-11)
+
+Google's appointment widget is a sealed iframe: no callback ever reaches the
+page or the worker, so bookings were invisible to the db. Two-layer answer:
+
+1. **Self-report at confirm (SHIPPED):** step 2 of join.html gained an
+   optional "Your booked time" field beside the existing "I've booked my
+   time" checkbox. On Continue the page POSTs
+   `/api/applications/<id>/booking` (the uuid from the submit response acts
+   as a capability; also kept in sessionStorage across refreshes). The
+   route sets status to call_scheduled and meetingAt when provided,
+   validates the time to a sane range, and NEVER moves status backwards
+   (applies only from submitted/call_scheduled, so admin progression wins;
+   verified). The member area and admin table show it immediately.
+2. **Authoritative calendar sync (PROPOSED, needs owner):** extend the
+   existing Google Apps Script with a time-driven trigger that reads the
+   appointment events from the owner's calendar and pushes
+   email/start-time (and cancellations) to a worker sync route guarded by
+   a shared vault secret. Corrects self-reports and catches reschedules.
+   Details to be agreed with the owner before building.
+
 ## Auth and roles design (owner-specified 2026-07-11)
 
 Clerk is the auth provider. Three user states, stored as a role on the

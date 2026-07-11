@@ -565,6 +565,40 @@
       margin-top: 18px;
       margin-bottom: 28px;
     }
+    .booked-time-wrap {
+      margin: 14px 0 6px;
+      text-align: left;
+    }
+    .booked-time-wrap label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--moss);
+      margin-bottom: 8px;
+    }
+    .booked-time-wrap label .opt {
+      font-weight: 400;
+      color: var(--sage);
+    }
+    .booked-time-wrap input {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      color: var(--moss);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      background: #fff;
+      width: 100%;
+      max-width: 280px;
+    }
+    .booked-time-wrap input:focus { outline: 2px solid var(--lime-soft); border-color: var(--lime); }
+    .booked-time-note {
+      font-size: 12px;
+      color: var(--sage);
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
     .step3-account-btn {
       display: inline-block;
       background-color: var(--lime);
@@ -857,6 +891,11 @@
           <input type="checkbox" id="confirm-check" />
           <span>I’ve booked my time and received a confirmation.</span>
         </label>
+        <div class="booked-time-wrap">
+          <label for="booked-time">Your booked time <span class="opt">(optional, from your confirmation)</span></label>
+          <input type="datetime-local" id="booked-time" />
+          <p class="booked-time-note">Sharing it lets your member area show your call details right away.</p>
+        </div>
         <button class="confirm-btn" id="confirm-btn" disabled>Continue →</button>
         <p class="step2-note">Please confirm a date and time, then check the box to continue.</p>
       </div>
@@ -921,6 +960,11 @@
     // prefill sign-up.
     let applicantEmail = '';
 
+    // Database application id from the submit response. The uuid works as a
+    // capability: only this browser knows it, so the booking report below
+    // can update the row without a signed-in session.
+    let dbApplicationId = sessionStorage.getItem('ssc-application-id') || '';
+
     // Form submit → advance to step 2
     const step1       = document.getElementById('step-1');
     const step2       = document.getElementById('step-2');
@@ -941,6 +985,25 @@
       if (applicantEmail) {
         document.getElementById('account-cta').href =
           '/members/?email=' + encodeURIComponent(applicantEmail);
+      }
+
+      // Report the booking to the member database (best effort). The
+      // applicant confirmed a booking exists; the time is included when
+      // they shared it.
+      if (dbApplicationId) {
+        const bookedValue = document.getElementById('booked-time').value;
+        const payload = {};
+        if (bookedValue) {
+          const ms = new Date(bookedValue).getTime();
+          if (Number.isFinite(ms)) payload.meetingAt = ms;
+        }
+        fetch('/api/applications/' + dbApplicationId + '/booking', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        }).catch(function(err) {
+          console.warn('Booking report skipped (non-blocking).', err);
+        });
       }
       step2.style.display = 'none';
       step3.style.display = 'block';
@@ -993,6 +1056,11 @@
             focus:        checked,
             submissionId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
           }),
+        }).then(function(res) { return res.json(); }).then(function(data) {
+          if (data && data.id) {
+            dbApplicationId = data.id;
+            sessionStorage.setItem('ssc-application-id', data.id);
+          }
         }).catch(function(err) {
           console.warn('Member database submission skipped (non-blocking).', err);
         });
