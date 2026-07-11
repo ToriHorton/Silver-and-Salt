@@ -868,8 +868,8 @@
       <p class="step3-body">Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital.</p>
       <p class="step3-body">A calendar invitation has been sent to your email.</p>
       <p class="step3-body step3-body-final">We’ll see you soon.</p>
-      <p class="step3-body">While you wait, set up your member account. It is where your application status and call details live.</p>
-      <a href="/members/?view=sign-up" class="step3-account-btn" id="account-cta">Create your member account</a><br>
+      <p class="step3-body">Your member account is ready. Sign in with your email to see your application status and call details.</p>
+      <a href="/members/" class="step3-account-btn" id="account-cta">Sign in to your member area</a><br>
       <a href="/" class="step3-link">Return to Silver <span class="brand-amp">&amp;</span> Salt Capital</a>
       <div class="quote-card">
         <p class="quote-text">“We women don’t care too much about getting our pictures on money as long as we can get our hands on it.”</p>
@@ -940,7 +940,7 @@
       if (!confirmCheck.checked) return;
       if (applicantEmail) {
         document.getElementById('account-cta').href =
-          '/members/?view=sign-up&email=' + encodeURIComponent(applicantEmail);
+          '/members/?email=' + encodeURIComponent(applicantEmail);
       }
       step2.style.display = 'none';
       step3.style.display = 'block';

@@ -233,8 +233,24 @@ Known intentional differences (flag at cutover review):
 - **Join flow wired (owner-approved):** join.html now ALSO posts the
   application as JSON to `/api/applications` (best effort; Apps Script keeps
   the Sheet row and both emails; on GitHub Pages the API call 404s
-  harmlessly). Step 3 gained a "Create your member account" button to
-  `/members/?view=sign-up&email=...` with the email prefilled.
+  harmlessly).
+- **Auto account creation (owner-directed 2026-07-11):** POST
+  /api/applications now creates the applicant's Clerk account server-side
+  (`ensureClerkAccount` in src/worker.ts): Clerk BAPI `POST /users` with the
+  secret key read at runtime from the tenant vault via
+  `db.secrets.get("clerk_secret_key")`. Email stays unverified until first
+  sign-in (owner accepted). 422 (account exists) counts as success; a
+  missing vault key quietly no-ops (response carries `accountCreated`).
+  Step 3 of join.html now says the account is ready and links "Sign in to
+  your member area" (`/members/?email=...`, sign-in prefilled). The sk_
+  NEVER appears in the repo, Wrangler, or chat; vault only (sanctioned by
+  the phase-3b reference for backend needs).
+- **Human step outstanding:** paste the Clerk DEV instance secret key
+  (Clerk dashboard -> API keys -> Secret key) into Studio ->
+  Silver & Salt Capital -> dev -> secrets as `clerk_secret_key`. Then verify
+  a fresh application returns `accountCreated: true` and the user appears
+  in Clerk and the `$users` mirror. Repeat with the prod instance key at
+  Phase 5.
 - **Member area (members/index.html) role views:** provisional sees their
   application status and, once set, the introduction call date; member sees
   Training Material and Upcoming Events placeholders; admin additionally
