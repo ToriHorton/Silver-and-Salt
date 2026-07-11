@@ -143,12 +143,16 @@ Known intentional differences (flag at cutover review):
 
 ## P3 status (2026-07-11, in progress)
 
-- Clerk app: **"Silver & Salt Capital"**, `app_3GMor24zmc0WwlcPwmf4obMUGPr`,
-  dev instance `ins_3GMor48pHxXbCydyuRxUmHOGnlI`, frontend API
-  `above-viper-15.clerk.accounts.dev`. Repo is `clerk link`ed. The dev
+- Clerk app: **"Silver & Salt Capital"** in the **Built Not Found**
+  workspace, `app_3G6TCBtJKVZo6Aq5UGgz9URtDqV`, dev instance
+  `ins_3G6TCDEMt5xW61E15wmaVFdhbv0`, frontend API
+  `relieved-eft-93.clerk.accounts.dev`. Repo is `clerk link`ed. The dev
   publishable key is inline in `odla.config.mjs` (public by design);
-  provision registered it (setAuth) and public-config now serves
-  `{ publishableKey, issuer }`.
+  provision registered it (setAuth) and public-config serves
+  `{ publishableKey, issuer }`. (History: a first app was created 2026-07-11
+  in the wrong workspace; the owner deleted it and created this one.
+  Re-provision overwrote the stale key on public-config, and the worker
+  picked it up at runtime with no redeploy, as designed.)
 - Worker (src/worker.ts): verifies Clerk session JWTs itself with `jose`
   (issuer from public-config, cached 5 min; JWKS cached per issuer). Role
   read from the session token `role` claim; absent or unknown claim means
@@ -164,16 +168,16 @@ Known intentional differences (flag at cutover review):
   `/api/auth/config`; post-login redirect target is `/members/` (a real URL).
 - **Build gotcha for future agents:** `npm run build` copies git-TRACKED
   files only. A brand-new page 404s until `git add`ed.
-- **Clerk CLI limitation:** this instance 404s on all `clerk config *`
-  commands (config-as-code API not enabled), so session-token claims cannot
-  be set from the CLI. Human dashboard step required (below).
+- Session-token claims are SET (2026-07-11, via
+  `clerk config patch`): `email` from the primary email address and `role`
+  from `public_metadata.role`. (Note: the first, deleted instance 404'd on
+  all `clerk config *` commands; this instance supports them, so claims are
+  config-as-code after all.)
 - **Human steps outstanding:**
-  1. Clerk dashboard -> Sessions -> Customize session token, set claims to
-     `{"email": "{{user.primary_email_address}}", "role": "{{user.public_metadata.role}}"}`.
-  2. Sign up / sign in at
+  1. Sign up / sign in at
      https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev/members/
      and confirm the page looks right (agent cannot see the render).
-  3. To grant admin: set the user's `public_metadata.role` to `"admin"`
+  2. To grant admin: set the user's `public_metadata.role` to `"admin"`
      (agent can run `npx clerk api /users` to find the id and PATCH metadata
      once a user exists).
 
