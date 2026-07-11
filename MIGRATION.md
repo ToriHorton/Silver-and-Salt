@@ -25,8 +25,10 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
   area build-out (provisional page, members page, admin table), done.
 - [ ] **P5: Production + DNS cutover** (the ONLY phase that touches
   production). Owner pre-requisite 2026-07-11: a payment flow in the join
-  flow must be designed and built BEFORE cutover; details to be worked out
-  when the earlier work is complete.
+  flow must be designed and built BEFORE cutover. The design is
+  **PAYMENT-SPEC.md** (repo root, excluded from the public build): Tori's
+  onboarding-scope.html brief translated to this stack. Phase P1 of that
+  spec (payment core) plus the owner's open-item answers gate cutover.
 
 ## P0 inventory findings (2026-07-11)
 
