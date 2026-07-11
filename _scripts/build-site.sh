@@ -26,6 +26,7 @@ git ls-files -z -- . \
   ':!:GEMINI.md' \
   ':!:CLAUDE.md' \
   ':!:MIGRATION.md' \
+  ':!:PAYMENT-SPEC.md' \
   | rsync -a --files-from=- --from0 . dist/
 
 echo "Built dist/ with $(find dist -type f | wc -l | tr -d ' ') files."
