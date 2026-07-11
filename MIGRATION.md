@@ -16,12 +16,11 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
 - [x] **P0: Preflight** (completed 2026-07-11, human approved)
 - [x] **P1: Static site on Cloudflare (dev tenant only)** (completed 2026-07-11, human approved)
 - [x] **P2: Database (odla-db)** (completed 2026-07-11, awaiting human approval to enter P3)
-- [ ] **P3: Login (Clerk)** in progress 2026-07-11: code shipped and verified
-  (401 gates, deployed, smoke ok); waiting on human browser verification and
-  the Clerk dashboard session-claims step (see P3 status below)
-- [ ] **P3b: User sync (mirror Clerk users into $users)** in progress
-  2026-07-11: webhook endpoint created; waiting on the owner to paste the
-  signing secret into Studio (see P3b status below)
+- [x] **P3: Login (Clerk)** (completed 2026-07-11, owner verified in browser)
+- [x] **P3b: User sync (mirror Clerk users into $users)** (completed
+  2026-07-11: owner pasted the signing secret into Studio by hand; verified
+  by firing user.updated events and watching both accounts appear in
+  `/api/admin/members` within seconds)
 - [x] **P4: AI** SKIPPED per owner decision 2026-07-11. Replaced with member
   area build-out (provisional page, members page, admin table), done.
 - [ ] **P5: Production + DNS cutover** (the ONLY phase that touches
@@ -216,12 +215,12 @@ Known intentional differences (flag at cutover review):
   `https://db.odla.ai/webhooks/clerk/silver-and-salt-capital--dev`, events
   `user.created`, `user.updated`, `user.deleted`. The signing secret was
   never printed or fetched.
-- **Human step outstanding:** copy the endpoint's signing secret from the
-  Clerk dashboard (Configure -> Webhooks -> the endpoint -> Signing Secret)
-  and paste it into Studio at odla.ai/studio -> the app -> dev -> secrets as
-  `clerk_webhook_secret` (write-only vault). $users stays empty until then;
-  verify afterwards by editing a user in Clerk and checking
-  `/api/admin/members`.
+- Signing secret pasted into Studio by the owner 2026-07-11 (write-only
+  vault, `clerk_webhook_secret`). Note for future agents: there is NO
+  CLI/API write path into the tenant vault (CLI has no vault command, SDK
+  `secrets` is get-only, admin endpoints 404) — the Studio UI paste is the
+  designed, human-checkpointed ingress. Sync verified: `user.updated`
+  events mirrored both dev accounts into `$users` within seconds.
 - **Schema v2:** applications gained `meetingAt` (epoch ms, admin-set; the
   Google Calendar booking widget cannot call us back) and `clerkUserId`
   (linked lazily when a signed-in user's email matches). Pushed to dev.
