@@ -245,12 +245,18 @@ Known intentional differences (flag at cutover review):
   your member area" (`/members/?email=...`, sign-in prefilled). The sk_
   NEVER appears in the repo, Wrangler, or chat; vault only (sanctioned by
   the phase-3b reference for backend needs).
-- **Human step outstanding:** paste the Clerk DEV instance secret key
-  (Clerk dashboard -> API keys -> Secret key) into Studio ->
-  Silver & Salt Capital -> dev -> secrets as `clerk_secret_key`. Then verify
-  a fresh application returns `accountCreated: true` and the user appears
-  in Clerk and the `$users` mirror. Repeat with the prod instance key at
-  Phase 5.
+- Secret key pasted by the owner 2026-07-11 and verified: application
+  submit returns `accountCreated: true`, the Clerk account exists, and the
+  webhook mirrors it into `$users` (visible in the admin Member Accounts
+  table). Re-submitting a duplicate application heals a previously missed
+  account creation (row dedupes, account create retries).
+- **Studio has TWO Clerk-secret slots; both are now filled and they serve
+  different consumers.** The Settings "Clerk secret key" field (End-user
+  auth block) is platform-reserved (reads come back `forbidden` on
+  `$`-names, `not_found` otherwise) and lets odla-db itself resolve users
+  via Clerk. The worker's copy MUST be a generic env secret named
+  `clerk_secret_key` for `db.secrets.get()`. At Phase 5, repeat BOTH pastes
+  with the prod instance key.
 - **Member area (members/index.html) role views:** provisional sees their
   application status and, once set, the introduction call date; member sees
   Training Material and Upcoming Events placeholders; admin additionally
