@@ -322,10 +322,22 @@ PAYMENT-SPEC.md P1 is implemented on the dev worker:
   refunded state.
 - Clerk users now carry public_metadata.profile (phone, state, whoYouAre,
   focus, linkedin) from the application (owner-directed).
-- NEXT: owner pastes `stripe_secret_key` (Test Mode) into Studio dev ->
-  run `node _scripts/setup-stripe-dev.mjs <pk_test_...>` -> owner pastes
-  the webhook signing secret as `stripe_webhook_secret` -> full Test Mode
-  E2E per PAYMENT-SPEC.md section 11.
+- **Stripe configured and E2E VERIFIED 2026-07-11** (Test Mode). Owner
+  pasted both vault secrets; `_scripts/setup-stripe-dev.mjs` created
+  product `prod_UrrarmxdVJJMun`, the $900/year price, and webhook endpoint
+  `we_1Ts7rX3sLwQtiao1eDcVrBld`. Note: the account runs the 2025+ Stripe
+  API, so the client secret comes from `latest_invoice.confirmation_secret`
+  (invoices carry no payment_intent) and refunds locate the customer's
+  earliest succeeded charge. Full acceptance run: $900 charged with the
+  test card -> `invoice.paid` verified the signature and flipped the row to
+  paid_pending_vetting with renewal 2027-07-11 and both emails logged ->
+  Approve promoted the role to member and logged the onboarding invite ->
+  a second applicant paid and was refunded via the console action
+  (90000 cents returned, subscription canceled, row flipped to refunded
+  with canceled=true by the webhooks). Remaining for the payment flow:
+  owner browser pass of the payment step UI, Apple Pay domain
+  registration, P2 referrals, P3 accreditation panel, P4 monitoring, and
+  the prod-instance repeats at Phase 5.
 
 ## Booking capture (2026-07-11)
 
