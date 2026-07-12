@@ -364,14 +364,23 @@ page or the worker, so bookings were invisible to the db. Two-layer answer:
    bookingPageUrl.dev), doctor validates it, and the owner approved a fresh
    device handshake. But the platform registry rejects the service
    ("unsupported service: calendar") and `calendar connect/status` 404:
-   the server rollout lags the npm release. "calendar" is therefore parked
-   OUT of `services` (leaving it in breaks every provision run). TO RESUME:
-   add "calendar" back to services, run provision, complete the Google
-   consent (owner's calendar account; consent is read-only
-   calendar.events.readonly), then `calendar calendars/status` + smoke, then
-   wire $bookings-to-application correlation by attendee email (respect the
-   existing no-status-regression guard) and remove the join step 2
-   self-report field. The Apps Script bridge idea is superseded.
+   the server rollout lagged the npm release. UPDATE 2026-07-12: the
+   rollout landed; provision now ENABLES the service and registers the
+   config (status shows calendars/policy/bookingPageUrl, zero scopes,
+   bookingCount 0). The remaining blocker is platform-side:
+   `calendar_google_oauth_not_configured` (503) when starting consent,
+   i.e. the connector service is missing its own Google OAuth client
+   credentials. Nothing app-side can fix it. CAVEAT while waiting:
+   provision exits at the consent step AFTER the calendar steps but BEFORE
+   schema/rules push; to push schema changes in the interim, temporarily
+   comment "calendar" out of services for that one run. TO RESUME once
+   odla configures their Google OAuth app: run provision (or `calendar
+   connect --env dev`), complete the read-only Google consent on the
+   calendar account hosting the appointment schedule, verify
+   `calendar calendars/status` + smoke, wire $bookings-to-application
+   correlation by attendee email (respect the no-status-regression
+   guard), then remove the join step 2 self-report field. The Apps Script
+   bridge idea is superseded.
 
 ## Auth and roles design (owner-specified 2026-07-11)
 
