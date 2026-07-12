@@ -761,6 +761,45 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ people: rows });
     }
 
+    // Upcoming mirrored bookings (the owner's booking calendar), each
+    // flagged with the application it correlates to, if any. Read-only:
+    // changes happen in Google Calendar via htmlLink.
+    if (req.method === "GET" && url.pathname === "/api/admin/bookings") {
+      const [bookingsRes, appsRes] = await Promise.all([
+        db.query({ $bookings: { $: { order: { startAt: "desc" }, limit: 500 } } }),
+        db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 200 } } }),
+      ]);
+      const appByEmail = new Map<string, Record<string, unknown>>();
+      for (const a of (appsRes.applications ?? []) as Array<Record<string, unknown>>) {
+        const key = (a.email as string).toLowerCase();
+        if (!appByEmail.has(key)) appByEmail.set(key, a);
+      }
+      const cutoff = Date.now() - 3_600_000;
+      const upcoming = ((bookingsRes.$bookings ?? []) as Array<Record<string, unknown>>)
+        .filter((b) => b.status === "confirmed" && (b.startAt as number) >= cutoff)
+        .sort((x, y) => (x.startAt as number) - (y.startAt as number))
+        .slice(0, 25)
+        .map((b) => {
+          const attendees = ((b.attendees as Array<string | { email?: string }>) ?? [])
+            .map((a) => (typeof a === "string" ? a : a.email ?? ""))
+            .filter(Boolean);
+          const matched = attendees
+            .map((e) => appByEmail.get(e.toLowerCase()))
+            .find(Boolean);
+          return {
+            startAt: b.startAt,
+            endAt: b.endAt,
+            summary: b.summary,
+            attendees,
+            htmlLink: b.htmlLink,
+            application: matched
+              ? { id: matched.id, name: `${matched.firstName} ${matched.lastName}`, status: matched.status }
+              : null,
+          };
+        });
+      return json({ bookings: upcoming });
+    }
+
     // Change a person's role (Clerk publicMetadata, the source of truth).
     if (req.method === "POST" && url.pathname === "/api/admin/people/role") {
       let body: Record<string, unknown>;
