@@ -6,10 +6,7 @@ export default {
     name: "Silver & Salt Capital",
   },
   envs: ["dev"],
-  // "calendar" stays parked until the platform accepts it (see MIGRATION.md,
-  // Phase 2b). Re-tested 2026-07-11 after a reported fix: registry still
-  // answers "unsupported service: calendar" and the connector API 404s.
-  services: ["db"],
+  services: ["db", "calendar"],
   calendar: {
     google: {
       // The owner's calendar hosting the appointment schedule. Read-only
