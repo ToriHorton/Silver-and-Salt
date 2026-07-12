@@ -6,12 +6,9 @@ export default {
     name: "Silver & Salt Capital",
   },
   envs: ["dev"],
-  // "calendar" is configured below and ready to enable, but the platform
-  // registry rejects the service ("unsupported service: calendar") and the
-  // connector API 404s as of 2026-07-11: the @odla-ai/calendar 0.1.0 release
-  // and runbooks shipped ahead of the server rollout. Add "calendar" back to
-  // services and run provision + `calendar connect --env dev` once the
-  // platform accepts it (keeping it listed breaks every provision run).
+  // "calendar" stays parked until the platform accepts it (see MIGRATION.md,
+  // Phase 2b). Re-tested 2026-07-11 after a reported fix: registry still
+  // answers "unsupported service: calendar" and the connector API 404s.
   services: ["db"],
   calendar: {
     google: {
