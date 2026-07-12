@@ -315,6 +315,19 @@
       </div>
 
       <div class="card">
+        <div class="card-label">Upcoming Bookings</div>
+        <div class="table-wrap">
+          <table id="bookings-table">
+            <thead>
+              <tr><th>When</th><th>Event</th><th>Guests</th><th>Application</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-note hidden" id="bookings-empty">Upcoming bookings from the connected calendar appear here. Booking changes happen in Google Calendar; this view is a read-only mirror.</p>
+      </div>
+
+      <div class="card">
         <div class="card-label">People</div>
         <div class="table-wrap">
           <table id="people-table">
@@ -370,11 +383,67 @@
           await window.Clerk.signOut();
           window.location.href = '/members/';
         });
-        await loadPeople();
+        await Promise.all([loadPeople(), loadBookings()]);
       } catch (err) {
         $('auth-loading').textContent = 'The console is briefly unavailable. Please refresh.';
         console.error(err);
       }
+    }
+
+    async function loadBookings() {
+      try {
+        const { bookings } = await api('/api/admin/bookings');
+        const tbody = document.querySelector('#bookings-table tbody');
+        tbody.innerHTML = '';
+        if (!bookings.length) {
+          $('bookings-empty').classList.remove('hidden');
+          return;
+        }
+        for (const b of bookings) {
+          const tr = document.createElement('tr');
+
+          const when = document.createElement('td');
+          when.className = 'person';
+          when.textContent = new Date(b.startAt).toLocaleString(undefined, {
+            weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+          });
+          tr.appendChild(when);
+
+          const summary = document.createElement('td');
+          summary.textContent = b.summary || '(no title)';
+          tr.appendChild(summary);
+
+          const guests = document.createElement('td');
+          guests.textContent = b.attendees.join(', ');
+          tr.appendChild(guests);
+
+          const appTd = document.createElement('td');
+          if (b.application) {
+            const badge = document.createElement('span');
+            badge.className = 'pay-badge paid';
+            badge.textContent = b.application.name;
+            badge.title = 'Matches an application (' + b.application.status + ')';
+            appTd.appendChild(badge);
+          } else {
+            appTd.innerHTML = '<span class="muted">&middot;</span>';
+          }
+          tr.appendChild(appTd);
+
+          const linkTd = document.createElement('td');
+          if (b.htmlLink) {
+            const a = document.createElement('a');
+            a.href = b.htmlLink;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = 'open';
+            a.style.cssText = 'font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;';
+            linkTd.appendChild(a);
+          }
+          tr.appendChild(linkTd);
+
+          tbody.appendChild(tr);
+        }
+      } catch (e) { console.error(e); }
     }
 
     function showSignIn() {
