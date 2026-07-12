@@ -479,6 +479,16 @@
         meetingInput.type = 'datetime-local';
         if (p.application.meetingAt) meetingInput.value = toLocalInputValue(p.application.meetingAt);
         meetingTd.appendChild(meetingInput);
+        if (p.application.meetingLink) {
+          const cal = document.createElement('a');
+          cal.href = p.application.meetingLink;
+          cal.target = '_blank';
+          cal.rel = 'noopener';
+          cal.textContent = 'open';
+          cal.title = 'View or change in Google Calendar (the mirror is read-only)';
+          cal.style.cssText = 'margin-left:8px;font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;';
+          meetingTd.appendChild(cal);
+        }
       } else {
         statusTd.innerHTML = '<span class="muted">No application</span>';
       }

@@ -470,11 +470,15 @@
         return;
       }
       if (application && application.meetingAt) {
+        const calendarLink = application.meetingLink
+          ? `<div class="meeting-note"><a href="${application.meetingLink}" target="_blank" rel="noopener" style="color: var(--lime-dark); font-weight: 700; text-decoration: none;">View or change it in Google Calendar</a></div>`
+          : '';
         body.innerHTML = `
           <div class="meeting-block">
             <div class="meeting-kicker">Your introduction call</div>
             <div class="meeting-date">${fmtMeeting(application.meetingAt)}</div>
             <div class="meeting-note">A calendar invitation is in your email. We look forward to meeting you.</div>
+            ${calendarLink}
             ${membershipLine}
           </div>`;
       } else if (application) {
