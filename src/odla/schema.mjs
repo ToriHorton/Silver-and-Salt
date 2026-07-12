@@ -32,9 +32,13 @@ export const schema = {
         message: { type: "string", unique: false, indexed: false, optional: false },
         status: { type: "string", unique: false, indexed: true, optional: false },
         createdAt: { type: "number", unique: false, indexed: true, optional: false },
-        // Epoch ms of the scheduled intro call. Set by an admin (the Google
-        // Calendar booking widget cannot call us back). Omitted until known.
+        // Epoch ms of the scheduled intro call. Authoritative source is the
+        // $bookings mirror (matched by attendee email); admins may also set
+        // it manually. 0 means "was booked, then cancelled".
         meetingAt: { type: "number", unique: false, indexed: true, optional: true },
+        // Google Calendar event link for the booked call (view/change there;
+        // the mirror is read-only). "" when a booking was cancelled.
+        meetingLink: { type: "string", unique: false, indexed: false, optional: true },
         // Clerk user id, linked lazily when a signed-in user's email matches.
         clerkUserId: { type: "string", unique: false, indexed: true, optional: true },
         // ── Payment flow (PAYMENT-SPEC.md P1) ──

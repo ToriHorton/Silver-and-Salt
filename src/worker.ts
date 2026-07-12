@@ -7,6 +7,7 @@
 // Browsers never receive a db credential.
 
 import { initAdmin, tx, uuidv7, OdlaError } from "@odla-ai/db";
+import { initCalendar } from "@odla-ai/calendar";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { sendTemplated, type GroupRow } from "./email";
 
@@ -339,12 +340,74 @@ const applicationSummary = (a: Record<string, unknown>) => ({
   lastName: a.lastName,
   email: a.email,
   status: a.status,
-  meetingAt: a.meetingAt ?? null,
+  meetingAt: (a.meetingAt as number) || null,
+  meetingLink: (a.meetingLink as string) || null,
   createdAt: a.createdAt,
   paid: Boolean(a.stripeSubscriptionId) && a.status !== "refunded",
   renewalAt: a.renewalAt ?? null,
   canceled: a.canceled === true,
 });
+
+// ── Calendar mirror correlation (PAYMENT-SPEC / phase-2b) ─────────
+// The $bookings mirror (read-only Google sync) is the authoritative source
+// of introduction-call bookings. On read paths we correlate a booking to
+// its application by attendee email: meetingAt/meetingLink follow the
+// mirror, and status only ever advances to call_scheduled (never regresses
+// an admin-advanced status). A vanished booking clears the time (0 / "")
+// but leaves status alone. The mirror being unavailable is never an error.
+type CalClient = ReturnType<typeof initCalendar>;
+
+const BOOKING_SYNCABLE = ["submitted", "paid_pending_vetting", "call_scheduled"];
+
+async function syncBookingFromMirror(
+  db: Db,
+  cal: CalClient,
+  env: Env,
+  app: Record<string, unknown>,
+): Promise<void> {
+  if (!BOOKING_SYNCABLE.includes(app.status as string)) return;
+
+  let next: { startAt: number; htmlLink?: string } | null = null;
+  try {
+    // Look back one hour so an in-progress call still shows.
+    next = await cal.bookings.next(app.email as string, { from: Date.now() - 3_600_000 });
+  } catch {
+    return; // mirror optional: not connected / transient failure
+  }
+
+  const attrs: Record<string, unknown> = {};
+  if (next) {
+    if (app.meetingAt !== next.startAt) attrs.meetingAt = next.startAt;
+    if (next.htmlLink && app.meetingLink !== next.htmlLink) attrs.meetingLink = next.htmlLink;
+    if (app.status === "submitted" || app.status === "paid_pending_vetting") {
+      attrs.status = "call_scheduled";
+    }
+  } else if (app.meetingLink) {
+    // Mirror-sourced booking disappeared (cancelled): clear the time.
+    attrs.meetingAt = 0;
+    attrs.meetingLink = "";
+  }
+  if (Object.keys(attrs).length === 0) return;
+
+  await db.transact(tx.applications[app.id as string].update(attrs));
+  Object.assign(app, attrs);
+
+  // A newly discovered booking triggers the pre-meeting prep email once.
+  if (next && !app.prepEmailSentAt) {
+    const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
+    if (group) {
+      await sendTemplated(db, env.ODLA_ENV, group, {
+        template: "prepEmail",
+        to: app.email as string,
+        vars: { firstName: app.firstName as string },
+        applicationId: app.id as string,
+        dedupeKey: `prep:${app.id}`,
+      });
+      await db.transact(tx.applications[app.id as string].update({ prepEmailSentAt: Date.now() }));
+      app.prepEmailSentAt = Date.now();
+    }
+  }
+}
 
 async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   // Public: the sign-in page bootstraps ClerkJS from this (same-origin, so
@@ -355,6 +418,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   }
 
   const db = initAdmin({
+    appId: env.ODLA_TENANT,
+    adminToken: env.ODLA_API_KEY,
+    endpoint: env.ODLA_ENDPOINT,
+  });
+  const cal = initCalendar({
     appId: env.ODLA_TENANT,
     adminToken: env.ODLA_API_KEY,
     endpoint: env.ODLA_ENDPOINT,
@@ -604,6 +672,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     if (user.email) {
       const a = await findApplicationByEmail(db, user.email);
       if (a) {
+        await syncBookingFromMirror(db, cal, env, a);
         application = applicationSummary(a);
         if (a.clerkUserId !== user.userId) {
           // Lazy link; mutationId makes retries exactly-once.
@@ -632,6 +701,13 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         db.query({ $users: { $: { limit: 200 } } }),
         fetchClerkRoles(db),
       ]);
+
+      // Refresh booking state from the mirror for the active pipeline
+      // (bounded; terminal statuses are skipped inside the sync).
+      const syncable = ((appsRes.applications ?? []) as Array<Record<string, unknown>>)
+        .filter((a) => BOOKING_SYNCABLE.includes(a.status as string))
+        .slice(0, 50);
+      await Promise.all(syncable.map((a) => syncBookingFromMirror(db, cal, env, a)));
 
       type PersonRow = {
         email: string;
