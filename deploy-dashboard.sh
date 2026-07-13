@@ -4,10 +4,13 @@
 # Pages site and are git-ignored, so nothing here publishes them.
 #
 # Private, local-only files (open locally in a browser):
-#   dashboard.html, granola-inbox.js, newsletter-data.js,
+#   dashboard.html (Overview), dashboard-actions.html (Actions),
+#   dashboard-newsletter.html (Monthly Newsletter),
+#   dashboard.css, dashboard-app.js (shared by the three pages),
+#   granola-inbox.js, newsletter-data.js,
 #   ecosystem.html, network/people.js, network/people-utah.js
 #
 # Pending a planned move to a protected / authenticated site.
 echo "Dashboard and network ecosystem are local-only (private). Nothing published."
-echo "Open dashboard.html or ecosystem.html in your browser locally."
+echo "Open dashboard.html, dashboard-actions.html, or dashboard-newsletter.html locally."
 exit 0
