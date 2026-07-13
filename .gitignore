@@ -14,6 +14,7 @@ watch-style.html
 .deploy-log.json
 
 # Private (local-only) CEO tools + data — pulled from public site, pending a protected host
+TASKS.md
 dashboard.html
 dashboard-actions.html
 dashboard-newsletter.html
