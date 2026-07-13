@@ -15,6 +15,10 @@ watch-style.html
 
 # Private (local-only) CEO tools + data — pulled from public site, pending a protected host
 dashboard.html
+dashboard-actions.html
+dashboard-newsletter.html
+dashboard.css
+dashboard-app.js
 ecosystem.html
 granola-inbox.js
 newsletter-data.js
