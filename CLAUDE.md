@@ -46,9 +46,10 @@ root; the runbook is `.agents/skills/odla-migrate/SKILL.md`. Read
 - **Step 1:** Form captures name, email, org, referral, focus areas, intro message
 - **Step 2:** Google Calendar Appointments iframe for scheduling a 30-min intro call
 - **Step 3:** Confirmation screen with Ivy Baker Priest quote and sepia photo
-- **Backend:** Google Apps Script Web App (see `FORM-SETUP.md` for details)
-  - Writes rows to Google Sheet "Silver & Salt Capital — Applications"
-  - Sends notification to tori@silverandsaltcapital.com + confirmation to applicant
+- **Backend:** the odla worker (`POST /api/applications` into odla-db). The
+  former Google Apps Script backend (Sheet + Gmail sends; was FORM-SETUP.md
+  and membership-form-script.gs) was retired on this branch 2026-07-13;
+  transactional email comes from the worker's @odla-ai/email pipeline.
 - **Styling:** Treatment E — sage left panel, lime right panel, cream wordmark
 - **Voice:** Approachable and premium — "A few questions, followed by a brief conversation."
 
