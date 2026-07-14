@@ -9,20 +9,12 @@ export default {
   services: ["db", "calendar"],
   calendar: {
     google: {
-      // The owner's calendar hosting the appointment schedule. Read-only
-      // mirror into $bookings; refine ids after `calendar calendars`.
+      // 0.2.0 live booking: FreeBusy availability over these calendars;
+      // bookings land on the first one. (CLI 0.11.2 still validates the
+      // legacy key name `calendars`; `availabilityCalendars` is the 0.2.0
+      // name.) Our odla-db is the source of truth for meetings; Google is
+      // the invite/Meet projection.
       calendars: { dev: ["primary"] },
-      // Primary is a general calendar: mirror only self-organized events
-      // with attendees (appointment bookings), not unrelated meetings.
-      match: { organizerSelf: true, requireAttendees: true },
-      // Attendee emails are required to correlate bookings to applications
-      // (owner reviews retention at the checkpoint).
-      attendeePolicy: "full",
-      // The existing public Appointment Schedule embed, preserved as the
-      // booking UI (public configuration, not a secret).
-      bookingPageUrl: {
-        dev: "https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true",
-      },
     },
   },
   db: {

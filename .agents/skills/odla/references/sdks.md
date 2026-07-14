@@ -1,8 +1,9 @@
 # odla SDK cheat-sheet
 
-Install only what the app needs. Every package ships an `llms.txt` in
-`node_modules/@odla-ai/<pkg>/` with the full, current API — read it. Minimal
-real usage below.
+Install only what the app needs. Prefer the installed package's README and
+exported TypeScript declarations/JSDoc over training memory; resolve public
+entry points through its `package.json` `exports`. Rendered references are also
+available at `https://odla.ai/docs/packages/<pkg>`. Minimal real usage follows.
 
 ## @odla-ai/db — realtime graph database
 
@@ -99,12 +100,12 @@ Run the passive CLI in local/CI development; do not import it into the running
 Worker:
 
 Before installing the exact release, require
-`npm view @odla-ai/security@0.2.2 version` to succeed before installing it. An
+`npm view @odla-ai/security@0.3.1 version` to succeed before installing it. An
 exact-version `E404` means the release is unavailable, not that the preflight
 passed, and does not prove the package name is absent.
 
 ```
-npm i -D --save-exact @odla-ai/security@0.2.2
+npm i -D --save-exact @odla-ai/security@0.3.1
 npx odla-security scan . --profile odla --out .odla/security/pre-ship --fail-on high --fail-on-candidates critical
 ```
 

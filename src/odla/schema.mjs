@@ -82,6 +82,35 @@ export const schema = {
         // { adminNotification, paymentConfirmation, prepEmail,
         //   onboardingInvite }, each { subject, text } with {{placeholders}}.
         emailTemplates: { type: "json", unique: false, indexed: false, optional: false },
+        // Scheduling rules for first-party booking: { slotMinutes, days,
+        // startHour, endHour, timezone, minNoticeHours, windowDays,
+        // summaryTemplate }. Absent keys fall back to code defaults.
+        schedulingJson: { type: "json", unique: false, indexed: false, optional: true },
+        createdAt: { type: "number", unique: false, indexed: true, optional: false },
+      },
+    },
+    // Introduction-call meetings: the SOURCE OF TRUTH for scheduling
+    // (owner-directed 2026-07-14). Google Calendar is a projection that
+    // carries the invite email and Meet link; googleEventId/meetUrl come
+    // back from the export. Drift fields record when Google disagrees with
+    // us (someone moved or cancelled the event there); we flag, never
+    // silently adopt.
+    meetings: {
+      attrs: {
+        id: { type: "string", unique: true, indexed: true, optional: false },
+        applicationId: { type: "string", unique: false, indexed: true, optional: false },
+        groupId: { type: "string", unique: false, indexed: true, optional: false },
+        startAt: { type: "number", unique: false, indexed: true, optional: false },
+        endAt: { type: "number", unique: false, indexed: false, optional: false },
+        timezone: { type: "string", unique: false, indexed: false, optional: false },
+        status: { type: "string", unique: false, indexed: true, optional: false }, // scheduled | cancelled
+        googleEventId: { type: "string", unique: false, indexed: true, optional: true },
+        meetUrl: { type: "string", unique: false, indexed: false, optional: true },
+        htmlLink: { type: "string", unique: false, indexed: false, optional: true },
+        // none | time_changed | cancelled_in_google | missing_in_google
+        drift: { type: "string", unique: false, indexed: true, optional: true },
+        driftGoogleStartAt: { type: "number", unique: false, indexed: false, optional: true },
+        driftDetectedAt: { type: "number", unique: false, indexed: false, optional: true },
         createdAt: { type: "number", unique: false, indexed: true, optional: false },
       },
     },

@@ -99,6 +99,18 @@ await db.transact(
     commitmentText: "(Community commitment: owner-supplied copy pending.)",
     normsText: "(Group norms: owner-supplied copy pending.)",
     emailTemplates,
+    // First-party scheduling rules (matches the retired appointment
+    // schedule: 45 minute calls, Pacific time).
+    schedulingJson: {
+      slotMinutes: 45,
+      days: [1, 2, 3, 4, 5],
+      startHour: 9,
+      endHour: 17,
+      timezone: "America/Los_Angeles",
+      minNoticeHours: 24,
+      windowDays: 14,
+      summaryTemplate: "Silver & Salt Capital: introduction call with {{firstName}} {{lastName}}",
+    },
     createdAt: Date.now(),
   }),
 );

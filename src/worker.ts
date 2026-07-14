@@ -7,8 +7,7 @@
 // Browsers never receive a db credential.
 
 import { initAdmin, tx, uuidv7, OdlaError } from "@odla-ai/db";
-import { initCalendar } from "@odla-ai/calendar";
-import { loadCalendarPublicConfig } from "@odla-ai/calendar/client";
+import { initCalendar, computeBookableSlots } from "@odla-ai/calendar";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { sendTemplated, type GroupRow } from "./email";
 
@@ -157,28 +156,6 @@ async function getGroup(db: Db, groupId: string): Promise<GroupRow | null> {
   const row = (groups?.[0] as unknown as GroupRow) ?? null;
   if (row) groupCache = { value: row, at: Date.now() };
   return row;
-}
-
-// The booking page URL lives with the calendar connection on the PLATFORM
-// (odla.config.mjs -> provision -> Studio's calendar page), not in app data:
-// that keeps it next to the connected calendar it must match. Cached like
-// the group row.
-let calPublicCache: { value: { bookingPageUrl?: string | null } | null; at: number } | null = null;
-
-async function getCalendarPublicConfig(env: Env): Promise<{ bookingPageUrl?: string | null } | null> {
-  if (calPublicCache && Date.now() - calPublicCache.at < 5 * 60_000) return calPublicCache.value;
-  try {
-    const value = await loadCalendarPublicConfig({
-      endpoint: env.ODLA_PLATFORM,
-      appId: env.ODLA_APP_ID,
-      env: env.ODLA_ENV,
-    });
-    calPublicCache = { value, at: Date.now() };
-    return value;
-  } catch {
-    calPublicCache = { value: null, at: Date.now() };
-    return null;
-  }
 }
 
 const groupLineItems = (g: GroupRow) => ({
@@ -371,63 +348,105 @@ const applicationSummary = (a: Record<string, unknown>) => ({
   canceled: a.canceled === true,
 });
 
-// ── Calendar mirror correlation (PAYMENT-SPEC / phase-2b) ─────────
-// The $bookings mirror (read-only Google sync) is the authoritative source
-// of introduction-call bookings. On read paths we correlate a booking to
-// its application by attendee email: meetingAt/meetingLink follow the
-// mirror, and status only ever advances to call_scheduled (never regresses
-// an admin-advanced status). A vanished booking clears the time (0 / "")
-// but leaves status alone. The mirror being unavailable is never an error.
+// ── Scheduling: odla-db is the source of truth (owner-directed) ────
+// The meetings entity is canonical. Google Calendar is a projection: the
+// export carries the invitation email and the Meet link. Drift (someone
+// moving or cancelling the event in Google) is DETECTED and FLAGGED for
+// the admin, never silently adopted.
 type CalClient = ReturnType<typeof initCalendar>;
 
-const BOOKING_SYNCABLE = ["submitted", "paid_pending_vetting", "call_scheduled"];
+const BOOKABLE_STATUSES = ["submitted", "paid_pending_vetting", "call_scheduled"];
 
-async function syncBookingFromMirror(
-  db: Db,
-  cal: CalClient,
-  env: Env,
-  app: Record<string, unknown>,
-): Promise<void> {
-  if (!BOOKING_SYNCABLE.includes(app.status as string)) return;
+type SchedulingConfig = {
+  slotMinutes: number;
+  days: number[];
+  startHour: number;
+  endHour: number;
+  timezone: string;
+  minNoticeHours: number;
+  windowDays: number;
+  summaryTemplate: string;
+};
 
-  let next: { startAt: number; htmlLink?: string } | null = null;
+const SCHEDULING_DEFAULTS: SchedulingConfig = {
+  slotMinutes: 45,
+  days: [1, 2, 3, 4, 5],
+  startHour: 9,
+  endHour: 17,
+  timezone: "America/Los_Angeles",
+  minNoticeHours: 24,
+  windowDays: 14,
+  summaryTemplate: "Silver & Salt Capital: introduction call with {{firstName}} {{lastName}}",
+};
+
+function schedulingConfig(group: GroupRow & { schedulingJson?: unknown }): SchedulingConfig {
+  const raw = (group.schedulingJson ?? {}) as Partial<SchedulingConfig>;
+  return { ...SCHEDULING_DEFAULTS, ...raw };
+}
+
+async function bookableSlots(cal: CalClient, cfg: SchedulingConfig) {
+  const from = Date.now();
+  const to = from + cfg.windowDays * 86_400_000;
+  const fb = await cal.availability.freeBusy({ timeMin: from, timeMax: to });
+  return computeBookableSlots(fb.busy, {
+    from: fb.timeMin,
+    to: fb.timeMax,
+    timezone: cfg.timezone,
+    slotMinutes: cfg.slotMinutes,
+    businessHours: { days: cfg.days, startHour: cfg.startHour, endHour: cfg.endHour },
+    minNoticeMs: cfg.minNoticeHours * 3_600_000,
+  });
+}
+
+async function scheduledMeetingFor(db: Db, applicationId: string) {
+  const { meetings } = await db.query({
+    meetings: {
+      $: { where: { applicationId, status: "scheduled" }, order: { createdAt: "desc" }, limit: 1 },
+    },
+  });
+  return meetings?.[0] ?? null;
+}
+
+// Compare canonical meetings against live Google events and stamp drift
+// flags. Our data never changes from this; only the flags do.
+async function detectDrift(db: Db, cal: CalClient, meetings: Array<Record<string, unknown>>): Promise<void> {
+  const upcoming = meetings.filter(
+    (m) => m.status === "scheduled" && (m.startAt as number) > Date.now() - 3_600_000 && m.googleEventId,
+  );
+  if (!upcoming.length) return;
+
+  let live: Array<{ eventId: string; startAt: number; status?: string }>;
   try {
-    // Look back one hour so an in-progress call still shows.
-    next = await cal.bookings.next(app.email as string, { from: Date.now() - 3_600_000 });
+    const res = await cal.availability.upcoming();
+    live = ((res?.bookings ?? res ?? []) as Array<Record<string, unknown>>).map((b) => ({
+      eventId: b.eventId as string,
+      startAt: b.startAt as number,
+      status: b.status as string | undefined,
+    }));
   } catch {
-    return; // mirror optional: not connected / transient failure
+    return; // calendar unavailable: flags stay as they were
   }
+  const byEventId = new Map(live.map((b) => [b.eventId, b]));
 
-  const attrs: Record<string, unknown> = {};
-  if (next) {
-    if (app.meetingAt !== next.startAt) attrs.meetingAt = next.startAt;
-    if (next.htmlLink && app.meetingLink !== next.htmlLink) attrs.meetingLink = next.htmlLink;
-    if (app.status === "submitted" || app.status === "paid_pending_vetting") {
-      attrs.status = "call_scheduled";
+  for (const m of upcoming) {
+    const g = byEventId.get(m.googleEventId as string);
+    let drift = "none";
+    let googleStartAt: number | undefined;
+    if (!g || g.status === "cancelled") {
+      drift = "gone_from_google";
+    } else if (g.startAt !== m.startAt) {
+      drift = "time_changed";
+      googleStartAt = g.startAt;
     }
-  } else if (app.meetingLink) {
-    // Mirror-sourced booking disappeared (cancelled): clear the time.
-    attrs.meetingAt = 0;
-    attrs.meetingLink = "";
-  }
-  if (Object.keys(attrs).length === 0) return;
-
-  await db.transact(tx.applications[app.id as string].update(attrs));
-  Object.assign(app, attrs);
-
-  // A newly discovered booking triggers the pre-meeting prep email once.
-  if (next && !app.prepEmailSentAt) {
-    const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
-    if (group) {
-      await sendTemplated(db, env.ODLA_ENV, group, {
-        template: "prepEmail",
-        to: app.email as string,
-        vars: { firstName: app.firstName as string },
-        applicationId: app.id as string,
-        dedupeKey: `prep:${app.id}`,
-      });
-      await db.transact(tx.applications[app.id as string].update({ prepEmailSentAt: Date.now() }));
-      app.prepEmailSentAt = Date.now();
+    const prev = (m.drift as string) ?? "none";
+    if (drift !== prev || (drift === "time_changed" && m.driftGoogleStartAt !== googleStartAt)) {
+      const attrs: Record<string, unknown> = {
+        drift,
+        ...(googleStartAt !== undefined ? { driftGoogleStartAt: googleStartAt } : {}),
+        ...(drift !== "none" ? { driftDetectedAt: Date.now() } : {}),
+      };
+      await db.transact(tx.meetings[m.id as string].update(attrs));
+      Object.assign(m, attrs);
     }
   }
 }
@@ -446,9 +465,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     endpoint: env.ODLA_ENDPOINT,
   });
   const cal = initCalendar({
-    appId: env.ODLA_TENANT,
+    appId: env.ODLA_APP_ID,
+    env: env.ODLA_ENV,
     adminToken: env.ODLA_API_KEY,
-    endpoint: env.ODLA_ENDPOINT,
+    endpoint: env.ODLA_PLATFORM,
   });
 
   // Public: everything the join page needs to render its compliance and
@@ -459,10 +479,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   if (req.method === "GET" && joinConfigMatch) {
     const group = await getGroup(db, joinConfigMatch[1]);
     if (!group) return json({ error: "not found" }, 404);
-    const [stripeKey, calPublic] = await Promise.all([
-      getVaultSecret(db, "stripe_secret_key"),
-      getCalendarPublicConfig(env),
-    ]);
+    const stripeKey = await getVaultSecret(db, "stripe_secret_key");
     return json({
       groupId: group.id,
       name: group.name,
@@ -472,10 +489,6 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       lineItems: groupLineItems(group),
       publishableKey: group.stripePublishableKey ?? null,
       paymentsReady: Boolean(group.stripePublishableKey && group.stripePriceId && stripeKey),
-      // The booking page comes from the platform's calendar config (edited
-      // in Studio or odla.config.mjs), so it always belongs to the calendar
-      // the mirror is connected to. The group row's copy is deprecated.
-      calendarLink: calPublic?.bookingPageUrl ?? null,
     });
   }
 
@@ -570,6 +583,160 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       publishableKey: group.stripePublishableKey ?? null,
       lineItems: groupLineItems(group),
     });
+  }
+
+  // Public: bookable slots computed live (Google FreeBusy + the group's
+  // business-hours rules). schedulingReady false while the calendar
+  // connection is absent, and the page degrades gracefully.
+  if (req.method === "GET" && url.pathname === "/api/schedule/slots") {
+    const group = await getGroup(db, DEFAULT_GROUP_ID);
+    if (!group) return json({ error: "not found" }, 404);
+    const cfg = schedulingConfig(group as GroupRow & { schedulingJson?: unknown });
+    try {
+      const slots = await bookableSlots(cal, cfg);
+      return json({
+        schedulingReady: true,
+        timezone: cfg.timezone,
+        slotMinutes: cfg.slotMinutes,
+        slots,
+      });
+    } catch (err) {
+      const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
+      console.error("slots unavailable", code);
+      return json({ schedulingReady: false, code: code ?? "calendar_unavailable" });
+    }
+  }
+
+  // Public, capability-guarded: book (or rebook) the introduction call.
+  // The meeting row in odla-db is canonical; the Google event is the
+  // projection that sends the invitation email and carries the Meet link.
+  if (req.method === "POST" && url.pathname === "/api/schedule/book") {
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return json({ error: "invalid JSON body" }, 400);
+    }
+    const applicationId = typeof body.applicationId === "string" ? body.applicationId : "";
+    const startAt = Number(body.startAt);
+    if (!applicationId || !Number.isFinite(startAt)) {
+      return json({ error: "applicationId and startAt required" }, 400);
+    }
+
+    const { applications } = await db.query({
+      applications: { $: { where: { id: applicationId }, limit: 1 } },
+    });
+    const app = applications?.[0];
+    if (!app) return json({ error: "not found" }, 404);
+    if (!BOOKABLE_STATUSES.includes(app.status as string)) {
+      return json({ error: `cannot book from status "${app.status}"` }, 409);
+    }
+
+    const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
+    if (!group) return json({ error: "group missing" }, 500);
+    const cfg = schedulingConfig(group as GroupRow & { schedulingJson?: unknown });
+    const endAt = startAt + cfg.slotMinutes * 60_000;
+
+    // The chosen time must still be an offered slot; the platform re-checks
+    // availability under a booking lease at insert as the final word.
+    try {
+      const slots = await bookableSlots(cal, cfg);
+      if (!slots.some((s: { startAt: number }) => s.startAt === startAt)) {
+        return json({ error: "slot no longer available", code: "calendar_slot_unavailable" }, 409);
+      }
+    } catch (err) {
+      const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
+      return json({ error: "scheduling unavailable", code: code ?? "calendar_unavailable" }, 503);
+    }
+
+    const summary = (cfg.summaryTemplate || SCHEDULING_DEFAULTS.summaryTemplate)
+      .replace("{{firstName}}", app.firstName as string)
+      .replace("{{lastName}}", app.lastName as string);
+
+    const existing = await scheduledMeetingFor(db, applicationId);
+    try {
+      let eventId: string;
+      let meetUrl: string | undefined;
+      let htmlLink: string | undefined;
+      let meetingId: string;
+
+      if (existing?.googleEventId) {
+        // Rebooking: move the existing event so the invite thread and Meet
+        // link survive; Google notifies the attendee of the change.
+        await cal.actions.reschedule(existing.googleEventId as string, { startAt, endAt });
+        eventId = existing.googleEventId as string;
+        meetUrl = (existing.meetUrl as string) || undefined;
+        htmlLink = (existing.htmlLink as string) || undefined;
+        meetingId = existing.id as string;
+        await db.transact(
+          tx.meetings[meetingId].update({
+            startAt,
+            endAt,
+            drift: "none",
+          }),
+        );
+      } else {
+        const { booking } = await cal.actions.create(
+          {
+            summary,
+            startAt,
+            endAt,
+            attendees: [app.email as string],
+            timezone: cfg.timezone,
+            meet: true,
+          },
+          { idempotencyKey: `application:${applicationId}:intro` },
+        );
+        eventId = booking.eventId;
+        meetUrl = booking.meetUrl;
+        htmlLink = booking.htmlLink;
+        meetingId = uuidv7();
+        await db.transact(
+          tx.meetings[meetingId].update({
+            id: meetingId,
+            applicationId,
+            groupId: group.id,
+            startAt,
+            endAt,
+            timezone: cfg.timezone,
+            status: "scheduled",
+            googleEventId: eventId,
+            ...(meetUrl ? { meetUrl } : {}),
+            ...(htmlLink ? { htmlLink } : {}),
+            drift: "none",
+            createdAt: Date.now(),
+          }),
+        );
+      }
+
+      await db.transact(
+        tx.applications[applicationId].update({
+          meetingAt: startAt,
+          ...(htmlLink ? { meetingLink: htmlLink } : {}),
+          ...(app.status !== "call_scheduled" ? { status: "call_scheduled" } : {}),
+        }),
+      );
+
+      if (!app.prepEmailSentAt) {
+        await sendTemplated(db, env.ODLA_ENV, group, {
+          template: "prepEmail",
+          to: app.email as string,
+          vars: { firstName: app.firstName as string },
+          applicationId,
+          dedupeKey: `prep:${applicationId}`,
+        });
+        await db.transact(tx.applications[applicationId].update({ prepEmailSentAt: Date.now() }));
+      }
+
+      return json({ ok: true, startAt, endAt, meetUrl: meetUrl ?? null, rescheduled: Boolean(existing) });
+    } catch (err) {
+      const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
+      if (code === "calendar_slot_unavailable") {
+        return json({ error: "slot no longer available", code }, 409);
+      }
+      console.error("booking failed", code, err);
+      return json({ error: "booking failed", code: code ?? "unknown" }, 502);
+    }
   }
 
   // Public, signature-verified: the Stripe webhook.
@@ -707,8 +874,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     if (user.email) {
       const a = await findApplicationByEmail(db, user.email);
       if (a) {
-        await syncBookingFromMirror(db, cal, env, a);
-        application = applicationSummary(a);
+        const meeting = await scheduledMeetingFor(db, a.id as string);
+        application = {
+          ...applicationSummary(a),
+          meetUrl: (meeting?.meetUrl as string) ?? null,
+        };
         if (a.clerkUserId !== user.userId) {
           // Lazy link; mutationId makes retries exactly-once.
           await db.transact(
@@ -737,12 +907,6 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         fetchClerkRoles(db),
       ]);
 
-      // Refresh booking state from the mirror for the active pipeline
-      // (bounded; terminal statuses are skipped inside the sync).
-      const syncable = ((appsRes.applications ?? []) as Array<Record<string, unknown>>)
-        .filter((a) => BOOKING_SYNCABLE.includes(a.status as string))
-        .slice(0, 50);
-      await Promise.all(syncable.map((a) => syncBookingFromMirror(db, cal, env, a)));
 
       type PersonRow = {
         email: string;
@@ -860,43 +1024,71 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ ok: true });
     }
 
-    // Upcoming mirrored bookings (the owner's booking calendar), each
-    // flagged with the application it correlates to, if any. Read-only:
-    // changes happen in Google Calendar via htmlLink.
-    if (req.method === "GET" && url.pathname === "/api/admin/bookings") {
-      const [bookingsRes, appsRes] = await Promise.all([
-        db.query({ $bookings: { $: { order: { startAt: "desc" }, limit: 500 } } }),
+    // Introduction calls from OUR canonical meetings entity, with drift
+    // flags refreshed against live Google state. Data stays ours; Google
+    // disagreement is flagged for the admin to resolve, never adopted.
+    if (req.method === "GET" && url.pathname === "/api/admin/meetings") {
+      const [meetingsRes, appsRes] = await Promise.all([
+        db.query({ meetings: { $: { order: { startAt: "desc" }, limit: 200 } } }),
         db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 200 } } }),
       ]);
-      const appByEmail = new Map<string, Record<string, unknown>>();
-      for (const a of (appsRes.applications ?? []) as Array<Record<string, unknown>>) {
-        const key = (a.email as string).toLowerCase();
-        if (!appByEmail.has(key)) appByEmail.set(key, a);
-      }
+      const meetings = (meetingsRes.meetings ?? []) as Array<Record<string, unknown>>;
+      await detectDrift(db, cal, meetings);
+
+      const appById = new Map(
+        ((appsRes.applications ?? []) as Array<Record<string, unknown>>).map((a) => [a.id, a]),
+      );
       const cutoff = Date.now() - 3_600_000;
-      const upcoming = ((bookingsRes.$bookings ?? []) as Array<Record<string, unknown>>)
-        .filter((b) => b.status === "confirmed" && (b.startAt as number) >= cutoff)
+      const rows = meetings
+        .filter((m) => (m.startAt as number) >= cutoff || m.drift === "gone_from_google")
         .sort((x, y) => (x.startAt as number) - (y.startAt as number))
-        .slice(0, 25)
-        .map((b) => {
-          const attendees = ((b.attendees as Array<string | { email?: string }>) ?? [])
-            .map((a) => (typeof a === "string" ? a : a.email ?? ""))
-            .filter(Boolean);
-          const matched = attendees
-            .map((e) => appByEmail.get(e.toLowerCase()))
-            .find(Boolean);
+        .slice(0, 50)
+        .map((m) => {
+          const a = appById.get(m.applicationId);
           return {
-            startAt: b.startAt,
-            endAt: b.endAt,
-            summary: b.summary,
-            attendees,
-            htmlLink: b.htmlLink,
-            application: matched
-              ? { id: matched.id, name: `${matched.firstName} ${matched.lastName}`, status: matched.status }
+            id: m.id,
+            startAt: m.startAt,
+            endAt: m.endAt,
+            status: m.status,
+            drift: m.drift ?? "none",
+            driftGoogleStartAt: m.driftGoogleStartAt ?? null,
+            meetUrl: m.meetUrl ?? null,
+            htmlLink: m.htmlLink ?? null,
+            applicant: a
+              ? { id: a.id, name: `${a.firstName} ${a.lastName}`, email: a.email, status: a.status }
               : null,
           };
         });
-      return json({ bookings: upcoming });
+      return json({ meetings: rows });
+    }
+
+    // Cancel an introduction call: our record turns cancelled and the
+    // Google projection is removed (Google notifies the attendee).
+    const cancelMatch = url.pathname.match(/^\/api\/admin\/meetings\/([0-9a-f-]+)\/cancel$/);
+    if (req.method === "POST" && cancelMatch) {
+      const { meetings } = await db.query({
+        meetings: { $: { where: { id: cancelMatch[1] }, limit: 1 } },
+      });
+      const meeting = meetings?.[0];
+      if (!meeting) return json({ error: "not found" }, 404);
+      if (meeting.status !== "scheduled") return json({ error: "already cancelled" }, 409);
+
+      if (meeting.googleEventId) {
+        try {
+          await cal.actions.cancel(meeting.googleEventId as string);
+        } catch (err) {
+          const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
+          if (code !== "booking_not_found") {
+            console.error("google cancel failed", code);
+            return json({ error: "cancel failed upstream", code }, 502);
+          }
+        }
+      }
+      await db.transact(tx.meetings[meeting.id as string].update({ status: "cancelled", drift: "none" }));
+      await db.transact(
+        tx.applications[meeting.applicationId as string].update({ meetingAt: 0, meetingLink: "" }),
+      );
+      return json({ ok: true });
     }
 
     // Change a person's role (Clerk publicMetadata, the source of truth).
@@ -1153,68 +1345,6 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   }
 
   // Gated: admins only (an internal stat per the owner's role model).
-  // Public, capability-guarded: the application id is an unguessable uuid
-  // known only to the browser that submitted it. Reports that the applicant
-  // booked their introduction call (time optional). Never moves status
-  // backwards: it only applies while the application sits in
-  // submitted/call_scheduled, so admin progression wins.
-  const bookingMatch = url.pathname.match(/^\/api\/applications\/([0-9a-f-]+)\/booking$/);
-  if (req.method === "POST" && bookingMatch) {
-    const id = bookingMatch[1];
-    let body: Record<string, unknown> = {};
-    try {
-      body = await req.json();
-    } catch {
-      // an empty body is fine: "booked, time unknown"
-    }
-
-    let meetingAt: number | undefined;
-    if (body.meetingAt !== undefined) {
-      const ms = Number(body.meetingAt);
-      const now = Date.now();
-      if (!Number.isFinite(ms) || ms < now - 86_400_000 || ms > now + 2 * 365 * 86_400_000) {
-        return json({ error: "meetingAt out of range" }, 400);
-      }
-      meetingAt = ms;
-    }
-
-    const { applications } = await db.query({
-      applications: { $: { where: { id }, limit: 1 } },
-    });
-    const existing = applications?.[0];
-    if (!existing) return json({ error: "not found" }, 404);
-
-    // In the payment flow, booking follows payment (paid_pending_vetting).
-    const bookable = ["submitted", "paid_pending_vetting", "call_scheduled"];
-    if (!bookable.includes(existing.status as string)) {
-      return json({ ok: true, applied: false });
-    }
-
-    await db.transact(
-      tx.applications[id].update({
-        status: "call_scheduled",
-        ...(meetingAt !== undefined ? { meetingAt } : {}),
-      }),
-    );
-
-    // Pre-meeting prep email, once per application (PAYMENT-SPEC.md 8.3).
-    if (!existing.prepEmailSentAt) {
-      const group = await getGroup(db, (existing.groupId as string) ?? DEFAULT_GROUP_ID);
-      if (group) {
-        await sendTemplated(db, env.ODLA_ENV, group, {
-          template: "prepEmail",
-          to: existing.email as string,
-          vars: { firstName: existing.firstName as string },
-          applicationId: id,
-          dedupeKey: `prep:${id}`,
-        });
-        await db.transact(tx.applications[id].update({ prepEmailSentAt: Date.now() }));
-      }
-    }
-
-    return json({ ok: true, applied: true });
-  }
-
   if (req.method === "GET" && url.pathname === "/api/applications/count") {
     const user = await verifyUser(req, env);
     if (!user) return json({ error: "unauthorized" }, 401);

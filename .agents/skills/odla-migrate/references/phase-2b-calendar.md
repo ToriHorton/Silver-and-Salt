@@ -9,8 +9,8 @@ server-issued Google consent page. They never paste an OAuth code or token.
 
 1. Inventory the old behavior. Distinguish a public appointment-page link from
    actual event create/reschedule/cancel APIs. Do not promise more than exists.
-2. Require `npm view @odla-ai/calendar@0.1.0 version` to succeed, then install
-   `npm i --save-exact @odla-ai/calendar@0.1.0` as a runtime dependency. An
+2. Require `npm view @odla-ai/calendar@0.1.1 version` to succeed, then install
+   `npm i --save-exact @odla-ai/calendar@0.1.1` as a runtime dependency. An
    exact-version `E404` blocks this phase; do not substitute a git checkout or
    another version. Add `"calendar"` beside
    `"db"` in services and configure:
