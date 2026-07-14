@@ -69,6 +69,10 @@ export const schema = {
         replyTo: { type: "string", unique: false, indexed: false, optional: false },
         // Dev-tenant sends all redirect here (subject gets a [dev] prefix).
         debugEmail: { type: "string", unique: false, indexed: false, optional: true },
+        // DEPRECATED: the booking page URL lives on the platform's calendar
+        // config (bookingPageUrl, Studio-editable); the worker reads it from
+        // loadCalendarPublicConfig. Kept only because schema removals are
+        // unsafe changes.
         calendarLink: { type: "string", unique: false, indexed: false, optional: true },
         disclaimerText: { type: "string", unique: false, indexed: false, optional: false },
         refundPolicyText: { type: "string", unique: false, indexed: false, optional: false },

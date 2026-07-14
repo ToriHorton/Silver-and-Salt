@@ -8,6 +8,7 @@
 
 import { initAdmin, tx, uuidv7, OdlaError } from "@odla-ai/db";
 import { initCalendar } from "@odla-ai/calendar";
+import { loadCalendarPublicConfig } from "@odla-ai/calendar/client";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { sendTemplated, type GroupRow } from "./email";
 
@@ -156,6 +157,28 @@ async function getGroup(db: Db, groupId: string): Promise<GroupRow | null> {
   const row = (groups?.[0] as unknown as GroupRow) ?? null;
   if (row) groupCache = { value: row, at: Date.now() };
   return row;
+}
+
+// The booking page URL lives with the calendar connection on the PLATFORM
+// (odla.config.mjs -> provision -> Studio's calendar page), not in app data:
+// that keeps it next to the connected calendar it must match. Cached like
+// the group row.
+let calPublicCache: { value: { bookingPageUrl?: string | null } | null; at: number } | null = null;
+
+async function getCalendarPublicConfig(env: Env): Promise<{ bookingPageUrl?: string | null } | null> {
+  if (calPublicCache && Date.now() - calPublicCache.at < 5 * 60_000) return calPublicCache.value;
+  try {
+    const value = await loadCalendarPublicConfig({
+      endpoint: env.ODLA_PLATFORM,
+      appId: env.ODLA_APP_ID,
+      env: env.ODLA_ENV,
+    });
+    calPublicCache = { value, at: Date.now() };
+    return value;
+  } catch {
+    calPublicCache = { value: null, at: Date.now() };
+    return null;
+  }
 }
 
 const groupLineItems = (g: GroupRow) => ({
@@ -436,7 +459,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   if (req.method === "GET" && joinConfigMatch) {
     const group = await getGroup(db, joinConfigMatch[1]);
     if (!group) return json({ error: "not found" }, 404);
-    const stripeKey = await getVaultSecret(db, "stripe_secret_key");
+    const [stripeKey, calPublic] = await Promise.all([
+      getVaultSecret(db, "stripe_secret_key"),
+      getCalendarPublicConfig(env),
+    ]);
     return json({
       groupId: group.id,
       name: group.name,
@@ -446,10 +472,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       lineItems: groupLineItems(group),
       publishableKey: group.stripePublishableKey ?? null,
       paymentsReady: Boolean(group.stripePublishableKey && group.stripePriceId && stripeKey),
-      // The group's booking page (Google appointment schedule embed). Must
-      // be a schedule on the calendar the mirror is connected to, or
-      // bookings never correlate.
-      calendarLink: group.calendarLink ?? null,
+      // The booking page comes from the platform's calendar config (edited
+      // in Studio or odla.config.mjs), so it always belongs to the calendar
+      // the mirror is connected to. The group row's copy is deprecated.
+      calendarLink: calPublic?.bookingPageUrl ?? null,
     });
   }
 
