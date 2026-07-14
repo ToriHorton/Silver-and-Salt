@@ -28,6 +28,7 @@ git ls-files -z -- . \
   ':!:MIGRATION.md' \
   ':!:PAYMENT-SPEC.md' \
   ':!:UI-COMPONENT-SPECS.md' \
+  ':!:ADMIN-CALENDAR-SPEC.md' \
   | rsync -a --files-from=- --from0 . dist/
 
 echo "Built dist/ with $(find dist -type f | wc -l | tr -d ' ') files."

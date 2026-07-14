@@ -407,15 +407,17 @@ async function scheduledMeetingFor(db: Db, applicationId: string) {
   return meetings?.[0] ?? null;
 }
 
-// Compare canonical meetings against live Google events and stamp drift
-// flags. Our data never changes from this; only the flags do.
-async function detectDrift(db: Db, cal: CalClient, meetings: Array<Record<string, unknown>>): Promise<void> {
-  const upcoming = meetings.filter(
+// Reconcile canonical meetings with live Google events. Owner policy
+// (2026-07-14): edits made in Google Calendar are legitimate edits and are
+// ADOPTED into our database, with an adoption stamp so the admin can see
+// that Google was the editor. A vanished event adopts as a cancellation.
+async function reconcileWithGoogle(db: Db, cal: CalClient, meetings: Array<Record<string, unknown>>): Promise<void> {
+  const active = meetings.filter(
     (m) => m.status === "scheduled" && (m.startAt as number) > Date.now() - 3_600_000 && m.googleEventId,
   );
-  if (!upcoming.length) return;
+  if (!active.length) return;
 
-  let live: Array<{ eventId: string; startAt: number; status?: string }>;
+  let live: Array<{ eventId: string; startAt: number; endAt?: number; status?: string }>;
   try {
     const res = (await cal.availability.upcoming()) as Record<string, unknown> | Array<unknown>;
     const list = Array.isArray(res)
@@ -424,32 +426,37 @@ async function detectDrift(db: Db, cal: CalClient, meetings: Array<Record<string
     live = (list as Array<Record<string, unknown>>).map((b) => ({
       eventId: b.eventId as string,
       startAt: b.startAt as number,
+      endAt: b.endAt as number | undefined,
       status: b.status as string | undefined,
     }));
   } catch (err) {
-    console.error("drift check unavailable", err);
-    return; // calendar unavailable: flags stay as they were
+    console.error("google reconcile unavailable", err);
+    return; // calendar unavailable: nothing changes
   }
   const byEventId = new Map(live.map((b) => [b.eventId, b]));
 
-  for (const m of upcoming) {
+  for (const m of active) {
     const g = byEventId.get(m.googleEventId as string);
-    let drift = "none";
-    let googleStartAt: number | undefined;
     if (!g || g.status === "cancelled") {
-      drift = "gone_from_google";
+      // Removed in Google: adopt as a cancellation.
+      const attrs = { status: "cancelled", drift: "none", adoptedFromGoogleAt: Date.now() };
+      await db.transact(tx.meetings[m.id as string].update(attrs));
+      await db.transact(
+        tx.applications[m.applicationId as string].update({ meetingAt: 0, meetingLink: "" }),
+      );
+      Object.assign(m, attrs);
     } else if (g.startAt !== m.startAt) {
-      drift = "time_changed";
-      googleStartAt = g.startAt;
-    }
-    const prev = (m.drift as string) ?? "none";
-    if (drift !== prev || (drift === "time_changed" && m.driftGoogleStartAt !== googleStartAt)) {
-      const attrs: Record<string, unknown> = {
-        drift,
-        ...(googleStartAt !== undefined ? { driftGoogleStartAt: googleStartAt } : {}),
-        ...(drift !== "none" ? { driftDetectedAt: Date.now() } : {}),
+      // Moved in Google: adopt the new time (duration from Google when
+      // known, else preserved).
+      const duration = (m.endAt as number) - (m.startAt as number);
+      const attrs = {
+        startAt: g.startAt,
+        endAt: g.endAt ?? g.startAt + duration,
+        drift: "none",
+        adoptedFromGoogleAt: Date.now(),
       };
       await db.transact(tx.meetings[m.id as string].update(attrs));
+      await db.transact(tx.applications[m.applicationId as string].update({ meetingAt: g.startAt }));
       Object.assign(m, attrs);
     }
   }
@@ -1037,7 +1044,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 200 } } }),
       ]);
       const meetings = (meetingsRes.meetings ?? []) as Array<Record<string, unknown>>;
-      await detectDrift(db, cal, meetings);
+      await reconcileWithGoogle(db, cal, meetings);
 
       const appById = new Map(
         ((appsRes.applications ?? []) as Array<Record<string, unknown>>).map((a) => [a.id, a]),
@@ -1056,6 +1063,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
             status: m.status,
             drift: m.drift ?? "none",
             driftGoogleStartAt: m.driftGoogleStartAt ?? null,
+            adoptedFromGoogleAt: m.adoptedFromGoogleAt ?? null,
             meetUrl: m.meetUrl ?? null,
             htmlLink: m.htmlLink ?? null,
             applicant: a
@@ -1064,6 +1072,57 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
           };
         });
       return json({ meetings: rows });
+    }
+
+    // Reschedule an introduction call to one of the open slots: our record
+    // updates and the Google event moves (Google notifies the attendee;
+    // the invite thread and Meet link survive).
+    const reschedMatch = url.pathname.match(/^\/api\/admin\/meetings\/([0-9a-f-]+)\/reschedule$/);
+    if (req.method === "POST" && reschedMatch) {
+      let body: Record<string, unknown>;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "invalid JSON body" }, 400);
+      }
+      const startAt = Number(body.startAt);
+      if (!Number.isFinite(startAt)) return json({ error: "startAt required" }, 400);
+
+      const { meetings } = await db.query({
+        meetings: { $: { where: { id: reschedMatch[1] }, limit: 1 } },
+      });
+      const meeting = meetings?.[0];
+      if (!meeting) return json({ error: "not found" }, 404);
+      if (meeting.status !== "scheduled") return json({ error: "meeting is cancelled" }, 409);
+      if (!meeting.googleEventId) return json({ error: "no calendar event on file" }, 409);
+
+      const group = await getGroup(db, (meeting.groupId as string) ?? DEFAULT_GROUP_ID);
+      if (!group) return json({ error: "group missing" }, 500);
+      const cfg = schedulingConfig(group as GroupRow & { schedulingJson?: unknown });
+      const endAt = startAt + cfg.slotMinutes * 60_000;
+
+      try {
+        const slots = await bookableSlots(cal, cfg);
+        if (!slots.some((s: { startAt: number }) => s.startAt === startAt)) {
+          return json({ error: "slot no longer available", code: "calendar_slot_unavailable" }, 409);
+        }
+        await cal.actions.reschedule(meeting.googleEventId as string, { startAt, endAt });
+      } catch (err) {
+        const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
+        if (code === "calendar_slot_unavailable") {
+          return json({ error: "slot no longer available", code }, 409);
+        }
+        console.error("admin reschedule failed", code, err);
+        return json({ error: "reschedule failed", code: code ?? "unknown" }, 502);
+      }
+
+      await db.transact(
+        tx.meetings[meeting.id as string].update({ startAt, endAt, drift: "none" }),
+      );
+      await db.transact(
+        tx.applications[meeting.applicationId as string].update({ meetingAt: startAt }),
+      );
+      return json({ ok: true, startAt, endAt });
     }
 
     // Cancel an introduction call: our record turns cancelled and the

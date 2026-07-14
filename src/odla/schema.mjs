@@ -111,6 +111,9 @@ export const schema = {
         drift: { type: "string", unique: false, indexed: true, optional: true },
         driftGoogleStartAt: { type: "number", unique: false, indexed: false, optional: true },
         driftDetectedAt: { type: "number", unique: false, indexed: false, optional: true },
+        // Owner policy 2026-07-14: Google edits are adopted, and this stamp
+        // records the most recent adoption for the admin's information.
+        adoptedFromGoogleAt: { type: "number", unique: false, indexed: false, optional: true },
         createdAt: { type: "number", unique: false, indexed: true, optional: false },
       },
     },

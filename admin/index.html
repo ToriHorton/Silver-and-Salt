@@ -313,6 +313,28 @@
     #meetings-table td:first-child { white-space: nowrap; }
     .cell-sub { display: block; font-size: 12px; color: var(--sage); margin-top: 3px; }
 
+    /* Inline reschedule picker (compact twin of the join page picker). */
+    .resched-cell { background: #f8fbf6; padding: 16px 12px; }
+    .resched-days { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .resched-day {
+      flex: 0 0 auto;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+      color: var(--moss-light);
+      background: #fff; border: 1px solid var(--border); border-radius: 100px;
+      padding: 6px 12px; cursor: pointer; white-space: nowrap;
+    }
+    .resched-day[aria-pressed="true"] { background: var(--moss); color: #fff; border-color: var(--moss); }
+    .resched-times { display: flex; flex-wrap: wrap; gap: 6px; }
+    .resched-time {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px; font-weight: 500; color: var(--moss);
+      background: #fff; border: 1px solid var(--border); border-radius: 4px;
+      padding: 7px 10px; cursor: pointer;
+    }
+    .resched-time:hover { border-color: var(--lime); background: var(--lime-soft); }
+    .resched-note { font-size: 12px; color: var(--sage); margin-top: 10px; }
+
     .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
 
     /* ── Email template editor ── */
@@ -588,6 +610,95 @@
       } catch (e) { console.error(e); }
     }
 
+    // Inline reschedule: expands a compact slot picker under the meeting
+    // row; picking a time moves the Google event and updates our record.
+    async function toggleReschedule(tr, m) {
+      const existing = tr.nextElementSibling;
+      if (existing && existing.classList.contains('resched-row')) {
+        existing.remove();
+        return;
+      }
+      document.querySelectorAll('.resched-row').forEach((r) => r.remove());
+
+      const row = document.createElement('tr');
+      row.className = 'resched-row';
+      const cell = document.createElement('td');
+      cell.colSpan = 5;
+      cell.className = 'resched-cell';
+      cell.innerHTML = '<p class="resched-note">Loading open times…</p>';
+      row.appendChild(cell);
+      tr.after(row);
+
+      try {
+        const data = await api('/api/schedule/slots');
+        if (!data.schedulingReady || !data.slots.length) {
+          cell.innerHTML = '<p class="resched-note">No open times are available right now.</p>';
+          return;
+        }
+        const tz = data.timezone;
+        const byDay = new Map();
+        for (const s of data.slots) {
+          const k = new Date(s.startAt).toLocaleDateString('en-CA', { timeZone: tz });
+          if (!byDay.has(k)) byDay.set(k, []);
+          byDay.get(k).push(s);
+        }
+        cell.innerHTML = '';
+        const days = document.createElement('div');
+        days.className = 'resched-days';
+        const times = document.createElement('div');
+        times.className = 'resched-times';
+        const note = document.createElement('p');
+        note.className = 'resched-note';
+        note.textContent = 'Pick a new time; the guest is notified by Google and the video link stays the same.';
+        let activeDay = [...byDay.keys()][0];
+
+        function renderRDays() {
+          days.innerHTML = '';
+          for (const [key, slots] of byDay) {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'resched-day';
+            chip.textContent = new Date(slots[0].startAt).toLocaleDateString(undefined, { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
+            chip.setAttribute('aria-pressed', String(key === activeDay));
+            chip.addEventListener('click', () => { activeDay = key; renderRDays(); renderRTimes(); });
+            days.appendChild(chip);
+          }
+        }
+        function renderRTimes() {
+          times.innerHTML = '';
+          for (const s of byDay.get(activeDay) || []) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'resched-time';
+            b.textContent = new Date(s.startAt).toLocaleTimeString(undefined, { timeZone: tz, hour: 'numeric', minute: '2-digit' });
+            b.addEventListener('click', async () => {
+              b.disabled = true;
+              try {
+                await api('/api/admin/meetings/' + m.id + '/reschedule', {
+                  method: 'POST',
+                  body: JSON.stringify({ startAt: s.startAt }),
+                });
+                await Promise.all([loadBookings(), loadPeople()]);
+              } catch (e) {
+                console.error(e);
+                note.textContent = 'That time could not be booked (it may have just been taken). Pick another.';
+                b.disabled = false;
+              }
+            });
+            times.appendChild(b);
+          }
+        }
+        renderRDays();
+        renderRTimes();
+        cell.appendChild(days);
+        cell.appendChild(times);
+        cell.appendChild(note);
+      } catch (e) {
+        console.error(e);
+        cell.innerHTML = '<p class="resched-note">Open times could not be loaded. Try again.</p>';
+      }
+    }
+
     async function loadBookings() {
       try {
         const { meetings } = await api('/api/admin/meetings');
@@ -654,6 +765,12 @@
             g.appendChild(badge);
           } else {
             g.innerHTML = '<span class="pay-badge paid">In sync</span>';
+            if (m.adoptedFromGoogleAt && Date.now() - m.adoptedFromGoogleAt < 7 * 86400000) {
+              const sub = document.createElement('span');
+              sub.className = 'cell-sub';
+              sub.textContent = 'updated from Google ' + new Date(m.adoptedFromGoogleAt).toLocaleDateString();
+              g.appendChild(sub);
+            }
           }
           if (m.htmlLink) {
             const sub = document.createElement('span');
@@ -671,9 +788,16 @@
 
           const actions = document.createElement('td');
           if (m.status === 'scheduled') {
+            const resched = document.createElement('button');
+            resched.className = 'row-save row-approve';
+            resched.textContent = 'Reschedule';
+            resched.addEventListener('click', () => toggleReschedule(tr, m));
+            actions.appendChild(resched);
+
             const cancel = document.createElement('button');
             cancel.className = 'row-save row-refund';
             cancel.textContent = 'Cancel';
+            cancel.style.marginLeft = '6px';
             cancel.addEventListener('click', async () => {
               const sure = confirm('Cancel this introduction call? The Google event is removed and the guest is notified.');
               if (!sure) return;
