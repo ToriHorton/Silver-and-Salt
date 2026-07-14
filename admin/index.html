@@ -307,6 +307,12 @@
     .pay-badge.unpaid { color: var(--sage); background: #eef2ec; border: 1px solid #dde5da; }
     .pay-renewal { font-size: 12px; color: var(--sage); margin-left: 6px; }
 
+    /* Meetings table wraps instead of scrolling; only the time stays on
+       one line. Sub-lines carry the quieter detail. */
+    #meetings-table td { white-space: normal; }
+    #meetings-table td:first-child { white-space: nowrap; }
+    .cell-sub { display: block; font-size: 12px; color: var(--sage); margin-top: 3px; }
+
     .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
 
     /* ── Email template editor ── */
@@ -603,7 +609,14 @@
           tr.appendChild(when);
 
           const who = document.createElement('td');
-          who.textContent = m.applicant ? m.applicant.name + ' (' + m.applicant.email + ')' : '(unknown)';
+          who.className = 'person';
+          who.textContent = m.applicant ? m.applicant.name : '(unknown)';
+          if (m.applicant) {
+            const sub = document.createElement('span');
+            sub.className = 'cell-sub';
+            sub.textContent = m.applicant.email;
+            who.appendChild(sub);
+          }
           tr.appendChild(who);
 
           const meet = document.createElement('td');
@@ -626,9 +639,13 @@
           } else if (m.drift === 'time_changed') {
             const badge = document.createElement('span');
             badge.className = 'pay-badge refunded';
-            badge.textContent = 'Moved in Google: ' + (m.driftGoogleStartAt ? fmt(m.driftGoogleStartAt) : 'time unknown');
+            badge.textContent = 'Moved in Google';
             badge.title = 'Google Calendar shows a different time than this database. Rebook from the join flow or cancel.';
             g.appendChild(badge);
+            const sub = document.createElement('span');
+            sub.className = 'cell-sub';
+            sub.textContent = 'Google shows ' + (m.driftGoogleStartAt ? fmt(m.driftGoogleStartAt) : 'a different time');
+            g.appendChild(sub);
           } else if (m.drift === 'gone_from_google') {
             const badge = document.createElement('span');
             badge.className = 'pay-badge refunded';
@@ -639,13 +656,16 @@
             g.innerHTML = '<span class="pay-badge paid">In sync</span>';
           }
           if (m.htmlLink) {
+            const sub = document.createElement('span');
+            sub.className = 'cell-sub';
             const a = document.createElement('a');
             a.href = m.htmlLink;
             a.target = '_blank';
             a.rel = 'noopener';
-            a.textContent = 'open';
-            a.style.cssText = 'margin-left:8px;font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;';
-            g.appendChild(a);
+            a.textContent = 'open in Google Calendar';
+            a.style.cssText = 'color:var(--lime-dark);font-weight:700;text-decoration:none;';
+            sub.appendChild(a);
+            g.appendChild(sub);
           }
           tr.appendChild(g);
 
