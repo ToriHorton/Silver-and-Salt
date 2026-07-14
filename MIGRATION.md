@@ -375,13 +375,20 @@ platform-side). Owner directive implemented:
   flags `time_changed` (with Google's time shown) or `gone_from_google`
   on the admin Introduction Calls card; admin can Cancel (removes the
   Google event, guest notified). Our data never changes from drift.
-- **BLOCKED on one human step**: the platform reports
-  `calendar_not_connected` because the pre-pivot read-only grant is
-  retired and CLI 0.11.2's lifecycle commands fail ("unsupported
-  access"), so the re-consent (with booking scopes) must run from
-  STUDIO's calendar page: disconnect, connect, Google consent. Until
-  then /api/schedule/slots returns schedulingReady:false and the join
-  page shows a graceful "we will reach out by email" message.
+- **CONNECTED AND E2E VERIFIED 2026-07-14.** Root cause of the CLI
+  failures found in source: 0.11.2's status parser throws on any access
+  mode except "read", while the pivoted platform reports access "book"
+  (one stale line; reported to odla). Workaround used the CLI's own
+  registry endpoints directly (`POST
+  /registry/apps/<app>/calendar/google/connect?env=dev` with the dev
+  token -> consentUrl -> `open` in the owner's browser -> poll attempt
+  until healthy). Live E2E: 87 slots computed from real FreeBusy; a
+  fresh application booked one; canonical meeting row written
+  (eventId + meetUrl), Google sent the invite with a real Meet link,
+  application flipped to call_scheduled with matching meetingAt, prep
+  email logged, admin Introduction Calls shows In sync. Remaining
+  manual test: owner drags/deletes the event in Google Calendar and
+  confirms the drift flag appears on /admin/ (never auto-adopted).
 - **UI-COMPONENT-SPECS.md** (repo root, excluded from build) requests a
   buildless SlotPicker from the odla team; join.html's hand-rolled picker
   is the interim.
