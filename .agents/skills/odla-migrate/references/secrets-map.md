@@ -8,8 +8,9 @@
 | Clerk webhook secret (`whsec_…`) | tenant vault (`clerk_webhook_secret`) | only for auth mode "full"; piped with `secrets set clerk_webhook_secret --env <env> --stdin`, or entered in Studio; never wrangler, never chat |
 | Clerk secret key (`sk_test_`/`sk_live_`) | not needed for this journey | if a later feature needs user resolution/invites, pipe it with `secrets set-clerk-key --env <env>` (reserved `$clerk_secret`, write-only); never chat |
 | LLM provider key | tenant vault | env var in the HUMAN's shell for one provision run; never wrangler vars, never git, never chat |
+| `ODLA_USER_EMAIL` / `--email` | process environment or one command invocation | non-secret identifier for the existing signed-in odla account allowed to review a fresh request; never substitute a password or session token |
 | `odla_sk_…` (tenant db key) | wrangler secret `ODLA_API_KEY` + `.odla/credentials.local.json` (0600) + `.dev.vars` | present when db is enabled; move it only with the pipeline below |
-| `odla_dev_…` (developer token) | `.odla/dev-token.json` (0600) | ~24h lifetime, provision-time only; never deployed |
+| `odla_dev_…` (developer token) | `.odla/dev-token.json` (0600) | tracked/revocable, ~24h lifetime, provision-time only; never deployed; deleting this cache does not revoke a copied token |
 | scoped `odla_dev_…` (admin-approved platform capability) | `.odla/admin-token.local.json` (0600) | separate policy/credential/usage/self-audit scope, ~15m lifetime, denied on owner routes, never deployed |
 | `o11y_…` (o11y ingest token) | wrangler secret `ODLA_O11Y_TOKEN` + `.odla/credentials.local.json` (0600) + `.dev.vars` | only if the app enables o11y; provision issues/reuses it and moves it alongside the db key; never a var, never chat |
 | `ODLA_ENDPOINT` / `ODLA_TENANT` / `ODLA_PLATFORM` / `ODLA_APP_ID` / `ODLA_ENV` | wrangler `vars` | not secrets; keep them set in every env block |

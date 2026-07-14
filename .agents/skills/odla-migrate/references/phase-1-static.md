@@ -10,7 +10,11 @@ in this session).
 ## Steps
 
 1. `npm i -D wrangler`
-2. Write `wrangler.jsonc` by hand using this documented shape:
+2. Write `wrangler.jsonc` by hand. The shape below is the odla-shaped
+   baseline; verify field names and current syntax against Cloudflare's live
+   doc first
+   (`https://developers.cloudflare.com/workers/wrangler/configuration/index.md`
+   — see SKILL.md "Context bootstrap"):
    - `name`: kebab-case app id; `main`: `src/worker.ts`
    - `compatibility_date` (today), `compatibility_flags: ["nodejs_compat"]`
    - `assets: { "directory": "<buildDir>", "binding": "ASSETS",

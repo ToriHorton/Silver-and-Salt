@@ -25,23 +25,30 @@ For static Appointment Schedule parity, add the public per-env
 ## 2. Build the Worker shell
 
 `npm i` only the SDKs you need and use the local `references/sdks.md` as the
-integration map. Create the Worker entrypoint and `wrangler.jsonc` before any
-deployed-secret transfer. With o11y, install `@odla-ai/o11y`, add
-`"nodejs_compat"` to `compatibility_flags`, and wrap the entrypoint with
-`withObservability`.
+integration map. `npm i -D wrangler` so the project pins its own copy instead
+of relying on an implicit `npx` fetch. Create the Worker entrypoint and
+`wrangler.jsonc` before any deployed-secret transfer — take the current config
+syntax from Cloudflare's live docs (SKILL.md "Tooling sources"), not memory.
+With o11y, install `@odla-ai/o11y`, add `"nodejs_compat"` to
+`compatibility_flags`, and wrap the entrypoint with `withObservability`.
 
-Each installed package's `node_modules/@odla-ai/<pkg>/llms.txt` is the full API
-contract. The npm artifacts contain everything required for this flow; private
-service source or online documentation is not setup context.
+Each installed package's README and exported TypeScript declarations/JSDoc are
+the version-matched API contract; resolve public entry points through its
+`package.json` `exports`. For everything odla, the npm artifacts contain the
+whole setup context — private service source or web documentation is never
+required. Third-party tooling (wrangler, Clerk) is the reverse: use the live
+vendor docs, never memorized steps.
 
 ## 3. Provision  ⏸ device-code approval
 
 ```
-npx @odla-ai/cli provision --write-dev-vars --push-secrets
+npx @odla-ai/cli provision --email <existing-odla-account> --write-dev-vars --push-secrets
 ```
 
-Prints a short device code and a link. ⏸ The human opens https://odla.ai/studio, signs
-in, and approves the code — no secret passes through the chat. Provision then:
+The email is an account identifier, never a password or session credential.
+Prints a short device code and a link. ⏸ That same account opens the link, signs
+in, explicitly reviews the exact code, and approves it — loading the URL alone
+does not claim access, and no secret passes through the chat. Provision then:
 creates the app, enables its services, issues or reuses the db key (and the
 o11y ingest token when o11y is enabled), pushes schema + rules, writes
 `.dev.vars`, and transfers configured Worker secrets through Wrangler stdin.
@@ -85,12 +92,12 @@ code. Browser code uses db subscriptions under explicit rules or pure
 Install the passive harness and scan before any production secret or deploy:
 
 Before installing the exact release, first verify
-`npm view @odla-ai/security@0.2.2 version`. An exact-version `E404` means the
+`npm view @odla-ai/security@0.3.1 version`. An exact-version `E404` means the
 release is unavailable and blocks this preflight; it is not a clean scan and
 does not prove the package name is absent.
 
 ```
-npm i -D --save-exact @odla-ai/security@0.2.2
+npm i -D --save-exact @odla-ai/security@0.3.1
 npx odla-security scan . --profile odla --out .odla/security/pre-ship --fail-on high --fail-on-candidates critical
 ```
 

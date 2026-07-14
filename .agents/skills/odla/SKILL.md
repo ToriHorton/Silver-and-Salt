@@ -37,6 +37,9 @@ State which path you're taking and what you'll build in one line; get a nod.
    `.odla/credentials.local.json`, or `.odla/dev-token.json` — use `ls -l` to
    confirm they exist (and are `0600`). The only value a human ever pastes is a
    Clerk **publishable** key (`pk_…`) — public by design.
+   A fresh odla device request also needs the existing account email via
+   `--email` or `ODLA_USER_EMAIL`; email is a non-secret identifier. Never ask
+   for an odla password, Clerk token, or browser session.
 2. **Dev before prod.** Keep `envs: ["dev"]` and verify the tenant
    (`<appId>--dev`) before any write or deploy. Add `prod` only at the explicit
    production checkpoint. The first prod
@@ -52,6 +55,28 @@ State which path you're taking and what you'll build in one line; get a nod.
    store a Google authorization code/refresh token. Open only the state-bound
    platform/Google consent URL returned by odla; calendar actions remain unavailable in the read-only slice.
 
+## Tooling sources
+
+- **odla**: this skill plus the installed `@odla-ai/*` packages are the
+  complete, offline contract (README + exported declarations/JSDoc, rendered
+  at `https://odla.ai/docs/packages/<pkg>`). Never reconstruct odla behavior
+  from the web or training memory.
+- **Third-party tools (wrangler, Clerk) — the reverse**: their CLIs and config
+  formats evolve, so never work from memorized setup steps. When you reach a
+  wrangler or Clerk step, fetch the vendor's current agent docs and follow
+  those:
+  - Cloudflare: docs index `https://developers.cloudflare.com/llms.txt`; every
+    docs page has a markdown twin at `<page>/index.md` (wrangler config:
+    `https://developers.cloudflare.com/workers/wrangler/configuration/index.md`).
+    With the human's OK (it edits global agent config), you may also follow
+    `https://developers.cloudflare.com/agent-setup/prompt.md` to add
+    Cloudflare's own skills + MCP servers to your harness.
+  - Clerk: agent-first CLI setup `https://clerk.com/docs/cli.md`; docs index
+    `https://clerk.com/docs/llms.txt`.
+
+  Offline? Say so, continue with the vendor steps written in these references,
+  and flag that they may be stale.
+
 ## The flow
 
 You reached this skill because the human ran `npx @odla-ai/cli setup`. Then:
@@ -66,8 +91,10 @@ guessing which platform/credential steps need manual work. Then:
    `withObservability`. The CLI will refuse secret delivery until the Wrangler
    target exists.
 3. **provision** ⏸ —
-   `npx @odla-ai/cli provision --write-dev-vars --push-secrets`. A device code
-   prints; the human approves it at https://odla.ai/studio. It creates the app,
+   `npx @odla-ai/cli provision --email <existing-odla-account>
+   --write-dev-vars --push-secrets`. A device code prints; that same account
+   signs in, reviews the exact code, and approves it at https://odla.ai/studio.
+   Opening the link alone is inert. It creates the app,
    enables services, issues or reuses configured credentials (db key + o11y
    ingest token when enabled), pushes schema + rules, writes `.dev.vars`, and
    transfers Worker secrets through Wrangler stdin. With calendar enabled it
@@ -119,5 +146,7 @@ code, paste a publishable key, run a command) — and wait for a nod.
 - `references/build.md` — the greenfield build, step by step, with the exact
   commands and what to verify at each one.
 - `references/sdks.md` — SDK cheat-sheet (what each does + minimal real usage).
-  Every installed SDK also ships `node_modules/@odla-ai/<pkg>/llms.txt` — read
-  it for the full, current API.
+  For the full, version-matched API, read the installed package's README and
+  exported TypeScript declarations/JSDoc (resolve entry points through its
+  `package.json` `exports`). Rendered references are also public at
+  `https://odla.ai/docs/packages/<pkg>`.

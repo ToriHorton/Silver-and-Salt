@@ -24,10 +24,10 @@ instance, never a second Clerk app per env; final go/no-go at each step.
    `secrets push --env prod --yes` only to retry the transfer (see
    references/secrets-map.md).
 3. Build, then run the passive pre-cutover security gate:
-   first require `npm view @odla-ai/security@0.2.2 version` to succeed. An
+   first require `npm view @odla-ai/security@0.3.1 version` to succeed. An
    exact-version `E404` means the release is unavailable and blocks cutover;
    it is not a clean scan and does not prove the package name is absent. Run
-   `npm i -D --save-exact @odla-ai/security@0.2.2` followed by
+   `npm i -D --save-exact @odla-ai/security@0.3.1` followed by
    `npx odla-security scan . --profile odla --out .odla/security/pre-cutover --fail-on high --fail-on-candidates critical`.
    Review `REPORT.md`; a candidate is a lead, not confirmation, and a baseline
    requires a concrete reason, owner, and expiry.

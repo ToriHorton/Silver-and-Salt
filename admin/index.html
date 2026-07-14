@@ -361,16 +361,16 @@
       </div>
 
       <div class="card">
-        <div class="card-label">Upcoming Bookings</div>
+        <div class="card-label">Introduction Calls</div>
         <div class="table-wrap">
-          <table id="bookings-table">
+          <table id="meetings-table">
             <thead>
-              <tr><th>When</th><th>Event</th><th>Guests</th><th>Application</th><th></th></tr>
+              <tr><th>When</th><th>Applicant</th><th>Video call</th><th>Google</th><th></th></tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
-        <p class="empty-note hidden" id="bookings-empty">Upcoming bookings from the connected calendar appear here. Booking changes happen in Google Calendar; this view is a read-only mirror.</p>
+        <p class="empty-note hidden" id="meetings-empty">Booked introduction calls appear here. This database is the source of truth; if someone moves or removes the event in Google Calendar, a flag appears instead of the change being adopted.</p>
       </div>
 
       <div class="card">
@@ -529,54 +529,91 @@
 
     async function loadBookings() {
       try {
-        const { bookings } = await api('/api/admin/bookings');
-        const tbody = document.querySelector('#bookings-table tbody');
+        const { meetings } = await api('/api/admin/meetings');
+        const tbody = document.querySelector('#meetings-table tbody');
         tbody.innerHTML = '';
-        if (!bookings.length) {
-          $('bookings-empty').classList.remove('hidden');
+        if (!meetings.length) {
+          $('meetings-empty').classList.remove('hidden');
           return;
         }
-        for (const b of bookings) {
+        const fmt = (ms) => new Date(ms).toLocaleString(undefined, {
+          weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+        });
+        for (const m of meetings) {
           const tr = document.createElement('tr');
 
           const when = document.createElement('td');
           when.className = 'person';
-          when.textContent = new Date(b.startAt).toLocaleString(undefined, {
-            weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
-          });
+          when.textContent = fmt(m.startAt);
           tr.appendChild(when);
 
-          const summary = document.createElement('td');
-          summary.textContent = b.summary || '(no title)';
-          tr.appendChild(summary);
+          const who = document.createElement('td');
+          who.textContent = m.applicant ? m.applicant.name + ' (' + m.applicant.email + ')' : '(unknown)';
+          tr.appendChild(who);
 
-          const guests = document.createElement('td');
-          guests.textContent = b.attendees.join(', ');
-          tr.appendChild(guests);
-
-          const appTd = document.createElement('td');
-          if (b.application) {
-            const badge = document.createElement('span');
-            badge.className = 'pay-badge paid';
-            badge.textContent = b.application.name;
-            badge.title = 'Matches an application (' + b.application.status + ')';
-            appTd.appendChild(badge);
-          } else {
-            appTd.innerHTML = '<span class="muted">&middot;</span>';
-          }
-          tr.appendChild(appTd);
-
-          const linkTd = document.createElement('td');
-          if (b.htmlLink) {
+          const meet = document.createElement('td');
+          if (m.meetUrl) {
             const a = document.createElement('a');
-            a.href = b.htmlLink;
+            a.href = m.meetUrl;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = 'Meet link';
+            a.style.cssText = 'font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;';
+            meet.appendChild(a);
+          }
+          tr.appendChild(meet);
+
+          // Google agreement: quiet when in sync, loud when someone moved
+          // or removed the event over there.
+          const g = document.createElement('td');
+          if (m.status === 'cancelled') {
+            g.innerHTML = '<span class="pay-badge unpaid">Cancelled</span>';
+          } else if (m.drift === 'time_changed') {
+            const badge = document.createElement('span');
+            badge.className = 'pay-badge refunded';
+            badge.textContent = 'Moved in Google: ' + (m.driftGoogleStartAt ? fmt(m.driftGoogleStartAt) : 'time unknown');
+            badge.title = 'Google Calendar shows a different time than this database. Rebook from the join flow or cancel.';
+            g.appendChild(badge);
+          } else if (m.drift === 'gone_from_google') {
+            const badge = document.createElement('span');
+            badge.className = 'pay-badge refunded';
+            badge.textContent = 'Removed in Google';
+            badge.title = 'The Google event is gone but this booking still stands here.';
+            g.appendChild(badge);
+          } else {
+            g.innerHTML = '<span class="pay-badge paid">In sync</span>';
+          }
+          if (m.htmlLink) {
+            const a = document.createElement('a');
+            a.href = m.htmlLink;
             a.target = '_blank';
             a.rel = 'noopener';
             a.textContent = 'open';
-            a.style.cssText = 'font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;';
-            linkTd.appendChild(a);
+            a.style.cssText = 'margin-left:8px;font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;';
+            g.appendChild(a);
           }
-          tr.appendChild(linkTd);
+          tr.appendChild(g);
+
+          const actions = document.createElement('td');
+          if (m.status === 'scheduled') {
+            const cancel = document.createElement('button');
+            cancel.className = 'row-save row-refund';
+            cancel.textContent = 'Cancel';
+            cancel.addEventListener('click', async () => {
+              const sure = confirm('Cancel this introduction call? The Google event is removed and the guest is notified.');
+              if (!sure) return;
+              cancel.disabled = true;
+              try {
+                await api('/api/admin/meetings/' + m.id + '/cancel', { method: 'POST', body: '{}' });
+                await Promise.all([loadBookings(), loadPeople()]);
+              } catch (e) {
+                console.error(e);
+                cancel.disabled = false;
+              }
+            });
+            actions.appendChild(cancel);
+          }
+          tr.appendChild(actions);
 
           tbody.appendChild(tr);
         }

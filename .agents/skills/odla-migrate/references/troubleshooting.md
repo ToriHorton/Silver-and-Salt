@@ -30,7 +30,9 @@ prints what it verified against.
 Cause: the `odla_dev_…` token expired (~24h) or the handshake was never
 approved.
 Fix: re-run `npx @odla-ai/cli provision` — it starts a fresh handshake; the
-human approves the new code at the printed URL. Use `--no-open` in
+matching existing account must be supplied with `--email` or
+`ODLA_USER_EMAIL`, then signs in, reviews, and approves the exact code at the
+printed URL. Never ask for a password or session token. Use `--no-open` in
 non-interactive shells if the browser launch misbehaves.
 
 ## `smoke` fails: missing credentials
@@ -78,6 +80,6 @@ the printed `secrets push --env ...` retry and do not rotate again.
 ## Something not covered here
 
 Check, in order: `npx @odla-ai/cli doctor` output; this skill's current phase
-and troubleshooting references; then the relevant installed
-`node_modules/@odla-ai/*/llms.txt`. Do not improvise around a safety rule to
-unblock yourself — surface the blocker to the human instead.
+and troubleshooting references; then the relevant installed package README and
+exported TypeScript declarations/JSDoc. Do not improvise around a safety rule
+to unblock yourself — surface the blocker to the human instead.

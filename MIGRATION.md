@@ -350,6 +350,45 @@ PAYMENT-SPEC.md P1 is implemented on the dev worker:
   registration, P2 referrals, P3 accreditation panel, P4 monitoring, and
   the prod-instance repeats at Phase 5.
 
+## Scheduling v2: odla-db is the source of truth (2026-07-14, owner-directed)
+
+@odla-ai/calendar 0.2.0 replaced the read-only mirror with a live booking
+proxy (FreeBusy, computeBookableSlots, create/reschedule/cancel with Meet
+links and Google-sent invites; `$bookings` mirror namespaces are GONE
+platform-side). Owner directive implemented:
+
+- **`meetings` entity is canonical** (schema): startAt/endAt/timezone/
+  status/googleEventId/meetUrl/htmlLink plus drift fields. Google Calendar
+  is a projection carrying the invitation email and Meet link.
+- **First-party booking**: join step 3 is now an on-brand slot picker
+  (day chips + time grid). `GET /api/schedule/slots` computes availability
+  (Google FreeBusy + group scheduling rules in `groups.schedulingJson`:
+  45 min, Mon-Fri 9-17 America/Los_Angeles, 24h notice, 14-day window);
+  `POST /api/schedule/book` books or REBOOKS (existing event is
+  rescheduled so the invite thread and Meet link survive), writes the
+  meeting row, updates the application, sends the prep email once. The
+  Google appointment-schedule iframe, the "have you booked" checkbox, and
+  the self-report route are all gone. Member page links "Join the video
+  call" (meetUrl) and "Change your time" (join.html?reschedule=<appId>).
+- **Drift detection, never adoption**: `/api/admin/meetings` compares
+  canonical meetings against `availability.upcoming()` by eventId and
+  flags `time_changed` (with Google's time shown) or `gone_from_google`
+  on the admin Introduction Calls card; admin can Cancel (removes the
+  Google event, guest notified). Our data never changes from drift.
+- **BLOCKED on one human step**: the platform reports
+  `calendar_not_connected` because the pre-pivot read-only grant is
+  retired and CLI 0.11.2's lifecycle commands fail ("unsupported
+  access"), so the re-consent (with booking scopes) must run from
+  STUDIO's calendar page: disconnect, connect, Google consent. Until
+  then /api/schedule/slots returns schedulingReady:false and the join
+  page shows a graceful "we will reach out by email" message.
+- **UI-COMPONENT-SPECS.md** (repo root, excluded from build) requests a
+  buildless SlotPicker from the odla team; join.html's hand-rolled picker
+  is the interim.
+- Note for future agents: CLI 0.11.2 validates the legacy config key
+  `calendars` and rejects 0.2.0's `availabilityCalendars`; config uses
+  the legacy name until the CLI catches up.
+
 ## Booking capture (2026-07-11)
 
 Google's appointment widget is a sealed iframe: no callback ever reaches the

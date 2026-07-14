@@ -24,9 +24,10 @@ own terminal so you never see the value.
 3. `npm i @odla-ai/ai`. In the worker, use `initFromPlatform` — it reads
    provider/model from public-config (cached ~60s) and resolves the key
    from the vault at call time using only the app's db key. Provider and
-   model are switchable in Studio with no redeploy. Read
-   `node_modules/@odla-ai/ai/llms.txt` and the public platform manual for the
-   complete vault + public-config contract.
+   model are switchable in Studio with no redeploy. Read the installed
+   `node_modules/@odla-ai/ai/README.md` and exported TypeScript
+   declarations/JSDoc for the version-matched API; the rendered reference at
+   `https://odla.ai/docs/packages/ai` covers the public platform composition.
 4. Add one `/api/*` route that round-trips the model; deploy dev.
 
 ## Verification checklist

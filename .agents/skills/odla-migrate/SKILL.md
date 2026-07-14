@@ -38,6 +38,9 @@ installed skill at `../odla/SKILL.md` instead.
 3. Never print, paste, or commit a secret. Never `cat` .dev.vars,
    .odla/credentials.local.json, or .odla/dev-token.json. Read
    references/secrets-map.md BEFORE any command that touches a credential.
+   A fresh device request requires the existing odla account email via
+   `--email` or `ODLA_USER_EMAIL`; email is a non-secret identifier. Never ask
+   for an odla password, Clerk token, or browser session.
 4. Never `git add -A` without reading `git status` first.
 5. Never widen a db rule to silence a 403 — default-deny is the design.
    Any rules change is a human checkpoint.
@@ -118,5 +121,23 @@ On any failure, read references/troubleshooting.md before improvising.
 This installed skill and its `references/` directory are the complete migration
 runbook; do not fetch a website or private source repository to reconstruct it.
 Read only the current phase file as directed above. After `npm install`, prefer
-`node_modules/@odla-ai/*/llms.txt` over training memory for package APIs — the
-installed artifact is the version this project actually uses.
+each installed package's README and exported TypeScript declarations/JSDoc over
+training memory; resolve entry points through its `package.json` `exports`.
+Those artifacts describe the version this project actually uses.
+
+Third-party tools (wrangler, Clerk) are the reverse: their CLIs and config
+formats evolve, so never work from memorized setup steps. When a phase reaches
+a wrangler or Clerk step, fetch the vendor's current agent docs and prefer
+their syntax over any literal command written in a phase file:
+
+- Cloudflare: docs index `https://developers.cloudflare.com/llms.txt`; every
+  docs page has a markdown twin at `<page>/index.md` (wrangler config:
+  `https://developers.cloudflare.com/workers/wrangler/configuration/index.md`).
+  With the human's OK (it edits global agent config), you may also follow
+  `https://developers.cloudflare.com/agent-setup/prompt.md` to add Cloudflare's
+  own skills + MCP servers to your harness.
+- Clerk: agent-first CLI setup `https://clerk.com/docs/cli.md`; docs index
+  `https://clerk.com/docs/llms.txt`.
+
+Offline? Say so, continue with the vendor steps written in the phase files,
+and flag that they may be stale.

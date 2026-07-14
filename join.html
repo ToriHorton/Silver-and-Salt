@@ -453,16 +453,7 @@
       color: rgba(255,255,255,0.85);
     }
 
-    .cal-iframe-wrap {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-    }
 
-    .cal-iframe-wrap iframe {
-      width: 100%;
-      max-width: 100%;
-    }
 
     .cal-hint {
       background: var(--lime-soft);
@@ -495,79 +486,78 @@
       line-height: 1.7;
     }
 
-    .step2-confirm-area {
-      margin-top: 28px;
-      padding: 24px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    .step2-confirm-area h3 {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 22px;
-      font-weight: 400;
-      font-style: italic;
-      color: var(--moss);
+    /* ── First-party slot picker ── */
+    .slots-area { padding: 20px 18px 24px; background: #fff; }
+    .slots-status {
+      font-size: 14px;
+      color: var(--sage);
       text-align: center;
-      margin-bottom: 16px;
+      padding: 18px 0;
+      line-height: 1.8;
     }
-
-    .confirm-check-wrap {
+    .slot-days {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      background: var(--lime-soft);
-      border: 1px solid rgba(124,184,63,0.25);
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 16px;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
     }
-
-    .confirm-check-wrap:has(input:checked) {
-      border-color: var(--lime);
-      box-shadow: 0 0 0 3px var(--lime-soft);
-    }
-
-    .confirm-check-wrap input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--lime);
-      cursor: pointer;
-      flex-shrink: 0;
-      margin: 0;
-    }
-
-    .confirm-check-wrap span {
-      font-family: 'Satoshi', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--moss);
-    }
-
-    .confirm-btn {
-      display: block;
-      width: 100%;
-      background-color: var(--lime);
-      color: #fff;
-      font-family: 'Satoshi', sans-serif;
-      font-size: 14px;
+    .slot-day {
+      flex: 0 0 auto;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.04em;
-      border: none;
-      border-radius: 4px;
-      padding: 15px;
+      color: var(--moss-light);
+      background: #f4faf2;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 8px 16px;
       cursor: pointer;
-      transition: background-color 0.2s, opacity 0.2s;
+      transition: all 0.2s;
+      white-space: nowrap;
     }
-    .confirm-btn:hover { background-color: var(--lime-dark); }
-    .confirm-btn:disabled {
-      background-color: #b0cc9e;
-      cursor: not-allowed;
-      opacity: 0.6;
+    .slot-day:hover { border-color: var(--lime); }
+    .slot-day[aria-pressed="true"] {
+      background: var(--moss);
+      color: #fff;
+      border-color: var(--moss);
     }
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+      gap: 8px;
+    }
+    .slot-time {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--moss);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .slot-time:hover { border-color: var(--lime); background: var(--lime-soft); }
+    .slot-time[aria-pressed="true"] {
+      background: var(--lime);
+      color: #fff;
+      border-color: var(--lime);
+      font-weight: 700;
+    }
+    .slot-confirm { margin-top: 18px; text-align: center; }
+    .slot-confirm .submit-btn { max-width: 380px; }
+
+
+
+
+
+
+
 
     #step-3 { display: none; text-align: center; padding: 40px 0; }
     .step3-icon { font-size: 36px; margin-bottom: 16px; }
@@ -763,7 +753,6 @@
       .two-col { grid-template-columns: 1fr; }
       .card     { padding: 32px 24px; }
       .hero     { padding: 76px 32px 60px; }
-      .calendar-wrap iframe { height: 550px; }
       .quote-card-top { gap: 16px; }
     }
 
@@ -801,13 +790,7 @@
       .cal-header     { padding: 14px 16px; }
       .cal-header .cal-sub { font-size: 15px; }
       .cal-hint       { font-size: 12px; padding: 10px 14px; }
-      .cal-iframe-wrap { overflow: hidden; -webkit-overflow-scrolling: touch; max-width: 100vw; }
-      .cal-iframe-wrap iframe { width: 100%; max-width: 100%; height: 750px; min-height: 600px; }
       .calendar-wrap { overflow: hidden; }
-      .step2-confirm-area { padding: 20px 16px; margin-top: 24px; }
-      .step2-confirm-area h3 { font-size: 20px; }
-      .confirm-check-wrap span { font-size: 13px; }
-      .confirm-btn    { font-size: 14px; padding: 14px 20px; }
 
       /* Step 3 — Confirmation */
       #step-3         { padding: 28px 12px; text-align: center; }
@@ -1005,25 +988,20 @@
         </div>
         <div class="cal-hint">
           <span class="cal-hint-icon">↓</span>
-          <span>Select a date below, then scroll down to choose an available time.</span>
+          <span>Pick a day, then choose an available time. <span id="slot-tz-note"></span></span>
         </div>
-        <!-- Google Calendar Appointment Scheduling begin -->
-        <div class="cal-iframe-wrap">
-          <!-- src is overridden from the group's calendarLink when the
-               backend is present, so each group (and each environment)
-               books on the calendar its mirror is connected to. -->
-          <iframe id="cal-iframe" src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" style="border: 0; display: block;" width="100%" height="600" frameborder="0"></iframe>
+        <!-- First-party booking: slots come from our backend (live
+             availability), the booking lives in our database, and Google
+             Calendar carries the invitation and video call link. -->
+        <div class="slots-area">
+          <p class="slots-status" id="slots-status">Loading available times…</p>
+          <div class="slot-days" id="slot-days" hidden></div>
+          <div class="slot-grid" id="slot-grid" hidden></div>
+          <div class="slot-confirm" id="slot-confirm" hidden>
+            <button class="submit-btn" id="book-btn">Book this time</button>
+            <p class="step2-note" id="slot-note"></p>
+          </div>
         </div>
-        <!-- end Google Calendar Appointment Scheduling -->
-      </div>
-      <div class="step2-confirm-area">
-        <h3>Have you booked your time?</h3>
-        <label class="confirm-check-wrap">
-          <input type="checkbox" id="confirm-check" />
-          <span>I’ve booked my time and received a confirmation.</span>
-        </label>
-        <button class="confirm-btn" id="confirm-btn" disabled>Continue →</button>
-        <p class="step2-note">Please confirm a date and time, then check the box to continue.</p>
       </div>
     </div>
 
@@ -1031,7 +1009,8 @@
       <div class="step3-icon">✦</div>
       <h2 class="step3-heading">You’re confirmed.</h2>
       <p class="step3-body">Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital.</p>
-      <p class="step3-body">A calendar invitation has been sent to your email.</p>
+      <p class="step3-body" id="confirmed-when" style="display:none;"></p>
+      <p class="step3-body">A calendar invitation with your video call link has been sent to your email.</p>
       <p class="step3-body step3-body-final">We’ll see you soon.</p>
       <p class="step3-body">Your member account is ready. Sign in with your email to see your application status and call details.</p>
       <a href="/members/" class="step3-account-btn" id="account-cta">Sign in to your member area</a><br>
@@ -1115,16 +1094,22 @@
         if (!cfg) { downgradeTracker(); return; }
         joinConfig = cfg;
         if (cfg.disclaimerText) document.getElementById('disclaimer-text').textContent = cfg.disclaimerText;
-        if (cfg.calendarLink) document.getElementById('cal-iframe').src = cfg.calendarLink;
         if (cfg.paymentsReady) {
           renderPayArea(cfg);
         } else {
           downgradeTracker();
         }
+        const params = new URLSearchParams(location.search);
         // Wallet/3DS redirects return here with a status flag; resume at
         // booking when the payment succeeded.
-        const rs = new URLSearchParams(location.search).get('redirect_status');
-        if (rs === 'succeeded' && cfg.paymentsReady) advanceToBooking(true);
+        if (params.get('redirect_status') === 'succeeded' && cfg.paymentsReady) advanceToBooking(true);
+        // The member area links here to change an existing booking.
+        const resume = params.get('reschedule');
+        if (resume) {
+          dbApplicationId = resume;
+          sessionStorage.setItem('ssc-application-id', resume);
+          advanceToBooking(false);
+        }
       })
       .catch(function() { downgradeTracker(); /* static hosting: no backend */ });
 
@@ -1171,6 +1156,7 @@
       if (paid) document.getElementById('paid-status').style.display = 'block';
       setDots('booking');
       document.getElementById('hero-subtitle').textContent = 'Please schedule a video call to complete your application.';
+      loadSlots();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1257,36 +1243,138 @@
     const step1       = document.getElementById('step-1');
     const step2       = document.getElementById('step-2');
     const step3       = document.getElementById('step-3');
-    const confirmBtn  = document.getElementById('confirm-btn');
     const dot1        = document.getElementById('dot-1');
     const dot2        = document.getElementById('dot-2');
 
-    // Checkbox gates the confirm button
-    const confirmCheck = document.getElementById('confirm-check');
-    confirmCheck.addEventListener('change', function() {
-      confirmBtn.disabled = !this.checked;
+    // ── First-party slot picker ──
+    // Availability comes from our backend; booking writes our database and
+    // exports a Google event that carries the invitation and Meet link.
+    let slotState = { slots: [], timezone: undefined, byDay: new Map(), activeDay: null, selected: null };
+
+    const dayKey = (ms, tz) => new Date(ms).toLocaleDateString('en-CA', { timeZone: tz });
+    const dayLabel = (ms, tz) => new Date(ms).toLocaleDateString(undefined, { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
+    const timeLabel = (ms, tz) => new Date(ms).toLocaleTimeString(undefined, { timeZone: tz, hour: 'numeric', minute: '2-digit' });
+    const fullLabel = (ms, tz) => new Date(ms).toLocaleString(undefined, { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+    async function loadSlots() {
+      const status = document.getElementById('slots-status');
+      status.hidden = false;
+      status.textContent = 'Loading available times…';
+      document.getElementById('slot-days').hidden = true;
+      document.getElementById('slot-grid').hidden = true;
+      document.getElementById('slot-confirm').hidden = true;
+      try {
+        const res = await fetch('/api/schedule/slots');
+        const data = await res.json();
+        if (!data.schedulingReady) {
+          status.textContent = 'Scheduling is briefly unavailable. We will reach out by email to arrange your conversation.';
+          return;
+        }
+        slotState.slots = data.slots || [];
+        slotState.timezone = data.timezone;
+        document.getElementById('slot-tz-note').textContent =
+          data.timezone ? 'Times are shown in ' + data.timezone.replace('_', ' ').split('/').pop() + ' time.' : '';
+        slotState.byDay = new Map();
+        for (const s of slotState.slots) {
+          const k = dayKey(s.startAt, slotState.timezone);
+          if (!slotState.byDay.has(k)) slotState.byDay.set(k, []);
+          slotState.byDay.get(k).push(s);
+        }
+        if (!slotState.byDay.size) {
+          status.textContent = 'Every time in the current window is taken. Please check back soon, or reply to your confirmation email.';
+          return;
+        }
+        status.hidden = true;
+        slotState.activeDay = [...slotState.byDay.keys()][0];
+        renderDays();
+        renderTimes();
+      } catch (err) {
+        console.error(err);
+        status.textContent = 'Scheduling is briefly unavailable. We will reach out by email to arrange your conversation.';
+      }
+    }
+
+    function renderDays() {
+      const host = document.getElementById('slot-days');
+      host.innerHTML = '';
+      for (const [key, slots] of slotState.byDay) {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'slot-day';
+        chip.textContent = dayLabel(slots[0].startAt, slotState.timezone);
+        chip.setAttribute('aria-pressed', String(key === slotState.activeDay));
+        chip.addEventListener('click', function() {
+          slotState.activeDay = key;
+          slotState.selected = null;
+          document.getElementById('slot-confirm').hidden = true;
+          renderDays();
+          renderTimes();
+        });
+        host.appendChild(chip);
+      }
+      host.hidden = false;
+    }
+
+    function renderTimes() {
+      const host = document.getElementById('slot-grid');
+      host.innerHTML = '';
+      for (const s of slotState.byDay.get(slotState.activeDay) || []) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot-time';
+        btn.textContent = timeLabel(s.startAt, slotState.timezone);
+        btn.setAttribute('aria-pressed', String(slotState.selected?.startAt === s.startAt));
+        btn.addEventListener('click', function() {
+          slotState.selected = s;
+          renderTimes();
+          const note = document.getElementById('slot-note');
+          note.textContent = fullLabel(s.startAt, slotState.timezone);
+          document.getElementById('book-btn').textContent = 'Book this time';
+          document.getElementById('slot-confirm').hidden = false;
+        });
+        host.appendChild(btn);
+      }
+      host.hidden = false;
+    }
+
+    document.getElementById('book-btn').addEventListener('click', async function() {
+      if (!slotState.selected || !dbApplicationId) return;
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = 'Booking…';
+      try {
+        const res = await fetch('/api/schedule/book', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ applicationId: dbApplicationId, startAt: slotState.selected.startAt }),
+        });
+        const data = await res.json();
+        if (res.status === 409 && data.code === 'calendar_slot_unavailable') {
+          document.getElementById('slot-note').textContent = 'That time was just taken. Here are the current openings.';
+          slotState.selected = null;
+          await loadSlots();
+          return;
+        }
+        if (!res.ok) throw new Error(data.error || 'booking failed');
+        goToConfirmation(data);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('slot-note').textContent = 'The booking could not be completed. Please try again.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Book this time';
+      }
     });
 
-    // Confirm button → advance to step 3 (thank you screen)
-    confirmBtn.addEventListener('click', function() {
-      if (!confirmCheck.checked) return;
+    function goToConfirmation(data) {
       if (applicantEmail) {
         document.getElementById('account-cta').href =
           '/members/?email=' + encodeURIComponent(applicantEmail);
       }
-
-      // Report the booking confirmation to the member database (best
-      // effort). The booked time itself arrives authoritatively from the
-      // read-only Google Calendar mirror; this report advances the status
-      // and triggers the prep email.
-      if (dbApplicationId) {
-        fetch('/api/applications/' + dbApplicationId + '/booking', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({}),
-        }).catch(function(err) {
-          console.warn('Booking report skipped (non-blocking).', err);
-        });
+      const when = document.getElementById('confirmed-when');
+      if (when && data && data.startAt) {
+        when.textContent = 'Your conversation is booked for ' + fullLabel(data.startAt, slotState.timezone) + '.';
+        when.style.display = 'block';
       }
       step2.style.display = 'none';
       step3.style.display = 'block';
@@ -1299,7 +1387,7 @@
       document.getElementById('hero-tag').style.display = 'none';
       document.querySelector('.hero').style.padding = '28px 28px 24px';
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    }
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();

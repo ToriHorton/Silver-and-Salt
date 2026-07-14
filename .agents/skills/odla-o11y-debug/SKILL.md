@@ -29,9 +29,13 @@ GET https://odla.ai/o11y/<appId>/<endpoint>?env=prod
 Authorization: Bearer <developer-token>
 ```
 
-Get `<developer-token>` from the device handshake (`POST https://odla.ai/handshake`
-→ approve in the Studio → `POST /handshake/poll`). `env` is `prod` (default) or
-`dev`. If a read returns `{"error":"ae_not_configured"}` (501), the app's metrics
+Get `<developer-token>` from `@odla-ai/cli` or the device handshake: start with
+`POST https://odla.ai/handshake` and
+`{"email":"<existing-odla-account>","label":"o11y debugger"}`, show the returned
+verification URL, then poll `POST /handshake/poll`. Email is a non-secret
+identifier; never ask for a password or session token. The matching account
+must sign in and explicitly review and approve the exact code. `env` is `prod`
+(default) or `dev`. If a read returns `{"error":"ae_not_configured"}` (501), the app's metrics
 reads aren't turned on yet — errors/traces still work; say so and fall back to them.
 
 ## Endpoints

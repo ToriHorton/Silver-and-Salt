@@ -475,15 +475,17 @@
         return;
       }
       if (application && application.meetingAt) {
-        const calendarLink = application.meetingLink
-          ? `<div class="meeting-note"><a href="${application.meetingLink}" target="_blank" rel="noopener" style="color: var(--lime-dark); font-weight: 700; text-decoration: none;">View or change it in Google Calendar</a></div>`
+        const meetLine = application.meetUrl
+          ? `<div class="meeting-note"><a href="${application.meetUrl}" target="_blank" rel="noopener" style="color: var(--lime-dark); font-weight: 700; text-decoration: none;">Join the video call</a></div>`
           : '';
+        const rescheduleLine = `<div class="meeting-note"><a href="/join.html?reschedule=${application.id}" style="color: var(--sage); text-decoration: underline;">Change your time</a></div>`;
         body.innerHTML = `
           <div class="meeting-block">
             <div class="meeting-kicker">Your introduction call</div>
             <div class="meeting-date">${fmtMeeting(application.meetingAt)}</div>
-            <div class="meeting-note">A calendar invitation is in your email. We look forward to meeting you.</div>
-            ${calendarLink}
+            <div class="meeting-note">A calendar invitation with the video call link is in your email. We look forward to meeting you.</div>
+            ${meetLine}
+            ${rescheduleLine}
             ${membershipLine}
           </div>`;
       } else if (application) {

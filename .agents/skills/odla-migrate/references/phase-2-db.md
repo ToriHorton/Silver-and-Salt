@@ -4,14 +4,15 @@ Goal: the app registered on the platform, a dev odla-db tenant with
 schema + deny-all rules, the db key in the dev worker, and first
 `/api/*` routes live in dev.
 
-Human obligation: sign in at https://odla.ai/studio and approve the handshake
-code when the provision run prints it (it also opens the approval page
-in the browser in interactive terminals).
+Human obligation: provide the existing odla account email (not a password or
+session credential), sign in at https://odla.ai/studio, explicitly review the
+exact handshake code, and approve it. The provision run prints the code and
+opens the review page in interactive terminals; loading it alone is inert.
 
 ## Steps
 
-1. Require `npm view @odla-ai/cli@0.10.0 version` to succeed, then run
-   `npm i -D --save-exact @odla-ai/cli@0.10.0` and `npm i @odla-ai/db`.
+1. Require `npm view @odla-ai/cli@0.10.2 version` to succeed, then run
+   `npm i -D --save-exact @odla-ai/cli@0.10.2` and `npm i @odla-ai/db`.
 2. `npx @odla-ai/cli init --app-id <id> --name "<Name>" --env dev --services db`
    Review `odla.config.mjs`. Keep `envs: ["dev"]` — prod is Phase 5. Set
    `links.dev` to the URL the Phase 1 `wrangler deploy` **actually printed** —
@@ -21,7 +22,7 @@ in the browser in interactive terminals).
    public-config show where the app runs. (`links.prod` is set the same way at
    Phase 5, from the prod deploy's printed URL.)
 3. STOP before touching schema: read "Porting relational code" in
-   `node_modules/@odla-ai/db/llms.txt`. The traps are silent: entity ids
+   `node_modules/@odla-ai/db/README.md`. The traps are silent: entity ids
    are not attrs (mirror an id attr), there is no NULL (omit on write,
    re-project on read), lists need explicit `order`, uniques are
    single-attr (derive composite keys), ON CONFLICT maps to `mutationId`
@@ -32,7 +33,8 @@ in the browser in interactive terminals).
    directly. Loosening a rule is a human checkpoint.
 5. `npx @odla-ai/cli doctor` until clean.
 6. `npx @odla-ai/cli provision --dry-run` — show the plan to the human.
-7. `npx @odla-ai/cli provision --write-dev-vars --push-secrets` — handshake,
+7. `npx @odla-ai/cli provision --email <existing-odla-account>
+   --write-dev-vars --push-secrets` — handshake,
    app registration, dev db key, schema + rules push; writes
    `.odla/credentials.local.json` (0600) and `.dev.vars`, then pipes configured
    Worker secrets to Wrangler over stdin. Both local files are gitignored by
@@ -47,8 +49,9 @@ in the browser in interactive terminals).
 10. Add `/api/*` routes before the assets fall-through, using
     `init({ appId: env.ODLA_TENANT, adminToken: env.ODLA_API_KEY,
     endpoint: env.ODLA_ENDPOINT })` from `@odla-ai/db`. Read the installed
-    package's `node_modules/@odla-ai/db/llms.txt` for query, transaction, and
-    error contracts.
+    package's README and exported TypeScript declarations/JSDoc for query,
+    transaction, and error contracts. The rendered reference is at
+    `https://odla.ai/docs/packages/db` when online.
 11. `wrangler dev` + curl each route; then `npm run deploy:app:dev` and
     curl the workers.dev URL.
 

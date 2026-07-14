@@ -17,6 +17,11 @@ dashboard. Do NOT assume an app exists: a stale publishable key can linger
 on the registry's app_auth record from a deleted/recreated app —
 `clerk apps list` is the source of truth for what's real.
 
+Clerk's CLI evolves. Before the first `npx clerk` command, fetch the current
+doc — `https://clerk.com/docs/cli.md` — and prefer its syntax over the literal
+flags below. The steps here are the odla-shaped sequence; the live doc is
+authoritative for commands and flags.
+
 ## Steps
 
 1. Provision the Clerk app with the CLI (after the human's `clerk auth
