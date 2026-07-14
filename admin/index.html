@@ -281,6 +281,41 @@
 
     .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
 
+    /* ── Email template editor ── */
+    .tpl-block { margin-bottom: 22px; }
+    .tpl-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 8px;
+    }
+    .tpl-hint {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      color: var(--sage);
+    }
+    .tpl-block input[type="text"], .tpl-block textarea {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      color: var(--moss);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      width: 100%;
+      margin-bottom: 8px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .tpl-block input:focus, .tpl-block textarea:focus {
+      outline: 2px solid var(--lime-soft);
+      border-color: var(--lime);
+    }
+
     .hidden { display: none; }
 
     @media (max-width: 480px) {
@@ -339,6 +374,22 @@
       </div>
 
       <div class="card">
+        <div class="card-label">Email Templates</div>
+        <p class="empty-note" style="margin-bottom: 18px;">These are the emails the system sends. Curly placeholders like {{firstName}} fill in per applicant when a message goes out.</p>
+        <div id="email-templates"></div>
+        <div class="tpl-block">
+          <label class="tpl-label" for="commitment-text">Community commitment <span class="tpl-hint">(embedded in the pre-meeting email as {{commitmentText}})</span></label>
+          <textarea id="commitment-text" rows="4"></textarea>
+        </div>
+        <div class="tpl-block">
+          <label class="tpl-label" for="norms-text">Group norms <span class="tpl-hint">(embedded in the pre-meeting email as {{normsText}})</span></label>
+          <textarea id="norms-text" rows="4"></textarea>
+        </div>
+        <button class="row-save" id="email-save" style="padding: 10px 22px;">Save email settings</button>
+        <span class="empty-note hidden" id="email-save-note" style="margin-left: 10px;"></span>
+      </div>
+
+      <div class="card">
         <div class="card-label">People</div>
         <div class="table-wrap">
           <table id="people-table">
@@ -394,11 +445,86 @@
           await window.Clerk.signOut();
           window.location.href = '/members/';
         });
-        await Promise.all([loadPeople(), loadBookings()]);
+        await Promise.all([loadPeople(), loadBookings(), loadEmailSettings()]);
       } catch (err) {
         $('auth-loading').textContent = 'The console is briefly unavailable. Please refresh.';
         console.error(err);
       }
+    }
+
+    const TEMPLATE_META = {
+      adminNotification: {
+        title: 'Admin notification (new paid application)',
+        hint: '{{firstName}} {{lastName}} {{email}} {{phone}} {{state}} {{adminUrl}}',
+      },
+      paymentConfirmation: {
+        title: 'Payment confirmation (to the applicant)',
+        hint: '{{firstName}} {{membersUrl}} {{refundPolicyText}}',
+      },
+      prepEmail: {
+        title: 'Pre-meeting prep (to the applicant on booking)',
+        hint: '{{firstName}} {{commitmentText}} {{normsText}}',
+      },
+      onboardingInvite: {
+        title: 'Onboarding invite (to the applicant on approval)',
+        hint: '{{firstName}} {{membersUrl}}',
+      },
+    };
+
+    async function loadEmailSettings() {
+      try {
+        const cfg = await api('/api/admin/group/email');
+        const host = $('email-templates');
+        host.innerHTML = '';
+        for (const [key, meta] of Object.entries(TEMPLATE_META)) {
+          const tpl = cfg.emailTemplates[key] || { subject: '', text: '' };
+          const block = document.createElement('div');
+          block.className = 'tpl-block';
+          block.innerHTML = `
+            <label class="tpl-label">${meta.title} <span class="tpl-hint">(${meta.hint})</span></label>
+            <input type="text" data-tpl-subject="${key}" placeholder="Subject" />
+            <textarea rows="6" data-tpl-text="${key}"></textarea>`;
+          block.querySelector(`[data-tpl-subject="${key}"]`).value = tpl.subject;
+          block.querySelector(`[data-tpl-text="${key}"]`).value = tpl.text;
+          host.appendChild(block);
+        }
+        $('commitment-text').value = cfg.commitmentText;
+        $('norms-text').value = cfg.normsText;
+
+        $('email-save').addEventListener('click', async () => {
+          const btn = $('email-save');
+          const note = $('email-save-note');
+          btn.disabled = true;
+          btn.textContent = 'Saving…';
+          note.classList.add('hidden');
+          try {
+            const emailTemplates = {};
+            for (const key of Object.keys(TEMPLATE_META)) {
+              emailTemplates[key] = {
+                subject: document.querySelector(`[data-tpl-subject="${key}"]`).value,
+                text: document.querySelector(`[data-tpl-text="${key}"]`).value,
+              };
+            }
+            await api('/api/admin/group/email', {
+              method: 'PUT',
+              body: JSON.stringify({
+                emailTemplates,
+                commitmentText: $('commitment-text').value,
+                normsText: $('norms-text').value,
+              }),
+            });
+            note.textContent = 'Saved.';
+            note.classList.remove('hidden');
+          } catch (e) {
+            console.error(e);
+            note.textContent = 'Save failed. Check every template has a single-line subject and a body.';
+            note.classList.remove('hidden');
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Save email settings';
+          }
+        });
+      } catch (e) { console.error(e); }
     }
 
     async function loadBookings() {

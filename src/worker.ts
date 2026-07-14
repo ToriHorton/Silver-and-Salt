@@ -796,6 +796,70 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ people: rows });
     }
 
+    // Owner-editable email configuration (PAYMENT-SPEC: copy lives in the
+    // group row, never code). Scoped to the launch group for now.
+    if (req.method === "GET" && url.pathname === "/api/admin/group/email") {
+      const group = await getGroup(db, DEFAULT_GROUP_ID);
+      if (!group) return json({ error: "not found" }, 404);
+      return json({
+        groupId: group.id,
+        emailTemplates: group.emailTemplates ?? {},
+        commitmentText: group.commitmentText ?? "",
+        normsText: group.normsText ?? "",
+      });
+    }
+
+    if (req.method === "PUT" && url.pathname === "/api/admin/group/email") {
+      let body: Record<string, unknown>;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "invalid JSON body" }, 400);
+      }
+
+      const TEMPLATE_KEYS = [
+        "adminNotification",
+        "paymentConfirmation",
+        "prepEmail",
+        "onboardingInvite",
+      ] as const;
+      const templates = body.emailTemplates as Record<string, { subject?: unknown; text?: unknown }>;
+      if (!templates || typeof templates !== "object") {
+        return json({ error: "emailTemplates object required" }, 400);
+      }
+      const clean: Record<string, { subject: string; text: string }> = {};
+      for (const key of TEMPLATE_KEYS) {
+        const t = templates[key];
+        const subject = typeof t?.subject === "string" ? t.subject.trim() : "";
+        const text = typeof t?.text === "string" ? t.text : "";
+        if (!subject || !text.trim()) {
+          return json({ error: `template "${key}" needs a subject and a body` }, 400);
+        }
+        if (/[\r\n]/.test(subject) || subject.length > 200) {
+          return json({ error: `template "${key}" subject must be a single line under 200 characters` }, 400);
+        }
+        if (text.length > 10_000) {
+          return json({ error: `template "${key}" body is too long` }, 400);
+        }
+        clean[key] = { subject, text };
+      }
+      const commitmentText = typeof body.commitmentText === "string" ? body.commitmentText : "";
+      const normsText = typeof body.normsText === "string" ? body.normsText : "";
+      if (commitmentText.length > 5000 || normsText.length > 5000) {
+        return json({ error: "commitment/norms text is too long" }, 400);
+      }
+
+      await db.transact(
+        tx.groups[DEFAULT_GROUP_ID].update({
+          emailTemplates: clean,
+          commitmentText,
+          normsText,
+        }),
+      );
+      groupCache = null; // this isolate serves fresh copy immediately
+      return json({ ok: true });
+    }
+
     // Upcoming mirrored bookings (the owner's booking calendar), each
     // flagged with the application it correlates to, if any. Read-only:
     // changes happen in Google Calendar via htmlLink.
