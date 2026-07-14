@@ -6,6 +6,15 @@
   <title>Apply to Join | Silver & Salt Capital</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Preload the fonts that paint above the fold (hero serif, body sans,
+       Infant digits) so a hard reload swaps once, early, instead of
+       strobing as each stylesheet lands. URLs match the current CSS the
+       providers serve; refresh them if a font version bump changes them. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cormorantgaramond/v21/co3ZmX5slCNuHLi8bLeY9MK7whWMhyjYrEtImSqn7B6D.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cormorantgaramond/v21/co3bmX5slCNuHLi8bLeY9MK7whWMhyjYqXtKky2F7g.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://cdn.fontshare.com/wf/TTX2Z3BF3P6Y5BQT3IV2VNOK6FL22KUT/7QYRJOI3JIMYHGY6CH7SOIFRQLZOLNJ6/KFIAZD4RUMEZIYV6FQ3T3GP5PDBDB6JY.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://cdn.fontshare.com/wf/LAFFD4SDUCDVQEXFPDC7C53EQ4ZELWQI/PXCT3G6LO6ICM5I3NTYENYPWJAECAWDD/GHM6WVH6MILNYOOCXHXB5GTSGNTMGXZR.woff2">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <style>
@@ -831,19 +840,20 @@
   <div class="container">
 
     <!-- Step indicator -->
-    <!-- Hidden until the backend config settles, so visitors never watch
-         the tracker renumber itself when the payment step activates. -->
-    <div class="steps" id="steps" style="visibility:hidden;">
+    <!-- Renders in its final three-step form immediately; the payment step
+         is the intended state wherever this page has a backend. The rare
+         no-backend case downgrades to two steps in JS. -->
+    <div class="steps" id="steps">
       <div class="step active" id="dot-1">
         <div class="step-dot">1</div>
         <div class="step-label">Apply</div>
       </div>
-      <div class="step pending" id="dot-pay" style="display:none;">
+      <div class="step pending" id="dot-pay">
         <div class="step-dot">2</div>
         <div class="step-label">Secure your place</div>
       </div>
       <div class="step pending" id="dot-2">
-        <div class="step-dot">2</div>
+        <div class="step-dot">3</div>
         <div class="step-label">Book your conversation</div>
       </div>
     </div>
@@ -1095,31 +1105,30 @@
 
     const fmtCents = (c) => '$' + (c / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    function revealSteps() {
-      document.getElementById('steps').style.visibility = '';
+    // No backend (or payments off): fold the tracker back to two steps.
+    function downgradeTracker() {
+      document.getElementById('dot-pay').style.display = 'none';
+      document.querySelector('#dot-2 .step-dot').textContent = '2';
     }
-    // Safety: never leave the tracker hidden if the config request hangs.
-    setTimeout(revealSteps, 2000);
 
     fetch('/api/groups/silver-and-salt-capital/join-config')
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(cfg) {
-        if (!cfg) { revealSteps(); return; }
+        if (!cfg) { downgradeTracker(); return; }
         joinConfig = cfg;
         if (cfg.disclaimerText) document.getElementById('disclaimer-text').textContent = cfg.disclaimerText;
         if (cfg.calendarLink) document.getElementById('cal-iframe').src = cfg.calendarLink;
         if (cfg.paymentsReady) {
-          document.getElementById('dot-pay').style.display = '';
-          document.querySelector('#dot-2 .step-dot').textContent = '3';
           renderPayArea(cfg);
+        } else {
+          downgradeTracker();
         }
-        revealSteps();
         // Wallet/3DS redirects return here with a status flag; resume at
         // booking when the payment succeeded.
         const rs = new URLSearchParams(location.search).get('redirect_status');
         if (rs === 'succeeded' && cfg.paymentsReady) advanceToBooking(true);
       })
-      .catch(function() { revealSteps(); /* static hosting: no backend, no payment step */ });
+      .catch(function() { downgradeTracker(); /* static hosting: no backend */ });
 
     function renderPayArea(cfg) {
       const li = cfg.lineItems;
