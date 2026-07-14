@@ -166,6 +166,10 @@
       flex-direction: column;
       align-items: center;
       gap: 6px;
+      /* Equal columns keep the dots evenly spaced regardless of how wide
+         each label runs; long labels wrap and stay centered. */
+      flex: 0 0 172px;
+      text-align: center;
     }
 
     .step-dot {
@@ -778,6 +782,7 @@
       .hero h1  { font-size: 30px; }
       .logo     { width: 160px; margin-bottom: 24px; }
       .step-line { width: 28px; }
+      .step { flex-basis: 104px; }
 
       /* Step 2 — Calendar */
       #step-2 { padding: 0 12px; }
@@ -831,12 +836,10 @@
         <div class="step-dot">1</div>
         <div class="step-label">Apply</div>
       </div>
-      <div style="width: 20px;"></div>
       <div class="step pending" id="dot-pay" style="display:none;">
         <div class="step-dot">2</div>
         <div class="step-label">Secure your place</div>
       </div>
-      <div style="width: 20px;" id="dot-pay-gap" hidden></div>
       <div class="step pending" id="dot-2">
         <div class="step-dot">2</div>
         <div class="step-label">Book your conversation</div>
@@ -1099,7 +1102,6 @@
         if (cfg.calendarLink) document.getElementById('cal-iframe').src = cfg.calendarLink;
         if (cfg.paymentsReady) {
           document.getElementById('dot-pay').style.display = '';
-          document.getElementById('dot-pay-gap').hidden = false;
           document.querySelector('#dot-2 .step-dot').textContent = '3';
           renderPayArea(cfg);
         }
