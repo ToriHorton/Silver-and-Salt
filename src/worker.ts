@@ -446,6 +446,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       lineItems: groupLineItems(group),
       publishableKey: group.stripePublishableKey ?? null,
       paymentsReady: Boolean(group.stripePublishableKey && group.stripePriceId && stripeKey),
+      // The group's booking page (Google appointment schedule embed). Must
+      // be a schedule on the calendar the mirror is connected to, or
+      // bookings never correlate.
+      calendarLink: group.calendarLink ?? null,
     });
   }
 
@@ -502,6 +506,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       "items[0][price]": group.stripePriceId,
       payment_behavior: "default_incomplete",
       "payment_settings[save_default_payment_method]": "on_subscription",
+      // Card only: keeps Link/Amazon Pay/Cash App/Klarna (and Link's
+      // save-my-info upsell) out of the Payment Element; the Express
+      // Checkout element then offers just the card wallets
+      // (Apple Pay / Google Pay once the domain is verified).
+      "payment_settings[payment_method_types][0]": "card",
       // 2025+ Stripe API: the first invoice's client secret lives on
       // confirmation_secret (invoices no longer carry payment_intent).
       "expand[]": "latest_invoice.confirmation_secret",

@@ -985,7 +985,10 @@
         </div>
         <!-- Google Calendar Appointment Scheduling begin -->
         <div class="cal-iframe-wrap">
-          <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" style="border: 0; display: block;" width="100%" height="600" frameborder="0"></iframe>
+          <!-- src is overridden from the group's calendarLink when the
+               backend is present, so each group (and each environment)
+               books on the calendar its mirror is connected to. -->
+          <iframe id="cal-iframe" src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1_9O59IJaGAZWnM6duwcPuqluoIu3ui_NMCu5iRHiJT_CRC9xjcoKWwMSG_9Zaxz1kQAMRU4A0?gv=true" style="border: 0; display: block;" width="100%" height="600" frameborder="0"></iframe>
         </div>
         <!-- end Google Calendar Appointment Scheduling -->
       </div>
@@ -1082,6 +1085,7 @@
         if (!cfg) return;
         joinConfig = cfg;
         if (cfg.disclaimerText) document.getElementById('disclaimer-text').textContent = cfg.disclaimerText;
+        if (cfg.calendarLink) document.getElementById('cal-iframe').src = cfg.calendarLink;
         if (cfg.paymentsReady) {
           document.getElementById('dot-pay').style.display = '';
           document.getElementById('dot-pay-gap').hidden = false;
