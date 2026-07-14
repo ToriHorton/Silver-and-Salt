@@ -396,25 +396,19 @@
       mount.classList.remove('hidden');
 
       const params = new URLSearchParams(location.search);
-      const wantSignUp = params.get('view') === 'sign-up';
-      if (wantSignUp) {
-        $('hero-title').textContent = 'Create Your Account';
-        $('hero-sub').textContent = 'Your member account keeps your application status and call details in one place.';
-        window.Clerk.mountSignUp(mount, {
-          appearance: APPEARANCE,
-          signInUrl: '/members/',
-          fallbackRedirectUrl: '/members/',
-          initialValues: params.get('email') ? { emailAddress: params.get('email') } : undefined,
-        });
-      } else {
-        window.Clerk.mountSignIn(mount, {
-          appearance: APPEARANCE,
-          signUpUrl: '/members/?view=sign-up',
-          fallbackRedirectUrl: '/members/',
-          signUpFallbackRedirectUrl: '/members/',
-          initialValues: params.get('email') ? { emailAddress: params.get('email') } : undefined,
-        });
+      // Membership starts with the application, and applying creates the
+      // account automatically, so every "sign up" pathway routes to the
+      // application form (including old ?view=sign-up links).
+      if (params.get('view') === 'sign-up') {
+        window.location.replace('/join.html');
+        return;
       }
+      window.Clerk.mountSignIn(mount, {
+        appearance: APPEARANCE,
+        signUpUrl: '/join.html',
+        fallbackRedirectUrl: '/members/',
+        initialValues: params.get('email') ? { emailAddress: params.get('email') } : undefined,
+      });
     }
 
     async function showSignedIn() {
