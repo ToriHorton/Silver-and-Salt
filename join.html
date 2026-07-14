@@ -863,9 +863,7 @@
       <div class="card">
         <div class="card-label">Before we meet</div>
 
-        <!-- Replace APPS_SCRIPT_URL with your deployed Google Apps Script Web App URL -->
-        <form id="inquiry-form" action="https://script.google.com/macros/s/AKfycbxX7GKDKryz1yKrVlP84F315qB5OHedtnawJH3woRJ19vSoIl6YtTrGQwCw7D_7EdHoJQ/exec" method="POST">
-          <input type="hidden" name="_subject" value="New Membership Inquiry: Silver & Salt Capital" />
+        <form id="inquiry-form">
 
           <div class="two-col">
             <div class="form-group">
@@ -1312,21 +1310,12 @@
         // Collect form data, joining multi-select checkboxes into a comma-separated string
         const formData = new FormData(form);
         const checked  = [...form.querySelectorAll('input[name="focus"]:checked')].map(cb => cb.value);
-        formData.delete('focus');
-        formData.set('focus', checked.join(', '));
-
-        // Send as application/x-www-form-urlencoded — the format Apps Script
-        // reliably parses into e.parameter (FormData/multipart can arrive empty).
-        const params = new URLSearchParams();
-        for (const [key, value] of formData.entries()) params.append(key, value);
-
         applicantEmail = formData.get('email') || '';
 
-        // Also record the application in the member database, best effort:
-        // Apps Script remains the source of the Sheet row and both emails.
-        // On hosts without the API route this resolves as a 404 and the
-        // application flow is unaffected.
-        const dbSubmitPromise = fetch('/api/applications', {
+        // The application goes to the member database only. The old Google
+        // Apps Script backend (Sheet row + Gmail sends from the owner's
+        // account) is retired; transactional email comes from the worker.
+        const res = await fetch('/api/applications', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
@@ -1344,37 +1333,14 @@
             disclaimerAck: document.getElementById('disclaimer-check').checked,
             submissionId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
           }),
-        }).then(function(res) { return res.json(); }).then(function(data) {
-          if (data && data.id) {
-            dbApplicationId = data.id;
-            sessionStorage.setItem('ssc-application-id', data.id);
-          }
-        }).catch(function(err) {
-          console.warn('Member database submission skipped (non-blocking).', err);
         });
-
-        // A urlencoded POST is a "simple request": it always reaches Apps Script,
-        // even if the browser can't read the response — so the submission is never
-        // lost or duplicated. When the response IS readable we confirm the row was
-        // written; when it isn't (CORS), we degrade gracefully rather than alarm.
-        let confirmed = null; // true = server confirmed, false = server rejected, null = couldn't read
-        try {
-          const res  = await fetch(form.action, { method: 'POST', body: params, redirect: 'follow' });
-          const json = await res.json();
-          confirmed  = json.result === 'success';
-        } catch (readErr) {
-          if (!navigator.onLine) throw readErr; // genuine network failure — surface it
-          console.warn('Submission sent, but the response could not be read (likely CORS). Proceeding.', readErr);
+        if (!res.ok) throw new Error('The application could not be submitted (' + res.status + ').');
+        const data = await res.json();
+        if (data && data.id) {
+          dbApplicationId = data.id;
+          sessionStorage.setItem('ssc-application-id', data.id);
         }
 
-        if (confirmed === false) throw new Error('The server rejected the submission.');
-
-        // confirmed === true (verified) or null (delivered, unverifiable) — advance.
-        // With payments ready, the flow inserts Secure Your Place; the db
-        // application id is required for it, so wait for that submission.
-        if (joinConfig && joinConfig.paymentsReady) {
-          try { await dbSubmitPromise; } catch (e) { /* fall through */ }
-        }
         if (joinConfig && joinConfig.paymentsReady && dbApplicationId) {
           showPayStep();
         } else {

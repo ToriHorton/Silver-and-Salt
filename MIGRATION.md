@@ -147,6 +147,14 @@ Known intentional differences (flag at cutover review):
   One test row exists in the dev tenant (submissionId `dev-smoke-001`).
 - join.html still posts to Google Apps Script; the form frontend moves to
   `/api/applications` in a later phase (production behavior unchanged).
+  SUPERSEDED 2026-07-13 (owner-directed): the Apps Script dual-submit is
+  REMOVED. The form posts only to `/api/applications`; the Sheet row and
+  the Gmail sends from the owner's account are gone (dev tests were
+  spamming both). `membership-form-script.gs` and `FORM-SETUP.md` are
+  deleted from this branch (git history keeps them; production main still
+  runs its own copy until cutover). Note: an unpaid application now
+  generates no admin email; the admin notification fires on payment
+  (invoice.paid), and the console lists everything.
 
 ## P3 status (2026-07-11, in progress)
 
