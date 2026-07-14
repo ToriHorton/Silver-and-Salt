@@ -831,7 +831,9 @@
   <div class="container">
 
     <!-- Step indicator -->
-    <div class="steps">
+    <!-- Hidden until the backend config settles, so visitors never watch
+         the tracker renumber itself when the payment step activates. -->
+    <div class="steps" id="steps" style="visibility:hidden;">
       <div class="step active" id="dot-1">
         <div class="step-dot">1</div>
         <div class="step-label">Apply</div>
@@ -1093,10 +1095,16 @@
 
     const fmtCents = (c) => '$' + (c / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+    function revealSteps() {
+      document.getElementById('steps').style.visibility = '';
+    }
+    // Safety: never leave the tracker hidden if the config request hangs.
+    setTimeout(revealSteps, 2000);
+
     fetch('/api/groups/silver-and-salt-capital/join-config')
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(cfg) {
-        if (!cfg) return;
+        if (!cfg) { revealSteps(); return; }
         joinConfig = cfg;
         if (cfg.disclaimerText) document.getElementById('disclaimer-text').textContent = cfg.disclaimerText;
         if (cfg.calendarLink) document.getElementById('cal-iframe').src = cfg.calendarLink;
@@ -1105,12 +1113,13 @@
           document.querySelector('#dot-2 .step-dot').textContent = '3';
           renderPayArea(cfg);
         }
+        revealSteps();
         // Wallet/3DS redirects return here with a status flag; resume at
         // booking when the payment succeeded.
         const rs = new URLSearchParams(location.search).get('redirect_status');
         if (rs === 'succeeded' && cfg.paymentsReady) advanceToBooking(true);
       })
-      .catch(function() { /* static hosting: no backend, no payment step */ });
+      .catch(function() { revealSteps(); /* static hosting: no backend, no payment step */ });
 
     function renderPayArea(cfg) {
       const li = cfg.lineItems;
