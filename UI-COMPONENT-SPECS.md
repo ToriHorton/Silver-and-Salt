@@ -47,6 +47,16 @@ white, time hover = 12% lime wash, selected = solid lime with white text).
 If the mappings already exist, publishing a screenshot pair in the docs
 would let static sites adopt with confidence.
 
+## 4. Buildless calendar views (month + agenda)
+
+Same motivation as item 1: `CalendarMonth`/`CalendarWeek`/`CalendarAgenda`
+exist as React components, but zero-build sites need either custom
+elements (`<odla-calendar-month>` accepting an `events` property of
+`{ startAt, endAt, summary }` spans, emitting `event-select`) or a
+documented, tested Preact-island import-map recipe. Consumer in hand: the
+admin Calendar management page specced in ADMIN-CALENDAR-SPEC.md on the
+Silver & Salt Capital branch.
+
 ## 3. Drift/status badge pattern (documentation, not code)
 
 For source-of-truth apps that project into external calendars, we render
