@@ -150,6 +150,34 @@
       overflow: visible;
     }
 
+    /* ── Tabs ── */
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .admin-tab {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .admin-tab:hover { border-color: var(--lime); color: var(--moss); }
+    .admin-tab[aria-selected="true"] {
+      background: var(--moss);
+      color: var(--cream);
+      border-color: var(--moss);
+    }
+
     /* ── Console header row ── */
     .console-row {
       display: flex;
@@ -352,6 +380,13 @@
         </div>
       </div>
 
+      <div class="admin-tabs" role="tablist">
+        <button type="button" class="admin-tab" data-tab="people" aria-selected="true">People</button>
+        <button type="button" class="admin-tab" data-tab="calls" aria-selected="false">Introduction Calls</button>
+        <button type="button" class="admin-tab" data-tab="email" aria-selected="false">Email Settings</button>
+      </div>
+
+      <div class="tab-panel" id="tab-people">
       <div class="card">
         <div class="card-label">Internal Stats</div>
         <div class="stats-row">
@@ -360,6 +395,22 @@
         </div>
       </div>
 
+      <div class="card">
+        <div class="card-label">People</div>
+        <div class="table-wrap">
+          <table id="people-table">
+            <thead>
+              <tr><th>Person</th><th>Email</th><th>Role</th><th>Status</th><th>Payment</th><th>Introduction call</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-note hidden" id="people-empty">People appear here as applications and accounts arrive.</p>
+      </div>
+    </div>
+      </div>
+
+      <div class="tab-panel hidden" id="tab-calls">
       <div class="card">
         <div class="card-label">Introduction Calls</div>
         <div class="table-wrap">
@@ -373,6 +424,9 @@
         <p class="empty-note hidden" id="meetings-empty">Booked introduction calls appear here. This database is the source of truth; if someone moves or removes the event in Google Calendar, a flag appears instead of the change being adopted.</p>
       </div>
 
+      </div>
+
+      <div class="tab-panel hidden" id="tab-email">
       <div class="card">
         <div class="card-label">Email Templates</div>
         <p class="empty-note" style="margin-bottom: 18px;">These are the emails the system sends. Curly placeholders like {{firstName}} fill in per applicant when a message goes out.</p>
@@ -389,19 +443,7 @@
         <span class="empty-note hidden" id="email-save-note" style="margin-left: 10px;"></span>
       </div>
 
-      <div class="card">
-        <div class="card-label">People</div>
-        <div class="table-wrap">
-          <table id="people-table">
-            <thead>
-              <tr><th>Person</th><th>Email</th><th>Role</th><th>Status</th><th>Payment</th><th>Introduction call</th><th></th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <p class="empty-note hidden" id="people-empty">People appear here as applications and accounts arrive.</p>
       </div>
-    </div>
 
   </div>
 
@@ -445,6 +487,19 @@
           await window.Clerk.signOut();
           window.location.href = '/members/';
         });
+        // Tabs: remember the active one across reloads via the hash.
+        const tabs = document.querySelectorAll('.admin-tab');
+        function switchTab(name) {
+          for (const t of tabs) t.setAttribute('aria-selected', String(t.dataset.tab === name));
+          for (const p of document.querySelectorAll('.tab-panel')) {
+            p.classList.toggle('hidden', p.id !== 'tab-' + name);
+          }
+          history.replaceState(null, '', '#' + name);
+        }
+        for (const t of tabs) t.addEventListener('click', () => switchTab(t.dataset.tab));
+        const initial = location.hash.replace('#', '');
+        if (['people', 'calls', 'email'].includes(initial)) switchTab(initial);
+
         await Promise.all([loadPeople(), loadBookings(), loadEmailSettings()]);
       } catch (err) {
         $('auth-loading').textContent = 'The console is briefly unavailable. Please refresh.';

@@ -417,13 +417,17 @@ async function detectDrift(db: Db, cal: CalClient, meetings: Array<Record<string
 
   let live: Array<{ eventId: string; startAt: number; status?: string }>;
   try {
-    const res = await cal.availability.upcoming();
-    live = ((res?.bookings ?? res ?? []) as Array<Record<string, unknown>>).map((b) => ({
+    const res = (await cal.availability.upcoming()) as Record<string, unknown> | Array<unknown>;
+    const list = Array.isArray(res)
+      ? res
+      : ((res?.events ?? res?.bookings ?? []) as Array<unknown>);
+    live = (list as Array<Record<string, unknown>>).map((b) => ({
       eventId: b.eventId as string,
       startAt: b.startAt as number,
       status: b.status as string | undefined,
     }));
-  } catch {
+  } catch (err) {
+    console.error("drift check unavailable", err);
     return; // calendar unavailable: flags stay as they were
   }
   const byEventId = new Map(live.map((b) => [b.eventId, b]));
