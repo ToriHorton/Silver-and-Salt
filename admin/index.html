@@ -364,6 +364,51 @@
 
     .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
 
+    /* ── Loading ── */
+    @keyframes ssc-spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--lime);
+      border-radius: 50%;
+      animation: ssc-spin 0.7s linear infinite;
+      vertical-align: -3px;
+    }
+    .loading-note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--sage);
+      padding: 14px 0;
+    }
+
+    /* ── Email preview ── */
+    .tpl-preview-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin: 2px 0 6px;
+    }
+    .email-preview {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fbfaf5;
+      padding: 14px 16px;
+    }
+    .email-meta { font-size: 11px; color: var(--sage); margin-bottom: 8px; }
+    .email-subject { font-size: 14px; font-weight: 700; color: var(--moss); margin-bottom: 10px; }
+    .email-body {
+      font-size: 13px;
+      color: var(--moss-light);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
     /* ── Email template editor ── */
     .tpl-block { margin-bottom: 22px; }
     .tpl-label {
@@ -422,7 +467,7 @@
 
     <div class="card" id="status-card">
       <div class="card-label">Admin</div>
-      <div class="auth-status" id="auth-loading">Preparing sign in…</div>
+      <div class="auth-status" id="auth-loading"><span class="spinner"></span> Preparing sign in…</div>
     </div>
 
     <div id="signin-mount" class="hidden"></div>
@@ -632,9 +677,33 @@
 
     async function loadEmailSettings() {
       try {
+        $('email-templates').innerHTML = '<div class="loading-note"><span class="spinner"></span> Loading email templates…</div>';
         const cfg = await api('/api/admin/group/email');
         const host = $('email-templates');
         host.innerHTML = '';
+
+        // Live previews render each template with sample applicant data
+        // exactly the way the worker renders real sends.
+        const SAMPLE = {
+          firstName: 'Martha', lastName: 'Cannon',
+          email: 'martha@example.com', phone: '(801) 555-0100', state: 'Utah',
+          adminUrl: location.origin + '/admin/',
+          membersUrl: location.origin + '/members/',
+        };
+        const renderTpl = (text) => text.replace(/\{\{(\w+)\}\}/g, (_, k) => {
+          if (k === 'refundPolicyText') return cfg.refundPolicyText || '';
+          if (k === 'commitmentText') return $('commitment-text').value;
+          if (k === 'normsText') return $('norms-text').value;
+          return SAMPLE[k] ?? '{{' + k + '}}';
+        });
+        const previews = [];
+        function refreshPreviews() {
+          for (const p of previews) {
+            p.subjectEl.textContent = renderTpl(p.subjectInput.value) || '(no subject)';
+            p.bodyEl.textContent = renderTpl(p.textInput.value) || '(no body)';
+          }
+        }
+
         for (const [key, meta] of Object.entries(TEMPLATE_META)) {
           const tpl = cfg.emailTemplates[key] || { subject: '', text: '' };
           const block = document.createElement('div');
@@ -642,13 +711,32 @@
           block.innerHTML = `
             <label class="tpl-label">${meta.title} <span class="tpl-hint">(${meta.hint})</span></label>
             <input type="text" data-tpl-subject="${key}" placeholder="Subject" />
-            <textarea rows="6" data-tpl-text="${key}"></textarea>`;
-          block.querySelector(`[data-tpl-subject="${key}"]`).value = tpl.subject;
-          block.querySelector(`[data-tpl-text="${key}"]`).value = tpl.text;
+            <textarea rows="6" data-tpl-text="${key}"></textarea>
+            <div class="tpl-preview-label">Preview (sample applicant: Martha Cannon)</div>
+            <div class="email-preview">
+              <div class="email-meta">From: ${cfg.name} &lt;${cfg.replyTo}&gt; &middot; To: martha@example.com</div>
+              <div class="email-subject" data-preview-subject="${key}"></div>
+              <div class="email-body" data-preview-body="${key}"></div>
+            </div>`;
+          const subjectInput = block.querySelector(`[data-tpl-subject="${key}"]`);
+          const textInput = block.querySelector(`[data-tpl-text="${key}"]`);
+          subjectInput.value = tpl.subject;
+          textInput.value = tpl.text;
+          previews.push({
+            subjectInput,
+            textInput,
+            subjectEl: block.querySelector(`[data-preview-subject="${key}"]`),
+            bodyEl: block.querySelector(`[data-preview-body="${key}"]`),
+          });
+          subjectInput.addEventListener('input', refreshPreviews);
+          textInput.addEventListener('input', refreshPreviews);
           host.appendChild(block);
         }
         $('commitment-text').value = cfg.commitmentText;
         $('norms-text').value = cfg.normsText;
+        $('commitment-text').addEventListener('input', refreshPreviews);
+        $('norms-text').addEventListener('input', refreshPreviews);
+        refreshPreviews();
 
         $('email-save').addEventListener('click', async () => {
           const btn = $('email-save');
@@ -704,6 +792,7 @@
 
     async function loadAvailability() {
       try {
+        $('avail-days').innerHTML = '<div class="loading-note"><span class="spinner"></span> Loading…</div>';
         const { scheduling } = await api('/api/admin/group/scheduling');
         groupTz = scheduling.timezone || groupTz;
         const daysHost = $('avail-days');
@@ -795,7 +884,7 @@
       const cell = document.createElement('td');
       cell.colSpan = 5;
       cell.className = 'resched-cell';
-      cell.innerHTML = '<p class="resched-note">Loading open times…</p>';
+      cell.innerHTML = '<div class="loading-note"><span class="spinner"></span> Loading open times…</div>';
       row.appendChild(cell);
       tr.after(row);
 
@@ -879,6 +968,7 @@
 
     async function loadBookings() {
       try {
+        document.querySelector('#meetings-table tbody').innerHTML = '<tr><td colspan="5"><div class="loading-note"><span class="spinner"></span> Loading introduction calls…</div></td></tr>';
         const { meetings, timezone } = await api('/api/admin/meetings');
         if (timezone) groupTz = timezone;
         const tbody = document.querySelector('#meetings-table tbody');
@@ -1008,6 +1098,7 @@
     }
 
     async function loadPeople() {
+      document.querySelector('#people-table tbody').innerHTML = '<tr><td colspan="7"><div class="loading-note"><span class="spinner"></span> Loading people…</div></td></tr>';
       const { people } = await api('/api/admin/people');
       $('stat-people').textContent = people.length;
       $('stat-applications').textContent = people.filter(p => p.application).length;

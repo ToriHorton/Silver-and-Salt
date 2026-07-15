@@ -162,6 +162,17 @@
       margin-bottom: 24px;
     }
 
+    @keyframes ssc-spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--lime);
+      border-radius: 50%;
+      animation: ssc-spin 0.7s linear infinite;
+      vertical-align: -3px;
+      margin-right: 8px;
+    }
     .auth-status {
       font-size: 14px;
       color: var(--sage);
@@ -341,7 +352,7 @@
 
     <div class="card" id="status-card">
       <div class="card-label">Members</div>
-      <div class="auth-status" id="auth-loading">Preparing sign in…</div>
+      <div class="auth-status" id="auth-loading"><span class="spinner"></span> Preparing sign in…</div>
     </div>
 
     <div id="signin-mount" class="hidden"></div>

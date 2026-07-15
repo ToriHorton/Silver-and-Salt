@@ -979,9 +979,14 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       if (!group) return json({ error: "not found" }, 404);
       return json({
         groupId: group.id,
+        name: group.name,
+        replyTo: group.replyTo,
         emailTemplates: group.emailTemplates ?? {},
         commitmentText: group.commitmentText ?? "",
         normsText: group.normsText ?? "",
+        // Read-only here (edited with the payment copy); included so the
+        // payment confirmation preview can render its embedded policy.
+        refundPolicyText: group.refundPolicyText ?? "",
       });
     }
 
