@@ -510,6 +510,7 @@
       <div class="tabs-root">
         <div class="tabs" role="tablist">
           <button type="button" role="tab" data-tab="people" aria-selected="true">People</button>
+          <button type="button" role="tab" data-tab="billing" aria-selected="false">Billing</button>
           <button type="button" role="tab" data-tab="calls" aria-selected="false">Introduction Calls</button>
           <button type="button" role="tab" data-tab="settings" aria-selected="false">Call Settings</button>
           <button type="button" role="tab" data-tab="email" aria-selected="false">Email Settings</button>
@@ -539,6 +540,34 @@
         <p class="empty-note hidden" id="people-empty">People appear here as applications and accounts arrive.</p>
       </div>
     </div>
+      </div>
+
+      <div class="tabs-panel tab-panel" id="tab-billing" hidden>
+      <div class="card">
+        <div class="card-label">Billing <span class="pay-badge unpaid hidden" id="billing-mode" style="margin-left:8px;">Test mode</span></div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-num" id="stat-active">–</div><div class="stat-label">Active memberships</div></div>
+          <div class="stat"><div class="stat-num" id="stat-runrate">–</div><div class="stat-label">Annual run rate</div></div>
+          <div class="stat"><div class="stat-num" id="stat-renewing">–</div><div class="stat-label">Renewing in 60 days</div></div>
+          <div class="stat"><div class="stat-num" id="stat-pastdue">–</div><div class="stat-label">Past due</div></div>
+          <div class="stat"><div class="stat-num" id="stat-refunded">–</div><div class="stat-label">Refunded</div></div>
+        </div>
+        <p class="empty-note" style="font-size:12px;">Live from Stripe. Amounts and renewal dates come from each subscription; the run rate counts only memberships that will renew. Refunds live on the People tab; deeper detail is one click away in Stripe.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Memberships</div>
+        <div class="table-wrap">
+          <table id="billing-table">
+            <thead>
+              <tr><th>Person</th><th>Membership</th><th>Subscription</th><th>Amount</th><th>Renews</th><th>Stripe</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-note hidden" id="billing-empty">Paid memberships appear here once applicants complete payment.</p>
+        <p class="empty-note hidden" id="billing-unready">Billing appears once Stripe is connected (publishable key, price, and secret key).</p>
+      </div>
       </div>
 
       <div class="tabs-panel tab-panel" id="tab-settings" hidden>
@@ -696,20 +725,24 @@
           await window.Clerk.signOut();
           window.location.href = '/members/';
         });
-        // Tabs: remember the active one across reloads via the hash.
+        // Tabs: remember the active one across reloads via the hash. Deep
+        // links from emails arrive as ?tab=<name> (mail-client link
+        // rewriting drops #fragments more often than queries); the hash
+        // form also works. Switching tabs canonicalizes back to the hash.
+        const TAB_NAMES = ['people', 'billing', 'calls', 'settings', 'email'];
         const tabs = document.querySelectorAll('.tabs [role="tab"]');
         function switchTab(name) {
           for (const t of tabs) t.setAttribute('aria-selected', String(t.dataset.tab === name));
           for (const p of document.querySelectorAll('.tabs-panel')) {
             p.hidden = p.id !== 'tab-' + name;
           }
-          history.replaceState(null, '', '#' + name);
+          history.replaceState(null, '', location.pathname + '#' + name);
         }
         for (const t of tabs) t.addEventListener('click', () => switchTab(t.dataset.tab));
-        const initial = location.hash.replace('#', '');
-        if (['people', 'calls', 'settings', 'email'].includes(initial)) switchTab(initial);
+        const initial = new URLSearchParams(location.search).get('tab') || location.hash.replace('#', '');
+        if (TAB_NAMES.includes(initial)) switchTab(initial);
 
-        await Promise.all([loadPeople(), loadBookings(), loadEmailSettings(), loadAvailability(), loadEmailLog()]);
+        await Promise.all([loadPeople(), loadBilling(), loadBookings(), loadEmailSettings(), loadAvailability(), loadEmailLog()]);
       } catch (err) {
         $('auth-loading').textContent = 'The console is briefly unavailable. Please refresh.';
         console.error(err);
@@ -770,7 +803,7 @@
         const SAMPLE = {
           firstName: 'Martha', lastName: 'Cannon',
           email: 'martha@example.com', phone: '(801) 555-0100', state: 'Utah',
-          adminUrl: location.origin + '/admin/',
+          adminUrl: location.origin + '/admin/?tab=people',
           membersUrl: location.origin + '/members/',
         };
         const renderTpl = (text) => text.replace(/\{\{(\w+)\}\}/g, (_, k) => {
@@ -1264,8 +1297,98 @@
       window.Clerk.mountSignIn(mount, {
         appearance: APPEARANCE,
         signUpUrl: '/join.html',
-        fallbackRedirectUrl: '/admin/',
+        // Keep the ?tab= or #tab deep link through the sign-in round trip.
+        fallbackRedirectUrl: location.pathname + location.search + location.hash,
       });
+    }
+
+    // Billing: live Stripe subscription state joined with our applications.
+    const fmtMoney = (cents) => '$' + Math.round(cents / 100).toLocaleString();
+    const fmtDate = (ms) => new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    const SUB_BADGE = { active: 'paid', past_due: 'refunded' };
+    const SUB_LABELS = {
+      active: 'Active', past_due: 'Past due', canceled: 'Canceled',
+      trialing: 'Trialing', unpaid: 'Unpaid', incomplete: 'Incomplete',
+      incomplete_expired: 'Expired', paused: 'Paused',
+    };
+
+    async function loadBilling() {
+      const tbody = document.querySelector('#billing-table tbody');
+      try {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="loading-note"><span class="spinner"></span> Loading billing…</div></td></tr>';
+        const b = await api('/api/admin/billing');
+        tbody.innerHTML = '';
+        if (!b.billingReady) {
+          $('billing-unready').classList.remove('hidden');
+          for (const id of ['stat-active', 'stat-runrate', 'stat-renewing', 'stat-pastdue', 'stat-refunded']) $(id).textContent = '–';
+          return;
+        }
+        $('billing-mode').classList.toggle('hidden', !b.testMode);
+        $('stat-active').textContent = b.summary.activeCount;
+        $('stat-runrate').textContent = fmtMoney(b.summary.annualRunRateCents);
+        $('stat-renewing').textContent = b.summary.renewingSoonCount;
+        $('stat-pastdue').textContent = b.summary.pastDueCount;
+        $('stat-refunded').textContent = b.summary.refundedCount;
+        $('billing-empty').classList.toggle('hidden', b.rows.length > 0);
+        if (b.truncated) console.warn('billing: subscription list truncated at 100');
+
+        for (const r of b.rows) {
+          const tr = document.createElement('tr');
+
+          const person = document.createElement('td');
+          person.textContent = r.name;
+          const em = document.createElement('span');
+          em.className = 'cell-sub';
+          em.textContent = r.email;
+          person.appendChild(em);
+          tr.appendChild(person);
+
+          const membership = document.createElement('td');
+          membership.textContent = STATUS_LABELS[r.applicationStatus] || r.applicationStatus;
+          tr.appendChild(membership);
+
+          const sub = document.createElement('td');
+          const badge = document.createElement('span');
+          badge.className = 'pay-badge ' + (SUB_BADGE[r.subscriptionStatus] || 'unpaid');
+          badge.textContent = r.subscriptionStatus ? (SUB_LABELS[r.subscriptionStatus] || r.subscriptionStatus) : 'None';
+          sub.appendChild(badge);
+          if (r.cancelAtPeriodEnd && r.subscriptionStatus === 'active') {
+            const note = document.createElement('span');
+            note.className = 'pay-renewal';
+            note.textContent = 'ends at renewal';
+            sub.appendChild(note);
+          }
+          tr.appendChild(sub);
+
+          const amount = document.createElement('td');
+          amount.textContent = r.amountCents ? fmtMoney(r.amountCents) + '/' + (r.interval === 'month' ? 'mo' : 'yr') : '';
+          tr.appendChild(amount);
+
+          const renews = document.createElement('td');
+          renews.textContent = r.renewalAt ? fmtDate(r.renewalAt) : '';
+          tr.appendChild(renews);
+
+          const links = document.createElement('td');
+          const stripeLink = (href, label) => {
+            const a = document.createElement('a');
+            a.href = href;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = label;
+            a.style.cssText = 'font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;margin-right:10px;';
+            links.appendChild(a);
+          };
+          if (r.customerUrl) stripeLink(r.customerUrl, 'Customer');
+          if (r.subscriptionUrl) stripeLink(r.subscriptionUrl, 'Subscription');
+          tr.appendChild(links);
+
+          tbody.appendChild(tr);
+        }
+      } catch (e) {
+        console.error(e);
+        tbody.innerHTML = '';
+        $('billing-unready').classList.remove('hidden');
+      }
     }
 
     async function loadPeople() {
