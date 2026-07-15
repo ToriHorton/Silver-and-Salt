@@ -396,7 +396,7 @@ platform-side). Owner directive implemented:
   `calendars` and rejects 0.2.0's `availabilityCalendars`; config uses
   the legacy name until the CLI catches up.
 
-## Email delivery: Cloudflare Email Service (2026-07-15, in progress)
+## Email delivery: Cloudflare Email Service (2026-07-15, LIVE ON DEV)
 
 Outbound email moves from the log-only stub to Cloudflare Email Service via
 the Worker's `send_email` binding (owner-directed 2026-07-15). Dev sends come
@@ -442,16 +442,22 @@ pre-requisite in wrangler.jsonc comments).
   wrangler dev boots with the binding (simulated locally), db routes serve,
   admin routes 401 unauthenticated; admin inline JS syntax-checked; brand
   check errors are all pre-existing (index.html, brand-book.html, _archive).
-- **BLOCKED, needs the owner:** (1) `npx @odla-ai/cli provision --yes` to
-  push the additive emailLog schema (the permission gate declined the
-  agent's run; dry-run plan verified schema-only, rules untouched). Deploy
-  of the dev worker WAITS on this: the new dedupeKey query would 502
-  bookings against the old schema. (2) After provision + deploy, a browser
-  pass of the Email tab and one "Send me a test" per template; delivery
-  lands in cory.ondrejka+debug@gmail.com from the odla.ai address. (3) The
-  `clerk api` CLI session went stale ("Failed to resolve secret key (404)"),
-  so agent-side admin-JWT curls are unavailable until a fresh
-  `npx clerk login`.
+- **DEPLOYED AND VERIFIED 2026-07-15** (owner approved the schema push and
+  re-ran `clerk login`): provision pushed the emailLog schema, the dev
+  worker deployed with the live SEND_EMAIL binding, and admin-JWT curls
+  against the deployed worker confirmed: config reports transport
+  "cloudflare" from silver-and-salt-capital@odla.ai with all four enabled
+  flags true; test sends of prepEmail and adminNotification returned ok
+  with Email Service receipts (redirected to the debug inbox); the send
+  audit shows both new rows as transport cloudflare above the historical
+  log-only rows. A sender-verification failure would have surfaced as
+  E_SENDER_NOT_VERIFIED in the audit, so odla.ai is confirmed onboarded.
+  Remaining owner niceties: eyeball the two "[dev]" emails in
+  cory.ondrejka+debug@gmail.com and click through the Email tab (toggles,
+  test buttons, Recent Sends). Note: `smoke --env dev` currently stops
+  after its public-config check when the CLI 0.11.2 calendar status parser
+  hits the platform's "book" access mode (same known bug as Scheduling v2);
+  provision's own output covered the schema confirmation.
 
 ## Booking capture (2026-07-11)
 
@@ -541,7 +547,11 @@ owner-managed.
 - **2026-07-15 (email):** Wired Cloudflare Email Service behind the existing
   EmailSender seam (dev from-address on odla.ai per the owner), added
   per-template send toggles, admin test sends, and the Recent Sends audit.
-  Awaiting owner: provision (schema push), then deploy + browser pass.
+  Owner approved the schema push and refreshed the clerk CLI login; deployed
+  to dev and verified end to end (real sends accepted by Email Service,
+  audit rows show transport cloudflare). Remaining: owner browser pass of
+  the Email tab and a glance at the two "[dev]" test emails in the debug
+  inbox.
 - **2026-07-11 (P2):** Owner approved P2 and specified the three-state role
   model (provisional/member/admin, recorded above). Installed pinned
   @odla-ai/cli 0.8.0 + @odla-ai/db. `init` scaffolded config/schema/rules;
