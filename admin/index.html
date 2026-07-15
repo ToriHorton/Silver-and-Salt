@@ -577,7 +577,21 @@
       <div class="tabs-panel tab-panel" id="tab-email" hidden>
       <div class="card">
         <div class="card-label">Email Templates</div>
-        <p class="empty-note" style="margin-bottom: 18px;">These are the emails the system sends. Curly placeholders like {{firstName}} fill in per applicant when a message goes out.</p>
+        <p class="empty-note" style="margin-bottom: 18px;">These are the emails the system sends. Curly placeholders like {{firstName}} fill in per applicant when a message goes out. The admin notification goes to the notification address below; the other three go to the applicant.</p>
+        <div class="avail-grid" style="margin-bottom: 20px;">
+          <div class="tpl-block">
+            <label class="tpl-label" for="dest-notification">Notification address <span class="tpl-hint">(admin alerts, like new paid applications)</span></label>
+            <input type="text" id="dest-notification" />
+          </div>
+          <div class="tpl-block">
+            <label class="tpl-label" for="dest-replyto">Send from / reply-to <span class="tpl-hint">(the address members see and answer)</span></label>
+            <input type="text" id="dest-replyto" />
+          </div>
+          <div class="tpl-block">
+            <label class="tpl-label" for="dest-debug">Debug inbox <span class="tpl-hint">(dev only: every send redirects here)</span></label>
+            <input type="text" id="dest-debug" />
+          </div>
+        </div>
         <div id="email-templates"></div>
         <div class="tpl-block">
           <label class="tpl-label" for="commitment-text">Community commitment <span class="tpl-hint">(embedded in the pre-meeting email as {{commitmentText}})</span></label>
@@ -596,7 +610,7 @@
 
   </div>
 
-  <script src="/assets/member-auth.js?v=2"></script>
+  <script src="/assets/member-auth.js?v=3"></script>
   <script>
     const { APPEARANCE, loadClerk, api, toLocalInputValue } = window.SSCAuth;
     const $ = (id) => document.getElementById(id);
@@ -658,19 +672,27 @@
 
     const TEMPLATE_META = {
       adminNotification: {
-        title: 'Admin notification (new paid application)',
+        title: 'Admin alert: application paid',
+        audience: 'notification',
+        purpose: 'Sent to YOU (the notification address) when an applicant pays, so vetting can start.',
         hint: '{{firstName}} {{lastName}} {{email}} {{phone}} {{state}} {{adminUrl}}',
       },
       paymentConfirmation: {
-        title: 'Payment confirmation (to the applicant)',
+        title: 'Applicant: payment received',
+        audience: 'applicant',
+        purpose: 'Sent to the applicant right after their card is charged; includes the refund policy.',
         hint: '{{firstName}} {{membersUrl}} {{refundPolicyText}}',
       },
       prepEmail: {
-        title: 'Pre-meeting prep (to the applicant on booking)',
+        title: 'Applicant: before your call',
+        audience: 'applicant',
+        purpose: 'Sent to the applicant when their introduction call is booked; carries the community commitment and norms.',
         hint: '{{firstName}} {{commitmentText}} {{normsText}}',
       },
       onboardingInvite: {
-        title: 'Onboarding invite (to the applicant on approval)',
+        title: 'Applicant: welcome aboard',
+        audience: 'applicant',
+        purpose: 'Sent to the applicant when you approve them; links their member area.',
         hint: '{{firstName}} {{membersUrl}}',
       },
     };
@@ -708,13 +730,17 @@
           const tpl = cfg.emailTemplates[key] || { subject: '', text: '' };
           const block = document.createElement('div');
           block.className = 'tpl-block';
+          const toLabel = meta.audience === 'notification'
+            ? (cfg.notificationEmail || '(notification address)')
+            : 'martha@example.com (the applicant)';
           block.innerHTML = `
-            <label class="tpl-label">${meta.title} <span class="tpl-hint">(${meta.hint})</span></label>
+            <label class="tpl-label">${meta.title} <span class="tpl-hint">(placeholders: ${meta.hint})</span></label>
+            <p class="empty-note" style="font-size:12px; margin-bottom:8px;">${meta.purpose}</p>
             <input type="text" data-tpl-subject="${key}" placeholder="Subject" />
             <textarea rows="6" data-tpl-text="${key}"></textarea>
             <div class="tpl-preview-label">Preview (sample applicant: Martha Cannon)</div>
             <div class="email-preview">
-              <div class="email-meta">From: ${cfg.name} &lt;${cfg.replyTo}&gt; &middot; To: martha@example.com</div>
+              <div class="email-meta">From: ${cfg.name} &lt;${cfg.replyTo}&gt; &middot; To: ${toLabel}</div>
               <div class="email-subject" data-preview-subject="${key}"></div>
               <div class="email-body" data-preview-body="${key}"></div>
             </div>`;
@@ -734,6 +760,9 @@
         }
         $('commitment-text').value = cfg.commitmentText;
         $('norms-text').value = cfg.normsText;
+        $('dest-notification').value = cfg.notificationEmail || '';
+        $('dest-replyto').value = cfg.replyTo || '';
+        $('dest-debug').value = cfg.debugEmail || '';
         $('commitment-text').addEventListener('input', refreshPreviews);
         $('norms-text').addEventListener('input', refreshPreviews);
         refreshPreviews();
@@ -758,6 +787,9 @@
                 emailTemplates,
                 commitmentText: $('commitment-text').value,
                 normsText: $('norms-text').value,
+                notificationEmail: $('dest-notification').value,
+                replyTo: $('dest-replyto').value,
+                debugEmail: $('dest-debug').value,
               }),
             });
             note.textContent = 'Saved.';

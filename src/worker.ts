@@ -981,6 +981,8 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         groupId: group.id,
         name: group.name,
         replyTo: group.replyTo,
+        notificationEmail: group.notificationEmail,
+        debugEmail: group.debugEmail ?? "",
         emailTemplates: group.emailTemplates ?? {},
         commitmentText: group.commitmentText ?? "",
         normsText: group.normsText ?? "",
@@ -1030,11 +1032,24 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         return json({ error: "commitment/norms text is too long" }, 400);
       }
 
+      // Delivery addresses: where the admin alert goes, the sender/reply-to
+      // identity, and the dev-tenant redirect inbox.
+      const emailish = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const notificationEmail = typeof body.notificationEmail === "string" ? body.notificationEmail.trim() : "";
+      const replyTo = typeof body.replyTo === "string" ? body.replyTo.trim() : "";
+      const debugEmail = typeof body.debugEmail === "string" ? body.debugEmail.trim() : "";
+      if (!emailish.test(notificationEmail)) return json({ error: "notification address must be a valid email" }, 400);
+      if (!emailish.test(replyTo)) return json({ error: "reply-to address must be a valid email" }, 400);
+      if (debugEmail && !emailish.test(debugEmail)) return json({ error: "debug address must be a valid email" }, 400);
+
       await db.transact(
         tx.groups[DEFAULT_GROUP_ID].update({
           emailTemplates: clean,
           commitmentText,
           normsText,
+          notificationEmail,
+          replyTo,
+          debugEmail,
         }),
       );
       groupCache = null; // this isolate serves fresh copy immediately
