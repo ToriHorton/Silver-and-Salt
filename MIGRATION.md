@@ -490,6 +490,50 @@ and verified on the deployed dev worker.
   abandoned card-only tests showing incomplete_expired, dashboard links on
   every row; deployed page serves the billing tab and the ?tab= bootstrap.
 
+## Preact conversion of the app pages (2026-07-15, owner-directed)
+
+The owner called the "static site, no build step" framing stale: the app
+surfaces (admin console, member area, join booking step) are applications,
+and Preact keeps them cheap to serve. Marketing pages stay untouched on the
+copy-through path.
+
+- **Build**: Vite + @preact/preset-vite (vite.config.mjs), run by
+  `_scripts/build-site.sh` AFTER the git-tracked copy; bundles land in
+  dist/assets/app/ (admin.js, members.js, join-picker.js + shared Preact
+  chunks, ~10 KB core). Entry names are stable; pages reference them with
+  the repo's ?v= convention. The copy pass now also EXCLUDES src/,
+  wrangler.jsonc, vite.config.mjs, odla.config.mjs, and package*.json from
+  dist (none exist on production main; the worker source was being served
+  publicly, now 404s).
+- **Admin console** (src/app/admin/, five modules + shared src/app/lib.js
+  and src/app/slot-picker.jsx): the ~1,100-line inline script became
+  Preact components with IDENTICAL markup/classes, so the page CSS is
+  unchanged. All five tabs stay mounted (hidden) so data loads in parallel
+  at sign-in like before. People rows remount per reload (generation key)
+  to match the old full-rebuild edit-state semantics. The admin reschedule
+  picker and the join picker now share one SlotPicker component
+  (class-contract parameterized), replacing two hand-rolled copies.
+- **Member area** (src/app/members.jsx): same conversion; hero text
+  updates and the Clerk sign-in mount stay page-owned DOM.
+- **Join page**: ONLY the step 2 slot picker converted
+  (src/app/join-picker.jsx). The island contract is
+  window.SSCJoinPicker.load({ getApplicationId, onBooked }) with a queueing
+  shim in the page for the classic-script/module load race. The form and
+  payment flow stay vanilla deliberately: they are the card-entry path that
+  needs a human browser pass to re-verify, and they convert separately.
+  The @odla-ai/ui SlotPicker/Tabs/DataTable swap-in happens when the ui
+  team ships (DataTable spec was handed off 2026-07-15; the buildless
+  custom-element requests in UI-COMPONENT-SPECS.md are superseded by this
+  conversion).
+- **Verified 2026-07-15**: 10-check render-to-string suite over the
+  components with fixture data (SlotPicker day/time chips + aria-pressed,
+  every tab's loading skeleton, PersonRow variants incl. self-role lock
+  and refunded-row action hiding); build produces the bundles; local and
+  deployed workers serve all three pages + bundles 200 and /src/worker.ts
+  404; join.html inline script still parses. NOT yet verified (needs the
+  owner's browser): admin tab click-through, members sign-in views, and a
+  join-flow booking end to end.
+
 ## Booking capture (2026-07-11)
 
 Google's appointment widget is a sealed iframe: no callback ever reaches the
@@ -575,6 +619,11 @@ owner-managed.
   locally with no watcher errors, and GitHub Pages still serving unchanged.
   Next human obligations: approve entering P2 (database), sign in at
   https://odla.ai/studio, and approve a handshake code when the CLI asks.
+- **2026-07-15 (Preact conversion):** Owner directed the app pages onto a
+  scoped Vite + Preact build (marketing pages untouched). Admin console,
+  member area, and the join slot picker are now Preact islands with
+  identical markup; worker source is no longer publicly served. Deployed
+  to dev; owner browser pass pending.
 - **2026-07-15 (billing + deep links):** Owner confirmed both test emails
   arrived. Added ?tab= deep links (used by the admin email) and the admin
   Billing tab backed by live Stripe data; deployed and verified on dev.

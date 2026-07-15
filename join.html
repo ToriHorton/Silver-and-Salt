@@ -1005,12 +1005,11 @@
              availability), the booking lives in our database, and Google
              Calendar carries the invitation and video call link. -->
         <div class="slots-area">
-          <p class="slots-status" id="slots-status">Loading available times…</p>
-          <div class="slot-days" id="slot-days" hidden></div>
-          <div class="slot-grid" id="slot-grid" hidden></div>
-          <div class="slot-confirm" id="slot-confirm" hidden>
-            <button class="submit-btn" id="book-btn">Book this time</button>
-            <p class="step2-note" id="slot-note"></p>
+          <!-- The picker renders here (src/app/join-picker.jsx, Preact via
+               the Vite build); same slot-* classes, so the CSS above applies
+               unchanged. The page talks to it via window.SSCJoinPicker. -->
+          <div id="join-picker-root">
+            <p class="slots-status">Loading available times…</p>
           </div>
         </div>
       </div>
@@ -1167,7 +1166,7 @@
       if (paid) document.getElementById('paid-status').style.display = 'block';
       setDots('booking');
       document.getElementById('hero-subtitle').textContent = 'Please schedule a video call to complete your application.';
-      loadSlots();
+      showSlotPicker();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1257,131 +1256,19 @@
     const dot1        = document.getElementById('dot-1');
     const dot2        = document.getElementById('dot-2');
 
-    // ── First-party slot picker ──
-    // Availability comes from our backend; booking writes our database and
-    // exports a Google event that carries the invitation and Meet link.
-    let slotState = { slots: [], timezone: undefined, byDay: new Map(), activeDay: null, selected: null };
+    // ── First-party slot picker (Preact island) ──
+    // The picker lives in /assets/app/join-picker.js. This shim queues a
+    // load() made before the module finishes loading; the module replaces
+    // it and drains the queue.
+    window.SSCJoinPicker = window.SSCJoinPicker || { load: function (opts) { this._pending = opts; } };
+    function showSlotPicker() {
+      window.SSCJoinPicker.load({
+        getApplicationId: function () { return dbApplicationId; },
+        onBooked: goToConfirmation,
+      });
+    }
 
-    const dayKey = (ms, tz) => new Date(ms).toLocaleDateString('en-CA', { timeZone: tz });
-    const dayLabel = (ms, tz) => new Date(ms).toLocaleDateString(undefined, { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
-    const timeLabel = (ms, tz) => new Date(ms).toLocaleTimeString(undefined, { timeZone: tz, hour: 'numeric', minute: '2-digit' });
     const fullLabel = (ms, tz) => new Date(ms).toLocaleString(undefined, { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
-    const tzShort = (tz) => {
-      try {
-        return new Intl.DateTimeFormat(undefined, { timeZone: tz, timeZoneName: 'short' })
-          .formatToParts(new Date()).find(function(p) { return p.type === 'timeZoneName'; }).value;
-      } catch (e) { return tz; }
-    };
-
-    async function loadSlots() {
-      const status = document.getElementById('slots-status');
-      status.hidden = false;
-      status.innerHTML = '<span class="spinner"></span> Loading available times…';
-      document.getElementById('slot-days').hidden = true;
-      document.getElementById('slot-grid').hidden = true;
-      document.getElementById('slot-confirm').hidden = true;
-      try {
-        const res = await fetch('/api/schedule/slots');
-        const data = await res.json();
-        if (!data.schedulingReady) {
-          status.textContent = 'Scheduling is briefly unavailable. We will reach out by email to arrange your conversation.';
-          return;
-        }
-        slotState.slots = data.slots || [];
-        slotState.timezone = data.timezone;
-        document.getElementById('slot-tz-note').textContent =
-          data.timezone ? 'All times are shown in ' + tzShort(data.timezone) + ' (' + data.timezone.replace(/_/g, ' ') + ').' : '';
-        slotState.byDay = new Map();
-        for (const s of slotState.slots) {
-          const k = dayKey(s.startAt, slotState.timezone);
-          if (!slotState.byDay.has(k)) slotState.byDay.set(k, []);
-          slotState.byDay.get(k).push(s);
-        }
-        if (!slotState.byDay.size) {
-          status.textContent = 'Every time in the current window is taken. Please check back soon, or reply to your confirmation email.';
-          return;
-        }
-        status.hidden = true;
-        slotState.activeDay = [...slotState.byDay.keys()][0];
-        renderDays();
-        renderTimes();
-      } catch (err) {
-        console.error(err);
-        status.textContent = 'Scheduling is briefly unavailable. We will reach out by email to arrange your conversation.';
-      }
-    }
-
-    function renderDays() {
-      const host = document.getElementById('slot-days');
-      host.innerHTML = '';
-      for (const [key, slots] of slotState.byDay) {
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'slot-day';
-        chip.textContent = dayLabel(slots[0].startAt, slotState.timezone);
-        chip.setAttribute('aria-pressed', String(key === slotState.activeDay));
-        chip.addEventListener('click', function() {
-          slotState.activeDay = key;
-          slotState.selected = null;
-          document.getElementById('slot-confirm').hidden = true;
-          renderDays();
-          renderTimes();
-        });
-        host.appendChild(chip);
-      }
-      host.hidden = false;
-    }
-
-    function renderTimes() {
-      const host = document.getElementById('slot-grid');
-      host.innerHTML = '';
-      for (const s of slotState.byDay.get(slotState.activeDay) || []) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'slot-time';
-        btn.textContent = timeLabel(s.startAt, slotState.timezone);
-        btn.setAttribute('aria-pressed', String(slotState.selected?.startAt === s.startAt));
-        btn.addEventListener('click', function() {
-          slotState.selected = s;
-          renderTimes();
-          const note = document.getElementById('slot-note');
-          note.textContent = fullLabel(s.startAt, slotState.timezone);
-          document.getElementById('book-btn').textContent = 'Book this time';
-          document.getElementById('slot-confirm').hidden = false;
-        });
-        host.appendChild(btn);
-      }
-      host.hidden = false;
-    }
-
-    document.getElementById('book-btn').addEventListener('click', async function() {
-      if (!slotState.selected || !dbApplicationId) return;
-      const btn = this;
-      btn.disabled = true;
-      btn.textContent = 'Booking…';
-      try {
-        const res = await fetch('/api/schedule/book', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ applicationId: dbApplicationId, startAt: slotState.selected.startAt }),
-        });
-        const data = await res.json();
-        if (res.status === 409 && data.code === 'calendar_slot_unavailable') {
-          document.getElementById('slot-note').textContent = 'That time was just taken. Here are the current openings.';
-          slotState.selected = null;
-          await loadSlots();
-          return;
-        }
-        if (!res.ok) throw new Error(data.error || 'booking failed');
-        goToConfirmation(data);
-      } catch (err) {
-        console.error(err);
-        document.getElementById('slot-note').textContent = 'The booking could not be completed. Please try again.';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Book this time';
-      }
-    });
 
     function goToConfirmation(data) {
       if (applicantEmail) {
@@ -1390,7 +1277,7 @@
       }
       const when = document.getElementById('confirmed-when');
       if (when && data && data.startAt) {
-        when.textContent = 'Your conversation is booked for ' + fullLabel(data.startAt, slotState.timezone) + '.';
+        when.textContent = 'Your conversation is booked for ' + fullLabel(data.startAt, data.timezone) + '.';
         when.style.display = 'block';
       }
       step2.style.display = 'none';
@@ -1459,6 +1346,7 @@
       }
     });
   </script>
+  <script type="module" src="/assets/app/join-picker.js?v=1"></script>
 
 </body>
 </html>
