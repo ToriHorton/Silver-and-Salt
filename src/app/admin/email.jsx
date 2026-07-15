@@ -2,6 +2,7 @@
 // owner-editable destination addresses, the four templates with live
 // previews, per-template send toggles and test sends, and the send audit.
 import { useState, useEffect, useCallback } from "preact/hooks";
+import { DataTable } from "@odla-ai/ui/components";
 import { api, bus, TEMPLATE_META } from "../lib.js";
 
 // Live previews render each template with sample applicant data exactly the
@@ -94,6 +95,53 @@ function TemplateBlock({ key_, meta, tpl, cfg, extra, onChange }) {
 
 // The send audit: everything the worker attempted, newest first. Test sends
 // and failures appear too, so this table is the honest record.
+const sendStatus = (s) =>
+  s.error
+    ? `Failed (${s.error})`
+    : s.transport === "cloudflare"
+      ? (s.redirected ? "Delivered (debug redirect)" : "Delivered")
+      : "Logged, no delivery";
+
+const SEND_COLUMNS = [
+  {
+    key: "when",
+    header: "When",
+    sortAs: "date",
+    sortValue: (s) => s.sentAt,
+    cell: (s) => new Date(s.sentAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }),
+  },
+  {
+    key: "template",
+    header: "Email",
+    sortAs: "string",
+    sortValue: (s) => TEMPLATE_META[s.template]?.title || s.template,
+    filterText: (s) => TEMPLATE_META[s.template]?.title || s.template,
+    cell: (s) => TEMPLATE_META[s.template]?.title || s.template,
+  },
+  {
+    key: "to",
+    header: "To",
+    sortAs: "string",
+    sortValue: (s) => s.to,
+    filterText: (s) => s.to,
+    cell: (s) => s.to,
+  },
+  {
+    key: "subject",
+    header: "Subject",
+    filterText: (s) => s.subject,
+    cell: (s) => s.subject,
+  },
+  {
+    key: "status",
+    header: "Status",
+    sortAs: "string",
+    sortValue: sendStatus,
+    filterText: sendStatus,
+    cell: (s) => <span class={"send-status " + (s.error ? "fail" : "ok")}>{sendStatus(s)}</span>,
+  },
+];
+
 function RecentSends() {
   const [sends, setSends] = useState(null);
 
@@ -112,38 +160,18 @@ function RecentSends() {
   return (
     <div class="card">
       <div class="card-label">Recent Sends</div>
-      <div class="table-wrap">
-        <table id="email-log-table">
-          <thead>
-            <tr><th>When</th><th>Email</th><th>To</th><th>Subject</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            {sends === null && (
-              <tr><td colSpan={5}><div class="loading-note"><span class="spinner"></span> Loading recent sends…</div></td></tr>
-            )}
-            {sends?.map((s) => (
-              <tr>
-                <td>{new Date(s.sentAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</td>
-                <td>{TEMPLATE_META[s.template]?.title || s.template}</td>
-                <td>{s.to}</td>
-                <td>{s.subject}</td>
-                <td>
-                  <span class={"send-status " + (s.error ? "fail" : "ok")}>
-                    {s.error
-                      ? `Failed (${s.error})`
-                      : s.transport === "cloudflare"
-                        ? (s.redirected ? "Delivered (debug redirect)" : "Delivered")
-                        : "Logged, no delivery"}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {sends && !sends.length && (
-        <p class="empty-note">Every send the system attempts appears here, including test sends and anything that failed.</p>
-      )}
+      <DataTable
+        rows={sends ?? []}
+        columns={SEND_COLUMNS}
+        rowKey={(s) => s.id}
+        filterable
+        filterPlaceholder="Filter by template, address, or status…"
+        defaultSort={{ key: "when", dir: "desc" }}
+        loading={sends === null}
+        loadingState={<div class="loading-note"><span class="spinner"></span> Loading recent sends…</div>}
+        emptyState={<p class="empty-note">Every send the system attempts appears here, including test sends and anything that failed.</p>}
+        ariaLabel="Recent sends"
+      />
     </div>
   );
 }

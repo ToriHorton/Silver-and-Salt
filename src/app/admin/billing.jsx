@@ -1,10 +1,76 @@
-// Billing tab: live Stripe subscription state joined with our applications.
-// Stripe is the source of truth for money; refunds stay on the People tab.
+// Billing tab: live Stripe subscription state joined with our applications,
+// on the @odla-ai/ui DataTable (sortable by renewal/amount, filterable by
+// person). Stripe is the source of truth for money; refunds stay on the
+// People tab.
 import { useState, useEffect } from "preact/hooks";
+import { DataTable } from "@odla-ai/ui/components";
 import { api, STATUS_LABELS, SUB_BADGE, SUB_LABELS, fmtMoney, fmtDate } from "../lib.js";
 
 const stripeLinkStyle =
   "font-size:12px;color:var(--lime-dark);font-weight:700;text-decoration:none;margin-right:10px;";
+
+const COLUMNS = [
+  {
+    key: "person",
+    header: "Person",
+    sortAs: "string",
+    sortValue: (r) => r.name,
+    filterText: (r) => r.name + " " + r.email,
+    cell: (r) => (
+      <span class="cell-person">
+        {r.name}
+        <span class="cell-sub">{r.email}</span>
+      </span>
+    ),
+  },
+  {
+    key: "membership",
+    header: "Membership",
+    sortAs: "string",
+    sortValue: (r) => STATUS_LABELS[r.applicationStatus] || r.applicationStatus,
+    cell: (r) => STATUS_LABELS[r.applicationStatus] || r.applicationStatus,
+  },
+  {
+    key: "subscription",
+    header: "Subscription",
+    sortAs: "string",
+    sortValue: (r) => r.subscriptionStatus ?? "",
+    cell: (r) => (
+      <>
+        <span class={"pay-badge " + (SUB_BADGE[r.subscriptionStatus] || "unpaid")}>
+          {r.subscriptionStatus ? (SUB_LABELS[r.subscriptionStatus] || r.subscriptionStatus) : "None"}
+        </span>
+        {r.cancelAtPeriodEnd && r.subscriptionStatus === "active" && (
+          <span class="pay-renewal">ends at renewal</span>
+        )}
+      </>
+    ),
+  },
+  {
+    key: "amount",
+    header: "Amount",
+    sortAs: "number",
+    sortValue: (r) => r.amountCents ?? 0,
+    cell: (r) => (r.amountCents ? fmtMoney(r.amountCents) + "/" + (r.interval === "month" ? "mo" : "yr") : ""),
+  },
+  {
+    key: "renews",
+    header: "Renews",
+    sortAs: "date",
+    sortValue: (r) => r.renewalAt ?? 0,
+    cell: (r) => (r.renewalAt ? fmtDate(r.renewalAt) : ""),
+  },
+  {
+    key: "stripe",
+    header: "Stripe",
+    cell: (r) => (
+      <>
+        {r.customerUrl && <a href={r.customerUrl} target="_blank" rel="noopener" style={stripeLinkStyle}>Customer</a>}
+        {r.subscriptionUrl && <a href={r.subscriptionUrl} target="_blank" rel="noopener" style={stripeLinkStyle}>Subscription</a>}
+      </>
+    ),
+  },
+];
 
 export function BillingTab() {
   const [billing, setBilling] = useState(null); // null = loading
@@ -40,43 +106,21 @@ export function BillingTab() {
 
       <div class="card">
         <div class="card-label">Memberships</div>
-        <div class="table-wrap">
-          <table id="billing-table">
-            <thead>
-              <tr><th>Person</th><th>Membership</th><th>Subscription</th><th>Amount</th><th>Renews</th><th>Stripe</th></tr>
-            </thead>
-            <tbody>
-              {billing === null && !failed && (
-                <tr><td colSpan={6}><div class="loading-note"><span class="spinner"></span> Loading billing…</div></td></tr>
-              )}
-              {ready && billing.rows.map((r) => (
-                <tr>
-                  <td>{r.name}<span class="cell-sub">{r.email}</span></td>
-                  <td>{STATUS_LABELS[r.applicationStatus] || r.applicationStatus}</td>
-                  <td>
-                    <span class={"pay-badge " + (SUB_BADGE[r.subscriptionStatus] || "unpaid")}>
-                      {r.subscriptionStatus ? (SUB_LABELS[r.subscriptionStatus] || r.subscriptionStatus) : "None"}
-                    </span>
-                    {r.cancelAtPeriodEnd && r.subscriptionStatus === "active" && (
-                      <span class="pay-renewal">ends at renewal</span>
-                    )}
-                  </td>
-                  <td>{r.amountCents ? fmtMoney(r.amountCents) + "/" + (r.interval === "month" ? "mo" : "yr") : ""}</td>
-                  <td>{r.renewalAt ? fmtDate(r.renewalAt) : ""}</td>
-                  <td>
-                    {r.customerUrl && <a href={r.customerUrl} target="_blank" rel="noopener" style={stripeLinkStyle}>Customer</a>}
-                    {r.subscriptionUrl && <a href={r.subscriptionUrl} target="_blank" rel="noopener" style={stripeLinkStyle}>Subscription</a>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {ready && !billing.rows.length && (
-          <p class="empty-note">Paid memberships appear here once applicants complete payment.</p>
-        )}
-        {(failed || (billing && !ready)) && (
+        {failed || (billing && !ready) ? (
           <p class="empty-note">Billing appears once Stripe is connected (publishable key, price, and secret key).</p>
+        ) : (
+          <DataTable
+            rows={billing?.rows ?? []}
+            columns={COLUMNS}
+            rowKey={(r) => r.id}
+            filterable
+            filterPlaceholder="Filter by name or email…"
+            defaultSort={{ key: "renews", dir: "asc" }}
+            loading={billing === null}
+            loadingState={<div class="loading-note"><span class="spinner"></span> Loading billing…</div>}
+            emptyState={<p class="empty-note">Paid memberships appear here once applicants complete payment.</p>}
+            ariaLabel="Memberships"
+          />
         )}
       </div>
     </>
