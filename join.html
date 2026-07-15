@@ -488,6 +488,17 @@
 
     /* ── First-party slot picker ── */
     .slots-area { padding: 20px 18px 24px; background: #fff; }
+    @keyframes ssc-spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--lime);
+      border-radius: 50%;
+      animation: ssc-spin 0.7s linear infinite;
+      vertical-align: -3px;
+      margin-right: 8px;
+    }
     .slots-status {
       font-size: 14px;
       color: var(--sage);
@@ -1265,7 +1276,7 @@
     async function loadSlots() {
       const status = document.getElementById('slots-status');
       status.hidden = false;
-      status.textContent = 'Loading available times…';
+      status.innerHTML = '<span class="spinner"></span> Loading available times…';
       document.getElementById('slot-days').hidden = true;
       document.getElementById('slot-grid').hidden = true;
       document.getElementById('slot-confirm').hidden = true;
