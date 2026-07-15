@@ -568,6 +568,39 @@ copy-through path.
   views, reschedule + cancel from the detail panel, and the month grid
   on a phone width.
 
+## @odla-ai/ui 0.6.0: DataTable adoption (2026-07-15)
+
+The ui team shipped the DataTable we spec'd (0.5.0 lacked it; 0.6.0
+published later the same day, with FilterChips/Segmented and marketing
+components alongside). Adopted:
+
+- **People, Billing (Memberships), and Recent Sends** are now
+  @odla-ai/ui DataTable: click-to-sort headers (aria-sort), built-in
+  filter input with live match count, and loading/empty/no-matches slots
+  wired to the console's existing spinner and empty-note styles.
+- **People edit model**: rows carry a mutable `draft` written by
+  UNCONTROLLED selects/inputs; the actions cell reads the draft at save.
+  DataTable keys rows by rowKey and MOVES live tr nodes on sort/filter,
+  so in-flight edits survive reorder; a generation counter in the rowKey
+  remounts rows onto fresh server state after any mutation. This is
+  exactly the acceptance case from the spec (live controls in cells, no
+  behavior loss).
+- **Introduction Calls stays hand-rolled** deliberately: its inline
+  reschedule expansion row has no slot in DataTable v1 (noted for the ui
+  team as follow-up feedback).
+- CSS: table.css + data-table.css vendored (tabs.css re-vendored: 0.6.0
+  switched to child selectors and added a .tabs-trailing slot; calendar
+  css unchanged). Tokens gained --ui-good and --ui-space-6, and a scoped
+  override block pins DataTable chrome to the console's existing table
+  look (uppercase headers, cell rhythm, no height cap or sticky tint).
+  Worker: billing rows and email-log rows now carry `id` for rowKey.
+- **Verified 2026-07-15**: the render suite (13 checks) now pushes
+  fixture rows through the real DataTable with the real People columns
+  (paid row with sort/filter chrome, self-role lock, refunded action
+  hiding, empty-state slot); deployed dev serves the new CSS and both
+  APIs return row ids. Owner browser pass: sort and filter each table,
+  then confirm an in-flight edit survives a sort.
+
 ## Booking capture (2026-07-11)
 
 Google's appointment widget is a sealed iframe: no callback ever reaches the
@@ -653,6 +686,11 @@ owner-managed.
   locally with no watcher errors, and GitHub Pages still serving unchanged.
   Next human obligations: approve entering P2 (database), sign in at
   https://odla.ai/studio, and approve a handshake code when the CLI asks.
+- **2026-07-15 (DataTable):** Updated to @odla-ai/ui 0.6.0 and adopted
+  the requested DataTable across People, Billing, and Recent Sends
+  (sortable, filterable, state slots; live cell controls preserved).
+  Introduction Calls keeps its hand-rolled table until DataTable grows a
+  row-expansion slot. Deployed to dev.
 - **2026-07-15 (calendar tab + 404):** Built the ADMIN-CALENDAR-SPEC.md
   Calendar tab on the new Preact build using @odla-ai/ui
   CalendarMonth/CalendarAgenda (first real consumption of the ui React

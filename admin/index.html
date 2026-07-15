@@ -8,8 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/odla-ui/tabs.css?v=1">
+  <link rel="stylesheet" href="/assets/odla-ui/tabs.css?v=2">
   <link rel="stylesheet" href="/assets/odla-ui/calendar.css?v=1">
+  <link rel="stylesheet" href="/assets/odla-ui/table.css?v=1">
+  <link rel="stylesheet" href="/assets/odla-ui/data-table.css?v=1">
   <style>
     /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
        always render in Cormorant Infant wherever Cormorant Garamond is
@@ -178,9 +180,40 @@
       --ui-accent-soft: var(--lime-soft);
       --ui-on-accent: #ffffff;
       --ui-danger: #a4442c;
+      --ui-good: var(--lime-dark);
+      --ui-space-6: 24px;
       --ui-shadow: 0 8px 24px rgba(47, 62, 52, 0.12);
       --ui-surface: #ffffff;
       --ui-surface-2: #f4faf2;
+    }
+
+    /* DataTable chrome, pinned to this console's existing table look: same
+       header treatment and cell rhythm as the hand-rolled tables, no height
+       cap or sticky tint (the page scrolls, tables never did). */
+    .data-table .table { font-size: 14px; }
+    .data-table .table th, .data-table .table-sort {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--sage);
+      white-space: nowrap;
+    }
+    .data-table .table th { padding: 10px 14px 10px 0; }
+    .data-table .table th.sortable { padding: 0; }
+    .data-table .table-sort { padding: 10px 14px 10px 0; }
+    .data-table .table td {
+      padding: 12px 14px 12px 0;
+      color: var(--moss-light);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .data-table .table-wrap { max-height: none; overflow-x: auto; }
+    .data-table .table thead th { position: static; background: transparent; }
+    .data-table .cell-person { color: var(--moss); font-weight: 500; }
+    .data-table .table-filter {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
     }
     .tabs { margin-bottom: 24px; }
     .tabs button {

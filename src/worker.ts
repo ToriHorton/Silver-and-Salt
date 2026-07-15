@@ -1031,6 +1031,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         emailLog: { $: { order: { sentAt: "desc" }, limit: 50 } },
       });
       const rows = ((emailLog ?? []) as Array<Record<string, unknown>>).map((r) => ({
+        id: r.id,
         template: r.template,
         to: r.to,
         subject: r.subject,
@@ -1088,6 +1089,8 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         const periodEnd =
           (sub?.current_period_end as number | undefined) ?? items[0]?.current_period_end;
         rows.push({
+          // Application id: the stable row identity for the admin table.
+          id: a.id as string,
           name: `${a.firstName} ${a.lastName}`,
           email: a.email as string,
           applicationStatus: a.status as string,
