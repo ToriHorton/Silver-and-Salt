@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/odla-ui/tabs.css?v=1">
   <style>
     /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
        always render in Cormorant Infant wherever Cormorant Garamond is
@@ -150,32 +151,31 @@
       overflow: visible;
     }
 
-    /* ── Tabs ── */
-    .admin-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
+    /* ── Tabs: @odla-ai/ui tabs component, tokens mapped to the brand ── */
+    :root {
+      --ui-space-1: 4px;
+      --ui-space-4: 16px;
+      --ui-border: var(--border);
+      --ui-text: var(--moss);
+      --ui-text-md: 14px;
+      --ui-text-muted: var(--sage);
+      --ui-focus: 0 0 0 3px var(--lime-soft);
+      --ui-radius-sm: 4px;
+      --ui-radius-lg: 12px;
+      --ui-radius-pill: 100px;
+      --ui-accent: var(--lime);
+      --ui-accent-strong: var(--lime-dark);
+      --ui-accent-soft: var(--lime-soft);
+      --ui-surface: #ffffff;
+      --ui-surface-2: #f4faf2;
     }
-    .admin-tab {
+    .tabs { margin-bottom: 24px; }
+    .tabs button {
       font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
-      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--sage);
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .admin-tab:hover { border-color: var(--lime); color: var(--moss); }
-    .admin-tab[aria-selected="true"] {
-      background: var(--moss);
-      color: var(--cream);
-      border-color: var(--moss);
+      font-size: 12px;
     }
 
     /* ── Console header row ── */
@@ -435,13 +435,17 @@
         </div>
       </div>
 
-      <div class="admin-tabs" role="tablist">
-        <button type="button" class="admin-tab" data-tab="people" aria-selected="true">People</button>
-        <button type="button" class="admin-tab" data-tab="calls" aria-selected="false">Introduction Calls</button>
-        <button type="button" class="admin-tab" data-tab="email" aria-selected="false">Email Settings</button>
+      <div class="tabs-root">
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" data-tab="people" aria-selected="true">People</button>
+          <button type="button" role="tab" data-tab="calls" aria-selected="false">Introduction Calls</button>
+          <button type="button" role="tab" data-tab="settings" aria-selected="false">Call Settings</button>
+          <button type="button" role="tab" data-tab="email" aria-selected="false">Email Settings</button>
+        </div>
       </div>
+      <div class="tabs-panels">
 
-      <div class="tab-panel" id="tab-people">
+      <div class="tabs-panel tab-panel" id="tab-people">
       <div class="card">
         <div class="card-label">Internal Stats</div>
         <div class="stats-row">
@@ -465,7 +469,7 @@
     </div>
       </div>
 
-      <div class="tab-panel hidden" id="tab-calls">
+      <div class="tabs-panel tab-panel" id="tab-settings" hidden>
       <div class="card">
         <div class="card-label">Availability</div>
         <p class="empty-note" style="margin-bottom: 16px;">The times offered for introduction calls. Booked slots and everything already on the connected calendar stay unavailable automatically.</p>
@@ -507,6 +511,9 @@
         <span class="empty-note hidden" id="avail-save-note" style="margin-left: 10px;"></span>
       </div>
 
+      </div>
+
+      <div class="tabs-panel tab-panel" id="tab-calls" hidden>
       <div class="card">
         <div class="card-label">Introduction Calls</div>
         <div class="table-wrap">
@@ -522,7 +529,7 @@
 
       </div>
 
-      <div class="tab-panel hidden" id="tab-email">
+      <div class="tabs-panel tab-panel" id="tab-email" hidden>
       <div class="card">
         <div class="card-label">Email Templates</div>
         <p class="empty-note" style="margin-bottom: 18px;">These are the emails the system sends. Curly placeholders like {{firstName}} fill in per applicant when a message goes out.</p>
@@ -537,6 +544,7 @@
         </div>
         <button class="row-save" id="email-save" style="padding: 10px 22px;">Save email settings</button>
         <span class="empty-note hidden" id="email-save-note" style="margin-left: 10px;"></span>
+      </div>
       </div>
 
       </div>
@@ -584,17 +592,17 @@
           window.location.href = '/members/';
         });
         // Tabs: remember the active one across reloads via the hash.
-        const tabs = document.querySelectorAll('.admin-tab');
+        const tabs = document.querySelectorAll('.tabs [role="tab"]');
         function switchTab(name) {
           for (const t of tabs) t.setAttribute('aria-selected', String(t.dataset.tab === name));
-          for (const p of document.querySelectorAll('.tab-panel')) {
-            p.classList.toggle('hidden', p.id !== 'tab-' + name);
+          for (const p of document.querySelectorAll('.tabs-panel')) {
+            p.hidden = p.id !== 'tab-' + name;
           }
           history.replaceState(null, '', '#' + name);
         }
         for (const t of tabs) t.addEventListener('click', () => switchTab(t.dataset.tab));
         const initial = location.hash.replace('#', '');
-        if (['people', 'calls', 'email'].includes(initial)) switchTab(initial);
+        if (['people', 'calls', 'settings', 'email'].includes(initial)) switchTab(initial);
 
         await Promise.all([loadPeople(), loadBookings(), loadEmailSettings(), loadAvailability()]);
       } catch (err) {
