@@ -459,6 +459,37 @@ pre-requisite in wrangler.jsonc comments).
   hits the platform's "book" access mode (same known bug as Scheduling v2);
   provision's own output covered the schema confirmation.
 
+## Billing dashboard and tab deep links (2026-07-15)
+
+Owner feedback after the email round: deep links into the tabbed admin page
+need a query or anchor, and the admin needs a billing dashboard. Both done
+and verified on the deployed dev worker.
+
+- **Tab deep links**: /admin/ now accepts `?tab=<people|billing|calls|
+  settings|email>` as well as the `#hash` form (mail clients rewrite links
+  and drop fragments more often than queries, so emails use the query
+  form). Switching tabs canonicalizes the URL back to the hash. The
+  sign-in mount's fallbackRedirectUrl preserves path + query + hash, so
+  the deep link survives an auth round trip. The adminNotification email's
+  {{adminUrl}} now renders `<origin>/admin/?tab=people`.
+- **Billing tab** (between People and Introduction Calls): summary stats
+  (active memberships, annual run rate counting only what will renew,
+  renewals within 60 days, past due, refunded) plus a Memberships table
+  (person, application status, live subscription status with
+  ends-at-renewal note, amount/interval, renewal date, links into the
+  Stripe dashboard, test-mode aware). Data from GET /api/admin/billing
+  (admin-gated): applications joined with one page of
+  GET /v1/subscriptions?status=all (flags `truncated` at 100 rather than
+  silently capping; note the 2025+ API keeps current_period_end on the
+  subscription items). Stripe is the money source of truth; db rows
+  contribute person and pipeline status. `billingReady: false` until the
+  vault has the Stripe key, and the tab says so instead of erroring.
+- **Verified 2026-07-15** on deployed dev with an admin JWT: billingReady
+  true, testMode true, 7 active test subscriptions at a 630000-cent run
+  rate, the refunded application showing its canceled subscription, both
+  abandoned card-only tests showing incomplete_expired, dashboard links on
+  every row; deployed page serves the billing tab and the ?tab= bootstrap.
+
 ## Booking capture (2026-07-11)
 
 Google's appointment widget is a sealed iframe: no callback ever reaches the
@@ -544,6 +575,9 @@ owner-managed.
   locally with no watcher errors, and GitHub Pages still serving unchanged.
   Next human obligations: approve entering P2 (database), sign in at
   https://odla.ai/studio, and approve a handshake code when the CLI asks.
+- **2026-07-15 (billing + deep links):** Owner confirmed both test emails
+  arrived. Added ?tab= deep links (used by the admin email) and the admin
+  Billing tab backed by live Stripe data; deployed and verified on dev.
 - **2026-07-15 (email):** Wired Cloudflare Email Service behind the existing
   EmailSender seam (dev from-address on odla.ai per the owner), added
   per-template send toggles, admin test sends, and the Recent Sends audit.

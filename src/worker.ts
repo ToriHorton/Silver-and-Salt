@@ -847,7 +847,9 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
             email: app.email as string,
             phone: (app.phone as string) ?? "",
             state: (app.state as string) ?? "",
-            adminUrl: `${url.origin}/admin/`,
+            // ?tab= survives mail-client link rewriting better than a #hash
+            // and lands the admin on the vetting view.
+            adminUrl: `${url.origin}/admin/?tab=people`,
             membersUrl: `${url.origin}/members/`,
           };
           await sendTemplated(db, env.ODLA_ENV, mailer, group, {
@@ -1040,6 +1042,94 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ sends: rows });
     }
 
+    // The billing dashboard: applications joined with live Stripe
+    // subscription state. Stripe is the source of truth for money; the db
+    // rows contribute the person and pipeline status.
+    if (req.method === "GET" && url.pathname === "/api/admin/billing") {
+      const group = await getGroup(db, DEFAULT_GROUP_ID);
+      const sk = await getVaultSecret(db, "stripe_secret_key");
+      if (!group || !sk) return json({ billingReady: false, rows: [], summary: null });
+
+      const [appsRes, subsRes] = await Promise.all([
+        db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 200 } } }),
+        stripeCall(sk, "GET", "/v1/subscriptions", { limit: 100, status: "all" }),
+      ]);
+      if (!subsRes.ok) {
+        console.error("billing: subscription list failed", subsRes.status);
+        return json({ error: "billing lookup failed upstream" }, 502);
+      }
+      const subById = new Map(
+        (((subsRes.body.data as Array<Record<string, unknown>>) ?? [])).map((s) => [s.id as string, s]),
+      );
+
+      const testMode = (group.stripePublishableKey ?? "").startsWith("pk_test");
+      const dash = testMode ? "https://dashboard.stripe.com/test" : "https://dashboard.stripe.com";
+
+      type SubItem = {
+        price?: { unit_amount?: number; recurring?: { interval?: string } };
+        quantity?: number;
+        current_period_end?: number;
+      };
+      const rows = [];
+      for (const a of (appsRes.applications ?? []) as Array<Record<string, unknown>>) {
+        if (!a.stripeCustomerId && !a.stripeSubscriptionId) continue;
+        const sub = a.stripeSubscriptionId
+          ? (subById.get(a.stripeSubscriptionId as string) as Record<string, unknown> | undefined)
+          : undefined;
+        const items = ((sub?.items as { data?: SubItem[] } | undefined)?.data ?? []);
+        let amountCents = 0;
+        let interval = "year";
+        for (const it of items) {
+          amountCents += (it.price?.unit_amount ?? 0) * (it.quantity ?? 1);
+          interval = it.price?.recurring?.interval ?? interval;
+        }
+        // 2025+ Stripe API keeps the period on the items; older shapes had
+        // it on the subscription. Our own renewalAt is the last fallback.
+        const periodEnd =
+          (sub?.current_period_end as number | undefined) ?? items[0]?.current_period_end;
+        rows.push({
+          name: `${a.firstName} ${a.lastName}`,
+          email: a.email as string,
+          applicationStatus: a.status as string,
+          subscriptionStatus: (sub?.status as string) ?? null,
+          cancelAtPeriodEnd: sub?.cancel_at_period_end === true,
+          amountCents,
+          interval,
+          renewalAt: periodEnd ? periodEnd * 1000 : ((a.renewalAt as number) ?? null),
+          customerUrl: a.stripeCustomerId ? `${dash}/customers/${a.stripeCustomerId}` : null,
+          subscriptionUrl: a.stripeSubscriptionId
+            ? `${dash}/subscriptions/${a.stripeSubscriptionId}`
+            : null,
+        });
+      }
+
+      // Run rate counts only what will actually renew.
+      const renewing = rows.filter((r) => r.subscriptionStatus === "active" && !r.cancelAtPeriodEnd);
+      const soonCutoff = Date.now() + 60 * 24 * 3600 * 1000;
+      const summary = {
+        activeCount: rows.filter((r) => r.subscriptionStatus === "active").length,
+        annualRunRateCents: renewing.reduce(
+          (s, r) => s + r.amountCents * (r.interval === "month" ? 12 : 1),
+          0,
+        ),
+        renewingSoonCount: renewing.filter((r) => r.renewalAt && r.renewalAt < soonCutoff).length,
+        pastDueCount: rows.filter((r) => r.subscriptionStatus === "past_due").length,
+        canceledCount: rows.filter(
+          (r) => r.subscriptionStatus === "canceled" || r.cancelAtPeriodEnd,
+        ).length,
+        refundedCount: rows.filter((r) => r.applicationStatus === "refunded").length,
+      };
+      return json({
+        billingReady: true,
+        testMode,
+        // One page of 100 subscriptions covers the community for now; flag
+        // instead of silently truncating when it no longer does.
+        truncated: subsRes.body.has_more === true,
+        rows,
+        summary,
+      });
+    }
+
     // Owner-triggered test send: exercises the real transport end to end
     // with sample data. Goes to the notification address (dev redirects to
     // the debug inbox as always) and ignores the template's enabled flag,
@@ -1066,7 +1156,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
           email: "martha@example.com",
           phone: "(801) 555-0100",
           state: "Utah",
-          adminUrl: `${url.origin}/admin/`,
+          adminUrl: `${url.origin}/admin/?tab=people`,
           membersUrl: `${url.origin}/members/`,
         },
         force: true,
