@@ -26,15 +26,19 @@
 
   let sessionToken = null;
 
-  // Fetch auth config, inject clerk-js v5, load it, and capture the
-  // session token when a user is signed in. Returns window.Clerk.
-  async function loadClerk() {
-    const cfg = await fetch('/api/auth/config').then(function (r) { return r.json(); });
-    const pk = cfg.publishableKey;
-    if (!pk) throw new Error('no publishable key');
+  // Start clerk-js immediately from a locally cached publishable key
+  // (refreshing the cache in the background), so repeat visits skip the
+  // config round trip that used to serialize in front of the ~300KB
+  // clerk-js download. A stale cached key falls back to a fresh fetch.
+  const CONFIG_CACHE_KEY = 'ssc-auth-config-v1';
 
+  async function bootClerkWith(pk) {
     // The Clerk frontend API host is encoded in the publishable key.
     const frontendApi = atob(pk.split('_')[2]).replace(/\$$/, '');
+    const pre = document.createElement('link');
+    pre.rel = 'preconnect';
+    pre.href = 'https://' + frontendApi;
+    document.head.appendChild(pre);
     await new Promise(function (resolve, reject) {
       const s = document.createElement('script');
       s.src = 'https://' + frontendApi + '/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
@@ -44,6 +48,38 @@
       document.head.appendChild(s);
     });
     await window.Clerk.load();
+  }
+
+  async function loadClerk() {
+    let cached = null;
+    try { cached = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || 'null'); } catch (e) { /* ignore */ }
+
+    const freshPromise = fetch('/api/auth/config')
+      .then(function (r) { return r.json(); })
+      .then(function (c) {
+        if (c && c.publishableKey) localStorage.setItem(CONFIG_CACHE_KEY, JSON.stringify(c));
+        return c;
+      })
+      .catch(function () { return null; });
+
+    let pk = cached && cached.publishableKey;
+    if (pk) {
+      try {
+        await bootClerkWith(pk);
+      } catch (e) {
+        // Stale cache (rotated key, retired instance): retry fresh once.
+        localStorage.removeItem(CONFIG_CACHE_KEY);
+        const fresh = await freshPromise;
+        pk = fresh && fresh.publishableKey;
+        if (!pk) throw new Error('no publishable key');
+        await bootClerkWith(pk);
+      }
+    } else {
+      const fresh = await freshPromise;
+      pk = fresh && fresh.publishableKey;
+      if (!pk) throw new Error('no publishable key');
+      await bootClerkWith(pk);
+    }
 
     if (window.Clerk.user) {
       sessionToken = await window.Clerk.session.getToken();
