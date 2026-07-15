@@ -17,7 +17,12 @@ watch-style.html
 # dashboard.html stays ignored; it is published as a copy at an obscure,
 # unlinked, noindexed URL (hq-25b5a94e297e.html) per Tori's 2026-07-14 decision.
 # granola-inbox.js and newsletter-data.js are published with it as its data feeds.
+TASKS.md
 dashboard.html
+dashboard-actions.html
+dashboard-newsletter.html
+dashboard.css
+dashboard-app.js
 ecosystem.html
 network/people.js
 network/people-utah.js
