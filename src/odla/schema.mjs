@@ -126,10 +126,16 @@ export const schema = {
         to: { type: "string", unique: false, indexed: true, optional: false },
         template: { type: "string", unique: false, indexed: true, optional: false },
         subject: { type: "string", unique: false, indexed: false, optional: false },
+        // "cloudflare" (Email Service delivery) or "log-only" (no delivery).
         transport: { type: "string", unique: false, indexed: false, optional: false },
-        // The transport receipt (synthesized "log-only-…" until Phase 5).
+        // The transport receipt (synthesized "log-only-…" when undelivered).
         messageId: { type: "string", unique: false, indexed: false, optional: true },
         redirected: { type: "boolean", unique: false, indexed: false, optional: true },
+        // Caller-stable key: a successful row with this key means the mail
+        // went out, so retried webhooks and rebookings never deliver twice.
+        dedupeKey: { type: "string", unique: false, indexed: true, optional: true },
+        // Transport error code when the send failed; absent on success.
+        error: { type: "string", unique: false, indexed: false, optional: true },
         sentAt: { type: "number", unique: false, indexed: true, optional: false },
       },
     },

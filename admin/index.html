@@ -443,6 +443,33 @@
       outline: 2px solid var(--lime-soft);
       border-color: var(--lime);
     }
+    .tpl-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 2px 0 10px;
+    }
+    .tpl-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--moss);
+      cursor: pointer;
+    }
+    .tpl-toggle input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--lime);
+      cursor: pointer;
+      margin: 0;
+    }
+    .tpl-test-note { font-size: 12px; color: var(--sage); }
+    .send-status { font-size: 12px; }
+    .send-status.ok { color: var(--lime-dark, #5a7d3f); }
+    .send-status.fail { color: #a4442c; }
 
     .hidden { display: none; }
 
@@ -576,15 +603,15 @@
 
       <div class="tabs-panel tab-panel" id="tab-email" hidden>
       <div class="card">
-        <div class="card-label">Email Templates</div>
-        <p class="empty-note" style="margin-bottom: 18px;">These are the emails the system sends. Curly placeholders like {{firstName}} fill in per applicant when a message goes out. The admin notification goes to the notification address below; the other three go to the applicant.</p>
-        <div class="avail-grid" style="margin-bottom: 20px;">
+        <div class="card-label">Email Delivery</div>
+        <p class="empty-note" id="delivery-note" style="margin-bottom: 18px;"><span class="spinner"></span> Checking delivery…</p>
+        <div class="avail-grid" style="margin-bottom: 4px;">
           <div class="tpl-block">
             <label class="tpl-label" for="dest-notification">Notification address <span class="tpl-hint">(admin alerts, like new paid applications)</span></label>
             <input type="text" id="dest-notification" />
           </div>
           <div class="tpl-block">
-            <label class="tpl-label" for="dest-replyto">Send from / reply-to <span class="tpl-hint">(the address members see and answer)</span></label>
+            <label class="tpl-label" for="dest-replyto">Reply-to address <span class="tpl-hint">(replies to any system email land here)</span></label>
             <input type="text" id="dest-replyto" />
           </div>
           <div class="tpl-block">
@@ -592,6 +619,12 @@
             <input type="text" id="dest-debug" />
           </div>
         </div>
+        <p class="empty-note" style="font-size: 12px;">Address changes apply when you press "Save email settings" below.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Email Templates</div>
+        <p class="empty-note" style="margin-bottom: 18px;">These are the emails the system sends, each tied to the moment listed with it. Curly placeholders like {{firstName}} fill in per applicant when a message goes out. Unchecking "Send automatically" keeps the moment silent until you turn it back on; "Send me a test" delivers a sample to your own inbox.</p>
         <div id="email-templates"></div>
         <div class="tpl-block">
           <label class="tpl-label" for="commitment-text">Community commitment <span class="tpl-hint">(embedded in the pre-meeting email as {{commitmentText}})</span></label>
@@ -603,6 +636,19 @@
         </div>
         <button class="row-save" id="email-save" style="padding: 10px 22px;">Save email settings</button>
         <span class="empty-note hidden" id="email-save-note" style="margin-left: 10px;"></span>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Recent Sends</div>
+        <div class="table-wrap">
+          <table id="email-log-table">
+            <thead>
+              <tr><th>When</th><th>Email</th><th>To</th><th>Subject</th><th>Status</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-note hidden" id="email-log-empty">Every send the system attempts appears here, including test sends and anything that failed.</p>
       </div>
       </div>
 
@@ -663,7 +709,7 @@
         const initial = location.hash.replace('#', '');
         if (['people', 'calls', 'settings', 'email'].includes(initial)) switchTab(initial);
 
-        await Promise.all([loadPeople(), loadBookings(), loadEmailSettings(), loadAvailability()]);
+        await Promise.all([loadPeople(), loadBookings(), loadEmailSettings(), loadAvailability(), loadEmailLog()]);
       } catch (err) {
         $('auth-loading').textContent = 'The console is briefly unavailable. Please refresh.';
         console.error(err);
@@ -704,6 +750,21 @@
         const host = $('email-templates');
         host.innerHTML = '';
 
+        // Delivery status: the transport and verified from address are set
+        // per environment in wrangler.jsonc, so they read as facts here.
+        const note = $('delivery-note');
+        if (cfg.transport === 'cloudflare') {
+          let msg = `Delivery is on through Cloudflare Email Service. Messages send from ${cfg.name} <${cfg.fromEmail}>; replies go to the reply-to address.`;
+          if (cfg.envName !== 'prod') {
+            msg += cfg.debugEmail
+              ? ' This is the dev environment: every send redirects to the debug inbox with a "[dev]" subject prefix.'
+              : ' This is the dev environment: with no debug inbox set, sends are recorded under Recent Sends and nothing is delivered.';
+          }
+          note.textContent = msg;
+        } else {
+          note.textContent = 'Delivery is off. Sends are recorded under Recent Sends and nothing is delivered. Deploying the worker with its send_email binding and EMAIL_FROM address turns delivery on.';
+        }
+
         // Live previews render each template with sample applicant data
         // exactly the way the worker renders real sends.
         const SAMPLE = {
@@ -736,11 +797,18 @@
           block.innerHTML = `
             <label class="tpl-label">${meta.title} <span class="tpl-hint">(placeholders: ${meta.hint})</span></label>
             <p class="empty-note" style="font-size:12px; margin-bottom:8px;">${meta.purpose}</p>
+            <div class="tpl-actions">
+              <label class="tpl-toggle"><input type="checkbox" data-tpl-enabled="${key}" /> Send automatically</label>
+              <span>
+                <button class="row-save" type="button" data-tpl-test="${key}">Send me a test</button>
+                <span class="tpl-test-note" data-tpl-test-note="${key}" style="margin-left:8px;"></span>
+              </span>
+            </div>
             <input type="text" data-tpl-subject="${key}" placeholder="Subject" />
             <textarea rows="6" data-tpl-text="${key}"></textarea>
             <div class="tpl-preview-label">Preview (sample applicant: Martha Cannon)</div>
             <div class="email-preview">
-              <div class="email-meta">From: ${cfg.name} &lt;${cfg.replyTo}&gt; &middot; To: ${toLabel}</div>
+              <div class="email-meta">From: ${cfg.name} &lt;${cfg.fromEmail || cfg.replyTo}&gt; &middot; Reply-to: ${cfg.replyTo} &middot; To: ${toLabel}</div>
               <div class="email-subject" data-preview-subject="${key}"></div>
               <div class="email-body" data-preview-body="${key}"></div>
             </div>`;
@@ -748,6 +816,34 @@
           const textInput = block.querySelector(`[data-tpl-text="${key}"]`);
           subjectInput.value = tpl.subject;
           textInput.value = tpl.text;
+          block.querySelector(`[data-tpl-enabled="${key}"]`).checked = tpl.enabled !== false;
+
+          const testBtn = block.querySelector(`[data-tpl-test="${key}"]`);
+          const testNote = block.querySelector(`[data-tpl-test-note="${key}"]`);
+          testBtn.addEventListener('click', async () => {
+            testBtn.disabled = true;
+            testNote.textContent = 'Sending…';
+            try {
+              const r = await api('/api/admin/email/test', {
+                method: 'POST',
+                body: JSON.stringify({ template: key }),
+              });
+              if (r.ok) {
+                const dest = r.redirected && r.debugEmail ? `${r.debugEmail} (debug inbox)` : r.to;
+                testNote.textContent = r.transport === 'cloudflare'
+                  ? `Sent to ${dest}.`
+                  : `Logged only (delivery is off).`;
+              } else {
+                testNote.textContent = `Send failed: ${r.reason || 'unknown'}.`;
+              }
+            } catch (e) {
+              console.error(e);
+              testNote.textContent = 'Send failed.';
+            } finally {
+              testBtn.disabled = false;
+              loadEmailLog();
+            }
+          });
           previews.push({
             subjectInput,
             textInput,
@@ -779,6 +875,7 @@
               emailTemplates[key] = {
                 subject: document.querySelector(`[data-tpl-subject="${key}"]`).value,
                 text: document.querySelector(`[data-tpl-text="${key}"]`).value,
+                enabled: document.querySelector(`[data-tpl-enabled="${key}"]`).checked,
               };
             }
             await api('/api/admin/group/email', {
@@ -804,6 +901,48 @@
           }
         });
       } catch (e) { console.error(e); }
+    }
+
+    // The send audit: everything the worker attempted, newest first. Test
+    // sends and failures appear too, so this table is the honest record.
+    async function loadEmailLog() {
+      const tbody = document.querySelector('#email-log-table tbody');
+      const empty = $('email-log-empty');
+      try {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="loading-note"><span class="spinner"></span> Loading recent sends…</div></td></tr>';
+        const { sends } = await api('/api/admin/email/log');
+        tbody.innerHTML = '';
+        empty.classList.toggle('hidden', sends.length > 0);
+        for (const s of sends) {
+          const tr = document.createElement('tr');
+          const cells = [
+            new Date(s.sentAt).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }),
+            TEMPLATE_META[s.template]?.title || s.template,
+            s.to,
+            s.subject,
+          ];
+          for (const c of cells) {
+            const td = document.createElement('td');
+            td.textContent = c;
+            tr.appendChild(td);
+          }
+          const status = document.createElement('td');
+          const span = document.createElement('span');
+          span.className = 'send-status ' + (s.error ? 'fail' : 'ok');
+          span.textContent = s.error
+            ? `Failed (${s.error})`
+            : s.transport === 'cloudflare'
+              ? (s.redirected ? 'Delivered (debug redirect)' : 'Delivered')
+              : 'Logged, no delivery';
+          status.appendChild(span);
+          tr.appendChild(status);
+          tbody.appendChild(tr);
+        }
+      } catch (e) {
+        console.error(e);
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+      }
     }
 
     // Times render in the group scheduling timezone with an explicit
