@@ -396,6 +396,63 @@ platform-side). Owner directive implemented:
   `calendars` and rejects 0.2.0's `availabilityCalendars`; config uses
   the legacy name until the CLI catches up.
 
+## Email delivery: Cloudflare Email Service (2026-07-15, in progress)
+
+Outbound email moves from the log-only stub to Cloudflare Email Service via
+the Worker's `send_email` binding (owner-directed 2026-07-15). Dev sends come
+from the odla.ai domain (already onboarded to Email Service on this
+Cloudflare account); the Phase 5 cutover switches EMAIL_FROM to a
+silverandsaltcapital.com address, which requires onboarding that domain to
+Email Service in the Cloudflare dashboard FIRST (recorded as a P5
+pre-requisite in wrangler.jsonc comments).
+
+- **Transport** (src/email.ts): `resolveTransport(env.SEND_EMAIL,
+  env.EMAIL_FROM)` returns the Cloudflare sender when both exist, log-only
+  otherwise. Payload from = `{ name: group.name, email: EMAIL_FROM }`;
+  group.replyTo rides as Reply-To (it needs no verification). Fail-safes:
+  outside prod, sends still redirect to group.debugEmail with a "[dev]"
+  subject prefix, and a dev tenant with NO debug inbox falls back to
+  log-only, so test applicants can never receive real mail.
+- **Config** (wrangler.jsonc): `"send_email": [{ "name": "SEND_EMAIL" }]`
+  plus `EMAIL_FROM` var in BOTH the top level (prod,
+  membership@silverandsaltcapital.com, deployed only at Phase 5) and env.dev
+  (silver-and-salt-capital@odla.ai). Wrangler envs inherit no bindings, so
+  dev declares its own.
+- **Exactly-once**: real delivery makes webhook retries dangerous, so
+  emailLog gained `dedupeKey` (indexed) and `error` attrs (schema change).
+  sendTemplated checks for a prior successful row with the same dedupeKey
+  before delivering; failure rows record the transport error code and never
+  carry the dedupe mutationId, so a retry after failure can succeed and
+  still be logged.
+- **Send-on-action controls** (owner request): each template in
+  groups.emailTemplates now carries `enabled` (absent = enabled).
+  sendTemplated skips disabled templates; the admin test route forces past
+  the flag. Booking stamps prepEmailSentAt only when a send actually
+  happened, so re-enabling the prep email lets a later rebooking send it.
+- **Admin console** (/admin/ Email tab): Email Delivery card (read-only
+  transport + verified from address, editable notification/reply-to/debug
+  addresses), per-template "Send automatically" toggle and "Send me a test"
+  button (POST /api/admin/email/test, admin-gated, honest about
+  redirect/log-only), and a Recent Sends card (GET /api/admin/email/log,
+  newest 50, shows failures). GET/PUT /api/admin/group/email now carries
+  enabled flags plus envName/transport/fromEmail.
+- **Verified 2026-07-15 (local)**: 30-check behavioral harness over the
+  bundled email module (transport selection, redirect, no-debug fallback,
+  enabled/force, dedupe suppression and retry-after-failure, failure rows);
+  wrangler dev boots with the binding (simulated locally), db routes serve,
+  admin routes 401 unauthenticated; admin inline JS syntax-checked; brand
+  check errors are all pre-existing (index.html, brand-book.html, _archive).
+- **BLOCKED, needs the owner:** (1) `npx @odla-ai/cli provision --yes` to
+  push the additive emailLog schema (the permission gate declined the
+  agent's run; dry-run plan verified schema-only, rules untouched). Deploy
+  of the dev worker WAITS on this: the new dedupeKey query would 502
+  bookings against the old schema. (2) After provision + deploy, a browser
+  pass of the Email tab and one "Send me a test" per template; delivery
+  lands in cory.ondrejka+debug@gmail.com from the odla.ai address. (3) The
+  `clerk api` CLI session went stale ("Failed to resolve secret key (404)"),
+  so agent-side admin-JWT curls are unavailable until a fresh
+  `npx clerk login`.
+
 ## Booking capture (2026-07-11)
 
 Google's appointment widget is a sealed iframe: no callback ever reaches the
@@ -481,6 +538,10 @@ owner-managed.
   locally with no watcher errors, and GitHub Pages still serving unchanged.
   Next human obligations: approve entering P2 (database), sign in at
   https://odla.ai/studio, and approve a handshake code when the CLI asks.
+- **2026-07-15 (email):** Wired Cloudflare Email Service behind the existing
+  EmailSender seam (dev from-address on odla.ai per the owner), added
+  per-template send toggles, admin test sends, and the Recent Sends audit.
+  Awaiting owner: provision (schema push), then deploy + browser pass.
 - **2026-07-11 (P2):** Owner approved P2 and specified the three-state role
   model (provisional/member/admin, recorded above). Installed pinned
   @odla-ai/cli 0.8.0 + @odla-ai/db. `init` scaffolded config/schema/rules;

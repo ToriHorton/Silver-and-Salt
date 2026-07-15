@@ -18,8 +18,18 @@
     "ODLA_TENANT": "silver-and-salt-capital",
     "ODLA_PLATFORM": "https://odla.ai",
     "ODLA_APP_ID": "silver-and-salt-capital",
-    "ODLA_ENV": "prod"
+    "ODLA_ENV": "prod",
+    // Verified sender for Cloudflare Email Service. Phase 5 pre-requisite:
+    // onboard silverandsaltcapital.com to Email Service in the Cloudflare
+    // dashboard BEFORE the first prod deploy, or sends fail with
+    // E_SENDER_NOT_VERIFIED (they are audited in emailLog either way).
+    "EMAIL_FROM": "membership@silverandsaltcapital.com"
   },
+  // Cloudflare Email Service: lets the Worker send transactional email.
+  // The from address must be on a domain onboarded to Email Service in this
+  // account; src/email.ts falls back to log-only when the binding or
+  // EMAIL_FROM is absent.
+  "send_email": [{ "name": "SEND_EMAIL" }],
   "assets": {
     // Always the Phase 0 build dir (npm run build), never the repo root.
     "directory": "dist",
@@ -41,8 +51,15 @@
         "ODLA_TENANT": "silver-and-salt-capital--dev",
         "ODLA_PLATFORM": "https://odla.ai",
         "ODLA_APP_ID": "silver-and-salt-capital",
-        "ODLA_ENV": "dev"
+        "ODLA_ENV": "dev",
+        // Dev sends from the odla.ai domain (already onboarded to Email
+        // Service on this Cloudflare account) until the Phase 5 cutover
+        // onboards silverandsaltcapital.com. Dev deliveries are further
+        // redirected to the group's debug inbox by src/email.ts.
+        "EMAIL_FROM": "silver-and-salt-capital@odla.ai"
       },
+      // Environments inherit no bindings; dev declares its own.
+      "send_email": [{ "name": "SEND_EMAIL" }],
       "assets": {
         "directory": "dist",
         "binding": "ASSETS",

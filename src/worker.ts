@@ -9,7 +9,15 @@
 import { initAdmin, tx, uuidv7, OdlaError } from "@odla-ai/db";
 import { initCalendar, computeBookableSlots } from "@odla-ai/calendar";
 import { createRemoteJWKSet, jwtVerify } from "jose";
-import { sendTemplated, type GroupRow } from "./email";
+import {
+  sendTemplated,
+  resolveTransport,
+  EMAIL_TEMPLATE_NAMES,
+  type EmailTemplateName,
+  type EmailTransport,
+  type SendEmailBinding,
+  type GroupRow,
+} from "./email";
 
 interface Env {
   ASSETS: Fetcher;
@@ -19,6 +27,11 @@ interface Env {
   ODLA_APP_ID: string;
   ODLA_ENV: string;
   ODLA_API_KEY: string;
+  // Cloudflare Email Service (send_email in wrangler.jsonc). Optional: a
+  // deploy without the binding or the verified from address falls back to
+  // log-only sends (audited in emailLog, nothing delivered).
+  SEND_EMAIL?: SendEmailBinding;
+  EMAIL_FROM?: string;
 }
 
 // ── Auth (Phase 3) ─────────────────────────────────────────────────
@@ -481,6 +494,9 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     adminToken: env.ODLA_API_KEY,
     endpoint: env.ODLA_PLATFORM,
   });
+  // Cloudflare Email Service when wired, log-only otherwise; the seam means
+  // every send call reads the same either way.
+  const mailer: EmailTransport = resolveTransport(env.SEND_EMAIL, env.EMAIL_FROM);
 
   // Public: everything the join page needs to render its compliance and
   // payment steps. Copy comes from the group row, never code; paymentsReady
@@ -729,14 +745,18 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       );
 
       if (!app.prepEmailSentAt) {
-        await sendTemplated(db, env.ODLA_ENV, group, {
+        const prep = await sendTemplated(db, env.ODLA_ENV, mailer, group, {
           template: "prepEmail",
           to: app.email as string,
           vars: { firstName: app.firstName as string },
           applicationId,
           dedupeKey: `prep:${applicationId}`,
         });
-        await db.transact(tx.applications[applicationId].update({ prepEmailSentAt: Date.now() }));
+        // Stamp only real sends: if the admin disabled the prep email (or
+        // the transport failed), a later rebooking may still send one.
+        if (prep.sent) {
+          await db.transact(tx.applications[applicationId].update({ prepEmailSentAt: Date.now() }));
+        }
       }
 
       return json({ ok: true, startAt, endAt, meetUrl: meetUrl ?? null, rescheduled: Boolean(existing) });
@@ -830,14 +850,14 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
             adminUrl: `${url.origin}/admin/`,
             membersUrl: `${url.origin}/members/`,
           };
-          await sendTemplated(db, env.ODLA_ENV, group, {
+          await sendTemplated(db, env.ODLA_ENV, mailer, group, {
             template: "adminNotification",
             to: group.notificationEmail,
             vars,
             applicationId: app.id as string,
             dedupeKey: `${event.id}:admin`,
           });
-          await sendTemplated(db, env.ODLA_ENV, group, {
+          await sendTemplated(db, env.ODLA_ENV, mailer, group, {
             template: "paymentConfirmation",
             to: app.email as string,
             vars,
@@ -977,18 +997,87 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     if (req.method === "GET" && url.pathname === "/api/admin/group/email") {
       const group = await getGroup(db, DEFAULT_GROUP_ID);
       if (!group) return json({ error: "not found" }, 404);
+      // Absent `enabled` means enabled: rows predating the flag keep sending.
+      const emailTemplates: Record<string, { subject: string; text: string; enabled: boolean }> = {};
+      for (const key of EMAIL_TEMPLATE_NAMES) {
+        const t = group.emailTemplates?.[key];
+        if (t) emailTemplates[key] = { subject: t.subject, text: t.text, enabled: t.enabled !== false };
+      }
       return json({
         groupId: group.id,
         name: group.name,
         replyTo: group.replyTo,
         notificationEmail: group.notificationEmail,
         debugEmail: group.debugEmail ?? "",
-        emailTemplates: group.emailTemplates ?? {},
+        emailTemplates,
         commitmentText: group.commitmentText ?? "",
         normsText: group.normsText ?? "",
         // Read-only here (edited with the payment copy); included so the
         // payment confirmation preview can render its embedded policy.
         refundPolicyText: group.refundPolicyText ?? "",
+        // Delivery wiring (read-only: set per environment in wrangler.jsonc;
+        // the sender address must be on the onboarded Email Service domain).
+        envName: env.ODLA_ENV,
+        transport: mailer.name,
+        fromEmail: mailer.fromEmail ?? null,
+      });
+    }
+
+    // The send audit: every attempted send, delivered or logged or failed.
+    if (req.method === "GET" && url.pathname === "/api/admin/email/log") {
+      const { emailLog } = await db.query({
+        emailLog: { $: { order: { sentAt: "desc" }, limit: 50 } },
+      });
+      const rows = ((emailLog ?? []) as Array<Record<string, unknown>>).map((r) => ({
+        template: r.template,
+        to: r.to,
+        subject: r.subject,
+        transport: r.transport,
+        redirected: r.redirected === true,
+        error: (r.error as string) ?? null,
+        sentAt: r.sentAt,
+      }));
+      return json({ sends: rows });
+    }
+
+    // Owner-triggered test send: exercises the real transport end to end
+    // with sample data. Goes to the notification address (dev redirects to
+    // the debug inbox as always) and ignores the template's enabled flag,
+    // since the admin asked for it explicitly.
+    if (req.method === "POST" && url.pathname === "/api/admin/email/test") {
+      let body: Record<string, unknown>;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "invalid JSON body" }, 400);
+      }
+      const template = body.template as EmailTemplateName;
+      if (!EMAIL_TEMPLATE_NAMES.includes(template)) {
+        return json({ error: `template must be one of: ${EMAIL_TEMPLATE_NAMES.join(", ")}` }, 400);
+      }
+      const group = await getGroup(db, DEFAULT_GROUP_ID);
+      if (!group) return json({ error: "not found" }, 404);
+      const result = await sendTemplated(db, env.ODLA_ENV, mailer, group, {
+        template,
+        to: group.notificationEmail,
+        vars: {
+          firstName: "Martha",
+          lastName: "Cannon",
+          email: "martha@example.com",
+          phone: "(801) 555-0100",
+          state: "Utah",
+          adminUrl: `${url.origin}/admin/`,
+          membersUrl: `${url.origin}/members/`,
+        },
+        force: true,
+      });
+      return json({
+        ok: result.sent,
+        reason: result.reason ?? null,
+        transport: mailer.name,
+        to: group.notificationEmail,
+        redirected: env.ODLA_ENV !== "prod" && !!group.debugEmail,
+        debugEmail: group.debugEmail ?? null,
       });
     }
 
@@ -1000,18 +1089,15 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         return json({ error: "invalid JSON body" }, 400);
       }
 
-      const TEMPLATE_KEYS = [
-        "adminNotification",
-        "paymentConfirmation",
-        "prepEmail",
-        "onboardingInvite",
-      ] as const;
-      const templates = body.emailTemplates as Record<string, { subject?: unknown; text?: unknown }>;
+      const templates = body.emailTemplates as Record<
+        string,
+        { subject?: unknown; text?: unknown; enabled?: unknown }
+      >;
       if (!templates || typeof templates !== "object") {
         return json({ error: "emailTemplates object required" }, 400);
       }
-      const clean: Record<string, { subject: string; text: string }> = {};
-      for (const key of TEMPLATE_KEYS) {
+      const clean: Record<string, { subject: string; text: string; enabled: boolean }> = {};
+      for (const key of EMAIL_TEMPLATE_NAMES) {
         const t = templates[key];
         const subject = typeof t?.subject === "string" ? t.subject.trim() : "";
         const text = typeof t?.text === "string" ? t.text : "";
@@ -1024,7 +1110,8 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         if (text.length > 10_000) {
           return json({ error: `template "${key}" body is too long` }, 400);
         }
-        clean[key] = { subject, text };
+        // The action toggle: absent means enabled, matching pre-flag rows.
+        clean[key] = { subject, text, enabled: t?.enabled !== false };
       }
       const commitmentText = typeof body.commitmentText === "string" ? body.commitmentText : "";
       const normsText = typeof body.normsText === "string" ? body.normsText : "";
@@ -1320,7 +1407,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       let emailLogged = false;
       const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
       if (group) {
-        await sendTemplated(db, env.ODLA_ENV, group, {
+        const invite = await sendTemplated(db, env.ODLA_ENV, mailer, group, {
           template: "onboardingInvite",
           to: app.email as string,
           vars: {
@@ -1330,7 +1417,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
           applicationId: id,
           dedupeKey: `approve:${id}`,
         });
-        emailLogged = true;
+        emailLogged = invite.sent;
       }
 
       // Phase R hook: write the referral credit here.
