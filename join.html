@@ -1254,7 +1254,13 @@
     const dayKey = (ms, tz) => new Date(ms).toLocaleDateString('en-CA', { timeZone: tz });
     const dayLabel = (ms, tz) => new Date(ms).toLocaleDateString(undefined, { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
     const timeLabel = (ms, tz) => new Date(ms).toLocaleTimeString(undefined, { timeZone: tz, hour: 'numeric', minute: '2-digit' });
-    const fullLabel = (ms, tz) => new Date(ms).toLocaleString(undefined, { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    const fullLabel = (ms, tz) => new Date(ms).toLocaleString(undefined, { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+    const tzShort = (tz) => {
+      try {
+        return new Intl.DateTimeFormat(undefined, { timeZone: tz, timeZoneName: 'short' })
+          .formatToParts(new Date()).find(function(p) { return p.type === 'timeZoneName'; }).value;
+      } catch (e) { return tz; }
+    };
 
     async function loadSlots() {
       const status = document.getElementById('slots-status');
@@ -1273,7 +1279,7 @@
         slotState.slots = data.slots || [];
         slotState.timezone = data.timezone;
         document.getElementById('slot-tz-note').textContent =
-          data.timezone ? 'Times are shown in ' + data.timezone.replace('_', ' ').split('/').pop() + ' time.' : '';
+          data.timezone ? 'All times are shown in ' + tzShort(data.timezone) + ' (' + data.timezone.replace(/_/g, ' ') + ').' : '';
         slotState.byDay = new Map();
         for (const s of slotState.slots) {
           const k = dayKey(s.startAt, slotState.timezone);

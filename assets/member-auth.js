@@ -62,10 +62,14 @@
     return res.json();
   }
 
-  function fmtMeeting(ms) {
+  // Meeting times always carry an explicit timezone; when the group's
+  // scheduling zone is known it anchors the rendering, so every viewer
+  // reads the same labelled instant.
+  function fmtMeeting(ms, tz) {
     return new Date(ms).toLocaleString(undefined, {
+      ...(tz ? { timeZone: tz } : {}),
       weekday: 'long', month: 'long', day: 'numeric',
-      hour: 'numeric', minute: '2-digit',
+      hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
     });
   }
 

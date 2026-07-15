@@ -313,6 +313,33 @@
     #meetings-table td:first-child { white-space: nowrap; }
     .cell-sub { display: block; font-size: 12px; color: var(--sage); margin-top: 3px; }
 
+    /* ── Availability form ── */
+    .avail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px 24px;
+      margin-bottom: 6px;
+    }
+    .avail-grid select, .avail-grid input[type="number"] {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
+      color: var(--moss);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      width: 100%;
+    }
+    .avail-days { display: flex; flex-wrap: wrap; gap: 6px; }
+    .avail-day {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      color: var(--sage);
+      background: #fff; border: 1px solid var(--border); border-radius: 100px;
+      padding: 7px 12px; cursor: pointer;
+    }
+    .avail-day[aria-pressed="true"] { background: var(--lime); color: #fff; border-color: var(--lime); }
+
     /* Inline reschedule picker (compact twin of the join page picker). */
     .resched-cell { background: #f8fbf6; padding: 16px 12px; }
     .resched-days { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
@@ -440,6 +467,47 @@
 
       <div class="tab-panel hidden" id="tab-calls">
       <div class="card">
+        <div class="card-label">Availability</div>
+        <p class="empty-note" style="margin-bottom: 16px;">The times offered for introduction calls. Booked slots and everything already on the connected calendar stay unavailable automatically.</p>
+        <div class="avail-grid" id="avail-form">
+          <div class="tpl-block">
+            <label class="tpl-label">Days</label>
+            <div id="avail-days" class="avail-days"></div>
+          </div>
+          <div class="tpl-block">
+            <label class="tpl-label" for="avail-start">Between</label>
+            <select id="avail-start"></select>
+            <label class="tpl-label" for="avail-end" style="margin-top:8px;">and</label>
+            <select id="avail-end"></select>
+          </div>
+          <div class="tpl-block">
+            <label class="tpl-label" for="avail-slot">Call length</label>
+            <select id="avail-slot">
+              <option value="30">30 minutes</option>
+              <option value="45">45 minutes</option>
+              <option value="60">60 minutes</option>
+              <option value="90">90 minutes</option>
+            </select>
+            <label class="tpl-label" for="avail-tz" style="margin-top:8px;">Timezone</label>
+            <select id="avail-tz">
+              <option value="America/Los_Angeles">Pacific (Los Angeles)</option>
+              <option value="America/Denver">Mountain (Denver)</option>
+              <option value="America/Chicago">Central (Chicago)</option>
+              <option value="America/New_York">Eastern (New York)</option>
+            </select>
+          </div>
+          <div class="tpl-block">
+            <label class="tpl-label" for="avail-notice">Minimum notice (hours)</label>
+            <input type="number" id="avail-notice" min="0" max="336" />
+            <label class="tpl-label" for="avail-window" style="margin-top:8px;">Booking window (days)</label>
+            <input type="number" id="avail-window" min="1" max="62" />
+          </div>
+        </div>
+        <button class="row-save" id="avail-save" style="padding: 10px 22px;">Save availability</button>
+        <span class="empty-note hidden" id="avail-save-note" style="margin-left: 10px;"></span>
+      </div>
+
+      <div class="card">
         <div class="card-label">Introduction Calls</div>
         <div class="table-wrap">
           <table id="meetings-table">
@@ -475,7 +543,7 @@
 
   </div>
 
-  <script src="/assets/member-auth.js?v=1"></script>
+  <script src="/assets/member-auth.js?v=2"></script>
   <script>
     const { APPEARANCE, loadClerk, api, toLocalInputValue } = window.SSCAuth;
     const $ = (id) => document.getElementById(id);
@@ -528,7 +596,7 @@
         const initial = location.hash.replace('#', '');
         if (['people', 'calls', 'email'].includes(initial)) switchTab(initial);
 
-        await Promise.all([loadPeople(), loadBookings(), loadEmailSettings()]);
+        await Promise.all([loadPeople(), loadBookings(), loadEmailSettings(), loadAvailability()]);
       } catch (err) {
         $('auth-loading').textContent = 'The console is briefly unavailable. Please refresh.';
         console.error(err);
@@ -610,6 +678,100 @@
       } catch (e) { console.error(e); }
     }
 
+    // Times render in the group scheduling timezone with an explicit
+    // abbreviation, never the viewer's unlabeled local zone.
+    let groupTz = 'America/Los_Angeles';
+    const tzShort = (tz) => {
+      try {
+        return new Intl.DateTimeFormat(undefined, { timeZone: tz, timeZoneName: 'short' })
+          .formatToParts(new Date()).find(p => p.type === 'timeZoneName')?.value || tz;
+      } catch (e) { return tz; }
+    };
+    const fmtTzTime = (ms, tz) => new Date(ms).toLocaleString(undefined, {
+      timeZone: tz, weekday: 'short', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
+    });
+
+    const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    async function loadAvailability() {
+      try {
+        const { scheduling } = await api('/api/admin/group/scheduling');
+        groupTz = scheduling.timezone || groupTz;
+        const daysHost = $('avail-days');
+        daysHost.innerHTML = '';
+        for (let d = 0; d < 7; d++) {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'avail-day';
+          chip.textContent = DAY_NAMES[d];
+          chip.dataset.day = String(d);
+          chip.setAttribute('aria-pressed', String(scheduling.days.includes(d)));
+          chip.addEventListener('click', () => {
+            chip.setAttribute('aria-pressed', String(chip.getAttribute('aria-pressed') !== 'true'));
+          });
+          daysHost.appendChild(chip);
+        }
+        const hourLabel = (h) => {
+          const d = new Date(Date.UTC(2026, 0, 5, 0, 0));
+          d.setUTCHours(h);
+          return new Date(2026, 0, 5, h).toLocaleTimeString(undefined, { hour: 'numeric' });
+        };
+        for (const id of ['avail-start', 'avail-end']) {
+          const sel = $(id);
+          sel.innerHTML = '';
+          for (let h = 0; h <= 24; h++) {
+            if (id === 'avail-start' && h === 24) continue;
+            if (id === 'avail-end' && h === 0) continue;
+            const opt = document.createElement('option');
+            opt.value = String(h);
+            opt.textContent = h === 24 ? 'midnight' : hourLabel(h);
+            sel.appendChild(opt);
+          }
+        }
+        $('avail-start').value = String(scheduling.startHour);
+        $('avail-end').value = String(scheduling.endHour);
+        $('avail-slot').value = String(scheduling.slotMinutes);
+        $('avail-tz').value = scheduling.timezone;
+        $('avail-notice').value = scheduling.minNoticeHours;
+        $('avail-window').value = scheduling.windowDays;
+
+        $('avail-save').addEventListener('click', async () => {
+          const btn = $('avail-save');
+          const note = $('avail-save-note');
+          btn.disabled = true;
+          btn.textContent = 'Saving…';
+          note.classList.add('hidden');
+          try {
+            const days = [...document.querySelectorAll('.avail-day[aria-pressed="true"]')]
+              .map(c => Number(c.dataset.day));
+            await api('/api/admin/group/scheduling', {
+              method: 'PUT',
+              body: JSON.stringify({ scheduling: {
+                days,
+                startHour: Number($('avail-start').value),
+                endHour: Number($('avail-end').value),
+                slotMinutes: Number($('avail-slot').value),
+                timezone: $('avail-tz').value,
+                minNoticeHours: Number($('avail-notice').value),
+                windowDays: Number($('avail-window').value),
+              }}),
+            });
+            groupTz = $('avail-tz').value;
+            note.textContent = 'Saved. New bookings offer these times.';
+            note.classList.remove('hidden');
+          } catch (e) {
+            console.error(e);
+            note.textContent = 'Save failed: check the values.';
+            note.classList.remove('hidden');
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Save availability';
+          }
+        });
+      } catch (e) { console.error(e); }
+    }
+
     // Inline reschedule: expands a compact slot picker under the meeting
     // row; picking a time moves the Google event and updates our record.
     async function toggleReschedule(tr, m) {
@@ -649,7 +811,7 @@
         times.className = 'resched-times';
         const note = document.createElement('p');
         note.className = 'resched-note';
-        note.textContent = 'Pick a new time; the guest is notified by Google and the video link stays the same.';
+        note.textContent = 'Times shown in ' + tzShort(tz) + '. Pick a new time; the guest is notified by Google and the video link stays the same.';
         let activeDay = [...byDay.keys()][0];
 
         function renderRDays() {
@@ -672,17 +834,25 @@
             b.className = 'resched-time';
             b.textContent = new Date(s.startAt).toLocaleTimeString(undefined, { timeZone: tz, hour: 'numeric', minute: '2-digit' });
             b.addEventListener('click', async () => {
-              b.disabled = true;
+              // Optimistic: the row shows the new time immediately; a
+              // failure rolls it back and reopens the choice.
+              const whenCell = tr.querySelector('td');
+              const oldWhen = whenCell.textContent;
+              whenCell.textContent = fmtTzTime(s.startAt, tz);
+              row.remove();
               try {
                 await api('/api/admin/meetings/' + m.id + '/reschedule', {
                   method: 'POST',
                   body: JSON.stringify({ startAt: s.startAt }),
                 });
-                await Promise.all([loadBookings(), loadPeople()]);
+                m.startAt = s.startAt;
+                loadPeople();
               } catch (e) {
                 console.error(e);
-                note.textContent = 'That time could not be booked (it may have just been taken). Pick another.';
-                b.disabled = false;
+                whenCell.textContent = oldWhen;
+                toggleReschedule(tr, m);
+                const n = tr.nextElementSibling?.querySelector('.resched-note');
+                if (n) n.textContent = 'That time could not be booked (it may have just been taken). Pick another.';
               }
             });
             times.appendChild(b);
@@ -701,16 +871,15 @@
 
     async function loadBookings() {
       try {
-        const { meetings } = await api('/api/admin/meetings');
+        const { meetings, timezone } = await api('/api/admin/meetings');
+        if (timezone) groupTz = timezone;
         const tbody = document.querySelector('#meetings-table tbody');
         tbody.innerHTML = '';
         if (!meetings.length) {
           $('meetings-empty').classList.remove('hidden');
           return;
         }
-        const fmt = (ms) => new Date(ms).toLocaleString(undefined, {
-          weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
-        });
+        const fmt = (ms) => fmtTzTime(ms, groupTz);
         for (const m of meetings) {
           const tr = document.createElement('tr');
 

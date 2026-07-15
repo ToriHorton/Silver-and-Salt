@@ -889,6 +889,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         application = {
           ...applicationSummary(a),
           meetUrl: (meeting?.meetUrl as string) ?? null,
+          timezone: (meeting?.timezone as string) ?? SCHEDULING_DEFAULTS.timezone,
         };
         if (a.clerkUserId !== user.userId) {
           // Lazy link; mutationId makes retries exactly-once.
@@ -1071,7 +1072,60 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
               : null,
           };
         });
-      return json({ meetings: rows });
+      const meetingsGroup = await getGroup(db, DEFAULT_GROUP_ID);
+      const meetingsTz = meetingsGroup
+        ? schedulingConfig(meetingsGroup as GroupRow & { schedulingJson?: unknown }).timezone
+        : SCHEDULING_DEFAULTS.timezone;
+      return json({ meetings: rows, timezone: meetingsTz });
+    }
+
+    // Owner-editable availability rules for first-party booking.
+    if (req.method === "GET" && url.pathname === "/api/admin/group/scheduling") {
+      const group = await getGroup(db, DEFAULT_GROUP_ID);
+      if (!group) return json({ error: "not found" }, 404);
+      return json({ scheduling: schedulingConfig(group as GroupRow & { schedulingJson?: unknown }) });
+    }
+
+    if (req.method === "PUT" && url.pathname === "/api/admin/group/scheduling") {
+      let body: Record<string, unknown>;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "invalid JSON body" }, 400);
+      }
+      const s = (body.scheduling ?? {}) as Partial<SchedulingConfig>;
+      const days = Array.isArray(s.days) ? s.days.map(Number).filter((d) => d >= 0 && d <= 6) : [];
+      const startHour = Number(s.startHour);
+      const endHour = Number(s.endHour);
+      const slotMinutes = Number(s.slotMinutes);
+      const minNoticeHours = Number(s.minNoticeHours);
+      const windowDays = Number(s.windowDays);
+      const timezone = typeof s.timezone === "string" ? s.timezone : "";
+      if (!days.length) return json({ error: "pick at least one day" }, 400);
+      if (!(startHour >= 0 && endHour <= 24 && startHour < endHour)) {
+        return json({ error: "hours must satisfy 0 <= start < end <= 24" }, 400);
+      }
+      if (!(slotMinutes >= 15 && slotMinutes <= 240)) return json({ error: "slot length must be 15 to 240 minutes" }, 400);
+      if (!(minNoticeHours >= 0 && minNoticeHours <= 336)) return json({ error: "notice must be 0 to 336 hours" }, 400);
+      // FreeBusy windows are capped at 62 days by the provider.
+      if (!(windowDays >= 1 && windowDays <= 62)) return json({ error: "window must be 1 to 62 days" }, 400);
+      try {
+        new Intl.DateTimeFormat(undefined, { timeZone: timezone });
+      } catch {
+        return json({ error: "unknown timezone" }, 400);
+      }
+      const summaryTemplate =
+        typeof s.summaryTemplate === "string" && s.summaryTemplate.trim()
+          ? s.summaryTemplate.trim().slice(0, 200)
+          : SCHEDULING_DEFAULTS.summaryTemplate;
+
+      await db.transact(
+        tx.groups[DEFAULT_GROUP_ID].update({
+          schedulingJson: { slotMinutes, days, startHour, endHour, timezone, minNoticeHours, windowDays, summaryTemplate },
+        }),
+      );
+      groupCache = null;
+      return json({ ok: true });
     }
 
     // Reschedule an introduction call to one of the open slots: our record
