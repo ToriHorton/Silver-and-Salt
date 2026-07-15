@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-14",
+  generated: "2026-07-15",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -10,6 +10,15 @@ window.GRANOLA_INBOX = {
     { text: "Connect with Lindsay to set up the Comma Copywriters editing pilot", owner: "", context: "from Granola: Women win/win projects in Utah; newsletter editing pilot through end of 2026, roughly $200 to $300 per month, Lindsay is Comma's business development manager", source: "granola", date: "2026-07-13" },
     { text: "Schedule a hike with Crystalee Beck to talk money and membership", owner: "", context: "from Granola: Women win/win projects in Utah; Crystalee is in Salt Lake roughly once a month", source: "granola", date: "2026-07-13" },
     { text: "Make intros to Jeff Durham, Anne-Marie McDonald, and Juliana", owner: "Crystalee Beck", context: "from Granola: Women win/win projects in Utah; Jeff Durham is the priority (Utah e-commerce, knows women building product companies)", source: "delegated", date: "2026-07-13" },
-    { text: "Mark up the 55-item membership offerings brainstorm before Phase 2", owner: "", context: "from Claude work: Silver & Salt Capital membership offerings doc; strike what you'd never offer, star essentials, then productize with names", source: "claude", date: "2026-07-13" }
+    { text: "Mark up the 55-item membership offerings brainstorm before Phase 2", owner: "", context: "from Claude work: Silver & Salt Capital membership offerings doc; strike what you'd never offer, star essentials, then productize with names", source: "claude", date: "2026-07-13" },
+    { text: "Send Crystalee Beck the process for officially investing", owner: "", context: "from email: Crystalee Beck re Great to connect this morning; she asked for the official investing process and sent five intros", source: "email", date: "2026-07-14" },
+    { text: "Decide on High Five Grant for Moms sponsorship by Jul 24", owner: "", context: "from email: Crystalee Beck re High Five Grant invite; sponsor deck attached, levels start at $500, answer requested by Jul 24, announcement late July", source: "email", date: "2026-07-14" },
+    { text: "Reply to intro to Jeff Durham of Durham Brands", owner: "", context: "from email: Crystalee Beck re Intro: Jeff Durham, meet Tori at Silver & Salt Capital", source: "email", date: "2026-07-14" },
+    { text: "Reply to intro to Sharlene Wells", owner: "", context: "from email: Crystalee Beck re Intro: Sharlene Wells, meet Tori at Silver & Salt Capital; Sharlene is a Chief Public Affairs Officer", source: "email", date: "2026-07-14" },
+    { text: "Reply to intro to Emily Rushton of Hire Integrated", owner: "", context: "from email: Crystalee Beck re Intro: Emily Rushton, meet Tori at Silver & Salt Capital", source: "email", date: "2026-07-14" },
+    { text: "Reply to intro to Juliana", owner: "", context: "from email: Crystalee Beck re Introduction: Juliana, meet Tori at Silver & Salt Capital; Juliana is an investor with an eye for ROI", source: "email", date: "2026-07-14" },
+    { text: "Reply to intro to Anne Marie of AMMP Growth", owner: "", context: "from email: Crystalee Beck re Intro: Anne Marie, meet Tori at Silver & Salt Capital", source: "email", date: "2026-07-14" },
+    { text: "Review Crystalee Beck's membership application", owner: "", context: "from email: New Membership Application, Crystalee Beck, submitted via the join.html form (found us on LinkedIn)", source: "email", date: "2026-07-14" },
+    { text: "Confirm the old GitHub token shared in chat was deleted", owner: "", context: "from Claude work: dashboard publish setup Jul 14; the first token passed through chat and should be revoked on GitHub", source: "claude", date: "2026-07-14" }
   ]
 };
