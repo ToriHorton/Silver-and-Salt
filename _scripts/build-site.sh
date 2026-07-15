@@ -29,6 +29,17 @@ git ls-files -z -- . \
   ':!:PAYMENT-SPEC.md' \
   ':!:UI-COMPONENT-SPECS.md' \
   ':!:ADMIN-CALENDAR-SPEC.md' \
+  ':!:src' \
+  ':!:vite.config.mjs' \
+  ':!:wrangler.jsonc' \
+  ':!:odla.config.mjs' \
+  ':!:package.json' \
+  ':!:package-lock.json' \
   | rsync -a --files-from=- --from0 . dist/
+
+# App islands (admin console, member area, join booking step): Preact via
+# Vite, bundled into dist/assets/app/. Worker and island SOURCE is excluded
+# from the copy above; only bundles ship. Marketing pages never touch this.
+npx vite build --logLevel warn
 
 echo "Built dist/ with $(find dist -type f | wc -l | tr -d ' ') files."
