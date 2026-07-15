@@ -8,6 +8,7 @@ import { api } from "../lib.js";
 import { PeopleTab } from "./people.jsx";
 import { BillingTab } from "./billing.jsx";
 import { CallsTab } from "./calls.jsx";
+import { CalendarTab } from "./calendar.jsx";
 import { AvailabilityTab } from "./availability.jsx";
 import { EmailTab } from "./email.jsx";
 
@@ -15,10 +16,11 @@ import { EmailTab } from "./email.jsx";
 // emails arrive as ?tab=<name> (mail-client link rewriting drops #fragments
 // more often than queries); the hash form also works. Switching tabs
 // canonicalizes back to the hash.
-const TAB_NAMES = ["people", "billing", "calls", "settings", "email"];
+const TAB_NAMES = ["people", "billing", "calendar", "calls", "settings", "email"];
 const TAB_LABELS = {
   people: "People",
   billing: "Billing",
+  calendar: "Calendar",
   calls: "Introduction Calls",
   settings: "Call Settings",
   email: "Email Settings",
@@ -26,13 +28,17 @@ const TAB_LABELS = {
 
 function initialTab() {
   const fromUrl = new URLSearchParams(location.search).get("tab") || location.hash.replace("#", "");
-  return TAB_NAMES.includes(fromUrl) ? fromUrl : "people";
+  // The calendar tab deep-links its subview: #calendar/month/2026-08.
+  const name = fromUrl.split("/")[0];
+  return TAB_NAMES.includes(name) ? name : "people";
 }
 
 function AdminApp({ me }) {
   const [tab, setTab] = useState(initialTab);
 
   useEffect(() => {
+    // CalendarTab owns the hash while active (it carries view + period).
+    if (tab === "calendar") return;
     history.replaceState(null, "", location.pathname + "#" + tab);
   }, [tab]);
 
@@ -69,6 +75,7 @@ function AdminApp({ me }) {
             loads once at sign-in, matching the old parallel boot. */}
         <div class="tabs-panel tab-panel" hidden={tab !== "people"}><PeopleTab myUserId={me.userId} /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "billing"}><BillingTab /></div>
+        <div class="tabs-panel tab-panel" hidden={tab !== "calendar"}><CalendarTab active={tab === "calendar"} /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "calls"}><CallsTab /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "settings"}><AvailabilityTab /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "email"}><EmailTab /></div>

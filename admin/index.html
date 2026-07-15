@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/odla-ui/tabs.css?v=1">
+  <link rel="stylesheet" href="/assets/odla-ui/calendar.css?v=1">
   <style>
     /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
        always render in Cormorant Infant wherever Cormorant Garamond is
@@ -151,21 +152,33 @@
       overflow: visible;
     }
 
-    /* ── Tabs: @odla-ai/ui tabs component, tokens mapped to the brand ── */
+    /* ── @odla-ai/ui components (tabs, calendar): tokens mapped to the brand ── */
     :root {
       --ui-space-1: 4px;
+      --ui-space-2: 8px;
+      --ui-space-3: 12px;
       --ui-space-4: 16px;
       --ui-border: var(--border);
+      --ui-border-strong: #b9cdb4;
       --ui-text: var(--moss);
+      --ui-text-lg: 16px;
       --ui-text-md: 14px;
+      --ui-text-sm: 13px;
+      --ui-text-xs: 11px;
       --ui-text-muted: var(--sage);
+      --ui-text-faint: #9aa79e;
+      --ui-tracking-caps: 0.08em;
       --ui-focus: 0 0 0 3px var(--lime-soft);
       --ui-radius-sm: 4px;
+      --ui-radius-md: 8px;
       --ui-radius-lg: 12px;
       --ui-radius-pill: 100px;
       --ui-accent: var(--lime);
       --ui-accent-strong: var(--lime-dark);
       --ui-accent-soft: var(--lime-soft);
+      --ui-on-accent: #ffffff;
+      --ui-danger: #a4442c;
+      --ui-shadow: 0 8px 24px rgba(47, 62, 52, 0.12);
       --ui-surface: #ffffff;
       --ui-surface-2: #f4faf2;
     }
@@ -467,6 +480,63 @@
       margin: 0;
     }
     .tpl-test-note { font-size: 12px; color: var(--sage); }
+
+    /* ── Calendar tab (view switcher, by-user sections, detail panel) ── */
+    .cal-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .cal-month-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--moss);
+      margin-left: 10px;
+      align-self: center;
+    }
+    .cal-person-section { margin-top: 18px; }
+    .cal-person-head {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--moss);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cal-person-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      color: var(--moss);
+      text-align: left;
+      padding: 10px 2px;
+      cursor: pointer;
+    }
+    .cal-person-row:hover { background: var(--lime-soft); }
+    .cal-row-past { color: var(--sage); }
+    .cal-detail {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 18px;
+      background: #fbfaf5;
+    }
+    .cal-detail-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .cal-detail-when { font-size: 15px; font-weight: 500; color: var(--moss); margin-top: 8px; }
     .send-status { font-size: 12px; }
     .send-status.ok { color: var(--lime-dark, #5a7d3f); }
     .send-status.fail { color: #a4442c; }
