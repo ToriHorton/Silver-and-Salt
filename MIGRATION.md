@@ -534,6 +534,40 @@ copy-through path.
   owner's browser): admin tab click-through, members sign-in views, and a
   join-flow booking end to end.
 
+## Admin Calendar tab and branded 404 (2026-07-15)
+
+- **Calendar tab** (ADMIN-CALENDAR-SPEC.md, owner-requested 2026-07-14):
+  sixth admin tab with three views: By user (sections per applicant,
+  upcoming first, person filter), Agenda (@odla-ai/ui CalendarAgenda,
+  upcoming only), and Month (@odla-ai/ui CalendarMonth, prev/today/next
+  navigation, count-capped day chips). The Preact conversion made the ui
+  React components directly consumable, so the spec's zero-build
+  constraint (and its buildless fallback options) are obsolete. Clicking
+  a meeting anywhere opens a detail panel with drift badge, Meet and
+  Google Calendar links, and working Reschedule (shared SlotPicker) and
+  Cancel actions. Deep links: #calendar/<view>[/<YYYY-MM>|/<person>];
+  the tab owns the hash while active. calendar.css is vendored at
+  assets/odla-ui/calendar.css (same contract as tabs.css) and the admin
+  page's --ui-* token map gained the missing tokens. Worker:
+  GET /api/admin/meetings now accepts ?all=1 (full history, cap 500) and
+  ?from=&to= (epoch ms window); the default stays upcoming-50 for the
+  Introduction Calls table.
+- **Branded 404** (404.html at repo root, git-tracked): serves on both
+  hosts' conventions (Cloudflare assets not_found_handling "404-page";
+  GitHub Pages picks it up at cutover, closing P1 known difference 3).
+  Cloudflare caveat, verified live: the branded body serves for browser
+  NAVIGATIONS (Sec-Fetch-Mode: navigate skips the worker on 2025-04+
+  compatibility dates); programmatic fetches through the worker fall
+  through to an empty-body 404, which is correct for API-ish requests.
+- **Verified 2026-07-15**: 13-check render suite now covers CalendarTab
+  pills/loading plus CalendarMonth/CalendarAgenda under preact/compat
+  with DST-week fixtures (US fall-back, day placement by data-date);
+  deployed dev serves calendar.css, the branded 404 on navigation, and
+  all three meetings query modes (default 50, all=1, empty window) under
+  an admin JWT. Owner browser pass pending: click through the three
+  views, reschedule + cancel from the detail panel, and the month grid
+  on a phone width.
+
 ## Booking capture (2026-07-11)
 
 Google's appointment widget is a sealed iframe: no callback ever reaches the
@@ -619,6 +653,12 @@ owner-managed.
   locally with no watcher errors, and GitHub Pages still serving unchanged.
   Next human obligations: approve entering P2 (database), sign in at
   https://odla.ai/studio, and approve a handshake code when the CLI asks.
+- **2026-07-15 (calendar tab + 404):** Built the ADMIN-CALENDAR-SPEC.md
+  Calendar tab on the new Preact build using @odla-ai/ui
+  CalendarMonth/CalendarAgenda (first real consumption of the ui React
+  components in this stack), extended /api/admin/meetings with range
+  params, and added the branded 404 page. Deployed to dev; owner browser
+  pass pending.
 - **2026-07-15 (Preact conversion):** Owner directed the app pages onto a
   scoped Vite + Preact build (marketing pages untouched). Admin console,
   member area, and the join slot picker are now Preact islands with

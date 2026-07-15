@@ -1236,9 +1236,12 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     // Introduction calls from OUR canonical meetings entity, with drift
     // flags refreshed against live Google state. Data stays ours; Google
     // disagreement is flagged for the admin to resolve, never adopted.
+    // Default: upcoming only, capped at 50 (the Introduction Calls table).
+    // The Calendar tab passes ?all=1 for full history, or ?from=&to= (epoch
+    // ms) for a window like the displayed month.
     if (req.method === "GET" && url.pathname === "/api/admin/meetings") {
       const [meetingsRes, appsRes] = await Promise.all([
-        db.query({ meetings: { $: { order: { startAt: "desc" }, limit: 200 } } }),
+        db.query({ meetings: { $: { order: { startAt: "desc" }, limit: 500 } } }),
         db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 200 } } }),
       ]);
       const meetings = (meetingsRes.meetings ?? []) as Array<Record<string, unknown>>;
@@ -1247,11 +1250,21 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       const appById = new Map(
         ((appsRes.applications ?? []) as Array<Record<string, unknown>>).map((a) => [a.id, a]),
       );
+      const all = url.searchParams.get("all") === "1";
+      const from = Number(url.searchParams.get("from"));
+      const to = Number(url.searchParams.get("to"));
+      const ranged = Number.isFinite(from) && Number.isFinite(to) && from < to && url.searchParams.has("from");
       const cutoff = Date.now() - 3_600_000;
+      const inWindow = (m: Record<string, unknown>) => {
+        const startAt = m.startAt as number;
+        if (ranged) return startAt >= from && startAt < to;
+        if (all) return true;
+        return startAt >= cutoff || m.drift === "gone_from_google";
+      };
       const rows = meetings
-        .filter((m) => (m.startAt as number) >= cutoff || m.drift === "gone_from_google")
+        .filter(inWindow)
         .sort((x, y) => (x.startAt as number) - (y.startAt as number))
-        .slice(0, 50)
+        .slice(0, all || ranged ? 500 : 50)
         .map((m) => {
           const a = appById.get(m.applicationId);
           return {
