@@ -7,7 +7,6 @@ import { useState, useEffect } from "preact/hooks";
 import { api } from "../lib.js";
 import { PeopleTab } from "./people.jsx";
 import { BillingTab } from "./billing.jsx";
-import { CallsTab } from "./calls.jsx";
 import { CalendarTab } from "./calendar.jsx";
 import { AvailabilityTab } from "./availability.jsx";
 import { EmailTab } from "./email.jsx";
@@ -16,12 +15,11 @@ import { EmailTab } from "./email.jsx";
 // emails arrive as ?tab=<name> (mail-client link rewriting drops #fragments
 // more often than queries); the hash form also works. Switching tabs
 // canonicalizes back to the hash.
-const TAB_NAMES = ["people", "billing", "calendar", "calls", "settings", "email"];
+const TAB_NAMES = ["people", "billing", "calendar", "settings", "email"];
 const TAB_LABELS = {
   people: "People",
   billing: "Billing",
   calendar: "Calendar",
-  calls: "Introduction Calls",
   settings: "Call Settings",
   email: "Email Settings",
 };
@@ -30,6 +28,9 @@ function initialTab() {
   const fromUrl = new URLSearchParams(location.search).get("tab") || location.hash.replace("#", "");
   // The calendar tab deep-links its subview: #calendar/month/2026-08.
   const name = fromUrl.split("/")[0];
+  // The Introduction Calls tab folded into Calendar (2026-07-15); old
+  // bookmarks land on the agenda and the hash canonicalizes itself.
+  if (name === "calls") return "calendar";
   return TAB_NAMES.includes(name) ? name : "people";
 }
 
@@ -76,7 +77,6 @@ function AdminApp({ me }) {
         <div class="tabs-panel tab-panel" hidden={tab !== "people"}><PeopleTab myUserId={me.userId} /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "billing"}><BillingTab /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "calendar"}><CalendarTab active={tab === "calendar"} /></div>
-        <div class="tabs-panel tab-panel" hidden={tab !== "calls"}><CallsTab /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "settings"}><AvailabilityTab /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "email"}><EmailTab /></div>
       </div>

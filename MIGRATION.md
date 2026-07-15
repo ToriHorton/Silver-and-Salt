@@ -465,8 +465,9 @@ Owner feedback after the email round: deep links into the tabbed admin page
 need a query or anchor, and the admin needs a billing dashboard. Both done
 and verified on the deployed dev worker.
 
-- **Tab deep links**: /admin/ now accepts `?tab=<people|billing|calls|
-  settings|email>` as well as the `#hash` form (mail clients rewrite links
+- **Tab deep links**: /admin/ now accepts `?tab=<people|billing|calendar|
+  settings|email>` (calls aliases to calendar since the 2026-07-15
+  consolidation) as well as the `#hash` form (mail clients rewrite links
   and drop fragments more often than queries, so emails use the query
   form). Switching tabs canonicalizes the URL back to the hash. The
   sign-in mount's fallbackRedirectUrl preserves path + query + hash, so
@@ -587,7 +588,9 @@ components alongside). Adopted:
   behavior loss).
 - **Introduction Calls stays hand-rolled** deliberately: its inline
   reschedule expansion row has no slot in DataTable v1 (noted for the ui
-  team as follow-up feedback).
+  team as follow-up feedback). SUPERSEDED later on 2026-07-15: the tab
+  itself was retired into the Calendar tab (see the consolidation
+  section above), which removes the last hand-rolled table.
 - CSS: table.css + data-table.css vendored (tabs.css re-vendored: 0.6.0
   switched to child selectors and added a .tabs-trailing slot; calendar
   css unchanged). Tokens gained --ui-good and --ui-space-6, and a scoped
@@ -600,6 +603,40 @@ components alongside). Adopted:
   hiding, empty-state slot); deployed dev serves the new CSS and both
   APIs return row ids. Owner browser pass: sort and filter each table,
   then confirm an in-flight edit survives a sort.
+
+## Introduction Calls folded into Calendar (2026-07-15, owner-directed)
+
+The owner flagged the Introduction Calls and Calendar tabs as duplicative
+(same meetings, same Reschedule/Cancel against the same endpoints).
+Calendar was the superset, so the Introduction Calls tab is retired:
+
+- **Needs attention strip** in the Calendar tab, above all three views:
+  every out-of-sync meeting (drift time_changed or gone_from_google,
+  not cancelled), past or future, with the applicant, our time, and the
+  drift badge; clicking opens the existing detail panel. This preserves
+  the old table's drift-at-a-glance duty and the flagged-never-adopted
+  doctrine. The "updated from Google" adoption note moved into
+  DriftBadge, so the detail panel and by-user rows both show it.
+- **Back-compat**: #calls and ?tab=calls alias to the Calendar tab and
+  the URL canonicalizes to #calendar/agenda. No email ever linked
+  tab=calls (the worker emits only ?tab=people).
+- **Deliberate drops**: the per-row Meet link (one click away in the
+  detail panel) and the optimistic-reschedule-with-rollback flow
+  (Calendar's confirm-then-reload is live-verified and simpler).
+- **Deleted**: src/app/admin/calls.jsx, its tab button/panel, and the
+  orphaned #meetings-table CSS. The resched-* styles stay (the detail
+  panel's picker uses them). GET /api/admin/meetings is unchanged; the
+  console now always calls it with ?all=1.
+- This also retires the console's last hand-rolled table, closing the
+  local "DataTable needs a row-expansion slot" gap without waiting on
+  the ui team.
+- **Verified 2026-07-15**: render suite (15 checks) covers the strip
+  (moved + removed flagged with Google's time, clean and cancelled rows
+  excluded, empty strip renders nothing); build has zero
+  meetings-table/CallsTab references; deployed dev serves the console.
+  Owner browser pass: #calls lands on the agenda, drag/delete an event
+  in Google Calendar and watch the strip, then Reschedule/Cancel from
+  the detail panel.
 
 ## Booking capture (2026-07-11)
 
@@ -686,6 +723,10 @@ owner-managed.
   locally with no watcher errors, and GitHub Pages still serving unchanged.
   Next human obligations: approve entering P2 (database), sign in at
   https://odla.ai/studio, and approve a handshake code when the CLI asks.
+- **2026-07-15 (calls/calendar consolidation):** Owner flagged the
+  Introduction Calls and Calendar tabs as duplicative; folded the former
+  into the latter with a Needs attention drift strip, a #calls alias, and
+  the last hand-rolled table retired. Deployed to dev.
 - **2026-07-15 (DataTable):** Updated to @odla-ai/ui 0.6.0 and adopted
   the requested DataTable across People, Billing, and Recent Sends
   (sortable, filterable, state slots; live cell controls preserved).

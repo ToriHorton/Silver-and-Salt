@@ -1239,9 +1239,9 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     // Introduction calls from OUR canonical meetings entity, with drift
     // flags refreshed against live Google state. Data stays ours; Google
     // disagreement is flagged for the admin to resolve, never adopted.
-    // Default: upcoming only, capped at 50 (the Introduction Calls table).
-    // The Calendar tab passes ?all=1 for full history, or ?from=&to= (epoch
-    // ms) for a window like the displayed month.
+    // The console's Calendar tab always passes ?all=1 (full history, cap
+    // 500); ?from=&to= (epoch ms) selects a window. The bare default
+    // (upcoming, cap 50) is kept for compatibility and curl checks.
     if (req.method === "GET" && url.pathname === "/api/admin/meetings") {
       const [meetingsRes, appsRes] = await Promise.all([
         db.query({ meetings: { $: { order: { startAt: "desc" }, limit: 500 } } }),
