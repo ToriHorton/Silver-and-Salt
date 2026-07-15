@@ -67,7 +67,10 @@ Existing routes suffice for v1:
 - By-user view: one section per applicant with upcoming first; empty
   states styled (`.empty-note`).
 - Agenda view: day-grouped rows matching the Introduction Calls table's
-  two-line row style.
+  two-line row style. [2026-07-15: the Introduction Calls table was
+  retired when its tab folded into this Calendar tab; the agenda's rows
+  are now the canonical style and a "Needs attention" strip carries the
+  table's drift-at-a-glance duty.]
 - No horizontal scrolling at 960px container or on a 390px phone.
 - All actions round-trip against the dev worker
   (silver-and-salt-capital-dev.cory-ondrejka.workers.dev) with an admin

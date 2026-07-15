@@ -45,7 +45,39 @@ function DriftBadge({ m, tz }) {
     );
   }
   if (m.drift === "gone_from_google") return <span class="pay-badge refunded">Removed in Google</span>;
-  return <span class="pay-badge paid">In sync</span>;
+  return (
+    <>
+      <span class="pay-badge paid">In sync</span>
+      {m.adoptedFromGoogleAt && Date.now() - m.adoptedFromGoogleAt < 7 * 86400000 ? (
+        <span class="cell-sub">updated from Google {new Date(m.adoptedFromGoogleAt).toLocaleDateString()}</span>
+      ) : null}
+    </>
+  );
+}
+
+// Drift stays loud without a click (the flagged-never-adopted doctrine):
+// every out-of-sync meeting, past or future, listed above the views.
+// Exported for the render suite.
+export function NeedsAttention({ meetings, tz, onSelect }) {
+  const flagged = meetings
+    .filter((m) => m.drift && m.drift !== "none" && m.status !== "cancelled")
+    .sort((a, b) => a.startAt - b.startAt);
+  if (!flagged.length) return null;
+  return (
+    <div class="cal-attention">
+      <div class="cal-attention-head">Needs attention</div>
+      {flagged.map((m) => (
+        <button type="button" class="cal-person-row" key={m.id} onClick={() => onSelect(m)}>
+          <span>
+            {m.applicant ? m.applicant.name : "(unknown)"}
+            {m.applicant && <span class="cell-sub">{m.applicant.email}</span>}
+          </span>
+          <span>{fmtTzTime(m.startAt, tz)}</span>
+          <span><DriftBadge m={m} tz={tz} /></span>
+        </button>
+      ))}
+    </div>
+  );
 }
 
 // Detail and actions for one selected meeting; mirrors the Introduction
@@ -280,6 +312,7 @@ export function CalendarTab({ active }) {
         <div class="loading-note"><span class="spinner"></span> Loading the schedule…</div>
       ) : (
         <>
+          <NeedsAttention meetings={meetings} tz={tz} onSelect={(m) => setSelected(m.id)} />
           {view === "month" && (
             <CalendarMonth
               events={events}
@@ -293,7 +326,7 @@ export function CalendarTab({ active }) {
             <CalendarAgenda
               events={upcomingEvents}
               timezone={tz}
-              emptyLabel="No upcoming introduction calls. Booked times appear here."
+              emptyLabel="No upcoming introduction calls. Booked times appear here; this database is the source of truth, and Google Calendar changes are flagged above instead of adopted."
               onEventClick={onSelect}
             />
           )}

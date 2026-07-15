@@ -353,10 +353,6 @@
     .pay-badge.unpaid { color: var(--sage); background: #eef2ec; border: 1px solid #dde5da; }
     .pay-renewal { font-size: 12px; color: var(--sage); margin-left: 6px; }
 
-    /* Meetings table wraps instead of scrolling; only the time stays on
-       one line. Sub-lines carry the quieter detail. */
-    #meetings-table td { white-space: normal; }
-    #meetings-table td:first-child { white-space: nowrap; }
     .cell-sub { display: block; font-size: 12px; color: var(--sage); margin-top: 3px; }
 
     /* ── Availability form ── */
@@ -530,6 +526,26 @@
       margin-left: 10px;
       align-self: center;
     }
+    /* Out-of-sync meetings, loud in every view (flagged, never adopted). */
+    .cal-attention {
+      border-left: 3px solid #a4442c;
+      background: #fbf0ec;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+    }
+    .cal-attention-head {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a4442c;
+      margin-bottom: 4px;
+    }
+    .cal-attention .cal-person-row { border-bottom-color: #ecd9d2; }
+    .cal-attention .cal-person-row:last-child { border-bottom: none; }
+    .cal-attention .cal-person-row:hover { background: rgba(164, 68, 44, 0.06); }
+
     .cal-person-section { margin-top: 18px; }
     .cal-person-head {
       font-size: 13px;
