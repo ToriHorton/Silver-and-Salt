@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-15",
+  generated: "2026-07-16",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -19,6 +19,17 @@ window.GRANOLA_INBOX = {
     { text: "Reply to intro to Juliana", owner: "", context: "from email: Crystalee Beck re Introduction: Juliana, meet Tori at Silver & Salt Capital; Juliana is an investor with an eye for ROI", source: "email", date: "2026-07-14" },
     { text: "Reply to intro to Anne Marie of AMMP Growth", owner: "", context: "from email: Crystalee Beck re Intro: Anne Marie, meet Tori at Silver & Salt Capital", source: "email", date: "2026-07-14" },
     { text: "Review Crystalee Beck's membership application", owner: "", context: "from email: New Membership Application, Crystalee Beck, submitted via the join.html form (found us on LinkedIn)", source: "email", date: "2026-07-14" },
-    { text: "Confirm the old GitHub token shared in chat was deleted", owner: "", context: "from Claude work: dashboard publish setup Jul 14; the first token passed through chat and should be revoked on GitHub", source: "claude", date: "2026-07-14" }
+    { text: "Confirm the old GitHub token shared in chat was deleted", owner: "", context: "from Claude work: dashboard publish setup Jul 14; the first token passed through chat and should be revoked on GitHub", source: "claude", date: "2026-07-14" },
+    { text: "Confirm Climate First Bank call time with Dario for Thursday or Friday", owner: "", context: "from email: Dario Miguel re Climate First Bank account opening; Tori offered Thu 11am or 1pm, or Fri 10am or 12 noon PT, waiting on his confirmation", source: "email", date: "2026-07-15" },
+    { text: "Send Heather Griffith Barber next steps for her $10,000 commitment", owner: "", context: "from email: Heather Griffith Barber re Crystalee's intro; she replied she is in for 10000, Tori welcomed her and next step is the official investing process", source: "email", date: "2026-07-15" },
+    { text: "Schedule intro call with Erynn Kerrigan of XL PR", owner: "", context: "from email: Crystalee Beck intro re Erynn Kerrigan at XL PR; Tori replied Jul 15, call not yet scheduled", source: "email", date: "2026-07-15" },
+    { text: "Schedule intro call with Becky Edwards", owner: "", context: "from email: Crystalee Beck intro re Becky Edwards, former elected official; Tori replied Jul 15, call not yet scheduled", source: "email", date: "2026-07-15" },
+    { text: "Schedule intro call with Sabrina Morales of Linguistica", owner: "", context: "from email: Crystalee Beck intro re Sabrina at Linguistica; Tori proposed an intro call in her reply", source: "email", date: "2026-07-15" },
+    { text: "Schedule intro call with Kristy Pack of Pack Tax", owner: "", context: "from email: Crystalee Beck intro re Kristy Pack, owner of Pack Tax; Tori replied Jul 15, call not yet scheduled", source: "email", date: "2026-07-15" },
+    { text: "Schedule intro call with Morgan Lemaitre of Park City Wealth Advisors", owner: "", context: "from email: Crystalee Beck intro re Morgan at Park City Wealth Advisors; Tori replied Jul 15, call not yet scheduled", source: "email", date: "2026-07-15" },
+    { text: "Schedule intro call with Allyse Jackson of Beehive Meals", owner: "", context: "from email: Crystalee Beck intro re Allyse at Beehive Meals; Tori replied Jul 15, call not yet scheduled", source: "email", date: "2026-07-15" },
+    { text: "Circle back with Tracey Lam in early August on the user journey trial", owner: "", context: "from email: Tracey Lam re Checking In; she asked to wait a few weeks after a death in the family, Tori agreed on Jul 15", source: "email", date: "2026-07-15" },
+    { text: "Revoke the two GitHub tokens emailed in plaintext and delete those emails", owner: "", context: "from email: horton.tori@gmail.com re sending and trying again; two personal access tokens were sent in plaintext between accounts on Jul 15", source: "email", date: "2026-07-15" },
+    { text: "Decide on SCWN founding membership before the Sep 30 dues increase", owner: "", context: "from email: Kristin Keller re Santa Cruz Women's Network launch follow up; founding dues $100 until Sep 30 then $200, next meetup Aug 13 at Cantine", source: "email", date: "2026-07-15" }
   ]
 };
