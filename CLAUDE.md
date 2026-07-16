@@ -2,6 +2,7 @@
 
 ## Workflow Rules
 - **Never use git worktrees.** Always work directly on the main branch or create standard branches. Worktrees cause confusion and lost work.
+- **Task management:** Before capturing, moving, updating, completing, deleting, or assigning any action item (or changing the Actions code in `dashboard.html`), read `TASK-MANAGEMENT.md` (local-only, git-ignored) and follow its Core Principles and Scenario Playbook.
 
 ---
 
@@ -39,7 +40,8 @@ root; the runbook is `.agents/skills/odla-migrate/SKILL.md`. Read
 ### Pages
 - `index.html` — Homepage
 - `join.html` — ✅ LIVE: Two-step investor application (form → calendar booking)
-- `dashboard.html` — CEO command center
+- `dashboard.html` — CEO command center (gitignored; published daily as an unlinked, noindexed copy at the obscure URL `hq-25b5a94e297e.html` with `granola-inbox.js` + `newsletter-data.js`, per Tori's 2026-07-14 decision, pending password protection; never link that URL from any public page)
+  - **Canonical version (Tori, 2026-07-14): the single-page `dashboard.html` on the MacBook Pro.** The split pages on the other computer (`dashboard-actions.html`, `dashboard-newsletter.html`, `dashboard.css`, `dashboard-app.js`) are deprecated; do not build on them.
 - `manifesto.html`, `opportunity.html`, `networks.html` etc. — Supporting pages
 
 ### join.html — Application Flow
