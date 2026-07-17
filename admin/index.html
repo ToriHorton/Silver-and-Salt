@@ -673,6 +673,57 @@
     .rec-log-row:last-child { border-bottom: 0; }
     .rec-log-subj { display: block; font-weight: 600; color: var(--moss); font-size: 14px; }
     .rec-log-meta { display: block; font-size: 12px; color: var(--sage); margin-top: 2px; }
+
+    /* ── @odla-ai/crm UI: the package ships crm-* wrapper classes with NO CSS,
+       so style its form controls + components to the brand. Form elements are
+       targeted by tag inside the wrappers (robust regardless of odla-ui's own
+       classes); primary action buttons get the lime treatment. ── */
+    .crm-activity-composer, .crm-fields-form { display: flex; flex-direction: column; gap: 10px; }
+    .crm-activity-composer input, .crm-activity-composer textarea,
+    .crm-fields-form input, .crm-fields-form textarea, .crm-fields-form select,
+    .crm-stage-control select {
+      width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px;
+      font: inherit; font-size: 14px; color: var(--moss); background: #fff;
+    }
+    .crm-activity-composer textarea, .crm-fields-form textarea { resize: vertical; min-height: 80px; }
+    .crm-activity-composer input:focus, .crm-activity-composer textarea:focus,
+    .crm-fields-form input:focus, .crm-fields-form textarea:focus, .crm-fields-form select:focus,
+    .crm-stage-control select:focus, .crm-tag-editor input:focus {
+      outline: none; border-color: var(--lime); box-shadow: var(--ui-focus);
+    }
+    .crm-activity-task-row { display: flex; gap: 10px; }
+    .crm-activity-task-row > * { flex: 1; margin: 0; }
+    /* primary action buttons: Add / Save profile / Move (brand lime) */
+    .crm-activity-composer > button, .crm-activity-composer > .btn,
+    .crm-fields-form > button, .crm-fields-form > .btn,
+    .crm-stage-control button, .crm-stage-control .btn {
+      align-self: flex-start; border: 0; border-radius: 100px; background: var(--lime);
+      color: #fff; font: inherit; font-size: 13px; font-weight: 700; padding: 9px 20px; cursor: pointer;
+    }
+    .crm-activity-composer > button:hover, .crm-fields-form > button:hover, .crm-stage-control button:hover { background: var(--lime-dark); }
+    .crm-activity-composer > button:disabled, .crm-fields-form > button:disabled, .crm-stage-control button:disabled { opacity: 0.5; cursor: default; }
+    /* activity feed list */
+    .crm-activity-list { list-style: none; margin: 18px 0 0; padding: 0; }
+    .crm-activity-list > li { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .crm-activity-list > li:last-child { border-bottom: 0; }
+    .crm-activity-meta { display: block; font-size: 12px; color: var(--sage); margin-top: 2px; }
+    /* stage control */
+    .crm-stage-control { align-items: flex-start; }
+    .crm-stage-current { font-size: 15px; font-weight: 600; color: var(--moss); }
+    .crm-stage-row { display: flex; gap: 10px; align-items: center; width: 100%; }
+    .crm-stage-row select { flex: 1; }
+    /* tags */
+    .crm-tag-editor { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .crm-tag-editor input { flex: 1; min-width: 140px; padding: 8px 11px; border: 1px solid var(--border); border-radius: 8px; font: inherit; font-size: 14px; color: var(--moss); }
+    .crm-tag-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--lime-soft); color: var(--moss); border-radius: 100px; padding: 4px 12px; font-size: 12px; font-weight: 600; }
+    .crm-tag-remove { border: 0; background: none; color: var(--sage); cursor: pointer; font-size: 15px; line-height: 1; padding: 0; }
+    .crm-tag-remove:hover { color: #a4442c; }
+    /* facet cards (identity / billing / channels) */
+    .crm-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+    .crm-card-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); margin-bottom: 10px; }
+    .crm-card-facts { display: grid; gap: 6px; font-size: 14px; color: var(--moss); }
+    .crm-card-empty { color: var(--sage); font-size: 14px; }
+    .crm-badge { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 100px; padding: 2px 10px; background: var(--lime-soft); color: var(--moss-light); }
     .crm-drawer-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 400; color: var(--moss); }
     .crm-lifecycle { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
     .crm-stage-chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss-light); background: var(--lime-soft); border: 1px solid var(--border); border-radius: 100px; padding: 5px 14px; }
@@ -724,6 +775,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=3"></script>
-  <script type="module" src="/assets/app/admin.js?v=9"></script>
+  <script type="module" src="/assets/app/admin.js?v=10"></script>
 </body>
 </html>

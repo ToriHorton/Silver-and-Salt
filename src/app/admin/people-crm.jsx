@@ -419,19 +419,29 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
   const [subtab, setSubtab] = useState("info");
   const [saving, setSaving] = useState(false);
   const [acts, setActs] = useState([]);
+  const [optimisticStage, setOptimisticStage] = useState(null);
 
   const reloadActs = useCallback(() => {
     client.listActivities(id).then((r) => setActs(r.activities || [])).catch(() => {});
   }, [id]);
   useEffect(() => { reloadActs(); }, [reloadActs]);
   // Reset to the Info tab whenever a different person is opened.
-  useEffect(() => { setSubtab("info"); }, [id]);
+  useEffect(() => { setSubtab("info"); setOptimisticStage(null); }, [id]);
+  // Clear the optimistic stage once the refreshed record actually shows it.
+  useEffect(() => {
+    if (optimisticStage && state.detail?.record?.stage === optimisticStage) setOptimisticStage(null);
+  }, [state.detail, optimisticStage]);
 
-  if (state.error) return <div class="card"><p class="crm-error">Could not load this record: {state.error}</p><button class="row-save" onClick={onClose}>Close</button></div>;
-  if (state.loading || !state.detail) return <div class="card"><span class="spinner"></span> Loading record…</div>;
+  // Keep the detail rendered across refreshes (show loading/error only before
+  // the first successful load) so an in-place action never flashes the pane.
+  if (state.error && !state.detail) return <div class="card"><p class="crm-error">Could not load this record: {state.error}</p><button class="row-save" onClick={onClose}>Close</button></div>;
+  if (!state.detail) return <div class="card"><span class="spinner"></span> Loading record…</div>;
 
   const { record } = state.detail;
   const appId = record.fields && record.fields.applicationId;
+  const stageRecord = optimisticStage
+    ? { ...record, stage: optimisticStage, stageIndex: crm.stageIndex("person", optimisticStage) }
+    : record;
   const afterChange = async () => { state.refresh(); onChanged(); };
 
   const onSaveFields = async (input) => {
@@ -440,16 +450,23 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
     finally { setSaving(false); }
   };
   // Stage moves route through the operational pipeline when there is an
-  // application; the worker mirrors the result back into the record.
+  // application; the worker mirrors the result back into the record. Optimistic:
+  // reflect the new stage immediately, then confirm with a light refresh of just
+  // this record (no full People-list reload; the rail catches up on its next
+  // natural refresh). On failure the optimistic stage reverts.
   const onMoveStage = async (to) => {
-    if (appId) {
-      await api(`/api/admin/applications/${appId}`, { method: "PATCH", body: JSON.stringify({ status: to }) });
-      bus.dispatchEvent(new Event("people:reload"));
-    } else {
-      await client.setStage(id, to);
+    setOptimisticStage(to);
+    try {
+      if (appId) {
+        await api(`/api/admin/applications/${appId}`, { method: "PATCH", body: JSON.stringify({ status: to }) });
+      } else {
+        await client.setStage(id, to);
+      }
+      state.refresh();
+    } catch (e) {
+      setOptimisticStage(null);
+      throw e;
     }
-    state.refresh();
-    onChanged();
   };
   const onAddTag = async (t) => { await client.addTag(id, t); state.refresh(); };
   const onRemoveTag = async (t) => { await client.removeTag(id, t); state.refresh(); };
@@ -483,7 +500,7 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
             <IdentityCard record={record} onLink={onLinkIdentity} />
           </div>
         )}
-        {subtab === "stage" && <StageControl crm={crm} record={record} onMove={onMoveStage} />}
+        {subtab === "stage" && <StageControl crm={crm} record={stageRecord} onMove={onMoveStage} />}
         {subtab === "comms" && <EmailComposer record={record} />}
         {subtab === "history" && <CommsHistory recordId={id} />}
         {subtab === "scheduling" && <Scheduling appId={appId} onChanged={afterChange} />}
