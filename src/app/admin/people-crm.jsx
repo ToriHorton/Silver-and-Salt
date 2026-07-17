@@ -406,6 +406,7 @@ function Scheduling({ appId, onChanged }) {
 // ── One person's detail, organized into sub-tabs. ──
 const REC_TABS = [
   ["info", "Info"],
+  ["stage", "Stage"],
   ["comms", "Comms"],
   ["history", "Comms history"],
   ["scheduling", "Scheduling"],
@@ -457,6 +458,10 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
   const onAddTask = async (t) => { await client.addActivity(id, { kind: "task", body: t.body, dueAt: t.dueAt, waitingOn: t.waitingOn }); reloadActs(); };
   const onToggleTask = async (a, done) => { await client.updateTask(a.id, { status: done ? "done" : "open" }); reloadActs(); };
 
+  // The Access (role) tab is super-admin-only.
+  const canAccess = superAdmin && record.clerkUserId;
+  const tabs = canAccess ? [...REC_TABS, ["access", "Access"]] : REC_TABS;
+
   return (
     <div class="card crm-drawer">
       <div class="crm-drawer-head">
@@ -465,7 +470,7 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
       </div>
 
       <div class="rec-tabs">
-        {REC_TABS.map(([key, label]) => (
+        {tabs.map(([key, label]) => (
           <button type="button" class={"rec-tab" + (subtab === key ? " on" : "")} onClick={() => setSubtab(key)}>{label}</button>
         ))}
       </div>
@@ -474,18 +479,11 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
         {subtab === "info" && (
           <div class="rec-info">
             <FieldsForm crm={crm} type="person" record={record} onSubmit={onSaveFields} submitting={saving} submitLabel="Save profile" />
-            <StageControl crm={crm} record={record} onMove={onMoveStage} />
             <div class="rec-section"><div class="card-label">Tags</div><TagEditor tags={state.detail.tags} onAdd={onAddTag} onRemove={onRemoveTag} /></div>
             <IdentityCard record={record} onLink={onLinkIdentity} />
-            {superAdmin && record.clerkUserId && (
-              <AccessCard
-                clerkUserId={record.clerkUserId}
-                myUserId={myUserId}
-                currentRole={roleMap && roleMap.get((record.primaryEmail || "").toLowerCase())}
-              />
-            )}
           </div>
         )}
+        {subtab === "stage" && <StageControl crm={crm} record={record} onMove={onMoveStage} />}
         {subtab === "comms" && <EmailComposer record={record} />}
         {subtab === "history" && <CommsHistory recordId={id} />}
         {subtab === "scheduling" && <Scheduling appId={appId} onChanged={afterChange} />}
@@ -497,6 +495,13 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
         )}
         {subtab === "notes" && (
           <ActivityFeed activities={acts} onAddNote={onAddNote} onAddTask={onAddTask} onToggleTask={onToggleTask} />
+        )}
+        {subtab === "access" && canAccess && (
+          <AccessCard
+            clerkUserId={record.clerkUserId}
+            myUserId={myUserId}
+            currentRole={roleMap && roleMap.get((record.primaryEmail || "").toLowerCase())}
+          />
         )}
       </div>
     </div>
