@@ -12,13 +12,18 @@
 import { useState, useEffect, useCallback } from "preact/hooks";
 import { CrmClient } from "@odla-ai/crm";
 import {
-  RecordPanel,
   ActivityFeed,
+  FieldsForm,
+  StageControl,
+  TagEditor,
+  IdentityCard,
+  BillingCard,
   useCrmQuery,
   useCrmRecord,
 } from "@odla-ai/crm/ui";
 import { crm, PERSON_STAGES } from "../../crm.mjs";
-import { api, bus, ROLES, STATUS_LABELS, APPROVABLE } from "../lib.js";
+import { api, bus, ROLES, STATUS_LABELS, APPROVABLE, fmtTzTime } from "../lib.js";
+import { SlotPicker } from "../slot-picker.jsx";
 
 // Stage filter chips for the exploration rail: "All" plus each pipeline stage.
 const STAGE_FILTERS = [{ id: "", label: "All" }, ...PERSON_STAGES.map((id) => ({ id, label: STATUS_LABELS[id] || id }))];
@@ -299,9 +304,118 @@ function AccessCard({ clerkUserId, myUserId }) {
   );
 }
 
-// ── One person's detail: lifecycle + email + the packaged RecordPanel ──
+// ── Comms History tab: the audited email log for this person. ──
+function CommsHistory({ recordId }) {
+  const [log, setLog] = useState(null);
+  useEffect(() => {
+    client.emailLog({ recordId, limit: 50 }).then((r) => setLog(r.log || [])).catch(() => setLog([]));
+  }, [recordId]);
+  if (!log) return <p class="muted"><span class="spinner"></span> Loading…</p>;
+  if (!log.length) return <p class="muted">No emails sent to this person yet.</p>;
+  return (
+    <ul class="rec-log">
+      {log.map((e) => (
+        <li class="rec-log-row">
+          <span class="rec-log-subj">{e.subject || "(no subject)"}</span>
+          <span class="rec-log-meta">
+            {e.templateId} · {new Date(e.sentAt).toLocaleString()} · {e.error ? "failed" : e.transport}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// ── Scheduling tab: this person's intro call, with reschedule / cancel. ──
+function Scheduling({ appId, onChanged }) {
+  const [meeting, setMeeting] = useState(undefined); // undefined = loading
+  const [tz, setTz] = useState("");
+  const [slots, setSlots] = useState(null);
+  const [rescheduling, setRescheduling] = useState(false);
+  const [busy, setBusy] = useState("");
+  const [msg, setMsg] = useState(null);
+
+  const load = useCallback(() => {
+    if (!appId) { setMeeting(null); return; }
+    api("/api/admin/meetings?all=1").then((res) => {
+      setTz(res.timezone || "");
+      const m = (res.meetings || []).find((x) => x.applicant && x.applicant.id === appId && x.status !== "cancelled");
+      setMeeting(m || null);
+    }).catch(() => setMeeting(null));
+  }, [appId]);
+  useEffect(() => { load(); }, [load]);
+
+  const cancel = async () => {
+    if (!confirm("Cancel this intro call? Google notifies the attendee.")) return;
+    setBusy("cancel"); setMsg(null);
+    try { await api(`/api/admin/meetings/${meeting.id}/cancel`, { method: "POST", body: "{}" }); onChanged?.(); load(); }
+    catch (e) { setMsg(e.message || String(e)); } finally { setBusy(""); }
+  };
+  const startReschedule = async () => {
+    setRescheduling(true); setSlots(null);
+    try { const r = await api("/api/schedule/slots"); setSlots(r.slots || []); if (r.timezone) setTz(r.timezone); }
+    catch { setSlots([]); }
+  };
+  const pick = async (slot) => {
+    setBusy("reschedule"); setMsg(null);
+    try {
+      await api(`/api/admin/meetings/${meeting.id}/reschedule`, { method: "POST", body: JSON.stringify({ startAt: slot.startAt }) });
+      setRescheduling(false); onChanged?.(); load();
+    } catch (e) { setMsg(e.message || String(e)); } finally { setBusy(""); }
+  };
+
+  if (!appId) return <p class="muted">No application on file, so no intro call.</p>;
+  if (meeting === undefined) return <p class="muted"><span class="spinner"></span> Loading…</p>;
+  if (!meeting) return <p class="muted">No intro call booked.</p>;
+  return (
+    <div>
+      <p class="rec-when">{fmtTzTime(meeting.startAt, tz)}</p>
+      {meeting.drift && meeting.drift !== "none" && (
+        <p class="crm-consent-note">Calendar drift: {meeting.drift} (reconciled from Google).</p>
+      )}
+      <div class="crm-email-actions" style="margin-bottom:14px">
+        {meeting.meetUrl && <a class="row-save" href={meeting.meetUrl} target="_blank" rel="noopener">Join Meet</a>}
+        {meeting.htmlLink && <a class="dash-agenda-link" href={meeting.htmlLink} target="_blank" rel="noopener">Google Calendar</a>}
+      </div>
+      {!rescheduling ? (
+        <div class="crm-email-actions">
+          <button class="row-save" onClick={startReschedule}>Reschedule</button>
+          <button class="row-save row-refund" disabled={busy === "cancel"} onClick={cancel}>{busy === "cancel" ? "Cancelling…" : "Cancel call"}</button>
+          {msg && <span class="crm-error">{msg}</span>}
+        </div>
+      ) : slots === null ? (
+        <p class="muted"><span class="spinner"></span> Loading slots…</p>
+      ) : !slots.length ? (
+        <p class="muted">No open slots right now.</p>
+      ) : (
+        <div class="resched-cell">
+          <SlotPicker slots={slots} timezone={tz}
+            classes={{ days: "resched-days", day: "resched-day", times: "resched-times", time: "resched-time" }}
+            onPick={pick} />
+          <div class="crm-email-actions" style="margin-top:10px">
+            <button class="row-save" onClick={() => setRescheduling(false)}>Cancel reschedule</button>
+            {busy === "reschedule" && <span class="muted">Rescheduling…</span>}
+            {msg && <span class="crm-error">{msg}</span>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── One person's detail, organized into sub-tabs. ──
+const REC_TABS = [
+  ["info", "Info"],
+  ["comms", "Comms"],
+  ["history", "Comms history"],
+  ["scheduling", "Scheduling"],
+  ["billing", "Billing"],
+  ["notes", "Notes"],
+];
+
 function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId }) {
   const state = useCrmRecord(client, id);
+  const [subtab, setSubtab] = useState("info");
   const [saving, setSaving] = useState(false);
   const [acts, setActs] = useState([]);
 
@@ -309,12 +423,15 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId }) {
     client.listActivities(id).then((r) => setActs(r.activities || [])).catch(() => {});
   }, [id]);
   useEffect(() => { reloadActs(); }, [reloadActs]);
+  // Reset to the Info tab whenever a different person is opened.
+  useEffect(() => { setSubtab("info"); }, [id]);
 
   if (state.error) return <div class="card"><p class="crm-error">Could not load this record: {state.error}</p><button class="row-save" onClick={onClose}>Close</button></div>;
   if (state.loading || !state.detail) return <div class="card"><span class="spinner"></span> Loading record…</div>;
 
   const { record } = state.detail;
   const appId = record.fields && record.fields.applicationId;
+  const afterChange = async () => { state.refresh(); onChanged(); };
 
   const onSaveFields = async (input) => {
     setSaving(true);
@@ -346,22 +463,36 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId }) {
         <div class="crm-drawer-title">{record.name || record.primaryEmail}</div>
         <button class="signout-btn" onClick={onClose}>Close</button>
       </div>
-      <LifecycleActions record={record} onChanged={async () => { state.refresh(); onChanged(); }} />
-      <EmailComposer record={record} />
-      {superAdmin && record.clerkUserId && (
-        <AccessCard clerkUserId={record.clerkUserId} myUserId={myUserId} />
-      )}
-      <RecordPanel
-        crm={crm}
-        detail={state.detail}
-        onSaveFields={onSaveFields}
-        onMoveStage={onMoveStage}
-        onAddTag={onAddTag}
-        onRemoveTag={onRemoveTag}
-        onLinkIdentity={onLinkIdentity}
-        saving={saving}
-        activitySlot={<ActivityFeed activities={acts} onAddNote={onAddNote} onAddTask={onAddTask} onToggleTask={onToggleTask} />}
-      />
+
+      <div class="rec-tabs">
+        {REC_TABS.map(([key, label]) => (
+          <button type="button" class={"rec-tab" + (subtab === key ? " on" : "")} onClick={() => setSubtab(key)}>{label}</button>
+        ))}
+      </div>
+
+      <div class="rec-panel">
+        {subtab === "info" && (
+          <div class="rec-info">
+            <FieldsForm crm={crm} type="person" record={record} onSubmit={onSaveFields} submitting={saving} submitLabel="Save profile" />
+            <StageControl crm={crm} record={record} onMove={onMoveStage} />
+            <div class="rec-section"><div class="card-label">Tags</div><TagEditor tags={state.detail.tags} onAdd={onAddTag} onRemove={onRemoveTag} /></div>
+            <IdentityCard record={record} onLink={onLinkIdentity} />
+            {superAdmin && record.clerkUserId && <AccessCard clerkUserId={record.clerkUserId} myUserId={myUserId} />}
+          </div>
+        )}
+        {subtab === "comms" && <EmailComposer record={record} />}
+        {subtab === "history" && <CommsHistory recordId={id} />}
+        {subtab === "scheduling" && <Scheduling appId={appId} onChanged={afterChange} />}
+        {subtab === "billing" && (
+          <div class="rec-info">
+            <BillingCard record={record} />
+            <LifecycleActions record={record} onChanged={afterChange} />
+          </div>
+        )}
+        {subtab === "notes" && (
+          <ActivityFeed activities={acts} onAddNote={onAddNote} onAddTask={onAddTask} onToggleTask={onToggleTask} />
+        )}
+      </div>
     </div>
   );
 }
