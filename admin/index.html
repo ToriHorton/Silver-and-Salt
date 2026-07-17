@@ -599,36 +599,35 @@
        off the page (the odla-ui DataTable has no scroll container of its own). */
     .crm-list-wrap { overflow-x: auto; }
     .crm-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px; }
-    /* Focused-user detail: a right-anchored slide-in panel over a dimmed
-       backdrop, instead of a card stacked above the list. */
-    .crm-overlay {
-      position: fixed; inset: 0; z-index: 1000;
-      background: rgba(24, 32, 26, 0.42);
-      display: flex; justify-content: flex-end;
+    /* People: full-width, two-pane master/detail (a left exploration rail and a
+       docked detail pane on the right). The 100vw breakout escapes the 960px
+       .container; body has overflow-x:hidden so it never adds a scrollbar. */
+    .people-full { width: 100vw; position: relative; left: 50%; margin-left: -50vw; padding: 0 32px; }
+    .people-stats { margin-bottom: 24px; }
+    .people-grid { display: grid; grid-template-columns: minmax(360px, 42%) 1fr; gap: 24px; align-items: start; }
+    .people-rail, .people-detail { min-width: 0; }
+    .people-detail { position: sticky; top: 20px; }
+    .people-empty { color: var(--sage); }
+    .people-empty p { margin-top: 6px; font-size: 15px; line-height: 1.5; }
+    @media (max-width: 1024px) {
+      .people-full { width: auto; left: auto; margin-left: 0; padding: 0; }
+      .people-grid { grid-template-columns: 1fr; }
+      .people-detail { position: static; }
     }
-    .crm-overlay > .crm-drawer {
-      width: min(580px, 94vw);
-      height: 100%;
-      margin: 0;
-      border: 0;
-      border-left: 1px solid var(--border);
-      border-radius: 0;
-      overflow-y: auto;
-      box-shadow: -14px 0 48px rgba(24, 32, 26, 0.22);
-      animation: crm-slide-in 0.18s ease-out;
-    }
-    @keyframes crm-slide-in {
-      from { transform: translateX(28px); opacity: 0.5; }
-      to   { transform: translateX(0);    opacity: 1; }
-    }
-    /* Keep the title + Close in view while the panel scrolls. */
+    /* The detail-pane header (title + Close). */
     .crm-drawer-head {
-      position: sticky; top: 0; z-index: 2;
-      background: #fff;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
       padding-bottom: 14px; margin-bottom: 16px;
       border-bottom: 1px solid var(--border);
     }
+    /* CRM name cells render as a bare <button class="crm-record-open"> with no
+       CSS of their own; style them as clean text links, not browser buttons. */
+    .crm-record-open {
+      border: 0; background: none; padding: 0; margin: 0;
+      font: inherit; font-weight: 600; color: var(--moss);
+      cursor: pointer; text-align: left;
+    }
+    .crm-record-open:hover { color: var(--lime-dark); text-decoration: underline; }
     .crm-drawer-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 400; color: var(--moss); }
     .crm-lifecycle { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
     .crm-stage-chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss-light); background: var(--lime-soft); border: 1px solid var(--border); border-radius: 100px; padding: 5px 14px; }
@@ -680,6 +679,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=3"></script>
-  <script type="module" src="/assets/app/admin.js?v=3"></script>
+  <script type="module" src="/assets/app/admin.js?v=4"></script>
 </body>
 </html>
