@@ -310,6 +310,17 @@ export function PeopleTab({ myUserId, superAdmin }) {
     return () => bus.removeEventListener("people:reload", onReload);
   }, [loadSummary]);
 
+  // The focused-user panel behaves like a drawer: Escape closes it and the page
+  // behind it doesn't scroll while it is open.
+  useEffect(() => {
+    if (!openId) return;
+    const onKey = (e) => { if (e.key === "Escape") setOpenId(null); };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
+  }, [openId]);
+
   const onChanged = useCallback(() => { query.refresh(); loadSummary(); }, [query, loadSummary]);
 
   const bulkEmail = async (ids) => {
@@ -344,7 +355,11 @@ export function PeopleTab({ myUserId, superAdmin }) {
         </div>
       </div>
 
-      {openId && <RecordDrawer id={openId} onClose={() => setOpenId(null)} onChanged={onChanged} superAdmin={superAdmin} myUserId={myUserId} />}
+      {openId && (
+        <div class="crm-overlay" onClick={(e) => { if (e.target === e.currentTarget) setOpenId(null); }}>
+          <RecordDrawer id={openId} onClose={() => setOpenId(null)} onChanged={onChanged} superAdmin={superAdmin} myUserId={myUserId} />
+        </div>
+      )}
 
       <div class="card">
         <div class="card-label">People</div>
