@@ -463,6 +463,7 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
         await client.setStage(id, to);
       }
       state.refresh();
+      reloadActs(); // the move logs a stage_change activity; refresh the Notes feed
     } catch (e) {
       setOptimisticStage(null);
       throw e;
