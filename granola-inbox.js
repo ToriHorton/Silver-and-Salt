@@ -43,6 +43,8 @@ window.GRANOLA_INBOX = {
     { text: "Reply to Melissa to book the Morgan Lemaitre call, Jul 27 afternoon offered", owner: "", context: "from email: Melissa re Intro: Morgan at Park City Wealth Advisors; Morgan has Monday Jul 27 afternoon availability", source: "email", date: "2026-07-16" },
     { text: "Send Heather Griffith Barber a calendar invite for Jul 28 at 11am", owner: "", context: "from email: Heather Griffith Barber re Crystalee's intro; she confirmed Jul 28 at 11 and asked for the invite", source: "email", date: "2026-07-16" },
     { text: "Send Sharlene Wells an updated invite for Jul 28 at noon to her MACU email", owner: "", context: "from email: Sharlene Wells re Crystalee's intro; she declined Jul 27, proposed Jul 28 at noon, asked for sharlenewells@macu", source: "email", date: "2026-07-16" },
-    { text: "Resend the Sabrina Morales intro to smorales@mylinguistica.com", owner: "", context: "from email: auto response re Intro: Sabrina at Linguistica; her primary email changed during a transition", source: "email", date: "2026-07-16" }
+    { text: "Resend the Sabrina Morales intro to smorales@mylinguistica.com", owner: "", context: "from email: auto response re Intro: Sabrina at Linguistica; her primary email changed during a transition", source: "email", date: "2026-07-16" },
+    { text: "Schedule intro call with Maile Keone of ListenTech", owner: "", context: "from email: Ruchi Watson re Reconnecting Maile + Tori; Tori proposed the week of Jul 27 to Jodi, Maile's EA, waiting on times", source: "email", date: "2026-07-16" },
+    { text: "Check Jul 28 noon overlap: Amanda Worsfold call vs Sharlene Wells invite", owner: "", context: "from email: calendar updates Jul 16; Amanda Worsfold is booked Jul 28 at 12pm PT and Sharlene Wells asked for Jul 28 at noon", source: "email", date: "2026-07-16" }
   ]
 };
