@@ -5,7 +5,7 @@
 import { render } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { api } from "../lib.js";
-import { PeopleTab } from "./people.jsx";
+import { PeopleTab } from "./people-crm.jsx";
 import { BillingTab } from "./billing.jsx";
 import { CalendarTab } from "./calendar.jsx";
 import { AvailabilityTab } from "./availability.jsx";
@@ -74,7 +74,7 @@ function AdminApp({ me }) {
       <div class="tabs-panels">
         {/* Every panel stays mounted (hidden when inactive) so all data
             loads once at sign-in, matching the old parallel boot. */}
-        <div class="tabs-panel tab-panel" hidden={tab !== "people"}><PeopleTab myUserId={me.userId} /></div>
+        <div class="tabs-panel tab-panel" hidden={tab !== "people"}><PeopleTab myUserId={me.userId} superAdmin={me.superAdmin === true} /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "billing"}><BillingTab /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "calendar"}><CalendarTab active={tab === "calendar"} /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "settings"}><AvailabilityTab /></div>

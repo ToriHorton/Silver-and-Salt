@@ -706,6 +706,87 @@ owner-managed.
    checkpoint.
 6. Never rotate keys or o11y tokens unless the human explicitly asks.
 
+## CRM admin layer (@odla-ai/crm) (2026-07-16, on dev; owner browser pass pending)
+
+Adopted the new `@odla-ai/crm` module (v0.1.1) as the admin relationship layer,
+in a **hybrid** with the existing operational system (owner-chosen):
+
+- **Authoritative flows stay as-is.** `applications.status` remains the
+  pipeline; join form, Stripe webhooks, meetings/scheduling, and Clerk
+  promotion are untouched. A one-way sync (`src/crm-sync.mjs`,
+  `syncPersonToCrm`) projects each person into a `crm_record` of type
+  `person`; `crm_record.stage` MIRRORS `applications.status` (never
+  authoritative). Sync fires after every status write (join, book, webhook,
+  approve, PATCH) and is `.catch`-wrapped so a CRM hiccup can never 5xx an
+  operational flow. `POST /api/admin/crm/sync` backfills/repairs (idempotent).
+- **What the CRM owns** (no operational equivalent before): tags, notes,
+  follow-up tasks, saved views, contact-consent, and audited ad-hoc/template
+  email — surfaced in a new People record panel (`src/app/admin/people-crm.jsx`,
+  built on `@odla-ai/crm/ui` under `preact/compat`). Lifecycle actions in the
+  panel (Approve/Refund/stage) call the EXISTING `/api/admin/applications/:id`
+  routes; the worker mirrors the result back. Model in `src/crm.mjs`.
+- **Email**: two free-form classes (`personal` transactional, `announcement`
+  marketing with unsubscribe) plus a `check_in` template, all consent-gated and
+  audited in `crm_email_log`. Kept separate from the four operational lifecycle
+  templates in `groups.emailTemplates` (do not merge — double-send risk).
+- **Routes** mounted at `/api/crm/*` (`createCrmRoutes`), admin-gated by reusing
+  `verifyUser`; the raw Cloudflare transport is injected (CRM does its own
+  consent/dev-redirect/audit). Deps bumped: `@odla-ai/ui` 0.6.0->0.7.0 (full
+  `assets/odla-ui/odla-ui.css` now vendored), added `@odla-ai/crm@0.1.1`.
+- **Super-admins + admin promotion (2026-07-16).** A record-panel "Access" card
+  (super-admin-only) promotes a person's Clerk role, incl. to `admin`. Gated by
+  a **super-admin** tier stored in a new `superAdmins` odla-db table that is
+  READ-ONLY from the app: deny-all rules like every namespace AND no worker
+  route ever writes it, so it can only be set in the odla Studio data browser
+  (rationale: browsers hold no db credential, so an injected page script has no
+  write path). Worker: `isSuperAdmin(db,email)` (read-only query, matched to the
+  caller's verified email); `/api/me` returns `superAdmin` for admins; new
+  `GET /api/admin/people/access?userId=`; `POST /api/admin/people/role` now
+  refuses to create/change an `admin` (or touch a super-admin) unless the caller
+  is a super-admin, and never writes the super-admin flag. Dev bootstrap:
+  `cory.ondrejka@gmail.com` seeded into `superAdmins`; in prod the owner adds
+  rows in Studio (keyed by lowercased email).
+
+**Upstream incompatibility (important for future agents).** The brand-new
+`@odla-ai/crm@0.1.1` and `@odla-ai/cli@0.13.x` were published ahead of a
+fully-compatible `@odla-ai/db`. `@odla-ai/db@0.6.5` (published 2026-07-16) fixed
+item 1 below; item 2 persists and was re-verified against 0.6.5:
+  1. [FIXED by db 0.6.5] `@odla-ai/cli@0.13.x` imports `collectToken` from
+     `@odla-ai/db`, which 0.6.4 did not export -> the CLI failed at module load,
+     so `odla-ai provision/doctor/smoke` could not run. 0.6.5 exports it, so the
+     CLI loads again. (We still provision via the script below, since the
+     official provision pushes the pristine CRM_SCHEMA without the id
+     declaration item 2's shim needs.) The original workaround remains:
+     `_scripts/provision-crm-dev.mjs`, which pushes the merged schema and seeds
+     `crm_config` using the app admin key (`ODLA_API_KEY`), no CLI/dev-token
+     needed. It also declares an indexed `id` on the crm_* entities (see below)
+     and skips the deny-all crm rules (redundant: browsers hold no db
+     credential, the worker admin key bypasses rules, app defaultRules is deny;
+     run the real `odla-ai provision` once the CLI is fixed to lay them down).
+  2. [STILL BROKEN on db 0.6.5, re-tested 2026-07-16] `@odla-ai/crm@0.1.1` reads
+     rows via `where:{id}` and writes `null` for empty slot columns, neither of
+     which db 0.6.4 or 0.6.5 supports (it only filters DECLARED indexed attrs
+     and rejects `null`). Shimmed by `wrapCrmDb` in
+     `src/crm-sync.mjs`: it stamps the entity id into every write op's attrs and
+     drops null/undefined attrs. Applied to both the worker's CRM routes and the
+     sync. **Remove the shim + the id-declaration once a compatible
+     `@odla-ai/db` ships.**
+
+**Verified on dev (2026-07-16):** provision pushed the 8 crm_* namespaces +
+seeded config; backfill synced 20 people (stage + billing snapshot + consent
+channels + Clerk link all correct, 0 errors); the full CRM op surface
+(create/read/update/setStage/tags/notes/tasks/consent/email) passes against the
+live dev tenant through the shim; worker bundles and boots; `/api/crm/records`
+and `/api/admin/crm/sync` return 401 unauthenticated; admin island builds with
+the CRM UI under Preact; existing tabs compile under ui 0.7.0. **Remaining: the
+owner's browser pass** — sign in at `/admin/` as admin, exercise the People
+record panel (open a record, add a note/task/tag, save a view, send a free-form
+and a template email to a test person, confirm consent gating), confirm
+Approve/Refund still drive the operational routes and the stage mirrors, and
+eyeball Billing/Calendar/Email-Settings under ui 0.7.0. New files are untracked;
+`git add` before the next `npm run build` (build-site.sh copies git-tracked
+files only — `assets/odla-ui/odla-ui.css` especially).
+
 ## Log
 
 - **2026-07-11 (P0):** Created branch `odla-conversion-test`. Ran

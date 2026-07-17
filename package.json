@@ -9,7 +9,7 @@
     "deploy:app:dev": "npm run build && wrangler deploy --env dev"
   },
   "devDependencies": {
-    "@odla-ai/cli": "0.11.2",
+    "@odla-ai/cli": "0.13.1",
     "@preact/preset-vite": "^2.10.5",
     "preact-render-to-string": "^6.7.0",
     "vite": "^8.1.4",
@@ -17,9 +17,10 @@
   },
   "dependencies": {
     "@odla-ai/calendar": "^0.2.0",
-    "@odla-ai/db": "^0.6.2",
+    "@odla-ai/crm": "^0.1.1",
+    "@odla-ai/db": "^0.6.5",
     "@odla-ai/email": "^0.3.1",
-    "@odla-ai/ui": "^0.6.0",
+    "@odla-ai/ui": "^0.7.0",
     "jose": "^6.2.3",
     "preact": "^10.29.7"
   }

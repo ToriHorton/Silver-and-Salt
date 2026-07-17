@@ -8,10 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/odla-ui/tabs.css?v=2">
-  <link rel="stylesheet" href="/assets/odla-ui/calendar.css?v=1">
-  <link rel="stylesheet" href="/assets/odla-ui/table.css?v=1">
-  <link rel="stylesheet" href="/assets/odla-ui/data-table.css?v=1">
+  <!-- Full @odla-ai/ui 0.7.0 stylesheet: covers the DataTable/Tabs/Calendar
+       used by the existing tabs AND the @odla-ai/crm UI (CrmList, RecordPanel,
+       StageControl, TagEditor, Combobox, ActivityFeed). The inline <style>
+       below loads AFTER this link, so the page's brand overrides of any shared
+       generic class (.card/.tabs/.spinner) win. -->
+  <link rel="stylesheet" href="/assets/odla-ui/odla-ui.css?v=1">
   <style>
     /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
        always render in Cormorant Infant wherever Cormorant Garamond is
@@ -591,6 +593,30 @@
     .send-status.fail { color: #a4442c; }
 
     .hidden { display: none; }
+
+    /* ── People (CRM) tab: record drawer, lifecycle bar, email composer ── */
+    /* Keep a wide people table scrolling INSIDE its card instead of bleeding
+       off the page (the odla-ui DataTable has no scroll container of its own). */
+    .crm-list-wrap { overflow-x: auto; }
+    .crm-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px; }
+    .crm-drawer { border: 1px solid var(--border); }
+    .crm-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .crm-drawer-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 400; color: var(--moss); }
+    .crm-lifecycle { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .crm-stage-chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss-light); background: var(--lime-soft); border: 1px solid var(--border); border-radius: 100px; padding: 5px 14px; }
+    .crm-error { color: #a4442c; font-size: 13px; }
+
+    .card-inner { border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 18px; background: #fff; }
+    .crm-seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+    .crm-seg button { border: 0; background: #fff; padding: 8px 16px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--sage); cursor: pointer; }
+    .crm-seg button.on { background: var(--moss); color: var(--cream); }
+    .crm-field { display: block; margin-bottom: 12px; }
+    .crm-field > span { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sage); margin-bottom: 5px; }
+    .crm-field input, .crm-field select, .crm-field textarea { width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; color: var(--moss); background: #fff; }
+    .crm-field textarea { resize: vertical; }
+    .crm-consent-note { font-size: 12px; color: var(--moss-light); background: var(--lime-soft); border-radius: 8px; padding: 8px 12px; margin: 6px 0 12px; }
+    .crm-email-actions { display: flex; align-items: center; gap: 12px; }
+    .crm-email-result { font-size: 13px; color: var(--moss-light); }
 
     @media (max-width: 480px) {
       .hero { padding: 48px 24px 40px; }

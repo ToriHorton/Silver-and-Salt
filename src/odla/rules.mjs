@@ -26,4 +26,14 @@ export const rules = {
     update: "false",
     delete: "false",
   },
+  // Super-admins: deny-all like the rest. The whole TABLE is read-only from the
+  // app's side (the Worker only ever queries it, never transacts it); the only
+  // writer is a human in the odla Studio data browser. This is the "make the
+  // table read-only" guarantee, not a per-field flag.
+  superAdmins: {
+    view: "false",
+    create: "false",
+    update: "false",
+    delete: "false",
+  },
 };
