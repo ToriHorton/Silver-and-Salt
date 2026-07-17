@@ -746,6 +746,17 @@ in a **hybrid** with the existing operational system (owner-chosen):
   is a super-admin, and never writes the super-admin flag. Dev bootstrap:
   `cory.ondrejka@gmail.com` seeded into `superAdmins`; in prod the owner adds
   rows in Studio (keyed by lowercased email).
+- **Admin IA restructure (2026-07-17, owner-directed).** Top tabs collapsed to
+  three: **Dashboard** (new `GET /api/admin/dashboard`: applications total/7d/30d,
+  live revenue + new-paid 7d/30d, pipeline by stage, upcoming-calls agenda +
+  drift; plus the full billing table) / **People** (the CRM two-pane) /
+  **Settings** (call + email settings merged). Old billing/calendar/email/calls
+  tabs fold in; legacy `?tab=` names redirect. The People rail is now a custom
+  role-styled list (admins/members badged, active row highlighted; roles from
+  `/api/admin/people`) instead of the packaged CrmList. The record detail is now
+  six sub-tabs: Info / Comms / Comms history / Scheduling (reschedule/cancel) /
+  Billing / Notes. The standalone month/by-user Calendar view was retired in
+  favor of the Dashboard agenda + per-person Scheduling (owner choice).
 
 **Upstream incompatibility — NOW RESOLVED (2026-07-17).** The brand-new
 `@odla-ai/crm@0.1.1` and `@odla-ai/cli@0.13.x` were briefly published ahead of a
