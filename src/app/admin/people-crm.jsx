@@ -310,15 +310,12 @@ export function PeopleTab({ myUserId, superAdmin }) {
     return () => bus.removeEventListener("people:reload", onReload);
   }, [loadSummary]);
 
-  // The focused-user panel behaves like a drawer: Escape closes it and the page
-  // behind it doesn't scroll while it is open.
+  // Escape deselects the focused person (detail pane returns to the summary).
   useEffect(() => {
     if (!openId) return;
     const onKey = (e) => { if (e.key === "Escape") setOpenId(null); };
     document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
+    return () => document.removeEventListener("keydown", onKey);
   }, [openId]);
 
   const onChanged = useCallback(() => { query.refresh(); loadSummary(); }, [query, loadSummary]);
@@ -341,10 +338,11 @@ export function PeopleTab({ myUserId, superAdmin }) {
   };
 
   const stages = summary?.stages || {};
+  // Full-width, two-pane master/detail: a left exploration rail (search +
+  // stage filters + the people list) and a docked detail pane on the right.
   return (
-    <>
-      <div class="card">
-        <div class="card-label">Pipeline</div>
+    <div class="people-full">
+      <div class="card people-stats">
         <div class="stats-row">
           <div class="stat"><div class="stat-num">{summary ? summary.total : "–"}</div><div class="stat-label">People</div></div>
           <div class="stat"><div class="stat-num">{summary ? (stages.submitted || 0) : "–"}</div><div class="stat-label">Submitted</div></div>
@@ -355,44 +353,49 @@ export function PeopleTab({ myUserId, superAdmin }) {
         </div>
       </div>
 
-      {openId && (
-        <div class="crm-overlay" onClick={(e) => { if (e.target === e.currentTarget) setOpenId(null); }}>
-          <RecordDrawer id={openId} onClose={() => setOpenId(null)} onChanged={onChanged} superAdmin={superAdmin} myUserId={myUserId} />
+      <div class="people-grid">
+        {/* Left: exploration / discovery rail. */}
+        <div class="card people-rail">
+          <div class="card-label">People</div>
+          <div class="crm-list-wrap">
+            <CrmList
+              crm={crm}
+              type="person"
+              query={query}
+              columns={["name", "stage", "primaryEmail"]}
+              selectable
+              selected={selected}
+              onSelectionChange={setSelected}
+              onOpenRecord={(r) => setOpenId(r.id)}
+              toolbar={
+                <div class="crm-toolbar">
+                  <ViewEditor
+                    current={{ type: "person", filters: query.params, sort: query.params.sort ?? null, columns: [] }}
+                    onSave={(spec) => client.saveView(spec)}
+                  />
+                  <BulkBar
+                    selected={selected}
+                    onClear={() => setSelected([])}
+                    actions={[{ id: "email", label: `Email ${selected.length}`, run: bulkEmail }]}
+                  />
+                </div>
+              }
+            />
+          </div>
         </div>
-      )}
 
-      <div class="card">
-        <div class="card-label">People</div>
-        {/* Compact column set: the heavy per-person detail (role, billing,
-            meeting, tags, notes, email) lives in the record panel on click, so
-            the list stays narrow. crm-list-wrap keeps any overflow scrolling
-            inside the card instead of bleeding off the page. */}
-        <div class="crm-list-wrap">
-        <CrmList
-          crm={crm}
-          type="person"
-          query={query}
-          columns={["name", "stage", "primaryEmail", "billingStatus", "renewalAt"]}
-          selectable
-          selected={selected}
-          onSelectionChange={setSelected}
-          onOpenRecord={(r) => setOpenId(r.id)}
-          toolbar={
-            <div class="crm-toolbar">
-              <ViewEditor
-                current={{ type: "person", filters: query.params, sort: query.params.sort ?? null, columns: [] }}
-                onSave={(spec) => client.saveView(spec)}
-              />
-              <BulkBar
-                selected={selected}
-                onClear={() => setSelected([])}
-                actions={[{ id: "email", label: `Email ${selected.length}`, run: bulkEmail }]}
-              />
+        {/* Right: the focused person's detail, or a hint when nothing is chosen. */}
+        <div class="people-detail">
+          {openId ? (
+            <RecordDrawer id={openId} onClose={() => setOpenId(null)} onChanged={onChanged} superAdmin={superAdmin} myUserId={myUserId} />
+          ) : (
+            <div class="card people-empty">
+              <div class="card-label">Details</div>
+              <p>Select a person on the left to see their profile, billing, intro call, tags, notes, and to send them email.</p>
             </div>
-          }
-        />
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
