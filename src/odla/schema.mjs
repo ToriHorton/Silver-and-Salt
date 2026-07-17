@@ -139,6 +139,20 @@ export const schema = {
         sentAt: { type: "number", unique: false, indexed: true, optional: false },
       },
     },
+    // Super-admins: the ONLY tier that may create or modify admins. Kept as a
+    // separate, app-READ-ONLY entity on purpose. Rules are deny-all like every
+    // other namespace (browsers hold no db credential) AND no worker route ever
+    // writes it, so the flag can only be set in the odla Studio data browser,
+    // never from the app or an injected page script. One row per super-admin,
+    // keyed by lowercased email.
+    superAdmins: {
+      attrs: {
+        id: { type: "string", unique: true, indexed: true, optional: false },
+        email: { type: "string", unique: true, indexed: true, optional: false },
+        note: { type: "string", unique: false, indexed: false, optional: true },
+        createdAt: { type: "number", unique: false, indexed: true, optional: false },
+      },
+    },
   },
   links: {},
 };

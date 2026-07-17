@@ -1,3 +1,6 @@
+import { createCrmIntegration } from "@odla-ai/crm";
+import { crm } from "./src/crm.mjs";
+
 export default {
   platformUrl: process.env.ODLA_PLATFORM_URL ?? "https://odla.ai",
   dbEndpoint: process.env.ODLA_ENDPOINT ?? process.env.ODLA_DB_ENDPOINT ?? "https://db.odla.ai",
@@ -7,6 +10,19 @@ export default {
   },
   envs: ["dev"],
   services: ["db", "calendar"],
+  // The CRM admin layer (@odla-ai/crm). `provision` collision-checks and
+  // merges its eight crm_* namespaces + deny-all rules alongside the app
+  // schema, and seeds the crm_config singleton once (preserving later owner
+  // edits). Routes are mounted in src/worker.ts; see src/crm.mjs for the model.
+  // Dev addresses match the group row so CRM dev mail lands in the same inbox.
+  integrations: [
+    createCrmIntegration(crm, {
+      basePath: "/api/crm",
+      notificationEmail: "cory.ondrejka+debug@gmail.com",
+      replyTo: "cory.ondrejka+debug@gmail.com",
+      debugEmail: "cory.ondrejka+debug@gmail.com",
+    }),
+  ],
   calendar: {
     google: {
       // 0.2.0 live booking: FreeBusy availability over these calendars;

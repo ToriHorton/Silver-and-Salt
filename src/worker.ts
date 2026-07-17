@@ -18,6 +18,12 @@ import {
   type SendEmailBinding,
   type GroupRow,
 } from "./email";
+// CRM admin relationship layer (@odla-ai/crm), mounted at /api/crm/*. The
+// operational flows below stay authoritative; src/crm-sync.mjs projects each
+// person one-way into a crm_record. See src/crm.mjs for the model.
+import { createCrmRoutes } from "@odla-ai/crm";
+import { crm } from "./crm.mjs";
+import { syncPersonToCrm, backfillCrm, wrapCrmDb } from "./crm-sync.mjs";
 
 interface Env {
   ASSETS: Fetcher;
@@ -99,6 +105,38 @@ async function verifyUser(req: Request, env: Env): Promise<AuthedUser | null> {
   } catch {
     return null;
   }
+}
+
+// The CRM admin surface reuses the same Clerk verification as /api/admin/*:
+// only an admin actor may act, and the CRM routes receive their userId/email.
+async function crmAuthorize(
+  req: Request,
+  env: Env,
+): Promise<{ userId: string; email?: string } | null> {
+  const u = await verifyUser(req, env);
+  if (!u || u.role !== "admin") return null;
+  return u.email ? { userId: u.userId, email: u.email } : { userId: u.userId };
+}
+
+// The CRM's injected transport is the RAW Cloudflare sender: @odla-ai/crm does
+// its own consent gating, dev-redirect, and audit, so wrapping it in the
+// worker's sendTemplated redirect would double-redirect. Log-only -> omit the
+// sender (CRM audits without delivering), matching the worker's own behavior.
+function crmSender(mailer: EmailTransport) {
+  if (mailer.name !== "cloudflare") return undefined;
+  return {
+    async send(payload: {
+      from: string;
+      to: string[];
+      subject: string;
+      text?: string;
+      html?: string;
+      replyTo?: string;
+      headers?: Record<string, string>;
+    }): Promise<{ messageId: string }> {
+      return mailer.sender.send(payload);
+    },
+  };
 }
 
 const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
@@ -347,6 +385,44 @@ async function fetchClerkRoles(db: Db): Promise<Map<string, Role> | null> {
   }
 }
 
+// Super-admin: the tier that may create/modify admins. Stored in the
+// `superAdmins` odla-db table, which the worker only ever READS (never writes);
+// it is set exclusively in the odla Studio data browser. Keyed by lowercased
+// email, matched against the caller's verified Clerk email.
+async function isSuperAdmin(db: Db, email: string | undefined): Promise<boolean> {
+  if (!email) return false;
+  const { superAdmins } = await db.query({
+    superAdmins: { $: { where: { email: email.toLowerCase() }, limit: 1 } },
+  });
+  return Boolean(superAdmins?.[0]);
+}
+
+// A target user's current Clerk role + primary email (for role-change gating
+// and the access lookup). Best-effort; null when the vault key is absent or the
+// lookup fails.
+async function clerkUserRoleEmail(
+  db: Db,
+  userId: string,
+): Promise<{ role: Role; email?: string } | null> {
+  const sk = await getVaultSecret(db, "clerk_secret_key");
+  if (!sk) return null;
+  try {
+    const res = await fetch(`https://api.clerk.com/v1/users/${userId}`, {
+      headers: { authorization: `Bearer ${sk}` },
+    });
+    if (!res.ok) return null;
+    const u = (await res.json()) as {
+      public_metadata?: Record<string, unknown>;
+      email_addresses?: Array<{ email_address?: string }>;
+    };
+    const r = u.public_metadata?.role;
+    const role: Role = r === "admin" || r === "member" ? r : "provisional";
+    return { role, email: u.email_addresses?.[0]?.email_address };
+  } catch {
+    return null;
+  }
+}
+
 const applicationSummary = (a: Record<string, unknown>) => ({
   id: a.id,
   firstName: a.firstName,
@@ -497,6 +573,27 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   // Cloudflare Email Service when wired, log-only otherwise; the seam means
   // every send call reads the same either way.
   const mailer: EmailTransport = resolveTransport(env.SEND_EMAIL, env.EMAIL_FROM);
+
+  // ── CRM admin routes (@odla-ai/crm) ─────────────────────────────────
+  // Mounted at /api/crm/*; the factory returns null outside its basePath, but
+  // gating on the prefix keeps it off the public hot paths (join/slots/webhook)
+  // entirely. authorize reuses verifyUser (admin-only); the sender is the raw
+  // Cloudflare transport (CRM owns consent gating, dev-redirect, and audit).
+  if (url.pathname.startsWith("/api/crm/")) {
+    const crmRoutes = createCrmRoutes({
+      crm,
+      // 0.6.4-compat shim (id stamping + null stripping); see src/crm-sync.mjs.
+      db: wrapCrmDb(db),
+      authorize: (r) => crmAuthorize(r, env),
+      sender: crmSender(mailer),
+      from: env.EMAIL_FROM,
+      envName: env.ODLA_ENV,
+      basePath: "/api/crm",
+      baseUrl: url.origin,
+    });
+    const crmResp = await crmRoutes(req);
+    if (crmResp) return crmResp;
+  }
 
   // Public: everything the join page needs to render its compliance and
   // payment steps. Copy comes from the group row, never code; paymentsReady
@@ -744,6 +841,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         }),
       );
 
+      await syncPersonToCrm(db, {
+        app: { ...app, status: "call_scheduled" },
+        stage: "call_scheduled",
+      }).catch((e) => console.error("crm sync failed (book)", e));
+
       if (!app.prepEmailSentAt) {
         const prep = await sendTemplated(db, env.ODLA_ENV, mailer, group, {
           template: "prepEmail",
@@ -839,6 +941,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
             mutationId: `stripe:${event.id}`,
           });
         }
+        const paidStatus = app.status === "submitted" ? "paid_pending_vetting" : (app.status as string);
+        await syncPersonToCrm(db, {
+          app: { ...app, status: paidStatus, ...(renewalAt ? { renewalAt } : {}) },
+          stage: paidStatus,
+        }).catch((e) => console.error("crm sync failed (invoice.paid)", e));
         const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
         if (group) {
           const vars = {
@@ -871,6 +978,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         await db.transact(tx.applications[app.id as string].update({ renewalAt }), {
           mutationId: `stripe:${event.id}`,
         });
+        await syncPersonToCrm(db, {
+          app: { ...app, renewalAt },
+          stage: app.status as string,
+        }).catch((e) => console.error("crm sync failed (renewal)", e));
       }
       return json({ ok: true });
     }
@@ -881,6 +992,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       await db.transact(tx.applications[app.id as string].update({ status: "refunded" }), {
         mutationId: `stripe:${event.id}`,
       });
+      await syncPersonToCrm(db, {
+        app: { ...app, status: "refunded" },
+        stage: "refunded",
+      }).catch((e) => console.error("crm sync failed (refunded)", e));
       // Phase R hook: reverse any pending referral credit here.
       return json({ ok: true });
     }
@@ -891,6 +1006,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       await db.transact(tx.applications[app.id as string].update({ canceled: true }), {
         mutationId: `stripe:${event.id}`,
       });
+      await syncPersonToCrm(db, {
+        app: { ...app, canceled: true },
+        stage: app.status as string,
+      }).catch((e) => console.error("crm sync failed (canceled)", e));
       return json({ ok: true });
     }
 
@@ -922,7 +1041,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         }
       }
     }
-    return json({ ...user, application });
+    // Super-admin status gates the "promote to admin" UI. Resolved only for
+    // admins (members never need it), from the read-only superAdmins table.
+    const superAdmin = user.role === "admin" ? await isSuperAdmin(db, user.email) : false;
+    return json({ ...user, superAdmin, application });
   }
 
   // ── Admin routes ────────────────────────────────────────────────
@@ -930,6 +1052,14 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     const user = await verifyUser(req, env);
     if (!user) return json({ error: "unauthorized" }, 401);
     if (user.role !== "admin") return json({ error: "forbidden" }, 403);
+
+    // Backfill / re-sync every person into the CRM (applications + $users ->
+    // crm_record). Idempotent, so it doubles as the one-time migration and a
+    // repair button. The ongoing sync happens inline at each lifecycle write.
+    if (req.method === "POST" && url.pathname === "/api/admin/crm/sync") {
+      const result = await backfillCrm(db);
+      return json({ ok: true, ...result });
+    }
 
     // One row per person, joined by lowercased email: the $users mirror
     // (accounts), applications (pipeline), and Clerk roles. Replaces the
@@ -1421,6 +1551,21 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ ok: true });
     }
 
+    // A person's current access (Clerk role + whether they are a super-admin),
+    // for the record panel's Access card. Admin-gated read.
+    if (req.method === "GET" && url.pathname === "/api/admin/people/access") {
+      const targetId = url.searchParams.get("userId") ?? "";
+      if (!targetId.startsWith("user_")) return json({ error: "invalid userId" }, 400);
+      const info = await clerkUserRoleEmail(db, targetId);
+      if (!info) return json({ error: "user lookup unavailable" }, 502);
+      return json({
+        userId: targetId,
+        role: info.role,
+        email: info.email ?? null,
+        superAdmin: await isSuperAdmin(db, info.email),
+      });
+    }
+
     // Change a person's role (Clerk publicMetadata, the source of truth).
     if (req.method === "POST" && url.pathname === "/api/admin/people/role") {
       let body: Record<string, unknown>;
@@ -1438,6 +1583,20 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       // Self-demotion lockout guard: admins change other people's roles.
       if (targetId === user.userId) {
         return json({ error: "you cannot change your own role" }, 400);
+      }
+
+      // Admin creation/modification is super-admin-only. A regular admin can set
+      // provisional/member on a non-admin, but cannot mint admins, touch an
+      // existing admin's role, or alter a super-admin. Super-admin itself is
+      // never writable here (it lives in the read-only superAdmins table).
+      const callerSuper = await isSuperAdmin(db, user.email);
+      const target = await clerkUserRoleEmail(db, targetId);
+      const targetCurrentRole = target?.role ?? "provisional";
+      if ((await isSuperAdmin(db, target?.email)) && !callerSuper) {
+        return json({ error: "this person is a super-admin; their access is managed in odla Studio" }, 403);
+      }
+      if ((role === "admin" || targetCurrentRole === "admin") && !callerSuper) {
+        return json({ error: "only super-admins can create or change an admin" }, 403);
       }
 
       let sk: string;
@@ -1476,6 +1635,11 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       }
 
       await db.transact(tx.applications[id].update({ status: "approved" }));
+
+      await syncPersonToCrm(db, {
+        app: { ...app, status: "approved" },
+        stage: "approved",
+      }).catch((e) => console.error("crm sync failed (approve)", e));
 
       // Promote the linked account to member (best effort; reported).
       // clerkUserId links lazily at first sign-in, so fall back to a Clerk
@@ -1618,6 +1782,15 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       if (!applications?.length) return json({ error: "not found" }, 404);
 
       await db.transact(tx.applications[id].update(attrs));
+      // Mirror only when the status moved (meetingAt is not a CRM person
+      // field). patched merges the pre-update row with the change.
+      if (attrs.status !== undefined) {
+        const patched = { ...applications[0], ...attrs };
+        await syncPersonToCrm(db, {
+          app: patched,
+          stage: patched.status as string,
+        }).catch((e) => console.error("crm sync failed (patch)", e));
+      }
       return json({ ok: true });
     }
 
@@ -1670,6 +1843,13 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         linkedin: parsed.attrs.linkedin ?? "",
       },
     );
+
+    // Project the new applicant into the CRM (non-fatal: a CRM hiccup must
+    // never fail the join).
+    await syncPersonToCrm(db, {
+      app: { id, ...parsed.attrs, status: "submitted" },
+      stage: "submitted",
+    }).catch((e) => console.error("crm sync failed (join)", e));
 
     return json({ ok: true, id, duplicate: duplicate ?? false, accountCreated }, 201);
   }
