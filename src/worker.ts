@@ -1123,6 +1123,79 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ people: rows });
     }
 
+    // Dashboard overview: application flow (total / last 7 / last 30), pipeline
+    // stage counts, live revenue (Stripe), and the upcoming intro-call agenda
+    // with drift. One call powers the Dashboard tab's stat cards + agenda.
+    if (req.method === "GET" && url.pathname === "/api/admin/dashboard") {
+      const nowMs = Date.now();
+      const d7 = nowMs - 7 * 86_400_000;
+      const d30 = nowMs - 30 * 86_400_000;
+
+      const [appsRes, meetingsRes, dashGroup] = await Promise.all([
+        db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 1000 } } }),
+        db.query({ meetings: { $: { where: { status: "scheduled" }, order: { startAt: "asc" }, limit: 500 } } }),
+        getGroup(db, DEFAULT_GROUP_ID),
+      ]);
+      const apps = (appsRes.applications ?? []) as Array<Record<string, unknown>>;
+      const applications = {
+        total: apps.length,
+        last7: apps.filter((a) => (a.createdAt as number) >= d7).length,
+        last30: apps.filter((a) => (a.createdAt as number) >= d30).length,
+      };
+      const pipeline: Record<string, number> = {};
+      for (const s of STATUSES) pipeline[s] = 0;
+      for (const a of apps) { const s = a.status as string; if (s in pipeline) pipeline[s] += 1; }
+
+      const meetings = (meetingsRes.meetings ?? []) as Array<Record<string, unknown>>;
+      const appById = new Map(apps.map((a) => [a.id, a]));
+      const upcomingMeetings = meetings.filter((m) => (m.startAt as number) >= nowMs - 3_600_000);
+      const calls = {
+        upcoming: upcomingMeetings.length,
+        needsAttention: meetings.filter((m) => m.drift && m.drift !== "none").length,
+      };
+      const agenda = upcomingMeetings.slice(0, 8).map((m) => {
+        const a = appById.get(m.applicationId) as Record<string, unknown> | undefined;
+        return {
+          id: m.id,
+          startAt: m.startAt,
+          meetUrl: m.meetUrl ?? null,
+          htmlLink: m.htmlLink ?? null,
+          drift: m.drift ?? "none",
+          name: a ? `${a.firstName} ${a.lastName}` : "(unknown)",
+          email: (a?.email as string) ?? null,
+        };
+      });
+      const tz = dashGroup
+        ? schedulingConfig(dashGroup as GroupRow & { schedulingJson?: unknown }).timezone
+        : SCHEDULING_DEFAULTS.timezone;
+
+      let revenue: Record<string, unknown> = { billingReady: false };
+      const dashSk = dashGroup ? await getVaultSecret(db, "stripe_secret_key") : null;
+      if (dashGroup && dashSk) {
+        const subsRes = await stripeCall(dashSk, "GET", "/v1/subscriptions", { limit: 100, status: "all" });
+        if (subsRes.ok) {
+          const subs = ((subsRes.body.data as Array<Record<string, unknown>>) ?? []);
+          const active = subs.filter((s) => s.status === "active");
+          const runRate = active.reduce((sum, s) => {
+            const items = ((s.items as { data?: Array<{ price?: { unit_amount?: number; recurring?: { interval?: string } }; quantity?: number }> })?.data ?? []);
+            let cents = 0, interval = "year";
+            for (const it of items) { cents += (it.price?.unit_amount ?? 0) * (it.quantity ?? 1); interval = it.price?.recurring?.interval ?? interval; }
+            return sum + cents * (interval === "month" ? 12 : 1);
+          }, 0);
+          revenue = {
+            billingReady: true,
+            testMode: (dashGroup.stripePublishableKey ?? "").startsWith("pk_test"),
+            activeCount: active.length,
+            annualRunRateCents: runRate,
+            newPaid7: subs.filter((s) => ((s.created as number) ?? 0) * 1000 >= d7).length,
+            newPaid30: subs.filter((s) => ((s.created as number) ?? 0) * 1000 >= d30).length,
+          };
+        }
+      }
+
+      return json({ applications, pipeline, calls, agenda, timezone: tz, revenue });
+    }
+
     // Owner-editable email configuration (PAYMENT-SPEC: copy lives in the
     // group row, never code). Scoped to the launch group for now.
     if (req.method === "GET" && url.pathname === "/api/admin/group/email") {

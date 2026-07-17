@@ -5,41 +5,35 @@
 import { render } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { api } from "../lib.js";
+import { DashboardTab } from "./dashboard.jsx";
 import { PeopleTab } from "./people-crm.jsx";
-import { BillingTab } from "./billing.jsx";
-import { CalendarTab } from "./calendar.jsx";
-import { AvailabilityTab } from "./availability.jsx";
-import { EmailTab } from "./email.jsx";
+import { SettingsTab } from "./settings.jsx";
 
 // Tabs remember the active one across reloads via the hash. Deep links from
 // emails arrive as ?tab=<name> (mail-client link rewriting drops #fragments
 // more often than queries); the hash form also works. Switching tabs
 // canonicalizes back to the hash.
-const TAB_NAMES = ["people", "billing", "calendar", "settings", "email"];
+const TAB_NAMES = ["dashboard", "people", "settings"];
 const TAB_LABELS = {
+  dashboard: "Dashboard",
   people: "People",
-  billing: "Billing",
-  calendar: "Calendar",
-  settings: "Call Settings",
-  email: "Email Settings",
+  settings: "Settings",
 };
+// Old tab names (billing/calendar/email/calls) folded into the three above.
+const LEGACY_TABS = { billing: "dashboard", calendar: "dashboard", calls: "dashboard", email: "settings" };
 
 function initialTab() {
   const fromUrl = new URLSearchParams(location.search).get("tab") || location.hash.replace("#", "");
-  // The calendar tab deep-links its subview: #calendar/month/2026-08.
   const name = fromUrl.split("/")[0];
-  // The Introduction Calls tab folded into Calendar (2026-07-15); old
-  // bookmarks land on the agenda and the hash canonicalizes itself.
-  if (name === "calls") return "calendar";
-  return TAB_NAMES.includes(name) ? name : "people";
+  if (TAB_NAMES.includes(name)) return name;
+  if (LEGACY_TABS[name]) return LEGACY_TABS[name];
+  return "dashboard";
 }
 
 function AdminApp({ me }) {
   const [tab, setTab] = useState(initialTab);
 
   useEffect(() => {
-    // CalendarTab owns the hash while active (it carries view + period).
-    if (tab === "calendar") return;
     history.replaceState(null, "", location.pathname + "#" + tab);
   }, [tab]);
 
@@ -74,11 +68,9 @@ function AdminApp({ me }) {
       <div class="tabs-panels">
         {/* Every panel stays mounted (hidden when inactive) so all data
             loads once at sign-in, matching the old parallel boot. */}
+        <div class="tabs-panel tab-panel" hidden={tab !== "dashboard"}><DashboardTab /></div>
         <div class="tabs-panel tab-panel" hidden={tab !== "people"}><PeopleTab myUserId={me.userId} superAdmin={me.superAdmin === true} /></div>
-        <div class="tabs-panel tab-panel" hidden={tab !== "billing"}><BillingTab /></div>
-        <div class="tabs-panel tab-panel" hidden={tab !== "calendar"}><CalendarTab active={tab === "calendar"} /></div>
-        <div class="tabs-panel tab-panel" hidden={tab !== "settings"}><AvailabilityTab /></div>
-        <div class="tabs-panel tab-panel" hidden={tab !== "email"}><EmailTab /></div>
+        <div class="tabs-panel tab-panel" hidden={tab !== "settings"}><SettingsTab /></div>
       </div>
     </>
   );
