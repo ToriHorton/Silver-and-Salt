@@ -23,7 +23,7 @@ import {
 // person one-way into a crm_record. See src/crm.mjs for the model.
 import { createCrmRoutes } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
-import { syncPersonToCrm, backfillCrm, wrapCrmDb } from "./crm-sync.mjs";
+import { syncPersonToCrm, backfillCrm } from "./crm-sync.mjs";
 
 interface Env {
   ASSETS: Fetcher;
@@ -582,8 +582,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   if (url.pathname.startsWith("/api/crm/")) {
     const crmRoutes = createCrmRoutes({
       crm,
-      // 0.6.4-compat shim (id stamping + null stripping); see src/crm-sync.mjs.
-      db: wrapCrmDb(db),
+      db,
       authorize: (r) => crmAuthorize(r, env),
       sender: crmSender(mailer),
       from: env.EMAIL_FROM,

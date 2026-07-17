@@ -16,35 +16,11 @@ import { crm, PERSON_STAGES } from "./crm.mjs";
 
 const str = (v) => (typeof v === "string" ? v : v == null ? "" : String(v));
 
-// ── odla-db compatibility shim for @odla-ai/crm@0.1.1 ────────────────────────
-// The published CRM (0.1.1) targets a newer @odla-ai/db than the latest release
-// (0.6.4), so two of its write/read assumptions don't hold on 0.6.4:
-//   1. It reads rows with `where:{id}`, but 0.6.4 only filters DECLARED indexed
-//      attrs and CRM_SCHEMA never declares `id`. We declare `id` (indexed) on
-//      the crm_* entities at provision time and stamp the entity id into every
-//      update op's attrs here, so getRecord/updateRecord/setStage resolve.
-//   2. Its create path writes `null` for empty slot/optional columns, which
-//      0.6.4 rejects ("expects string, received null"). We drop null/undefined
-//      attrs so the columns are omitted instead.
-// This wraps the injected AdminDb so BOTH the worker's CRM routes and this
-// sync see a 0.6.4-compatible client. Tx-builder chains (non-arrays) pass
-// through untouched. Remove this shim once a compatible @odla-ai/db ships.
-export function wrapCrmDb(db) {
-  const fix = (op) => {
-    if (!op || op.t !== "update" || !op.attrs || typeof op.attrs !== "object") return op;
-    const attrs = {};
-    for (const [k, v] of Object.entries(op.attrs)) {
-      if (v !== null && v !== undefined) attrs[k] = v;
-    }
-    if (typeof op.id === "string") attrs.id = op.id;
-    return { ...op, attrs };
-  };
-  return {
-    query: (q) => db.query(q),
-    aggregate: (ns, spec, opts) => db.aggregate(ns, spec, opts),
-    transact: (ops, opts) => db.transact(Array.isArray(ops) ? ops.map(fix) : ops, opts),
-  };
-}
+// NOTE (2026-07-17): the earlier `wrapCrmDb` compatibility shim (null-strip +
+// id-stamp) was removed once @odla-ai/crm 0.1.2 + @odla-ai/db 0.6.6 shipped:
+// crm 0.1.2 mirrors the entity id as an attr itself and no longer writes null
+// slots, and its CRM_SCHEMA now declares that `id` attr. The injected AdminDb
+// is passed straight through.
 
 // The person type's custom-field input, mapped from an application row (or a
 // synthetic {email, firstName} for an account with no application). The email
@@ -97,9 +73,7 @@ function billingColumnsFromApp(app) {
 export async function syncPersonToCrm(db, { app, stage }) {
   const emailKey = str(app.email).toLowerCase();
   if (!emailKey) return null;
-  // CRM helper ops go through the 0.6.4-compat wrapper; the raw db is fine for
-  // the plain query and the direct billing-column write below.
-  const deps = { crm, db: wrapCrmDb(db) };
+  const deps = { crm, db };
 
   const { crm_record } = await db.query({
     crm_record: { $: { where: { type: "person", primaryEmail: emailKey }, limit: 1 } },

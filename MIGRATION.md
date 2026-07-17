@@ -747,36 +747,36 @@ in a **hybrid** with the existing operational system (owner-chosen):
   `cory.ondrejka@gmail.com` seeded into `superAdmins`; in prod the owner adds
   rows in Studio (keyed by lowercased email).
 
-**Upstream incompatibility (important for future agents).** The brand-new
-`@odla-ai/crm@0.1.1` and `@odla-ai/cli@0.13.x` were published ahead of a
-fully-compatible `@odla-ai/db`. `@odla-ai/db@0.6.5` (published 2026-07-16) fixed
-item 1 below; item 2 persists and was re-verified against 0.6.5:
-  1. [FIXED by db 0.6.5] `@odla-ai/cli@0.13.x` imports `collectToken` from
-     `@odla-ai/db`, which 0.6.4 did not export -> the CLI failed at module load,
-     so `odla-ai provision/doctor/smoke` could not run. 0.6.5 exports it, so the
-     CLI loads again. (We still provision via the script below, since the
-     official provision pushes the pristine CRM_SCHEMA without the id
-     declaration item 2's shim needs.) The original workaround remains:
-     `_scripts/provision-crm-dev.mjs`, which pushes the merged schema and seeds
-     `crm_config` using the app admin key (`ODLA_API_KEY`), no CLI/dev-token
-     needed. It also declares an indexed `id` on the crm_* entities (see below)
-     and skips the deny-all crm rules (redundant: browsers hold no db
-     credential, the worker admin key bypasses rules, app defaultRules is deny;
-     run the real `odla-ai provision` once the CLI is fixed to lay them down).
-  2. [STILL BROKEN on db 0.6.5, re-tested 2026-07-16] `@odla-ai/crm@0.1.1` reads
-     rows via `where:{id}` and writes `null` for empty slot columns, neither of
-     which db 0.6.4 or 0.6.5 supports (it only filters DECLARED indexed attrs
-     and rejects `null`). Shimmed by `wrapCrmDb` in
-     `src/crm-sync.mjs`: it stamps the entity id into every write op's attrs and
-     drops null/undefined attrs. Applied to both the worker's CRM routes and the
-     sync. **Remove the shim + the id-declaration once a compatible
-     `@odla-ai/db` ships.**
+**Upstream incompatibility — NOW RESOLVED (2026-07-17).** The brand-new
+`@odla-ai/crm@0.1.1` and `@odla-ai/cli@0.13.x` were briefly published ahead of a
+fully-compatible `@odla-ai/db`. Both issues are now fixed upstream and the
+workaround shim has been removed:
+  1. [FIXED by db 0.6.5] `@odla-ai/cli@0.13.x` imported `collectToken` from
+     `@odla-ai/db`, which 0.6.4 did not export -> the CLI failed at module load.
+     0.6.5 exports it, so `odla-ai` loads again.
+  2. [FIXED by crm 0.1.2 + db 0.6.6] `@odla-ai/crm@0.1.1` read rows via
+     `where:{id}` and wrote `null` for empty slot columns, which db 0.6.4/0.6.5
+     didn't support (filters only DECLARED indexed attrs; rejects `null`). This
+     was carried by a `wrapCrmDb` shim (id-stamp + null-strip) plus a manual
+     id-declaration in the provision script. **crm 0.1.2 now mirrors the entity
+     id as an attr itself, no longer writes null slots, and its `CRM_SCHEMA`
+     declares that `id` attr** — so on 0.1.2 + db 0.6.6 the full op surface
+     passes UNSHIMMED (re-verified 2026-07-17). The shim and the manual
+     id-declaration were removed; the injected `AdminDb` is passed straight
+     through.
 
-**Verified on dev (2026-07-16):** provision pushed the 8 crm_* namespaces +
-seeded config; backfill synced 20 people (stage + billing snapshot + consent
-channels + Clerk link all correct, 0 errors); the full CRM op surface
-(create/read/update/setStage/tags/notes/tasks/consent/email) passes against the
-live dev tenant through the shim; worker bundles and boots; `/api/crm/records`
+Provisioning still uses `_scripts/provision-crm-dev.mjs` (pushes the merged
+schema + seeds `crm_config` with the app admin key — no dev-token re-auth). The
+official `npx odla-ai provision` also works again now (CLI loads, CRM_SCHEMA is
+self-consistent) if you want it to lay down the explicit deny-all crm rules;
+until then those namespaces rely on default-deny + no browser db credential.
+
+**Verified on dev (2026-07-16, re-verified unshimmed 2026-07-17):** provision
+pushed the crm_* namespaces + seeded config; backfill synced 20 people (stage +
+billing snapshot + consent channels + Clerk link all correct, 0 errors); the
+full CRM op surface (create/read/update/setStage/tags/notes/tasks/consent/email)
+passes against the live dev tenant (now UNSHIMMED on crm 0.1.2 + db 0.6.6);
+worker bundles and boots; `/api/crm/records`
 and `/api/admin/crm/sync` return 401 unauthenticated; admin island builds with
 the CRM UI under Preact; existing tabs compile under ui 0.7.0. **Remaining: the
 owner's browser pass** — sign in at `/admin/` as admin, exercise the People

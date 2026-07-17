@@ -1,16 +1,15 @@
 // Provision the @odla-ai/crm namespaces into the DEV tenant.
 //
-// Why this exists instead of `npx odla-ai provision`: the published
-// @odla-ai/cli@0.13.x (the first line that understands `integrations`) imports
-// `collectToken` from @odla-ai/db, a symbol no published @odla-ai/db (latest
-// 0.6.4) exports, so the CLI fails at module load and no command runs. This
-// script does the same additive work the CLI's provision would do for the CRM
-// integration, using the app admin key (never-expiring), so it needs neither
-// the broken CLI nor a fresh developer token.
+// Why this exists: it provisions with the app admin key (never-expiring), so it
+// needs no developer-token re-auth and no interactive Studio handshake. As of
+// @odla-ai/db 0.6.6 the official `npx odla-ai provision` also works again (0.6.5
+// restored the `collectToken` export the CLI needs) and crm 0.1.2's CRM_SCHEMA
+// is now self-consistent, so either path is fine; this one stays as the
+// token-free, proven option for dev.
 //
 // What it does (all additive, dev-only, idempotent — safe to re-run):
-//   1. GET the live app schema and MERGE the eight crm_* namespaces in
-//      (app entities are preserved byte-for-byte; only new entities are added).
+//   1. GET the live app schema and MERGE the app + crm namespaces in
+//      (existing entities are preserved; only new ones are added).
 //   2. POST the merged schema back.
 //   3. Seed the crm_config singleton (templates + addresses) when absent.
 //
@@ -18,7 +17,8 @@
 // wants the developer token, and it is redundant here anyway — the browser
 // never holds a db credential (all access is the worker with the admin key,
 // which bypasses rules), and the app's defaultRules is "deny". Run the real
-// `odla-ai provision` once the CLI ships a fix to lay down the explicit rules.
+// `odla-ai provision` (now that the CLI loads) if you want the explicit rules
+// laid down.
 //
 // Usage:  node _scripts/provision-crm-dev.mjs
 
@@ -89,22 +89,15 @@ async function main() {
   // forbids "$"). Keeping all existing app entities in the payload means the
   // push can only ADD the crm_* namespaces, never remove anything.
   // Live + the canonical app schema (src/odla/schema.mjs, so new app entities
-  // like superAdmins get pushed) + the crm namespaces.
+  // like superAdmins get pushed) + the crm namespaces. crm 0.1.2's CRM_SCHEMA
+  // now declares the `id` attr on the namespaces it reads by `where:{id}`, so
+  // no manual id-declaration is needed anymore. The $-prefixed system
+  // namespaces are platform-managed and rejected by the schema endpoint.
   const mergedAll = { ...liveSchema.entities, ...appSchema.entities, ...CRM_SCHEMA.entities };
   const entities = {};
   for (const [name, def] of Object.entries(mergedAll)) {
     if (name.startsWith("$")) continue;
-    if (name.startsWith("crm_")) {
-      // @odla-ai/crm@0.1.1 reads rows via `where:{id}`, but @odla-ai/db@0.6.4
-      // only filters DECLARED indexed attrs and CRM_SCHEMA never declares `id`.
-      // Declare it (indexed) so id-lookup works; the worker's wrapCrmDb stamps
-      // the id value onto every write. See src/crm-sync.mjs.
-      entities[name] = {
-        attrs: { id: { type: "string", unique: false, indexed: true, optional: true }, ...def.attrs },
-      };
-    } else {
-      entities[name] = def;
-    }
+    entities[name] = def;
   }
   const merged = {
     entities,
