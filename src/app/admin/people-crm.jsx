@@ -244,28 +244,34 @@ function EmailComposer({ record }) {
 // ── Access card: promote/change a person's role. Super-admin-only (the whole
 // card is hidden otherwise). Super-admin itself is set only in odla Studio and
 // is never editable here; the server enforces the same rules.
-function AccessCard({ clerkUserId, myUserId }) {
-  const [access, setAccess] = useState(null);
-  const [role, setRole] = useState("");
+function AccessCard({ clerkUserId, myUserId, currentRole }) {
+  const [role, setRole] = useState(currentRole || "provisional");
+  const [savedRole, setSavedRole] = useState(currentRole || "provisional");
+  const [targetSuper, setTargetSuper] = useState(false);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState(null);
   const isSelf = clerkUserId === myUserId;
 
-  const load = useCallback(() => {
+  // Show the role we already know (from the People list) immediately, then
+  // refine the authoritative role + target super-admin status in the
+  // background. The card never blocks on "Loading…"; a lookup failure just
+  // leaves the known role in place.
+  useEffect(() => {
+    setRole(currentRole || "provisional");
+    setSavedRole(currentRole || "provisional");
     setMsg(null);
     api(`/api/admin/people/access?userId=${encodeURIComponent(clerkUserId)}`)
-      .then((a) => { setAccess(a); setRole(a.role); })
-      .catch((e) => setMsg("Could not load access: " + (e.message || e)));
-  }, [clerkUserId]);
-  useEffect(() => { load(); }, [load]);
+      .then((a) => { setRole(a.role); setSavedRole(a.role); setTargetSuper(a.superAdmin === true); })
+      .catch(() => {});
+  }, [clerkUserId, currentRole]);
 
   const save = async () => {
     setSaving(true);
     setMsg(null);
     try {
       await api("/api/admin/people/role", { method: "POST", body: JSON.stringify({ userId: clerkUserId, role }) });
+      setSavedRole(role);
       setMsg("Saved ✓");
-      load();
       bus.dispatchEvent(new Event("people:reload"));
     } catch (e) {
       setMsg(e.message || String(e));
@@ -277,29 +283,23 @@ function AccessCard({ clerkUserId, myUserId }) {
   return (
     <div class="card-inner">
       <div class="card-label">Access</div>
-      {!access ? (
-        <p class="muted">Loading…</p>
-      ) : (
-        <>
-          {access.superAdmin && (
-            <p class="crm-consent-note">Super-admin (set in odla Studio). Managed there, not here.</p>
-          )}
-          <label class="crm-field">
-            <span>Role</span>
-            <select value={role} disabled={isSelf || access.superAdmin || saving}
-              onChange={(e) => setRole(e.currentTarget.value)}>
-              {ROLES.map((r) => <option value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>)}
-            </select>
-          </label>
-          {isSelf && <p class="muted" style="font-size:12px;margin:-4px 0 10px">You cannot change your own role.</p>}
-          <div class="crm-email-actions">
-            <button class="row-save" disabled={saving || isSelf || access.superAdmin || role === access.role} onClick={save}>
-              {saving ? "Saving…" : "Save role"}
-            </button>
-            {msg && <span class="crm-email-result">{msg}</span>}
-          </div>
-        </>
+      {targetSuper && (
+        <p class="crm-consent-note">Super-admin (set in odla Studio). Managed there, not here.</p>
       )}
+      <label class="crm-field">
+        <span>Role</span>
+        <select value={role} disabled={isSelf || targetSuper || saving}
+          onChange={(e) => setRole(e.currentTarget.value)}>
+          {ROLES.map((r) => <option value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>)}
+        </select>
+      </label>
+      {isSelf && <p class="muted" style="font-size:12px;margin:-4px 0 10px">You cannot change your own role.</p>}
+      <div class="crm-email-actions">
+        <button class="row-save" disabled={saving || isSelf || targetSuper || role === savedRole} onClick={save}>
+          {saving ? "Saving…" : "Save role"}
+        </button>
+        {msg && <span class="crm-email-result">{msg}</span>}
+      </div>
     </div>
   );
 }
@@ -413,7 +413,7 @@ const REC_TABS = [
   ["notes", "Notes"],
 ];
 
-function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId }) {
+function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap }) {
   const state = useCrmRecord(client, id);
   const [subtab, setSubtab] = useState("info");
   const [saving, setSaving] = useState(false);
@@ -477,7 +477,13 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId }) {
             <StageControl crm={crm} record={record} onMove={onMoveStage} />
             <div class="rec-section"><div class="card-label">Tags</div><TagEditor tags={state.detail.tags} onAdd={onAddTag} onRemove={onRemoveTag} /></div>
             <IdentityCard record={record} onLink={onLinkIdentity} />
-            {superAdmin && record.clerkUserId && <AccessCard clerkUserId={record.clerkUserId} myUserId={myUserId} />}
+            {superAdmin && record.clerkUserId && (
+              <AccessCard
+                clerkUserId={record.clerkUserId}
+                myUserId={myUserId}
+                currentRole={roleMap && roleMap.get((record.primaryEmail || "").toLowerCase())}
+              />
+            )}
           </div>
         )}
         {subtab === "comms" && <EmailComposer record={record} />}
@@ -560,7 +566,7 @@ export function PeopleTab({ myUserId, superAdmin }) {
         {/* Right: the focused person's detail, or a hint when nothing is chosen. */}
         <div class="people-detail">
           {openId ? (
-            <RecordDrawer id={openId} onClose={() => setOpenId(null)} onChanged={onChanged} superAdmin={superAdmin} myUserId={myUserId} />
+            <RecordDrawer id={openId} onClose={() => setOpenId(null)} onChanged={onChanged} superAdmin={superAdmin} myUserId={myUserId} roleMap={roleMap} />
           ) : (
             <div class="card people-empty">
               <div class="card-label">Details</div>
