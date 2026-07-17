@@ -659,6 +659,20 @@
     .dash-agenda-who { color: var(--moss-light); font-size: 14px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .dash-agenda-link { color: var(--lime-dark); font-weight: 700; text-decoration: none; font-size: 12px; }
     .dash-agenda-link:hover { text-decoration: underline; }
+
+    /* Record detail sub-tabs (Info / Comms / Comms history / Scheduling / Billing / Notes). */
+    .rec-tabs { display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .rec-tab { border: 0; background: none; padding: 8px 12px; font: inherit; font-size: 13px; font-weight: 600; color: var(--sage); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .rec-tab:hover { color: var(--moss); }
+    .rec-tab.on { color: var(--moss); border-bottom-color: var(--lime); }
+    .rec-info > * { margin-bottom: 18px; }
+    .rec-info > *:last-child { margin-bottom: 0; }
+    .rec-when { font-size: 16px; font-weight: 600; color: var(--moss); margin-bottom: 12px; }
+    .rec-log { list-style: none; margin: 0; padding: 0; }
+    .rec-log-row { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .rec-log-row:last-child { border-bottom: 0; }
+    .rec-log-subj { display: block; font-weight: 600; color: var(--moss); font-size: 14px; }
+    .rec-log-meta { display: block; font-size: 12px; color: var(--sage); margin-top: 2px; }
     .crm-drawer-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 400; color: var(--moss); }
     .crm-lifecycle { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
     .crm-stage-chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss-light); background: var(--lime-soft); border: 1px solid var(--border); border-radius: 100px; padding: 5px 14px; }
@@ -710,6 +724,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=3"></script>
-  <script type="module" src="/assets/app/admin.js?v=6"></script>
+  <script type="module" src="/assets/app/admin.js?v=7"></script>
 </body>
 </html>
