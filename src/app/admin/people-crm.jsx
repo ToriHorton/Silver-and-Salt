@@ -12,16 +12,88 @@
 import { useState, useEffect, useCallback } from "preact/hooks";
 import { CrmClient } from "@odla-ai/crm";
 import {
-  CrmList,
   RecordPanel,
   ActivityFeed,
-  ViewEditor,
-  BulkBar,
   useCrmQuery,
   useCrmRecord,
 } from "@odla-ai/crm/ui";
-import { crm } from "../../crm.mjs";
+import { crm, PERSON_STAGES } from "../../crm.mjs";
 import { api, bus, ROLES, STATUS_LABELS, APPROVABLE } from "../lib.js";
+
+// Stage filter chips for the exploration rail: "All" plus each pipeline stage.
+const STAGE_FILTERS = [{ id: "", label: "All" }, ...PERSON_STAGES.map((id) => ({ id, label: STATUS_LABELS[id] || id }))];
+
+// The exploration rail: search + stage filters + a compact, role-styled list.
+// Data (search/filter/pagination) comes from useCrmQuery; role comes from the
+// roleMap (email -> Clerk role) so admins/members are highlighted, and the open
+// person's row is marked active.
+function PeopleRail({ query, roleMap, openId, onOpen }) {
+  const page = query.page;
+  const records = page?.records || [];
+  const activeStage = (query.params.stage && query.params.stage[0]) || "";
+
+  return (
+    <div class="rail">
+      <input
+        class="rail-search"
+        type="search"
+        placeholder="Search people…"
+        value={query.params.search || ""}
+        onInput={(e) => query.setSearch(e.currentTarget.value)}
+      />
+      <div class="rail-stages">
+        {STAGE_FILTERS.map((s) => (
+          <button
+            type="button"
+            class={"rail-chip" + (activeStage === s.id ? " on" : "")}
+            onClick={() => query.update({ stage: s.id ? [s.id] : undefined })}
+          >{s.label}</button>
+        ))}
+      </div>
+
+      {query.loading && !records.length ? (
+        <div class="rail-note"><span class="spinner"></span> Loading people…</div>
+      ) : !records.length ? (
+        <div class="rail-note">No people match.</div>
+      ) : (
+        <ul class="rail-list">
+          {records.map((r) => {
+            const role = roleMap.get((r.primaryEmail || "").toLowerCase());
+            return (
+              <li key={r.id}>
+                <button
+                  type="button"
+                  class={"rail-row" + (r.id === openId ? " active" : "")}
+                  onClick={() => onOpen(r.id)}
+                >
+                  <span class="rail-row-top">
+                    <span class={"rail-name" + (role === "admin" ? " role-admin" : "")}>
+                      {r.name || r.primaryEmail || "(no name)"}
+                    </span>
+                    {role === "admin" && <span class="role-badge admin">Admin</span>}
+                    {role === "member" && <span class="role-badge member">Member</span>}
+                    <span class="rail-stage-badge">{STATUS_LABELS[r.stage] || r.stage || ""}</span>
+                  </span>
+                  <span class="rail-email">{r.primaryEmail || ""}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {page && page.total > page.limit && (
+        <div class="rail-pager">
+          <button type="button" disabled={page.offset <= 0}
+            onClick={() => query.setOffset(Math.max(0, page.offset - page.limit))}>Prev</button>
+          <span>{page.offset + 1}–{Math.min(page.offset + page.limit, page.total)} of {page.total}</span>
+          <button type="button" disabled={page.offset + page.limit >= page.total}
+            onClick={() => query.setOffset(page.offset + page.limit)}>Next</button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // Same Clerk bearer the rest of the console uses, fetched per request.
 const client = new CrmClient({
@@ -297,18 +369,29 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId }) {
 export function PeopleTab({ myUserId, superAdmin }) {
   const query = useCrmQuery(client, "person");
   const [openId, setOpenId] = useState(null);
-  const [selected, setSelected] = useState([]);
   const [summary, setSummary] = useState(null);
+  // email(lowercased) -> Clerk role, from /api/admin/people, so the rail can
+  // highlight admins/members. Refreshed whenever roles may have changed.
+  const [roleMap, setRoleMap] = useState(() => new Map());
 
   const loadSummary = useCallback(() => {
     client.summary("person").then(setSummary).catch(() => {});
   }, []);
+  const loadRoles = useCallback(() => {
+    api("/api/admin/people").then((res) => {
+      const m = new Map();
+      for (const p of res.people || []) if (p.role) m.set((p.email || "").toLowerCase(), p.role);
+      setRoleMap(m);
+    }).catch(() => {});
+  }, []);
+
   useEffect(() => {
     loadSummary();
-    const onReload = () => { query.refresh(); loadSummary(); };
+    loadRoles();
+    const onReload = () => { query.refresh(); loadSummary(); loadRoles(); };
     bus.addEventListener("people:reload", onReload);
     return () => bus.removeEventListener("people:reload", onReload);
-  }, [loadSummary]);
+  }, [loadSummary, loadRoles]);
 
   // Escape deselects the focused person (detail pane returns to the summary).
   useEffect(() => {
@@ -318,24 +401,7 @@ export function PeopleTab({ myUserId, superAdmin }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [openId]);
 
-  const onChanged = useCallback(() => { query.refresh(); loadSummary(); }, [query, loadSummary]);
-
-  const bulkEmail = async (ids) => {
-    const subject = prompt(`Subject for a personal note to ${ids.length} people:`);
-    if (!subject) return;
-    const body = prompt("Message:");
-    if (!body) return;
-    let sent = 0, blocked = 0;
-    for (const rid of ids) {
-      try {
-        const res = await client.sendEmail(rid, { templateId: "personal", vars: { firstName: "there", subject, body } });
-        res.sent ? sent++ : blocked++;
-      } catch { blocked++; }
-    }
-    bus.dispatchEvent(new Event("emaillog:reload"));
-    alert(`Sent ${sent}, skipped ${blocked}.`);
-    setSelected([]);
-  };
+  const onChanged = useCallback(() => { query.refresh(); loadSummary(); loadRoles(); }, [query, loadSummary, loadRoles]);
 
   const stages = summary?.stages || {};
   // Full-width, two-pane master/detail: a left exploration rail (search +
@@ -357,31 +423,7 @@ export function PeopleTab({ myUserId, superAdmin }) {
         {/* Left: exploration / discovery rail. */}
         <div class="card people-rail">
           <div class="card-label">People</div>
-          <div class="crm-list-wrap">
-            <CrmList
-              crm={crm}
-              type="person"
-              query={query}
-              columns={["name", "stage", "primaryEmail"]}
-              selectable
-              selected={selected}
-              onSelectionChange={setSelected}
-              onOpenRecord={(r) => setOpenId(r.id)}
-              toolbar={
-                <div class="crm-toolbar">
-                  <ViewEditor
-                    current={{ type: "person", filters: query.params, sort: query.params.sort ?? null, columns: [] }}
-                    onSave={(spec) => client.saveView(spec)}
-                  />
-                  <BulkBar
-                    selected={selected}
-                    onClear={() => setSelected([])}
-                    actions={[{ id: "email", label: `Email ${selected.length}`, run: bulkEmail }]}
-                  />
-                </div>
-              }
-            />
-          </div>
+          <PeopleRail query={query} roleMap={roleMap} openId={openId} onOpen={setOpenId} />
         </div>
 
         {/* Right: the focused person's detail, or a hint when nothing is chosen. */}
