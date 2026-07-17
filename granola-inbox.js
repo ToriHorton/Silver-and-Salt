@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-16",
+  generated: "2026-07-17",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -30,6 +30,19 @@ window.GRANOLA_INBOX = {
     { text: "Schedule intro call with Allyse Jackson of Beehive Meals", owner: "", context: "from email: Crystalee Beck intro re Allyse at Beehive Meals; Tori replied Jul 15, call not yet scheduled", source: "email", date: "2026-07-15" },
     { text: "Circle back with Tracey Lam in early August on the user journey trial", owner: "", context: "from email: Tracey Lam re Checking In; she asked to wait a few weeks after a death in the family, Tori agreed on Jul 15", source: "email", date: "2026-07-15" },
     { text: "Revoke the two GitHub tokens emailed in plaintext and delete those emails", owner: "", context: "from email: horton.tori@gmail.com re sending and trying again; two personal access tokens were sent in plaintext between accounts on Jul 15", source: "email", date: "2026-07-15" },
-    { text: "Decide on SCWN founding membership before the Sep 30 dues increase", owner: "", context: "from email: Kristin Keller re Santa Cruz Women's Network launch follow up; founding dues $100 until Sep 30 then $200, next meetup Aug 13 at Cantine", source: "email", date: "2026-07-15" }
+    { text: "Decide on SCWN founding membership before the Sep 30 dues increase", owner: "", context: "from email: Kristin Keller re Santa Cruz Women's Network launch follow up; founding dues $100 until Sep 30 then $200, next meetup Aug 13 at Cantine", source: "email", date: "2026-07-15" },
+    { text: "Review and sign the Climate First Bank e-sign account documents", owner: "", context: "from email: Climate First Bank ProSign and Dario Miguel re Account Information; docs and account info arrived Jul 16", source: "email", date: "2026-07-16" },
+    { text: "Set up Stripe with the new bank account number to take payments", owner: "", context: "from Granola: New Account- Built Not Found Capital, Inc; account number expected, Stripe setup unblocks payments this weekend", source: "granola", date: "2026-07-16" },
+    { text: "Connect with the Citizens Bank contact about emerging fund manager banking", owner: "", context: "from Granola: Singari women athletes investment fund; ex-SVB contact runs a division for emerging fund managers", source: "granola", date: "2026-07-16" },
+    { text: "Map athlete economic tiers with AI research", owner: "", context: "from Granola: Singari women athletes investment fund; segment Olympic, everyday pro, college, and NIL athletes", source: "granola", date: "2026-07-16" },
+    { text: "Re-engage athletes from last year's interviews on the fund thesis", owner: "", context: "from Granola: Singari women athletes investment fund; reframe outreach around the current thesis", source: "granola", date: "2026-07-16" },
+    { text: "Schedule the Los Gatos whiteboard session with Singari on fund structure", owner: "", context: "from Granola: Singari women athletes investment fund; map platform vs fund and thesis clarity", source: "granola", date: "2026-07-16" },
+    { text: "Set up the intro to Tanya Heinz", owner: "", context: "from Granola: Singari women athletes investment fund; Olympian and NIL advisor, strong alignment on athlete financial empowerment", source: "granola", date: "2026-07-16" },
+    { text: "Coordinate the format for the August Chief investment group event", owner: "", context: "from Granola: Singari women athletes investment fund; July date rescheduled, co-running the August session", source: "granola", date: "2026-07-16" },
+    { text: "Confirm the 11:15am Jul 29 call with Erynn Kerrigan via her EA Liz", owner: "", context: "from email: Liz Cuillard re Intro: Erynn Kerrigan at XL PR; Liz offered Wednesday Jul 29 at 11:15am", source: "email", date: "2026-07-16" },
+    { text: "Reply to Melissa to book the Morgan Lemaitre call, Jul 27 afternoon offered", owner: "", context: "from email: Melissa re Intro: Morgan at Park City Wealth Advisors; Morgan has Monday Jul 27 afternoon availability", source: "email", date: "2026-07-16" },
+    { text: "Send Heather Griffith Barber a calendar invite for Jul 28 at 11am", owner: "", context: "from email: Heather Griffith Barber re Crystalee's intro; she confirmed Jul 28 at 11 and asked for the invite", source: "email", date: "2026-07-16" },
+    { text: "Send Sharlene Wells an updated invite for Jul 28 at noon to her MACU email", owner: "", context: "from email: Sharlene Wells re Crystalee's intro; she declined Jul 27, proposed Jul 28 at noon, asked for sharlenewells@macu", source: "email", date: "2026-07-16" },
+    { text: "Resend the Sabrina Morales intro to smorales@mylinguistica.com", owner: "", context: "from email: auto response re Intro: Sabrina at Linguistica; her primary email changed during a transition", source: "email", date: "2026-07-16" }
   ]
 };
