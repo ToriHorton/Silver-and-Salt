@@ -628,6 +628,28 @@
       cursor: pointer; text-align: left;
     }
     .crm-record-open:hover { color: var(--lime-dark); text-decoration: underline; }
+
+    /* Exploration rail: search + stage chips + role-styled, active-highlighted list. */
+    .rail-search { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font: inherit; font-size: 14px; color: var(--moss); margin-bottom: 12px; }
+    .rail-stages { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .rail-chip { border: 1px solid var(--border); background: #fff; border-radius: 100px; padding: 5px 12px; font: inherit; font-size: 12px; font-weight: 600; color: var(--sage); cursor: pointer; }
+    .rail-chip.on { background: var(--moss); color: var(--cream); border-color: var(--moss); }
+    .rail-list { list-style: none; margin: 0; padding: 0; }
+    .rail-row { display: block; width: 100%; text-align: left; border: 0; background: none; border-radius: 8px; padding: 10px 12px; margin-bottom: 2px; cursor: pointer; font: inherit; }
+    .rail-row:hover { background: var(--bg); }
+    .rail-row.active { background: var(--lime-soft); box-shadow: inset 3px 0 0 var(--lime); }
+    .rail-row-top { display: flex; align-items: center; gap: 8px; }
+    .rail-name { font-weight: 600; color: var(--moss); }
+    .rail-name.role-admin { color: var(--lime-dark); }
+    .role-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 100px; padding: 2px 8px; }
+    .role-badge.admin { background: var(--lime); color: #fff; }
+    .role-badge.member { background: var(--lime-soft); color: var(--moss-light); }
+    .rail-stage-badge { margin-left: auto; font-size: 11px; color: var(--sage); white-space: nowrap; }
+    .rail-email { display: block; font-size: 12px; color: var(--sage); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rail-pager { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px; font-size: 12px; color: var(--sage); }
+    .rail-pager button { border: 1px solid var(--border); background: #fff; border-radius: 6px; padding: 5px 12px; font: inherit; font-size: 12px; color: var(--moss); cursor: pointer; }
+    .rail-pager button:disabled { opacity: 0.45; cursor: default; }
+    .rail-note { padding: 16px 4px; color: var(--sage); font-size: 14px; }
     .crm-drawer-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 400; color: var(--moss); }
     .crm-lifecycle { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
     .crm-stage-chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss-light); background: var(--lime-soft); border: 1px solid var(--border); border-radius: 100px; padding: 5px 14px; }
@@ -679,6 +701,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=3"></script>
-  <script type="module" src="/assets/app/admin.js?v=4"></script>
+  <script type="module" src="/assets/app/admin.js?v=5"></script>
 </body>
 </html>
