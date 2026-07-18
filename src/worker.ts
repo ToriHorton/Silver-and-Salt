@@ -556,24 +556,33 @@ async function reconcileWithGoogle(db: Db, cal: CalClient, meetings: Array<Recor
 // % and the ghost line). Built from event timestamps (ms). Day boundaries are
 // UTC — fine for a rough trend.
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-function bucketSeries(times: number[], now: number) {
+function bucketSeries(events: Array<{ t: number; v: number }>, now: number) {
   const day = 86_400_000;
-  const count = (start: number, end: number) => times.filter((t) => t >= start && t < end).length;
+  const sum = (start: number, end: number) =>
+    events.reduce((acc, e) => (e.t >= start && e.t < end ? acc + e.v : acc), 0);
   const wow = { labels: [] as string[], current: [] as number[], previous: [] as number[] };
   for (let i = 6; i >= 0; i--) {
     const end = now - i * day;
     wow.labels.push(DOW[new Date(end - day / 2).getUTCDay()]);
-    wow.current.push(count(end - day, end));
-    wow.previous.push(count(end - 8 * day, end - 7 * day));
+    wow.current.push(sum(end - day, end));
+    wow.previous.push(sum(end - 8 * day, end - 7 * day));
   }
   const mom = { labels: [] as string[], current: [] as number[], previous: [] as number[] };
   for (let i = 3; i >= 0; i--) {
     const end = now - i * 7 * day;
     mom.labels.push(`wk ${4 - i}`);
-    mom.current.push(count(end - 7 * day, end));
-    mom.previous.push(count(end - 35 * day, end - 28 * day));
+    mom.current.push(sum(end - 7 * day, end));
+    mom.previous.push(sum(end - 35 * day, end - 28 * day));
   }
   return { wow, mom };
+}
+
+// A Stripe subscription's annualized amount in cents (monthly plans ×12).
+function subAnnualCents(s: Record<string, unknown>): number {
+  const items = ((s.items as { data?: Array<{ price?: { unit_amount?: number; recurring?: { interval?: string } }; quantity?: number }> })?.data ?? []);
+  let cents = 0, interval = "year";
+  for (const it of items) { cents += (it.price?.unit_amount ?? 0) * (it.quantity ?? 1); interval = it.price?.recurring?.interval ?? interval; }
+  return cents * (interval === "month" ? 12 : 1);
 }
 
 async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
@@ -1156,9 +1165,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       const d7 = nowMs - 7 * 86_400_000;
       const d30 = nowMs - 30 * 86_400_000;
 
-      const [appsRes, meetingsRes, dashGroup] = await Promise.all([
+      const [appsRes, meetingsRes, recsRes, dashGroup] = await Promise.all([
         db.query({ applications: { $: { order: { createdAt: "desc" }, limit: 1000 } } }),
         db.query({ meetings: { $: { where: { status: "scheduled" }, order: { startAt: "asc" }, limit: 500 } } }),
+        db.query({ crm_record: { $: { where: { type: "person" }, limit: 1000 } } }),
         getGroup(db, DEFAULT_GROUP_ID),
       ]);
       const apps = (appsRes.applications ?? []) as Array<Record<string, unknown>>;
@@ -1167,9 +1177,19 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         last7: apps.filter((a) => (a.createdAt as number) >= d7).length,
         last30: apps.filter((a) => (a.createdAt as number) >= d30).length,
       };
+      // Pipeline counts + weekly delta from crm_record (it carries stageChangedAt,
+      // so we know how many entered each stage in the last 7 days).
+      const recs = (recsRes.crm_record ?? []) as Array<Record<string, unknown>>;
       const pipeline: Record<string, number> = {};
-      for (const s of STATUSES) pipeline[s] = 0;
-      for (const a of apps) { const s = a.status as string; if (s in pipeline) pipeline[s] += 1; }
+      const pipelineDelta: Record<string, number> = {};
+      for (const s of STATUSES) { pipeline[s] = 0; pipelineDelta[s] = 0; }
+      for (const r of recs) {
+        const s = r.stage as string;
+        if (s in pipeline) {
+          pipeline[s] += 1;
+          if ((r.stageChangedAt as number) >= d7) pipelineDelta[s] += 1;
+        }
+      }
 
       const meetings = (meetingsRes.meetings ?? []) as Array<Record<string, unknown>>;
       const appById = new Map(apps.map((a) => [a.id, a]));
@@ -1196,32 +1216,31 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
 
       let revenue: Record<string, unknown> = { billingReady: false };
       let membersSeries: unknown = null;
+      let revenueSeries: unknown = null;
       const dashSk = dashGroup ? await getVaultSecret(db, "stripe_secret_key") : null;
       if (dashGroup && dashSk) {
         const subsRes = await stripeCall(dashSk, "GET", "/v1/subscriptions", { limit: 100, status: "all" });
         if (subsRes.ok) {
           const subs = ((subsRes.body.data as Array<Record<string, unknown>>) ?? []);
-          membersSeries = bucketSeries(subs.map((s) => ((s.created as number) ?? 0) * 1000), nowMs);
+          const subMs = (s: Record<string, unknown>) => ((s.created as number) ?? 0) * 1000;
+          membersSeries = bucketSeries(subs.map((s) => ({ t: subMs(s), v: 1 })), nowMs);
+          // Revenue = annualized run-rate added per bucket (money, not counts).
+          revenueSeries = bucketSeries(subs.map((s) => ({ t: subMs(s), v: subAnnualCents(s) })), nowMs);
           const active = subs.filter((s) => s.status === "active");
-          const runRate = active.reduce((sum, s) => {
-            const items = ((s.items as { data?: Array<{ price?: { unit_amount?: number; recurring?: { interval?: string } }; quantity?: number }> })?.data ?? []);
-            let cents = 0, interval = "year";
-            for (const it of items) { cents += (it.price?.unit_amount ?? 0) * (it.quantity ?? 1); interval = it.price?.recurring?.interval ?? interval; }
-            return sum + cents * (interval === "month" ? 12 : 1);
-          }, 0);
+          const runRate = active.reduce((sum, s) => sum + subAnnualCents(s), 0);
           revenue = {
             billingReady: true,
             testMode: (dashGroup.stripePublishableKey ?? "").startsWith("pk_test"),
             activeCount: active.length,
             annualRunRateCents: runRate,
-            newPaid7: subs.filter((s) => ((s.created as number) ?? 0) * 1000 >= d7).length,
-            newPaid30: subs.filter((s) => ((s.created as number) ?? 0) * 1000 >= d30).length,
+            newPaid7: subs.filter((s) => subMs(s) >= d7).length,
+            newPaid30: subs.filter((s) => subMs(s) >= d30).length,
           };
         }
       }
 
-      const applicationsSeries = bucketSeries(apps.map((a) => (a.createdAt as number) || 0), nowMs);
-      return json({ applications, applicationsSeries, pipeline, calls, agenda, timezone: tz, revenue, membersSeries });
+      const applicationsSeries = bucketSeries(apps.map((a) => ({ t: (a.createdAt as number) || 0, v: 1 })), nowMs);
+      return json({ applications, applicationsSeries, pipeline, pipelineDelta, calls, agenda, timezone: tz, revenue, revenueSeries, membersSeries });
     }
 
     // Owner-editable email configuration (PAYMENT-SPEC: copy lives in the

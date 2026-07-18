@@ -1,10 +1,10 @@
 // Dashboard tab: the admin overview, built on @odla-ai/ui display widgets.
-// MetricWidget KPI+trend cards (Applications, New members) with week/month
-// toggles, a StatBand for point-in-time revenue, a StepPipeline funnel of the
-// stage counts, the upcoming intro-call agenda, and the full billing table.
+// MetricWidget KPI+trend cards (Applications, New members, and a full-width
+// Revenue trend), a StepPipeline funnel of the stage counts with weekly deltas,
+// the upcoming intro-call agenda, and the full billing table.
 // Data: GET /api/admin/dashboard.
 import { useState, useEffect } from "preact/hooks";
-import { MetricWidget, StatBand, StepPipeline } from "@odla-ai/ui/components";
+import { MetricWidget, StepPipeline } from "@odla-ai/ui/components";
 import { api, STATUS_LABELS, fmtMoney, fmtTzTime } from "../lib.js";
 import { BillingTab } from "./billing.jsx";
 
@@ -16,19 +16,22 @@ function DashboardStats() {
 
   const rev = d?.revenue;
   const pipe = d?.pipeline;
+  const delta = d?.pipelineDelta;
   const calls = d?.calls;
 
-  const revStats = rev && rev.billingReady
-    ? [
-        { value: rev.activeCount, label: "Active memberships" },
-        { value: fmtMoney(rev.annualRunRateCents), label: "Annual run rate" },
-      ]
-    : null;
-
-  // Happy-path funnel; declined/refunded are shown as a footnote.
+  // Happy-path funnel; declined/refunded are shown as a footnote. Big count in
+  // the circle, weekly inflow as the delta beneath the label.
   const funnel = Object.keys(STATUS_LABELS)
     .filter((s) => s !== "declined" && s !== "refunded")
-    .map((s) => ({ num: pipe ? String(pipe[s] ?? 0) : "–", title: STATUS_LABELS[s] }));
+    .map((s) => {
+      const n = pipe ? (pipe[s] ?? 0) : null;
+      const dv = delta ? (delta[s] ?? 0) : 0;
+      return {
+        icon: <span class="pipe-count">{n === null ? "–" : n}</span>,
+        title: STATUS_LABELS[s],
+        description: <span class={dv > 0 ? "pipe-delta" : "pipe-delta-zero"}>{dv > 0 ? `+${dv} this week` : "no change"}</span>,
+      };
+    });
 
   return (
     <>
@@ -47,14 +50,15 @@ function DashboardStats() {
         )}
       </div>
 
-      {revStats && (
-        <div class="card">
-          <StatBand
-            serif
-            heading={<>Revenue <span class="brand-amp">&amp;</span> memberships{rev.testMode ? " · test mode" : ""}</>}
-            stats={revStats}
-          />
+      {d && d.revenueSeries && rev?.billingReady ? (
+        <div class="dash-revenue">
+          <MetricWidget label="Revenue · annual run rate added" data={d.revenueSeries} format={fmtMoney} size="large" />
+          <p class="muted dash-revenue-note">
+            Active memberships: {rev.activeCount} · Annual run rate: {fmtMoney(rev.annualRunRateCents)}{rev.testMode ? " · test mode" : ""}
+          </p>
         </div>
+      ) : (
+        <div class="card"><div class="card-label">Revenue</div><p class="muted">{d ? "Appears once Stripe is connected." : "Loading…"}</p></div>
       )}
 
       <div class="card">
