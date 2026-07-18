@@ -77,9 +77,11 @@ function PeopleRail({ query, roleMap, openId, onOpen }) {
                     </span>
                     {role === "admin" && <span class="role-badge admin">Admin</span>}
                     {role === "member" && <span class="role-badge member">Member</span>}
-                    <span class="rail-stage-badge">{STATUS_LABELS[r.stage] || r.stage || ""}</span>
                   </span>
-                  <span class="rail-email">{r.primaryEmail || ""}</span>
+                  <span class="rail-sub">
+                    <span class="rail-email">{r.primaryEmail || ""}</span>
+                    {r.stage && <span class="rail-status">{STATUS_LABELS[r.stage] || r.stage}</span>}
+                  </span>
                 </button>
               </li>
             );
@@ -405,8 +407,8 @@ function Scheduling({ appId, onChanged }) {
 
 // ── One person's detail, organized into sub-tabs. ──
 const REC_TABS = [
-  ["info", "Info"],
   ["stage", "Stage"],
+  ["info", "Info"],
   ["comms", "Comms"],
   ["history", "Comms history"],
   ["scheduling", "Scheduling"],
@@ -416,7 +418,7 @@ const REC_TABS = [
 
 function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap }) {
   const state = useCrmRecord(client, id);
-  const [subtab, setSubtab] = useState("info");
+  const [subtab, setSubtab] = useState("stage");
   const [saving, setSaving] = useState(false);
   const [acts, setActs] = useState([]);
   const [optimisticStage, setOptimisticStage] = useState(null);
@@ -426,7 +428,7 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
   }, [id]);
   useEffect(() => { reloadActs(); }, [reloadActs]);
   // Reset to the Info tab whenever a different person is opened.
-  useEffect(() => { setSubtab("info"); setOptimisticStage(null); }, [id]);
+  useEffect(() => { setSubtab("stage"); setOptimisticStage(null); }, [id]);
   // Clear the optimistic stage once the refreshed record actually shows it.
   useEffect(() => {
     if (optimisticStage && state.detail?.record?.stage === optimisticStage) setOptimisticStage(null);
@@ -455,12 +457,22 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
   // this record (no full People-list reload; the rail catches up on its next
   // natural refresh). On failure the optimistic stage reverts.
   const onMoveStage = async (to) => {
+    // Approving and refunding carry side effects (role promotion + onboarding
+    // email; Stripe refund + cancel), so route those through their dedicated
+    // endpoints rather than a raw status write. Everything else is a plain PATCH.
+    if (to === "refunded" && !confirm("Move to Refunded? This refunds the member in full and cancels their subscription.")) return;
     setOptimisticStage(to);
     try {
-      if (appId) {
-        await api(`/api/admin/applications/${appId}`, { method: "PATCH", body: JSON.stringify({ status: to }) });
-      } else {
+      if (!appId) {
         await client.setStage(id, to);
+      } else if (to === "approved") {
+        await api(`/api/admin/applications/${appId}/approve`, { method: "POST", body: "{}" });
+        bus.dispatchEvent(new Event("people:reload"));
+      } else if (to === "refunded") {
+        await api(`/api/admin/applications/${appId}/refund`, { method: "POST", body: "{}" });
+        bus.dispatchEvent(new Event("people:reload"));
+      } else {
+        await api(`/api/admin/applications/${appId}`, { method: "PATCH", body: JSON.stringify({ status: to }) });
       }
       state.refresh();
       reloadActs(); // the move logs a stage_change activity; refresh the Notes feed

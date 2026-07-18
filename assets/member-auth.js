@@ -87,11 +87,19 @@
     return window.Clerk;
   }
 
-  // Authenticated JSON fetch; throws on any non-2xx status.
+  // Authenticated JSON fetch; throws on any non-2xx status. A FRESH Clerk
+  // session token is fetched per request: Clerk tokens are short-lived (~60s)
+  // and getToken() returns a cached one while valid or transparently refreshes
+  // it, so a long-open page never sends a stale (expired) token and 401s. The
+  // token captured at load is only a fallback if the session is briefly absent.
   async function api(path, opts) {
     opts = opts || {};
     const headers = Object.assign({}, opts.headers || {});
-    if (sessionToken) headers.authorization = 'Bearer ' + sessionToken;
+    let token = sessionToken;
+    try {
+      if (window.Clerk && window.Clerk.session) token = await window.Clerk.session.getToken();
+    } catch (e) { /* fall back to the token captured at load */ }
+    if (token) headers.authorization = 'Bearer ' + token;
     if (opts.body) headers['content-type'] = 'application/json';
     const res = await fetch(path, Object.assign({}, opts, { headers: headers }));
     if (!res.ok) throw new Error(path + ' -> ' + res.status);
