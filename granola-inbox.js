@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-17",
+  generated: "2026-07-18",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -45,6 +45,17 @@ window.GRANOLA_INBOX = {
     { text: "Send Sharlene Wells an updated invite for Jul 28 at noon to her MACU email", owner: "", context: "from email: Sharlene Wells re Crystalee's intro; she declined Jul 27, proposed Jul 28 at noon, asked for sharlenewells@macu", source: "email", date: "2026-07-16" },
     { text: "Resend the Sabrina Morales intro to smorales@mylinguistica.com", owner: "", context: "from email: auto response re Intro: Sabrina at Linguistica; her primary email changed during a transition", source: "email", date: "2026-07-16" },
     { text: "Schedule intro call with Maile Keone of ListenTech", owner: "", context: "from email: Ruchi Watson re Reconnecting Maile + Tori; Tori proposed the week of Jul 27 to Jodi, Maile's EA, waiting on times", source: "email", date: "2026-07-16" },
-    { text: "Check Jul 28 noon overlap: Amanda Worsfold call vs Sharlene Wells invite", owner: "", context: "from email: calendar updates Jul 16; Amanda Worsfold is booked Jul 28 at 12pm PT and Sharlene Wells asked for Jul 28 at noon", source: "email", date: "2026-07-16" }
+    { text: "Check Jul 28 noon overlap: Amanda Worsfold call vs Sharlene Wells invite", owner: "", context: "from email: calendar updates Jul 16; Amanda Worsfold is booked Jul 28 at 12pm PT and Sharlene Wells asked for Jul 28 at noon", source: "email", date: "2026-07-16" },
+    { text: "Add Claire Larsen of Vamo to the investor update list", owner: "", context: "from Granola: Tori Horton and Claire Larsen; swap monthly update lists ahead of her Utah return", source: "granola", date: "2026-07-17" },
+    { text: "Intro Claire Larsen to Lanya at IIH Angels", owner: "", context: "from Granola: Tori Horton and Claire Larsen; Lanya has followed on personally and backs female founders", source: "granola", date: "2026-07-17" },
+    { text: "Send pre-seed female founders to Claire Larsen as deal flow emerges", owner: "", context: "from Granola: Tori Horton and Claire Larsen; she will review VC-backable pre-seed founders from the network", source: "granola", date: "2026-07-17" },
+    { text: "Plan lunch with Claire Larsen when she moves back to Utah", owner: "", context: "from Granola: Tori Horton and Claire Larsen; she returns after the 12-month Brickyard stint", source: "granola", date: "2026-07-17" },
+    { text: "Follow up with members mid-August to collect first checks once Stripe is live", owner: "", context: "from Granola: Tori x Lisa x Dawn Meeting; 50 verbal yeses, Stripe goes live next week", source: "granola", date: "2026-07-17" },
+    { text: "Intro Tori to Janine Furpo of Invest for Better", owner: "Dawn Myers", context: "from Granola: Tori x Lisa x Dawn Meeting; explore licensing her education content", source: "delegated", date: "2026-07-17" },
+    { text: "Loop in Alyssa and Lisa for a follow-up call on SEC caps and carry sharing", owner: "Dawn Myers", context: "from Granola: Tori x Lisa x Dawn Meeting; Alyssa covers deal flow, Lisa covers legal questions", source: "delegated", date: "2026-07-17" },
+    { text: "Send Loon fee details and carry structure to Tori", owner: "Dawn Myers", context: "from Granola: Tori x Lisa x Dawn Meeting; management fee, carry rate, and setup costs", source: "delegated", date: "2026-07-17" },
+    { text: "Send Lisa Friedlander next steps from the Citrine Angels noon call", owner: "", context: "from email: Lisa Friedlander re Today's Noon Call; she missed the call and asked how she can help and what the next steps are", source: "email", date: "2026-07-17" },
+    { text: "Confirm Vamo round close date, 2025 vs early 2026, for the Utah funding page", owner: "", context: "from Claude work: Vamo funding research; section 06 framed around the announcement date pending confirmation", source: "claude", date: "2026-07-17" },
+    { text: "Pick a membership page structure direction so full page copy can be written", owner: "", context: "from Claude work: membership signup page flow; four structure options drafted, pillars recommended", source: "claude", date: "2026-07-17" }
   ]
 };
