@@ -1312,6 +1312,44 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       return json({ sends: rows });
     }
 
+    // One person's comms timeline for the CRM record panel: the transactional
+    // emails we actually sent them (emailLog, filtered to this application) plus
+    // the Google Calendar invitations their meetings imply. Google sends the
+    // calendar invite/update/cancel itself, so it never lands in emailLog; we
+    // reconstruct it from the meeting rows. adminNotification is dropped (it
+    // goes to the team, not the member). Ad-hoc CRM sends, if any, are merged in
+    // client-side from crm_email_log.
+    const commsMatch = url.pathname.match(/^\/api\/admin\/people\/([0-9a-fA-F-]+)\/comms$/);
+    if (req.method === "GET" && commsMatch) {
+      const commsAppId = commsMatch[1];
+      const [emailRes, meetingRes] = await Promise.all([
+        db.query({ emailLog: { $: { where: { applicationId: commsAppId }, order: { sentAt: "desc" }, limit: 100 } } }),
+        db.query({ meetings: { $: { where: { applicationId: commsAppId } } } }),
+      ]);
+      const emails = ((emailRes.emailLog ?? []) as Array<Record<string, unknown>>)
+        .filter((r) => r.template !== "adminNotification")
+        .map((r) => ({
+          kind: "email",
+          channel: r.error ? "email (failed)" : r.redirected ? "email (dev-redirected)" : r.transport === "log-only" ? "email (not delivered)" : "email",
+          label: r.template as string,
+          subject: (r.subject as string) ?? "",
+          to: (r.to as string) ?? null,
+          at: r.sentAt as number,
+          error: (r.error as string) ?? null,
+        }));
+      const calendar = ((meetingRes.meetings ?? []) as Array<Record<string, unknown>>).map((m) => ({
+        kind: "calendar",
+        channel: "Google Calendar",
+        label: m.status === "cancelled" ? "Invitation (call later cancelled)" : "Meeting invitation",
+        subject: "Introduction call invitation",
+        to: null,
+        at: (m.createdAt as number) ?? (m.startAt as number),
+        error: null,
+      }));
+      const items = [...emails, ...calendar].sort((a, b) => (b.at ?? 0) - (a.at ?? 0));
+      return json({ items });
+    }
+
     // The billing dashboard: applications joined with live Stripe
     // subscription state. Stripe is the source of truth for money; the db
     // rows contribute the person and pipeline status.
