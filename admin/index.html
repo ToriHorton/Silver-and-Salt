@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-  <!-- Full @odla-ai/ui 0.8.0 stylesheet: covers the DataTable/MetricWidget/
+  <!-- Full @odla-ai/ui 0.8.2 stylesheet: covers the DataTable/MetricWidget/
        StatBand/StepPipeline used by the Dashboard AND the @odla-ai/crm UI
        (StageControl, TagEditor, Combobox, ActivityFeed). The inline <style>
        below loads AFTER this link, so the page's brand overrides of any shared
        generic class (.card/.tabs/.spinner) win. -->
-  <link rel="stylesheet" href="/assets/odla-ui/odla-ui.css?v=3">
+  <link rel="stylesheet" href="/assets/odla-ui/odla-ui.css?v=4">
   <style>
     /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
        always render in Cormorant Infant wherever Cormorant Garamond is
@@ -192,13 +192,13 @@
          as a mismatch. Pin the chart's positive to the line color: a rising
          series is one coherent lime; negatives stay --ui-danger (red). */
       --ui-chart-pos: var(--ui-accent);
-      /* Metric hover tooltip. The default fill is --ui-text at 92% (semi-
-         transparent), so the bright green graph bleeds through behind the
-         text and the label color (derived from --ui-bg, which we never set)
-         renders low-contrast. Pin both to a solid brand pair: moss card,
-         cream text, the same high-contrast combo as the hero. */
-      --ui-chart-tip-bg: var(--moss);
-      --ui-chart-tip-text: var(--cream);
+      /* Metric hover tooltip: adopts @odla-ai/ui 0.8.2's themed default
+         (--ui-chart-tip-bg = --ui-surface, text = --ui-text, now with a
+         --ui-border-strong border + --ui-shadow-strong lift), which resolves
+         to a white card with moss text on our theme. This replaced our earlier
+         moss/cream override once the upstream tooltip stopped using a
+         semi-transparent fill. Re-pin here only if the light tooltip ever
+         reads poorly. */
       --ui-space-6: 24px;
       --ui-shadow: 0 8px 24px rgba(47, 62, 52, 0.12);
       --ui-surface: #ffffff;
@@ -816,6 +816,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=4"></script>
-  <script type="module" src="/assets/app/admin.js?v=19"></script>
+  <script type="module" src="/assets/app/admin.js?v=20"></script>
 </body>
 </html>
