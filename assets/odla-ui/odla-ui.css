@@ -927,7 +927,14 @@
 
 .topbar {
   display: flex;
-  align-items: center;
+  /* first baseline, NOT center: a top bar routinely mixes a larger display
+     brand (e.g. 18px) with smaller nav links (e.g. 15px), and center-aligning
+     unlike text sizes makes their baselines visibly drift — a bug that has
+     recurred repeatedly. Baseline keeps the text row crisp. The trailing
+     .topbar-actions cluster (buttons/avatars) opts back into block-centering
+     below; a ~1em brand mark bottom-aligns to the baseline like a glyph, and an
+     oversized mark should set `align-self: center` locally (see the landing). */
+  align-items: first baseline;
   gap: var(--ui-space-4);
   position: sticky;
   top: 0;
@@ -948,8 +955,9 @@
 }
 .topbar-brand small { color: var(--ui-text-muted); font-weight: 500; }
 
-/* The link row. */
-.topbar-nav { display: flex; align-items: center; gap: var(--ui-space-1); }
+/* The link row. baseline (matching the bar) so the links define a clean shared
+   baseline with the brand rather than a center-derived one. */
+.topbar-nav { display: flex; align-items: baseline; gap: var(--ui-space-1); }
 
 .topbar-link {
   font: inherit;
@@ -971,9 +979,12 @@
 }
 
 /* Flexible gap that pushes trailing actions to the right edge. */
-.topbar-spacer { flex: 1 1 auto; min-width: var(--ui-space-2); }
+.topbar-spacer { flex: 1 1 auto; min-width: var(--ui-space-2); align-self: center; }
 
-.topbar-actions { display: flex; align-items: center; gap: var(--ui-space-3); }
+/* Trailing controls (buttons, avatars, a whoami block) center as a block —
+   align-self: center opts them out of the bar's baseline so they don't hang off
+   the text baseline. */
+.topbar-actions { display: flex; align-items: center; align-self: center; gap: var(--ui-space-3); }
 
 /* Embedded or preview chrome: never sticks to the outer page viewport. */
 .topbar.contained {
@@ -3620,3 +3631,157 @@ details.mk-faq-item {
   text-align: center;
   max-width: 40%;
 }
+
+/* @odla-ai/ui — metric widget
+   A KPI + trend card: a headline value, its delta vs the previous period, a
+   secondary peak stat, and an inline-SVG chart (a cumulative/per-bucket line
+   with a dashed ghost, or diverging variance bars). Every colour resolves from
+   the theme's --ui-chart-* roles, so any theme recolours it with no redraw.
+   Size classes progressively disclose detail — small hides the peak stat and
+   the point markers/axis labels the chart component only emits at large. */
+
+.metric {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-4);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow);
+}
+
+.metric-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2) var(--ui-space-3);
+}
+
+.metric-label {
+  min-width: 0;
+  margin: 0;
+  font-size: var(--ui-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-widest);
+  color: var(--ui-text-muted);
+}
+
+.metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  flex-wrap: wrap;
+}
+
+.metric-value {
+  font-family: var(--ui-font-display);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-tight);
+  line-height: var(--ui-leading-none);
+  color: var(--ui-text);
+}
+
+.metric-delta {
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.metric-delta.pos { color: var(--ui-chart-pos); }
+.metric-delta.neg { color: var(--ui-chart-neg); }
+
+.metric-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  flex-shrink: 0;
+}
+
+.metric-peak {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+}
+.metric-peak-label {
+  font-size: var(--ui-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-wide);
+  color: var(--ui-text-faint);
+}
+.metric-peak-value {
+  font-size: var(--ui-text-md);
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+.metric-chart {
+  position: relative;
+  width: 100%;
+}
+.metric-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.metric-area { fill: var(--ui-chart-band); stroke: none; }
+.metric-line {
+  fill: none;
+  stroke: var(--ui-chart-1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.metric-ghost {
+  fill: none;
+  stroke: var(--ui-chart-axis-faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+.metric-point {
+  fill: var(--ui-chart-1);
+  stroke: var(--ui-chart-dot-stroke);
+  stroke-width: 1.5;
+}
+.metric-bar.pos { fill: var(--ui-chart-pos); }
+.metric-bar.neg { fill: var(--ui-chart-neg); }
+.metric-zero {
+  stroke: var(--ui-chart-grid-zero);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.metric-grid {
+  stroke: var(--ui-chart-grid);
+  stroke-width: 1;
+}
+
+/* Stroke weights stay in screen px so lines read the same at any card size
+   (the 100×56 viewBox otherwise scales strokes up with width). */
+.metric-line,
+.metric-ghost,
+.metric-point,
+.metric-zero,
+.metric-grid {
+  vector-effect: non-scaling-stroke;
+}
+
+.metric-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--ui-text-xs);
+  color: var(--ui-chart-axis);
+}
+.metric-tick {
+  flex: 1 1 0;
+  text-align: center;
+}
+
+/* Size scale — the numeral grows with the card. */
+.metric-small { gap: var(--ui-space-2); }
+.metric-small .metric-value { font-size: var(--ui-text-4xl); }
+.metric-medium .metric-value { font-size: var(--ui-display-h4); }
+.metric-large { gap: var(--ui-space-4); }
+.metric-large .metric-value { font-size: var(--ui-display-h2); }
