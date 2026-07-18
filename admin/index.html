@@ -192,6 +192,13 @@
          as a mismatch. Pin the chart's positive to the line color: a rising
          series is one coherent lime; negatives stay --ui-danger (red). */
       --ui-chart-pos: var(--ui-accent);
+      /* Metric hover tooltip. The default fill is --ui-text at 92% (semi-
+         transparent), so the bright green graph bleeds through behind the
+         text and the label color (derived from --ui-bg, which we never set)
+         renders low-contrast. Pin both to a solid brand pair: moss card,
+         cream text, the same high-contrast combo as the hero. */
+      --ui-chart-tip-bg: var(--moss);
+      --ui-chart-tip-text: var(--cream);
       --ui-space-6: 24px;
       --ui-shadow: 0 8px 24px rgba(47, 62, 52, 0.12);
       --ui-surface: #ffffff;
