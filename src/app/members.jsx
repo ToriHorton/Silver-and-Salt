@@ -2,9 +2,73 @@
 // provisional application card or the member material) into #members-root;
 // the hero and sign-in mount stay page-owned DOM, updated here directly.
 import { render } from "preact";
+import { useState } from "preact/hooks";
+import { SlotPicker } from "./slot-picker.jsx";
 
 const $ = (id) => document.getElementById(id);
 const linkStyle = "color: var(--lime-dark); font-weight: 700; text-decoration: none;";
+const secondaryLink = "color: var(--sage); text-decoration: underline;";
+
+// In-page reschedule: pick a new slot and rebook via /api/schedule/book (the
+// same capability the join flow uses; the application id is the credential).
+function Rescheduler({ application, onReschedule }) {
+  const [open, setOpen] = useState(false);
+  const [slots, setSlots] = useState(null);
+  const [tz, setTz] = useState(application.timezone);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  const start = async () => {
+    setOpen(true); setSlots(null); setMsg(null);
+    try {
+      const r = await window.SSCAuth.api("/api/schedule/slots");
+      setSlots(r.slots || []);
+      if (r.timezone) setTz(r.timezone);
+    } catch (e) { setSlots([]); setMsg("Times are briefly unavailable. Please try again."); }
+  };
+  const pick = async (slot) => {
+    setBusy(true); setMsg(null);
+    try {
+      await window.SSCAuth.api("/api/schedule/book", {
+        method: "POST",
+        body: JSON.stringify({ applicationId: application.id, startAt: slot.startAt }),
+      });
+      setOpen(false);
+      await onReschedule();
+    } catch (e) {
+      setMsg((e && e.message) || "That time is no longer available. Please pick another.");
+    } finally { setBusy(false); }
+  };
+
+  if (!open) {
+    return (
+      <div class="meeting-note">
+        <a href="#" onClick={(e) => { e.preventDefault(); start(); }} style={secondaryLink}>Change your time</a>
+      </div>
+    );
+  }
+  return (
+    <div class="msched">
+      {slots === null ? (
+        <p class="meeting-note">Loading available times…</p>
+      ) : !slots.length ? (
+        <p class="meeting-note">No open times right now. Please check back soon.</p>
+      ) : (
+        <SlotPicker
+          slots={slots}
+          timezone={tz}
+          classes={{ days: "msched-days", day: "msched-day", times: "msched-times", time: "msched-time" }}
+          onPick={pick}
+        />
+      )}
+      {busy && <p class="meeting-note">Rescheduling…</p>}
+      {msg && <p class="meeting-note" style="color:#a4442c">{msg}</p>}
+      <div class="meeting-note">
+        <a href="#" onClick={(e) => { e.preventDefault(); setOpen(false); }} style={secondaryLink}>Keep my current time</a>
+      </div>
+    </div>
+  );
+}
 
 function MembershipLine({ application }) {
   if (!application?.paid) return null;
@@ -18,7 +82,7 @@ function MembershipLine({ application }) {
   );
 }
 
-function ProvisionalCard({ application }) {
+function ProvisionalCard({ application, onReschedule }) {
   const { fmtMeeting } = window.SSCAuth;
   let block;
   if (application && application.status === "refunded") {
@@ -37,7 +101,7 @@ function ProvisionalCard({ application }) {
         {application.meetUrl && (
           <div class="meeting-note"><a href={application.meetUrl} target="_blank" rel="noopener" style={linkStyle}>Join the video call</a></div>
         )}
-        <div class="meeting-note"><a href={"/join.html?reschedule=" + application.id} style="color: var(--sage); text-decoration: underline;">Change your time</a></div>
+        <Rescheduler application={application} onReschedule={onReschedule} />
         <MembershipLine application={application} />
       </div>
     );
@@ -85,7 +149,9 @@ function MemberView() {
   );
 }
 
-function MembersApp({ me, email }) {
+function MembersApp({ me: initialMe, email }) {
+  const [me, setMe] = useState(initialMe);
+  const reload = async () => { try { setMe(await window.SSCAuth.api("/api/me")); } catch (e) { console.error(e); } };
   const role = me.role || "provisional";
   const signOut = async () => {
     await window.Clerk.signOut();
@@ -103,7 +169,7 @@ function MembersApp({ me, email }) {
           {role === "admin" && <a class="admin-console-link" href="/admin/">Admin console</a>}
         </div>
       </div>
-      {role === "provisional" ? <ProvisionalCard application={me.application} /> : <MemberView />}
+      {role === "provisional" ? <ProvisionalCard application={me.application} onReschedule={reload} /> : <MemberView />}
     </>
   );
 }

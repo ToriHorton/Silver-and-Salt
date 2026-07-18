@@ -279,6 +279,14 @@
       line-height: 1.8;
       margin-top: 12px;
     }
+    /* ── In-page reschedule picker (member self-service) ── */
+    .msched { text-align: left; margin-top: 18px; }
+    .msched-days { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border, #d6e8d2); }
+    .msched-day { border: 1px solid var(--border, #d6e8d2); background: #fff; border-radius: 8px; padding: 8px 12px; font: inherit; font-size: 13px; font-weight: 600; color: var(--moss); cursor: pointer; white-space: nowrap; }
+    .msched-day[aria-pressed="true"] { background: var(--moss); color: var(--cream, #FBF8F2); border-color: var(--moss); }
+    .msched-times { display: flex; flex-wrap: wrap; gap: 6px; }
+    .msched-time { border: 1px solid var(--border, #d6e8d2); background: #fff; border-radius: 8px; padding: 8px 12px; font: inherit; font-size: 13px; color: var(--moss); cursor: pointer; }
+    .msched-time:hover { border-color: var(--lime); }
     .apply-link {
       display: inline-block;
       background-color: var(--lime);
@@ -365,6 +373,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=3"></script>
-  <script type="module" src="/assets/app/members.js?v=1"></script>
+  <script type="module" src="/assets/app/members.js?v=2"></script>
 </body>
 </html>

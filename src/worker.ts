@@ -1060,10 +1060,27 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       const a = await findApplicationByEmail(db, user.email);
       if (a) {
         const meeting = await scheduledMeetingFor(db, a.id as string);
+        // Adopt any Google Calendar change (moved or cancelled) so the member
+        // sees the current time, not a stale stored one. reconcileWithGoogle
+        // updates the db and mutates the meeting object in place.
+        let meetingAt: number | null = (a.meetingAt as number) || null;
+        let meetUrl: string | null = null;
+        let tz = SCHEDULING_DEFAULTS.timezone;
+        if (meeting) {
+          await reconcileWithGoogle(db, cal, [meeting]);
+          tz = (meeting.timezone as string) ?? tz;
+          if (meeting.status === "scheduled") {
+            meetingAt = meeting.startAt as number;
+            meetUrl = (meeting.meetUrl as string) ?? null;
+          } else {
+            meetingAt = null; // adopted a Google cancellation
+          }
+        }
         application = {
           ...applicationSummary(a),
-          meetUrl: (meeting?.meetUrl as string) ?? null,
-          timezone: (meeting?.timezone as string) ?? SCHEDULING_DEFAULTS.timezone,
+          meetingAt,
+          meetUrl,
+          timezone: tz,
         };
         if (a.clerkUserId !== user.userId) {
           // Lazy link; mutationId makes retries exactly-once.
