@@ -11,7 +11,7 @@ const secondaryLink = "color: var(--sage); text-decoration: underline;";
 
 // In-page reschedule: pick a new slot and rebook via /api/schedule/book (the
 // same capability the join flow uses; the application id is the credential).
-function Rescheduler({ application, onReschedule }) {
+function Rescheduler({ application, onReschedule, label = "Change your time" }) {
   const [open, setOpen] = useState(false);
   const [slots, setSlots] = useState(null);
   const [tz, setTz] = useState(application.timezone);
@@ -43,7 +43,7 @@ function Rescheduler({ application, onReschedule }) {
   if (!open) {
     return (
       <div class="meeting-note">
-        <a href="#" onClick={(e) => { e.preventDefault(); start(); }} style={secondaryLink}>Change your time</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); start(); }} style={secondaryLink}>{label}</a>
       </div>
     );
   }
@@ -108,8 +108,9 @@ function ProvisionalCard({ application, onReschedule }) {
   } else if (application) {
     block = (
       <div class="meeting-block">
-        <div class="meeting-kicker">Application received</div>
-        <div class="meeting-note">Your application is in. Your introduction call details will appear here once your time is confirmed, and a calendar invitation will reach your email.</div>
+        <div class="meeting-kicker">Book your introduction call</div>
+        <div class="meeting-note">Your application is in. Choose a time below, and a calendar invitation with the video call link will reach your email.</div>
+        <Rescheduler application={application} onReschedule={onReschedule} label="Choose a time" />
         <MembershipLine application={application} />
       </div>
     );
