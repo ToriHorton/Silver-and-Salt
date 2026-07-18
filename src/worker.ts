@@ -1187,7 +1187,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         const s = r.stage as string;
         if (s in pipeline) {
           pipeline[s] += 1;
-          if ((r.stageChangedAt as number) >= d7) pipelineDelta[s] += 1;
+          // stageChangedAt comes back as an ISO string (date-typed attr), so
+          // parse to epoch ms before the window comparison.
+          const sc = typeof r.stageChangedAt === "number" ? r.stageChangedAt : Date.parse(r.stageChangedAt as string);
+          if (sc >= d7) pipelineDelta[s] += 1;
         }
       }
 
