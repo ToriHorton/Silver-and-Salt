@@ -6,7 +6,6 @@
 import { useState, useEffect } from "preact/hooks";
 import { MetricWidget, StepPipeline } from "@odla-ai/ui/components";
 import { api, STATUS_LABELS, fmtMoney, fmtTzTime } from "../lib.js";
-import { BillingTab } from "./billing.jsx";
 
 const num = (n) => Math.round(n).toLocaleString();
 
@@ -35,6 +34,28 @@ function DashboardStats() {
 
   return (
     <>
+      <div class="card">
+        <div class="card-label">
+          Upcoming intro calls{calls?.needsAttention ? ` · ${calls.needsAttention} need attention` : ""}
+        </div>
+        {!d ? (
+          <p class="muted"><span class="spinner"></span> Loading…</p>
+        ) : !d.agenda.length ? (
+          <p class="muted">No upcoming calls.</p>
+        ) : (
+          <ul class="dash-agenda">
+            {d.agenda.map((m) => (
+              <li class="dash-agenda-row">
+                <span class="dash-agenda-when">{fmtTzTime(m.startAt, d.timezone)}</span>
+                <span class="dash-agenda-who">{m.name}{m.email ? ` · ${m.email}` : ""}</span>
+                {m.drift && m.drift !== "none" && <span class="pay-badge refunded">drift</span>}
+                {m.htmlLink && <a href={m.htmlLink} target="_blank" rel="noopener" class="dash-agenda-link">open</a>}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
       <div class="dash-metrics">
         {!d ? (
           <div class="card"><p class="muted"><span class="spinner"></span> Loading…</p></div>
@@ -68,37 +89,10 @@ function DashboardStats() {
           Declined {pipe ? (pipe.declined ?? 0) : "–"} · Refunded {pipe ? (pipe.refunded ?? 0) : "–"}
         </p>
       </div>
-
-      <div class="card">
-        <div class="card-label">
-          Upcoming intro calls{calls?.needsAttention ? ` · ${calls.needsAttention} need attention` : ""}
-        </div>
-        {!d ? (
-          <p class="muted"><span class="spinner"></span> Loading…</p>
-        ) : !d.agenda.length ? (
-          <p class="muted">No upcoming calls.</p>
-        ) : (
-          <ul class="dash-agenda">
-            {d.agenda.map((m) => (
-              <li class="dash-agenda-row">
-                <span class="dash-agenda-when">{fmtTzTime(m.startAt, d.timezone)}</span>
-                <span class="dash-agenda-who">{m.name}{m.email ? ` · ${m.email}` : ""}</span>
-                {m.drift && m.drift !== "none" && <span class="pay-badge refunded">drift</span>}
-                {m.htmlLink && <a href={m.htmlLink} target="_blank" rel="noopener" class="dash-agenda-link">open</a>}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
     </>
   );
 }
 
 export function DashboardTab() {
-  return (
-    <>
-      <DashboardStats />
-      <BillingTab />
-    </>
-  );
+  return <DashboardStats />;
 }
