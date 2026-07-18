@@ -181,6 +181,7 @@ export async function sendTemplated(
     to,
     template: opts.template,
     subject,
+    body: text,
     transport: effective.name,
     redirected: redirect,
     sentAt: Date.now(),

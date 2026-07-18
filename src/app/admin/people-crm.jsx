@@ -320,8 +320,10 @@ const EMAIL_LABELS = {
 // emails sent from the CRM composer (crm_email_log). Sorted newest first. ──
 function CommsHistory({ appId, recordId }) {
   const [items, setItems] = useState(null);
+  const [open, setOpen] = useState(() => new Set());
   useEffect(() => {
     let alive = true;
+    setItems(null); setOpen(new Set());
     Promise.all([
       appId
         ? api(`/api/admin/people/${appId}/comms`).then((r) => r.items || []).catch(() => [])
@@ -331,6 +333,7 @@ function CommsHistory({ appId, recordId }) {
         channel: e.error ? "email (failed)" : (e.transport || "email"),
         label: e.templateId || "Message",
         subject: e.subject || "",
+        body: e.body || e.text || e.html || null,
         at: e.sentAt,
         error: e.error || null,
       }))).catch(() => []),
@@ -341,18 +344,40 @@ function CommsHistory({ appId, recordId }) {
     return () => { alive = false; };
   }, [appId, recordId]);
 
+  const toggle = (i) => setOpen((prev) => {
+    const next = new Set(prev);
+    if (next.has(i)) next.delete(i); else next.add(i);
+    return next;
+  });
+
   if (!items) return <p class="muted"><span class="spinner"></span> Loading…</p>;
   if (!items.length) return <p class="muted">No messages sent to this person yet.</p>;
   return (
     <ul class="rec-log">
-      {items.map((e) => (
-        <li class={"rec-log-row" + (e.kind === "calendar" ? " rec-log-cal" : "")}>
-          <span class="rec-log-subj">{e.subject || EMAIL_LABELS[e.label] || e.label || "(no subject)"}</span>
-          <span class="rec-log-meta">
-            {EMAIL_LABELS[e.label] || e.label}{e.at ? ` · ${new Date(e.at).toLocaleString()}` : ""} · {e.error ? "failed" : e.channel}
-          </span>
-        </li>
-      ))}
+      {items.map((e, i) => {
+        const label = EMAIL_LABELS[e.label] || e.label;
+        const meta = `${label}${e.at ? ` · ${new Date(e.at).toLocaleString()}` : ""}${e.to ? ` · to ${e.to}` : ""} · ${e.error ? "failed" : e.channel}`;
+        const expandable = e.kind === "email" && !!e.body;
+        const isOpen = open.has(i);
+        const Head = expandable ? "button" : "div";
+        return (
+          <li class={"rec-log-row" + (e.kind === "calendar" ? " rec-log-cal" : "")}>
+            <Head
+              type={expandable ? "button" : undefined}
+              class={"rec-log-head" + (expandable ? " expandable" : "")}
+              onClick={expandable ? () => toggle(i) : undefined}
+              aria-expanded={expandable ? isOpen : undefined}
+            >
+              <span class="rec-log-subj">
+                {expandable && <span class={"rec-log-caret" + (isOpen ? " open" : "")}>›</span>}
+                {e.subject || label || "(no subject)"}
+              </span>
+              <span class="rec-log-meta">{meta}</span>
+            </Head>
+            {isOpen && <pre class="rec-log-body">{e.body}</pre>}
+          </li>
+        );
+      })}
     </ul>
   );
 }

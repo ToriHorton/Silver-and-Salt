@@ -1334,6 +1334,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
           label: r.template as string,
           subject: (r.subject as string) ?? "",
           to: (r.to as string) ?? null,
+          body: (r.body as string) ?? null,
           at: r.sentAt as number,
           error: (r.error as string) ?? null,
         }));

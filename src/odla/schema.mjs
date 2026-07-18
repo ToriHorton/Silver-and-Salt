@@ -126,6 +126,10 @@ export const schema = {
         to: { type: "string", unique: false, indexed: true, optional: false },
         template: { type: "string", unique: false, indexed: true, optional: false },
         subject: { type: "string", unique: false, indexed: false, optional: false },
+        // The rendered plaintext body as sent, so the admin can read the email
+        // back in the CRM Comms history. Optional: rows written before this
+        // attr existed have none (nothing to render from — vars aren't stored).
+        body: { type: "string", unique: false, indexed: false, optional: true },
         // "cloudflare" (Email Service delivery) or "log-only" (no delivery).
         transport: { type: "string", unique: false, indexed: false, optional: false },
         // The transport receipt (synthesized "log-only-…" when undelivered).
