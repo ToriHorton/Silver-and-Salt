@@ -183,6 +183,15 @@
       --ui-on-accent: #ffffff;
       --ui-danger: #a4442c;
       --ui-good: var(--lime-dark);
+      /* Metric-graph color alignment. The line strokes in --ui-chart-1
+         (=--ui-accent, our lime); positive hover dots + delta swatches use
+         --ui-chart-pos (defaults to --ui-good). odla-ai/ui's own theme makes
+         accent a blue and good a green, so the two read as a deliberate
+         line-vs-direction cue. Our brand has one green, so good=lime-dark
+         landed as a near-identical second green on the lime line, which reads
+         as a mismatch. Pin the chart's positive to the line color: a rising
+         series is one coherent lime; negatives stay --ui-danger (red). */
+      --ui-chart-pos: var(--ui-accent);
       --ui-space-6: 24px;
       --ui-shadow: 0 8px 24px rgba(47, 62, 52, 0.12);
       --ui-surface: #ffffff;
