@@ -656,6 +656,14 @@
     .dash-metrics > .card, .dash-metrics > .metric { margin-bottom: 0; }
     .metric { border: 1px solid var(--border); border-radius: 8px; }
     @media (max-width: 720px) { .dash-metrics { grid-template-columns: 1fr; } }
+    /* Full-width revenue trend + caption. */
+    .dash-revenue { margin-bottom: 24px; }
+    .dash-revenue > .metric { margin-bottom: 0; }
+    .dash-revenue-note { margin: 10px 2px 0; }
+    /* Pipeline funnel: large count in the circle + weekly delta beneath. */
+    .pipe-count { font-size: 28px; font-weight: 700; color: var(--moss); line-height: 1; }
+    .pipe-delta { color: var(--lime-dark); font-weight: 700; font-size: 12px; }
+    .pipe-delta-zero { color: var(--sage); font-size: 12px; }
 
     /* Dashboard upcoming-calls agenda. */
     .dash-agenda { list-style: none; margin: 0; padding: 0; }
@@ -781,6 +789,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=3"></script>
-  <script type="module" src="/assets/app/admin.js?v=12"></script>
+  <script type="module" src="/assets/app/admin.js?v=13"></script>
 </body>
 </html>
