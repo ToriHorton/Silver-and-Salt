@@ -110,8 +110,11 @@
   --ui-chart-band-strong: color-mix(in srgb, var(--ui-accent) 22%, transparent);
   --ui-chart-pos: var(--ui-good);
   --ui-chart-neg: var(--ui-danger);
-  --ui-chart-tip-bg: color-mix(in srgb, var(--ui-text) 92%, transparent);
-  --ui-chart-tip-text: var(--ui-bg);
+  /* Tooltips are themed popovers, not inverted/code surfaces. Keeping these
+     on the semantic surface/text pair preserves contrast across every palette
+     and lets the component border + shadow provide separation from the plot. */
+  --ui-chart-tip-bg: var(--ui-surface);
+  --ui-chart-tip-text: var(--ui-text);
   --ui-chart-dot-stroke: var(--ui-bg);
   /* Temporal/geo viz roles (maps, flow arcs, activity glow, heat ramp).
      Intensity is expressed with globalAlpha/blur at draw time, never by
@@ -232,8 +235,8 @@
   --ui-chart-band-strong: color-mix(in srgb, var(--ui-accent) 22%, transparent);
   --ui-chart-pos: var(--ui-good);
   --ui-chart-neg: var(--ui-danger);
-  --ui-chart-tip-bg: color-mix(in srgb, var(--ui-text) 92%, transparent);
-  --ui-chart-tip-text: var(--ui-bg);
+  --ui-chart-tip-bg: var(--ui-surface);
+  --ui-chart-tip-text: var(--ui-text);
   --ui-chart-dot-stroke: var(--ui-bg);
   --ui-chart-geo-fill: color-mix(in srgb, var(--ui-text) 7%, transparent);
   --ui-chart-geo-line: var(--ui-border);
@@ -3515,12 +3518,16 @@ details.mk-faq-item {
 
 .choropleth-tip {
   position: absolute;
+  box-sizing: border-box;
   transform: translate(-50%, calc(-100% - 10px));
   background: var(--ui-chart-tip-bg);
   color: var(--ui-chart-tip-text);
+  border: 1px solid var(--ui-border-strong);
+  box-shadow: var(--ui-shadow-strong);
+  font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-snug);
-  padding: 6px 10px;
+  padding: var(--ui-space-2) 10px;
   border-radius: var(--ui-radius-md);
   pointer-events: none;
   white-space: nowrap;
@@ -3789,13 +3796,17 @@ details.mk-faq-item {
 
 .metric-tip {
   position: absolute;
-  min-width: 112px;
+  box-sizing: border-box;
+  min-width: 128px;
   transform: translate(-50%, calc(-100% - 8px));
-  padding: 6px 8px;
+  padding: var(--ui-space-2) 10px;
+  border: 1px solid var(--ui-border-strong);
   border-radius: var(--ui-radius-md);
   background: var(--ui-chart-tip-bg);
   color: var(--ui-chart-tip-text);
-  font-size: var(--ui-text-xs);
+  box-shadow: var(--ui-shadow-strong);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-snug);
   pointer-events: none;
   white-space: nowrap;
@@ -3804,8 +3815,9 @@ details.mk-faq-item {
 .metric-tip.start { transform: translate(0, calc(-100% - 8px)); }
 .metric-tip.end { transform: translate(-100%, calc(-100% - 8px)); }
 .metric-tip-label {
-  margin-bottom: 3px;
+  margin-bottom: var(--ui-space-1);
   font-weight: 700;
+  color: var(--ui-chart-tip-text);
 }
 .metric-tip-row {
   display: flex;
@@ -3817,7 +3829,9 @@ details.mk-faq-item {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  color: var(--ui-text-muted);
 }
+.metric-tip-row strong { color: var(--ui-chart-tip-text); }
 .metric-tip-row i {
   width: 7px;
   height: 7px;
