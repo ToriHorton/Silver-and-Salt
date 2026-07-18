@@ -11,6 +11,7 @@ import { initCalendar, computeBookableSlots } from "@odla-ai/calendar";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import {
   sendTemplated,
+  renderTemplateBody,
   resolveTransport,
   EMAIL_TEMPLATE_NAMES,
   type EmailTemplateName,
@@ -1322,22 +1323,44 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     const commsMatch = url.pathname.match(/^\/api\/admin\/people\/([0-9a-fA-F-]+)\/comms$/);
     if (req.method === "GET" && commsMatch) {
       const commsAppId = commsMatch[1];
-      const [emailRes, meetingRes] = await Promise.all([
+      const [emailRes, meetingRes, appRes] = await Promise.all([
         db.query({ emailLog: { $: { where: { applicationId: commsAppId }, order: { sentAt: "desc" }, limit: 100 } } }),
         db.query({ meetings: { $: { where: { applicationId: commsAppId } } } }),
+        db.query({ applications: { $: { where: { id: commsAppId }, limit: 1 } } }),
       ]);
+      // For rows written before emailLog.body existed, re-render the body from
+      // the current template + this person's data so the history stays readable.
+      const commsApp = (appRes.applications?.[0] as Record<string, unknown>) ?? null;
+      const commsGroup = await getGroup(db, (commsApp?.groupId as string) ?? DEFAULT_GROUP_ID);
+      const reconVars: Record<string, string> | null = commsApp
+        ? {
+            firstName: (commsApp.firstName as string) ?? "",
+            lastName: (commsApp.lastName as string) ?? "",
+            email: (commsApp.email as string) ?? "",
+            phone: (commsApp.phone as string) ?? "",
+            state: (commsApp.state as string) ?? "",
+            adminUrl: `${url.origin}/admin/?tab=people`,
+            membersUrl: `${url.origin}/members/`,
+          }
+        : null;
       const emails = ((emailRes.emailLog ?? []) as Array<Record<string, unknown>>)
         .filter((r) => r.template !== "adminNotification")
-        .map((r) => ({
-          kind: "email",
-          channel: r.error ? "email (failed)" : r.redirected ? "email (dev-redirected)" : r.transport === "log-only" ? "email (not delivered)" : "email",
-          label: r.template as string,
-          subject: (r.subject as string) ?? "",
-          to: (r.to as string) ?? null,
-          body: (r.body as string) ?? null,
-          at: r.sentAt as number,
-          error: (r.error as string) ?? null,
-        }));
+        .map((r) => {
+          let body = (r.body as string) ?? null;
+          if (!body && commsGroup && reconVars) {
+            body = renderTemplateBody(commsGroup, r.template as string, reconVars);
+          }
+          return {
+            kind: "email",
+            channel: r.error ? "email (failed)" : r.redirected ? "email (dev-redirected)" : r.transport === "log-only" ? "email (not delivered)" : "email",
+            label: r.template as string,
+            subject: (r.subject as string) ?? "",
+            to: (r.to as string) ?? null,
+            body,
+            at: r.sentAt as number,
+            error: (r.error as string) ?? null,
+          };
+        });
       const calendar = ((meetingRes.meetings ?? []) as Array<Record<string, unknown>>).map((m) => ({
         kind: "calendar",
         channel: "Google Calendar",

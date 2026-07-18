@@ -99,6 +99,27 @@ function render(template: string, vars: Record<string, string>): string {
   return template.replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] ?? "");
 }
 
+// Re-render a template's plaintext body for display: the CRM Comms history
+// reads back emails whose body predates the emailLog.body attr by rendering the
+// current template with the recipient's data. Same {{var}} substitution and the
+// same group-level vars the send path injects. Returns null for an unknown
+// template. Reflects the template copy as it reads TODAY, not necessarily the
+// exact bytes originally sent (only stored emailLog.body is byte-exact).
+export function renderTemplateBody(
+  group: GroupRow,
+  template: string,
+  vars: Record<string, string>,
+): string | null {
+  const tpl = group.emailTemplates?.[template];
+  if (!tpl) return null;
+  return render(tpl.text, {
+    ...vars,
+    refundPolicyText: group.refundPolicyText,
+    commitmentText: group.commitmentText ?? "",
+    normsText: group.normsText ?? "",
+  });
+}
+
 export interface SendResult {
   sent: boolean;
   // "disabled" | "template-missing" | "already-sent" | a transport error code
