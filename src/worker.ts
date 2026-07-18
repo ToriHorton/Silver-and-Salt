@@ -551,6 +551,31 @@ async function reconcileWithGoogle(db: Db, cal: CalClient, meetings: Array<Recor
   }
 }
 
+// Time series for @odla-ai/ui MetricWidget: `wow` = 7 daily buckets, `mom` = 4
+// weekly buckets, each with the previous period's aligned values (for the delta
+// % and the ghost line). Built from event timestamps (ms). Day boundaries are
+// UTC — fine for a rough trend.
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+function bucketSeries(times: number[], now: number) {
+  const day = 86_400_000;
+  const count = (start: number, end: number) => times.filter((t) => t >= start && t < end).length;
+  const wow = { labels: [] as string[], current: [] as number[], previous: [] as number[] };
+  for (let i = 6; i >= 0; i--) {
+    const end = now - i * day;
+    wow.labels.push(DOW[new Date(end - day / 2).getUTCDay()]);
+    wow.current.push(count(end - day, end));
+    wow.previous.push(count(end - 8 * day, end - 7 * day));
+  }
+  const mom = { labels: [] as string[], current: [] as number[], previous: [] as number[] };
+  for (let i = 3; i >= 0; i--) {
+    const end = now - i * 7 * day;
+    mom.labels.push(`wk ${4 - i}`);
+    mom.current.push(count(end - 7 * day, end));
+    mom.previous.push(count(end - 35 * day, end - 28 * day));
+  }
+  return { wow, mom };
+}
+
 async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   // Public: the sign-in page bootstraps ClerkJS from this (same-origin, so
   // the page needs no hardcoded key and prod picks up its own config).
@@ -1170,11 +1195,13 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         : SCHEDULING_DEFAULTS.timezone;
 
       let revenue: Record<string, unknown> = { billingReady: false };
+      let membersSeries: unknown = null;
       const dashSk = dashGroup ? await getVaultSecret(db, "stripe_secret_key") : null;
       if (dashGroup && dashSk) {
         const subsRes = await stripeCall(dashSk, "GET", "/v1/subscriptions", { limit: 100, status: "all" });
         if (subsRes.ok) {
           const subs = ((subsRes.body.data as Array<Record<string, unknown>>) ?? []);
+          membersSeries = bucketSeries(subs.map((s) => ((s.created as number) ?? 0) * 1000), nowMs);
           const active = subs.filter((s) => s.status === "active");
           const runRate = active.reduce((sum, s) => {
             const items = ((s.items as { data?: Array<{ price?: { unit_amount?: number; recurring?: { interval?: string } }; quantity?: number }> })?.data ?? []);
@@ -1193,7 +1220,8 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         }
       }
 
-      return json({ applications, pipeline, calls, agenda, timezone: tz, revenue });
+      const applicationsSeries = bucketSeries(apps.map((a) => (a.createdAt as number) || 0), nowMs);
+      return json({ applications, applicationsSeries, pipeline, calls, agenda, timezone: tz, revenue, membersSeries });
     }
 
     // Owner-editable email configuration (PAYMENT-SPEC: copy lives in the

@@ -17,10 +17,10 @@
   },
   "dependencies": {
     "@odla-ai/calendar": "^0.2.0",
-    "@odla-ai/crm": "^0.1.2",
+    "@odla-ai/crm": "^0.1.3",
     "@odla-ai/db": "^0.6.6",
     "@odla-ai/email": "^0.3.1",
-    "@odla-ai/ui": "^0.7.0",
+    "@odla-ai/ui": "^0.8.0",
     "jose": "^6.2.3",
     "preact": "^10.29.7"
   }

@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-  <!-- Full @odla-ai/ui 0.7.0 stylesheet: covers the DataTable/Tabs/Calendar
-       used by the existing tabs AND the @odla-ai/crm UI (CrmList, RecordPanel,
-       StageControl, TagEditor, Combobox, ActivityFeed). The inline <style>
+  <!-- Full @odla-ai/ui 0.8.0 stylesheet: covers the DataTable/MetricWidget/
+       StatBand/StepPipeline used by the Dashboard AND the @odla-ai/crm UI
+       (StageControl, TagEditor, Combobox, ActivityFeed). The inline <style>
        below loads AFTER this link, so the page's brand overrides of any shared
        generic class (.card/.tabs/.spinner) win. -->
-  <link rel="stylesheet" href="/assets/odla-ui/odla-ui.css?v=1">
+  <link rel="stylesheet" href="/assets/odla-ui/odla-ui.css?v=2">
   <style>
     /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
        always render in Cormorant Infant wherever Cormorant Garamond is
@@ -651,6 +651,12 @@
     .rail-pager button:disabled { opacity: 0.45; cursor: default; }
     .rail-note { padding: 16px 4px; color: var(--sage); font-size: 14px; }
 
+    /* Dashboard metric widgets (@odla-ai/ui MetricWidget). */
+    .dash-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; align-items: start; }
+    .dash-metrics > .card, .dash-metrics > .metric { margin-bottom: 0; }
+    .metric { border: 1px solid var(--border); border-radius: 8px; }
+    @media (max-width: 720px) { .dash-metrics { grid-template-columns: 1fr; } }
+
     /* Dashboard upcoming-calls agenda. */
     .dash-agenda { list-style: none; margin: 0; padding: 0; }
     .dash-agenda-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
@@ -775,6 +781,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=3"></script>
-  <script type="module" src="/assets/app/admin.js?v=11"></script>
+  <script type="module" src="/assets/app/admin.js?v=12"></script>
 </body>
 </html>
