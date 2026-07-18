@@ -686,8 +686,15 @@
     .rec-log { list-style: none; margin: 0; padding: 0; }
     .rec-log-row { padding: 10px 0; border-bottom: 1px solid var(--border); }
     .rec-log-row:last-child { border-bottom: 0; }
+    .rec-log-head { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 0; margin: 0; font: inherit; color: inherit; }
+    button.rec-log-head.expandable { cursor: pointer; }
+    button.rec-log-head.expandable:hover .rec-log-subj { color: var(--lime-dark); }
     .rec-log-subj { display: block; font-weight: 600; color: var(--moss); font-size: 14px; }
     .rec-log-meta { display: block; font-size: 12px; color: var(--sage); margin-top: 2px; }
+    .rec-log-caret { display: inline-block; width: 12px; margin-right: 6px; color: var(--sage); transition: transform 0.15s; }
+    .rec-log-caret.open { transform: rotate(90deg); }
+    /* Expanded email body: the plaintext as sent, wrapped in the brand font. */
+    .rec-log-body { white-space: pre-wrap; word-break: break-word; font: inherit; font-size: 13px; line-height: 1.65; color: var(--moss-light); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; margin: 10px 0 2px; }
     /* Calendar (Google) entries: a lime rule to set them apart from emails. */
     .rec-log-cal { padding-left: 12px; box-shadow: inset 3px 0 0 var(--lime-soft); }
     .rec-log-cal .rec-log-subj { color: var(--moss-light); }
@@ -793,6 +800,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=4"></script>
-  <script type="module" src="/assets/app/admin.js?v=17"></script>
+  <script type="module" src="/assets/app/admin.js?v=18"></script>
 </body>
 </html>
