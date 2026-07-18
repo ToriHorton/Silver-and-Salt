@@ -306,21 +306,50 @@ function AccessCard({ clerkUserId, myUserId, currentRole }) {
   );
 }
 
-// ── Comms History tab: the audited email log for this person. ──
-function CommsHistory({ recordId }) {
-  const [log, setLog] = useState(null);
+// Friendly names for the worker's lifecycle email templates.
+const EMAIL_LABELS = {
+  prepEmail: "Call prep",
+  paymentConfirmation: "Payment confirmation",
+  onboardingInvite: "Welcome / onboarding",
+  adminNotification: "Team notification",
+};
+
+// ── Comms History tab: everything this person has received. Merges the
+// worker's real sends (transactional emails + the Google Calendar invitations
+// their meetings imply, from /api/admin/people/:appId/comms) with any ad-hoc
+// emails sent from the CRM composer (crm_email_log). Sorted newest first. ──
+function CommsHistory({ appId, recordId }) {
+  const [items, setItems] = useState(null);
   useEffect(() => {
-    client.emailLog({ recordId, limit: 50 }).then((r) => setLog(r.log || [])).catch(() => setLog([]));
-  }, [recordId]);
-  if (!log) return <p class="muted"><span class="spinner"></span> Loading…</p>;
-  if (!log.length) return <p class="muted">No emails sent to this person yet.</p>;
+    let alive = true;
+    Promise.all([
+      appId
+        ? api(`/api/admin/people/${appId}/comms`).then((r) => r.items || []).catch(() => [])
+        : Promise.resolve([]),
+      client.emailLog({ recordId, limit: 50 }).then((r) => (r.log || []).map((e) => ({
+        kind: "email",
+        channel: e.error ? "email (failed)" : (e.transport || "email"),
+        label: e.templateId || "Message",
+        subject: e.subject || "",
+        at: e.sentAt,
+        error: e.error || null,
+      }))).catch(() => []),
+    ]).then(([worker, crmSends]) => {
+      if (!alive) return;
+      setItems([...worker, ...crmSends].sort((a, b) => (b.at || 0) - (a.at || 0)));
+    });
+    return () => { alive = false; };
+  }, [appId, recordId]);
+
+  if (!items) return <p class="muted"><span class="spinner"></span> Loading…</p>;
+  if (!items.length) return <p class="muted">No messages sent to this person yet.</p>;
   return (
     <ul class="rec-log">
-      {log.map((e) => (
-        <li class="rec-log-row">
-          <span class="rec-log-subj">{e.subject || "(no subject)"}</span>
+      {items.map((e) => (
+        <li class={"rec-log-row" + (e.kind === "calendar" ? " rec-log-cal" : "")}>
+          <span class="rec-log-subj">{e.subject || EMAIL_LABELS[e.label] || e.label || "(no subject)"}</span>
           <span class="rec-log-meta">
-            {e.templateId} · {new Date(e.sentAt).toLocaleString()} · {e.error ? "failed" : e.transport}
+            {EMAIL_LABELS[e.label] || e.label}{e.at ? ` · ${new Date(e.at).toLocaleString()}` : ""} · {e.error ? "failed" : e.channel}
           </span>
         </li>
       ))}
@@ -515,7 +544,7 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
         )}
         {subtab === "stage" && <StageControl crm={crm} record={stageRecord} onMove={onMoveStage} />}
         {subtab === "comms" && <EmailComposer record={record} />}
-        {subtab === "history" && <CommsHistory recordId={id} />}
+        {subtab === "history" && <CommsHistory appId={appId} recordId={id} />}
         {subtab === "scheduling" && <Scheduling appId={appId} onChanged={afterChange} />}
         {subtab === "billing" && (
           <div class="rec-info">
