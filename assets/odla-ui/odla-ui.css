@@ -3725,7 +3725,10 @@ details.mk-faq-item {
   height: auto;
   display: block;
   overflow: visible;
+  cursor: crosshair;
 }
+
+.metric-hover-target { fill: transparent; }
 
 .metric-area { fill: var(--ui-chart-band); stroke: none; }
 .metric-line {
@@ -3757,6 +3760,20 @@ details.mk-faq-item {
   stroke: var(--ui-chart-grid);
   stroke-width: 1;
 }
+.metric-hover { pointer-events: none; }
+.metric-hover-line {
+  stroke: var(--ui-chart-axis-faint);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.metric-hover-dot {
+  fill: var(--ui-chart-1);
+  stroke: var(--ui-chart-dot-stroke);
+  stroke-width: 1.5;
+}
+.metric-hover-dot.pos { fill: var(--ui-chart-pos); }
+.metric-hover-dot.neg { fill: var(--ui-chart-neg); }
+.metric-hover-dot.ghost { fill: var(--ui-chart-axis-faint); }
 
 /* Stroke weights stay in screen px so lines read the same at any card size
    (the 100×56 viewBox otherwise scales strokes up with width). */
@@ -3764,9 +3781,52 @@ details.mk-faq-item {
 .metric-ghost,
 .metric-point,
 .metric-zero,
-.metric-grid {
+.metric-grid,
+.metric-hover-line,
+.metric-hover-dot {
   vector-effect: non-scaling-stroke;
 }
+
+.metric-tip {
+  position: absolute;
+  min-width: 112px;
+  transform: translate(-50%, calc(-100% - 8px));
+  padding: 6px 8px;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-chart-tip-bg);
+  color: var(--ui-chart-tip-text);
+  font-size: var(--ui-text-xs);
+  line-height: var(--ui-leading-snug);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 2;
+}
+.metric-tip.start { transform: translate(0, calc(-100% - 8px)); }
+.metric-tip.end { transform: translate(-100%, calc(-100% - 8px)); }
+.metric-tip-label {
+  margin-bottom: 3px;
+  font-weight: 700;
+}
+.metric-tip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+.metric-tip-row > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.metric-tip-row i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ui-chart-1);
+}
+.metric-tip-row i.pos { background: var(--ui-chart-pos); }
+.metric-tip-row i.neg { background: var(--ui-chart-neg); }
+.metric-tip-row i.ghost { background: var(--ui-chart-axis-faint); }
 
 .metric-axis {
   display: flex;
