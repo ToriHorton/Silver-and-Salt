@@ -42,3 +42,4 @@ dist/
 # Clerk local state (sk_ lives in .env.local; never commit)
 .env.local
 .clerk/
+.odla/handshake.local.json
