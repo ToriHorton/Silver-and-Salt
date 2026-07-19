@@ -23,5 +23,13 @@
     "@odla-ai/ui": "^0.8.2",
     "jose": "^6.2.3",
     "preact": "^10.29.7"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "workerd@1.20260710.1": true,
+    "sharp@0.34.5": true,
+    "fsevents@2.3.3": true,
+    "protobufjs@7.6.5": true,
+    "@google/genai@1.52.0": true
   }
 }

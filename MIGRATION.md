@@ -855,3 +855,35 @@ files only — `assets/odla-ui/odla-ui.css` especially).
   locally and deployed; smoke passes. Next human obligations: approve entering
   P3 (Clerk login), create a Clerk account/app, and paste the publishable key
   (pk_..., not the secret key) when asked.
+- **2026-07-18 (second dev machine + owner-account worker):** Set up a second
+  developer machine (Node 26 via Homebrew; `npm install`, NOT `npm ci`, since
+  the lockfile was slightly out of sync; approved the six install scripts
+  esbuild/workerd/sharp/fsevents/protobufjs/@google/genai, now persisted in
+  package.json `allowScripts`). Provisioned local dev credentials against the
+  shared app with `provision --write-dev-vars`. Known snag: the rules push
+  403s with "not your app" (the app is owner-held by cory.ondrejka@gmail.com
+  and the rules are already deployed deny-all, so they need no push), and
+  provision exits before writing `.dev.vars`. Workaround: the minted key is
+  already in `.odla/credentials.local.json` (`envs.dev.dbKey`), so `.dev.vars`
+  was written from it directly (`ODLA_API_KEY=<key>`, 0600, never printed);
+  that single secret is all a local worker needs (every other ODLA_* var is
+  inline in wrangler.jsonc; Clerk/Stripe keys resolve at runtime from the
+  tenant vault). Then deployed a SECOND dev worker on the owner's OWN
+  Cloudflare account (tori@silverandsaltcapital.com, account aa3582f8...):
+  registered the `silver-and-salt.workers.dev` subdomain (wrangler v4 dropped
+  the `subdomain` command, so the owner registered it in the dashboard) and ran
+  `deploy:app:dev` (--env dev ONLY). Live at
+  https://silver-and-salt-capital-dev.silver-and-salt.workers.dev, sharing the
+  same dev backend (db tenant silver-and-salt-capital--dev, Clerk
+  relieved-eft-93, Stripe) as Cory's dev worker. `ODLA_API_KEY` pushed to the
+  deployed worker via `secrets push` (owner ran it; the db routes 500'd for
+  ~30s during secret propagation, then went green). All routes verified on the
+  deployed worker: `/` and `/api/health` 200, `/api/auth/config` serves the
+  shared Clerk key, `/api/me` 401 unauth, `/api/groups/silver-and-salt-capital/
+  join-config` returns the real group (paymentsReady true). Known gap: real
+  email sends from THIS worker fail sender verification, because dev EMAIL_FROM
+  (silver-and-salt-capital@odla.ai) is a sender verified on Cory's account, not
+  the owner's (audited, non-fatal; local `wrangler dev` simulates the binding).
+  To send real mail from the owner-account worker later, onboard a
+  silverandsaltcapital.com (or owner-owned) sender to Cloudflare Email Service
+  on the owner's account. Production and `main` remain untouched.
