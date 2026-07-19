@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="styles.css?v=2026-07-13">
 <style>
 /* ═══ INFOGRAPHIC: UTAH 2025 ═══ */
-.ig-wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+.ig-wrap{max-width:1100px;margin:0 auto;padding:0 48px;}
 
 /* Hero */
 .ig-hero{background:linear-gradient(135deg, var(--teal) 0%, #0d6b5c 100%);color:var(--cream);padding:120px 24px 72px;position:relative;overflow:hidden;}
@@ -241,8 +241,49 @@
 .story.reveal-ready [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity 0.7s ease,transform 0.7s ease;}
 .story.reveal-ready [data-reveal].in{opacity:1;transform:none;}
 
+/* Funding flow bars (Section 4) */
+.fundflow{max-width:600px;margin-top:34px;}
+.ff-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
+.ff-tag{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;}
+.ff-tag.t-green{color:var(--teal);}
+.ff-tag.t-rust{color:var(--rust);}
+.ff-amt{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;line-height:1;}
+.ff-amt.t-green{color:var(--teal);}
+.ff-amt.t-rust{color:var(--rust);}
+.ff-pct{font-family:'Satoshi',sans-serif;font-size:13px;font-weight:400;color:var(--sage);}
+.ff-bar-full{background:var(--teal);border-radius:6px;padding:15px 20px;display:flex;gap:10px 28px;flex-wrap:wrap;align-items:center;margin-bottom:34px;}
+.ff-inbar{font-size:13px;color:var(--cream);font-weight:500;}
+.ff-inbar a{color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(251,248,242,0.4);transition:border-color 0.2s;}
+.ff-inbar a:hover{border-bottom-color:var(--cream);}
+.ff-lead{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(251,248,242,0.18);border-radius:999px;padding:2px 10px;margin-left:6px;}
+.ff-utah{position:relative;}
+.ff-utah .ff-head,.ff-bar-empty{margin-right:92px;}
+.ff-bar-empty{height:50px;border:1.5px dashed rgba(209,107,79,0.55);border-radius:6px;background:transparent;}
+.ff-arrow{position:absolute;right:0;top:32px;width:84px;height:150px;pointer-events:none;}
+.ff-close{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,46px);font-weight:600;color:var(--moss);line-height:1.14;letter-spacing:-0.01em;margin-top:36px;max-width:520px;}
+.ff-close em{font-style:normal;color:var(--rust);}
+
+/* Section 5: The gap gets worse (Vamo) */
+.vamo-head{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:600;color:var(--moss);line-height:1.1;letter-spacing:-0.01em;margin-bottom:22px;max-width:660px;}
+.vamo-head em{font-style:normal;color:var(--rust);}
+.vamo-card{background:var(--cream);border:1px solid var(--border);border-top:3px solid var(--rust);border-radius:8px;padding:26px 28px;max-width:600px;margin:28px 0;}
+.vamo-logo img{height:34px;width:auto;display:block;}
+.vamo-meta{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:14px;font-size:13px;color:var(--moss-light);}
+.vamo-meta b{color:var(--moss);font-weight:700;}
+.vamo-meta a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(26,143,125,0.32);transition:border-color 0.2s;}
+.vamo-meta a:hover{border-bottom-color:var(--teal);}
+.vamo-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);border:1px solid rgba(209,107,79,0.55);border-radius:999px;padding:3px 12px;margin-top:16px;}
+.gap-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:640px;margin:30px 0;}
+.gap-cell{background:var(--sand);border:1px solid var(--border);border-radius:8px;padding:20px 22px;}
+.gap-cell-tag{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+.gap-cell-big{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;line-height:1.3;color:var(--moss);}
+.gap-cell-big em{font-style:italic;color:var(--rust);}
+.gap-cell-sub{font-size:12px;color:var(--moss-light);margin-top:8px;line-height:1.5;}
+.rust-callout{color:var(--rust);font-weight:700;}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
+  .ig-wrap{padding:0 24px;}
   .ig-hero{padding:96px 20px 56px;}
   .story{padding:64px 0 48px;}
   .ebeat{padding:40px 0;}
@@ -280,6 +321,9 @@
   .prop-pct{font-size:18px;}
   .key-insight{padding:56px 24px;}
   .key-insight::before{font-size:260px;}
+  .ff-utah .ff-head,.ff-bar-empty{margin-right:64px;}
+  .ff-arrow{width:64px;height:130px;}
+  .gap-compare{grid-template-columns:1fr;}
 }
 @media(max-width:480px){
   .ig-eyebrow{margin-bottom:10px;}
@@ -304,7 +348,7 @@
 <script src="assets/site-header.js?v=11" defer></script>
 
 <!-- HERO -->
-<report-header number="02" name="Utah Funding 2025" title="1 out of 169. We can" emphasis="do better." summary="Utah startups raised $1.86 billion across 169 deals in 2025. We traced the money and found only one female CEO. Explore the full funding funnel and follow the money that supported women." updated="July 2026"></report-header>
+<report-header number="02" name="Utah Funding 2025" title="1 out of 169. We can" emphasis="do better." summary="Utah startups raised $1.86 billion across 169 deals in 2025. We traced every publicly announced dollar and found one woman CEO. This is the story of where the money went, and what it cost us." updated="July 2026"></report-header>
 <script src="assets/report-header.js?v=3" defer></script>
 
 <div class="ig-wrap">
@@ -312,25 +356,25 @@
   <!-- MONEY STORY (scroll reveal) -->
   <section class="story" aria-label="Where Utah's 2025 startup capital went">
     <p class="story-kicker" data-reveal>Let's talk about money</p>
-    <p class="story-lede" data-reveal>How much money went to Utah startups in 2025 and who did it reach?</p>
+    <p class="story-lede" data-reveal>The best way to understand what a community values is to see where it invests. Utah startups raised big in 2025. Follow the money and watch who it reached.</p>
 
     <div class="ebeat" data-reveal>
       <div class="ebeat-index"><span class="ebeat-num">01</span><span class="ebeat-kicker">The pool</span></div>
       <p class="ebeat-fig ebeat-fig--xl">$1.86B</p>
-      <p class="ebeat-cap">raised publicly, according to <a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank" rel="noopener">PitchBook · Utah Business 2026 Deal Dispatch</a>.</p>
+      <p class="ebeat-cap">raised publicly across 169 deals, according to <a href="https://www.utahbusiness.com/deal-dispatch/2026/01/05/investors-placing-bets-2026-larger-later-stage-rounds-signaled-future-focused-ai-deep-tech/" target="_blank" rel="noopener">PitchBook · Utah Business 2026 Deal Dispatch</a>. That is the pool. Now follow it.</p>
     </div>
 
     <div class="ebeat" data-reveal>
       <div class="ebeat-index"><span class="ebeat-num">02</span><span class="ebeat-kicker">The share</span></div>
       <p class="ebeat-fig ebeat-fig--sm rust">0.5%</p>
-      <p class="ebeat-cap">of it reached a woman-founded team. Half a cent on the dollar.</p>
+      <p class="ebeat-cap">of that pool reached a woman-founded team. Half a cent on the dollar.</p>
       <div class="capbar-card" style="margin-top:26px;max-width:600px;">
         <div class="capbar">
           <span class="capbar-in">$1.86B deployed across Utah, 2025</span>
           <span class="capbar-sliver"></span>
         </div>
         <span class="capbar-connector"></span>
-        <p class="capbar-note"><span class="gold-dot"></span><span>This represents the <strong>$9.75M</strong> (or about <strong>0.5%</strong> of funds) that went to companies with women founders on the team.</span></p>
+        <p class="capbar-note"><span class="gold-dot"></span><span>The sliver on the left is the <strong>$9.75M</strong> that reached companies with a woman on the founding team. About half of one percent.</span></p>
       </div>
     </div>
 
@@ -340,7 +384,7 @@
         <p class="ebeat-fig ebeat-fig--teal">3</p>
         <div class="teams-dots" id="teamsdots" role="img" aria-label="169 dots, one per funded startup. Three are circled for the companies with women on the founding team."><svg class="dot-circle" viewBox="0 0 48 34" aria-hidden="true"><defs><filter id="feltrough" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/></filter></defs><path d="M27 6 C39 6 46 11 44 17 C42 25 31 30 21 29 C10 28 3 22 5 15 C7 8 18 5 29 6 C34 6 40 8 42 10" fill="none" stroke="#1A8F7D" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#feltrough)"/></svg></div>
       </div>
-      <p class="ebeat-cap">companies had a woman on the founding team, out of 169 total funded startups.</p>
+      <p class="ebeat-cap">companies out of 169 funded had a woman on the founding team. Meet all three.</p>
       <div class="founder-grid">
         <div class="founder-card flagged">
           <a class="founder-toplink" href="https://findfaye.com" target="_blank" rel="noopener">
@@ -374,33 +418,32 @@
         <p class="ebeat-fig rust">1</p>
         <div class="teams-dots" id="onedots" role="img" aria-label="169 dots, one per funded startup. One is circled in rust for the company with a woman as CEO."><svg class="dot-circle dot-circle--one" viewBox="0 0 26 30" aria-hidden="true"><defs><filter id="feltrough1" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="6" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter></defs><path d="M15 4 C22 4 25 9 24 15 C23 22 17 26 12 25 C6 24 2 19 3 13 C4 7 9 4 15 4 C18 4 21 5 22 7" fill="none" stroke="#D16B4F" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#feltrough1)"/></svg></div>
       </div>
-      <p class="ebeat-cap">startup had a woman as CEO.</p>
-      <p class="one-note">1 out of 169 isn't a good look for Utah, but the story gets worse.</p>
+      <p class="ebeat-cap">of the three put a woman in the CEO seat: Faye, led by Emily King.</p>
+      <p class="one-note">1 CEO out of 169 companies. And the story gets worse from here.</p>
     </div>
 
     <div class="beat-turn" data-reveal>
       <div class="ebeat-index"><span class="ebeat-num">04</span><span class="ebeat-kicker">The reality</span></div>
       <p class="turn-statement">Faye raised <em>$0</em> from Utah investors.</p>
-      <p class="turn-sub">Every dollar of Faye's $2.5M came from out of state.</p>
-      <div class="origins">
-        <div class="origin">
-          <p class="origin-loc">California</p>
-          <p class="origin-head"><a href="https://www.unusual.vc/our-story/" target="_blank" rel="noopener">Unusual Ventures</a></p>
-          <p class="origin-note">A concentrated firm founded in 2017, Unusual embeds a full-time operations team alongside its founders, from customer discovery through go-to-market. Faye's round was led by venture partner Sarah Leary.</p>
+      <p class="turn-sub">The one round with a woman CEO, and every dollar of it came from somewhere else. Here is where:</p>
+      <div class="fundflow">
+        <div class="ff-head"><span class="ff-tag t-green">Out of state</span><span class="ff-amt t-green">$2.5M <span class="ff-pct">· 100%</span></span></div>
+        <div class="ff-bar-full">
+          <span class="ff-inbar"><a href="https://www.unusual.vc/our-story/" target="_blank" rel="noopener">Unusual Ventures</a> · California <span class="ff-lead">lead</span></span>
+          <span class="ff-inbar"><a href="https://www.springbank.vc/" target="_blank" rel="noopener">Springbank</a> · New York</span>
         </div>
-        <div class="origin">
-          <p class="origin-loc">New York</p>
-          <p class="origin-head"><a href="https://www.springbank.vc/" target="_blank" rel="noopener">Springbank</a></p>
-          <p class="origin-note">Founded by Courtney Leimkuhler, Elana Berkowitz, and Jen Lee Koss, Springbank backs the infrastructure of how we work, live, and care, and invests in world-class teams of all genders and backgrounds.</p>
-        </div>
-        <div class="origin origin--zero">
-          <p class="origin-loc">Utah</p>
-          <p class="origin-zero-num">$0</p>
+        <div class="ff-utah">
+          <div class="ff-head"><span class="ff-tag t-rust">Utah</span><span class="ff-amt t-rust">$0 <span class="ff-pct">· 0%</span></span></div>
+          <div class="ff-bar-empty"></div>
+          <svg class="ff-arrow" viewBox="0 0 84 150" aria-hidden="true">
+            <path d="M 48 142 C 76 114, 78 74, 48 46 C 38 37, 24 32, 8 31" fill="none" stroke="#D16B4F" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#feltrough)"/>
+            <path d="M 8 31 C 14 27, 19 24, 23 21" fill="none" stroke="#D16B4F" stroke-width="2.8" stroke-linecap="round"/>
+            <path d="M 8 31 C 14 35, 19 39, 23 43" fill="none" stroke="#D16B4F" stroke-width="2.8" stroke-linecap="round"/>
+          </svg>
+          <p class="ff-close">This is what a <em>structural gap</em> looks like.</p>
         </div>
       </div>
     </div>
-
-    <p class="story-close" data-reveal>This is what a <em>structural</em> gap looks like.</p>
   </section>
   <script>
   (function(){
@@ -430,9 +473,43 @@
   (function(){var f=document.getElementById('onedots');if(!f)return;for(var i=0;i<169;i++){var d=document.createElement('span');d.className=i<1?'dot rl':'dot';if(i===0)d.classList.add('sep');f.appendChild(d);}})();
   </script>
 
-  <!-- SECTION 05: THE INSIGHT -->
+  <!-- SECTION 05: THE GAP GETS WORSE -->
+  <section class="ig-section insight-section" aria-label="The gap gets worse: Vamo">
+    <div class="ebeat-index"><span class="ebeat-num">05</span><span class="ebeat-kicker">The gap gets worse</span></div>
+    <p class="vamo-head">Did you hear about the <em>female founder who had to leave</em> to get funding?</p>
+    <p class="ebeat-cap">There should be a fourth company on this list. <a href="https://www.vamodelivery.com" target="_blank" rel="noopener">Vamo</a> is a cold-chain delivery platform founded at BYU by three Salt Lake City natives. Claire Larsen grew it to <strong>$2.5M</strong> in annual recurring revenue.</p>
+    <div class="vamo-card">
+      <a class="vamo-logo" href="https://www.vamodelivery.com" target="_blank" rel="noopener"><img src="assets/logos/vamo-logo.png" alt="Vamo" loading="lazy" decoding="async"></a>
+      <div class="vamo-meta"><span>Funded · Announced Jan 2026</span><span><b>~$2M</b> via Brickyard</span><span><a href="https://www.linkedin.com/in/clairelarsen7/" target="_blank" rel="noopener">Claire Larsen</a> · CEO</span></div>
+      <div class="vamo-badge">Relocated: Salt Lake City &rarr; Chattanooga, TN</div>
+    </div>
+    <p class="ebeat-cap"><strong>So where is Vamo in this report?</strong> This report counts companies funded <em>in Utah</em>. And to get funded, <strong class="rust-callout">Claire had to leave.</strong> The capital to scale came through <a href="https://www.justlaybrick.com/" target="_blank" rel="noopener">Brickyard</a>, a founder residency in Chattanooga, Tennessee, and Brickyard's model requires founders to relocate. So in January, Claire packed up her family and moved her Utah-built company 1,500 miles east. By the time her round was public, Vamo was a Tennessee company.</p>
+    <div class="gap-compare">
+      <div class="gap-cell">
+        <div class="gap-cell-tag">Faye</div>
+        <div class="gap-cell-big">Raised $2.5M, every dollar came <em>from out of state</em>.</div>
+        <div class="gap-cell-sub">Woman CEO. Stayed in Utah. $0 from Utah investors.</div>
+      </div>
+      <div class="gap-cell">
+        <div class="gap-cell-tag">Vamo</div>
+        <div class="gap-cell-big">Raised ~$2M, and had to <em>move out of state</em> to get it.</div>
+        <div class="gap-cell-sub">Woman CEO. Utah-built. Now a Tennessee company.</div>
+      </div>
+    </div>
+    <p class="source-cite">For the data-minded: PitchBook attributes rounds by announcement date and headquarters. Vamo announced in January 2026 as a Tennessee company, so she falls outside the dataset. Claire confirmed to us that Utah angels contributed roughly $400K as a part of this raise.</p>
+  </section>
+
+  <!-- SECTION 06: THE QUESTION -->
+  <section class="ig-section insight-section" aria-label="The question">
+    <div class="ebeat-index"><span class="ebeat-num">06</span><span class="ebeat-kicker">The question</span></div>
+    <p class="ebeat-cap">Some say Utah lacks women founders. This data raises a harder question:</p>
+    <p class="vamo-head">Is the problem actually that Utah lacks investors who <em>fund women</em>?</p>
+    <p class="ebeat-cap">The time for "mock shock" has passed. The question is real and the responsibility is on anyone who reads this report. <strong class="rust-callout">What will you do differently in 2026?</strong> The returns from women founders are real, and in 2025 Utah forced women to earn returns for investors out of the state.</p>
+  </section>
+
+  <!-- SECTION 07: THE INSIGHT -->
   <section class="ig-section insight-section">
-    <div class="ebeat-index"><span class="ebeat-num">05</span><span class="ebeat-kicker">The insight</span></div>
+    <div class="ebeat-index"><span class="ebeat-num">07</span><span class="ebeat-kicker">The insight</span></div>
     <h2 class="ig-h">The math is simple.</h2>
 
     <div class="key-insight">
