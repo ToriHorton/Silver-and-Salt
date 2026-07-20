@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-19",
+  generated: "2026-07-20",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -62,6 +62,9 @@ window.GRANOLA_INBOX = {
     { text: "Accept the Cloudflare account invitation before it expires Jul 21", owner: "", context: "from email: Cloudflare invitation sent by Cory Ondrejka, tied to the odla migration", source: "email", date: "2026-07-18" },
     { text: "Send Pat Jones a short Silver & Salt Capital blurb she can forward", owner: "", context: "from Granola: Women's leadership investing in Utah with Pat Jones; pjoneshorton@gmail.com, bunco group of Athena Award winners meets the 2nd Wednesday", source: "granola", date: "2026-07-18" },
     { text: "Reach out to Becky Potts about the women's investing effort", owner: "", context: "from Granola: Women's leadership investing in Utah with Pat Jones; Becky teaches women's investing every other week, strong fit per Pat", source: "granola", date: "2026-07-18" },
-    { text: "Choose final wording for the thesis page $1,000 investment line", owner: "", context: "from Claude work: thesis page copy; three rewrites offered for the 6 to 10 businesses line", source: "claude", date: "2026-07-18" }
+    { text: "Choose final wording for the thesis page $1,000 investment line", owner: "", context: "from Claude work: thesis page copy; three rewrites offered for the 6 to 10 businesses line", source: "claude", date: "2026-07-18" },
+    { text: "Prep for the Cory Ondrejka intro call, Mon Jul 20 at 9:45am PT", owner: "", context: "from email: Cory Ondrejka invite re Silver & Salt Capital introduction call, Jul 20", source: "email", date: "2026-07-19" },
+    { text: "Nudge Eva at BYU Ballard Center about fall Rollins Center plans", owner: "", context: "from Claude work: daily network pulse; Eva promised to text after the May 18 meeting, two months quiet", source: "claude", date: "2026-07-19" },
+    { text: "Confirm the Sharlene Wells reschedule for Wed Jul 22 at 6pm MDT holds", owner: "", context: "from Claude work: daily network pulse; thread ended without a firm confirmation around the Hawaii conference", source: "claude", date: "2026-07-19" }
   ]
 };
