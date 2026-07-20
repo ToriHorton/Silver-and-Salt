@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-18",
+  generated: "2026-07-19",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -56,6 +56,12 @@ window.GRANOLA_INBOX = {
     { text: "Send Loon fee details and carry structure to Tori", owner: "Dawn Myers", context: "from Granola: Tori x Lisa x Dawn Meeting; management fee, carry rate, and setup costs", source: "delegated", date: "2026-07-17" },
     { text: "Send Lisa Friedlander next steps from the Citrine Angels noon call", owner: "", context: "from email: Lisa Friedlander re Today's Noon Call; she missed the call and asked how she can help and what the next steps are", source: "email", date: "2026-07-17" },
     { text: "Confirm Vamo round close date, 2025 vs early 2026, for the Utah funding page", owner: "", context: "from Claude work: Vamo funding research; section 06 framed around the announcement date pending confirmation", source: "claude", date: "2026-07-17" },
-    { text: "Pick a membership page structure direction so full page copy can be written", owner: "", context: "from Claude work: membership signup page flow; four structure options drafted, pillars recommended", source: "claude", date: "2026-07-17" }
+    { text: "Pick a membership page structure direction so full page copy can be written", owner: "", context: "from Claude work: membership signup page flow; four structure options drafted, pillars recommended", source: "claude", date: "2026-07-17" },
+    { text: "Follow up with Crystalee Beck on a 1-year High Five sponsorship contract", owner: "", context: "from email: Crystalee Beck re Silver & Salt Capital sponsorship signature request; Tori asked Jul 18 for a 1-year version instead of the 2-year commitment", source: "email", date: "2026-07-18" },
+    { text: "Pay or schedule The Mama Ladder invoice #292, $2,500 due Oct 15", owner: "", context: "from email: Wave invoice from The Mama Ladder, ACH bank payment available", source: "email", date: "2026-07-18" },
+    { text: "Accept the Cloudflare account invitation before it expires Jul 21", owner: "", context: "from email: Cloudflare invitation sent by Cory Ondrejka, tied to the odla migration", source: "email", date: "2026-07-18" },
+    { text: "Send Pat Jones a short Silver & Salt Capital blurb she can forward", owner: "", context: "from Granola: Women's leadership investing in Utah with Pat Jones; pjoneshorton@gmail.com, bunco group of Athena Award winners meets the 2nd Wednesday", source: "granola", date: "2026-07-18" },
+    { text: "Reach out to Becky Potts about the women's investing effort", owner: "", context: "from Granola: Women's leadership investing in Utah with Pat Jones; Becky teaches women's investing every other week, strong fit per Pat", source: "granola", date: "2026-07-18" },
+    { text: "Choose final wording for the thesis page $1,000 investment line", owner: "", context: "from Claude work: thesis page copy; three rewrites offered for the 6 to 10 businesses line", source: "claude", date: "2026-07-18" }
   ]
 };
