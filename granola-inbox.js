@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-20",
+  generated: "2026-07-21",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -65,6 +65,16 @@ window.GRANOLA_INBOX = {
     { text: "Choose final wording for the thesis page $1,000 investment line", owner: "", context: "from Claude work: thesis page copy; three rewrites offered for the 6 to 10 businesses line", source: "claude", date: "2026-07-18" },
     { text: "Prep for the Cory Ondrejka intro call, Mon Jul 20 at 9:45am PT", owner: "", context: "from email: Cory Ondrejka invite re Silver & Salt Capital introduction call, Jul 20", source: "email", date: "2026-07-19" },
     { text: "Nudge Eva at BYU Ballard Center about fall Rollins Center plans", owner: "", context: "from Claude work: daily network pulse; Eva promised to text after the May 18 meeting, two months quiet", source: "claude", date: "2026-07-19" },
-    { text: "Confirm the Sharlene Wells reschedule for Wed Jul 22 at 6pm MDT holds", owner: "", context: "from Claude work: daily network pulse; thread ended without a firm confirmation around the Hawaii conference", source: "claude", date: "2026-07-19" }
+    { text: "Confirm the Sharlene Wells reschedule for Wed Jul 22 at 6pm MDT holds", owner: "", context: "from Claude work: daily network pulse; thread ended without a firm confirmation around the Hawaii conference", source: "claude", date: "2026-07-19" },
+    { text: "Send Morgan Lemaitre the work-in-progress prospectus and 2025 funding report", owner: "", context: "from Granola: Tori Horton and Morgan Lemaitre intro; she wants benchmarks and criteria before sharing with clients, an info sheet went out Jul 20", source: "granola", date: "2026-07-20" },
+    { text: "Plan an in-person lunch with Morgan Lemaitre in Park City or Salt Lake", owner: "", context: "from Granola: Tori Horton and Morgan Lemaitre intro; connect on Tori's next Utah visit", source: "granola", date: "2026-07-20" },
+    { text: "Text intro connecting Lisa and Annie before Friday", owner: "", context: "from Granola: Lisa and Tori checking in; encourage a video meet before the weekend", source: "granola", date: "2026-07-20" },
+    { text: "Send Lisa the first season plan for the Built Not Found podcast", owner: "", context: "from Granola: Lisa and Tori checking in; she wants the full season outlined on paper before going further", source: "granola", date: "2026-07-20" },
+    { text: "Share Annie's community podcast list with Lisa", owner: "", context: "from Granola: Lisa and Tori checking in; podcasts and websites to orient her on the community conversation space", source: "granola", date: "2026-07-20" },
+    { text: "Schedule Lisa's pilot setup visit for early September", owner: "", context: "from Granola: Lisa and Tori checking in; Tori travels through mid-August, earliest realistic start is after Labor Day", source: "granola", date: "2026-07-20" },
+    { text: "Research comparable podcasts and share a shortlist", owner: "Lisa", context: "from Granola: Lisa and Tori checking in; swap lists with Tori before the pilot, Heart + Head in Salt Lake flagged as a reference", source: "delegated", date: "2026-07-20" },
+    { text: "Reply to Jeanne Wang's Village Search Partners mid-year update", owner: "", context: "from Claude work: daily network pulse; a short reply opens the door to two proposed intros", source: "claude", date: "2026-07-20" },
+    { text: "Send Lauren Sercu the overdue advisor invite", owner: "", context: "from Claude work: daily pipeline briefing; flagged as a top priority from the Connection Hub review", source: "claude", date: "2026-07-20" },
+    { text: "Nudge Dave Boyce on the five stalled warm intro requests", owner: "", context: "from Claude work: daily pipeline briefing; intro requests sitting in Warm Intro stage", source: "claude", date: "2026-07-20" }
   ]
 };
