@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-21",
+  generated: "2026-07-23",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -75,6 +75,16 @@ window.GRANOLA_INBOX = {
     { text: "Research comparable podcasts and share a shortlist", owner: "Lisa", context: "from Granola: Lisa and Tori checking in; swap lists with Tori before the pilot, Heart + Head in Salt Lake flagged as a reference", source: "delegated", date: "2026-07-20" },
     { text: "Reply to Jeanne Wang's Village Search Partners mid-year update", owner: "", context: "from Claude work: daily network pulse; a short reply opens the door to two proposed intros", source: "claude", date: "2026-07-20" },
     { text: "Send Lauren Sercu the overdue advisor invite", owner: "", context: "from Claude work: daily pipeline briefing; flagged as a top priority from the Connection Hub review", source: "claude", date: "2026-07-20" },
-    { text: "Nudge Dave Boyce on the five stalled warm intro requests", owner: "", context: "from Claude work: daily pipeline briefing; intro requests sitting in Warm Intro stage", source: "claude", date: "2026-07-20" }
+    { text: "Nudge Dave Boyce on the five stalled warm intro requests", owner: "", context: "from Claude work: daily pipeline briefing; intro requests sitting in Warm Intro stage", source: "claude", date: "2026-07-20" },
+    { text: "Have the investment conversation with Corey by Friday Jul 24", owner: "", context: "from Granola: Emily Scott meeting; decide together how much to invest in the business, how to arrive at that number, and how to deploy it given the timeline", source: "granola", date: "2026-07-22" },
+    { text: "Text Emily Scott to schedule a fast follow next week", owner: "", context: "from Granola: Emily Scott meeting; keep momentum on the membership model and welcome package plans", source: "granola", date: "2026-07-22" },
+    { text: "Send Maryam the Silver & Salt Capital website and two-pager", owner: "", context: "from Granola: Maryam meeting; she needs the materials to review before Monday", source: "granola", date: "2026-07-22" },
+    { text: "Review the Silver & Salt Capital website and two-pager, then send notes and ideas before Monday", owner: "Maryam", context: "from Granola: Maryam meeting; potential role in marketing launch plan, content strategy, and managing a junior executor", source: "delegated", date: "2026-07-22" },
+    { text: "Reconnect with Maryam on Monday to discuss scope and a working arrangement", owner: "", context: "from Granola: Maryam meeting; any paid arrangement starts light (informal Venmo) to protect her insurance eligibility, then grow together", source: "granola", date: "2026-07-22" },
+    { text: "Follow up with Sharlene Wells to lock a Monday Jul 27 reschedule time", owner: "", context: "from email: Sharlene Wells is stuck at the Hawaii conference and asked to move the intro; Tori offered Mon Jul 27 between 10am and 3pm MT, awaiting her pick", source: "email", date: "2026-07-22" },
+    { text: "Reach out to Jacki Zehner after Pat Jones's endorsement intro", owner: "", context: "from email: Pat Jones Horton sent a note of endorsement and Tori's details to Jacki Zehner, and will do the same for Becky Potts", source: "email", date: "2026-07-21" },
+    { text: "Research community college Spanish options for Josh's spring semester", owner: "", context: "from Granola: Emily Scott meeting; check West Valley and nearby campuses for intermediate Spanish, decision can wait until October", source: "granola", date: "2026-07-22" },
+    { text: "Send unofficial transcript and school profile to D3 football programs", owner: "Charli", context: "from Granola: Emily Scott meeting; Charli to send the compressed school profile and confirm the LG transcript is current", source: "delegated", date: "2026-07-22" },
+    { text: "Send Common App and PIQ essay drafts to Charli for feedback", owner: "Josh", context: "from Granola: Emily Scott meeting; longer Common App essay first, then pull down into the PIQs", source: "delegated", date: "2026-07-22" }
   ]
 };
