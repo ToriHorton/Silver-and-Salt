@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2026-06-29">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
 <style>
 /* ═══════════════════════════════════════
    INDEX.HTML — Page-specific styles only
@@ -1007,7 +1007,7 @@ body:has(#page-welcome.active) .f-mark .sc-right { background: #7CB83F; }
      NAVIGATION
      ═══════════════════════════════════════ -->
 <site-header></site-header>
-<script src="assets/site-header.js?v=8" defer></script>
+<script src="assets/site-header.js?v=11" defer></script>
 
 
 <!-- ═══════════════════════════════════════
@@ -2675,7 +2675,7 @@ function applyPalette(name) {
 /* ═══════════════════════════════════════
    PAGE SWITCHING
    ═══════════════════════════════════════ */
-function showPage(id) {
+function showPage(id, updateUrl = true) {
   // Hide all pages
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   // Show target
@@ -2705,6 +2705,15 @@ function showPage(id) {
   }
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'instant' });
+  // Keep the address bar shareable: each tab gets its own hash
+  // (Home stays at the clean root URL). Skipped when the change
+  // came from the URL itself (initial load, back/forward).
+  if (updateUrl) {
+    const hash = id === 'welcome' ? '' : '#' + id;
+    if (window.location.hash !== hash) {
+      history.pushState(null, '', hash || window.location.pathname + window.location.search);
+    }
+  }
 }
 
 /* ═══════════════════════════════════════
@@ -2714,10 +2723,17 @@ function showPage(id) {
 // (assets/site-header.js). It intercepts clicks and calls
 // showPage() so the SPA tab switcher fires instead of a full nav.
 
-// Initial page load — check URL hash for deep linking
+// Initial page load: check URL hash for deep linking
 const hashPage = window.location.hash.replace('#', '');
 const validPages = ['start','welcome','thesis','how','story','about'];
-showPage(validPages.includes(hashPage) ? hashPage : 'welcome');
+showPage(validPages.includes(hashPage) ? hashPage : 'welcome', false);
+
+// Back/forward buttons: re-read the hash and switch tabs without
+// pushing a new history entry.
+window.addEventListener('popstate', () => {
+  const id = window.location.hash.replace('#', '') || 'welcome';
+  if (validPages.includes(id)) showPage(id, false);
+});
 
 /* ═══════════════════════════════════════
    MEMBER GRID RENDERER
