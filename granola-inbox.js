@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-23",
+  generated: "2026-07-24",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -85,6 +85,11 @@ window.GRANOLA_INBOX = {
     { text: "Reach out to Jacki Zehner after Pat Jones's endorsement intro", owner: "", context: "from email: Pat Jones Horton sent a note of endorsement and Tori's details to Jacki Zehner, and will do the same for Becky Potts", source: "email", date: "2026-07-21" },
     { text: "Research community college Spanish options for Josh's spring semester", owner: "", context: "from Granola: Emily Scott meeting; check West Valley and nearby campuses for intermediate Spanish, decision can wait until October", source: "granola", date: "2026-07-22" },
     { text: "Send unofficial transcript and school profile to D3 football programs", owner: "Charli", context: "from Granola: Emily Scott meeting; Charli to send the compressed school profile and confirm the LG transcript is current", source: "delegated", date: "2026-07-22" },
-    { text: "Send Common App and PIQ essay drafts to Charli for feedback", owner: "Josh", context: "from Granola: Emily Scott meeting; longer Common App essay first, then pull down into the PIQs", source: "delegated", date: "2026-07-22" }
+    { text: "Send Common App and PIQ essay drafts to Charli for feedback", owner: "Josh", context: "from Granola: Emily Scott meeting; longer Common App essay first, then pull down into the PIQs", source: "delegated", date: "2026-07-22" },
+    { text: "Fill out the High Five Grant sponsor spotlight form", owner: "", context: "from email: Meg Thunell re Welcome to the High Five Grant for Moms; responses feed social posts and emails highlighting the sponsorship", source: "email", date: "2026-07-23" },
+    { text: "Confirm judging the High Five pitch session, Mon Oct 26, 12 to 2pm MT", owner: "", context: "from email: Meg Thunell re Welcome to the High Five Grant for Moms; full two-hour commitment requested, more details coming from Meg", source: "email", date: "2026-07-23" },
+    { text: "Reply to Pat Jones and schedule the catch-up call", owner: "", context: "from email: Pat Jones Horton re Fwd: Question from Pat; she says let's talk soon, and Becky Potts is committed this year but may reach out in 2027", source: "email", date: "2026-07-23" },
+    { text: "Reply to Janay Cody on how Silver & Salt Capital got started", owner: "", context: "from email: Janay Cody re Janay//Tori; she shared her five target companies and asked how Tori brought the firm to life", source: "email", date: "2026-07-23" },
+    { text: "Enable 2-step verification for Google Cloud console before Oct 20", owner: "", context: "from email: Google Cloud notice Jul 23; 2SV becomes required for console access on Oct 20, 2026", source: "email", date: "2026-07-23" }
   ]
 };
