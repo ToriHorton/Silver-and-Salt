@@ -182,11 +182,28 @@
     }
 
     /* Clerk renders its own card here; keep overflow visible. */
-    #signin-mount {
+    .signin-mount {
       display: flex;
       justify-content: center;
       overflow: visible;
     }
+
+    /* chapter's member area uses odla-ui's button classes for sign out. This
+       page carries no odla-ui stylesheet, so map them to the bare treatment
+       the console has always used. */
+    .account-actions .btn.secondary.mini {
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      cursor: pointer;
+    }
+    .account-actions .btn.secondary.mini:hover { color: var(--moss); }
 
     /* ── Signed-in chrome ── */
     .member-row {
@@ -363,16 +380,14 @@
       <div class="auth-status" id="auth-loading"><span class="spinner"></span> Preparing sign in…</div>
     </div>
 
-    <div id="signin-mount" class="hidden"></div>
-
-    <!-- The signed-in view renders here (src/app/members.jsx, Preact via
-         the Vite build); markup and classes match the previous inline
-         version so the CSS above applies unchanged. -->
+    <!-- Sign-in and the signed-in view both render here (src/app/members.jsx:
+         @odla-ai/chapter's MembersArea behind @odla-ai/auth-clerk's ClerkGate).
+         Chapter emits the same class names the CSS above targets, so the
+         packaged component inherits this page's styling unchanged. -->
     <div id="members-root"></div>
 
   </div>
 
-  <script src="/assets/member-auth.js?v=4"></script>
-  <script type="module" src="/assets/app/members.js?v=3"></script>
+  <script type="module" src="/assets/app/members.js?v=4"></script>
 </body>
 </html>

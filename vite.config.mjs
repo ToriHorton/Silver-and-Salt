@@ -13,9 +13,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        admin: "src/app/admin/index.jsx",
+        admin: "src/app/admin.jsx",
         members: "src/app/members.jsx",
-        "join-picker": "src/app/join-picker.jsx",
+        join: "src/app/join.jsx",
       },
       output: {
         entryFileNames: "[name].js",
