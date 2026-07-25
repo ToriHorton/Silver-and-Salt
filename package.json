@@ -6,21 +6,26 @@
     "dev": "python3 -m http.server 3000",
     "build": "bash _scripts/build-site.sh",
     "dev:worker": "npm run build && wrangler dev --env dev",
-    "deploy:app:dev": "npm run build && wrangler deploy --env dev"
+    "deploy:app:dev": "npm run build && wrangler deploy --env dev",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "@odla-ai/cli": "0.13.1",
+    "@odla-ai/cli": "0.17.1",
     "@preact/preset-vite": "^2.10.5",
     "preact-render-to-string": "^6.7.0",
     "vite": "^8.1.4",
+    "vitest": "4.1.10",
     "wrangler": "^4.111.0"
   },
   "dependencies": {
-    "@odla-ai/calendar": "^0.2.0",
-    "@odla-ai/crm": "^0.1.3",
-    "@odla-ai/db": "^0.6.6",
-    "@odla-ai/email": "^0.3.1",
-    "@odla-ai/ui": "^0.8.2",
+    "@odla-ai/auth-clerk": "0.4.1",
+    "@odla-ai/brand": "0.2.0",
+    "@odla-ai/calendar": "0.2.0",
+    "@odla-ai/chapter": "0.23.0",
+    "@odla-ai/crm": "0.3.1",
+    "@odla-ai/db": "0.6.7",
+    "@odla-ai/email": "0.3.1",
+    "@odla-ai/ui": "0.12.1",
     "jose": "^6.2.3",
     "preact": "^10.29.7"
   },
