@@ -598,6 +598,10 @@
       margin-bottom: 28px;
     }
     /* ── Compliance + payment step ── */
+    /* chapter's payment step renders the refund policy as a <label
+       class="compliance-box">, so the uppercase form-label rule above would
+       shout 1,000 characters of legal copy. Reset the label treatment here;
+       the consent line inside keeps its own. */
     .compliance-box {
       background: var(--lime-soft);
       border: 1px solid var(--border);
@@ -605,6 +609,13 @@
       padding: 16px 18px;
       margin-top: 6px;
       text-align: left;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: normal;
+      text-transform: none;
+      line-height: 1.7;
+      color: var(--moss-light);
+      display: block;
     }
     .compliance-box p {
       font-family: 'Cormorant Garamond', Georgia, serif;
