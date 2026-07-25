@@ -26,6 +26,7 @@ git ls-files -z -- . \
   ':!:GEMINI.md' \
   ':!:CLAUDE.md' \
   ':!:MIGRATION.md' \
+  ':!:CHAPTER-FEEDBACK.md' \
   ':!:PAYMENT-SPEC.md' \
   ':!:UI-COMPONENT-SPECS.md' \
   ':!:ADMIN-CALENDAR-SPEC.md' \
