@@ -30,16 +30,20 @@ git ls-files -z -- . \
   ':!:UI-COMPONENT-SPECS.md' \
   ':!:ADMIN-CALENDAR-SPEC.md' \
   ':!:src' \
+  ':!:test' \
   ':!:vite.config.mjs' \
+  ':!:vitest.config.mjs' \
   ':!:wrangler.jsonc' \
   ':!:odla.config.mjs' \
   ':!:package.json' \
   ':!:package-lock.json' \
   | rsync -a --files-from=- --from0 . dist/
 
-# App islands (admin console, member area, join booking step): Preact via
-# Vite, bundled into dist/assets/app/. Worker and island SOURCE is excluded
-# from the copy above; only bundles ship. Marketing pages never touch this.
+# App islands (admin console, member area, join flow): Preact via Vite,
+# bundled into dist/assets/app/. The admin entry also imports its component
+# CSS (salt theme layer + @odla-ai/ui + @odla-ai/crm), which Vite emits as
+# dist/assets/app/admin.css. Worker and island SOURCE is excluded from the
+# copy above; only bundles ship. Marketing pages never touch this.
 npx vite build --logLevel warn
 
 echo "Built dist/ with $(find dist -type f | wc -l | tr -d ' ') files."

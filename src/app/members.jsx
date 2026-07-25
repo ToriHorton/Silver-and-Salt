@@ -1,137 +1,45 @@
-// Member area app. Renders the signed-in view (account header plus the
-// provisional application card or the member material) into #members-root;
-// the hero and sign-in mount stay page-owned DOM, updated here directly.
+// Member area.
+//
+// chapter's MembersArea renders the account header, the provisional
+// application card (including the booking and reschedule flow), and the member
+// content, using the same class names this page's CSS already targets
+// (card, card-label, member-row, member-email, role-badge, account-actions,
+// admin-console-link, meeting-block/kicker/date/note, apply-link, msched-*).
+// So the packaged component drops into the existing stylesheet unchanged.
+//
+// The hero and the sign-in mount stay page-owned DOM, updated here directly,
+// because they sit above the island.
+
 import { render } from "preact";
-import { useState } from "preact/hooks";
-import { SlotPicker } from "./slot-picker.jsx";
+import { useEffect, useState } from "preact/hooks";
+import {
+  ClerkGate,
+  SignedIn,
+  SignedOut,
+  SignIn,
+  useClerkAuth,
+} from "@odla-ai/auth-clerk";
+import { MembersArea } from "@odla-ai/chapter/ui/member";
+import { chapter } from "../chapter.config.mjs";
 
 const $ = (id) => document.getElementById(id);
-const linkStyle = "color: var(--lime-dark); font-weight: 700; text-decoration: none;";
-const secondaryLink = "color: var(--sage); text-decoration: underline;";
 
-// In-page reschedule: pick a new slot and rebook via /api/schedule/book (the
-// same capability the join flow uses; the application id is the credential).
-function Rescheduler({ application, onReschedule, label = "Change your time" }) {
-  const [open, setOpen] = useState(false);
-  const [slots, setSlots] = useState(null);
-  const [tz, setTz] = useState(application.timezone);
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState(null);
+// Clerk is themed with appearance VARIABLES only. Element-level overrides fight
+// the widget's internal layout and broke it once; the fix was to carry brand
+// through variables and let Clerk render its own card on the page field.
+const APPEARANCE = {
+  variables: {
+    colorPrimary: "#7CB83F",
+    colorText: "#2F3E34",
+    colorTextSecondary: "#7E8E84",
+    colorBackground: "#ffffff",
+    fontFamily: "'Satoshi', 'Helvetica Neue', Arial, sans-serif",
+    borderRadius: "4px",
+  },
+};
 
-  const start = async () => {
-    setOpen(true); setSlots(null); setMsg(null);
-    try {
-      const r = await window.SSCAuth.api("/api/schedule/slots");
-      setSlots(r.slots || []);
-      if (r.timezone) setTz(r.timezone);
-    } catch (e) { setSlots([]); setMsg("Times are briefly unavailable. Please try again."); }
-  };
-  const pick = async (slot) => {
-    setBusy(true); setMsg(null);
-    try {
-      await window.SSCAuth.api("/api/schedule/book", {
-        method: "POST",
-        body: JSON.stringify({ applicationId: application.id, startAt: slot.startAt }),
-      });
-      setOpen(false);
-      await onReschedule();
-    } catch (e) {
-      setMsg((e && e.message) || "That time is no longer available. Please pick another.");
-    } finally { setBusy(false); }
-  };
-
-  if (!open) {
-    return (
-      <div class="meeting-note">
-        <a href="#" onClick={(e) => { e.preventDefault(); start(); }} style={secondaryLink}>{label}</a>
-      </div>
-    );
-  }
-  return (
-    <div class="msched">
-      {slots === null ? (
-        <p class="meeting-note">Loading available times…</p>
-      ) : !slots.length ? (
-        <p class="meeting-note">No open times right now. Please check back soon.</p>
-      ) : (
-        <SlotPicker
-          slots={slots}
-          timezone={tz}
-          classes={{ days: "msched-days", day: "msched-day", times: "msched-times", time: "msched-time" }}
-          onPick={pick}
-        />
-      )}
-      {busy && <p class="meeting-note">Rescheduling…</p>}
-      {msg && <p class="meeting-note" style="color:#a4442c">{msg}</p>}
-      <div class="meeting-note">
-        <a href="#" onClick={(e) => { e.preventDefault(); setOpen(false); }} style={secondaryLink}>Keep my current time</a>
-      </div>
-    </div>
-  );
-}
-
-function MembershipLine({ application }) {
-  if (!application?.paid) return null;
-  return (
-    <div class="meeting-note" style="margin-top:16px;">
-      Your founding membership is active
-      {application.renewalAt
-        ? " and renews " + new Date(application.renewalAt).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })
-        : ""}.
-    </div>
-  );
-}
-
-function ProvisionalCard({ application, onReschedule }) {
-  const { fmtMeeting } = window.SSCAuth;
-  let block;
-  if (application && application.status === "refunded") {
-    block = (
-      <div class="meeting-block">
-        <div class="meeting-kicker">Membership refunded</div>
-        <div class="meeting-note">Your founding-member fee has been refunded in full and your membership is canceled. Thank you for your interest in Silver <span class="brand-amp">&amp;</span> Salt Capital.</div>
-      </div>
-    );
-  } else if (application && application.meetingAt) {
-    block = (
-      <div class="meeting-block">
-        <div class="meeting-kicker">Your introduction call</div>
-        <div class="meeting-date">{fmtMeeting(application.meetingAt, application.timezone)}</div>
-        <div class="meeting-note">A calendar invitation with the video call link is in your email. We look forward to meeting you.</div>
-        {application.meetUrl && (
-          <div class="meeting-note"><a href={application.meetUrl} target="_blank" rel="noopener" style={linkStyle}>Join the video call</a></div>
-        )}
-        <Rescheduler application={application} onReschedule={onReschedule} />
-        <MembershipLine application={application} />
-      </div>
-    );
-  } else if (application) {
-    block = (
-      <div class="meeting-block">
-        <div class="meeting-kicker">Book your introduction call</div>
-        <div class="meeting-note">Your application is in. Choose a time below, and a calendar invitation with the video call link will reach your email.</div>
-        <Rescheduler application={application} onReschedule={onReschedule} label="Choose a time" />
-        <MembershipLine application={application} />
-      </div>
-    );
-  } else {
-    block = (
-      <div class="meeting-block">
-        <div class="meeting-kicker">One step remains</div>
-        <div class="meeting-note">Your account is ready, and the application that completes it takes a few minutes.</div>
-        <a class="apply-link" href="/join.html">Apply for membership</a>
-      </div>
-    );
-  }
-  return (
-    <div class="card">
-      <div class="card-label">Your Application</div>
-      {block}
-    </div>
-  );
-}
-
-function MemberView() {
+/** What a fully approved member sees below the account header. */
+function MemberContent() {
   return (
     <>
       <div class="card">
@@ -150,85 +58,106 @@ function MemberView() {
   );
 }
 
-function MembersApp({ me: initialMe, email }) {
-  const [me, setMe] = useState(initialMe);
-  const reload = async () => { try { setMe(await window.SSCAuth.api("/api/me")); } catch (e) { console.error(e); } };
-  const role = me.role || "provisional";
-  const signOut = async () => {
-    await window.Clerk.signOut();
-    window.location.href = "/members/";
+function SignedInView() {
+  const { getToken, signOut, user } = useClerkAuth();
+  const [role, setRole] = useState("provisional");
+
+  // Every request carries a FRESH session token; Clerk's are short-lived, so a
+  // token captured once goes stale on a page left open.
+  const api = async (path, opts = {}) => {
+    const token = await getToken();
+    const res = await fetch(path, {
+      ...opts,
+      headers: {
+        "content-type": "application/json",
+        ...(opts.headers || {}),
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `Request failed (${res.status})`);
+    }
+    return res.json();
   };
+
+  // The hero copy differs for a provisional member, and the hero is page DOM.
+  useEffect(() => {
+    let live = true;
+    void api("/api/me")
+      .then((me) => live && setRole(me.role || "provisional"))
+      .catch(() => {});
+    return () => { live = false; };
+  }, []);
+
+  useEffect(() => {
+    $("status-card")?.classList.add("hidden");
+    $("hero-title").textContent = "Member Area";
+    $("hero-sub").textContent = role === "provisional"
+      ? "Thank you for joining us. Full membership follows your introduction call."
+      : "Welcome back.";
+  }, [role]);
+
   return (
-    <>
-      <div class="card">
-        <div class="member-row">
-          <span class="member-email">{email}</span>
-          <span class={"role-badge " + role}>{role}</span>
-        </div>
-        <div class="account-actions">
-          <button class="signout-btn" onClick={signOut}>Sign out</button>
-          {role === "admin" && <a class="admin-console-link" href="/admin/">Admin console</a>}
-        </div>
-      </div>
-      {role === "provisional" ? <ProvisionalCard application={me.application} onReschedule={reload} /> : <MemberView />}
-    </>
+    <MembersArea
+      api={api}
+      signOut={() => { void signOut().then(() => { window.location.href = "/members/"; }); }}
+      adminHref="/admin/"
+      applyHref="/join.html"
+      memberContent={<MemberContent />}
+      copy={chapter.copy.members}
+      key={user?.id}
+    />
   );
 }
 
-function showSignIn() {
-  $("status-card").classList.add("hidden");
-  const mount = $("signin-mount");
-  mount.classList.remove("hidden");
-
+function SignInView() {
   const params = new URLSearchParams(location.search);
-  // Membership starts with the application, and applying creates the
-  // account automatically, so every "sign up" pathway routes to the
-  // application form (including old ?view=sign-up links).
-  if (params.get("view") === "sign-up") {
-    window.location.replace("/join.html");
-    return;
-  }
-  window.Clerk.mountSignIn(mount, {
-    appearance: window.SSCAuth.APPEARANCE,
-    signUpUrl: "/join.html",
-    fallbackRedirectUrl: "/members/",
-    initialValues: params.get("email") ? { emailAddress: params.get("email") } : undefined,
-  });
-}
 
-async function showSignedIn() {
-  $("status-card").classList.add("hidden");
+  useEffect(() => { $("status-card")?.classList.add("hidden"); }, []);
 
-  let me = { email: null, role: "provisional", application: null };
-  try {
-    me = await window.SSCAuth.api("/api/me");
-  } catch (e) { console.error(e); }
-
-  const email = me.email
-    || window.Clerk.user.primaryEmailAddress?.emailAddress
-    || window.Clerk.user.id;
-  const role = me.role || "provisional";
-
-  $("hero-title").textContent = "Member Area";
-  $("hero-sub").textContent = role === "provisional"
-    ? "Thank you for joining us. Full membership follows your introduction call."
-    : "Welcome back.";
-
-  render(<MembersApp me={me} email={email} />, $("members-root"));
+  // Clerk renders its own card, so the host wrapper only centers it and keeps
+  // overflow visible (the widget's labels sit outside its box).
+  return (
+    <div class="signin-mount">
+      <SignIn
+        appearance={APPEARANCE}
+        signUpUrl="/join.html"
+        fallbackRedirectUrl="/members/"
+        initialValues={params.get("email") ? { emailAddress: params.get("email") } : undefined}
+      />
+    </div>
+  );
 }
 
 async function boot() {
+  // Membership starts with the application, and applying creates the account,
+  // so every sign-up pathway routes to the form (including old ?view=sign-up
+  // links that used to open Clerk's hosted, off-brand sign-up page).
+  if (new URLSearchParams(location.search).get("view") === "sign-up") {
+    window.location.replace("/join.html");
+    return;
+  }
+
+  let publishableKey;
   try {
-    const clerk = await window.SSCAuth.loadClerk();
-    if (clerk.user) {
-      await showSignedIn();
-    } else {
-      showSignIn();
-    }
+    ({ clerkPublishableKey: publishableKey } = await fetch("/api/config").then((r) => r.json()));
   } catch (err) {
-    $("auth-loading").textContent = "Sign in is briefly unavailable. Please refresh, or return to the site and try again.";
     console.error(err);
   }
+  if (!publishableKey) {
+    $("auth-loading").textContent =
+      "Sign in is briefly unavailable. Please refresh, or return to the site and try again.";
+    return;
+  }
+
+  render(
+    <ClerkGate publishableKey={publishableKey} appearance={APPEARANCE} afterSignOutUrl="/members/">
+      <SignedIn><SignedInView /></SignedIn>
+      <SignedOut><SignInView /></SignedOut>
+    </ClerkGate>,
+    $("members-root"),
+  );
 }
 
-boot();
+void boot();
