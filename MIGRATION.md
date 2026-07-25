@@ -1007,3 +1007,36 @@ API:
 - The owner-account dev worker (`silver-and-salt.workers.dev`) still runs the
   pre-chapter build against the same backend. Redeploy it from this branch
   before testing there, since the old bundles call routes that no longer exist.
+
+### Upstream fixes: chapter 0.24.0 (2026-07-25)
+
+All four adoption findings were fixed in the package rather than worked around
+here. odla-ai branch `fix/chapter-adoption-findings`, two commits: the fixes
+(with a `crm-mirror-contract` test that fails if a future status write skips
+the CRM mirror) and the 0.24.0 release surfaces.
+
+Both local workarounds in `src/worker.ts` are deleted, and the payment consent
+gate is back to the shape this site shipped before the conversion.
+
+**`package.json` now pins `@odla-ai/chapter` at `0.24.0`, which is not on npm
+yet.** The dev worker runs a locally-built copy of that version. Until the
+release is published, a fresh `npm install` on this branch will fail to resolve
+it. Publishing is the outstanding step; see the notes below.
+
+Not done, and deliberately left for a human decision:
+
+- **0.24.0 is not published.** `npm run release:prepare` and the fixes are
+  committed on the odla-ai branch, but nothing is pushed and no publish workflow
+  has been dispatched.
+- `npm run release:validate` does not pass locally, for one environmental
+  reason: the security scan walks `.claude/worktrees/`, where a stale worktree
+  holds a copy of a generated file above the scanner's size cap. That path is
+  git-excluded, so a CI checkout would not contain it. The scan over `packages`
+  alone is clean (`confirmed=0`).
+- **The odla-ai lockfile had drifted** on `main` — `npm ci` refused to run and
+  the release gate failed on it. It was regenerated with `npm run lock:update`
+  in the repo's pinned Linux container, so that repair is part of the release
+  commit. It is a repo-wide change, worth a look before it lands.
+- Twenty worktrees/branches are in flight in odla-ai. The release runbook says
+  to fetch and rebase and regenerate shared files before pushing, since other
+  releases may be in progress.
