@@ -92,7 +92,55 @@ succeed, via `ctx.waitUntil` (`resyncCrmStage` in `src/worker.ts`).
 
 ---
 
-## 3. `clerkAppearanceFromTokens()` reads the document root, not the admin scope
+## 3. The payment consent gate lost its affirmative statement
+
+**Severity: high. It is the consent record for a $900 charge.**
+
+This site's payment step used to render the policy and the agreement as
+separate things:
+
+```html
+<div class="compliance-box">
+  <p>{refundPolicyText}</p>
+  <label class="compliance-check">
+    <input type="checkbox" />
+    <span>I have read and agree to the pricing and refund policy above.</span>
+  </label>
+</div>
+```
+
+`PaymentStep` renders:
+
+```jsx
+<label className="compliance-box">
+  <input type="checkbox" onChange={e => { if (e.currentTarget.checked) void begin(); }} />
+  <span>{refundPolicyText}</span>
+</label>
+```
+
+Two consequences. The checkbox now sits inline at the head of about a thousand
+characters of legal copy, so it reads as a bullet rather than a control. And
+the affirmative sentence is gone entirely: the member checks a box whose label
+IS the policy, rather than one that says they agree to it. What gets recorded
+in `refundPolicyAckAt` is the same either way, but what the member was shown at
+the moment of consent is materially weaker.
+
+There is no way to restore it from the host. `ChapterCopy["join"]["payment"]`
+has `setupFailed`, `preparing`, `pending`, `processing`, `payAndContinue`, and
+`incomplete`, but no consent string. `payment.children` renders after the price
+lines and outside the `<label>`, so a sentence placed there is neither adjacent
+to the control nor associated with it. Appending the sentence to
+`policy.refundPolicyText` would leak it into the `paymentConfirmation` email,
+which interpolates `{{refundPolicyText}}`.
+
+**Suggested fix:** add `copy.join.payment.consent` (default something like
+"I have read and agree to the pricing and refund policy above."), render the
+policy in its own block, and put the checkbox with that sentence in a nested
+label beneath it. A site that wants today's behavior can set the key to empty.
+
+---
+
+## 4. `clerkAppearanceFromTokens()` reads the document root, not the admin scope
 
 **Severity: medium. Off-brand sign-in on any dark-mode machine.**
 
@@ -121,7 +169,7 @@ remove.
 
 ---
 
-## 4. The signed-out gate assumes it owns the page
+## 5. The signed-out gate assumes it owns the page
 
 **Severity: low, but it fights `chrome="embedded"`.**
 
@@ -140,15 +188,11 @@ the `100vh` framing, or give both a stable class.
 
 ---
 
-## 5. Smaller notes
+## 6. Smaller notes
 
 - **En dashes in packaged copy.** `copy.admin.availability.startHour` and
   `endHour` render `"Start hour (0–24)"`. Our brand standard prohibits em and en
   dashes, so both needed overriding. Worth using ASCII in default copy.
-- **`compliance-box` is a `<label>`.** The payment step renders the refund
-  policy as `<label class="compliance-box">`. Any host that uppercases form
-  labels (a common pattern) will shout a thousand characters of legal copy at
-  the user. A `<div>` with the checkbox in its own `<label>` would be safer.
 - **`GET /api/crm/records` 400s without `?type=`.** Reasonable, but the probe
   registered by `createChapterIntegration` expects 401, so an authenticated
   smoke check against the bare path looks like a failure.
