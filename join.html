@@ -217,7 +217,13 @@
     }
 
     /* ── Card ── */
-    .card {
+    /* chapter's JoinIsland renders the application fields inside its own
+       <form class="join-form">, and the packaged payment and booking steps
+       inside .join-step, so both get the same white card treatment the rest
+       of the flow uses. */
+    .card,
+    .join-form,
+    .join-step {
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 8px;
