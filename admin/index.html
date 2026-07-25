@@ -60,7 +60,12 @@
       padding: 0 0 80px;
     }
 
-    .container { width: 100%; max-width: 960px; padding: 0 20px; }
+    /* The console is an application, not a reading column. The hero stays
+       centred on its own, but the two-pane People workspace needs real width,
+       so this container is far wider than the marketing pages' measure.
+       --ui-content-width (set from brand.tokens.contentWidth) bounds chapter's
+       own AdminPage inside it; keep the two in step. */
+    .container { width: 100%; max-width: 1480px; padding: 0 20px; }
 
     /* ── Hero (compact variant for the console) ── */
     .hero {
