@@ -31,4 +31,9 @@ import { chapter } from "../chapter.config.mjs";
 // and the console renders embedded beneath it (chrome="embedded" is the
 // default). The wordmark's ampersand needs the brand-amp span to stay upright,
 // which is markup, so it lives in the page HTML rather than in copy.
+//
+// ChapterAdmin's signed-out gate renders its own badge, wordmark, and tagline,
+// which duplicates the masthead on a host page that already has one. That is a
+// presentation problem, not a data problem, so the page hides the gate's brand
+// box in CSS rather than passing a falsified brand here.
 render(<ChapterAdmin chapter={chapter} />, document.getElementById("console-root"));

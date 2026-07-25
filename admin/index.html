@@ -1,5 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- data-ui-theme/data-ui-accent put the salt theme's token VALUES on the
+     document root, and data-theme="light" stops @odla-ai/ui's
+     prefers-color-scheme dark block from applying there. Both matter because
+     ChapterAdmin themes the Clerk widget with clerkAppearanceFromTokens(),
+     which reads the ROOT rather than its own [data-chapter-admin] scope; on a
+     dark-mode machine the sign-in card would otherwise render dark with a
+     blue button. -->
+<html lang="en" data-ui-theme="salt" data-ui-accent="lime" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -152,6 +159,48 @@
     /* Clerk renders its own card inside the console; keep overflow visible so
        the widget's labels are not clipped. */
     #console-root { overflow: visible; }
+
+    /* Clerk sign-in theming.
+       ChapterAdmin themes the widget with clerkAppearanceFromTokens(), which
+       reads getComputedStyle(document.documentElement), NOT its own
+       [data-chapter-admin] scope where BrandStyle writes these values. The salt
+       theme attributes on <html> supply the marketing palette (sand and rust),
+       so pin the app-surface values the console actually uses. These are the
+       exact custom properties that function reads; nothing else belongs here.
+       Remove once clerkAppearanceFromTokens reads the chapter-admin scope. */
+    :root {
+      --ui-accent: var(--lime);
+      --ui-on-accent: #ffffff;
+      --ui-surface: #ffffff;
+      --ui-surface-2: #f4faf2;
+      --ui-text: var(--moss);
+      --ui-text-muted: var(--sage);
+      --ui-border: var(--border);
+      --ui-danger: #a4442c;
+      --ui-good: var(--lime-dark);
+      --ui-radius-md: 4px;
+      --ui-font-sans: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      --ui-shadow: 0 8px 24px rgba(47, 62, 52, 0.12);
+    }
+
+    /* ChapterAdmin's signed-out gate renders a badge, wordmark, and tagline
+       above the Clerk widget. This page already has a masthead carrying all
+       three, so the gate's copy shows the brand twice. Hide just that block,
+       matched by the gate wrapper that contains the Clerk root so the rule
+       cannot reach the signed-in console. */
+    [data-chapter-admin] > div > div:has(> .cl-rootBox) > div:first-child {
+      display: none;
+    }
+
+    /* The gate is styled for a page chapter owns outright: 100vh tall, centred,
+       with its own radial wash. Under this page's hero that reads as a second
+       full-screen panel, so flatten it back to a card sitting in the container.
+       chapter sets these three inline, so overriding them needs !important. */
+    [data-chapter-admin] > div:has(.cl-rootBox) {
+      min-height: 0 !important;
+      padding: 0 !important;
+      background: none !important;
+    }
 
     /* ── Loading (the page's own pre-console spinner) ── */
     @keyframes ssc-spin { to { transform: rotate(360deg); } }
