@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-24",
+  generated: "2026-07-25",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -90,6 +90,7 @@ window.GRANOLA_INBOX = {
     { text: "Confirm judging the High Five pitch session, Mon Oct 26, 12 to 2pm MT", owner: "", context: "from email: Meg Thunell re Welcome to the High Five Grant for Moms; full two-hour commitment requested, more details coming from Meg", source: "email", date: "2026-07-23" },
     { text: "Reply to Pat Jones and schedule the catch-up call", owner: "", context: "from email: Pat Jones Horton re Fwd: Question from Pat; she says let's talk soon, and Becky Potts is committed this year but may reach out in 2027", source: "email", date: "2026-07-23" },
     { text: "Reply to Janay Cody on how Silver & Salt Capital got started", owner: "", context: "from email: Janay Cody re Janay//Tori; she shared her five target companies and asked how Tori brought the firm to life", source: "email", date: "2026-07-23" },
-    { text: "Enable 2-step verification for Google Cloud console before Oct 20", owner: "", context: "from email: Google Cloud notice Jul 23; 2SV becomes required for console access on Oct 20, 2026", source: "email", date: "2026-07-23" }
+    { text: "Enable 2-step verification for Google Cloud console before Oct 20", owner: "", context: "from email: Google Cloud notice Jul 23; 2SV becomes required for console access on Oct 20, 2026", source: "email", date: "2026-07-23" },
+    { text: "Schedule intro call with Leslie Greve of Trucordia", owner: "", context: "from email: Crystalee Beck intro re Leslie Greve, CMO at Trucordia; Tori proposed an intro call in her Jul 24 reply, awaiting Leslie's response", source: "email", date: "2026-07-24" }
   ]
 };
