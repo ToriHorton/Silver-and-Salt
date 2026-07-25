@@ -64,7 +64,12 @@ export const chapter = defineChapter({
       // both to lime keeps a positive number from looking like a second state.
       good: "#6aa535",
       chartPositive: "#7CB83F",
-      contentWidth: "960px",
+      // The console's own max width, inside admin/index.html's .container.
+      // Chapter defaults to 1120px, which squeezes the People master/detail.
+      contentWidth: "1440px",
+      // Master rail wide enough for a name and stage without wrapping, with
+      // the record detail taking the rest.
+      masterDetailColumns: "minmax(320px, 380px) 1fr",
       panelRadius: "8px",
       panelShadow: "0 8px 24px rgba(47, 62, 52, 0.12)",
     },
