@@ -45,23 +45,8 @@ const REFERRALS = [
   ["other", "Other"],
 ];
 
-/**
- * Multi-select interests.
- *
- * UPSTREAM WORKAROUND (@odla-ai/chapter 0.23.0): JoinIsland collects the form
- * with `for (const [k, v] of new FormData(form).entries()) fields[k] = v`, so
- * repeated names overwrite and only the LAST checked box would survive. Seven
- * checkboxes sharing name="focus" would post one string instead of an array.
- * `getAll` appears nowhere in the shipped bundle.
- *
- * So the visible checkboxes carry no `name` (FormData ignores them) and the
- * selection is mirrored into a single hidden `focus` input as a JSON array,
- * which src/worker.ts parses back into an array before chapter sees it.
- * Verified against the live dev tenant: an array posts and stores as an array,
- * a JSON string stores as a string, so the parse has to happen server-side.
- * Delete this component's hidden input and the worker's normalizer together
- * once JoinIsland uses `getAll`.
- */
+/** Multi-select interests. The seven boxes share one `name`, which chapter's
+ *  JoinIsland collects with getAll, so the selection posts as an array. */
 function InterestsField() {
   const [picked, setPicked] = useState([]);
   const toggle = (value) =>
@@ -77,6 +62,8 @@ function InterestsField() {
           <label class="checkbox-option" key={value}>
             <input
               type="checkbox"
+              name="focus"
+              value={value}
               checked={picked.includes(value)}
               onChange={() => toggle(value)}
             />{" "}
@@ -84,7 +71,6 @@ function InterestsField() {
           </label>
         ))}
       </div>
-      <input type="hidden" name="focus" value={JSON.stringify(picked)} />
     </div>
   );
 }
