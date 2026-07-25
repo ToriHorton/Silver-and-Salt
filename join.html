@@ -598,10 +598,10 @@
       margin-bottom: 28px;
     }
     /* ── Compliance + payment step ── */
-    /* chapter's payment step renders the refund policy as a <label
-       class="compliance-box">, so the uppercase form-label rule above would
-       shout 1,000 characters of legal copy. Reset the label treatment here;
-       the consent line inside keeps its own. */
+    /* The consent gate, used by the disclaimer on step 1 and by chapter's
+       payment step: a policy block with the agreement on a checkbox beneath
+       it. Both are <label>s in part, so both reset the uppercase form-label
+       treatment above; legal copy must never be shouted. */
     .compliance-box {
       background: var(--lime-soft);
       border: 1px solid var(--border);
@@ -617,7 +617,8 @@
       color: var(--moss-light);
       display: block;
     }
-    .compliance-box p {
+    .compliance-box p,
+    .compliance-policy {
       font-family: 'Cormorant Garamond', Georgia, serif;
       font-style: italic;
       font-size: 16px;
@@ -630,6 +631,10 @@
       align-items: flex-start;
       gap: 10px;
       font-size: 13px;
+      font-weight: 400;
+      letter-spacing: normal;
+      text-transform: none;
+      line-height: 1.6;
       color: var(--moss-light);
       cursor: pointer;
     }

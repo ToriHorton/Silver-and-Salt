@@ -1,5 +1,10 @@
 # @odla-ai/chapter 0.23.0: adoption feedback
 
+> **All four findings are fixed in 0.24.0** (odla-ai branch
+> `fix/chapter-adoption-findings`). This document is kept as the record of what
+> was observed and why each fix is shaped the way it is. Items 1 and 2 had local
+> workarounds in `src/worker.ts`; both are deleted.
+
 Findings from converting Silver & Salt Capital (the site chapter was extracted
 from) onto the published package. Everything below was observed on a live dev
 tenant, not read out of the source. Excluded from the public build.

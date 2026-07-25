@@ -21,7 +21,7 @@
     "@odla-ai/auth-clerk": "0.4.1",
     "@odla-ai/brand": "0.2.0",
     "@odla-ai/calendar": "0.2.0",
-    "@odla-ai/chapter": "0.23.0",
+    "@odla-ai/chapter": "0.24.0",
     "@odla-ai/crm": "0.3.1",
     "@odla-ai/db": "0.6.7",
     "@odla-ai/email": "0.3.1",
