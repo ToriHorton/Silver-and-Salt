@@ -887,3 +887,123 @@ files only — `assets/odla-ui/odla-ui.css` especially).
   To send real mail from the owner-account worker later, onboard a
   silverandsaltcapital.com (or owner-owned) sender to Cloudflare Email Service
   on the owner's account. Production and `main` remain untouched.
+
+## Chapter conversion (2026-07-24, branch `chapter-conversion`)
+
+Everything above predates `@odla-ai/chapter`. This section supersedes the
+architecture it describes; the phase history is kept as the record of how the
+site got here.
+
+Silver & Salt Capital now runs on **@odla-ai/chapter 0.23.0**, the package that
+was extracted from this repo. Branch `chapter-conversion`, cut from
+`origin/odla-conversion-test`. Production (`main`, GitHub Pages, the top-level
+wrangler env) is untouched. **43 files changed, 2,018 insertions, 11,358
+deletions.**
+
+### What the config replaced
+
+`src/chapter.config.mjs` is now the single source of truth for what used to be
+spread across `src/odla/schema.mjs`, `src/odla/rules.mjs`, `src/crm.mjs`, the
+`db` block in `odla.config.mjs`, and a set of constants duplicated three ways
+in the worker and the islands:
+
+| Deleted | Now |
+|---|---|
+| `src/worker.ts` (2,094 lines) | `chapterWorker({ chapter })` |
+| `src/odla/schema.mjs`, `rules.mjs` | `createChapterIntegration(chapter)` |
+| `src/crm.mjs`, `src/crm-sync.mjs` | `crm` key + chapter's projection |
+| `src/email.ts` | chapter's email pipeline |
+| `src/app/admin/*` (6 modules) | `<ChapterAdmin chapter={chapter} />` |
+| `src/app/members.jsx` internals | `<MembersArea>` |
+| `join.html` inline JS, `join-picker.jsx`, `slot-picker.jsx` | `<JoinIsland>` |
+| `assets/member-auth.js` | `@odla-ai/auth-clerk` `<ClerkGate>` |
+| `assets/odla-ui/*.css` (vendored) | bundled theme imports |
+| `_scripts/provision-crm-dev.mjs`, `seed-groups-dev.mjs` | chapter's schema push + guarded group seed |
+
+The `--ui-*` token map, DataTable overrides, and component CSS in
+`admin/index.html` went with them: 822 lines to 202. Branding is config
+(`brand.theme: "salt"`, `accent: "lime"`, plus pinned tokens), and ChapterAdmin
+scopes it to `[data-chapter-admin]`.
+
+### Schema parity: exact
+
+`chapter.schema` is **byte-identical** to the schema this site ran before, all
+five namespaces (`applications`, `groups`, `meetings`, `emailLog`,
+`superAdmins`) and every attribute's type, uniqueness, index, and optionality.
+`test/fixtures/legacy-schema.mjs` freezes the old schema and
+`test/schema-parity.test.mjs` asserts the equality standing, so a package
+upgrade cannot drift the generated schema silently. **Do not edit the fixture
+to make that test pass**; it records what the live tenants actually hold.
+
+### Two decisions that would change behavior if inherited
+
+- `sends.adminNotification: "payment"`. Chapter defaults to `"submit"`. This
+  site has never emailed the admin for an unpaid application.
+- `application.requireDisclaimerAck: true`. Matches current behavior; asserted
+  so it stays deliberate.
+
+Both are covered in `test/chapter-config.test.mjs`, along with the pipeline,
+the approve/refund policy, the profile-field allowlist, and a walk over the
+resolved copy contract for em and en dashes.
+
+### Upstream workarounds (both in `src/worker.ts`, both tested)
+
+Details and suggested fixes in **CHAPTER-FEEDBACK.md**. Delete each when the
+package fixes it:
+
+1. **`JoinIsland` collapses repeated form fields.** It collects with
+   `fields[k] = v` over `FormData.entries()`, so our seven `focus` checkboxes
+   would post one string. `join.jsx` posts a hidden JSON array and
+   `normalizeApplication` parses it back.
+2. **The CRM stage is not mirrored on payment or booking.** Chapter syncs from
+   approve and PATCH only, but its own dashboard funnel reads
+   `crm_record.stage`, so paid and booked applicants read as "Submitted".
+   `resyncCrmStage` re-projects after those two requests, via `ctx.waitUntil`.
+
+Plus two host-side CSS accommodations in `admin/index.html`:
+`clerkAppearanceFromTokens()` reads the document root rather than the admin
+scope (so the twelve tokens it reads are pinned at `:root`), and the signed-out
+gate draws its own masthead at `100vh` (hidden and flattened).
+
+### Verified live on the dev worker 2026-07-24
+
+Deployed to `silver-and-salt-capital-dev.cory-ondrejka.workers.dev` (dev tenant
+`silver-and-salt-capital--dev`, Stripe test mode). Full journey, browser plus
+API:
+
+1. Application submitted **through the real form in a browser**: row written,
+   `focus` stored as a proper 3-element array, disclaimer stamped, Clerk account
+   created server-side, CRM person projected with slots `s1`/`s2`/`s3` correct.
+2. `$900.00` charged in Stripe test mode. `invoice.paid` flipped the row to
+   `paid_pending_vetting` with renewal 2027-07-25, and both the payment
+   confirmation and the admin notification were delivered by Cloudflare Email
+   Service, redirected to the debug inbox.
+3. 92 real slots computed from Google FreeBusy; booking wrote the canonical
+   `meetings` row with a Google event id and a live Meet link, set
+   `call_scheduled`, sent the prep email, and mirrored the CRM stage.
+4. Admin JWT: `/api/me` returns admin + superAdmin; all seven `/api/admin/*`
+   routes 200; the dashboard reports live Stripe revenue and a correct pipeline.
+5. Approve promoted the Clerk role to `member`, sent the onboarding invite, and
+   moved both the application and the CRM record to `approved`. Clerk
+   `public_metadata.profile` carries exactly the five allowlisted fields.
+6. Sign-in pages for `/admin/` and `/members/` render the moss hero, lime rule,
+   white card, and lime primary button; the join form sits in its card behind
+   the three-step tracker.
+
+38 tests pass. Brand check shows 16 errors, all pre-existing on the base branch
+(`index.html`, `brand-book.html`, `_archive/`).
+
+### Still outstanding
+
+- **Owner browser pass of the SIGNED-IN console.** Every admin API was verified
+  with a minted admin JWT and the signed-out UI was verified visually, but
+  nobody has clicked through the three workspaces, the People record panel, or
+  the Settings tabs in a real session. That is the main gap.
+- A refund has not been exercised on this branch (approve was, on the same
+  application, and the two are mutually exclusive end states).
+- Test fixture left in the dev tenant: `chapter.e2e@example.com`, approved,
+  paid, with a booked call on 2026-07-27. Three throwaway probe rows from
+  diagnosing the array bug were deleted along with their Clerk accounts.
+- The owner-account dev worker (`silver-and-salt.workers.dev`) still runs the
+  pre-chapter build against the same backend. Redeploy it from this branch
+  before testing there, since the old bundles call routes that no longer exist.
