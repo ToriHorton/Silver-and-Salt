@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-25",
+  generated: "2026-07-26",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -91,6 +91,12 @@ window.GRANOLA_INBOX = {
     { text: "Reply to Pat Jones and schedule the catch-up call", owner: "", context: "from email: Pat Jones Horton re Fwd: Question from Pat; she says let's talk soon, and Becky Potts is committed this year but may reach out in 2027", source: "email", date: "2026-07-23" },
     { text: "Reply to Janay Cody on how Silver & Salt Capital got started", owner: "", context: "from email: Janay Cody re Janay//Tori; she shared her five target companies and asked how Tori brought the firm to life", source: "email", date: "2026-07-23" },
     { text: "Enable 2-step verification for Google Cloud console before Oct 20", owner: "", context: "from email: Google Cloud notice Jul 23; 2SV becomes required for console access on Oct 20, 2026", source: "email", date: "2026-07-23" },
-    { text: "Schedule intro call with Leslie Greve of Trucordia", owner: "", context: "from email: Crystalee Beck intro re Leslie Greve, CMO at Trucordia; Tori proposed an intro call in her Jul 24 reply, awaiting Leslie's response", source: "email", date: "2026-07-24" }
+    { text: "Schedule intro call with Leslie Greve of Trucordia", owner: "", context: "from email: Crystalee Beck intro re Leslie Greve, CMO at Trucordia; Tori proposed an intro call in her Jul 24 reply, awaiting Leslie's response", source: "email", date: "2026-07-24" },
+    { text: "Get Lisa the gear list, then order via Sweetwater and ship to her", owner: "", context: "from Granola: Lisa - booking; Lisa consults the Sweetwater sales rep on 2 mics and a 3-camera setup, then Tori orders", source: "granola", date: "2026-07-25" },
+    { text: "Loop Lisa in with Cheney on studio setup", owner: "", context: "from Granola: Lisa - booking; Cheney handles room aesthetics and sound deadening, Lisa advises on audio quality", source: "granola", date: "2026-07-25" },
+    { text: "Reimburse Lisa $272 for the Sept 10 Southwest flight BUR to SJC", owner: "", context: "from Granola: Lisa - booking; Lisa books and Tori reimburses, itinerary arrived by email Jul 25", source: "granola", date: "2026-07-25" },
+    { text: "Confirm Annie's schedule and send October dates to Lisa", owner: "", context: "from Granola: Lisa - booking; Tori out Oct 6 to 8, Oct 13 is the earliest hold date to finalize over email", source: "granola", date: "2026-07-25" },
+    { text: "Report back on Jacki Zehner's reply to the endorsement note", owner: "Pat Jones Horton", context: "from email: Pat Jones Horton re Fwd: Lovely to catch up!; she nudged Jacki again and will keep Tori posted", source: "delegated", date: "2026-07-25" },
+    { text: "Send a Monday bump to Anne Marie and Allyse Jackson", owner: "", context: "from Claude work: Nia daily network pulse; neither replied to Tori's Jul 16 intro responses", source: "claude", date: "2026-07-25" }
   ]
 };
