@@ -1,0 +1,1053 @@
+{
+  "entities": {
+    "crm_record": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "type": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "name": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "primaryEmail": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "stage": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "stageIndex": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "stageChangedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "rank": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "score": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "ownerId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "emailStatus": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "clerkUserId": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": true
+        },
+        "stripeCustomerId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "subscriptionId": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "billingStatus": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "renewalAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "mrr": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "s1": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "s2": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "s3": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "s4": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "n1": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "n2": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "n3": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "d1": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "d2": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "fields": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "searchText": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "archived": {
+          "type": "boolean",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "createdAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "updatedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "archivedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        }
+      }
+    },
+    "crm_tag": {
+      "attrs": {
+        "key": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "recordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "tag": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "createdAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "crm_link": {
+      "attrs": {
+        "key": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "fromId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "toId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "relation": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "createdAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "crm_activity": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "recordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "kind": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "body": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "status": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "dueAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "waitingOn": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "assigneeId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "authorId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "createdAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "completedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "meta": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        }
+      }
+    },
+    "crm_contact_channel": {
+      "attrs": {
+        "key": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "recordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "kind": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "value": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "isPrimary": {
+          "type": "boolean",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "consent": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "consentAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "consentSource": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "unsubscribeToken": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "createdAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "crm_email_log": {
+      "attrs": {
+        "recordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "channelId": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "to": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "templateId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "subject": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "transport": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "redirected": {
+          "type": "boolean",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "dedupeKey": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "messageId": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "error": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "sentAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "crm_view": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "name": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "type": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "ownerId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "shared": {
+          "type": "boolean",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "filters": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "sort": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "columns": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "createdAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "updatedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "crm_config": {
+      "attrs": {
+        "key": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "notificationEmail": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "replyTo": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "debugEmail": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "emailTemplates": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "settings": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "updatedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "applications": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "firstName": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "lastName": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "email": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "referral": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "referralName": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "whoYouAre": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "focus": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "linkedin": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "message": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "status": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "createdAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "meetingAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "meetingLink": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "clerkUserId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "phone": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "state": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "groupId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "stripeCustomerId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "stripeSubscriptionId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "renewalAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "disclaimerAckAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "refundPolicyAckAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "prepEmailSentAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "canceled": {
+          "type": "boolean",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        }
+      }
+    },
+    "groups": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "name": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "standardPriceCents": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "foundingDiscountCents": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "stripePriceId": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "stripePublishableKey": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "notificationEmail": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "replyTo": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "debugEmail": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "calendarLink": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "disclaimerText": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "refundPolicyText": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "trustCopy": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "commitmentText": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "normsText": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "emailTemplates": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "schedulingJson": {
+          "type": "json",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "createdAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "meetings": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "applicationId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "groupId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "startAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "endAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "timezone": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "status": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "googleEventId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "meetUrl": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "htmlLink": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "drift": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "driftGoogleStartAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "driftDetectedAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "adoptedFromGoogleAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "createdAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "emailLog": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "groupId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "applicationId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "to": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "template": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "subject": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "body": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "transport": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": false
+        },
+        "messageId": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "redirected": {
+          "type": "boolean",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "dedupeKey": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "error": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "sentAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "superAdmins": {
+      "attrs": {
+        "id": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "email": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "note": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "createdAt": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    }
+  },
+  "links": {}
+}

@@ -44,6 +44,33 @@
     "html_handling": "auto-trailing-slash"
   },
   "env": {
+    // Phase 2 CANARY: the Chapter entry (src/worker-chapter.ts) on its OWN
+    // worker name, so it cannot take over the dev worker that currently serves
+    // the product. Same dev tenant and same dev vars, because the canary must
+    // read the real dev data to be worth measuring; it is isolated by ROUTE
+    // and NAME, not by data.
+    //   npx wrangler deploy --env canary
+    // The legacy dev worker (env.dev, below) stays the primary dev deployment
+    // until Phase 4 route adoption is proven.
+    "canary": {
+      "name": "silver-and-salt-capital-canary",
+      "main": "src/worker-chapter.ts",
+      "vars": {
+        "ODLA_ENDPOINT": "https://db.odla.ai",
+        "ODLA_TENANT": "silver-and-salt-capital--dev",
+        "ODLA_PLATFORM": "https://odla.ai",
+        "ODLA_APP_ID": "silver-and-salt-capital",
+        "ODLA_ENV": "dev",
+        "EMAIL_FROM": "silver-and-salt-capital@odla.ai"
+      },
+      "send_email": [{ "name": "SEND_EMAIL" }],
+      "assets": {
+        "directory": "dist",
+        "binding": "ASSETS",
+        "not_found_handling": "404-page",
+        "html_handling": "auto-trailing-slash"
+      }
+    },
     "dev": {
       "name": "silver-and-salt-capital-dev",
       "vars": {

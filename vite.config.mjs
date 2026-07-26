@@ -15,7 +15,10 @@ export default defineConfig({
       input: {
         admin: "src/app/admin/index.jsx",
         members: "src/app/members.jsx",
-        "join-picker": "src/app/join-picker.jsx",
+        // The packaged join flow (@odla-ai/chapter JoinIsland). Supersedes
+        // join-picker, which JoinIsland's booking step replaces; the old entry
+        // is kept out of the build so a stale bundle cannot be served.
+        "join-island": "src/app/join-island.jsx",
       },
       output: {
         entryFileNames: "[name].js",

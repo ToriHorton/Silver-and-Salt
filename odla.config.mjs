@@ -1,5 +1,5 @@
-import { createCrmIntegration } from "@odla-ai/crm";
-import { crm } from "./src/crm.mjs";
+import { createChapterIntegration } from "@odla-ai/chapter";
+import { chapter } from "./src/chapter.config.mjs";
 
 export default {
   platformUrl: process.env.ODLA_PLATFORM_URL ?? "https://odla.ai",
@@ -9,20 +9,21 @@ export default {
     name: "Silver & Salt Capital",
   },
   envs: ["dev"],
-  services: ["db", "calendar"],
-  // The CRM admin layer (@odla-ai/crm). `provision` collision-checks and
-  // merges its eight crm_* namespaces + deny-all rules alongside the app
-  // schema, and seeds the crm_config singleton once (preserving later owner
-  // edits). Routes are mounted in src/worker.ts; see src/crm.mjs for the model.
-  // Dev addresses match the group row so CRM dev mail lands in the same inbox.
-  integrations: [
-    createCrmIntegration(crm, {
-      basePath: "/api/crm",
-      notificationEmail: "cory.ondrejka+debug@gmail.com",
-      replyTo: "cory.ondrejka+debug@gmail.com",
-      debugEmail: "cory.ondrejka+debug@gmail.com",
-    }),
-  ],
+  // Sourced from the resolved chapter so the descriptor and the Worker cannot
+  // disagree about which services exist.
+  services: chapter.services,
+  // The single Chapter integration composes BOTH the chapter operational
+  // namespaces (applications, groups, meetings, emailLog, superAdmins) and the
+  // eight crm_* namespaces, with deny-all rules and insert-only seeds for the
+  // groups row and the crm_config singleton.
+  //
+  // The legacy inline `db.schema`/`db.rules` pair and the separate
+  // createCrmIntegration() call were REMOVED here rather than kept alongside:
+  // provisioning both would declare the same namespaces twice. The legacy
+  // schema and rules survive as frozen parity fixtures under tests/fixtures/,
+  // and tests/chapter-parity.test.mjs asserts this integration against them
+  // (59 assertions, exact attribute-level parity on all 13 namespaces).
+  integrations: [createChapterIntegration(chapter, { basePath: "/api/crm" })],
   calendar: {
     google: {
       // 0.2.0 live booking: FreeBusy availability over these calendars;
@@ -33,10 +34,11 @@ export default {
       calendars: { dev: ["primary"] },
     },
   },
+  // No inline `db.schema`/`db.rules`: the Chapter integration above declares
+  // every namespace. Declaring them here as well would provision the same
+  // namespaces twice. src/odla/schema.mjs and src/odla/rules.mjs are retained
+  // in the tree as the legacy parity reference only; nothing provisions them.
   db: {
-    schema: "./src/odla/schema.mjs",
-    rules: "./src/odla/rules.mjs",
-    // When rules is omitted, the CLI generates deny-all rules from schema.
     defaultRules: "deny",
   },
   // ai: enabled at Phase 4 if the owner opts in. Leaving the block out keeps
