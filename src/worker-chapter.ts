@@ -1,15 +1,16 @@
-// Phase 2 dev CANARY entry. NOT yet the deployed worker for the real product.
+// THE Worker entry for this site — `wrangler deploy --env dev` deploys this to
+// silver-and-salt-capital-dev, and a future prod deploy runs the same file.
 //
-// This is `chapterWorker({ chapter, routes })` with EVERY legacy endpoint kept
-// as a host route in front of the built-ins. Host routes run first, so mounting
-// this changes no route ownership: every path the legacy worker implements today
-// is still served by exactly the legacy code that serves it today, byte for
-// byte. What it adds is reachability — the Chapter built-ins the legacy worker
-// never implemented (/api/config, /api/network/shared, and the follower receive
-// path) become executable so the canary can be measured.
+// This is `chapterWorker({ chapter, routes })`. It began as an off-route canary
+// on its own worker name, mounting EVERY legacy endpoint as a host route so the
+// Chapter build could be measured without changing who served what. Phase 4
+// retired those routes one at a time, each only after its behavior was compared
+// against the built-in, and Chapter is now primary for applications, payments,
+// scheduling, the Stripe webhook, /api/me, CRM and all of /api/admin/*.
 //
-// Phase 4 retires this file's LEGACY_OWNED entries one at a time, each only
-// after that route's behavior has been compared against the built-in.
+// Three legacy routes remain below, each for a stated reason rather than
+// inertia. src/worker.ts is no longer an entry point but is still imported here
+// to serve them.
 //
 // Route ownership is an explicit ALLOWLIST rather than "legacy handles anything
 // it doesn't 404 on". An allowlist is auditable (you can read what legacy owns),

@@ -29,11 +29,30 @@ const ENV = process.argv[2] ?? "dev";
 const OUT = `/tmp/odla-schema-check-${ENV}.jsonl.gz`;
 
 console.log(`checking deployed ${ENV} tenant against the installed engine…`);
-execFileSync(
-  "npx",
-  ["@odla-ai/cli", "app", "export", "--env", ENV, "--fresh", "--out", OUT],
-  { stdio: ["ignore", "ignore", "inherit"] },
-);
+try {
+  execFileSync(
+    "npx",
+    ["@odla-ai/cli", "app", "export", "--env", ENV, "--fresh", "--out", OUT],
+    { stdio: ["ignore", "inherit", "inherit"] },
+  );
+} catch (err) {
+  // Exit 75 is the odla CLI's "device handshake still pending" code: the local
+  // token expired and a human has to approve a code in Studio. That is not a
+  // schema failure, and reporting it as one (or as a raw Node stack trace)
+  // sends whoever runs this looking in entirely the wrong place.
+  if (err?.status === 75) {
+    console.error(
+      "\n  Cannot check: this terminal is not signed in to odla.\n" +
+        "  The command above prints an approval code and a Studio URL —\n" +
+        "  approve it, then re-run `npm run check:schema`.\n" +
+        "  The schema itself has NOT been checked either way.\n",
+    );
+    process.exit(75);
+  }
+  console.error(`\n  Could not export the ${ENV} tenant (exit ${err?.status ?? "?"}).`);
+  console.error("  The schema has NOT been checked.\n");
+  process.exit(2);
+}
 
 const lines = gunzipSync(readFileSync(OUT)).toString("utf8").split("\n");
 let deployed = null;

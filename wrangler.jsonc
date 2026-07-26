@@ -1,13 +1,24 @@
 // Cloudflare Worker config for the Silver & Salt Capital site (odla migration).
-// Phase 1: serve the static build from dist/ via an assets binding.
+// Serves the static build from dist/ via an assets binding.
 //
 // IMPORTANT (until Phase 5 sign-off): deploy ONLY the dev environment
 //   npx wrangler deploy --env dev
 // Never deploy the top-level (prod) config before Phase 5.
+//
+// The entry is src/worker-chapter.ts: chapterWorker with the three remaining
+// legacy compatibility routes mounted in front of it. It replaced the bare
+// src/worker.ts here once Chapter became the primary implementation. The legacy
+// module is still imported BY that entry for those three routes, so it stays in
+// the tree; it is simply no longer an entry point.
+//
+// The separate "canary" environment was removed with the same change. It existed
+// so the Chapter build could be measured without touching the dev worker while
+// the legacy worker was still primary. That is no longer true, so dev IS the
+// Chapter deployment and a second worker would only drift.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "silver-and-salt-capital",
-  "main": "src/worker.ts",
+  "main": "src/worker-chapter.ts",
   "compatibility_date": "2026-07-11",
   "compatibility_flags": ["nodejs_compat"],
   // Plain vars, not secrets. The secret (ODLA_API_KEY) is pushed by the odla
@@ -44,33 +55,9 @@
     "html_handling": "auto-trailing-slash"
   },
   "env": {
-    // Phase 2 CANARY: the Chapter entry (src/worker-chapter.ts) on its OWN
-    // worker name, so it cannot take over the dev worker that currently serves
-    // the product. Same dev tenant and same dev vars, because the canary must
-    // read the real dev data to be worth measuring; it is isolated by ROUTE
-    // and NAME, not by data.
-    //   npx wrangler deploy --env canary
-    // The legacy dev worker (env.dev, below) stays the primary dev deployment
-    // until Phase 4 route adoption is proven.
-    "canary": {
-      "name": "silver-and-salt-capital-canary",
-      "main": "src/worker-chapter.ts",
-      "vars": {
-        "ODLA_ENDPOINT": "https://db.odla.ai",
-        "ODLA_TENANT": "silver-and-salt-capital--dev",
-        "ODLA_PLATFORM": "https://odla.ai",
-        "ODLA_APP_ID": "silver-and-salt-capital",
-        "ODLA_ENV": "dev",
-        "EMAIL_FROM": "silver-and-salt-capital@odla.ai"
-      },
-      "send_email": [{ "name": "SEND_EMAIL" }],
-      "assets": {
-        "directory": "dist",
-        "binding": "ASSETS",
-        "not_found_handling": "404-page",
-        "html_handling": "auto-trailing-slash"
-      }
-    },
+    // The Chapter deployment. Inherits `main` (src/worker-chapter.ts) from the
+    // top level, so dev and a future prod deploy cannot disagree about which
+    // entry they run — the drift that a separate canary env invited.
     "dev": {
       "name": "silver-and-salt-capital-dev",
       "vars": {
