@@ -34,7 +34,9 @@ in this session).
 7. Add non-`deploy` npm scripts so CI never auto-deploys:
    `"deploy:app:dev": "<build> && wrangler deploy --env dev"` (and later
    `"deploy:app"` for prod). Never name a script exactly `deploy`.
-8. Record the workers.dev URL and parity results in MIGRATION.md.
+8. Record the workers.dev URL, immutable deployment version, and parity
+   evidence in the focused Phase 1 commit/checkpoint. Backfill that evidence
+   into PM immediately after Phase 2 registers the app.
 
 ## Verification checklist
 

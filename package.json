@@ -11,7 +11,7 @@
     "check:schema": "node _scripts/check-deployed-schema.mjs"
   },
   "devDependencies": {
-    "@odla-ai/cli": "^0.24.0",
+    "@odla-ai/cli": "^0.25.1",
     "@preact/preset-vite": "^2.10.5",
     "preact-render-to-string": "^6.7.0",
     "vite": "^8.1.4",

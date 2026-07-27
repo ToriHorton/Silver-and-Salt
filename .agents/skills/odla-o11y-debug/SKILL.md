@@ -95,3 +95,17 @@ suggest one (metric + threshold + window).
 - **Say what you couldn't see.** Arbitrary custom attributes live in the trace
   payload, not the group-by dimensions; if the cohort is defined by a custom
   field, note that you inferred it from individual traces, not an aggregate.
+
+## Land the finding
+
+A triage that ends in chat is lost by the next session. File what you found as a
+bug against the app, with the cohort in the description and the trace id in a
+comment:
+
+```cmd
+npx @odla-ai/cli pm bug add --app <appId> --title "POST /pay 503s under retry" --severity high --desc "…"
+```
+
+Severity follows the blast radius, not your confidence. The conventions and the
+rest of the `pm` command set are in `.agents/skills/odla/references/pm.md`
+(installed alongside this skill).

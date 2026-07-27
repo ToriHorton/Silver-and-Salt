@@ -16,6 +16,11 @@ Human obligation: none.
      `.github/workflows/*` using deploy-pages.
    - Dynamic wishes: forms posting to third parties, `mailto:` contact,
      localStorage used as a database, TODOs mentioning login/db.
+   - Every route's method/path, current consumer, owning source file, request and
+     response contract, auth/cache behavior, and evidence. Source evidence is a
+     path + commit; deployed evidence is an origin + immutable deployment
+     version. Never infer current-branch ownership from an unversioned deployed
+     response, an old branch, or git history.
 2. Ensure the build outputs to a DEDICATED directory (`dist/`, `_site/`,
    `build/`). If the site is served from the repo root, restructure so a
    build step (even a copy script) produces a clean output dir first.
@@ -26,16 +31,19 @@ Human obligation: none.
    `sk_live_`, `whsec_`, `ghp_`, `github_pat_`, `AKIA`, `-----BEGIN`).
    Any hit: STOP, show the human file:line (never the value), and
    resolve before continuing.
-5. Create `MIGRATION.md` at the repo root: the six-phase checklist with
-   P0 marked in progress, the inventory findings, and the chosen build
-   dir. Commit it (review `git status` first).
+5. Choose the intended stable odla `appId`. Follow
+   `project-state.md`'s pre-registration bootstrap: keep the inventory and
+   evidence in focused source-controlled artifacts/commits and the checkpoint
+   handoff. Do not create a parallel migration diary. PM becomes authoritative
+   immediately after Phase 2 registers the app.
 
 ## Verification checklist
 
 - [ ] Build runs clean and populates only the dedicated output dir
 - [ ] Output dir contains index.html and the site's assets
 - [ ] No committed secrets found (or resolved with the human)
-- [ ] MIGRATION.md committed
+- [ ] Intended `appId`, inventory evidence, and source commit recorded in the
+      checkpoint handoff
 
 Rollback: nothing to roll back.
 

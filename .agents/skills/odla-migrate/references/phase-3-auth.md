@@ -22,6 +22,12 @@ doc — `https://clerk.com/docs/cli.md` — and prefer its syntax over the liter
 flags below. The steps here are the odla-shaped sequence; the live doc is
 authoritative for commands and flags.
 
+The development and production instances below belong to this one website's
+Clerk application. A separate leader or follower website uses its own Clerk
+application, issuer, publishable keys, roles, and users. Cross-site Chapter
+record delivery uses a per-edge vault share secret and the follower's own ODLA
+key; it never forwards or accepts another site's Clerk JWT.
+
 ## Steps
 
 1. Provision the Clerk app with the CLI (after the human's `clerk auth
@@ -52,10 +58,10 @@ authoritative for commands and flags.
      `{"email": "{{user.primary_email_address}}"}`
 4. Gate at least one `/api/*` route on a verified user; return 401
    otherwise.
-5. Add Clerk sign-in to the site pages. For a React/Preact site, use
+5. Add Clerk sign-in to the site pages. For a Preact site, use
    `@odla-ai/auth-clerk`: wrap the app in `<ClerkGate publishableKey>`
    (key from public-config) and drop in `<SignIn />`. It runs on vanilla
-   clerk-js (no clerk-react), loads clerk-js as a lazy chunk, and themes
+   clerk-js (no React wrapper), loads clerk-js as a lazy chunk, and themes
    to odla-ui via `clerkAppearanceFromTokens()`. Otherwise drive ClerkJS
    directly with the publishable key from public-config, or use Clerk's
    hosted pages. For a **vanilla/static site**, load Clerk's browser bundle
@@ -66,6 +72,13 @@ authoritative for commands and flags.
    host encoded in the pk. Then mount `Clerk.mountSignIn(el, { appearance })`
    and attach `Clerk.session.getToken()` as the `Bearer` on `/api/*` calls.
 6. Deploy dev (`npm run deploy:app:dev`).
+
+Record and test the complete auth matrix: signed out, allowed, forbidden,
+malformed, expired, wrong issuer, role ladder, and sign-out/return routing. If
+the legacy verifier intentionally enforced `aud` or `azp`, preserve it with a
+host verifier and add negative fixtures until the replacement has the same
+policy. If it never enforced them, record those two cases as `n/a`; that is
+inherited policy scope, not proof that the rest of authorization is correct.
 
 Clerk is the **source of truth** for identity; odla-db keeps a mirror in
 `$users`. Shipping login (this phase) is enough to gate routes. Mirroring
@@ -138,7 +151,8 @@ works. Before writing any markup:
       palette, logo, spacing) — human-confirmed, not self-asserted
 - [ ] Post-login redirect lands on a real URL (mind trailing-slash /
       directory-index routing), not a 404
-- [ ] MIGRATION.md updated (gated routes, Clerk instance name)
+- [ ] PM records the gated routes, this site's Clerk app/instance decision,
+      source commit, and deployed verification evidence
 
 Rollback: remove the auth layer / ungate the route; nothing outside dev
 changed.

@@ -36,7 +36,8 @@ own terminal so you never see the value.
 - [ ] The AI route returns a model response on the deployed dev worker
 - [ ] `wrangler.jsonc` `vars` contain NO provider key; `git grep` for the
       key's prefix finds nothing
-- [ ] MIGRATION.md updated (provider, model, route)
+- [ ] PM records the non-secret provider/model/route decision and deployed
+      verification evidence
 
 Rollback: remove the route; the vault key can be rotated/removed in
 Studio.

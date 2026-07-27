@@ -6,8 +6,26 @@ For work that creates an odla app or adds odla services, read and follow
 `.agents/skills/odla-migrate/SKILL.md`. For production telemetry triage, use
 `.agents/skills/odla-o11y-debug/SKILL.md`.
 
-The complete runbooks and their references are installed in this repository.
-Do not fetch online odla documentation as setup context. Network access is only
-needed when a runbook deliberately calls the odla service, npm, Cloudflare, or
-another configured provider.
+Track the work in odla's PM as you go — record decisions when you make them, file
+bugs when you notice them, and move tasks when the work moves
+(`npx @odla-ai/cli pm task list`). The conventions and the full command set are
+in `.agents/skills/odla/references/pm.md`.
+
+The setup runbooks and their references are installed in this repository, pinned
+to this CLI version. Use them as your setup context.
+
+Operational procedures — releasing, backups, database and code-runtime
+operations — are **not** in this bundle. They live in the odla database and
+change without a CLI release, so ask them at the moment you begin the work.
+When this repository has an `appId`, pass it: app-scoped discovery includes
+that project's instructions plus the shared platform procedures.
+
+```
+npx odla-ai runbook ask "<what you are about to do>" --app <appId>
+npx odla-ai runbook list
+npx odla-ai runbook get <slug>
+```
+
+Never scrape odla.ai HTML for any of this. The CLI reads the same content
+directly, authenticated and current; a scraped page is neither.
 <!-- odla-ai agent setup:end -->

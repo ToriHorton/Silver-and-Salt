@@ -2,7 +2,7 @@
 name: odla-migrate
 description: >
   Migrate a static site (e.g. GitHub Pages) to odla on Cloudflare in safe
-  phases, then add a database, optional read-only calendar mirror, Clerk login, and AI. Use when the user wants to
+  phases, then add a database, optional Google Calendar booking, Clerk login, and AI. Use when the user wants to
   move a static or GitHub Pages site to Cloudflare/odla, or to add a backend,
   database, login/auth, or AI features to a static site via odla.
 ---

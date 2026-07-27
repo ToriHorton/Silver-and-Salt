@@ -147,7 +147,7 @@
     "what is STILL VALID": "Everything derived from this branch's source (application fields and caps, pipeline stages and subsets, auth ladder, operations, sends trigger, account model) and everything read from the tenant DATABASE (schema, rules, row counts, group row). The tenant schema was independently verified to equal this branch's legacy source exactly, zero attribute differences, so the parity gate is sound rather than circular.",
     "what was CORRECTED": "The route list below now comes from src/worker.ts in this tree, not from probing the deployment.",
     "what REMAINS SUSPECT": "visualBaseline was measured against that other deployment's build. Public page geometry is likely unaffected (the HTML is the same static tree) but /join, /members/ and /admin/ may reflect the other branch's islands. Re-measure from a local build of THIS branch before using it for Phase 5 visual acceptance.",
-    "confirmed independently": "adminConsole three-workspace IA was re-verified against src/app/admin/index.jsx in this tree (TAB_LABELS dashboard/people/settings, with a source comment that billing/calendar/email/calls were folded in), so that observation holds on its own evidence."
+    "confirmed independently": "Only the three top-level labels were re-verified against src/app/admin/index.jsx in this tree. Labels are inventory keys, not behavior parity. src/app/admin/people-crm.jsx is the authoritative legacy People workspace evidence."
   },
 
   "routes": {
@@ -207,7 +207,15 @@
         "overflow": false,
         "tableCount": 0
       },
-      "CORRECTION": "An earlier reading of the src/app/admin/*.jsx file list suggested an eight-tab admin. The deployed console is actually already three top-level workspaces (Dashboard, People, Settings) with operational detail in nested page tabs. That is the same information architecture ChapterAdmin defaults to in chapter mode, so adopting the packaged console is close to an IA no-op rather than a restructure.",
+      "INVALIDATED_INTERPRETATION": "The three top-level labels match ChapterAdmin, but that did not make the replacement an information architecture no-op. The screenshot came from the contaminated Chapter deployment, while the reviewed legacy source mounted a custom People CRM with distinct summaries, exploration, role signals, tabs, and mutations. The source contract below is the acceptance authority.",
+      "peopleSourceContract": {
+        "source": "src/app/admin/people-crm.jsx at the frozen source commit",
+        "summary": ["People", "Submitted", "Paid", "Call set", "Approved", "Open tasks"],
+        "exploration": ["search", "pipeline stage filters", "pagination", "role badges", "active selection"],
+        "recordTabs": ["Stage", "Info", "Comms", "Comms history", "Scheduling", "Billing", "Notes", "Access when authorized"],
+        "operations": ["application-authoritative stage transitions", "approve", "refund and subscription cancellation", "profile and tags", "identity linking", "free-form and template email", "communication history", "meeting reschedule and cancellation", "notes and tasks", "role changes with super-admin restrictions"],
+        "acceptanceRule": "Preserve this workspace through ChapterAdmin workspaces until each behavior is proven packaged-equivalent, deliberately composed, or accepted as a PM-recorded product change."
+      },
       "unauthenticatedApiGate": "an /api/me fetch without the Clerk bearer token returns 401 {\"authorized\":false} while the page itself renders, confirming the gate is server-side"
     },
     "regenerationNote": "The public pages and app islands are static files in git, so the true 'before' is recoverable by checking out gitSha above and rebuilding. That is the authoritative before-record; these numbers are the fast comparison.",

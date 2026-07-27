@@ -29,11 +29,45 @@ prints what it verified against.
 
 Cause: the `odla_dev_…` token expired (~24h) or the handshake was never
 approved.
-Fix: re-run `npx @odla-ai/cli provision` — it starts a fresh handshake; the
-matching existing account must be supplied with `--email` or
-`ODLA_USER_EMAIL`, then signs in, reviews, and approves the exact code at the
-printed URL. Never ask for a password or session token. Use `--no-open` in
-non-interactive shells if the browser launch misbehaves.
+Fix: re-run `npx @odla-ai/cli provision` — it resumes a still-pending
+handshake if one exists, else starts a fresh one; the matching existing
+account must be supplied with `--email` or `ODLA_USER_EMAIL`, then signs in,
+reviews, and approves the exact code at the printed URL. Never ask for a
+password or session token.
+
+## Handshake exits with code 75 / "handshake still pending"
+
+Cause: nobody approved within the wait cap (90s outside an interactive
+terminal; `--wait <seconds>` overrides). This is normal in agent shells and
+loses nothing — the handshake is persisted in `.odla/handshake.local.json`.
+Fix: relay the printed approval URL to the human **verbatim** (browser
+launch is best-effort — a sandboxed shell can report success with no tab
+appearing), wait for them to approve, then re-run the same command; it
+resumes the same code and collects the token. Do not loop unattended
+retries; each handshake lives ~10 minutes.
+
+## The approval URL says no request matches, or is never approvable
+
+Symptom: the human opens the printed `/studio?code=XXXX-XXXX` link and Studio
+says "No request for your account matches …", or they approve nothing because
+no request card appears — while the CLI polls until the handshake expires.
+
+Cause: `--email` / `ODLA_USER_EMAIL` was not the human's odla **account**
+email. The registry matches the exact normalized string (`trim` + `lowercase`
+only), so a `+alias`, a `users.noreply.github.com` address, or a second
+personal address is a different identity. An address that resolves to no
+account is **not** an error — to keep anyone from discovering which emails are
+registered, the request is recorded as an inert decoy bound to no owner, which
+no one can preview or approve. Every surface therefore looks normal: the CLI
+prints a URL, polls, and times out.
+
+Fix: confirm the address with the human and re-run. **Never derive it from
+`git config user.email`, `gh`, or a commit author** — that is the usual source
+of this, because a git identity is routinely a different address from the odla
+account. If `.odla/handshake.local.json` exists, the address it records is
+known-good; reuse that. Repeated failures with the same address mean it is not
+registered — the human must add it to their account (or use the registered
+one), and no amount of retrying will help.
 
 ## `smoke` fails: missing credentials
 
@@ -65,6 +99,21 @@ the repository's credential file.
 Cause: the Clerk session token doesn't include an email claim.
 Fix: Clerk dashboard → session token customization → add the email
 claim, then re-test. The worker only forwards what the JWT carries.
+
+## A newly deployed route still returns 404
+
+Cause: the request may be reaching an older Worker/deployment, or an edge cache
+may still hold a response from before the route, configuration, or credential
+became ready. A deployed URL is also not proof that the checked-out branch owns
+that route.
+
+Fix: first identify the checked-in owner from the exact source path and commit.
+Confirm the deployed immutable Worker version matches that commit. Probe both
+the direct workers.dev candidate and the public domain with a unique non-secret
+query value; capture `Age`, `Cache-Control`, `CF-Cache-Status`, `ETag`, and the
+Worker version marker. Re-test after the documented propagation/cache window.
+File a route bug only if the intended version reproduces with fresh evidence.
+Never rotate a key or rewrite the route merely to defeat a cached response.
 
 ## Re-running provision — is it safe?
 
