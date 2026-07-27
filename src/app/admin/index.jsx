@@ -9,11 +9,11 @@
 //   - the /api/me role check and the non-admin redirect copy
 //   - the #console-root mount point and the page's CSS
 //
-// What CHANGES: the tab UI and its three panels are replaced by ChapterAdmin,
-// which supplies the same Dashboard / People / Settings grammar from the
-// resolved chapter config. The old dashboard.jsx / people-crm.jsx /
-// settings.jsx panels are no longer imported. They stay in the tree until the
-// deployed console is signed off, then get deleted in one reviewed change.
+// What CHANGES: ChapterAdmin owns the authenticated shell, workspace routing,
+// and the reviewed packaged defaults. The existing PeopleTab remains the
+// operational People workspace through Chapter's `workspaces` seam. Matching
+// Dashboard / People / Settings labels did not prove behavior parity, so no
+// validated workspace is deleted on information architecture alone.
 //
 // chrome="embedded" (the default) is REQUIRED here: the site header already
 // exists on the page, and "standalone" would render a second masthead.
@@ -29,6 +29,7 @@ import "@odla-ai/crm/ui.css";
 import { render } from "preact";
 import { ChapterAdmin } from "@odla-ai/chapter/ui/admin";
 import { chapter } from "../../chapter.config.mjs";
+import { operationalAdminWorkspaces } from "./workspaces.jsx";
 
 // Inbound compatibility: the admin notification email links with ?tab=people,
 // and older links used ?tab=billing / calendar / calls / email, which the
@@ -99,6 +100,10 @@ async function boot() {
         chrome="embedded"
         basePath="/admin/"
         crmBasePath="/api/crm"
+        // Matching workspace labels do not establish product parity. Preserve
+        // the validated CRM workspace and let Chapter own its surrounding
+        // authentication, routing, chrome, and the other default workspaces.
+        workspaces={(defaults) => operationalAdminWorkspaces(defaults, me)}
         // Reuse the Clerk session this page already established instead of
         // letting the console run a second auth flow. The adapter hands
         // Chapter the token getter and the already-fetched user, so there is

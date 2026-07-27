@@ -24,10 +24,10 @@ instance, never a second Clerk app per env; final go/no-go at each step.
    `secrets push --env prod --yes` only to retry the transfer (see
    references/secrets-map.md).
 3. Build, then run the passive pre-cutover security gate:
-   first require `npm view @odla-ai/security@0.3.1 version` to succeed. An
-   exact-version `E404` means the release is unavailable and blocks cutover;
-   it is not a clean scan and does not prove the package name is absent. Run
-   `npm i -D --save-exact @odla-ai/security@0.3.1` followed by
+   first require `npm view @odla-ai/security version` to succeed. A registry
+   failure blocks cutover; it is not a clean scan. Run
+   `npm i -D @odla-ai/security`, commit the lockfile, record the resolved
+   version from `npm ls @odla-ai/security`, then run
    `npx odla-security scan . --profile odla --out .odla/security/pre-cutover --fail-on high --fail-on-candidates critical`.
    Review `REPORT.md`; a candidate is a lead, not confirmation, and a baseline
    requires a concrete reason, owner, and expiry.
@@ -41,8 +41,11 @@ instance, never a second Clerk app per env; final go/no-go at each step.
    --env prod --plan-digest <digest-from-security-plan>
    --ack-redacted-source`. Never request a PAT; GitHub read approval is not
    snippet-disclosure consent.
-4. `npx wrangler deploy` (first prod deploy). Verify
-   `/api/health` and the parity paths on the prod workers.dev URL.
+4. `npx wrangler deploy` (first prod deploy). Record the immutable Worker
+   version and source commit, then verify `/api/health` and the full
+   request/response contracts on the prod workers.dev URL. Equal payload values
+   with different keys, nesting, types, units, or omission behavior are not
+   parity.
 5. `npx @odla-ai/cli smoke --env prod`.
 6. Human: add the domain to Cloudflare, then attach it to the prod
    worker (Workers & Pages → the worker → Domains & Routes). Supply
@@ -50,9 +53,12 @@ instance, never a second Clerk app per env; final go/no-go at each step.
 7. Cut DNS. GitHub Pages STAYS PUBLISHED — if anything looks wrong,
    the rollback is pointing DNS back at Pages.
 8. Verify from the public domain: parity paths, the gated route (signed
-   in and out), `/api/*` routes, the AI route if present.
-9. Update MIGRATION.md: cutover timestamp, verification results, and a
-   dated reminder ≥ 72 hours out to decommission Pages.
+   in and out), `/api/*` routes, the AI route if present. Use a unique
+   non-secret query value and capture cache/version headers so an earlier
+   edge-cached response cannot masquerade as the deployed build.
+9. Comment on the PM cutover task with the timestamp, immutable deployment
+   version, verification results, rollback checkpoint, and a dated follow-up
+   task ≥ 72 hours out to decommission Pages.
 10. After ≥ 72 hours of clean parallel-run and explicit human
     confirmation: disable GitHub Pages in the repo settings. KEEP the
     repo — it is still the source of the site.
@@ -85,6 +91,7 @@ production on the *existing* app. Then:
 Rollback: point DNS back at GitHub Pages (minutes). Nothing on the
 odla/Cloudflare side needs to be torn down to roll back.
 
-Done when: the 72-hour confirmation is done and MIGRATION.md is closed
-out. Congratulate the human — and mention Studio (https://odla.ai/studio) as
-where they watch their app from now on.
+Done when: the 72-hour confirmation is done, every migration conformance goal
+is met, and the remaining PM tasks are completed or explicitly deferred.
+Congratulate the human — and mention Studio (https://odla.ai/studio) as where
+they watch their app and PM state from now on.

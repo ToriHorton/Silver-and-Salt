@@ -11,8 +11,11 @@ opens the review page in interactive terminals; loading it alone is inert.
 
 ## Steps
 
-1. Require `npm view @odla-ai/cli@0.10.2 version` to succeed, then run
-   `npm i -D --save-exact @odla-ai/cli@0.10.2` and `npm i @odla-ai/db`.
+1. Require `npm view @odla-ai/cli version` to succeed, then run
+   `npm i -D @odla-ai/cli` and `npm i @odla-ai/db`. Use normal dependency
+   declarations while ODLA is under active development, commit the lockfile,
+   and record the resolved graph from
+   `npm ls @odla-ai/cli @odla-ai/db` in PM.
 2. `npx @odla-ai/cli init --app-id <id> --name "<Name>" --env dev --services db`
    Review `odla.config.mjs`. Keep `envs: ["dev"]` — prod is Phase 5. Set
    `links.dev` to the URL the Phase 1 `wrangler deploy` **actually printed** —
@@ -27,7 +30,16 @@ opens the review page in interactive terminals; loading it alone is inert.
    re-project on read), lists need explicit `order`, uniques are
    single-attr (derive composite keys), ON CONFLICT maps to `mutationId`
    dedupe.
-4. Write `src/odla/schema.mjs` for the app's entities. KEEP the
+4. **Membership site? Go to `phase-2-chapter.md` before writing any
+   schema.** If the app has applications/join, paid membership, booked
+   intro calls, a member area, an admin console or a people CRM, then
+   `defineChapter()` from `@odla-ai/chapter` GENERATES the schema, the
+   deny-all rules, the seed row and the provisioning integration. Hand-
+   authoring them here is exactly the work that package exists to delete
+   (a real conversion cut ~2,500 lines). Use chapter for what it models;
+   hand-author only the namespaces it does not.
+
+   Otherwise, write `src/odla/schema.mjs` for the app's entities. KEEP the
    generated deny-all `src/odla/rules.mjs`: the worker mediates all
    access with its app key (which bypasses rules); browsers get nothing
    directly. Loosening a rule is a human checkpoint.
@@ -41,6 +53,10 @@ opens the review page in interactive terminals; loading it alone is inert.
    init — confirm with `git status`. Use
    `npx @odla-ai/cli secrets push --env dev` only to retry the secret-transfer
    portion (details and manual fallback: references/secrets-map.md).
+8. The app now exists. Before further implementation, follow
+   `project-state.md`: create the migration goals/tasks/decisions in PM,
+   backfill the approved Phase 0/1 evidence, and read the resulting active
+   task/goal before continuing.
 9. Add to `wrangler.jsonc` `env.dev.vars`: `ODLA_ENDPOINT`
    ("https://db.odla.ai"), `ODLA_TENANT` ("<appId>--dev"),
    `ODLA_PLATFORM` ("https://odla.ai"), `ODLA_APP_ID`, `ODLA_ENV`
@@ -61,7 +77,8 @@ opens the review page in interactive terminals; loading it alone is inert.
 - [ ] Routes work locally and on the deployed dev worker
 - [ ] `links.dev` set — public-config carries the URL and Studio shows it
 - [ ] `git status` shows no credential files staged
-- [ ] MIGRATION.md updated with tenant id + route list
+- [ ] PM initialized and Phase 0/1 evidence backfilled; Phase 2 route/tenant
+      evidence attached to the active task without credentials
 
 Rollback: the dev tenant is disposable; the live site never depended on
 it. Pages untouched.

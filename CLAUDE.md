@@ -20,13 +20,15 @@ When writing anything related to the company (copy, HTML, alt text, commit messa
 
 ---
 
-## odla Migration (branch `odla-conversion-test` only)
+## odla Migration
 
-A phased test migration to odla.ai/Cloudflare is in progress on the branch
-`odla-conversion-test`. Durable state lives in `MIGRATION.md` at the repo
-root; the runbook is `.agents/skills/odla-migrate/SKILL.md`. Read
-`MIGRATION.md` before touching migration work. Production (GitHub Pages on
-`main`) stays untouched until Phase 5 sign-off.
+A phased migration to odla.ai, Cloudflare, and Chapter is in progress on the
+current migration branch. Durable coordination state lives in odla PM under the
+`appId` from `odla.config.mjs`. It does not live in `MIGRATION.md`. Before
+touching migration work, read `.agents/skills/odla-migrate/SKILL.md`, query the
+active PM tasks, goals, decisions, and bugs, then ask the live runbooks for the
+procedure you are about to follow. Production (GitHub Pages on `main`) stays
+untouched until explicit cutover approval.
 
 ---
 
