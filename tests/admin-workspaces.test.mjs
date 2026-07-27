@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { ThemeScope } from "@odla-ai/ui/components";
 import { h } from "preact";
 import { renderToStaticMarkup } from "preact-render-to-string";
 import { describe, expect, it } from "vitest";
@@ -62,9 +63,20 @@ describe("ChapterAdmin workspace composition", () => {
   });
 
   it("keeps the full-width People canvas free of the centered embedded-shell stripe", () => {
+    const chapterFrame = renderToStaticMarkup(
+      h(
+        ThemeScope,
+        { "data-chapter-admin": "" },
+        h("main", { class: "shell-main" }),
+      ),
+    );
+
+    expect(chapterFrame).toContain('class="ui-theme-scope"');
+    expect(chapterFrame).toContain("data-chapter-admin");
+    expect(chapterFrame).toContain('<main class="shell-main"></main>');
     expect(adminHtml).toMatch(/\.people-full\s*\{[^}]*width:\s*100vw/);
     expect(adminHtml).toMatch(
-      /#console-root \[data-chapter-admin\] > \.shell-main\s*\{\s*background:\s*transparent !important;/,
+      /#console-root \[data-chapter-admin\],\s*#console-root \[data-chapter-admin\] > \.shell-main\s*\{\s*background:\s*transparent !important;/,
     );
   });
 });
