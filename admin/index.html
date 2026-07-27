@@ -622,10 +622,12 @@
        off the page (the odla-ui DataTable has no scroll container of its own). */
     .crm-list-wrap { overflow-x: auto; }
     .crm-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px; }
-    /* ChapterAdmin paints --ui-bg on its embedded shell with an inline style.
-       This page already owns the green canvas, and the shell still lives inside
-       the legacy 960px .container. Letting that inline background show creates
-       a tall cream center stripe once People breaks out to viewport width. */
+    /* ChapterAdmin paints --ui-bg twice: on its .ui-theme-scope root and on the
+       embedded .shell-main's inline style. This page already owns the green
+       canvas, and both paint layers still live inside the legacy 960px
+       .container. Clear both or a tall cream center stripe remains visible
+       once People breaks out to viewport width. */
+    #console-root [data-chapter-admin],
     #console-root [data-chapter-admin] > .shell-main { background: transparent !important; }
     /* People: full-width, two-pane master/detail (a left exploration rail and a
        docked detail pane on the right). The 100vw breakout escapes the 960px
