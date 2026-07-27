@@ -12,6 +12,7 @@ default-deny `src/odla/rules.mjs`. Isomorphic (browser + Worker).
 
 ```ts
 // browser client — token from your IdP (Clerk):
+import { OdlaProvider, useQuery, useTransact } from "@odla-ai/db/preact";
 const db = init({ appId, endpoint, getToken });
 const { data } = useQuery({ notes: { $: { order: { createdAt: "asc" } } } });
 transact(db.tx.notes[crypto.randomUUID()].update({ text, createdAt: Date.now() }));
@@ -20,7 +21,7 @@ transact(db.tx.notes[crypto.randomUUID()].update({ text, createdAt: Date.now() }
 Worker/admin side: `init({ appId: tenantId, adminToken: env.ODLA_API_KEY, endpoint })`
 — the admin key bypasses rules, so a worker-mediated backend needs none.
 
-## @odla-ai/auth-clerk — sign-in (Clerk; runs on Preact or React)
+## @odla-ai/auth-clerk — native Preact sign-in (Clerk)
 
 ```tsx
 <ClerkGate publishableKey={pk} appearance={clerkAppearanceFromTokens()}>
@@ -32,34 +33,46 @@ Worker/admin side: `init({ appId: tenantId, adminToken: env.ODLA_API_KEY, endpoi
 The publishable key is public; `provision` stores it (`setAuth`). Rules evaluate
 the signed-in user's JWT as `auth` — e.g. `auth.signedIn`, `auth.email`.
 
-## @odla-ai/calendar — read-only Google booking mirror
+## @odla-ai/calendar — live Google Calendar booking
 
 Calendar requires `services: ["db", "calendar"]` plus a `calendar.google`
-block. Normal provision opens a second, state-bound Google checkpoint issued by the platform for the
-human to grant `calendar.events.readonly`; Google tokens stay in the hosted
-connector and never become app/CLI secrets.
+block (`availabilityCalendars` per env, optional `bookingCalendar`). Normal
+provision opens a second, state-bound Google checkpoint issued by the
+platform; the human grants the booking scopes in a browser. Google tokens
+stay platform-side and never become app/CLI secrets. Google Calendar is the
+single source of truth — odla stores no calendar or attendee data, and
+nothing syncs.
 
 ```ts
 // Trusted Worker only — the admin key must never enter browser code.
-const calendar = initCalendar({
-  appId: env.ODLA_TENANT,
+const cal = initCalendar({
+  appId: env.ODLA_APP_ID,       // registry app id
+  env: env.ODLA_ENV,
   adminToken: env.ODLA_API_KEY,
-  endpoint: env.ODLA_ENDPOINT,
+  endpoint: env.ODLA_PLATFORM ?? "https://odla.ai",
 });
-const next = await calendar.bookings.next("member@example.com");
+const fb = await cal.availability.freeBusy({ timeMin, timeMax });
+const slots = computeBookableSlots(fb.busy, { from: timeMin, to: timeMax,
+  timezone, slotMinutes: 30 });
+const { booking } = await cal.actions.create(
+  { summary, startAt, endAt, attendees: [email], timezone, meet: true },
+  { idempotencyKey: `booking:${recordId}` }, // retry-safe; Google emails the invite
+);
 ```
 
-Browser code may query `$bookings` with `@odla-ai/db/client` only under an
-explicit view rule, and may import pure formatting helpers from
-`@odla-ai/calendar/client`. Do not import `initCalendar` or expose
-`ODLA_API_KEY` in a browser. Provider actions are not part of the read-only
-slice; a `calendar_not_connected`/501 action response is not a reason to widen
-credentials or request a Google token.
+Store the returned `eventId`/`meetUrl` on the app's own record;
+`actions.reschedule(eventId, …)` and `actions.cancel(eventId)` use it. A
+taken slot rejects with non-retryable `calendar_slot_unavailable` — refetch
+slots, don't retry. Browser code never calls `initCalendar` or the platform
+calendar routes; it hits the app's own endpoints and may import pure helpers
+(`computeBookableSlots`, formatters) from `@odla-ai/calendar/client`.
+`SlotPicker` from `@odla-ai/ui` renders the slot output directly.
 
 After consent, use `odla-ai calendar calendars --env dev --json` to discover
-selectable ids, edit the checked-in list, and optionally set a public per-env
-`bookingPageUrl` for Appointment Schedule embed/link mode. Re-provision, then verify with
-`calendar status --json` and `smoke`.
+selectable ids and edit the checked-in list. Re-provision, then verify
+`calendar status --env dev` reports `bookable: yes` and `smoke` passes. A
+pre-pivot read-only grant reports `degraded`/`calendar_reconsent_required`;
+re-run `calendar connect`.
 
 ## @odla-ai/ai — inference (Claude / GPT / Gemini)
 
@@ -70,6 +83,31 @@ await ai.chat({ messages }); // provider/model + key resolved from the platform 
 
 No API key in your code or env — it lives in the tenant vault; `provision`
 stores it when the configured `ai.keyEnv` is set at provision time.
+
+## @odla-ai/crm — records, pipelines, follow-ups, and contactability
+
+Define the CRM once in an app module, mount `createCrmRoutes` in trusted Worker
+code behind the app's admin authorization, and render the optional admin kit
+from `@odla-ai/crm/ui`. Declare `createCrmIntegration(crm, options)` under
+`odla.config.mjs` `integrations`—never under `services`.
+
+```ts
+import { createCrmIntegration } from "@odla-ai/crm";
+import { crm } from "./src/crm.js";
+
+export default {
+  app: { id: "my-app", name: "My App" },
+  services: ["db"],
+  integrations: [createCrmIntegration(crm, { basePath: "/api/crm" })],
+  links: { dev: "https://dev.example.com" },
+};
+```
+
+Provision merges the CRM schema/rules and creates `crm_config` only when
+absent. Doctor checks the composed contract offline; smoke calls the records
+route anonymously and requires `401`. The CLI does not edit the Worker or
+invent `authorize`. Billing is an optional injected `BillingProvider`; reuse
+app-owned payment code when present rather than assuming another package.
 
 ## @odla-ai/o11y — observability (Cloudflare Workers)
 
@@ -99,13 +137,13 @@ in sync.
 Run the passive CLI in local/CI development; do not import it into the running
 Worker:
 
-Before installing the exact release, require
-`npm view @odla-ai/security@0.3.1 version` to succeed before installing it. An
-exact-version `E404` means the release is unavailable, not that the preflight
-passed, and does not prove the package name is absent.
+Require `npm view @odla-ai/security version` to succeed before installing it.
+A registry failure blocks the preflight; it is not a clean scan. Use a normal
+dependency declaration, commit the lockfile, and record the resolved version.
 
 ```
-npm i -D --save-exact @odla-ai/security@0.3.1
+npm i -D @odla-ai/security
+npm ls @odla-ai/security
 npx odla-security scan . --profile odla --out .odla/security/pre-ship --fail-on high --fail-on-candidates critical
 ```
 
@@ -118,6 +156,17 @@ injected isolated executor and never falls back to the host shell.
 
 ## Others
 
+- **@odla-ai/chapter** — membership sites from one `defineChapter()` config:
+  generates the odla-db schema + deny-all rules + group seed + provisioning
+  integration, and ships the worker (join/apply, Stripe membership, Google
+  booking, member area, exactly-once lifecycle email, CRM projection, and
+  leader → follower record delivery) plus a UI kit. Composable:
+  `chapterWorker({ chapter, routes })` runs host routes before the built-ins and
+  shares its auth context; `<ChapterAdmin chapter={chapter}/>` derives the
+  familiar brand/section shell and uses host-independent `?tab=` routing;
+  `./ui/member` is Preact-only (no Clerk SDK). **If a migration target
+  is a membership site, start here instead of hand-authoring schema** — see
+  `odla-migrate/references/phase-2-chapter.md`.
 - **@odla-ai/ui** — design system: CSS tokens, five themes, component styles,
   chart helpers.
 - **@odla-ai/kg** — ontology-driven knowledge graph: source connectors, LLM

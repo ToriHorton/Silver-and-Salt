@@ -15,12 +15,18 @@ deny-all rules from the schema. To turn on auth/observability, add `"o11y"` to
 `services` and an `auth.clerk` block in `odla.config.mjs` (init leaves it
 commented).
 
-For a Google booking mirror, include both `"db"` and `"calendar"`. Configure
-`calendar.google.calendars` for every env (start with `"primary"`), optional
-match filters, and `attendeePolicy: "full" | "hashed"`. This release is
-read-only; do not add OAuth credentials or action scopes to config.
-For static Appointment Schedule parity, add the public per-env
-`bookingPageUrl`; it is link/embed configuration, never a credential.
+For an npm app capability such as `@odla-ai/crm`, import its data-only
+descriptor into `odla.config.mjs` and add it under `integrations`; do not add
+the capability id to `services`. Provision collision-checks and merges its
+schema/rules, creates guarded seeds only when absent, and leaves runtime package
+installation and route mounting to the source step.
+
+For Google Calendar booking, include both `"db"` and `"calendar"`. Configure
+`calendar.google.availabilityCalendars` for every env (start with
+`"primary"`; 1–10 per env) and optionally `bookingCalendar` (defaults to the
+first availability calendar). Do not add OAuth credentials to config — the
+Google grant is platform-side. A legacy per-env `bookingPageUrl` link may be
+kept as a fallback; it is public configuration, never a credential.
 
 ## 2. Build the Worker shell
 
@@ -50,19 +56,22 @@ Prints a short device code and a link. ⏸ That same account opens the link, sig
 in, explicitly reviews the exact code, and approves it — loading the URL alone
 does not claim access, and no secret passes through the chat. Provision then:
 creates the app, enables its services, issues or reuses the db key (and the
-o11y ingest token when o11y is enabled), pushes schema + rules, writes
+o11y ingest token when o11y is enabled), pushes the composed app + integration
+schema/rules, creates missing guarded seeds, writes
 `.dev.vars`, and transfers configured Worker secrets through Wrangler stdin.
 Local credential files are `0600` and gitignored. Verify with
-`npx @odla-ai/cli doctor` — it prints the app, envs, services, and flags
+`npx @odla-ai/cli doctor` — it prints the app, envs, services, integrations, and flags
 anything unset. `--push-secrets` preflights the Wrangler config and login before
 issuing or rotating a shown-once credential.
 
 Calendar adds a second ⏸ checkpoint after the odla device approval: provision
-prints/opens a state-bound Google URL issued by the platform and waits while the human grants
-`calendar.events.readonly` and the hosted connector performs initial sync. The
-CLI never receives the Google callback code or tokens. Once connected, run
+prints/opens a state-bound Google URL issued by the platform and waits while
+the human grants the booking scopes in a browser. The CLI never receives the
+Google callback code or tokens, and nothing syncs afterward — Google stays
+the single source of truth. Once connected, run
 `npx @odla-ai/cli calendar calendars --env dev --json`, refine the checked-in
-calendar ids if needed, re-provision, and verify `calendar status --json`.
+calendar ids if needed, re-provision, and verify `calendar status --env dev`
+reports `bookable: yes`.
 
 The CLI stops at the source boundary: it verifies but does not invent your
 application semantics. Do not use Studio to mint a routine o11y token. Manual
@@ -82,22 +91,24 @@ means the namespace has no rule yet — add one in `src/odla/rules.mjs`
 (deliberately; e.g. `{ notes: { view: "auth.signedIn", create: "auth.signedIn" } }`),
 re-provision to push it, and retry.
 
-Calendar uses the same `ODLA_ENDPOINT`, `ODLA_TENANT`, and server-only
-`ODLA_API_KEY`; it adds no Worker secret. Keep `initCalendar` in trusted Worker
-code. Browser code uses db subscriptions under explicit rules or pure
-`@odla-ai/calendar/client` helpers, never the admin key.
+Calendar rides the server-only `ODLA_API_KEY`; it adds no Worker secret. Keep
+`initCalendar` in trusted Worker code and expose the app's own slots/booking
+endpoints to the browser — never call the platform calendar routes from
+browser code. Browsers may import only the pure `@odla-ai/calendar/client`
+helpers (`computeBookableSlots`, formatters), never the admin key.
 
 ## 5. Security preflight
 
 Install the passive harness and scan before any production secret or deploy:
 
-Before installing the exact release, first verify
-`npm view @odla-ai/security@0.3.1 version`. An exact-version `E404` means the
-release is unavailable and blocks this preflight; it is not a clean scan and
-does not prove the package name is absent.
+First verify `npm view @odla-ai/security version`. A registry failure blocks
+this preflight; it is not a clean scan. Use a normal dependency declaration
+while ODLA is under active development, commit the lockfile, and record the
+resolved version with the scan evidence.
 
 ```
-npm i -D --save-exact @odla-ai/security@0.3.1
+npm i -D @odla-ai/security
+npm ls @odla-ai/security
 npx odla-security scan . --profile odla --out .odla/security/pre-ship --fail-on high --fail-on-candidates critical
 ```
 
