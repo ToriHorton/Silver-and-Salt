@@ -15,6 +15,9 @@
 | `o11y_…` (o11y ingest token) | wrangler secret `ODLA_O11Y_TOKEN` + `.odla/credentials.local.json` (0600) + `.dev.vars` | only if the app enables o11y; provision issues/reuses it and moves it alongside the db key; never a var, never chat |
 | `ODLA_ENDPOINT` / `ODLA_TENANT` / `ODLA_PLATFORM` / `ODLA_APP_ID` / `ODLA_ENV` | wrangler `vars` | not secrets; keep them set in every env block |
 | `ODLA_O11Y_ENDPOINT` / `ODLA_O11Y_SERVICE` | `.dev.vars` from provision or optional wrangler `vars` overrides | not secrets; public ingest defaults to `https://o11y.odla.ai` and `ODLA_APP_ID` when the token is present |
+| `GOOGLE_CALENDAR_CLIENT_ID` / `GOOGLE_CALENDAR_CLIENT_SECRET` / `CALENDAR_TOKEN_MASTER_KEY` | platform-operator Worker secrets on `odla-apps` | never part of a customer migration; never in chat, the repo, or the app's wrangler config — a readiness 503 (`calendar_*_not_configured`) means the operator sets these, not you |
+| Google calendar grant (OAuth tokens) | platform-side, sealed after human browser consent | the human clicks the server-issued consent URL; no code or token is ever pasted, and the CLI/app/repo never hold one |
+| calendar booking auth (app side) | none — rides the existing `ODLA_API_KEY` | enabling calendar adds NO new app secret; `initCalendar` uses the app's server db key, server-side only, never in a browser |
 
 System AI provider credentials are platform-owned and never enter a customer
 migration. `odla-ai security run` receives only app/run-bound role grants; do
