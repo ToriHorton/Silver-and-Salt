@@ -1,8 +1,11 @@
+import { readFileSync } from "node:fs";
 import { h } from "preact";
 import { renderToStaticMarkup } from "preact-render-to-string";
 import { describe, expect, it } from "vitest";
 import { PeopleTab } from "../src/app/admin/people-crm.jsx";
 import { operationalAdminWorkspaces } from "../src/app/admin/workspaces.jsx";
+
+const adminHtml = readFileSync(new URL("../admin/index.html", import.meta.url), "utf8");
 
 const defaultWorkspaces = () => [
   { id: "dashboard", label: "Dashboard", render: () => h("p", null, "dashboard") },
@@ -56,5 +59,12 @@ describe("ChapterAdmin workspace composition", () => {
         { userId: "user_owner" },
       ),
     ).toThrow(/expected people workspace/);
+  });
+
+  it("keeps the full-width People canvas free of the centered embedded-shell stripe", () => {
+    expect(adminHtml).toMatch(/\.people-full\s*\{[^}]*width:\s*100vw/);
+    expect(adminHtml).toMatch(
+      /#console-root \[data-chapter-admin\] > \.shell-main\s*\{\s*background:\s*transparent !important;/,
+    );
   });
 });
