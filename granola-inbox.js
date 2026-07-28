@@ -1,5 +1,5 @@
 window.GRANOLA_INBOX = {
-  generated: "2026-07-26",
+  generated: "2026-07-28",
   items: [
     { text: "Send Climate First Bank call availability for account onboarding", owner: "", context: "from email: Climate First Bank asked for dates/times for a 20-30 min call on the Built Not Found Capital business account (Jul 1)", source: "email", date: "2026-07-01" },
     { text: "Schedule intro call with Jacob Sorenson of Utah MBA Angels", owner: "", context: "from email: Kelsey Rudd intro re Angel Investing in Utah; Jacob asked when works best, Tori replied Jul 13 and scheduling is still open", source: "email", date: "2026-07-08" },
@@ -97,6 +97,15 @@ window.GRANOLA_INBOX = {
     { text: "Reimburse Lisa $272 for the Sept 10 Southwest flight BUR to SJC", owner: "", context: "from Granola: Lisa - booking; Lisa books and Tori reimburses, itinerary arrived by email Jul 25", source: "granola", date: "2026-07-25" },
     { text: "Confirm Annie's schedule and send October dates to Lisa", owner: "", context: "from Granola: Lisa - booking; Tori out Oct 6 to 8, Oct 13 is the earliest hold date to finalize over email", source: "granola", date: "2026-07-25" },
     { text: "Report back on Jacki Zehner's reply to the endorsement note", owner: "Pat Jones Horton", context: "from email: Pat Jones Horton re Fwd: Lovely to catch up!; she nudged Jacki again and will keep Tori posted", source: "delegated", date: "2026-07-25" },
-    { text: "Send a Monday bump to Anne Marie and Allyse Jackson", owner: "", context: "from Claude work: Nia daily network pulse; neither replied to Tori's Jul 16 intro responses", source: "claude", date: "2026-07-25" }
+    { text: "Send a Monday bump to Anne Marie and Allyse Jackson", owner: "", context: "from Claude work: Nia daily network pulse; neither replied to Tori's Jul 16 intro responses", source: "claude", date: "2026-07-25" },
+    { text: "Send Lauren the Golden Hills Capital two-pager and financial model", owner: "", context: "from Granola: Investing in Sonoma - follow up; Lauren wants to pressure-test the numbers before the Aug 6 call", source: "granola", date: "2026-07-27" },
+    { text: "Build the draft Golden Hills Capital website for the Aug 6 call", owner: "", context: "from Granola: Investing in Sonoma - follow up; run Lauren's thesis through AI, working version ready by Aug 6 (Tori promised Cory a draft by Aug 7)", source: "granola", date: "2026-07-27" },
+    { text: "Intro Juliana to Bubba Paige with a short blurb", owner: "", context: "from Granola: Introduction: Juliana & Tori; Juliana also has a separate topic to discuss with Bubba", source: "granola", date: "2026-07-27" },
+    { text: "Add Juliana to the deal flow newsletter and 2027 round outreach", owner: "", context: "from Granola: Introduction: Juliana & Tori; passive check-writer, flag her when due diligence is complete on deals", source: "granola", date: "2026-07-27" },
+    { text: "Research SPV admin vendors and share findings before Aug 6", owner: "Lauren Friedman", context: "from Granola: Investing in Sonoma - follow up; start with AngelList (friend call), then Assure and Carta", source: "delegated", date: "2026-07-27" },
+    { text: "Reply to Lauren's intro to Colby and Mikelle at Multiplier Advisors", owner: "", context: "from email: Lauren Friedman re A long overdue Utah connection; Salt Lake impact investing firm, email still unread", source: "email", date: "2026-07-27" },
+    { text: "Review Lauren's initial Golden Hills Capital two-pager", owner: "", context: "from email: Lauren Friedman re initial golden hills capital two-pager; already forwarded to Cory with the 8/7 website promise", source: "email", date: "2026-07-27" },
+    { text: "Confirm Wednesday afternoon meeting time with Sharlene Wells", owner: "", context: "from email: Tori re Intro: Investing in Utah Women; Tori proposed Wednesday afternoon on Jul 27, awaiting Sharlene's reply", source: "email", date: "2026-07-27" },
+    { text: "Review and send the weekly analytics summary draft in Gmail", owner: "", context: "from Claude work: weekly analytics review; Jul 20-26 report saved, draft in Gmail, Networks page bounces flagged", source: "claude", date: "2026-07-27" }
   ]
 };
