@@ -196,6 +196,122 @@
         }
       }
     },
+    "crm_record_origin": {
+      "attrs": {
+        "key": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "recordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "sourceId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "sourceRecordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "sourceUrl": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        },
+        "payloadVersion": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "firstReceivedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "lastReceivedAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        }
+      }
+    },
+    "crm_record_delivery": {
+      "attrs": {
+        "key": {
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "optional": false
+        },
+        "recordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "targetId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "remoteRecordId": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "status": {
+          "type": "string",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "attempts": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "payloadVersion": {
+          "type": "number",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "lastAttemptAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": false
+        },
+        "deliveredAt": {
+          "type": "date",
+          "unique": false,
+          "indexed": true,
+          "optional": true
+        },
+        "error": {
+          "type": "string",
+          "unique": false,
+          "indexed": false,
+          "optional": true
+        }
+      }
+    },
     "crm_tag": {
       "attrs": {
         "key": {

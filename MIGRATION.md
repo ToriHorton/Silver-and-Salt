@@ -887,3 +887,12 @@ files only — `assets/odla-ui/odla-ui.css` especially).
   To send real mail from the owner-account worker later, onboard a
   silverandsaltcapital.com (or owner-owned) sender to Cloudflare Email Service
   on the owner's account. Production and `main` remain untouched.
+- **2026-07-30 (signed leader edge rollout):** Upgraded the dev Chapter
+  implementation to `@odla-ai/db` 0.9.0, `@odla-ai/crm` 0.5.0, and
+  `@odla-ai/chapter` 0.26.0. Reviewed the additive, deny-all
+  `crm_record_origin` and `crm_record_delivery` namespaces under shared
+  package decision `21c28820-c0b6-5780-b8e1-bd34d01100c4`; updated the frozen
+  parity fixtures before provisioning. This follower still has no leader
+  target configuration and retains its existing brand, public/member routes,
+  admin structure, and local pipeline authority. Production and `main` remain
+  untouched.

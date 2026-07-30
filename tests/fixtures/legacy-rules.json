@@ -5,6 +5,18 @@
     "update": "false",
     "delete": "false"
   },
+  "crm_record_origin": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_record_delivery": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
   "crm_tag": {
     "view": "false",
     "create": "false",
