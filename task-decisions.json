@@ -8,7 +8,7 @@
     "Verdict 'expired' means the deadline passed and the item was escalated into the dashboard action list as overdue. It is suppressed from re-proposal, NOT dismissed."
   ],
   "version": 1,
-  "updated": "2026-07-29",
+  "updated": "2026-07-30",
   "standing_rules": [
     {
       "rule": "GitHub Pages deploy-failure notifications are never tasks",
@@ -331,9 +331,21 @@
     },
     {
       "thread_id": "maryam",
-      "title": "Maryam scope + working arrangement",
+      "title": "Maryam marketing project (she declined Jul 29)",
       "kind": "churn",
       "open_count": 1
+    },
+    {
+      "thread_id": "shalini-sardana",
+      "title": "Shalini Sardana August reconvene",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "citrine-angels",
+      "title": "Citrine Angels (Lisa Friedlander, Elyssa Haynes)",
+      "kind": "project",
+      "open_count": 2
     },
     {
       "thread_id": "podcast-lisa",
@@ -397,15 +409,15 @@
     },
     {
       "thread_id": "website",
-      "title": "Website and messaging decisions",
+      "title": "Website, dashboard and messaging decisions",
       "kind": "project",
-      "open_count": 5
+      "open_count": 6
     },
     {
       "thread_id": "singles",
       "title": "Standalone items",
       "kind": "single",
-      "open_count": 17
+      "open_count": 16
     }
   ]
 }
