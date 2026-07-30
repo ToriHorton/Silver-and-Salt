@@ -23,6 +23,12 @@ const legacyRules = JSON.parse(readFileSync("tests/fixtures/legacy-rules.json", 
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
 const integration = createChapterIntegration(chapter);
 
+// Reviewed 2026-07-30 under shared package decision
+// 21c28820-c0b6-5780-b8e1-bd34d01100c4: CRM 0.5.0 adds two deny-all,
+// additive namespaces for stable upstream identity and delivery evidence.
+// They contain no member/session/key data and are required before this
+// follower can accept the leader's signed v2 record envelope.
+
 // Attributes Chapter adds beyond the frozen legacy contract, each reviewed and
 // recorded as a PM decision. Anything NOT listed here fails the gate, so an
 // upgrade cannot quietly extend the data model.
