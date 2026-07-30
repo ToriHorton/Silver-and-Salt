@@ -979,6 +979,56 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
   border-radius: 6px; padding: 11px 14px; margin-bottom: 8px;
 }
 .stage-body { flex: 1; min-width: 0; }
+/* Overdue and due-today alert banner */
+.overdue-alert {
+  background: var(--dash-red-bg); border: 1px solid rgba(176,52,29,0.28);
+  border-left: 4px solid var(--dash-red); border-radius: 6px;
+  padding: 13px 16px; margin-bottom: 18px;
+}
+.overdue-alert .oa-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--dash-red);
+  margin-bottom: 7px; letter-spacing: -0.01em;
+}
+.overdue-alert ul { margin: 0; padding-left: 18px; }
+.overdue-alert li { font-size: 14px; margin: 3px 0; color: var(--moss); }
+.overdue-alert .oa-when { font-weight: 600; color: var(--dash-red); }
+.overdue-alert .oa-when.today { color: #8A6D1F; }
+.overdue-alert .oa-where {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--sage); margin-left: 6px;
+}
+/* Due-date control inside a staging row, sits under the ABC boxes */
+.stage-due-row { flex-basis: 100%; display: flex; justify-content: flex-end; margin-top: 5px; }
+
+/* Parked (deprioritized) list + one-click undo toast */
+.parked-block { margin-top: 14px; border-top: 1px solid rgba(47,62,52,0.12); padding-top: 12px; }
+.parked-head {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--sage);
+  user-select: none; padding: 2px 0;
+}
+.parked-head:hover { color: var(--moss); }
+.parked-caret { font-size: 10px; transition: transform 0.15s; display: inline-block; }
+.parked-head.open .parked-caret { transform: rotate(90deg); }
+.parked-list { margin-top: 8px; }
+.parked-list .stage-item { opacity: 0.72; }
+.parked-list .stage-item:hover { opacity: 1; }
+.act-ctrl.park:hover { background: rgba(126,142,132,0.14); color: var(--sage); border-color: var(--sage); }
+.undo-toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: 26px; z-index: 9999;
+  background: var(--moss); color: #F7F5F0;
+  border-radius: 8px; padding: 11px 14px 11px 16px;
+  display: none; align-items: center; gap: 14px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.22); font-size: 14px; max-width: 90vw;
+}
+.undo-toast.show { display: flex; }
+.undo-toast .ut-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
+.undo-toast button {
+  background: transparent; color: #F7F5F0; border: 1px solid rgba(247,245,240,0.45);
+  border-radius: 5px; padding: 4px 11px; cursor: pointer; font-size: 13px; flex-shrink: 0;
+}
+.undo-toast button:hover { background: rgba(247,245,240,0.16); }
 .stage-assign { display: flex; gap: 3px; margin-right: 4px; }
 .stage-assign .act-ctrl {
   width: 22px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 14px;
@@ -2287,6 +2337,8 @@ select.act-select { cursor: pointer; }
         <button class="act-btn" onclick="addAction()">+ Add action</button>
       </div>
 
+      <div id="overdue-alert" class="overdue-alert" style="display:none"></div>
+
       <div class="staging-block">
         <div class="staging-head">
           <span class="review-col-title">Staging <span id="staging-count" class="acc-tag"></span></span>
@@ -2294,6 +2346,14 @@ select.act-select { cursor: pointer; }
         </div>
         <div class="staging-sub">Unsorted actions captured from Granola, email, and Claude work, including items owned by others. Review, edit, then assign a priority to move each into the list below.</div>
         <div id="staging-list"></div>
+
+        <div class="parked-block" id="parked-block" style="display:none">
+          <div class="parked-head" id="parked-head" onclick="toggleParked()">
+            <span class="parked-caret">&#9654;</span>
+            <span>Deprioritized <span id="parked-count" class="acc-tag"></span></span>
+          </div>
+          <div class="parked-list" id="parked-list" style="display:none"></div>
+        </div>
       </div>
 
       <div id="abc-groups"></div>
@@ -2500,6 +2560,9 @@ function normalize(d) {
   if (!d.items) d.items = [];
   d.items.forEach(i => { if (i.due === undefined) i.due = ''; if (i.keyTask === undefined) i.keyTask = false; });
   if (!d.staging) d.staging = [];
+  if (!d.parked) d.parked = [];   // deprioritized: out of the staging view, not deleted
+  d.staging.forEach(s => { if (s.due === undefined) s.due = ''; });
+  d.parked.forEach(s => { if (s.due === undefined) s.due = ''; });
   if (!d.delegated) d.delegated = [];
   if (!d.importedInbox) d.importedInbox = {}; // { normalizedText: syncDate } to avoid re-importing
   if (!d.monthlyNotes) d.monthlyNotes = {};
@@ -2585,7 +2648,7 @@ function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelector('.tab-btn[data-tab="' + name + '"]').classList.add('active');
-  if (name === 'actions') { renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
+  if (name === 'actions') { renderOverdueAlert(); renderStaging(); renderParked(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
   if (name === 'newsletter') renderNewsletter();
 }
 
@@ -2676,11 +2739,212 @@ function stageItem(it) {
         '<button class="act-ctrl aB" title="Assign to B (should do)" onclick="assignStaged(\'' + it.id + '\',\'B\')">B</button>' +
         '<button class="act-ctrl aC" title="Assign to C (nice to do)" onclick="assignStaged(\'' + it.id + '\',\'C\')">C</button>' +
       '</span>' +
+      '<button class="act-ctrl park" title="Deprioritize: move out of view, one click" onclick="parkStaged(\'' + it.id + '\')">↓</button>' +
       '<button class="act-ctrl" title="Edit" onclick="editStaged(\'' + it.id + '\')">✎</button>' +
-      '<button class="act-ctrl danger" title="Discard" onclick="removeStaged(\'' + it.id + '\')">✕</button>' +
+      '<button class="act-ctrl danger" title="Discard (undo available)" onclick="removeStaged(\'' + it.id + '\')">✕</button>' +
+      stageDueControl(it, 'staging') +
     '</div>';
   return el;
 }
+
+/* ── Due dates directly in staging and the deprioritized list ──────────
+   Sits under the ABC boxes. Click to open a native date picker; the badge then
+   colours itself red when overdue, amber when due within three days. */
+function stageDueControl(it, bucket) {
+  if (stageDueEditId === it.id) {
+    return '<div class="stage-due-row"><input type="date" class="act-due-input" id="sdue-' + it.id + '"' +
+      ' value="' + esc(it.due || '') + '"' +
+      ' onchange="saveStageDue(\'' + it.id + '\',\'' + bucket + '\',this.value)"' +
+      ' onblur="closeStageDue()"></div>';
+  }
+  if (it.due) {
+    const c = dueClass(it.due, false);
+    return '<div class="stage-due-row"><button class="act-due-corner ' + c + '"' +
+      ' onclick="editStageDue(\'' + it.id + '\')" title="Change or clear the deadline">' +
+      (c === 'overdue' ? 'Overdue: ' : 'Due by: ') + '<b>' + fmtDueFull(it.due) + '</b></button></div>';
+  }
+  return '<div class="stage-due-row"><button class="act-due-corner empty"' +
+    ' onclick="editStageDue(\'' + it.id + '\')" title="Set a deadline">+ Due date</button></div>';
+}
+let stageDueEditId = null;
+function editStageDue(id) {
+  stageDueEditId = id; editStageId = null; confirmStageId = null; addingStage = false;
+  renderStaging(); renderParked();
+  const i = document.getElementById('sdue-' + id);
+  if (i) { i.focus(); if (i.showPicker) { try { i.showPicker(); } catch (e) {} } }
+}
+function closeStageDue() { stageDueEditId = null; renderStaging(); renderParked(); }
+function saveStageDue(id, bucket, val) {
+  const arr = bucket === 'parked' ? (DATA.parked || []) : (DATA.staging || []);
+  const it = arr.find(x => x.id === id);
+  if (it) { it.due = val || ''; saveData(); }
+  stageDueEditId = null;
+  renderStaging(); renderParked(); renderOverdueAlert();
+}
+
+/* ── Deprioritized (parked) list ──────────────────────────────────────
+   One click out of staging, one click back. No confirmation dialogs; every
+   action here is reversible from the undo toast instead. */
+let parkedOpen = false;
+function toggleParked() {
+  parkedOpen = !parkedOpen;
+  const l = document.getElementById('parked-list'), h = document.getElementById('parked-head');
+  if (l) l.style.display = parkedOpen ? 'block' : 'none';
+  if (h) h.classList.toggle('open', parkedOpen);
+}
+function renderParked() {
+  const block = document.getElementById('parked-block');
+  const list = document.getElementById('parked-list');
+  const cnt = document.getElementById('parked-count');
+  if (!block || !list) return;
+  const items = DATA.parked || [];
+  block.style.display = items.length ? 'block' : 'none';
+  if (cnt) cnt.textContent = items.length ? items.length : '';
+  list.innerHTML = '';
+  if (!items.length) { parkedOpen = false; list.style.display = 'none';
+    const h = document.getElementById('parked-head'); if (h) h.classList.remove('open'); return; }
+  list.style.display = parkedOpen ? 'block' : 'none';
+  items.forEach(it => list.appendChild(parkedItem(it)));
+}
+function parkedItem(it) {
+  const el = document.createElement('div');
+  el.className = 'stage-item';
+  el.innerHTML =
+    '<div class="stage-body">' +
+      '<div class="act-text">' + esc(it.text) + (it.source ? '<span class="src-tag">' + esc(it.source) + '</span>' : '') + '</div>' +
+      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<span class="stage-assign">' +
+        '<button class="act-ctrl aA" title="Assign to A (must do)" onclick="assignParked(\'' + it.id + '\',\'A\')">A</button>' +
+        '<button class="act-ctrl aB" title="Assign to B (should do)" onclick="assignParked(\'' + it.id + '\',\'B\')">B</button>' +
+        '<button class="act-ctrl aC" title="Assign to C (nice to do)" onclick="assignParked(\'' + it.id + '\',\'C\')">C</button>' +
+      '</span>' +
+      '<button class="act-ctrl park" title="Move back to staging" onclick="unparkStaged(\'' + it.id + '\')">↑</button>' +
+      '<button class="act-ctrl danger" title="Discard (undo available)" onclick="removeParked(\'' + it.id + '\')">✕</button>' +
+      stageDueControl(it, 'parked') +
+    '</div>';
+  return el;
+}
+function parkStaged(id) {
+  const i = (DATA.staging || []).findIndex(x => x.id === id);
+  if (i < 0) return;
+  const it = DATA.staging[i];
+  DATA.staging.splice(i, 1);
+  (DATA.parked = DATA.parked || []).unshift(it);
+  saveData(); renderStaging(); renderParked();
+  showUndo('Deprioritized: ' + it.text, function () {
+    DATA.parked = (DATA.parked || []).filter(x => x.id !== it.id);
+    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
+    saveData(); renderStaging(); renderParked();
+  });
+}
+function unparkStaged(id) {
+  const i = (DATA.parked || []).findIndex(x => x.id === id);
+  if (i < 0) return;
+  const it = DATA.parked[i];
+  DATA.parked.splice(i, 1);
+  (DATA.staging = DATA.staging || []).unshift(it);
+  saveData(); renderStaging(); renderParked();
+  showUndo('Moved back to staging: ' + it.text, function () {
+    DATA.staging = (DATA.staging || []).filter(x => x.id !== it.id);
+    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
+    saveData(); renderStaging(); renderParked();
+  });
+}
+function assignParked(id, p) {
+  const i = (DATA.parked || []).findIndex(x => x.id === id);
+  if (i < 0) return;
+  const it = DATA.parked[i];
+  DATA.parked.splice(i, 1);
+  const nid = uid();
+  DATA.items.push({ id: nid, text: it.text, context: it.context || '', priority: p,
+    order: nextOrder(p), done: false, due: '', keyTask: false,
+    created: new Date().toISOString().slice(0, 10), completedDate: null });
+  saveData(); renderStaging(); renderParked(); renderActions();
+  showUndo('Moved to ' + p + ': ' + it.text, function () {
+    DATA.items = DATA.items.filter(x => x.id !== nid);
+    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
+    saveData(); renderStaging(); renderParked(); renderActions();
+  });
+}
+function removeParked(id) {
+  const i = (DATA.parked || []).findIndex(x => x.id === id);
+  if (i < 0) return;
+  const it = DATA.parked[i];
+  DATA.parked.splice(i, 1);
+  logDiscard(it, 'discarded from the deprioritized list');
+  saveData(); renderParked();
+  showUndo('Discarded: ' + it.text, function () {
+    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
+    DATA.log = (DATA.log || []).filter(l => l.itemId !== it.id);
+    saveData(); renderParked();
+  });
+}
+function logDiscard(it, note) {
+  (DATA.log = DATA.log || []).push({ id: uid(), itemId: it.id, text: it.text,
+    priority: '', due: '', action: 'deleted', at: new Date().toISOString(), note: note });
+}
+
+/* ── Overdue alert: everything past due or due today, wherever it lives ──
+   Scans prioritized items, staging, and the deprioritized list, so a deadline
+   cannot hide just because the item has not been sorted yet. */
+function renderOverdueAlert() {
+  const box = document.getElementById('overdue-alert');
+  if (!box) return;
+  const today = todayStr();
+  const hits = [];
+  (DATA.items || []).forEach(i => {
+    if (i.due && !i.done && i.due <= today) hits.push({ due: i.due, text: i.text, where: i.priority });
+  });
+  (DATA.staging || []).forEach(i => {
+    if (i.due && i.due <= today) hits.push({ due: i.due, text: i.text, where: 'staging' });
+  });
+  (DATA.parked || []).forEach(i => {
+    if (i.due && i.due <= today) hits.push({ due: i.due, text: i.text, where: 'deprioritized' });
+  });
+  if (!hits.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  hits.sort((a, b) => a.due < b.due ? -1 : a.due > b.due ? 1 : 0);
+  const od = hits.filter(h => h.due < today).length;
+  const td = hits.length - od;
+  const parts = [];
+  if (od) parts.push(od + ' overdue');
+  if (td) parts.push(td + ' due today');
+  box.innerHTML = '<div class="oa-title">' + parts.join(', ') + '</div><ul>' +
+    hits.map(function (h) {
+      const isToday = h.due === today;
+      return '<li><span class="oa-when' + (isToday ? ' today' : '') + '">' +
+        (isToday ? 'Today' : fmtDue(h.due)) + '</span> &nbsp;' + esc(h.text) +
+        '<span class="oa-where">' + esc(h.where) + '</span></li>';
+    }).join('') + '</ul>';
+  box.style.display = 'block';
+}
+
+/* ── Undo toast: replaces the yes/no confirmations ── */
+let undoTimer = null, undoFn = null;
+function showUndo(msg, fn) {
+  undoFn = fn;
+  let t = document.getElementById('undo-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'undo-toast'; t.className = 'undo-toast';
+    t.innerHTML = '<span class="ut-text"></span>' +
+      '<button onclick="doUndo()">Undo</button>' +
+      '<button onclick="hideUndo()" title="Dismiss">&#10005;</button>';
+    document.body.appendChild(t);
+  }
+  t.querySelector('.ut-text').textContent = msg;
+  t.classList.add('show');
+  if (undoTimer) clearTimeout(undoTimer);
+  undoTimer = setTimeout(hideUndo, 9000);
+}
+function hideUndo() {
+  const t = document.getElementById('undo-toast');
+  if (t) t.classList.remove('show');
+  if (undoTimer) { clearTimeout(undoTimer); undoTimer = null; }
+  undoFn = null;
+}
+function doUndo() { const f = undoFn; hideUndo(); if (f) f(); }
 function stageAddForm() {
   const el = document.createElement('div');
   el.className = 'act-addform';
@@ -2718,17 +2982,41 @@ function saveStageEdit(id) {
   editStageId = null; saveData(); renderStaging();
 }
 function stageEditKey(e, id) { if (e.key === 'Enter') saveStageEdit(id); else if (e.key === 'Escape') cancelStageEdit(); }
-function removeStaged(id) { confirmStageId = id; editStageId = null; addingStage = false; renderStaging(); }
+// One click, no confirmation. Reversible from the undo toast for 9 seconds.
+function removeStaged(id) {
+  const i = (DATA.staging || []).findIndex(x => x.id === id);
+  if (i < 0) return;
+  const it = DATA.staging[i];
+  DATA.staging.splice(i, 1);
+  logDiscard(it, 'discarded from staging');
+  confirmStageId = null; editStageId = null; addingStage = false;
+  saveData(); renderStaging();
+  showUndo('Discarded: ' + it.text, function () {
+    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
+    DATA.log = (DATA.log || []).filter(l => l.itemId !== it.id);
+    saveData(); renderStaging();
+  });
+}
 function cancelStageDel() { confirmStageId = null; renderStaging(); }
 function confirmStageRemove(id) {
   DATA.staging = DATA.staging.filter(x => x.id !== id);
   confirmStageId = null; saveData(); renderStaging();
 }
 function assignStaged(id, p) {
-  const it = DATA.staging.find(x => x.id === id); if (!it) return;
-  DATA.items.push({ id:uid(), text:it.text, context:it.context || '', priority:p, order:nextOrder(p), done:false, created:new Date().toISOString().slice(0,10), completedDate:null });
-  DATA.staging = DATA.staging.filter(x => x.id !== id);
-  saveData(); renderStaging(); renderActions();
+  const i = (DATA.staging || []).findIndex(x => x.id === id); if (i < 0) return;
+  const it = DATA.staging[i];
+  DATA.staging.splice(i, 1);
+  const nid = uid();
+  // Carry any deadline set in staging straight through to the prioritized item.
+  DATA.items.push({ id:nid, text:it.text, context:it.context || '', priority:p, order:nextOrder(p),
+    done:false, due:it.due || '', keyTask:false,
+    created:new Date().toISOString().slice(0,10), completedDate:null });
+  saveData(); renderStaging(); renderParked(); renderActions(); renderOverdueAlert();
+  showUndo('Moved to ' + p + ': ' + it.text, function () {
+    DATA.items = DATA.items.filter(x => x.id !== nid);
+    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
+    saveData(); renderStaging(); renderParked(); renderActions(); renderOverdueAlert();
+  });
 }
 
 // ── Assigned to others (delegation tracker) ──
@@ -3497,6 +3785,8 @@ importInbox();
   }
 })();
 renderStaging();
+renderParked();
+renderOverdueAlert();
 renderDelegated();
 renderLog();
 </script>
