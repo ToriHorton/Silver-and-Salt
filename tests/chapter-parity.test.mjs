@@ -244,6 +244,14 @@ describe("follower role", () => {
     expect(chapter.network.targets).toEqual([]);
   });
 
+  it("exposes only the approved leader read and shared-note lanes", () => {
+    expect(chapter.network.readers).toEqual([{
+      id: "built-not-found",
+      fields: { person: ["name"] },
+      sharedNotes: ["person"],
+    }]);
+  });
+
   it("declares person as the only receivable CRM type", () => {
     // A custom crm REPLACES Chapter's default; a leader may only send types
     // declared here. Adding a type is a deliberate contract change.

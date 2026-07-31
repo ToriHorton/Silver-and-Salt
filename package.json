@@ -21,7 +21,7 @@
   "dependencies": {
     "@odla-ai/auth-clerk": "^0.4.1",
     "@odla-ai/calendar": "^0.2.0",
-    "@odla-ai/chapter": "^0.26.0",
+    "@odla-ai/chapter": "^0.27.1",
     "@odla-ai/crm": "^0.5.0",
     "@odla-ai/db": "^0.9.1",
     "@odla-ai/email": "^0.3.1",
