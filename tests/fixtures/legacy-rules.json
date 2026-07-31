@@ -1,0 +1,92 @@
+{
+  "crm_record": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_record_origin": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_record_delivery": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_tag": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_link": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_activity": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_contact_channel": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_email_log": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_view": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "crm_config": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "applications": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "groups": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "meetings": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "emailLog": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  },
+  "superAdmins": {
+    "view": "false",
+    "create": "false",
+    "update": "false",
+    "delete": "false"
+  }
+}

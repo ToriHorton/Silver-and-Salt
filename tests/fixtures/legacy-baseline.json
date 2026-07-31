@@ -1,0 +1,221 @@
+{
+  "_comment": "Phase 0 frozen operating baseline for the @odla-ai/chapter adoption. This file is acceptance authority: Chapter's resolved behavior is compared against it, and a difference is a defect until a PM decision records it as intentional. Captured 2026-07-25 from the deployed dev worker and the checked-out tree, NOT from memory or git history.",
+
+  "freeze": {
+    "gitSha": "e2b55d6d7d2f55548123e6f64fda589a0e098379",
+    "gitBranch": "claude/silver-salt-website-setup-17047d",
+    "workerName": "silver-and-salt-capital-dev",
+    "activeVersionId": "acbf3b60-7ff7-42ae-b3bf-e4197516edd6",
+    "activeDeployedAt": "2026-07-25T16:50:09.800Z",
+    "devUrl": "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
+    "dbTenant": "silver-and-salt-capital--dev",
+    "snapshotMaxTx": 741,
+    "snapshotSha256": "f616ed1718f12374793878d898219d7355ecb0c6eb60fa36eafc7ec9e2ee4467",
+    "snapshotNote": "Snapshot held OUT of the repo (member PII). Re-take with: npx @odla-ai/cli app export --env dev --fresh"
+  },
+
+  "rowCounts": {
+    "_asOfTx": 741,
+    "applications": 36,
+    "groups": 1,
+    "meetings": 7,
+    "emailLog": 49,
+    "superAdmins": 2,
+    "$users": 37,
+    "crm_record": 36,
+    "crm_contact_channel": 43,
+    "crm_activity": 20,
+    "crm_config": 1,
+    "crm_tag": 1,
+    "crm_email_log": 1,
+    "crm_link": 0,
+    "crm_view": 0
+  },
+
+  "naturalKeys": {
+    "applications": "id (uuidv7, mirrored as a unique attr); email is indexed but NOT unique because a person may reapply",
+    "groups": "id (the literal app slug silver-and-salt-capital)",
+    "meetings": "id; applicationId is the relation carrier",
+    "emailLog": "id; dedupeKey is the caller-stable replay key",
+    "superAdmins": "id AND email, both unique, keyed by lowercased email",
+    "crm_record": "id; matched to applications by email"
+  },
+
+  "rules": {
+    "state": "deny-all on every one of the 13 namespaces",
+    "verified": "confirmed mechanically against the deployed rules meta in the snapshot",
+    "requirement": "Chapter must keep default-deny; any namespace Chapter widens is a defect"
+  },
+
+  "application": {
+    "required": ["firstName", "lastName", "email", "referral", "whoYouAre", "message"],
+    "optional": ["referralName", "linkedin", "phone", "state"],
+    "maxLen": {
+      "firstName": 200, "lastName": 200, "email": 320, "referral": 100,
+      "referralName": 200, "whoYouAre": 100, "linkedin": 500, "message": 5000,
+      "phone": 40, "state": 60
+    },
+    "bodyCap": 32768,
+    "focusArrayCap": 20,
+    "validateEmail": true,
+    "emailRegex": "^[^s@]+@[^s@]+\\.[^s@]+$",
+    "disclaimerAck": "legacy writes disclaimerAckAt when body.disclaimerAck === true, but does NOT reject a submit that omits it",
+    "profileProjection": ["phone", "state", "whoYouAre", "focus", "linkedin"],
+    "profileProjectionNote": "written to Clerk public_metadata.profile by ensureClerkAccount at submit time; the intro message stays db-only",
+    "submitIdempotency": "client submissionId becomes mutationId join:<id> for server-side exactly-once"
+  },
+
+  "pipeline": {
+    "stages": ["submitted", "paid_pending_vetting", "call_scheduled", "interviewed", "approved", "declined", "refunded"],
+    "initial": "submitted",
+    "bookableFrom": ["submitted", "paid_pending_vetting", "call_scheduled"],
+    "approvableFrom": ["paid_pending_vetting", "call_scheduled", "interviewed"],
+    "paidTransition": "the Stripe webhook flips submitted -> paid_pending_vetting; the webhook is the authoritative writer",
+    "refundedTransition": "charge.refunded webhook writes status refunded"
+  },
+
+  "auth": {
+    "source": "claim",
+    "claim": "role",
+    "ladder": ["provisional", "member", "admin"],
+    "claimOrigin": "Clerk publicMetadata.role; unknown or missing claim degrades to provisional",
+    "superAdmins": true,
+    "superAdminsNote": "read-only odla-db table; no worker route ever writes it, set only in odla Studio",
+    "audAzp": "n/a",
+    "audAzpNote": "CORRECTED 2026-07-26 per chapter-follower v7. The legacy verifier calls jwtVerify with { issuer } only and enforces neither aud nor azp. v7 is explicit: 'do not describe the absence of an aud or azp check as proof that authorization is complete' and 'record those cases as n/a, not as a security success'. An earlier report of this finding framed it as a clean parity/security result, which overstated it. The correct reading is narrow: because the reviewed existing policy does not enforce aud or azp, Chapter's issuer-only verification introduces NO REGRESSION, and there is no host verifier that must be preserved in front of Chapter. It says nothing about whether enforcing them would be better.",
+    "escalationGuard": "only super-admins may create or change an admin; self-demotion is blocked"
+  },
+
+  "operations": {
+    "onApprove": { "promoteTo": "member", "send": "onboardingInvite" },
+    "refund": {
+      "allowedFrom": ["submitted", "paid_pending_vetting", "call_scheduled", "interviewed", "declined"],
+      "blockedFrom": ["approved", "refunded"],
+      "blockedReason": "approved memberships are non-refundable per policy (409); already-refunded is 409",
+      "cancelSubscription": true,
+      "mechanism": "refund the earliest succeeded unrefunded charge, cancel the subscription; the status flip comes from the webhook"
+    }
+  },
+
+  "sends": {
+    "adminNotification": "payment",
+    "adminNotificationNote": "legacy fires adminNotification inside the Stripe webhook on first successful payment, NOT on submit",
+    "templates": ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite"],
+    "replayGuard": "emailLog.dedupeKey; a successful row means the mail went out"
+  },
+
+  "prices": {
+    "standardPriceCents": 100000,
+    "foundingDiscountCents": 10000,
+    "dueTodayCents": 90000,
+    "renews": "annually",
+    "stripePriceId": "price_1Ts7rW3sLwQtiao1DTAj0iS0",
+    "mode": "test",
+    "note": "the live Stripe Price is authoritative; provider-side amount/currency/interval equality is a cutover gate"
+  },
+
+  "scheduling": {
+    "slotMinutes": 45,
+    "days": [1, 2, 3, 4, 5],
+    "startHour": 9,
+    "endHour": 17,
+    "timezone": "America/Los_Angeles",
+    "source": "groups.schedulingJson; odla-db meetings is the source of truth, Google is the invite/Meet projection"
+  },
+
+  "emails": {
+    "notificationEmail": "cory.ondrejka+debug@gmail.com",
+    "replyTo": "cory.ondrejka+debug@gmail.com",
+    "debugEmail": "cory.ondrejka+debug@gmail.com",
+    "devFrom": "silver-and-salt-capital@odla.ai",
+    "prodFrom": "membership@silverandsaltcapital.com",
+    "transport": "Cloudflare Email Service via the SEND_EMAIL binding; falls back to log-only"
+  },
+
+  "clerk": {
+    "instance": "relieved-eft-93",
+    "publishableKey": "pk_test_cmVsaWV2ZWQtZWZ0LTkzLmNsZXJrLmFjY291bnRzLmRldiQ",
+    "issuer": "https://relieved-eft-93.clerk.accounts.dev",
+    "account": "create",
+    "accountNote": "ensureClerkAccount runs server-side at submit, so the legacy account model is create, NOT none"
+  },
+
+  "CONTAMINATION_NOTICE": {
+    "discovered": "2026-07-25, during the Phase 2 canary probe",
+    "what": "The deployed worker silver-and-salt-capital-dev is NOT running this branch's src/worker.ts. It serves Chapter built-ins (/api/config 200, /api/network/shared 401) and 404s legacy-only routes (/api/applications/count). It is a Chapter build deployed from another branch onto the SHARED dev tenant.",
+    "how it surfaced": "The canary returned 404 for /api/join-config where the dev worker returns 200. Root cause: this branch's legacy route is group-scoped (/api/groups/:id/join-config) and the flat path is Chapter's built-in name, so probing the deployment had taught the wrong route shape.",
+    "what is STILL VALID": "Everything derived from this branch's source (application fields and caps, pipeline stages and subsets, auth ladder, operations, sends trigger, account model) and everything read from the tenant DATABASE (schema, rules, row counts, group row). The tenant schema was independently verified to equal this branch's legacy source exactly, zero attribute differences, so the parity gate is sound rather than circular.",
+    "what was CORRECTED": "The route list below now comes from src/worker.ts in this tree, not from probing the deployment.",
+    "what REMAINS SUSPECT": "visualBaseline was measured against that other deployment's build. Public page geometry is likely unaffected (the HTML is the same static tree) but /join, /members/ and /admin/ may reflect the other branch's islands. Re-measure from a local build of THIS branch before using it for Phase 5 visual acceptance.",
+    "confirmed independently": "adminConsole three-workspace IA was re-verified against src/app/admin/index.jsx in this tree (TAB_LABELS dashboard/people/settings, with a source comment that billing/calendar/email/calls were folded in), so that observation holds on its own evidence."
+  },
+
+  "routes": {
+    "_source": "src/worker.ts in THIS branch, read from source",
+    "public": ["/api/health", "/api/auth/config", "/api/groups/:id/join-config", "/api/applications", "/api/schedule/slots", "/api/schedule/book", "/api/payments/subscription", "/api/webhooks/stripe"],
+    "authed": ["/api/me"],
+    "admin": [
+      "/api/admin/people", "/api/admin/people/access", "/api/admin/people/role",
+      "/api/admin/dashboard", "/api/admin/billing", "/api/admin/meetings",
+      "/api/admin/group/email", "/api/admin/group/scheduling",
+      "/api/admin/email/log", "/api/admin/email/test",
+      "/api/admin/crm/sync", "/api/admin/applications/:id/approve",
+      "/api/admin/applications/:id/refund", "/api/admin/applications/:id",
+      "/api/admin/meetings/:id/reschedule", "/api/admin/meetings/:id/cancel",
+      "/api/applications/count"
+    ],
+    "crm": "/api/crm/* mounted from @odla-ai/crm at basePath /api/crm",
+    "staticFallback": "unknown /api/* returns JSON 404; everything else falls through to the ASSETS binding",
+    "publicHtmlCount": 74
+  },
+
+  "visualBaseline": {
+    "capturedFrom": "deployed dev worker, iframe measurement harness",
+    "widths": [390, 768, 1280, 1440],
+    "horizontalOverflow": "none at any width on any measured route",
+    "bodyBg": { "public": "rgb(251, 248, 242)", "app": "rgb(238, 244, 234)" },
+    "fonts": { "body": "Satoshi", "display": "Cormorant Garamond" },
+    "h1FontSizePx": {
+      "/": { "390": 36, "768": 52, "1280": 56, "1440": 56 },
+      "/join": { "390": 30, "768": 38, "1280": 38, "1440": 38 },
+      "/members/": { "390": 30, "768": 38, "1280": 38, "1440": 38 },
+      "/admin/": { "390": 32, "768": 32, "1280": 32, "1440": 32 }
+    },
+    "joinFormInputs": 18,
+    "homepageLinks": 87,
+    "homepageImages": 9,
+    "titles": {
+      "/": "Silver & Salt Capital",
+      "/join": "Apply to Join | Silver & Salt Capital",
+      "/members/": "Members | Silver & Salt Capital",
+      "/admin/": "Admin | Silver & Salt Capital"
+    },
+    "clerkContainment": "confirmed rendering inside the site shell at 390 (email field + Continue + 'Secured by' + Development mode)",
+    "KNOWN_GAP": "The hidden-iframe harness did not mount the Clerk widget at 768/1280/1440, so the signed-OUT input/button counts on /members/ and /admin/ at those widths reflect the pre-Clerk shell only. Re-measure signed-out Clerk containment at those widths in a real viewport during Phase 5. This is a measurement limitation, not an observed layout defect.",
+    "authenticatedBaseline": {
+      "capturedAt": "2026-07-25, real viewport 1440x900, owner signed in as cory.ondrejka@gmail.com, role ADMIN",
+      "memberArea": {
+        "identityBlock": ["email", "ADMIN badge", "SIGN OUT", "ADMIN CONSOLE"],
+        "sections": ["TRAINING MATERIAL (3 items, all COMING SOON)", "UPCOMING EVENTS (placeholder copy)"]
+      },
+      "adminConsole": {
+        "topLevelWorkspaces": ["Dashboard", "People", "Settings"],
+        "nestedPageTabs": ["Overview", "Billing"],
+        "dashboardSections": ["Upcoming calls · America/Los_Angeles", "Pipeline"],
+        "statTiles": ["APPLICATIONS", "NEW MEMBERS"],
+        "statTileControls": ["1W", "1M", "3", "Daily", "Δ", "Σ"],
+        "overflow": false,
+        "tableCount": 0
+      },
+      "CORRECTION": "An earlier reading of the src/app/admin/*.jsx file list suggested an eight-tab admin. The deployed console is actually already three top-level workspaces (Dashboard, People, Settings) with operational detail in nested page tabs. That is the same information architecture ChapterAdmin defaults to in chapter mode, so adopting the packaged console is close to an IA no-op rather than a restructure.",
+      "unauthenticatedApiGate": "an /api/me fetch without the Clerk bearer token returns 401 {\"authorized\":false} while the page itself renders, confirming the gate is server-side"
+    },
+    "regenerationNote": "The public pages and app islands are static files in git, so the true 'before' is recoverable by checking out gitSha above and rebuilding. That is the authoritative before-record; these numbers are the fast comparison.",
+    "TOOLING_CAVEAT": "Owner-confirmed 2026-07-25: the Claude Code in-app browser pane renders these pages at a wrong height (content occupies only the upper portion of the stated viewport, and the dark header band clips short of the full width). The same pages are correct in real Chrome. Screenshots taken through that pane are therefore NOT authoritative for vertical geometry or visual acceptance, and an apparent height/banding difference there must not be filed as a visual regression. Use the measured numbers in this fixture (scrollWidth, computed font sizes, element boxes), which come from the page's own layout and were not affected, or verify in a real browser."
+  },
+
+  "privacyHazard": {
+    "note": "dashboard.html, ecosystem.html, granola-inbox.js, newsletter-data.js, network/people*.js are gitignored local CEO tools present in the working tree",
+    "requirement": "the build copies git-tracked files only (git ls-files), never a recursive directory copy; Chapter adoption must not change this"
+  }
+}
