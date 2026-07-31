@@ -244,6 +244,16 @@ describe("follower role", () => {
     expect(chapter.network.targets).toEqual([]);
   });
 
+  it("shares only member names with Built Not Found", () => {
+    expect(chapter.network.readers).toEqual([
+      {
+        id: "built-not-found",
+        fields: { person: ["name"] },
+        sharedNotes: [],
+      },
+    ]);
+  });
+
   it("declares person as the only receivable CRM type", () => {
     // A custom crm REPLACES Chapter's default; a leader may only send types
     // declared here. Adding a type is a deliberate contract change.

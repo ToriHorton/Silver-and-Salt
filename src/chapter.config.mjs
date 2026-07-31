@@ -8,10 +8,10 @@
 // silently move the site.
 //
 // Network role: Silver & Salt Capital is a FOLLOWER on its first edge (owner
-// decision 2026-07-25). A follower needs no `network` block: it receives on
-// POST /api/network/shared and authenticates with the vaulted
-// `network_share_secret`. `network.targets` stays absent because this site
-// leads no edge yet.
+// decision 2026-07-25). It leads no outbound edge, but explicitly authorizes
+// Built Not Found to browse the bounded member-name projection below. Both
+// browse and inbound push requests authenticate with the vaulted
+// `network_share_secret`; its value never lives in source.
 
 import { defineChapter } from "@odla-ai/chapter";
 import { crm } from "./crm.mjs";
@@ -38,6 +38,15 @@ export const chapter = defineChapter({
   // needs to send companies, a `company` type must be added here first or the
   // payload is rejected before any CRM write.
   crm,
+
+  network: {
+    readers: [
+      {
+        id: "built-not-found",
+        fields: { person: ["name"] },
+      },
+    ],
+  },
 
   services: ["db", "calendar"],
 
