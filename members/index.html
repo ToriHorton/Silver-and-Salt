@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Members | Silver & Salt Capital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
+       always render in Cormorant Infant wherever Cormorant Garamond is
+       requested. Standalone pages must carry this block themselves. */
+    @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 300; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+    @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+    @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+    @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 700; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyPU44g9vKiM1sORYSiWeAsLN997_cV2RkDTq8.woff2) format('woff2'); unicode-range: U+0030-0039; }
+    @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 300; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyJU44g9vKiM1sORYSiWeAsLN997_Il2xMEbK0UPg.woff2) format('woff2'); unicode-range: U+0030-0039; }
+    @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyJU44g9vKiM1sORYSiWeAsLN997_Il2xMEbK0UPg.woff2) format('woff2'); unicode-range: U+0030-0039; }
+    @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/cormorantinfant/v22/HhyJU44g9vKiM1sORYSiWeAsLN997_Il2xMEbK0UPg.woff2) format('woff2'); unicode-range: U+0030-0039; }
+
+    /* Styling follows join.html (the design reference): moss hero, white
+       cards on the soft green field, lime primary actions. */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
+
+    :root {
+      --cream:      #FBF8F2;
+      --moss:       #2F3E34;
+      --moss-light: #4A5E50;
+      --sage:       #7E8E84;
+      --lime:       #7CB83F;
+      --lime-dark:  #6aa535;
+      --lime-soft:  rgba(124, 184, 63, 0.12);
+      --border:     #d6e8d2;
+      --bg:         #eef4ea;
+    }
+
+    body {
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--moss);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 80px;
+    }
+
+    .container { width: 100%; max-width: 520px; padding: 0 20px; }
+
+    /* ── Hero ── */
+    .hero {
+      width: 100%;
+      max-width: 100vw;
+      background: var(--moss);
+      text-align: center;
+      padding: 88px 40px 72px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, var(--lime) 50%, transparent 100%);
+    }
+    .hero-inner { max-width: 480px; margin: 0 auto; }
+
+    .back-link {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-family: 'Satoshi', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--cream); }
+
+    .wordmark {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+      margin-bottom: 28px;
+    }
+    .brand-amp { font-family: 'Cormorant Garamond', Georgia, serif; font-style: normal; }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 38px;
+      font-weight: 300;
+      font-style: italic;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .hero-rule {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      max-width: 200px;
+    }
+    .hero-rule::before, .hero-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+    .hero-diamond {
+      width: 5px; height: 5px;
+      background: var(--lime);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .hero p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      margin-bottom: 22px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--lime);
+      border: 1px solid rgba(124,184,63,0.35);
+      border-radius: 100px;
+      padding: 5px 16px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px;
+      overflow: visible;
+      margin-bottom: 24px;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 24px;
+    }
+
+    @keyframes ssc-spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--lime);
+      border-radius: 50%;
+      animation: ssc-spin 0.7s linear infinite;
+      vertical-align: -3px;
+      margin-right: 8px;
+    }
+    .auth-status {
+      font-size: 14px;
+      color: var(--sage);
+      text-align: center;
+      padding: 24px 0;
+      line-height: 1.8;
+    }
+
+    /* Clerk renders its own card here; keep overflow visible. */
+    #signin-mount {
+      display: flex;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    /* ── Signed-in chrome ── */
+    .member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .member-email { font-size: 15px; font-weight: 500; color: var(--moss); }
+
+    .role-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 5px 16px;
+    }
+    .role-badge.provisional { color: var(--sage); background: #eef2ec; border: 1px solid #dde5da; }
+    .role-badge.member      { color: #fff; background: var(--lime); }
+    .role-badge.admin       { color: var(--cream); background: var(--moss); }
+
+    .account-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .signout-btn {
+      background: none;
+      border: none;
+      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .signout-btn:hover { color: var(--moss); text-decoration: underline; }
+
+    .admin-console-link {
+      display: inline-block;
+      background: var(--moss);
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      padding: 10px 18px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .admin-console-link:hover { background: var(--moss-light); }
+
+    /* ── Provisional view ── */
+    .meeting-block {
+      text-align: center;
+      background: var(--lime-soft);
+      border-radius: 8px;
+      padding: 28px 24px;
+      margin-bottom: 4px;
+    }
+    .meeting-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--lime-dark);
+      margin-bottom: 10px;
+    }
+    .meeting-date {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 1.25;
+      color: var(--moss);
+    }
+    .meeting-note {
+      font-size: 14px;
+      color: var(--moss-light);
+      line-height: 1.8;
+      margin-top: 12px;
+    }
+    /* ── In-page reschedule picker (member self-service) ── */
+    .msched { text-align: left; margin-top: 18px; }
+    .msched-days { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border, #d6e8d2); }
+    .msched-day { border: 1px solid var(--border, #d6e8d2); background: #fff; border-radius: 8px; padding: 8px 12px; font: inherit; font-size: 13px; font-weight: 600; color: var(--moss); cursor: pointer; white-space: nowrap; }
+    .msched-day[aria-pressed="true"] { background: var(--moss); color: var(--cream, #FBF8F2); border-color: var(--moss); }
+    .msched-times { display: flex; flex-wrap: wrap; gap: 6px; }
+    .msched-time { border: 1px solid var(--border, #d6e8d2); background: #fff; border-radius: 8px; padding: 8px 12px; font: inherit; font-size: 13px; color: var(--moss); cursor: pointer; }
+    .msched-time:hover { border-color: var(--lime); }
+    .apply-link {
+      display: inline-block;
+      background-color: var(--lime);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      padding: 14px 30px;
+      text-decoration: none;
+      margin-top: 14px;
+      transition: background-color 0.2s;
+    }
+    .apply-link:hover { background-color: var(--lime-dark); }
+
+    /* ── Member view ── */
+    .section-list { list-style: none; }
+    .section-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      color: var(--moss-light);
+      line-height: 1.6;
+    }
+    .section-list li:last-child { border-bottom: none; }
+    .section-list .item-mark { color: var(--lime); flex-shrink: 0; }
+    .section-list .soon {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .empty-note { font-size: 14px; color: var(--sage); line-height: 1.8; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 480px) {
+      .hero { padding: 64px 24px 52px; }
+      .hero h1 { font-size: 30px; }
+      .back-link { position: static; display: block; text-align: left; margin-bottom: 24px; }
+      .card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <a href="/" class="back-link">← Return to site</a>
+    <div class="hero-inner">
+      <div class="wordmark">Silver <span class="brand-amp">&amp;</span> Salt Capital</div>
+      <h1 id="hero-title">Member Sign In</h1>
+      <div class="hero-rule"><div class="hero-diamond"></div></div>
+      <p id="hero-sub">Welcome back. Sign in to reach your member area.</p>
+      <span class="tag">Members Only</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="card" id="status-card">
+      <div class="card-label">Members</div>
+      <div class="auth-status" id="auth-loading"><span class="spinner"></span> Preparing sign in…</div>
+    </div>
+
+    <div id="signin-mount" class="hidden"></div>
+
+    <!-- The signed-in view renders here (src/app/members.jsx, Preact via
+         the Vite build); markup and classes match the previous inline
+         version so the CSS above applies unchanged. -->
+    <div id="members-root"></div>
+
+  </div>
+
+  <script src="/assets/member-auth.js?v=4"></script>
+  <script type="module" src="/assets/app/members.js?v=3"></script>
+</body>
+</html>

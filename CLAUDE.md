@@ -20,6 +20,16 @@ When writing anything related to the company (copy, HTML, alt text, commit messa
 
 ---
 
+## odla Migration (branch `odla-conversion-test` only)
+
+A phased test migration to odla.ai/Cloudflare is in progress on the branch
+`odla-conversion-test`. Durable state lives in `MIGRATION.md` at the repo
+root; the runbook is `.agents/skills/odla-migrate/SKILL.md`. Read
+`MIGRATION.md` before touching migration work. Production (GitHub Pages on
+`main`) stays untouched until Phase 5 sign-off.
+
+---
+
 ## Project State (last updated 2026-04-11)
 
 ### Website
@@ -38,9 +48,10 @@ When writing anything related to the company (copy, HTML, alt text, commit messa
 - **Step 1:** Form captures name, email, org, referral, focus areas, intro message
 - **Step 2:** Google Calendar Appointments iframe for scheduling a 30-min intro call
 - **Step 3:** Confirmation screen with Ivy Baker Priest quote and sepia photo
-- **Backend:** Google Apps Script Web App (see `FORM-SETUP.md` for details)
-  - Writes rows to Google Sheet "Silver & Salt Capital — Applications"
-  - Sends notification to tori@silverandsaltcapital.com + confirmation to applicant
+- **Backend:** the odla worker (`POST /api/applications` into odla-db). The
+  former Google Apps Script backend (Sheet + Gmail sends; was FORM-SETUP.md
+  and membership-form-script.gs) was retired on this branch 2026-07-13;
+  transactional email comes from the worker's @odla-ai/email pipeline.
 - **Styling:** Treatment E — sage left panel, lime right panel, cream wordmark
 - **Voice:** Approachable and premium — "A few questions, followed by a brief conversation."
 

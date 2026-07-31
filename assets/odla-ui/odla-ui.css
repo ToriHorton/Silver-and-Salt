@@ -1,0 +1,3861 @@
+/* odla-ui.css — GENERATED from index.css by scripts/gen-css.mjs; do not edit.
+   Flattened (no @imports) so it can be copied/served as a single file. */
+
+/* ══════════════════════════════════════════════════════════════
+   @odla-ai/ui — token defaults
+   Every block is wrapped in :where() so it has ZERO specificity:
+   a theme's plain `:root { … }` definitions always win, regardless
+   of stylesheet load order. Without a theme, these neutral values
+   (grayscale + restrained blue) render sanely on their own.
+   Contract data lives in js/tokens.js; themes map their palettes
+   onto the required tier in themes/<name>/ui.css.
+   ══════════════════════════════════════════════════════════════ */
+
+:where(:root) {
+  /* ─── Required tier: neutral fallbacks (themes override all of these) ─── */
+  --ui-bg: #f7f7f5;
+  --ui-surface: #ffffff;
+  --ui-surface-2: #efefec;
+  --ui-text: #24272b;
+  --ui-text-muted: #64686e;
+  --ui-text-faint: #9b9fa6;
+  --ui-border: #dfe0dc;
+  --ui-border-strong: #b9bbb5;
+  --ui-accent: #3b5e8c;
+  --ui-accent-strong: #2e4a70;
+  --ui-accent-soft: rgba(59, 94, 140, 0.1);
+  --ui-on-accent: #ffffff;
+  --ui-good: #4a7c59;
+  --ui-good-soft: rgba(74, 124, 89, 0.12);
+  --ui-warn: #a07d2e;
+  --ui-warn-soft: rgba(160, 125, 46, 0.12);
+  --ui-danger: #a8433a;
+  --ui-danger-soft: rgba(168, 67, 58, 0.1);
+  --ui-code-bg: #efefec;
+  --ui-code-text: #33363b;
+  --ui-shadow: 0 1px 2px rgba(36, 39, 43, 0.04), 0 8px 24px rgba(36, 39, 43, 0.06);
+  --ui-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ui-font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --ui-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ui-font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* ─── Defaulted tier: universal scales ─── */
+  /* Accent family extensions (derived; themes with richer palettes override).
+     accent-2 collapses onto the single accent unless a theme separates them. */
+  --ui-accent-glow: color-mix(in srgb, var(--ui-accent) 16%, transparent);
+  --ui-accent-2: var(--ui-accent);
+  --ui-accent-2-soft: color-mix(in srgb, var(--ui-accent-2) 10%, transparent);
+  --ui-highlight: var(--ui-accent-strong);
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 24px;
+  --ui-space-6: 32px;
+  --ui-space-7: 48px;
+  --ui-space-8: 64px;
+  --ui-space-9: 80px;
+  --ui-space-10: 96px;
+  --ui-space-11: 120px;
+  --ui-radius-sm: 4px;
+  --ui-radius-md: 7px;
+  --ui-radius-lg: 10px;
+  --ui-radius-pill: 999px;
+  --ui-text-xs: 11px;
+  --ui-text-sm: 12px;
+  --ui-text-md: 13px;
+  --ui-text-lg: 15px;
+  /* Marketing body scale — app UI text stays on xs..lg. */
+  --ui-text-xl: 17px;
+  --ui-text-2xl: 19px;
+  --ui-text-3xl: 20px;
+  --ui-text-4xl: 22px;
+  --ui-tracking-caps: 0.06em;
+  --ui-tracking-tight: -0.03em;
+  --ui-tracking-snug: -0.02em;
+  --ui-tracking-wide: 0.02em;
+  --ui-tracking-widest: 0.14em;
+  --ui-tracking-ultra: 0.22em;
+  --ui-leading-none: 1;
+  --ui-leading-tight: 1.1;
+  --ui-leading-snug: 1.3;
+  --ui-leading-normal: 1.55;
+  --ui-leading-relaxed: 1.7;
+  --ui-leading-loose: 1.8;
+  --ui-focus: 0 0 0 3px var(--ui-accent-soft);
+  /* Elevated tier for hero-scale panels; derives from --ui-shadow so every
+     theme gets a sane value, and themes may override for deeper lift. */
+  --ui-shadow-strong: var(--ui-shadow);
+  --ui-rail-width: 64px;
+  --ui-sidebar-width: 240px;
+  --ui-bottom-bar-height: 42px;
+  --ui-dock-card-width: 320px;
+  --ui-layer-chrome: 50;
+  --ui-layer-dock: 80;
+  --ui-layer-toast: 110;
+  --ui-layer-overlay: 1000;
+
+  /* ─── Chart roles (derived; themes may override for richer palettes) ─── */
+  --ui-chart-1: var(--ui-accent);
+  --ui-chart-2: var(--ui-good);
+  --ui-chart-3: var(--ui-warn);
+  --ui-chart-4: var(--ui-danger);
+  --ui-chart-5: color-mix(in srgb, var(--ui-accent) 45%, var(--ui-text));
+  --ui-chart-6: var(--ui-text-faint);
+  --ui-chart-grid: color-mix(in srgb, var(--ui-text) 8%, transparent);
+  --ui-chart-grid-zero: color-mix(in srgb, var(--ui-text) 22%, transparent);
+  --ui-chart-axis: var(--ui-text-muted);
+  --ui-chart-axis-faint: var(--ui-text-faint);
+  --ui-chart-band: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+  --ui-chart-band-strong: color-mix(in srgb, var(--ui-accent) 22%, transparent);
+  --ui-chart-pos: var(--ui-good);
+  --ui-chart-neg: var(--ui-danger);
+  /* Tooltips are themed popovers, not inverted/code surfaces. Keeping these
+     on the semantic surface/text pair preserves contrast across every palette
+     and lets the component border + shadow provide separation from the plot. */
+  --ui-chart-tip-bg: var(--ui-surface);
+  --ui-chart-tip-text: var(--ui-text);
+  --ui-chart-dot-stroke: var(--ui-bg);
+  /* Temporal/geo viz roles (maps, flow arcs, activity glow, heat ramp).
+     Intensity is expressed with globalAlpha/blur at draw time, never by
+     interpolating these colors — values may be unresolved color-mix(). */
+  --ui-chart-geo-fill: color-mix(in srgb, var(--ui-text) 7%, transparent);
+  --ui-chart-geo-line: var(--ui-border);
+  --ui-chart-flow: var(--ui-accent);
+  --ui-chart-glow: var(--ui-accent-strong);
+  --ui-chart-heat-lo: var(--ui-good);
+  --ui-chart-heat-mid: var(--ui-warn);
+  --ui-chart-heat-hi: var(--ui-danger);
+
+  /* ─── Chat roles (derived) ─── */
+  --ui-chat-user-bg: var(--ui-accent-soft);
+  --ui-chat-user-text: var(--ui-text);
+  --ui-chat-assistant-bg: var(--ui-surface);
+  --ui-chat-thinking-bg: var(--ui-surface-2);
+  --ui-chat-thinking-text: var(--ui-text-muted);
+  --ui-chat-tool-accent: var(--ui-accent);
+
+  /* ─── Marketing roles: display type, section rhythm, decor hooks ───
+     Decor defaults are inert (no grain, empty watermark) — a theme opts in
+     with literals in its ui.css (see themes/salt). */
+  --ui-display-h6: clamp(20px, 2.8vw, 28px);
+  --ui-display-h5: clamp(22px, 3vw, 32px);
+  --ui-display-h4: clamp(26px, 3.5vw, 36px);
+  --ui-display-h3: clamp(28px, 4vw, 42px);
+  --ui-display-h2: clamp(36px, 5.5vw, 56px);
+  --ui-display-h1: clamp(48px, 7vw, 72px);
+  --ui-display-xl: clamp(52px, 8vw, 108px);
+  --ui-section-pad-y: var(--ui-space-10);
+  --ui-section-pad-x: var(--ui-space-7);
+  --ui-content-width: 1100px;
+  --ui-content-narrow: 620px;
+  --ui-grain: none;
+  --ui-watermark-glyph: "";
+  --ui-watermark-ink: color-mix(in srgb, var(--ui-text) 4%, transparent);
+  --ui-nav-veil: color-mix(in srgb, var(--ui-bg) 92%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Scoped accent swap — [data-ui-accent="<name>"]
+   Custom properties substitute var() at computed-value time ON THE
+   DECLARING ELEMENT, so a scope that re-points --ui-accent must also
+   re-declare every derived default that composes it — otherwise those
+   composites keep the :root-computed values. Each declaration below is
+   byte-identical to its :where(:root) twin (test-enforced) so the two
+   can never drift. Themes ship the variant values themselves as plain
+   [data-ui-accent="<name>"] blocks in ui.css (specificity 0,1,0 beats
+   these zero-specificity re-derivations regardless of load order).
+   ══════════════════════════════════════════════════════════════ */
+:where([data-ui-accent]) {
+  --ui-accent-glow: color-mix(in srgb, var(--ui-accent) 16%, transparent);
+  --ui-accent-2: var(--ui-accent);
+  --ui-accent-2-soft: color-mix(in srgb, var(--ui-accent-2) 10%, transparent);
+  --ui-highlight: var(--ui-accent-strong);
+  --ui-focus: 0 0 0 3px var(--ui-accent-soft);
+  --ui-chart-1: var(--ui-accent);
+  --ui-chart-5: color-mix(in srgb, var(--ui-accent) 45%, var(--ui-text));
+  --ui-chart-band: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+  --ui-chart-band-strong: color-mix(in srgb, var(--ui-accent) 22%, transparent);
+  --ui-chart-flow: var(--ui-accent);
+  --ui-chart-glow: var(--ui-accent-strong);
+  --ui-chat-user-bg: var(--ui-accent-soft);
+  --ui-chat-tool-accent: var(--ui-accent);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Inverted island — .ui-invert
+   The subtree renders in the dark palette regardless of the global
+   mode (inside global dark it is a no-op). Same substitution rule as
+   above: the island must re-declare the dark values AND every
+   var()-composing derived default so composites recompute against the
+   island's palette on the island element. The neutral values mirror
+   :where([data-theme="dark"]) byte-for-byte (test-enforced); themes
+   layer their own palettes via the generated themes/<name>/invert.css.
+   ══════════════════════════════════════════════════════════════ */
+:where(.ui-invert) {
+  color-scheme: dark;
+  --ui-bg: #17181b;
+  --ui-surface: #1f2125;
+  --ui-surface-2: #26282d;
+  --ui-text: #e6e6e3;
+  --ui-text-muted: #a2a6ad;
+  --ui-text-faint: #6f737a;
+  --ui-border: #33363c;
+  --ui-border-strong: #4a4e56;
+  --ui-accent: #7ba1d4;
+  --ui-accent-strong: #97b7e2;
+  --ui-accent-soft: rgba(123, 161, 212, 0.14);
+  --ui-on-accent: #14161a;
+  --ui-good: #7fae8e;
+  --ui-good-soft: rgba(127, 174, 142, 0.14);
+  --ui-warn: #c5a75e;
+  --ui-warn-soft: rgba(197, 167, 94, 0.14);
+  --ui-danger: #cf7a72;
+  --ui-danger-soft: rgba(207, 122, 114, 0.14);
+  --ui-code-bg: #26282d;
+  --ui-code-text: #d4d5d2;
+  --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --ui-accent-glow: color-mix(in srgb, var(--ui-accent) 16%, transparent);
+  --ui-accent-2: var(--ui-accent);
+  --ui-accent-2-soft: color-mix(in srgb, var(--ui-accent-2) 10%, transparent);
+  --ui-highlight: var(--ui-accent-strong);
+  --ui-focus: 0 0 0 3px var(--ui-accent-soft);
+  --ui-shadow-strong: var(--ui-shadow);
+  --ui-chart-1: var(--ui-accent);
+  --ui-chart-2: var(--ui-good);
+  --ui-chart-3: var(--ui-warn);
+  --ui-chart-4: var(--ui-danger);
+  --ui-chart-5: color-mix(in srgb, var(--ui-accent) 45%, var(--ui-text));
+  --ui-chart-6: var(--ui-text-faint);
+  --ui-chart-grid: color-mix(in srgb, var(--ui-text) 8%, transparent);
+  --ui-chart-grid-zero: color-mix(in srgb, var(--ui-text) 22%, transparent);
+  --ui-chart-axis: var(--ui-text-muted);
+  --ui-chart-axis-faint: var(--ui-text-faint);
+  --ui-chart-band: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+  --ui-chart-band-strong: color-mix(in srgb, var(--ui-accent) 22%, transparent);
+  --ui-chart-pos: var(--ui-good);
+  --ui-chart-neg: var(--ui-danger);
+  --ui-chart-tip-bg: var(--ui-surface);
+  --ui-chart-tip-text: var(--ui-text);
+  --ui-chart-dot-stroke: var(--ui-bg);
+  --ui-chart-geo-fill: color-mix(in srgb, var(--ui-text) 7%, transparent);
+  --ui-chart-geo-line: var(--ui-border);
+  --ui-chart-flow: var(--ui-accent);
+  --ui-chart-glow: var(--ui-accent-strong);
+  --ui-chart-heat-lo: var(--ui-good);
+  --ui-chart-heat-mid: var(--ui-warn);
+  --ui-chart-heat-hi: var(--ui-danger);
+  --ui-chat-user-bg: var(--ui-accent-soft);
+  --ui-chat-user-text: var(--ui-text);
+  --ui-chat-assistant-bg: var(--ui-surface);
+  --ui-chat-thinking-bg: var(--ui-surface-2);
+  --ui-chat-thinking-text: var(--ui-text-muted);
+  --ui-chat-tool-accent: var(--ui-accent);
+  --ui-section-pad-y: var(--ui-space-10);
+  --ui-section-pad-x: var(--ui-space-7);
+  --ui-watermark-ink: color-mix(in srgb, var(--ui-text) 4%, transparent);
+  --ui-nav-veil: color-mix(in srgb, var(--ui-bg) 92%, transparent);
+}
+
+/* Neutral dark fallbacks — only the required tier changes; the derived
+   tiers track it automatically via var()/color-mix(). Themes that define
+   their own dark palettes override these the same zero-specificity way. */
+:where([data-theme="dark"]) {
+  --ui-bg: #17181b;
+  --ui-surface: #1f2125;
+  --ui-surface-2: #26282d;
+  --ui-text: #e6e6e3;
+  --ui-text-muted: #a2a6ad;
+  --ui-text-faint: #6f737a;
+  --ui-border: #33363c;
+  --ui-border-strong: #4a4e56;
+  --ui-accent: #7ba1d4;
+  --ui-accent-strong: #97b7e2;
+  --ui-accent-soft: rgba(123, 161, 212, 0.14);
+  --ui-on-accent: #14161a;
+  --ui-good: #7fae8e;
+  --ui-good-soft: rgba(127, 174, 142, 0.14);
+  --ui-warn: #c5a75e;
+  --ui-warn-soft: rgba(197, 167, 94, 0.14);
+  --ui-danger: #cf7a72;
+  --ui-danger-soft: rgba(207, 122, 114, 0.14);
+  --ui-code-bg: #26282d;
+  --ui-code-text: #d4d5d2;
+  --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:root:not([data-theme="light"])) {
+    --ui-bg: #17181b;
+    --ui-surface: #1f2125;
+    --ui-surface-2: #26282d;
+    --ui-text: #e6e6e3;
+    --ui-text-muted: #a2a6ad;
+    --ui-text-faint: #6f737a;
+    --ui-border: #33363c;
+    --ui-border-strong: #4a4e56;
+    --ui-accent: #7ba1d4;
+    --ui-accent-strong: #97b7e2;
+    --ui-accent-soft: rgba(123, 161, 212, 0.14);
+    --ui-on-accent: #14161a;
+    --ui-good: #7fae8e;
+    --ui-good-soft: rgba(127, 174, 142, 0.14);
+    --ui-warn: #c5a75e;
+    --ui-warn-soft: rgba(197, 167, 94, 0.14);
+    --ui-danger: #cf7a72;
+    --ui-danger-soft: rgba(207, 122, 114, 0.14);
+    --ui-code-bg: #26282d;
+    --ui-code-text: #d4d5d2;
+    --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* @odla-ai/ui — buttons & controls
+   Class-scoped by design: no bare-element rules, so these sheets coexist
+   with themes (e.g. blog themes) that style bare elements themselves.
+   `.btn` alone renders the primary variant; modifiers chain (.btn.ghost). */
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
+  border: 0;
+  padding: 7px 13px;
+  border-radius: var(--ui-radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.btn:hover { background: var(--ui-accent-strong); }
+.btn:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+
+.btn.secondary {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+}
+.btn.secondary:hover { background: var(--ui-surface-2); }
+
+.btn.ghost {
+  background: transparent;
+  color: var(--ui-accent);
+  border: 0;
+}
+.btn.ghost:hover { background: var(--ui-accent-soft); }
+
+.btn.danger { background: var(--ui-danger); color: var(--ui-on-accent); }
+.btn.danger:hover { background: color-mix(in srgb, var(--ui-danger) 82%, var(--ui-text)); }
+
+.btn.mini { padding: 3px 9px; font-size: var(--ui-text-sm); }
+
+/* Marketing modifiers (Silver & Salt lineage). `.lg` scales a CTA up;
+   `.lift` adds the hover rise + accent glow; `.outline` and `.underline`
+   are the marketing secondary/tertiary looks (`.ghost` above is the app
+   tertiary and unchanged). Compose freely: .btn.lg.lift */
+.btn.lg {
+  font-weight: 700;
+  font-size: var(--ui-text-md);
+  letter-spacing: var(--ui-tracking-wide);
+  padding: var(--ui-space-4) var(--ui-space-7);
+  border-radius: var(--ui-radius-sm);
+}
+.btn.lift { transition: all 0.25s ease; }
+.btn.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px var(--ui-accent-glow);
+}
+.btn.outline {
+  background: transparent;
+  color: var(--ui-text);
+  border: 1.5px solid var(--ui-border);
+}
+.btn.outline:hover {
+  background: transparent;
+  border-color: var(--ui-accent);
+  color: var(--ui-accent);
+}
+.btn.underline {
+  background: none;
+  color: var(--ui-accent);
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ui-accent) 30%, transparent);
+  border-radius: 0;
+  padding: 0 0 2px;
+  font-size: var(--ui-text-md);
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+}
+.btn.underline:hover { background: none; border-bottom-color: var(--ui-accent); color: var(--ui-accent); }
+
+/* Segmented control: a strip of buttons, one active (.on). */
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  overflow: hidden;
+}
+.seg button {
+  font: inherit;
+  font-size: var(--ui-text-md);
+  background: transparent;
+  color: var(--ui-text-muted);
+  border: 0;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.seg button + button { border-left: 1px solid var(--ui-border); }
+.seg button:hover { color: var(--ui-text); }
+.seg button.on,
+.seg button[aria-pressed="true"] {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-strong);
+  font-weight: 600;
+}
+
+/* Status/metadata pill: quiet, mono, rounded. */
+.pill {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  padding: 3px 9px;
+  border-radius: var(--ui-radius-pill);
+  color: var(--ui-text-muted);
+}
+
+/* Interactive chip (link chips, removable filters). */
+.chip {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  padding: 2px 7px;
+  margin: 1px 3px 1px 0;
+  border-radius: 6px;
+  background: var(--ui-accent-soft);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-accent-strong);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--ui-accent); }
+
+/* Filter chip group (FilterChips component): toggle buttons carrying
+   aria-pressed, optional trailing counts. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  align-items: center;
+}
+.chips .chip {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  padding: 4px 12px;
+  margin: 0;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-surface);
+  color: var(--ui-text-muted);
+}
+.chips .chip:hover { color: var(--ui-text); border-color: var(--ui-border-strong); }
+.chips .chip[aria-pressed="true"] {
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+  color: var(--ui-on-accent);
+}
+.chips .chip:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.chip-count {
+  font-weight: 400;
+  opacity: 0.7;
+  margin-left: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* @odla-ai/ui — accessible in-content tabs. */
+
+.tabs-root { min-width: 0; container-type: inline-size; }
+.tabs {
+  display: flex;
+  gap: var(--ui-space-4);
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border-bottom: 1px solid var(--ui-border);
+  scrollbar-width: thin;
+}
+.tabs > button {
+  flex: 0 0 auto;
+  margin-bottom: -1px;
+  padding: 8px 2px;
+  font: inherit;
+  font-size: var(--ui-text-md);
+  color: var(--ui-text-muted);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+.tabs > button:hover { color: var(--ui-text); }
+.tabs > button:focus-visible { outline: none; box-shadow: var(--ui-focus); border-radius: var(--ui-radius-sm); }
+.tabs > button:disabled { cursor: default; opacity: 0.45; }
+/* Trailing slot: panel-scoped filters/actions aligned to the strip's end,
+   outside the tablist's tab semantics. */
+.tabs .tabs-trailing {
+  display: flex;
+  gap: var(--ui-space-1);
+  align-items: center;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+.tabs > button.on,
+.tabs > button[aria-selected="true"] {
+  color: var(--ui-text);
+  border-bottom-color: var(--ui-accent);
+  font-weight: 600;
+}
+.tabs-panels { min-width: 0; }
+.tabs-panel { min-width: 0; padding: var(--ui-space-4) 0; }
+.tabs-panel:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.tabs-panel[hidden] { display: none; }
+
+.tabs-pill .tabs { gap: var(--ui-space-1); border-bottom: 0; }
+.tabs-pill .tabs > button {
+  margin-bottom: 0;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--ui-radius-pill);
+}
+.tabs-pill .tabs > button[aria-selected="true"] {
+  color: var(--ui-accent-strong);
+  background: var(--ui-accent-soft);
+}
+
+.tabs-contained {
+  overflow: hidden;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+}
+.tabs-contained .tabs { padding: 0 var(--ui-space-4); background: var(--ui-surface-2); }
+.tabs-contained .tabs-panel { padding: var(--ui-space-4); }
+
+.tabs-vertical {
+  display: grid;
+  grid-template-columns: minmax(132px, 0.35fr) minmax(0, 1fr);
+  align-items: start;
+}
+.tabs-vertical .tabs {
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  overflow-x: visible;
+  border-right: 1px solid var(--ui-border);
+  border-bottom: 0;
+}
+.tabs-vertical .tabs > button {
+  margin: 0 -1px 0 0;
+  padding: 8px 10px;
+  text-align: left;
+  border-right: 2px solid transparent;
+  border-bottom: 0;
+}
+.tabs-vertical .tabs > button[aria-selected="true"] {
+  border-right-color: var(--ui-accent);
+  border-bottom-color: transparent;
+}
+.tabs-vertical .tabs-panel { padding: 0 0 0 var(--ui-space-4); }
+.tabs-vertical.tabs-contained .tabs { padding: var(--ui-space-3); }
+.tabs-vertical.tabs-contained .tabs-panel { padding: var(--ui-space-4); }
+
+@container (max-width: 420px) {
+  .tabs-vertical { grid-template-columns: minmax(0, 1fr); }
+  .tabs-vertical .tabs {
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--ui-border);
+  }
+  .tabs-vertical .tabs > button,
+  .tabs-vertical .tabs > button[aria-selected="true"] {
+    margin: 0 0 -1px;
+    text-align: center;
+    border-right: 0;
+    border-bottom: 2px solid transparent;
+  }
+  .tabs-vertical .tabs > button[aria-selected="true"] { border-bottom-color: var(--ui-accent); }
+  .tabs-vertical .tabs-panel { padding: var(--ui-space-4) 0 0; }
+}
+
+/* @odla-ai/ui — form fields
+   .input/.select/.textarea are the class equivalents of themed bare
+   elements; .field wraps a label + control + error/hint. */
+
+.input,
+.select,
+.textarea {
+  font: inherit;
+  font-size: var(--ui-text-md);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  padding: 8px 10px;
+  width: 100%;
+}
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--ui-accent);
+  box-shadow: var(--ui-focus);
+}
+.input::placeholder,
+.textarea::placeholder { color: var(--ui-text-faint); }
+.input:disabled,
+.select:disabled,
+.textarea:disabled { opacity: 0.55; cursor: default; }
+
+.textarea {
+  font-family: var(--ui-font-mono);
+  resize: vertical;
+  min-height: 72px;
+}
+.textarea.prose-input { font-family: inherit; }
+
+.input.invalid,
+.select.invalid,
+.textarea.invalid,
+.input[aria-invalid="true"],
+.select[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--ui-danger);
+}
+.input.invalid:focus,
+.select.invalid:focus,
+.textarea.invalid:focus,
+.input[aria-invalid="true"]:focus,
+.select[aria-invalid="true"]:focus,
+.textarea[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px var(--ui-danger-soft);
+}
+
+/* Field wrapper: label above control, error/hint below. */
+.field { margin: 0 0 var(--ui-space-4); }
+.field-label {
+  display: block;
+  font-size: var(--ui-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-caps);
+  color: var(--ui-text-muted);
+  margin: 0 0 4px;
+}
+.field-error { color: var(--ui-danger); font-size: var(--ui-text-md); margin: 4px 0 0; }
+.field-hint { color: var(--ui-text-faint); font-size: var(--ui-text-sm); margin: 4px 0 0; }
+
+/* Checkbox/radio with label. */
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  cursor: pointer;
+  font-size: var(--ui-text-md);
+}
+.check input {
+  accent-color: var(--ui-accent);
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+/* Styled range slider. */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-border);
+  outline: none;
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ui-accent);
+  border: 2px solid var(--ui-surface);
+  cursor: pointer;
+}
+.range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ui-accent);
+  border: 2px solid var(--ui-surface);
+  cursor: pointer;
+}
+.range:focus-visible { box-shadow: var(--ui-focus); }
+
+/* Grouped form area (e.g. schema-aware add-row forms). */
+.form-well {
+  padding: var(--ui-space-3);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  margin-bottom: var(--ui-space-3);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 8px 14px;
+  align-items: center;
+}
+.form-grid label {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text);
+}
+.form-grid .type { color: var(--ui-text-faint); font-size: var(--ui-text-xs); }
+
+/* @odla-ai/ui — cards, panels, badges */
+
+.card {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  padding: 14px;
+  box-shadow: var(--ui-shadow);
+}
+.card h4 {
+  margin: 0 0 var(--ui-space-2);
+  color: var(--ui-text-muted);
+  font-weight: 600;
+  font-size: var(--ui-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-caps);
+}
+
+/* KPI card grid. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--ui-space-3);
+  margin: var(--ui-space-4) 0;
+}
+.metric { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.panel {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  padding: var(--ui-space-4);
+  margin: var(--ui-space-4) 0;
+  box-shadow: var(--ui-shadow);
+}
+.panel h3 { margin: 0 0 var(--ui-space-3); font-weight: 700; }
+
+/* Status badge: neutral by default, status variants chain. */
+.badge {
+  display: inline-block;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text-muted);
+}
+.badge.good { background: var(--ui-good-soft); border-color: var(--ui-good); color: var(--ui-good); }
+.badge.warn { background: var(--ui-warn-soft); border-color: var(--ui-warn); color: var(--ui-warn); }
+.badge.danger { background: var(--ui-danger-soft); border-color: var(--ui-danger); color: var(--ui-danger); }
+.badge.accent { background: var(--ui-accent-soft); border-color: var(--ui-accent); color: var(--ui-accent-strong); }
+
+/* Pass/fail verdict pill (permission inspectors, test results). */
+.verdict {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--ui-radius-pill);
+}
+.verdict-pass { background: var(--ui-good-soft); color: var(--ui-good); border: 1px solid var(--ui-good); }
+.verdict-fail { background: var(--ui-danger-soft); color: var(--ui-danger); border: 1px solid var(--ui-danger); }
+
+/* @odla-ai/ui — data tables
+   `.table` is the class equivalent of a themed bare <table>.
+   Wrap in `.table-wrap` for scroll + sticky header. */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ui-text-md);
+}
+.table td,
+.table th {
+  text-align: left;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--ui-border);
+}
+.table th { color: var(--ui-text-muted); font-weight: 600; }
+.table td { font-variant-numeric: tabular-nums; }
+
+/* Scroll container; header sticks against the sunken surface. */
+.table-wrap { overflow: auto; max-height: 420px; }
+.table-wrap .table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--ui-surface-2);
+  z-index: 1;
+}
+
+/* Signed values. */
+.table .pos { color: var(--ui-good); }
+.table .neg { color: var(--ui-danger); }
+
+/* Inline-editable cells (data browsers). */
+.table td.editable { cursor: text; }
+.table td.editable:hover { background: var(--ui-accent-soft); }
+
+/* @odla-ai/ui — navigation & layout chrome */
+
+/* App shell: fixed sidebar + content column. */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+.sidebar {
+  background: var(--ui-surface);
+  border-right: 1px solid var(--ui-border);
+  padding: var(--ui-space-4);
+}
+.main { padding: var(--ui-space-5) var(--ui-space-6); max-width: 1100px; min-width: 0; }
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--ui-space-4);
+}
+.head h2 { margin: 0; font-weight: 700; }
+.brand {
+  font-family: var(--ui-font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 18px;
+  margin-bottom: var(--ui-space-4);
+}
+.brand small { color: var(--ui-text-muted); font-weight: 500; }
+
+/* Sidebar nav entry (button or link). */
+.navitem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-weight: 600;
+  background: var(--ui-surface);
+  color: var(--ui-text-muted);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  padding: 8px 10px;
+  margin-bottom: var(--ui-space-2);
+  cursor: pointer;
+  text-decoration: none;
+}
+.navitem:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+.navitem.active {
+  background: var(--ui-accent-soft);
+  border-color: var(--ui-accent);
+  color: var(--ui-accent-strong);
+}
+
+/* Content containers. */
+.wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 var(--ui-space-4); }
+.wrap.narrow { max-width: 640px; }
+
+/* Utility row + muted text (ubiquitous in app chrome). */
+.row { display: flex; gap: var(--ui-space-2); align-items: center; }
+.muted { color: var(--ui-text-muted); }
+
+/* Off-canvas drawer. Toggle .open on both drawer and overlay. */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(340px, 88vw);
+  background: var(--ui-surface);
+  border-left: 1px solid var(--ui-border);
+  padding: var(--ui-space-4);
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  z-index: var(--ui-layer-overlay);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: calc(var(--ui-layer-overlay) - 1);
+}
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* Page footer strip. */
+.footer {
+  border-top: 1px solid var(--ui-border);
+  color: var(--ui-text-muted);
+  font-size: var(--ui-text-sm);
+  padding: var(--ui-space-5) 0;
+  margin-top: var(--ui-space-7);
+}
+
+/* @odla-ai/ui — top navigation bar
+   Class-scoped by design: no bare-element rules, so this sheet coexists with
+   themes that style bare elements themselves. A full-width sticky header:
+   brand on the left, a link row, then right-aligned actions.
+   `.topbar-link` alone is idle; `.topbar-link.active` marks the current view
+   (mirrors `.navitem.active` in nav.css). */
+
+.topbar {
+  display: flex;
+  /* first baseline, NOT center: a top bar routinely mixes a larger display
+     brand (e.g. 18px) with smaller nav links (e.g. 15px), and center-aligning
+     unlike text sizes makes their baselines visibly drift — a bug that has
+     recurred repeatedly. Baseline keeps the text row crisp. The trailing
+     .topbar-actions cluster (buttons/avatars) opts back into block-centering
+     below; a ~1em brand mark bottom-aligns to the baseline like a glyph, and an
+     oversized mark should set `align-self: center` locally (see the landing). */
+  align-items: first baseline;
+  gap: var(--ui-space-4);
+  position: sticky;
+  top: 0;
+  z-index: var(--ui-layer-chrome);
+  width: 100%;
+  padding: 10px var(--ui-space-5);
+  background: var(--ui-surface);
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.topbar-brand {
+  font-family: var(--ui-font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 18px;
+  color: var(--ui-text);
+  text-decoration: none;
+}
+.topbar-brand small { color: var(--ui-text-muted); font-weight: 500; }
+
+/* The link row. baseline (matching the bar) so the links define a clean shared
+   baseline with the brand rather than a center-derived one. */
+.topbar-nav { display: flex; align-items: baseline; gap: var(--ui-space-1); }
+
+.topbar-link {
+  font: inherit;
+  font-weight: 600;
+  font-size: var(--ui-text-md);
+  background: transparent;
+  color: var(--ui-text-muted);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  padding: 7px 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.topbar-link:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+.topbar-link:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.topbar-link.active {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-strong);
+}
+
+/* Flexible gap that pushes trailing actions to the right edge. */
+.topbar-spacer { flex: 1 1 auto; min-width: var(--ui-space-2); align-self: center; }
+
+/* Trailing controls (buttons, avatars, a whoami block) center as a block —
+   align-self: center opts them out of the bar's baseline so they don't hang off
+   the text baseline. */
+.topbar-actions { display: flex; align-items: center; align-self: center; gap: var(--ui-space-3); }
+
+/* Embedded or preview chrome: never sticks to the outer page viewport. */
+.topbar.contained {
+  position: relative;
+  top: auto;
+  z-index: 1;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+}
+
+/* @odla-ai/ui — container-native application shell, rail, and sidebar. */
+
+.ui-app-shell {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 360px;
+  overflow: hidden;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+.ui-app-shell.viewport { height: 100dvh; }
+.ui-app-shell-header { flex: 0 0 auto; min-width: 0; }
+.ui-app-shell-header .topbar { position: relative; top: auto; z-index: var(--ui-layer-chrome); }
+.ui-app-shell-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.ui-app-shell-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--ui-space-4);
+}
+.ui-app-shell-edge {
+  position: relative;
+  flex: 0 0 auto;
+  z-index: var(--ui-layer-dock);
+  pointer-events: none;
+}
+.ui-app-shell-edge > .edge-dock {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  left: 0;
+}
+.ui-app-shell-edge > .edge-dock,
+.ui-app-shell-edge > .edge-notification { pointer-events: auto; }
+
+.ui-navigation-rail {
+  flex: 0 0 var(--ui-rail-width);
+  width: var(--ui-rail-width);
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-2);
+  background: var(--ui-surface-2);
+  border-right: 1px solid var(--ui-border);
+}
+.ui-navigation-rail-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-1);
+  min-height: 48px;
+  padding: var(--ui-space-2) var(--ui-space-1);
+  font: inherit;
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  cursor: pointer;
+}
+.ui-navigation-rail-item:hover { color: var(--ui-text); background: var(--ui-surface); }
+.ui-navigation-rail-item:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.ui-navigation-rail-item.active { color: var(--ui-accent-strong); background: var(--ui-accent-soft); }
+.ui-navigation-rail-icon { font-size: 18px; line-height: 1; }
+.ui-navigation-rail-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+
+.ui-sidebar {
+  flex: 0 0 var(--ui-sidebar-width);
+  width: var(--ui-sidebar-width);
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--ui-space-4);
+  background: var(--ui-surface);
+  border-right: 1px solid var(--ui-border);
+}
+.ui-sidebar-section + .ui-sidebar-section { margin-top: var(--ui-space-5); }
+.ui-sidebar-section-label {
+  margin-bottom: var(--ui-space-2);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-faint);
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+}
+.ui-sidebar-item {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: var(--ui-text-md);
+  text-align: left;
+  color: var(--ui-text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  cursor: pointer;
+}
+.ui-sidebar-item:hover { color: var(--ui-text); background: var(--ui-surface-2); }
+.ui-sidebar-item:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.ui-sidebar-item.active { color: var(--ui-accent-strong); background: var(--ui-accent-soft); font-weight: 600; }
+
+@container (max-width: 680px) {
+  .ui-sidebar { display: none; }
+  .ui-navigation-rail { flex-basis: 52px; width: 52px; padding-inline: var(--ui-space-1); }
+  .ui-navigation-rail-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+@container (max-width: 440px) {
+  .ui-navigation-rail { flex-basis: 48px; width: 48px; }
+  .ui-app-shell-main { padding: var(--ui-space-3); }
+}
+
+/* @odla-ai/ui — docs left-nav (sidebar table of contents)
+   Class-scoped by design. A grouped list of section links for a docs layout;
+   pair with `.sidebar` (nav.css) or drop into any column. Groups carry a quiet
+   caps label; the active link gets an accent left-border (mirrors the
+   `--ui-accent` active language of `.navitem`). */
+
+.docsnav { display: block; font-size: var(--ui-text-md); }
+
+.docsnav-group {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  color: var(--ui-text-faint);
+  margin: var(--ui-space-4) 0 var(--ui-space-2);
+}
+.docsnav-group:first-child { margin-top: 0; }
+
+.docsnav-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  background: transparent;
+  color: var(--ui-text-muted);
+  border: 0;
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--ui-radius-sm) var(--ui-radius-sm) 0;
+  padding: 6px 11px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.docsnav-link:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+.docsnav-link:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.docsnav-link.active {
+  color: var(--ui-accent-strong);
+  font-weight: 600;
+  border-left-color: var(--ui-accent);
+  background: var(--ui-accent-soft);
+}
+
+/* @odla-ai/ui — toasts, banners, dropzones, activity indicators */
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--ui-text);
+  color: var(--ui-bg);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: var(--ui-text-md);
+  box-shadow: var(--ui-shadow);
+  z-index: var(--ui-layer-toast);
+}
+.toast.good { border-left: 3px solid var(--ui-good); }
+.toast.warn { border-left: 3px solid var(--ui-warn); }
+.toast.danger { border-left: 3px solid var(--ui-danger); }
+
+/* Inline notice bar. */
+.banner {
+  padding: 10px 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface-2);
+  font-size: var(--ui-text-md);
+  margin: var(--ui-space-3) 0;
+}
+.banner.good { background: var(--ui-good-soft); border-color: var(--ui-good); color: var(--ui-good); }
+.banner.warn { background: var(--ui-warn-soft); border-color: var(--ui-warn); color: var(--ui-warn); }
+.banner.error { background: var(--ui-danger-soft); border-color: var(--ui-danger); color: var(--ui-danger); }
+
+/* File-drop target; add .drag while a file hovers. */
+.dropzone {
+  border: 1.5px dashed var(--ui-border);
+  border-radius: 8px;
+  padding: 18px;
+  text-align: center;
+  color: var(--ui-text-muted);
+  font-size: var(--ui-text-md);
+  background: var(--ui-surface-2);
+  margin-bottom: 14px;
+}
+.dropzone.drag {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-strong);
+}
+
+/* Live-activity pulse dot. */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ui-good);
+  margin-right: 6px;
+  animation: ui-pulse 1.4s infinite;
+}
+@keyframes ui-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Content-shaped loading placeholder — size it to the content it stands in
+ * for, so data arriving later never shifts the layout. */
+.skeleton {
+  display: block;
+  background: var(--ui-surface-2);
+  border-radius: var(--ui-radius-sm);
+  min-height: 1em;
+  animation: ui-pulse 1.4s infinite;
+}
+.skeleton + .skeleton { margin-top: 6px; }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}
+
+/* Border spinner. */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--ui-border);
+  border-top-color: var(--ui-accent);
+  border-radius: 50%;
+  animation: ui-spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+@keyframes ui-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* @odla-ai/ui — segmented scope switch (environment, time range). The
+   selected segment is deliberately LOUD: these controls silently change what
+   an entire view means, and a subtle toggle invites reading the wrong data.
+   The optional label sits OUTSIDE the bordered track — inside it, a caption
+   is indistinguishable from an unselected choice. */
+
+.segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.segmented-label {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  user-select: none;
+}
+.segmented-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+}
+.segmented-track button {
+  padding: 4px 12px;
+  font: inherit;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ui-radius-pill);
+  cursor: pointer;
+}
+.segmented-track button:hover { color: var(--ui-text); }
+.segmented-track button:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.segmented-track button:disabled { cursor: default; opacity: 0.45; }
+.segmented-track button[aria-checked="true"] {
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+  font-weight: 600;
+}
+
+/* @odla-ai/ui — persistent bottom notification and Gmail-style work dock. */
+
+.edge-notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-bottom-bar-height);
+  padding: 8px var(--ui-space-4) max(8px, env(safe-area-inset-bottom));
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  border-top: 1px solid var(--ui-border-strong);
+  box-shadow: var(--ui-shadow);
+  font-size: var(--ui-text-md);
+}
+.edge-notification.good { background: var(--ui-good-soft); border-top-color: var(--ui-good); }
+.edge-notification.warn { background: var(--ui-warn-soft); border-top-color: var(--ui-warn); }
+.edge-notification.danger { background: var(--ui-danger-soft); border-top-color: var(--ui-danger); }
+.edge-notification-content { min-width: 0; }
+.edge-notification-actions { display: flex; flex: 0 0 auto; align-items: center; gap: var(--ui-space-2); }
+
+.edge-dock {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: var(--ui-space-3);
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding: 0 var(--ui-space-4);
+}
+.dock-card {
+  flex: 0 0 auto;
+  width: min(var(--ui-dock-card-width), calc(100cqw - var(--ui-space-5)));
+  max-height: 360px;
+  overflow: hidden;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border-strong);
+  border-bottom: 0;
+  border-radius: var(--ui-radius-lg) var(--ui-radius-lg) 0 0;
+  box-shadow: var(--ui-shadow);
+}
+.dock-card.minimized { width: min(220px, calc(100cqw - var(--ui-space-5))); }
+.dock-card-header { display: flex; align-items: stretch; min-height: 40px; background: var(--ui-surface-2); }
+.dock-card-toggle {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  color: var(--ui-text);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.dock-card-toggle:focus-visible,
+.dock-card-dismiss:focus-visible { outline: none; box-shadow: inset var(--ui-focus); }
+.dock-card-title { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.dock-card-meta { flex: 0 0 auto; color: var(--ui-text-faint); font-size: var(--ui-text-xs); }
+.dock-card-dismiss {
+  flex: 0 0 36px;
+  width: 36px;
+  padding: 0;
+  font: inherit;
+  font-size: 18px;
+  color: var(--ui-text-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.dock-card-dismiss:hover { color: var(--ui-text); background: var(--ui-surface); }
+.dock-card-body {
+  max-height: 316px;
+  overflow: auto;
+  padding: var(--ui-space-4);
+  border-top: 1px solid var(--ui-border);
+}
+.dock-card-body[hidden] { display: none; }
+
+@container (max-width: 560px) {
+  .edge-dock { justify-content: flex-start; padding-inline: var(--ui-space-2); }
+  .edge-notification { align-items: flex-start; flex-direction: column; }
+  .edge-notification-actions { width: 100%; }
+}
+
+/* @odla-ai/ui — chat surfaces
+   Shaped by the @odla-ai/ai content-block contract: text, tool_use,
+   tool_result, thinking blocks; streaming deltas; usage; typed errors. */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.chat-msg { display: flex; flex-direction: column; align-items: flex-start; }
+.chat-msg.user { align-items: flex-end; }
+
+.chat-bubble {
+  max-width: 88%;
+  padding: 10px 14px;
+  border-radius: var(--ui-radius-lg);
+  font-size: var(--ui-text-lg);
+  line-height: 1.55;
+  overflow-wrap: break-word;
+}
+.chat-msg.user .chat-bubble {
+  background: var(--ui-chat-user-bg);
+  color: var(--ui-chat-user-text);
+}
+.chat-msg.assistant .chat-bubble {
+  background: var(--ui-chat-assistant-bg);
+  border: 1px solid var(--ui-border);
+}
+.chat-bubble pre {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  background: var(--ui-code-bg);
+  color: var(--ui-code-text);
+  border-radius: var(--ui-radius-sm);
+  padding: 10px 12px;
+  overflow-x: auto;
+}
+
+/* Collapsible reasoning panel (ThinkingBlock) — use a <details>. */
+.chat-thinking {
+  align-self: stretch;
+  background: var(--ui-chat-thinking-bg);
+  color: var(--ui-chat-thinking-text);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  font-size: var(--ui-text-sm);
+  padding: 6px 10px;
+}
+.chat-thinking summary {
+  cursor: pointer;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-caps);
+}
+.chat-thinking[open] summary { margin-bottom: 6px; }
+
+/* Tool-call card (ToolUseBlock): name + streamed args. The accent-colored
+   mono name is the card's signal — no stripe. */
+.chat-tool {
+  align-self: stretch;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  padding: 8px 12px;
+}
+.chat-tool-name {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  color: var(--ui-chat-tool-accent);
+}
+.chat-tool-args {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  background: var(--ui-code-bg);
+  color: var(--ui-code-text);
+  border-radius: var(--ui-radius-sm);
+  padding: 8px 10px;
+  margin: 6px 0 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+/* Tool-result card (ToolResultBlock); .error for isError results.
+   Status reads from a leading dot, not an edge stripe. */
+.chat-result {
+  align-self: stretch;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface-2);
+  padding: 8px 12px;
+  font-size: var(--ui-text-md);
+}
+.chat-result::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-good);
+  margin-right: 8px;
+  vertical-align: 1px;
+}
+.chat-result.error {
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger);
+}
+.chat-result.error::before { background: var(--ui-danger); }
+
+/* Streaming caret appended during text/thinking deltas. */
+.chat-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  background: var(--ui-accent);
+  vertical-align: text-bottom;
+  animation: ui-blink 1s steps(1) infinite;
+}
+@keyframes ui-blink {
+  50% { opacity: 0; }
+}
+
+/* Composer bar. */
+.chat-composer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: var(--ui-space-2);
+  align-items: flex-end;
+  background: var(--ui-surface);
+  border-top: 1px solid var(--ui-border);
+  padding: var(--ui-space-3);
+}
+.chat-composer .textarea { flex: 1; min-height: 40px; max-height: 200px; }
+
+/* Token/cost footer (OracleUsage). */
+.chat-usage {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-faint);
+  text-align: right;
+}
+
+/* Error/stop-reason notices (rate_limit, context_window, refusal, …). */
+.chat-banner {
+  align-self: stretch;
+  padding: 8px 12px;
+  border-radius: var(--ui-radius-md);
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface-2);
+  font-size: var(--ui-text-md);
+}
+.chat-banner.warn { background: var(--ui-warn-soft); border-color: var(--ui-warn); color: var(--ui-warn); }
+.chat-banner.error { background: var(--ui-danger-soft); border-color: var(--ui-danger); color: var(--ui-danger); }
+
+/* Attachment chip (image/document blocks in history or composer). */
+.chat-attachment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-surface-2);
+  color: var(--ui-text-muted);
+  padding: 3px 8px;
+}
+.chat-attachment img {
+  max-height: 48px;
+  border-radius: var(--ui-radius-sm);
+  display: block;
+}
+
+/* @odla-ai/ui — chart containers
+   Rendering happens on <canvas> via js/canvas.js; colors come from the
+   --ui-chart-* tokens read with js/palette.js readPalette(). */
+
+.chart { position: relative; }
+.chart canvas { display: block; width: 100%; }
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-3);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-muted);
+  margin-top: var(--ui-space-2);
+}
+.chart-key { display: inline-flex; align-items: center; gap: 5px; }
+.chart-key i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--ui-radius-sm);
+  background: currentColor;
+}
+
+/* @odla-ai/ui — calendar surfaces: toolbar, month grid, week/day time grid,
+   agenda list. Interactive event surfaces may render as button, a, or div —
+   the shared classes normalize all three. */
+
+.cal { min-width: 0; font-size: var(--ui-text-md); }
+
+/* Toolbar */
+.cal-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-3);
+  margin: 0 0 var(--ui-space-3);
+}
+.cal-toolbar-nav { display: flex; gap: var(--ui-space-1); }
+.cal-toolbar-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--ui-text-lg);
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Month grid */
+.cal-month {
+  overflow: hidden;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+}
+.cal-month-head {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  background: var(--ui-surface-2);
+  border-bottom: 1px solid var(--ui-border);
+}
+.cal-dow {
+  padding: 6px 8px;
+  font-size: var(--ui-text-xs);
+  font-weight: 600;
+  color: var(--ui-text-muted);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-caps);
+}
+.cal-month-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.cal-month-week + .cal-month-week { border-top: 1px solid var(--ui-border); }
+.cal-cell { min-width: 0; min-height: 96px; padding: 4px; }
+.cal-cell + .cal-cell { border-left: 1px solid var(--ui-border); }
+.cal-cell.outside { background: var(--ui-surface-2); }
+.cal-cell.outside .cal-cell-num { color: var(--ui-text-faint); }
+.cal-cell-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 4px;
+  margin: 0 0 2px;
+  font: inherit;
+  font-size: var(--ui-text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ui-radius-pill);
+}
+button.cal-cell-num { cursor: pointer; }
+button.cal-cell-num:hover { background: var(--ui-accent-soft); color: var(--ui-accent-strong); }
+.cal-cell.today .cal-cell-num {
+  font-weight: 700;
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+}
+.cal-cell-events { display: grid; gap: 2px; }
+.cal-chip {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+  width: 100%;
+  min-width: 0;
+  padding: 1px 6px;
+  font: inherit;
+  font-size: var(--ui-text-xs);
+  text-align: left;
+  text-decoration: none;
+  color: var(--ui-accent-strong);
+  background: var(--ui-accent-soft);
+  border: 0;
+  border-left: 2px solid var(--ui-accent);
+  border-radius: var(--ui-radius-sm);
+}
+button.cal-chip, a.cal-chip { cursor: pointer; }
+button.cal-chip:hover, a.cal-chip:hover {
+  background: color-mix(in srgb, var(--ui-accent-soft) 82%, var(--ui-accent));
+}
+.cal-chip-time { flex: 0 0 auto; font-variant-numeric: tabular-nums; opacity: 0.8; }
+.cal-chip-title { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cal-more { padding: 0 6px; font-size: var(--ui-text-xs); color: var(--ui-text-faint); }
+
+/* Week / day time grid */
+.cal-week {
+  overflow: hidden;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+}
+.cal-week-head {
+  display: flex;
+  background: var(--ui-surface-2);
+  border-bottom: 1px solid var(--ui-border);
+}
+.cal-week-gutter { flex: 0 0 52px; }
+.cal-week-daylabel {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  overflow: hidden;
+  font-size: var(--ui-text-xs);
+  font-weight: 600;
+  color: var(--ui-text-muted);
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  letter-spacing: var(--ui-tracking-caps);
+}
+.cal-week-daylabel.today { color: var(--ui-accent-strong); }
+.cal-week-body { display: flex; }
+.cal-hour-label {
+  height: 48px;
+  padding: 2px 6px 0 0;
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-faint);
+  text-align: right;
+}
+.cal-col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid var(--ui-border);
+}
+.cal-col.today { background: color-mix(in srgb, var(--ui-accent-soft) 30%, transparent); }
+.cal-hour { height: 48px; }
+.cal-hour + .cal-hour { border-top: 1px solid var(--ui-border); }
+.cal-event {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 14px;
+  margin: 0;
+  padding: 1px 6px;
+  overflow: hidden;
+  font: inherit;
+  font-size: var(--ui-text-xs);
+  line-height: 1.2;
+  text-align: left;
+  text-decoration: none;
+  color: var(--ui-accent-strong);
+  background: var(--ui-accent-soft);
+  border: 1px solid var(--ui-accent);
+  border-radius: var(--ui-radius-sm);
+}
+button.cal-event, a.cal-event { cursor: pointer; }
+button.cal-event:hover, a.cal-event:hover {
+  background: color-mix(in srgb, var(--ui-accent-soft) 82%, var(--ui-accent));
+}
+.cal-event-title {
+  overflow: hidden;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.cal-event-time {
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+.cal-now {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 0;
+  border-top: 2px solid var(--ui-danger);
+  pointer-events: none;
+}
+.cal-now::before {
+  position: absolute;
+  top: -5px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  content: "";
+  background: var(--ui-danger);
+  border-radius: 50%;
+}
+
+/* Agenda list */
+.cal-agenda { display: grid; gap: var(--ui-space-4); }
+.cal-agenda-day { min-width: 0; }
+.cal-agenda-date {
+  margin: 0 0 var(--ui-space-2);
+  font-size: var(--ui-text-xs);
+  font-weight: 600;
+  color: var(--ui-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-caps);
+}
+.cal-agenda-day.today .cal-agenda-date { color: var(--ui-accent-strong); }
+.cal-agenda-list { display: grid; gap: var(--ui-space-1); padding: 0; margin: 0; list-style: none; }
+.cal-agenda-item {
+  display: flex;
+  gap: var(--ui-space-3);
+  align-items: baseline;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: var(--ui-text-md);
+  text-align: left;
+  text-decoration: none;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+}
+button.cal-agenda-item, a.cal-agenda-item { cursor: pointer; }
+button.cal-agenda-item:hover, a.cal-agenda-item:hover {
+  border-color: var(--ui-border-strong);
+  box-shadow: var(--ui-shadow);
+}
+.cal-agenda-time {
+  flex: 0 0 auto;
+  font-size: var(--ui-text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-text-muted);
+}
+.cal-agenda-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.cal-empty {
+  padding: var(--ui-space-4);
+  margin: 0;
+  color: var(--ui-text-faint);
+  text-align: center;
+  border: 1px dashed var(--ui-border);
+  border-radius: var(--ui-radius-md);
+}
+
+/* Slot picker */
+.cal-slots { display: grid; gap: var(--ui-space-3); }
+.cal-slots-days {
+  display: flex;
+  gap: var(--ui-space-1);
+  padding-bottom: 2px;
+  overflow-x: auto;
+}
+.cal-slot-day {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  color: var(--ui-text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+}
+.cal-slot-day:hover { border-color: var(--ui-border-strong); }
+.cal-slot-day[aria-pressed="true"] {
+  color: var(--ui-accent-strong);
+  background: var(--ui-accent-soft);
+  border-color: var(--ui-accent);
+}
+.cal-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: var(--ui-space-1);
+}
+.cal-slot {
+  padding: 8px 10px;
+  font: inherit;
+  font-size: var(--ui-text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-text);
+  text-align: center;
+  cursor: pointer;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+}
+.cal-slot:hover { border-color: var(--ui-border-strong); box-shadow: var(--ui-shadow); }
+.cal-slot[aria-pressed="true"] {
+  font-weight: 700;
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+}
+.cal-slots-empty {
+  padding: var(--ui-space-4);
+  margin: 0;
+  color: var(--ui-text-faint);
+  text-align: center;
+  border: 1px dashed var(--ui-border);
+  border-radius: var(--ui-radius-md);
+}
+
+/* Cancelled events and shared focus treatment */
+.cal-chip.cancelled, .cal-event.cancelled, .cal-agenda-item.cancelled {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+.cal-chip:focus-visible,
+.cal-event:focus-visible,
+.cal-agenda-item:focus-visible,
+.cal-cell-num:focus-visible,
+.cal-slot-day:focus-visible,
+.cal-slot:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+
+/* @odla-ai/ui — timeline scrubber (TimeScrubber): transport button, slider
+   track with playhead + event markers, readout, optional rate select. */
+
+.timescrub {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  padding: var(--ui-space-2) 0;
+}
+
+.timescrub-play {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+  cursor: pointer;
+}
+.timescrub-play:hover { border-color: var(--ui-border-strong); }
+.timescrub-play:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.timescrub-play[aria-pressed="true"] {
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+}
+
+.timescrub-track {
+  position: relative;
+  flex: 1 1 auto;
+  height: 8px;
+  min-width: 80px;
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+  cursor: pointer;
+  touch-action: none;
+}
+.timescrub-track:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+
+.timescrub-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--ui-accent-soft);
+  border-radius: var(--ui-radius-pill);
+  pointer-events: none;
+}
+
+.timescrub-handle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  background: var(--ui-accent);
+  border: 2px solid var(--ui-bg);
+  border-radius: var(--ui-radius-pill);
+  box-shadow: var(--ui-shadow);
+  pointer-events: none;
+}
+
+.timescrub-marker {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--ui-text-faint);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.timescrub-marker-accent { background: var(--ui-accent); }
+.timescrub-marker-good { background: var(--ui-good); }
+.timescrub-marker-warn { background: var(--ui-warn); }
+.timescrub-marker-danger { background: var(--ui-danger); }
+
+.timescrub-readout {
+  flex: 0 0 auto;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  min-width: 84px;
+  text-align: right;
+}
+
+.timescrub-rate { flex: 0 0 auto; width: auto; }
+
+/* @odla-ai/ui — marketing section scaffolding
+   Full-bleed bands with centered content wells and the editorial text
+   ladder (eyebrow label → display title → lead → body). Surfaces compose:
+   `.mk-section` rides the page bg, `.alt` sits on the raised surface, and
+   `.ui-invert` (themes/<name>/invert.css) turns a band into a dark island. */
+
+.mk-section {
+  padding: var(--ui-section-pad-y) var(--ui-section-pad-x);
+}
+.mk-section.alt { background: var(--ui-surface); }
+.mk-section.tight { padding-top: var(--ui-space-8); padding-bottom: var(--ui-space-8); }
+/* Inverted bands paint their island: the tokens flip via .ui-invert, but a
+   section must lay the dark ground itself. */
+.mk-section.ui-invert {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+
+.mk-wrap { max-width: var(--ui-content-width); margin: 0 auto; }
+.mk-narrow { max-width: var(--ui-content-narrow); }
+.mk-center { text-align: center; }
+
+/* Eyebrow/kicker label above a title. */
+.mk-label {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-lg);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-widest);
+  text-transform: uppercase;
+  color: var(--ui-accent);
+  margin-bottom: var(--ui-space-4);
+  display: inline-block;
+}
+
+/* Display title; <em> is the accent emphasis (upright by default, matching
+   the sans h2 treatment — heroes italicize via .mk-hero-title). */
+.mk-title {
+  font-family: var(--ui-font-sans);
+  font-weight: 900;
+  font-size: var(--ui-display-h3);
+  line-height: var(--ui-leading-tight);
+  letter-spacing: var(--ui-tracking-tight);
+  color: var(--ui-text);
+  margin-bottom: var(--ui-space-6);
+}
+.mk-title em { font-style: normal; color: var(--ui-accent); }
+.mk-title.h1 { font-size: var(--ui-display-h1); }
+.mk-title.h2 { font-size: var(--ui-display-h2); }
+.mk-title.h4 { font-size: var(--ui-display-h4); }
+.mk-title.serif {
+  font-family: var(--ui-font-display);
+  font-weight: 300;
+}
+
+.mk-lead {
+  font-size: var(--ui-text-3xl);
+  line-height: var(--ui-leading-relaxed);
+  color: var(--ui-text-muted);
+  max-width: 600px;
+}
+
+.mk-body {
+  font-size: var(--ui-text-2xl);
+  line-height: var(--ui-leading-relaxed);
+  max-width: 600px;
+  color: var(--ui-text-muted);
+}
+.mk-body + .mk-body { margin-top: var(--ui-space-4); }
+.mk-center .mk-lead,
+.mk-center .mk-body { margin-left: auto; margin-right: auto; }
+
+/* CTA band: a centered full-accent statement section. */
+.mk-cta-band {
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
+  text-align: center;
+  padding: var(--ui-space-9) var(--ui-section-pad-x);
+}
+.mk-cta-band .mk-title,
+.mk-cta-band .mk-label { color: var(--ui-on-accent); }
+.mk-cta-band .mk-body,
+.mk-cta-band .mk-lead {
+  color: color-mix(in srgb, var(--ui-on-accent) 78%, transparent);
+}
+
+@media (max-width: 900px) {
+  .mk-section,
+  .mk-cta-band { padding-left: var(--ui-space-5); padding-right: var(--ui-space-5); }
+}
+@media (max-width: 480px) {
+  .mk-section,
+  .mk-cta-band { padding-left: var(--ui-space-4); padding-right: var(--ui-space-4); }
+}
+
+/* @odla-ai/ui — marketing hero / report header
+   Centered above-the-fold band: tracked eyebrow, display-serif headline
+   with italic accent emphasis, lead, CTA row, meta/source lines. Decor
+   (spotlight, flanking hairlines, watermark) layers behind z-index 2. */
+
+.mk-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--ui-space-11) var(--ui-section-pad-x) var(--ui-space-9);
+  position: relative;
+  overflow: hidden;
+}
+.mk-hero > * { position: relative; z-index: 2; }
+
+.mk-hero-eyebrow {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-ultra);
+  text-transform: uppercase;
+  color: var(--ui-accent);
+  margin-bottom: var(--ui-space-5);
+}
+
+.mk-hero-title {
+  font-family: var(--ui-font-display);
+  font-weight: 300;
+  font-size: var(--ui-display-h1);
+  line-height: 1.05;
+  letter-spacing: var(--ui-tracking-tight);
+  color: var(--ui-text);
+  max-width: 900px;
+}
+.mk-hero-title em { font-style: italic; color: var(--ui-accent); }
+
+.mk-hero-closer {
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-display-h6);
+  font-weight: 700;
+  color: var(--ui-text-muted);
+  margin-top: var(--ui-space-4);
+  line-height: var(--ui-leading-tight);
+}
+
+.mk-hero-lead {
+  font-size: var(--ui-text-xl);
+  line-height: var(--ui-leading-relaxed);
+  color: var(--ui-text-muted);
+  max-width: 480px;
+  margin-top: var(--ui-space-6);
+}
+
+.mk-hero-cta {
+  display: flex;
+  gap: var(--ui-space-4);
+  margin-top: var(--ui-space-9);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.mk-hero-meta {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  margin-top: var(--ui-space-4);
+  letter-spacing: var(--ui-tracking-wide);
+}
+
+.mk-hero-source {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-muted);
+  margin-top: var(--ui-space-3);
+  letter-spacing: var(--ui-tracking-wide);
+  text-align: right;
+  width: 100%;
+  max-width: 900px;
+}
+.mk-hero-source a {
+  color: var(--ui-text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ui-border);
+  transition: color 0.2s;
+}
+.mk-hero-source a:hover { color: var(--ui-accent); }
+
+/* Radial spotlight behind the headline. */
+.mk-hero-spot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  border-radius: var(--ui-radius-pill);
+  background: radial-gradient(circle, color-mix(in srgb, var(--ui-accent) 6%, transparent) 0%, transparent 60%);
+  z-index: 0;
+}
+
+/* Thin decorative hairlines flanking the hero. */
+.mk-hero-line {
+  position: absolute;
+  top: 30%;
+  width: 1px;
+  height: 120px;
+  z-index: 1;
+}
+.mk-hero-line.left {
+  left: 40px;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--ui-accent) 15%, transparent), transparent);
+}
+.mk-hero-line.right {
+  top: 25%;
+  right: 40px;
+  height: 160px;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--ui-text) 8%, transparent), transparent);
+}
+
+@media (max-width: 768px) {
+  .mk-hero { padding: var(--ui-space-9) var(--ui-space-6) var(--ui-space-8); }
+  .mk-hero-line { display: none; }
+}
+
+/* @odla-ai/ui — brand decor: grain, glow, watermarks, split-circle mark
+   All texture intensity comes from theme tokens: --ui-grain defaults to
+   `none` and --ui-watermark-glyph to "" — themes opt in (salt carries the
+   feTurbulence data-URI and the "&" glyph), so these classes are inert
+   under themes that don't. */
+
+/* Page-wide film grain (put on <body> or a page root). */
+.mk-grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--ui-grain);
+  pointer-events: none;
+  z-index: var(--ui-layer-toast);
+  opacity: 0.4;
+}
+
+/* Soft radial washes for glow sections; pair with position:relative bands. */
+.mk-glow { position: relative; overflow: hidden; }
+.mk-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 50% at 85% 15%, var(--ui-accent-2-soft) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 10% 85%, var(--ui-accent-glow) 0%, transparent 50%);
+}
+
+/* Giant faded display glyph. The element's own text is the glyph (render it
+   aria-hidden); size via .sm/.lg. Host needs position:relative + overflow:hidden. */
+.mk-watermark {
+  position: absolute;
+  bottom: -80px;
+  right: 40px;
+  font-family: var(--ui-font-display);
+  font-size: 420px;
+  font-weight: 300;
+  color: var(--ui-text);
+  opacity: 0.04;
+  line-height: var(--ui-leading-none);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.mk-watermark.sm { font-size: 280px; bottom: -50px; right: -40px; }
+.mk-watermark.lg { font-size: 560px; bottom: -120px; }
+
+/* Split-circle brand mark: half text-ink, half accent, centered serif glyph.
+   The glyph stays light in every palette (it straddles the dark half), so it
+   is a deliberate literal, not a token. */
+.mk-mark {
+  position: relative;
+  overflow: hidden;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--ui-radius-pill);
+  flex-shrink: 0;
+}
+.mk-mark.lg { width: 40px; height: 40px; }
+.mk-mark-left,
+.mk-mark-right {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+}
+.mk-mark-left { left: 0; background: var(--ui-text); }
+.mk-mark-right { right: 0; background: var(--ui-accent); transition: background 0.3s; }
+.ui-invert .mk-mark-left { background: var(--ui-text-muted); }
+.mk-mark-glyph {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-4xl);
+  font-weight: 600;
+  color: #fff;
+  z-index: 2;
+  line-height: var(--ui-leading-none);
+}
+
+/* Inline brand glyph (the upright serif "&" inside sans copy). */
+.mk-amp {
+  font-family: var(--ui-font-display);
+  font-weight: 400;
+  font-size: 0.8em;
+  font-style: normal;
+  margin: 0 -0.04em;
+}
+
+/* @odla-ai/ui — marketing stat cells & bands
+   Editorial numbers: serif display numerals (theme digit overrides apply),
+   quiet labels, tiny source lines. `.mk-stat-grid` is the two-column band
+   (StatBand renders it as a <dl>); `.mk-stat-inline` is the big
+   number-beside-context row; `.mk-stat-anchor` the centered single stat. */
+
+.mk-stat-band { max-width: 640px; }
+.mk-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  margin: 0;
+}
+/* Cells are <dl> groups: DOM order is dt (label) then dd (num/desc/src) for
+   term→description semantics; CSS re-orders the number above the label. */
+.mk-stat {
+  padding: var(--ui-space-6) 0;
+  border-top: 1px solid var(--ui-border);
+  display: flex;
+  flex-direction: column;
+}
+.mk-stat > .mk-stat-num { order: 1; }
+.mk-stat > .mk-stat-label { order: 2; }
+.mk-stat > .mk-stat-desc { order: 3; }
+.mk-stat > .mk-stat-src { order: 4; }
+.mk-stat:nth-child(odd) { padding-right: var(--ui-space-6); }
+.mk-stat:nth-child(even) {
+  padding-left: var(--ui-space-6);
+  border-left: 1px solid var(--ui-border);
+}
+
+.mk-stat-num {
+  font-family: var(--ui-font-sans);
+  font-weight: 900;
+  font-size: clamp(28px, 3.5vw, 40px);
+  line-height: var(--ui-leading-none);
+  letter-spacing: var(--ui-tracking-snug);
+  color: var(--ui-text);
+  margin: 0 0 var(--ui-space-2);
+}
+.mk-stat-num em { font-style: normal; color: var(--ui-accent); }
+.mk-stat-num.serif {
+  font-family: var(--ui-font-display);
+  font-weight: 600;
+  font-size: var(--ui-display-h2);
+}
+.mk-stat-label {
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-snug);
+  color: var(--ui-text-muted);
+  margin: 0;
+}
+.mk-stat-desc {
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-normal);
+  color: var(--ui-text-muted);
+  margin: 0;
+}
+.mk-stat-src {
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-faint);
+  margin: var(--ui-space-1) 0 0;
+}
+.mk-stat-src a { color: inherit; text-decoration: none; }
+.mk-stat-src a:hover { color: var(--ui-accent); }
+
+/* Big number beside a short context block. */
+.mk-stat-inline {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-3);
+  margin: var(--ui-space-6) 0 var(--ui-space-2);
+}
+.mk-stat-inline-num {
+  font-family: var(--ui-font-sans);
+  font-weight: 900;
+  font-size: var(--ui-display-h2);
+  line-height: var(--ui-leading-none);
+  letter-spacing: var(--ui-tracking-snug);
+  color: var(--ui-accent);
+}
+.mk-stat-inline-context {
+  font-size: var(--ui-text-xl);
+  color: var(--ui-text-muted);
+  line-height: 1.4;
+  max-width: 300px;
+}
+
+/* Centered anchor stat under a hairline rule. */
+.mk-stat-anchor {
+  border-top: 1px solid var(--ui-border);
+  padding-top: var(--ui-space-6);
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+.mk-stat-anchor .mk-stat-num {
+  font-family: var(--ui-font-display);
+  font-weight: 600;
+  font-size: clamp(48px, 6vw, 64px);
+}
+
+@media (max-width: 600px) {
+  .mk-stat-grid { grid-template-columns: 1fr; }
+  .mk-stat:nth-child(odd) { padding-right: 0; }
+  .mk-stat:nth-child(even) { padding-left: 0; border-left: 0; }
+}
+
+/* @odla-ai/ui — proof rows & testimonial quote card
+   Striped evidence rows (logo grayscale-to-color on hover, right-aligned
+   stat) and the portrait quote card (sepia circle portrait, serif italic
+   pull-quote with an accent rule). */
+
+.mk-proof { margin-top: var(--ui-space-6); max-width: 780px; }
+.mk-proof-row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: var(--ui-space-4);
+  align-items: start;
+  padding: 22px 24px;
+  border-radius: var(--ui-radius-lg);
+  margin-bottom: 6px;
+}
+.mk-proof-row:nth-child(odd) { background: var(--ui-surface); }
+.mk-proof-head {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  margin-bottom: 6px;
+}
+.mk-proof-logo {
+  height: 22px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+  filter: grayscale(80%) opacity(0.6);
+  transition: filter 0.2s;
+}
+.mk-proof-row:hover .mk-proof-logo { filter: grayscale(0%) opacity(1); }
+.mk-proof-name {
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-3xl);
+  font-weight: 600;
+  color: var(--ui-text);
+}
+.mk-proof-loc {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+  margin-left: auto;
+}
+.mk-proof-desc {
+  font-size: var(--ui-text-xl);
+  line-height: var(--ui-leading-normal);
+  color: var(--ui-text-muted);
+}
+.mk-proof-stat {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  color: var(--ui-accent);
+  text-align: right;
+  line-height: 1.6;
+  padding-top: var(--ui-space-6);
+}
+
+/* Portrait quote card. */
+.mk-quote {
+  border-top: 1px solid var(--ui-border);
+  padding-top: var(--ui-space-9);
+  margin-top: var(--ui-space-7);
+  text-align: left;
+}
+.mk-quote-top {
+  display: flex;
+  gap: var(--ui-space-5);
+  align-items: center;
+  margin-bottom: var(--ui-space-5);
+}
+.mk-quote-portrait {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--ui-radius-pill);
+  object-fit: cover;
+  object-position: top center;
+  flex-shrink: 0;
+  border: 2px solid var(--ui-border);
+  filter: sepia(80%);
+}
+.mk-quote-identity { flex: 1; }
+.mk-quote-name {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-md);
+  font-weight: 700;
+  color: var(--ui-text);
+  margin-bottom: var(--ui-space-1);
+}
+.mk-quote-title {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  line-height: 1.6;
+}
+.mk-quote-text {
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-2xl);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ui-text);
+  line-height: var(--ui-leading-relaxed);
+  border-left: 2px solid var(--ui-accent);
+  padding-left: var(--ui-space-5);
+}
+
+@media (max-width: 700px) {
+  .mk-proof-row { grid-template-columns: 1fr; gap: var(--ui-space-2); }
+  .mk-proof-stat { text-align: left; padding-top: 0; }
+  .mk-proof-head { flex-wrap: wrap; }
+  .mk-proof-loc { margin-left: 0; }
+}
+
+/* @odla-ai/ui — citations: page sources, footnotes, inline refs
+   Clean-and-confident sourcing: no inline clutter, a single
+   "Sources & methodology" block per page plus numbered footnotes. */
+
+.mk-sources {
+  max-width: var(--ui-content-width);
+  margin: 0 auto;
+  padding: var(--ui-space-7) var(--ui-space-7) var(--ui-space-8);
+  border-top: 1px solid var(--ui-border);
+}
+.mk-sources-heading {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-widest);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+  margin-bottom: var(--ui-space-5);
+}
+.mk-sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--ui-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+}
+.mk-sources-list li {
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-normal);
+  color: var(--ui-text-muted);
+  display: flex;
+  gap: var(--ui-space-2);
+}
+.mk-sources-list .claim { color: var(--ui-text); }
+.mk-sources-list .source { color: var(--ui-text-faint); white-space: nowrap; }
+.mk-sources-list .source a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ui-border);
+  transition: color 0.2s;
+}
+.mk-sources-list .source a:hover { color: var(--ui-accent); }
+.mk-sources-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  color: var(--ui-accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--ui-accent) 30%, transparent);
+  padding-bottom: 2px;
+  transition: border-color 0.2s;
+}
+.mk-sources-link:hover { border-color: var(--ui-accent); }
+
+/* Numbered footnote block. */
+.mk-fn {
+  padding: var(--ui-space-8) var(--ui-space-7);
+  border-top: 1px solid var(--ui-border);
+}
+.mk-fn-title {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-widest);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+  margin-bottom: var(--ui-space-5);
+}
+.mk-fn-item {
+  font-size: var(--ui-text-sm);
+  line-height: 1.75;
+  color: var(--ui-text-muted);
+  margin-bottom: var(--ui-space-1);
+  padding-left: var(--ui-space-5);
+  position: relative;
+}
+.mk-fn-item .n {
+  position: absolute;
+  left: 0;
+  font-weight: 600;
+  color: var(--ui-accent);
+  opacity: 0.6;
+}
+.mk-fn-item a {
+  color: var(--ui-text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ui-border);
+  transition: color 0.2s;
+}
+.mk-fn-item a:hover { color: var(--ui-accent); }
+
+/* Inline citation superscripts. `.mk-fn-sup` is the accent variant used on
+   stat claims; `.mk-ref` the quiet gray one. */
+.mk-fn-sup {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--ui-accent);
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 1px;
+  opacity: 0.7;
+}
+.mk-fn-sup a { color: inherit; text-decoration: none; }
+.mk-ref {
+  font-family: var(--ui-font-sans);
+  font-size: 0.6em;
+  vertical-align: super;
+  line-height: 0;
+  color: var(--ui-text-faint);
+  font-weight: 600;
+  margin-left: 1px;
+}
+
+@media (max-width: 768px) {
+  .mk-sources { padding: var(--ui-space-6) var(--ui-space-5) var(--ui-space-7); }
+  .mk-sources-list li { flex-direction: column; gap: 2px; }
+  .mk-sources-list .source { white-space: normal; }
+}
+
+/* @odla-ai/ui — step indicator & step pipeline
+   `.mk-steps` is the multi-step-flow progress row (dots + labels +
+   connector lines; states via .pending/.active/.complete on .mk-step).
+   `.mk-pipeline` is the numbered process diagram with a connector rail
+   (tones via .you/.alt on .mk-pipeline-icon). */
+
+.mk-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  list-style: none;
+  margin: 0 0 var(--ui-space-6);
+  padding: 0;
+}
+.mk-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 172px;
+  text-align: center;
+}
+.mk-step-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--ui-radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ui-text-sm);
+  font-weight: 700;
+  transition: all 0.3s ease;
+  background: color-mix(in srgb, var(--ui-accent) 22%, var(--ui-surface));
+  color: var(--ui-text-muted);
+}
+.mk-step.active .mk-step-dot { background: var(--ui-text); color: var(--ui-bg); }
+.mk-step.complete .mk-step-dot { background: var(--ui-accent); color: var(--ui-on-accent); }
+.mk-step-label {
+  font-size: var(--ui-text-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+  transition: color 0.3s;
+}
+.mk-step.active .mk-step-label { color: var(--ui-text); font-weight: 700; }
+.mk-step.complete .mk-step-label { color: var(--ui-accent); }
+.mk-step-line {
+  width: 52px;
+  height: 1px;
+  background: color-mix(in srgb, var(--ui-accent) 30%, var(--ui-border));
+  margin: 14px 10px 0;
+  flex-shrink: 0;
+}
+
+/* Numbered pipeline with a connector rail through the icons. */
+.mk-pipeline {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mk-pipeline::before {
+  content: "";
+  position: absolute;
+  top: 42px;
+  left: calc(10% + 20px);
+  right: calc(10% + 20px);
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--ui-accent-2),
+    color-mix(in srgb, var(--ui-accent-2) 25%, transparent),
+    var(--ui-accent-2),
+    color-mix(in srgb, var(--ui-accent-2) 25%, transparent),
+    var(--ui-accent-2)
+  );
+  z-index: 0;
+}
+.mk-pipeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.mk-pipeline-icon {
+  width: 84px;
+  height: 84px;
+  border-radius: var(--ui-radius-pill);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  position: relative;
+  background: var(--ui-surface-2);
+}
+.mk-pipeline-icon.you {
+  background: var(--ui-accent-2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ui-accent-2) 15%, transparent);
+  color: var(--ui-bg);
+}
+.mk-pipeline-icon.alt {
+  background: color-mix(in srgb, var(--ui-accent) 30%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ui-accent) 10%, transparent);
+  color: var(--ui-text);
+}
+.mk-pipeline-num {
+  font-family: var(--ui-font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-caps);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+.mk-pipeline-who {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+  margin-bottom: var(--ui-space-1);
+}
+.mk-pipeline-title {
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-3xl);
+  font-weight: 600;
+  color: var(--ui-text);
+  line-height: var(--ui-leading-snug);
+  margin-bottom: var(--ui-space-1);
+}
+.mk-pipeline-desc {
+  font-size: var(--ui-text-md);
+  color: var(--ui-text-muted);
+  line-height: 1.6;
+  max-width: 180px;
+}
+
+@media (max-width: 768px) {
+  .mk-steps { flex-wrap: wrap; }
+  .mk-step { flex-basis: 120px; }
+  .mk-step-line { width: 24px; }
+  .mk-pipeline { grid-auto-flow: row; gap: var(--ui-space-6); }
+  .mk-pipeline::before { display: none; }
+}
+
+/* @odla-ai/ui — FAQ accordion (native <details>/<summary>)
+   The browser owns open/close; CSS supplies the marker (+/–), hairline
+   card look, and focus ring. Exclusive groups come from the native
+   `name` attribute on <details>. */
+
+.mk-faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+}
+details.mk-faq-item {
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+}
+.mk-faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-4) var(--ui-space-5);
+  font-weight: 600;
+  color: var(--ui-text);
+  font-size: var(--ui-text-lg);
+}
+.mk-faq-item summary::-webkit-details-marker { display: none; }
+.mk-faq-item summary::after {
+  content: "+";
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-4xl);
+  font-weight: 300;
+  line-height: var(--ui-leading-none);
+  color: var(--ui-accent);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.mk-faq-item[open] summary::after { transform: rotate(45deg); }
+.mk-faq-item summary:hover { color: var(--ui-accent); }
+.mk-faq-item summary:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+  border-radius: var(--ui-radius-md);
+}
+.mk-faq-body {
+  padding: 0 var(--ui-space-5) var(--ui-space-5);
+  font-size: var(--ui-text-lg);
+  line-height: var(--ui-leading-relaxed);
+  color: var(--ui-text-muted);
+}
+.mk-faq-body > * + * { margin-top: var(--ui-space-3); }
+
+/* @odla-ai/ui — marketing navigation
+   Two shapes on one veil-and-blur chrome bar (sticky, not fixed, so it
+   embeds cleanly):
+   - `.mk-nav.bar`  — single tier: brand · links · CTA, hamburger ≤768px.
+     The links list itself becomes the mobile dropdown when `.open` is set
+     on the nav root (component- or app-managed; no double markup).
+   - `.mk-nav.rail` — two tiers: brand row (.mk-nav-top) over a tab rail
+     (.mk-nav-rail), horizontally scrollable with a fade mask ≤600px.
+   Dropdown sections (.mk-nav-has-menu) open on hover/focus-within or a
+   component-managed `.open` — visibility is class-based, never [hidden]. */
+
+.mk-nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--ui-layer-chrome);
+  background: var(--ui-nav-veil);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--ui-border);
+}
+
+/* Brand slot (mark + wordmark) shared by both shapes. */
+.mk-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.mk-nav-wordmark {
+  font-family: var(--ui-font-display);
+  font-weight: 600;
+  font-size: var(--ui-display-h6);
+  color: var(--ui-text);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Small solid CTA pill. */
+.mk-nav-apply {
+  font-family: var(--ui-font-sans);
+  font-weight: 700;
+  font-size: var(--ui-text-sm);
+  letter-spacing: var(--ui-tracking-wide);
+  padding: var(--ui-space-2) var(--ui-space-5);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.mk-nav-apply:hover {
+  background: var(--ui-accent-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--ui-accent-glow);
+}
+
+/* ── Bar shape ── */
+.mk-nav.bar {
+  padding: 0 var(--ui-space-7);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-5);
+}
+.mk-nav-links {
+  list-style: none;
+  display: flex;
+  gap: var(--ui-space-6);
+  margin: 0;
+  padding: 0;
+}
+.mk-nav-links a {
+  font-size: var(--ui-text-sm);
+  font-weight: 700;
+  color: var(--ui-text-muted);
+  text-decoration: none;
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.mk-nav-links a:hover,
+.mk-nav-links a.active { color: var(--ui-text); }
+.mk-nav-cta {
+  font-size: var(--ui-text-sm);
+  font-weight: 700;
+  color: var(--ui-accent);
+  text-decoration: none;
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.mk-nav-cta:hover { opacity: 0.8; }
+
+/* Hamburger (bar shape, ≤768px); spans morph to an X under .open. */
+.mk-nav-burger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--ui-space-2);
+}
+.mk-nav-burger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ui-text);
+  border-radius: 1px;
+  transition: all 0.25s;
+}
+.mk-nav-burger span + span { margin-top: 5px; }
+.mk-nav.open .mk-nav-burger span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.mk-nav.open .mk-nav-burger span:nth-child(2) { opacity: 0; }
+.mk-nav.open .mk-nav-burger span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+/* ── Rail shape ── */
+.mk-nav-top {
+  max-width: var(--ui-content-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px var(--ui-space-7) 12px;
+}
+.mk-nav-rail {
+  max-width: var(--ui-content-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ui-space-7);
+  height: 30px;
+}
+.mk-nav-tabs {
+  display: flex;
+  gap: 0;
+  height: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mk-nav-tabs a,
+.mk-nav-tabs button.mk-nav-tab {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ui-text);
+  text-decoration: none;
+  padding: 0 var(--ui-space-4);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.mk-nav-tabs a:hover,
+.mk-nav-tabs button.mk-nav-tab:hover { color: var(--ui-accent); }
+.mk-nav-tabs a.active,
+.mk-nav-tabs button.mk-nav-tab.active {
+  color: var(--ui-text);
+  border-bottom-color: var(--ui-text);
+}
+
+/* Dropdown section (rail shape). */
+.mk-nav-has-menu { position: relative; height: 100%; display: flex; }
+.mk-nav-dd {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-top: none;
+  box-shadow: var(--ui-shadow-strong);
+  padding: var(--ui-space-2) 0;
+  display: none;
+  z-index: var(--ui-layer-overlay);
+  flex-direction: column;
+}
+.mk-nav-has-menu:hover .mk-nav-dd,
+.mk-nav-has-menu:focus-within .mk-nav-dd,
+.mk-nav-has-menu.open .mk-nav-dd { display: flex; }
+.mk-nav-dd-link {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ui-text);
+  text-decoration: none;
+  padding: var(--ui-space-2) var(--ui-space-4);
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.mk-nav-dd-link:hover { background: var(--ui-surface); color: var(--ui-accent); }
+.mk-nav-dd-link.current { color: var(--ui-accent); font-weight: 700; }
+
+@media (max-width: 768px) {
+  /* Bar shape collapses to hamburger; the links list becomes the dropdown. */
+  .mk-nav.bar .mk-nav-links,
+  .mk-nav.bar .mk-nav-cta { display: none; }
+  .mk-nav.bar .mk-nav-burger { display: block; }
+  .mk-nav.bar.open .mk-nav-links {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--ui-nav-veil);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--ui-border);
+    padding: var(--ui-space-5) var(--ui-space-7);
+    flex-direction: column;
+    gap: var(--ui-space-4);
+  }
+  .mk-nav.bar.open .mk-nav-links a {
+    font-size: var(--ui-text-md);
+    font-weight: 600;
+    color: var(--ui-text);
+    letter-spacing: normal;
+    text-transform: none;
+    padding: var(--ui-space-2) 0;
+    display: block;
+  }
+  .mk-nav.bar.open .mk-nav-links a:hover { color: var(--ui-accent); }
+
+  .mk-nav-top { padding: 14px 20px 10px; }
+  .mk-nav-rail { padding: 0 16px; height: 44px; }
+  .mk-nav-tabs a,
+  .mk-nav-tabs button.mk-nav-tab {
+    font-size: 10px;
+    letter-spacing: var(--ui-tracking-caps);
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+  .mk-nav-apply { font-size: 10px; padding: 7px 14px; }
+}
+
+@media (max-width: 600px) {
+  .mk-nav-rail { padding-left: 12px; padding-right: 12px; position: relative; }
+  .mk-nav-tabs {
+    justify-content: space-between;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .mk-nav-tabs::-webkit-scrollbar { display: none; }
+  .mk-nav-rail::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    background: linear-gradient(to right, transparent, var(--ui-nav-veil));
+    pointer-events: none;
+    z-index: 2;
+  }
+  .mk-nav-top { padding-left: 12px; padding-right: 12px; }
+}
+
+/* @odla-ai/ui — marketing footer
+   Sitemap columns over a brand row (mark + wordmark + tagline | meta) and
+   a legal block, on the raised surface with a hairline top rule. The giant
+   corner glyph comes from --ui-watermark-glyph (inert unless the theme
+   opts in). */
+
+.mk-footer {
+  padding: var(--ui-space-5) var(--ui-space-7) var(--ui-space-4);
+  text-align: left;
+  background: var(--ui-surface);
+  border-top: 1px solid var(--ui-border);
+  position: relative;
+  overflow: hidden;
+}
+.mk-footer::after {
+  content: var(--ui-watermark-glyph);
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  transform: translateY(-50%);
+  font-family: var(--ui-font-display);
+  font-size: 280px;
+  font-weight: 300;
+  color: var(--ui-text);
+  opacity: 0.04;
+  line-height: var(--ui-leading-none);
+  pointer-events: none;
+  user-select: none;
+}
+.mk-footer-inner {
+  max-width: var(--ui-content-width);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+}
+
+.mk-footer-sitemap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--ui-space-6);
+  width: 100%;
+}
+.mk-footer-heading {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ui-text);
+  margin: 0 0 var(--ui-space-2);
+}
+.mk-footer-link {
+  display: block;
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  line-height: var(--ui-leading-snug);
+  margin-bottom: 3px;
+  transition: color 0.2s;
+}
+.mk-footer-link:hover { color: var(--ui-accent); }
+
+.mk-footer-brandrow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-4);
+  border-top: 1px solid var(--ui-border);
+  padding-top: var(--ui-space-3);
+}
+.mk-footer-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-4);
+}
+.mk-footer-wordmark {
+  font-family: var(--ui-font-display);
+  font-weight: 300;
+  font-size: var(--ui-text-4xl);
+  color: var(--ui-text);
+  line-height: 1.15;
+  letter-spacing: var(--ui-tracking-snug);
+}
+.mk-footer-tag {
+  font-family: var(--ui-font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: var(--ui-text-lg);
+  color: var(--ui-text-muted);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+.mk-footer-meta { text-align: right; flex-shrink: 0; }
+.mk-footer-copy {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  opacity: 0.35;
+}
+.mk-footer-legal {
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  opacity: 0.55;
+  line-height: 1.6;
+  margin-top: var(--ui-space-2);
+  max-width: 600px;
+}
+
+@media (max-width: 600px) {
+  .mk-footer-sitemap { grid-template-columns: repeat(2, 1fr); }
+  .mk-footer-brandrow { flex-direction: column; gap: var(--ui-space-3); }
+  .mk-footer-meta { text-align: left; }
+}
+
+/* @odla-ai/ui — DataTable chrome (extends the .table family in table.css)
+   The DataTable component renders .table-wrap > .table inside .data-table;
+   this sheet adds the toolbar (filter input + live count), sortable header
+   buttons with direction carets, and the loading/empty/no-matches row. */
+
+.data-table { display: flex; flex-direction: column; gap: var(--ui-space-2); }
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+.table-filter {
+  font: inherit;
+  font-size: var(--ui-text-md);
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  padding: 5px 10px;
+  min-width: 200px;
+}
+.table-filter:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.table-filter::placeholder { color: var(--ui-text-faint); }
+.table-status {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sortable header: the whole header cell content is a real button. */
+.table th.sortable { padding: 0; }
+.table-sort {
+  font: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--ui-text-muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  padding: 7px 8px;
+}
+.table-sort:hover { color: var(--ui-text); }
+.table-sort:focus-visible { outline: none; box-shadow: var(--ui-focus); }
+.table-sort::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  opacity: 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.table-sort.asc::after {
+  border-bottom: 5px solid var(--ui-accent);
+  opacity: 1;
+}
+.table-sort.desc::after {
+  border-top: 5px solid var(--ui-accent);
+  opacity: 1;
+}
+
+.table-caption {
+  caption-side: top;
+  text-align: left;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  padding-bottom: var(--ui-space-2);
+}
+
+/* Selection column (`selectable`): a narrow leading checkbox cell. */
+.table .table-select {
+  width: 32px;
+  padding-right: 0;
+}
+.table .table-select input {
+  display: block;
+  margin: 0 auto;
+  accent-color: var(--ui-accent);
+  cursor: pointer;
+}
+.table .table-select input:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+
+/* Loading / empty / no-matches row. */
+.table-state {
+  padding: var(--ui-space-6) var(--ui-space-4);
+  text-align: center;
+  color: var(--ui-text-muted);
+  font-size: var(--ui-text-md);
+}
+
+/* @odla-ai/ui — Pagination (.pager): offset/limit pager for server-driven
+   lists (pairs with DataTable `manual`). Prev/Next buttons around a live
+   tabular-numeral status label. */
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+.pager-status {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.pager-btn {
+  font: inherit;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.pager-btn:hover:not(:disabled) {
+  color: var(--ui-text);
+  border-color: var(--ui-border-strong);
+}
+.pager-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.pager-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+
+/* @odla-ai/ui — Combobox (.combobox): typeahead popup over the .input
+   contract. The wrapper anchors an absolutely-positioned listbox; options
+   carry value + muted hint and highlight via .active (keyboard or hover). */
+
+.combobox {
+  position: relative;
+}
+.combobox-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: var(--ui-layer-overlay);
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  box-shadow: var(--ui-shadow);
+  max-height: 280px;
+  overflow-y: auto;
+}
+.combobox-option {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  padding: 6px 8px;
+  border-radius: var(--ui-radius-sm);
+  cursor: pointer;
+  font-size: var(--ui-text-md);
+  color: var(--ui-text);
+}
+.combobox-option.active {
+  background: var(--ui-accent-soft);
+}
+.combobox-hint {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  flex-shrink: 0;
+}
+.combobox-empty {
+  padding: 6px 8px;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+}
+
+/* @odla-ai/ui — choropleth map
+   SVG region map. The component stamps each shape with a continuous
+   `--ui-heat` (0..1) custom property AND a stepped data-heat="0..5" bucket;
+   fills mix the theme's heat ramp ends so any theme recolors the map with
+   no redraw. Selection/hover states ride the accent. */
+
+.choropleth {
+  margin: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+}
+.choropleth svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.choropleth-shape {
+  fill: color-mix(
+    in oklab,
+    var(--ui-chart-heat-hi) calc(var(--ui-heat, 0) * 100%),
+    color-mix(in srgb, var(--ui-chart-geo-fill) 60%, var(--ui-surface))
+  );
+  stroke: var(--ui-chart-geo-line);
+  stroke-width: 0.75;
+  transition: fill 0.2s, stroke 0.2s;
+}
+.choropleth-shape.selectable { cursor: pointer; }
+.choropleth-shape.selectable:hover { stroke: var(--ui-accent); stroke-width: 1.5; }
+.choropleth-shape.selected {
+  stroke: var(--ui-accent-strong);
+  stroke-width: 2;
+}
+.choropleth-shape:focus-visible {
+  outline: none;
+  stroke: var(--ui-accent);
+  stroke-width: 2;
+}
+
+.choropleth-tip {
+  position: absolute;
+  box-sizing: border-box;
+  transform: translate(-50%, calc(-100% - 10px));
+  background: var(--ui-chart-tip-bg);
+  color: var(--ui-chart-tip-text);
+  border: 1px solid var(--ui-border-strong);
+  box-shadow: var(--ui-shadow-strong);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-snug);
+  padding: var(--ui-space-2) 10px;
+  border-radius: var(--ui-radius-md);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.choropleth-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4);
+  align-items: center;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+}
+.choropleth-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.choropleth-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--ui-border);
+  background: color-mix(
+    in oklab,
+    var(--ui-chart-heat-hi) calc(var(--ui-heat, 0) * 100%),
+    color-mix(in srgb, var(--ui-chart-geo-fill) 60%, var(--ui-surface))
+  );
+}
+
+/* @odla-ai/ui — cycle diagram
+   N labeled nodes on a circle with an aria-hidden connector ring (SVG arcs,
+   stroked with the chart series colors by the component). The node list is
+   a real <ol> so the reading order is the cycle order. */
+
+.cycle {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+.cycle-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.cycle-ring circle {
+  fill: none;
+  stroke: var(--ui-chart-grid);
+  stroke-width: 0.4;
+}
+.cycle-ring path {
+  fill: none;
+  stroke-width: 0.8;
+  opacity: 0.75;
+}
+
+.cycle-nodes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+}
+.cycle-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-2);
+  text-align: center;
+  max-width: 130px;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-snug);
+  color: var(--ui-text-muted);
+}
+.cycle-dot {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--ui-radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: 700;
+  color: var(--ui-on-accent);
+  flex-shrink: 0;
+}
+.cycle-node-label {
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+.cycle-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-2);
+  text-align: center;
+  max-width: 40%;
+}
+
+/* @odla-ai/ui — metric widget
+   A KPI + trend card: a headline value, its delta vs the previous period, a
+   secondary peak stat, and an inline-SVG chart (a cumulative/per-bucket line
+   with a dashed ghost, or diverging variance bars). Every colour resolves from
+   the theme's --ui-chart-* roles, so any theme recolours it with no redraw.
+   Size classes progressively disclose detail — small hides the peak stat and
+   the point markers/axis labels the chart component only emits at large. */
+
+.metric {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-4);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow);
+}
+
+.metric-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2) var(--ui-space-3);
+}
+
+.metric-label {
+  min-width: 0;
+  margin: 0;
+  font-size: var(--ui-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-widest);
+  color: var(--ui-text-muted);
+}
+
+.metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  flex-wrap: wrap;
+}
+
+.metric-value {
+  font-family: var(--ui-font-display);
+  font-weight: 700;
+  letter-spacing: var(--ui-tracking-tight);
+  line-height: var(--ui-leading-none);
+  color: var(--ui-text);
+}
+
+.metric-delta {
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.metric-delta.pos { color: var(--ui-chart-pos); }
+.metric-delta.neg { color: var(--ui-chart-neg); }
+
+.metric-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  flex-shrink: 0;
+}
+
+.metric-peak {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+}
+.metric-peak-label {
+  font-size: var(--ui-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-wide);
+  color: var(--ui-text-faint);
+}
+.metric-peak-value {
+  font-size: var(--ui-text-md);
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+.metric-chart {
+  position: relative;
+  width: 100%;
+}
+.metric-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  cursor: crosshair;
+}
+
+.metric-hover-target { fill: transparent; }
+
+.metric-area { fill: var(--ui-chart-band); stroke: none; }
+.metric-line {
+  fill: none;
+  stroke: var(--ui-chart-1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.metric-ghost {
+  fill: none;
+  stroke: var(--ui-chart-axis-faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+.metric-point {
+  fill: var(--ui-chart-1);
+  stroke: var(--ui-chart-dot-stroke);
+  stroke-width: 1.5;
+}
+.metric-bar.pos { fill: var(--ui-chart-pos); }
+.metric-bar.neg { fill: var(--ui-chart-neg); }
+.metric-zero {
+  stroke: var(--ui-chart-grid-zero);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.metric-grid {
+  stroke: var(--ui-chart-grid);
+  stroke-width: 1;
+}
+.metric-hover { pointer-events: none; }
+.metric-hover-line {
+  stroke: var(--ui-chart-axis-faint);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.metric-hover-dot {
+  fill: var(--ui-chart-1);
+  stroke: var(--ui-chart-dot-stroke);
+  stroke-width: 1.5;
+}
+.metric-hover-dot.pos { fill: var(--ui-chart-pos); }
+.metric-hover-dot.neg { fill: var(--ui-chart-neg); }
+.metric-hover-dot.ghost { fill: var(--ui-chart-axis-faint); }
+
+/* Stroke weights stay in screen px so lines read the same at any card size
+   (the 100×56 viewBox otherwise scales strokes up with width). */
+.metric-line,
+.metric-ghost,
+.metric-point,
+.metric-zero,
+.metric-grid,
+.metric-hover-line,
+.metric-hover-dot {
+  vector-effect: non-scaling-stroke;
+}
+
+.metric-tip {
+  position: absolute;
+  box-sizing: border-box;
+  min-width: 128px;
+  transform: translate(-50%, calc(-100% - 8px));
+  padding: var(--ui-space-2) 10px;
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-chart-tip-bg);
+  color: var(--ui-chart-tip-text);
+  box-shadow: var(--ui-shadow-strong);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-snug);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 2;
+}
+.metric-tip.start { transform: translate(0, calc(-100% - 8px)); }
+.metric-tip.end { transform: translate(-100%, calc(-100% - 8px)); }
+.metric-tip-label {
+  margin-bottom: var(--ui-space-1);
+  font-weight: 700;
+  color: var(--ui-chart-tip-text);
+}
+.metric-tip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+.metric-tip-row > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ui-text-muted);
+}
+.metric-tip-row strong { color: var(--ui-chart-tip-text); }
+.metric-tip-row i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ui-chart-1);
+}
+.metric-tip-row i.pos { background: var(--ui-chart-pos); }
+.metric-tip-row i.neg { background: var(--ui-chart-neg); }
+.metric-tip-row i.ghost { background: var(--ui-chart-axis-faint); }
+
+.metric-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--ui-text-xs);
+  color: var(--ui-chart-axis);
+}
+.metric-tick {
+  flex: 1 1 0;
+  text-align: center;
+}
+
+/* Size scale — the numeral grows with the card. */
+.metric-small { gap: var(--ui-space-2); }
+.metric-small .metric-value { font-size: var(--ui-text-4xl); }
+.metric-medium .metric-value { font-size: var(--ui-display-h4); }
+.metric-large { gap: var(--ui-space-4); }
+.metric-large .metric-value { font-size: var(--ui-display-h2); }

@@ -1,0 +1,85 @@
+// Cloudflare Worker config for the Silver & Salt Capital site (odla migration).
+// Serves the static build from dist/ via an assets binding.
+//
+// IMPORTANT (until Phase 5 sign-off): deploy ONLY the dev environment
+//   npx wrangler deploy --env dev
+// Never deploy the top-level (prod) config before Phase 5.
+//
+// The entry is src/worker-chapter.ts: chapterWorker with the three remaining
+// legacy compatibility routes mounted in front of it. It replaced the bare
+// src/worker.ts here once Chapter became the primary implementation. The legacy
+// module is still imported BY that entry for those three routes, so it stays in
+// the tree; it is simply no longer an entry point.
+//
+// The separate "canary" environment was removed with the same change. It existed
+// so the Chapter build could be measured without touching the dev worker while
+// the legacy worker was still primary. That is no longer true, so dev IS the
+// Chapter deployment and a second worker would only drift.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "silver-and-salt-capital",
+  "main": "src/worker-chapter.ts",
+  "compatibility_date": "2026-07-11",
+  "compatibility_flags": ["nodejs_compat"],
+  // Plain vars, not secrets. The secret (ODLA_API_KEY) is pushed by the odla
+  // CLI via wrangler stdin and never appears in this file or the repo.
+  // Top level = prod tenant, used only from Phase 5 on.
+  "vars": {
+    "ODLA_ENDPOINT": "https://db.odla.ai",
+    "ODLA_TENANT": "silver-and-salt-capital",
+    "ODLA_PLATFORM": "https://odla.ai",
+    "ODLA_APP_ID": "silver-and-salt-capital",
+    "ODLA_ENV": "prod",
+    // Verified sender for Cloudflare Email Service. Phase 5 pre-requisite:
+    // onboard silverandsaltcapital.com to Email Service in the Cloudflare
+    // dashboard BEFORE the first prod deploy, or sends fail with
+    // E_SENDER_NOT_VERIFIED (they are audited in emailLog either way).
+    "EMAIL_FROM": "membership@silverandsaltcapital.com"
+  },
+  // Cloudflare Email Service: lets the Worker send transactional email.
+  // The from address must be on a domain onboarded to Email Service in this
+  // account; src/email.ts falls back to log-only when the binding or
+  // EMAIL_FROM is absent.
+  "send_email": [{ "name": "SEND_EMAIL" }],
+  "assets": {
+    // Always the Phase 0 build dir (npm run build), never the repo root.
+    "directory": "dist",
+    "binding": "ASSETS",
+    // Matches the current site: no custom 404.html exists, so missing
+    // paths return a plain 404 (GitHub Pages serves its own default page).
+    "not_found_handling": "404-page",
+    // GitHub Pages serves /join.html AND /join both as 200. Cloudflare has
+    // no exact equivalent; this default keeps both forms reachable
+    // (.html URLs 307-redirect to extensionless). "none" would 404 any
+    // extensionless link, so it is the wrong trade.
+    "html_handling": "auto-trailing-slash"
+  },
+  "env": {
+    // The Chapter deployment. Inherits `main` (src/worker-chapter.ts) from the
+    // top level, so dev and a future prod deploy cannot disagree about which
+    // entry they run — the drift that a separate canary env invited.
+    "dev": {
+      "name": "silver-and-salt-capital-dev",
+      "vars": {
+        "ODLA_ENDPOINT": "https://db.odla.ai",
+        "ODLA_TENANT": "silver-and-salt-capital--dev",
+        "ODLA_PLATFORM": "https://odla.ai",
+        "ODLA_APP_ID": "silver-and-salt-capital",
+        "ODLA_ENV": "dev",
+        // Dev sends from the odla.ai domain (already onboarded to Email
+        // Service on this Cloudflare account) until the Phase 5 cutover
+        // onboards silverandsaltcapital.com. Dev deliveries are further
+        // redirected to the group's debug inbox by src/email.ts.
+        "EMAIL_FROM": "silver-and-salt-capital@odla.ai"
+      },
+      // Environments inherit no bindings; dev declares its own.
+      "send_email": [{ "name": "SEND_EMAIL" }],
+      "assets": {
+        "directory": "dist",
+        "binding": "ASSETS",
+        "not_found_handling": "404-page",
+        "html_handling": "auto-trailing-slash"
+      }
+    }
+  }
+}
