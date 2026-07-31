@@ -894,5 +894,6 @@ files only — `assets/odla-ui/odla-ui.css` especially).
   package decision `21c28820-c0b6-5780-b8e1-bd34d01100c4`; updated the frozen
   parity fixtures before provisioning. This follower still has no leader
   target configuration and retains its existing brand, public/member routes,
-  admin structure, and local pipeline authority. Production and `main` remain
-  untouched.
+  admin structure, and local pipeline authority. The source change targets the
+  primary `main` branch; only the development Worker is deployed. The
+  production Worker remains untouched.
