@@ -979,6 +979,36 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
   border-radius: 6px; padding: 11px 14px; margin-bottom: 8px;
 }
 .stage-body { flex: 1; min-width: 0; }
+
+/* Done this week + Accomplishments page */
+.done-block { background: #FAFAF7; }
+.done-week-range { font-size: 12px; color: var(--sage); letter-spacing: 0.02em; }
+.done-row .done-text { color: var(--sage); }
+.done-on { font-size: 11px; color: var(--sage); margin-left: 8px; letter-spacing: 0.03em; }
+.done-week-foot { margin-top: 10px; font-size: 12px; color: var(--sage); }
+.done-week-foot a { color: var(--teal); }
+.acc-totals { display: flex; gap: 12px; margin: 6px 0 22px; flex-wrap: wrap; }
+.acc-stat { background: white; border: 1px solid rgba(47,62,52,0.12); border-radius: 8px;
+  padding: 14px 20px; min-width: 118px; }
+.acc-stat-n { font-family: 'Cormorant Garamond', serif; font-size: 30px; color: var(--moss); line-height: 1; }
+.acc-stat-l { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--sage); margin-top: 5px; }
+.acc-week { background: white; border: 1px solid rgba(47,62,52,0.12); border-radius: 8px;
+  margin-bottom: 14px; overflow: hidden; }
+.acc-week.current { border-color: var(--teal); box-shadow: 0 0 0 1px rgba(90,138,120,0.25); }
+.acc-week-head { display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 16px; background: var(--sand); border-bottom: 1px solid rgba(47,62,52,0.1); }
+.acc-week-range { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--moss); }
+.acc-now { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em;
+  background: var(--teal); color: #F7F5F0; padding: 2px 7px; border-radius: 9px; margin-left: 7px;
+  vertical-align: middle; }
+.acc-week-n { font-size: 12px; color: var(--sage); }
+.acc-week-list { list-style: none; margin: 0; padding: 8px 16px 14px; }
+.acc-week-list li { padding: 5px 0; font-size: 14px; color: var(--moss);
+  border-bottom: 1px solid rgba(47,62,52,0.05); }
+.acc-week-list li:last-child { border-bottom: none; }
+.acc-mark { color: var(--teal); margin-right: 9px; font-weight: 600; }
+.acc-mark.manual { color: var(--warm); }
+
 /* Overdue and due-today alert banner */
 .overdue-alert {
   background: var(--dash-red-bg); border: 1px solid rgba(176,52,29,0.28);
@@ -1304,6 +1334,7 @@ select.act-select { cursor: pointer; }
 <nav class="tab-nav">
   <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
   <button class="tab-btn" data-tab="actions" onclick="switchTab('actions')">Actions</button>
+  <button class="tab-btn" data-tab="accomplishments" onclick="switchTab('accomplishments')">Accomplishments</button>
   <button class="tab-btn" data-tab="newsletter" onclick="switchTab('newsletter')">Monthly Newsletter</button>
 </nav>
 
@@ -2339,6 +2370,16 @@ select.act-select { cursor: pointer; }
 
       <div id="overdue-alert" class="overdue-alert" style="display:none"></div>
 
+      <div class="staging-block done-block">
+        <div class="staging-head">
+          <span class="review-col-title">Done this week <span id="done-week-count" class="acc-tag"></span></span>
+          <span class="done-week-range" id="done-week-label"></span>
+        </div>
+        <div class="staging-sub">Completed actions move here and out of the A, B, and C lists. The week runs Sunday to Saturday, so this clears itself each Sunday. Nothing is lost: everything stays on the Accomplishments page.</div>
+        <div id="done-week-list"></div>
+        <div class="done-week-foot" id="done-week-foot"></div>
+      </div>
+
       <div class="staging-block">
         <div class="staging-head">
           <span class="review-col-title">Staging <span id="staging-count" class="acc-tag"></span></span>
@@ -2443,6 +2484,17 @@ select.act-select { cursor: pointer; }
 </section>
 
 <!-- ══ MONTHLY NEWSLETTER TAB ═══════════════════════════════════════════════ -->
+<section class="tab-panel" id="tab-accomplishments">
+  <div class="section-head">
+    <div>
+      <div class="actions-intro">Accomplishments</div>
+      <div class="actions-sub">Every week you have finished something, Sunday to Saturday, newest first. This page never resets.</div>
+    </div>
+  </div>
+  <div id="acc-totals" class="acc-totals"></div>
+  <div id="acc-weeks"></div>
+</section>
+
 <section class="tab-panel" id="tab-newsletter">
   <div class="actions-main">
     <div class="act-section">
@@ -2648,6 +2700,7 @@ function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelector('.tab-btn[data-tab="' + name + '"]').classList.add('active');
+  if (name === 'accomplishments') { renderAccomplishmentsPage(); }
   if (name === 'actions') { renderOverdueAlert(); renderStaging(); renderParked(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
   if (name === 'newsletter') renderNewsletter();
 }
@@ -2884,6 +2937,68 @@ function removeParked(id) {
 function logDiscard(it, note) {
   (DATA.log = DATA.log || []).push({ id: uid(), itemId: it.id, text: it.text,
     priority: '', due: '', action: 'deleted', at: new Date().toISOString(), note: note });
+}
+
+/* ── Accomplishments by week ──────────────────────────────────────────
+   Builds the full history from two sources: actions checked off (bucketed by
+   completedDate) and wins logged by hand. Weeks run Sunday to Saturday and are
+   listed newest first. This view is cumulative and never resets. */
+function buildWeekBuckets() {
+  const weeks = {};
+  const touch = k => (weeks[k] = weeks[k] || { key: k, done: [], manual: [] });
+  DATA.items.forEach(i => {
+    if (i.done && i.completedDate) touch(weekKeyFromStr(i.completedDate)).done.push(i);
+  });
+  Object.keys(DATA.accomplishments || {}).forEach(k => {
+    const list = DATA.accomplishments[k] || [];
+    if (list.length) touch(k).manual = list.slice();
+  });
+  return Object.keys(weeks).sort().reverse().map(k => weeks[k]);
+}
+function renderAccomplishmentsPage() {
+  const wrap = document.getElementById('acc-weeks');
+  const tot = document.getElementById('acc-totals');
+  if (!wrap) return;
+  const buckets = buildWeekBuckets();
+  const thisKey = weekKey(new Date());
+  const totalDone = buckets.reduce((n, b) => n + b.done.length, 0);
+  const totalManual = buckets.reduce((n, b) => n + b.manual.length, 0);
+  const thisWeek = buckets.find(b => b.key === thisKey);
+  const thisCount = thisWeek ? thisWeek.done.length + thisWeek.manual.length : 0;
+  if (tot) {
+    tot.innerHTML =
+      '<div class="acc-stat"><div class="acc-stat-n">' + thisCount + '</div><div class="acc-stat-l">this week</div></div>' +
+      '<div class="acc-stat"><div class="acc-stat-n">' + (totalDone + totalManual) + '</div><div class="acc-stat-l">all time</div></div>' +
+      '<div class="acc-stat"><div class="acc-stat-n">' + buckets.length + '</div><div class="acc-stat-l">weeks with wins</div></div>';
+  }
+  wrap.innerHTML = '';
+  if (!buckets.length) {
+    wrap.innerHTML = '<div class="act-empty">Nothing logged yet. Check off an action, or add a win under Actions, and the week will appear here.</div>';
+    return;
+  }
+  buckets.forEach(b => {
+    const d = new Date(b.key + 'T12:00:00');
+    const isNow = b.key === thisKey;
+    const n = b.done.length + b.manual.length;
+    const card = document.createElement('div');
+    card.className = 'acc-week' + (isNow ? ' current' : '');
+    let rows = '';
+    b.done.forEach(function (i) {
+      rows += '<li><span class="acc-mark">&#10003;</span>' + esc(i.text) +
+        '<span class="src-tag">' + esc(i.priority) + '</span>' +
+        (i.completedDate ? '<span class="done-on">' + fmtDue(i.completedDate) + '</span>' : '') + '</li>';
+    });
+    b.manual.forEach(function (a) {
+      rows += '<li><span class="acc-mark manual">&#9733;</span>' + esc(a.text) +
+        '<span class="src-tag">logged</span></li>';
+    });
+    card.innerHTML =
+      '<div class="acc-week-head">' +
+        '<span class="acc-week-range">' + weekRangeLabel(d) + (isNow ? ' <span class="acc-now">this week</span>' : '') + '</span>' +
+        '<span class="acc-week-n">' + n + (n === 1 ? ' win' : ' wins') + '</span>' +
+      '</div><ul class="acc-week-list">' + rows + '</ul>';
+    wrap.appendChild(card);
+  });
 }
 
 /* ── Overdue alert: everything past due or due today, wherever it lives ──
@@ -3137,10 +3252,69 @@ function renderActions() {
       '<div class="abc-group-body" id="grp-' + p + '"></div>';
     root.appendChild(group);
     const body = group.querySelector('#grp-' + p);
-    const items = DATA.items.filter(i => i.priority === p).sort((a,b) => a.order - b.order);
+    // Completed items leave the ABC lists and live in the Done section instead.
+    const items = DATA.items.filter(i => i.priority === p && !i.done).sort((a,b) => a.order - b.order);
     if (!items.length) { body.innerHTML = '<div class="act-empty">No ' + p + ' items.</div>'; return; }
     items.forEach((it, idx) => body.appendChild(renderItem(it, p, idx + 1, idx, items.length)));
   });
+  renderDoneWeek();
+}
+
+/* ── Done this week ───────────────────────────────────────────────────
+   Weeks run Sunday to Saturday. Anything completed inside the current week
+   shows here; when the week rolls over this list empties on its own and the
+   items stay permanently on the Accomplishments page. Nothing is deleted. */
+function weekRangeLabel(d) {
+  const s = sundayOf(d), e = new Date(s); e.setDate(s.getDate() + 6);
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const sameMonth = s.getMonth() === e.getMonth();
+  return m[s.getMonth()] + ' ' + s.getDate() + ' to ' +
+    (sameMonth ? '' : m[e.getMonth()] + ' ') + e.getDate() + ', ' + e.getFullYear();
+}
+function doneItemsForWeek(key) {
+  return DATA.items
+    .filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) === key)
+    .sort((a,b) => (b.completedDate || '').localeCompare(a.completedDate || ''));
+}
+function renderDoneWeek() {
+  const box = document.getElementById('done-week-list');
+  if (!box) return;
+  const key = weekKey(new Date());
+  const done = doneItemsForWeek(key);
+  const manual = (DATA.accomplishments[key] || []).length;
+  const lbl = document.getElementById('done-week-label');
+  if (lbl) lbl.textContent = weekRangeLabel(new Date());
+  const cnt = document.getElementById('done-week-count');
+  if (cnt) cnt.textContent = (done.length + manual) ? (done.length + manual) : '';
+  const older = DATA.items.filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) !== key).length;
+  const foot = document.getElementById('done-week-foot');
+  if (foot) {
+    foot.innerHTML = older
+      ? older + ' completed in earlier weeks. <a href="#" onclick="switchTab(\'accomplishments\');return false;">See all accomplishments by week</a>.'
+      : '<a href="#" onclick="switchTab(\'accomplishments\');return false;">See all accomplishments by week</a>.';
+  }
+  box.innerHTML = '';
+  if (!done.length) {
+    box.innerHTML = '<div class="act-empty">Nothing completed yet this week. Check off an action and it lands here.</div>';
+    return;
+  }
+  done.forEach(it => box.appendChild(doneItem(it)));
+}
+function doneItem(it) {
+  const el = document.createElement('div');
+  el.className = 'stage-item done-row';
+  el.innerHTML =
+    '<div class="stage-body">' +
+      '<div class="act-text done-text">' + esc(it.text) +
+        '<span class="src-tag">' + esc(it.priority) + '</span>' +
+        (it.completedDate ? '<span class="done-on">' + fmtDue(it.completedDate) + '</span>' : '') +
+      '</div>' +
+      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Reopen this action" onclick="toggleDone(\'' + it.id + '\')">↩</button>' +
+    '</div>';
+  return el;
 }
 
 function renderItem(it, p, num, idx, count) {
@@ -3324,7 +3498,7 @@ function toggleDone(id) {
   it.done = !it.done;
   it.completedDate = it.done ? todayStr() : null;
   if (it.done) logEntry(it, 'completed'); else unlogCompletion(it.id);
-  saveData(); renderActions(); renderWeekly(); renderReport(); renderLog();
+  saveData(); renderActions(); renderDoneWeek(); renderAccomplishmentsPage(); renderWeekly(); renderReport(); renderLog();
 }
 function setPriority(id, p) {
   const it = DATA.items.find(i => i.id === id); if (!it || it.priority === p) return;
@@ -3787,6 +3961,7 @@ importInbox();
 renderStaging();
 renderParked();
 renderOverdueAlert();
+renderAccomplishmentsPage();
 renderDelegated();
 renderLog();
 </script>
