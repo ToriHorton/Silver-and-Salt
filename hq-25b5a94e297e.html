@@ -1011,6 +1011,18 @@ button.oa-when.today:hover { background: rgba(138,109,31,0.1); }
   padding: 4px 7px; border: 1px solid rgba(47,62,52,0.3); border-radius: 4px; }
 
 
+
+/* Backup and restore bar */
+.databar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: white; border: 1px solid rgba(47,62,52,0.12); border-radius: 8px;
+  padding: 10px 14px; margin-bottom: 18px; font-size: 12px; }
+.databar-label { color: var(--sage); }
+.databar-state { font-weight: 600; }
+.databar-state.never { color: var(--dash-red); }
+.databar-state.stale { color: #8A6D1F; }
+.databar-state.ok { color: var(--teal); }
+.databar-actions { margin-left: auto; display: flex; gap: 7px; }
+
 /* Quarterly goals + agent suggestions */
 .goals-block { background: #F6F4EE; }
 .goals-nav { display: flex; align-items: center; gap: 5px; }
@@ -2402,6 +2414,16 @@ select.act-select { cursor: pointer; }
         <button class="act-btn" onclick="addAction()">+ Add action</button>
       </div>
 
+      <div class="databar">
+        <span class="databar-label">Your data lives in this browser only.</span>
+        <span id="export-state" class="databar-state"></span>
+        <span class="databar-actions">
+          <button class="act-btn" onclick="exportBackup()">Download backup</button>
+          <button class="act-btn ghost" onclick="document.getElementById('restore-file').click()">Restore from file</button>
+          <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this)">
+        </span>
+      </div>
+
       <div id="overdue-alert" class="overdue-alert" style="display:none"></div>
 
       <div class="staging-block goals-block">
@@ -2756,7 +2778,7 @@ function switchTab(name) {
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelector('.tab-btn[data-tab="' + name + '"]').classList.add('active');
   if (name === 'accomplishments') { renderAccomplishmentsPage(); }
-  if (name === 'actions') { renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
+  if (name === 'actions') { renderExportState(); renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
   if (name === 'newsletter') renderNewsletter();
 }
 
@@ -2922,6 +2944,103 @@ function completeStaged(id) {
 function logDiscard(it, note) {
   (DATA.log = DATA.log || []).push({ id: uid(), itemId: it.id, text: it.text,
     priority: '', due: '', action: 'deleted', at: new Date().toISOString(), note: note });
+}
+
+/* ── Export and restore ───────────────────────────────────────────────
+   Everything here lives in one browser's localStorage. That is a single point
+   of failure: clearing site data, a new profile, or a different machine loses
+   the lot. These two buttons are the way out and the way back. */
+const BACKUP_VERSION = 1;
+function backupPayload() {
+  return {
+    _format: 'silver-and-salt-capital-dashboard-backup',
+    _version: BACKUP_VERSION,
+    exportedAt: new Date().toISOString(),
+    storeKey: STORE_KEY,
+    counts: {
+      items: (DATA.items || []).length,
+      openItems: (DATA.items || []).filter(i => !i.done).length,
+      completedItems: (DATA.items || []).filter(i => i.done).length,
+      staging: (DATA.staging || []).length,
+      delegated: (DATA.delegated || []).length,
+      log: (DATA.log || []).length,
+      quarterGoals: Object.keys(DATA.quarterGoals || {}).reduce((n, q) => n + (DATA.quarterGoals[q] || []).length, 0),
+      accomplishmentWeeks: Object.keys(DATA.accomplishments || {}).length
+    },
+    data: DATA
+  };
+}
+function exportBackup() {
+  const payload = backupPayload();
+  const txt = JSON.stringify(payload, null, 2);
+  const name = 'ssc-dashboard-backup-' + todayStr() + '.json';
+  try {
+    const blob = new Blob([txt], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
+    DATA.lastExport = payload.exportedAt;
+    saveData(); renderExportState();
+    const c = payload.counts;
+    showUndo('Saved ' + name + ' (' + c.items + ' actions, ' + c.staging + ' staged, ' +
+      c.log + ' archived)', null);
+  } catch (e) {
+    window.prompt('Could not download automatically. Copy this and save it as ' + name + ':', txt);
+  }
+}
+function restoreBackup(input) {
+  const file = input && input.files && input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function () {
+    let parsed;
+    try { parsed = JSON.parse(reader.result); }
+    catch (e) { showUndo('That file is not valid JSON, nothing was changed.', null); input.value = ''; return; }
+    const incoming = (parsed && parsed.data) ? parsed.data : parsed;
+    if (!incoming || typeof incoming !== 'object' || !Array.isArray(incoming.items)) {
+      showUndo('That does not look like a dashboard backup, nothing was changed.', null);
+      input.value = ''; return;
+    }
+    const before = JSON.stringify(DATA);
+    const n = (incoming.items || []).length, s = (incoming.staging || []).length;
+    const when = parsed && parsed.exportedAt ? parsed.exportedAt.slice(0, 10) : 'unknown date';
+    if (!window.confirm('Restore ' + n + ' actions and ' + s + ' staged items from ' + when + '?\n\n' +
+        'This replaces what is in this browser right now (' + (DATA.items || []).length + ' actions, ' +
+        ((DATA.staging || []).length) + ' staged).\n\nYour current data is snapshotted first, and Undo will put it back.')) {
+      input.value = ''; return;
+    }
+    try { localStorage.setItem(STORE_KEY + '__before_restore_' + todayStr(), before); } catch (e) {}
+    DATA = normalize(incoming);
+    saveData();
+    renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging();
+    renderActions(); renderWeekly(); renderReport(); renderDelegated(); renderLog();
+    renderAccomplishmentsPage(); renderExportState();
+    input.value = '';
+    showUndo('Restored from ' + when + '. Undo puts your previous data back.', function () {
+      DATA = normalize(JSON.parse(before));
+      saveData();
+      renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging();
+      renderActions(); renderWeekly(); renderReport(); renderDelegated(); renderLog();
+      renderAccomplishmentsPage(); renderExportState();
+    });
+  };
+  reader.readAsText(file);
+}
+function renderExportState() {
+  const el = document.getElementById('export-state');
+  if (!el) return;
+  if (!DATA.lastExport) {
+    el.className = 'databar-state never';
+    el.textContent = 'Never backed up.';
+    return;
+  }
+  const d = DATA.lastExport.slice(0, 10);
+  const days = Math.floor((new Date(todayStr()) - new Date(d)) / 86400000);
+  el.className = 'databar-state' + (days >= 7 ? ' stale' : ' ok');
+  el.textContent = days <= 0 ? 'Backed up today.'
+    : 'Last backup ' + d + ' (' + days + ' day' + (days === 1 ? '' : 's') + ' ago).';
 }
 
 /* ── Quarterly goals ──────────────────────────────────────────────────
