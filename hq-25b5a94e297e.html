@@ -1059,20 +1059,9 @@ button.oa-when.today:hover { background: rgba(138,109,31,0.1); }
 /* Due-date control inside a staging row, sits under the ABC boxes */
 .stage-due-row { flex-basis: 100%; display: flex; justify-content: flex-end; margin-top: 5px; }
 
-/* Parked (deprioritized) list + one-click undo toast */
-.parked-block { margin-top: 14px; border-top: 1px solid rgba(47,62,52,0.12); padding-top: 12px; }
-.parked-head {
-  display: flex; align-items: center; gap: 8px; cursor: pointer;
-  font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--sage);
-  user-select: none; padding: 2px 0;
-}
-.parked-head:hover { color: var(--moss); }
-.parked-caret { font-size: 10px; transition: transform 0.15s; display: inline-block; }
-.parked-head.open .parked-caret { transform: rotate(90deg); }
-.parked-list { margin-top: 8px; }
-.parked-list .stage-item { opacity: 0.72; }
-.parked-list .stage-item:hover { opacity: 1; }
-.act-ctrl.park:hover { background: rgba(126,142,132,0.14); color: var(--sage); border-color: var(--sage); }
+.act-ctrl.check:hover { background: rgba(90,138,120,0.15); color: var(--teal); border-color: var(--teal); }
+
+/* Undo toast */
 .undo-toast {
   position: fixed; left: 50%; transform: translateX(-50%);
   bottom: 26px; z-index: 9999;
@@ -2408,13 +2397,6 @@ select.act-select { cursor: pointer; }
         <div class="staging-sub">Unsorted actions captured from Granola, email, and Claude work, including items owned by others. Review, edit, then assign a priority to move each into the list below.</div>
         <div id="staging-list"></div>
 
-        <div class="parked-block" id="parked-block" style="display:none">
-          <div class="parked-head" id="parked-head" onclick="toggleParked()">
-            <span class="parked-caret">&#9654;</span>
-            <span>Deprioritized <span id="parked-count" class="acc-tag"></span></span>
-          </div>
-          <div class="parked-list" id="parked-list" style="display:none"></div>
-        </div>
       </div>
 
       <div id="abc-groups"></div>
@@ -2634,10 +2616,12 @@ function normalize(d) {
   if (!d.items) d.items = [];
   d.items.forEach(i => { if (i.due === undefined) i.due = ''; if (i.keyTask === undefined) i.keyTask = false; });
   if (!d.staging) d.staging = [];
-  if (!d.parked) d.parked = [];   // deprioritized: out of the staging view, not deleted
+  // The deprioritized list was removed; fold anything left there back into staging
+  // so no action item can be stranded.
+  if (d.parked && d.parked.length) { d.staging = d.parked.concat(d.staging); }
+  d.parked = [];
   d.staging.forEach(s => { if (s.due === undefined) s.due = ''; });
-  d.parked.forEach(s => { if (s.due === undefined) s.due = ''; });
-  if (!d.delegated) d.delegated = [];
+    if (!d.delegated) d.delegated = [];
   if (!d.importedInbox) d.importedInbox = {}; // { normalizedText: syncDate } to avoid re-importing
   if (!d.monthlyNotes) d.monthlyNotes = {};
   if (!d.accomplishments) d.accomplishments = {};
@@ -2723,7 +2707,7 @@ function switchTab(name) {
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelector('.tab-btn[data-tab="' + name + '"]').classList.add('active');
   if (name === 'accomplishments') { renderAccomplishmentsPage(); }
-  if (name === 'actions') { renderOverdueAlert(); renderStaging(); renderParked(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
+  if (name === 'actions') { renderOverdueAlert(); renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
   if (name === 'newsletter') renderNewsletter();
 }
 
@@ -2814,7 +2798,7 @@ function stageItem(it) {
         '<button class="act-ctrl aB" title="Assign to B (should do)" onclick="assignStaged(\'' + it.id + '\',\'B\')">B</button>' +
         '<button class="act-ctrl aC" title="Assign to C (nice to do)" onclick="assignStaged(\'' + it.id + '\',\'C\')">C</button>' +
       '</span>' +
-      '<button class="act-ctrl park" title="Deprioritize: move out of view, one click" onclick="parkStaged(\'' + it.id + '\')">↓</button>' +
+      '<button class="act-ctrl check" title="Mark accomplished" onclick="completeStaged(\'' + it.id + '\')">✓</button>' +
       '<button class="act-ctrl" title="Edit" onclick="editStaged(\'' + it.id + '\')">✎</button>' +
       '<button class="act-ctrl danger" title="Discard (undo available)" onclick="removeStaged(\'' + it.id + '\')">✕</button>' +
       stageDueControl(it, 'staging') +
@@ -2822,7 +2806,7 @@ function stageItem(it) {
   return el;
 }
 
-/* ── Due dates directly in staging and the deprioritized list ──────────
+/* ── Due dates directly on staged items ───────────────────────────────
    Sits under the ABC boxes. Click to open a native date picker; the badge then
    colours itself red when overdue, amber when due within three days. */
 function stageDueControl(it, bucket) {
@@ -2844,118 +2828,48 @@ function stageDueControl(it, bucket) {
 let stageDueEditId = null;
 function editStageDue(id) {
   stageDueEditId = id; editStageId = null; confirmStageId = null; addingStage = false;
-  renderStaging(); renderParked();
+  renderStaging();
   const i = document.getElementById('sdue-' + id);
   if (i) { i.focus(); if (i.showPicker) { try { i.showPicker(); } catch (e) {} } }
 }
-function closeStageDue() { stageDueEditId = null; renderStaging(); renderParked(); }
+function closeStageDue() { stageDueEditId = null; renderStaging(); }
 function saveStageDue(id, bucket, val) {
-  const arr = bucket === 'parked' ? (DATA.parked || []) : (DATA.staging || []);
+  const arr = (DATA.staging || []);
   const it = arr.find(x => x.id === id);
   if (it) { it.due = val || ''; saveData(); }
   stageDueEditId = null;
-  renderStaging(); renderParked(); renderOverdueAlert();
+  renderStaging(); renderOverdueAlert();
 }
 
-/* ── Deprioritized (parked) list ──────────────────────────────────────
-   One click out of staging, one click back. No confirmation dialogs; every
-   action here is reversible from the undo toast instead. */
-let parkedOpen = false;
-function toggleParked() {
-  parkedOpen = !parkedOpen;
-  const l = document.getElementById('parked-list'), h = document.getElementById('parked-head');
-  if (l) l.style.display = parkedOpen ? 'block' : 'none';
-  if (h) h.classList.toggle('open', parkedOpen);
-}
-function renderParked() {
-  const block = document.getElementById('parked-block');
-  const list = document.getElementById('parked-list');
-  const cnt = document.getElementById('parked-count');
-  if (!block || !list) return;
-  const items = DATA.parked || [];
-  block.style.display = items.length ? 'block' : 'none';
-  if (cnt) cnt.textContent = items.length ? items.length : '';
-  list.innerHTML = '';
-  if (!items.length) { parkedOpen = false; list.style.display = 'none';
-    const h = document.getElementById('parked-head'); if (h) h.classList.remove('open'); return; }
-  list.style.display = parkedOpen ? 'block' : 'none';
-  items.forEach(it => list.appendChild(parkedItem(it)));
-}
-function parkedItem(it) {
-  const el = document.createElement('div');
-  el.className = 'stage-item';
-  el.innerHTML =
-    '<div class="stage-body">' +
-      '<div class="act-text">' + esc(it.text) + (it.source ? '<span class="src-tag">' + esc(it.source) + '</span>' : '') + '</div>' +
-      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
-    '</div>' +
-    '<div class="act-controls">' +
-      '<span class="stage-assign">' +
-        '<button class="act-ctrl aA" title="Assign to A (must do)" onclick="assignParked(\'' + it.id + '\',\'A\')">A</button>' +
-        '<button class="act-ctrl aB" title="Assign to B (should do)" onclick="assignParked(\'' + it.id + '\',\'B\')">B</button>' +
-        '<button class="act-ctrl aC" title="Assign to C (nice to do)" onclick="assignParked(\'' + it.id + '\',\'C\')">C</button>' +
-      '</span>' +
-      '<button class="act-ctrl park" title="Move back to staging" onclick="unparkStaged(\'' + it.id + '\')">↑</button>' +
-      '<button class="act-ctrl danger" title="Discard (undo available)" onclick="removeParked(\'' + it.id + '\')">✕</button>' +
-      stageDueControl(it, 'parked') +
-    '</div>';
-  return el;
-}
-function parkStaged(id) {
+// Mark a staged task accomplished without prioritizing it first. It becomes a
+// completed action dated today, so it shows up in Accomplishments this week and
+// on the Accomplishments page. Reversible from the undo toast.
+function completeStaged(id) {
   const i = (DATA.staging || []).findIndex(x => x.id === id);
   if (i < 0) return;
   const it = DATA.staging[i];
   DATA.staging.splice(i, 1);
-  (DATA.parked = DATA.parked || []).unshift(it);
-  saveData(); renderStaging(); renderParked();
-  showUndo('Deprioritized: ' + it.text, function () {
-    DATA.parked = (DATA.parked || []).filter(x => x.id !== it.id);
-    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
-    saveData(); renderStaging(); renderParked();
-  });
-}
-function unparkStaged(id) {
-  const i = (DATA.parked || []).findIndex(x => x.id === id);
-  if (i < 0) return;
-  const it = DATA.parked[i];
-  DATA.parked.splice(i, 1);
-  (DATA.staging = DATA.staging || []).unshift(it);
-  saveData(); renderStaging(); renderParked();
-  showUndo('Moved back to staging: ' + it.text, function () {
-    DATA.staging = (DATA.staging || []).filter(x => x.id !== it.id);
-    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
-    saveData(); renderStaging(); renderParked();
-  });
-}
-function assignParked(id, p) {
-  const i = (DATA.parked || []).findIndex(x => x.id === id);
-  if (i < 0) return;
-  const it = DATA.parked[i];
-  DATA.parked.splice(i, 1);
   const nid = uid();
-  DATA.items.push({ id: nid, text: it.text, context: it.context || '', priority: p,
-    order: nextOrder(p), done: false, due: '', keyTask: false,
-    created: new Date().toISOString().slice(0, 10), completedDate: null });
-  saveData(); renderStaging(); renderParked(); renderActions();
-  showUndo('Moved to ' + p + ': ' + it.text, function () {
+  const today = todayStr();
+  const made = { id: nid, text: it.text, context: it.context || '', priority: 'C',
+    order: nextOrder('C'), done: true, due: it.due || '', keyTask: false,
+    created: it.created || today, completedDate: today };
+  DATA.items.push(made);
+  logEntry(made, 'completed');
+  saveData();
+  renderStaging(); renderActions(); renderWeekly(); renderOverdueAlert();
+  renderAccomplishmentsPage(); renderLog();
+  showUndo('Marked accomplished: ' + it.text, function () {
     DATA.items = DATA.items.filter(x => x.id !== nid);
-    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
-    saveData(); renderStaging(); renderParked(); renderActions();
+    unlogCompletion(nid);
+    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
+    saveData();
+    renderStaging(); renderActions(); renderWeekly(); renderOverdueAlert();
+    renderAccomplishmentsPage(); renderLog();
   });
 }
-function removeParked(id) {
-  const i = (DATA.parked || []).findIndex(x => x.id === id);
-  if (i < 0) return;
-  const it = DATA.parked[i];
-  DATA.parked.splice(i, 1);
-  logDiscard(it, 'discarded from the deprioritized list');
-  saveData(); renderParked();
-  showUndo('Discarded: ' + it.text, function () {
-    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
-    DATA.log = (DATA.log || []).filter(l => l.itemId !== it.id);
-    saveData(); renderParked();
-  });
-}
+
+
 function logDiscard(it, note) {
   (DATA.log = DATA.log || []).push({ id: uid(), itemId: it.id, text: it.text,
     priority: '', due: '', action: 'deleted', at: new Date().toISOString(), note: note });
@@ -3024,7 +2938,7 @@ function renderAccomplishmentsPage() {
 }
 
 /* ── Overdue alert: everything past due or due today, wherever it lives ──
-   Scans prioritized items, staging, and the deprioritized list, so a deadline
+   Scans prioritized items and staging, so a deadline
    cannot hide just because the item has not been sorted yet. */
 /* Everything in the red banner is editable in place: priority, due date, and
    notes. No scrolling required. Rows may come from three buckets, so every
@@ -3035,19 +2949,16 @@ function oaFind(id) {
   if (o) return { obj: o, bucket: 'items' };
   o = (DATA.staging || []).find(x => x.id === id);
   if (o) return { obj: o, bucket: 'staging' };
-  o = (DATA.parked || []).find(x => x.id === id);
-  if (o) return { obj: o, bucket: 'parked' };
   return null;
 }
 function oaRefresh() {
-  renderOverdueAlert(); renderActions(); renderStaging(); renderParked();
+  renderOverdueAlert(); renderActions(); renderStaging();
 }
-// Priority from the banner. For a staged or deprioritized row this promotes it.
+// Priority from the banner. For a staged row this promotes it into the ABC lists.
 function oaSetPriority(id, p) {
   const f = oaFind(id); if (!f) return;
   if (f.bucket === 'items') { setPriority(id, p); renderOverdueAlert(); return; }
-  if (f.bucket === 'staging') { assignStaged(id, p); renderOverdueAlert(); return; }
-  assignParked(id, p); renderOverdueAlert();
+  assignStaged(id, p); renderOverdueAlert();
 }
 function oaEditDue(id) { oaDueEditId = id; oaNoteEditId = null; renderOverdueAlert();
   const i = document.getElementById('oadue-' + id);
@@ -3072,10 +2983,8 @@ function oaNoteKey(e, id) {
 function oaDone(id) {
   const f = oaFind(id); if (!f) return;
   if (f.bucket === 'items') { toggleDone(id); renderOverdueAlert(); return; }
-  // Staged or deprioritized: promote to C, then immediately complete it.
-  oaSetPriority(id, 'C');
-  const made = DATA.items[DATA.items.length - 1];
-  if (made) { toggleDone(made.id); }
+  // Staged: complete it straight away.
+  completeStaged(id);
   renderOverdueAlert();
 }
 function renderOverdueAlert() {
@@ -3088,9 +2997,6 @@ function renderOverdueAlert() {
   });
   (DATA.staging || []).forEach(i => {
     if (i.due && i.due <= today) hits.push({ o: i, bucket: 'staging', where: 'staging' });
-  });
-  (DATA.parked || []).forEach(i => {
-    if (i.due && i.due <= today) hits.push({ o: i, bucket: 'parked', where: 'deprioritized' });
   });
   if (!hits.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
   hits.sort((a, b) => a.o.due < b.o.due ? -1 : a.o.due > b.o.due ? 1 : 0);
@@ -3225,11 +3131,11 @@ function assignStaged(id, p) {
   DATA.items.push({ id:nid, text:it.text, context:it.context || '', priority:p, order:nextOrder(p),
     done:false, due:it.due || '', keyTask:false,
     created:new Date().toISOString().slice(0,10), completedDate:null });
-  saveData(); renderStaging(); renderParked(); renderActions(); renderOverdueAlert();
+  saveData(); renderStaging(); renderActions(); renderOverdueAlert();
   showUndo('Moved to ' + p + ': ' + it.text, function () {
     DATA.items = DATA.items.filter(x => x.id !== nid);
     DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
-    saveData(); renderStaging(); renderParked(); renderActions(); renderOverdueAlert();
+    saveData(); renderStaging(); renderActions(); renderOverdueAlert();
   });
 }
 
@@ -4027,7 +3933,7 @@ importInbox();
   }
 })();
 renderStaging();
-renderParked();
+
 renderOverdueAlert();
 renderAccomplishmentsPage();
 renderDelegated();
