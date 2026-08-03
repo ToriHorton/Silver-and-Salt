@@ -1010,6 +1010,22 @@ button.oa-when.today:hover { background: rgba(138,109,31,0.1); }
 .oa-note-input { width: 100%; margin-top: 5px; font-family: inherit; font-size: 12px;
   padding: 4px 7px; border: 1px solid rgba(47,62,52,0.3); border-radius: 4px; }
 
+
+/* Quarterly goals + agent suggestions */
+.goals-block { background: #F6F4EE; }
+.goals-nav { display: flex; align-items: center; gap: 5px; }
+.goal-row .act-text { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--moss); }
+.goal-num { display: inline-block; min-width: 19px; color: var(--sage); font-size: 13px;
+  font-family: inherit; }
+.goals-sync { margin-top: 11px; font-size: 12px; border-radius: 5px; padding: 9px 12px; }
+.goals-sync.ok { background: rgba(90,138,120,0.1); color: var(--moss);
+  border: 1px solid rgba(90,138,120,0.3); }
+.goals-sync.warn { background: #FFF8E6; color: #6B5410; border: 1px solid #E8D4A0; }
+.goals-sync .act-btn { margin-left: 8px; vertical-align: middle; }
+.suggest-block { background: #F3F6F4; border-color: rgba(90,138,120,0.3); }
+.suggest-row { border-left: 3px solid var(--teal); }
+.src-tag.suggest { color: var(--teal); border-color: rgba(90,138,120,0.5); }
+
 /* Accomplishments page + weekly review extras */
 .done-week-range { font-size: 12px; color: var(--sage); letter-spacing: 0.02em; }
 .done-row .done-text { color: var(--sage); }
@@ -2388,6 +2404,30 @@ select.act-select { cursor: pointer; }
 
       <div id="overdue-alert" class="overdue-alert" style="display:none"></div>
 
+      <div class="staging-block goals-block">
+        <div class="staging-head">
+          <span class="review-col-title">Goals <span id="goals-quarter" class="acc-tag"></span></span>
+          <span class="goals-nav">
+            <button class="act-ctrl" onclick="shiftQuarter(-1)" title="Previous quarter">&#8249;</button>
+            <button class="act-btn ghost" onclick="thisQuarter()">This quarter</button>
+            <button class="act-ctrl" onclick="shiftQuarter(1)" title="Next quarter">&#8250;</button>
+            <button class="act-btn ghost" onclick="addGoal()">+ Add goal</button>
+          </span>
+        </div>
+        <div class="staging-sub">What this quarter is for. The daily agent reads these to suggest two aligned tasks each morning.</div>
+        <div id="goals-list"></div>
+        <div id="goals-sync" class="goals-sync" style="display:none"></div>
+      </div>
+
+      <div class="staging-block suggest-block" id="suggest-block" style="display:none">
+        <div class="staging-head">
+          <span class="review-col-title">Suggested for your goals <span id="suggest-count" class="acc-tag"></span></span>
+          <span class="done-week-range">From the daily agent</span>
+        </div>
+        <div class="staging-sub">Two ideas each morning, drawn from your quarterly goals. Accept moves one into Staging. Dismiss removes it.</div>
+        <div id="suggest-list"></div>
+      </div>
+
 
       <div class="staging-block">
         <div class="staging-head">
@@ -2534,6 +2574,7 @@ select.act-select { cursor: pointer; }
 <script src="granola-inbox.js" onerror="void 0"></script>
 <!-- Monthly newsletter feed (written by the ssc-monthly-update-draft task; absent until first run) -->
 <script src="newsletter-data.js" onerror="void 0"></script>
+<script src="goals.js" onerror="void 0"></script>
 <script>
 // ── Live date ──
 (function() {
@@ -2616,6 +2657,14 @@ function normalize(d) {
   if (!d.items) d.items = [];
   d.items.forEach(i => { if (i.due === undefined) i.due = ''; if (i.keyTask === undefined) i.keyTask = false; });
   if (!d.staging) d.staging = [];
+  if (!d.quarterGoals) d.quarterGoals = {};   // { "2026-Q3": [ {id, text, note, created} ] }
+  // NOTE: do not name this 'goals'. The legacy migration below does delete d.goals.
+  // Seed from the committed goals.js feed on first run so a fresh browser is not empty.
+  if (typeof window !== 'undefined' && window.SSC_GOALS && window.SSC_GOALS.quarters) {
+    Object.keys(window.SSC_GOALS.quarters).forEach(function (q) {
+      if (!d.quarterGoals[q] || !d.quarterGoals[q].length) d.quarterGoals[q] = window.SSC_GOALS.quarters[q].slice();
+    });
+  }
   // The deprioritized list was removed; fold anything left there back into staging
   // so no action item can be stranded.
   if (d.parked && d.parked.length) { d.staging = d.parked.concat(d.staging); }
@@ -2707,7 +2756,7 @@ function switchTab(name) {
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelector('.tab-btn[data-tab="' + name + '"]').classList.add('active');
   if (name === 'accomplishments') { renderAccomplishmentsPage(); }
-  if (name === 'actions') { renderOverdueAlert(); renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
+  if (name === 'actions') { renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
   if (name === 'newsletter') renderNewsletter();
 }
 
@@ -2752,7 +2801,7 @@ function renderStaging() {
   const cnt = document.getElementById('staging-count');
   list.innerHTML = '';
   if (addingStage) list.appendChild(stageAddForm());
-  const items = DATA.staging || [];
+  const items = (DATA.staging || []).filter(s => s.source !== 'suggestion');
   if (cnt) cnt.textContent = items.length ? items.length : '';
   if (!items.length && !addingStage) {
     list.innerHTML = '<div class="act-empty">Nothing staged. Captured actions land here for review before you prioritize them.</div>';
@@ -2873,6 +2922,214 @@ function completeStaged(id) {
 function logDiscard(it, note) {
   (DATA.log = DATA.log || []).push({ id: uid(), itemId: it.id, text: it.text,
     priority: '', due: '', action: 'deleted', at: new Date().toISOString(), note: note });
+}
+
+/* ── Quarterly goals ──────────────────────────────────────────────────
+   Goals are edited here and live in browser storage. The daily agent runs on
+   the Mac and cannot read browser storage, so it reads goals.json from the repo
+   instead. When the two differ, the sync notice below tells you, rather than
+   letting the agent quietly work from stale goals. */
+let curQuarter = new Date();
+let editGoalId = null, addingGoal = false, confirmGoalId = null;
+function quarterKey(d) { return d.getFullYear() + '-Q' + (Math.floor(d.getMonth() / 3) + 1); }
+function quarterLabel(k) {
+  const p = k.split('-Q');
+  const names = { '1': 'Jan to Mar', '2': 'Apr to Jun', '3': 'Jul to Sep', '4': 'Oct to Dec' };
+  return 'Q' + p[1] + ' ' + p[0] + ' (' + names[p[1]] + ')';
+}
+function shiftQuarter(n) {
+  curQuarter.setMonth(curQuarter.getMonth() + n * 3);
+  editGoalId = null; addingGoal = false; confirmGoalId = null; renderGoals();
+}
+function thisQuarter() { curQuarter = new Date(); editGoalId = null; addingGoal = false; renderGoals(); }
+function goalsFor(k) { return (DATA.quarterGoals && DATA.quarterGoals[k]) || []; }
+function renderGoals() {
+  const list = document.getElementById('goals-list');
+  if (!list) return;
+  const k = quarterKey(curQuarter);
+  const lbl = document.getElementById('goals-quarter');
+  if (lbl) lbl.textContent = quarterLabel(k);
+  const goals = goalsFor(k);
+  list.innerHTML = '';
+  if (addingGoal) list.appendChild(goalAddForm());
+  if (!goals.length && !addingGoal) {
+    list.innerHTML = '<div class="act-empty">No goals set for this quarter yet. Add one and the daily agent will start suggesting work against it.</div>';
+  } else {
+    goals.forEach((g, i) => list.appendChild(goalItem(k, g, i)));
+  }
+  renderGoalSync();
+}
+function goalItem(k, g, idx) {
+  const el = document.createElement('div');
+  el.className = 'stage-item goal-row';
+  if (editGoalId === g.id) {
+    el.innerHTML =
+      '<div class="stage-body" style="display:flex;flex-direction:column;gap:6px">' +
+        '<input class="act-input" id="edit-goal-text" value="' + esc(g.text) + '" placeholder="Goal" onkeydown="goalEditKey(event,\'' + k + '\',\'' + g.id + '\')">' +
+        '<input class="act-input" id="edit-goal-note" value="' + esc(g.note || '') + '" placeholder="What does success look like? (optional)" onkeydown="goalEditKey(event,\'' + k + '\',\'' + g.id + '\')">' +
+      '</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl" title="Save" onclick="saveGoalEdit(\'' + k + '\',\'' + g.id + '\')">✓</button>' +
+        '<button class="act-ctrl" title="Cancel" onclick="cancelGoalEdit()">✕</button>' +
+      '</div>';
+    return el;
+  }
+  el.innerHTML =
+    '<div class="stage-body">' +
+      '<div class="act-text"><span class="goal-num">' + (idx + 1) + '</span>' + esc(g.text) + '</div>' +
+      (g.note ? '<div class="act-context">' + esc(g.note) + '</div>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Edit" onclick="editGoal(\'' + k + '\',\'' + g.id + '\')">✎</button>' +
+      '<button class="act-ctrl danger" title="Remove (undo available)" onclick="removeGoal(\'' + k + '\',\'' + g.id + '\')">✕</button>' +
+    '</div>';
+  return el;
+}
+function goalAddForm() {
+  const el = document.createElement('div');
+  el.className = 'act-addform';
+  el.innerHTML =
+    '<input class="act-input" id="add-goal-text" placeholder="A goal for this quarter" onkeydown="goalAddKey(event)">' +
+    '<div class="addform-row">' +
+      '<input class="act-input" id="add-goal-note" placeholder="What does success look like? (optional)" onkeydown="goalAddKey(event)">' +
+    '</div>' +
+    '<div class="addform-actions">' +
+      '<button class="act-btn" onclick="saveNewGoal()">Add goal</button>' +
+      '<button class="act-btn ghost" onclick="cancelGoalAdd()">Cancel</button>' +
+    '</div>';
+  return el;
+}
+function addGoal() { addingGoal = true; editGoalId = null; renderGoals();
+  const t = document.getElementById('add-goal-text'); if (t) t.focus(); }
+function cancelGoalAdd() { addingGoal = false; renderGoals(); }
+function goalAddKey(e) { if (e.key === 'Enter') { e.preventDefault(); saveNewGoal(); }
+  if (e.key === 'Escape') cancelGoalAdd(); }
+function saveNewGoal() {
+  const k = quarterKey(curQuarter);
+  const t = document.getElementById('add-goal-text');
+  const n = document.getElementById('add-goal-note');
+  const v = (t.value || '').trim();
+  if (!v) { t.focus(); return; }
+  DATA.quarterGoals = DATA.quarterGoals || {};
+  DATA.quarterGoals[k] = DATA.quarterGoals[k] || [];
+  DATA.quarterGoals[k].push({ id: uid(), text: v, note: (n.value || '').trim(), created: todayStr() });
+  addingGoal = false; saveData(); renderGoals();
+}
+function editGoal(k, id) { editGoalId = id; addingGoal = false; renderGoals();
+  const t = document.getElementById('edit-goal-text'); if (t) { t.focus(); t.select(); } }
+function cancelGoalEdit() { editGoalId = null; renderGoals(); }
+function goalEditKey(e, k, id) { if (e.key === 'Enter') { e.preventDefault(); saveGoalEdit(k, id); }
+  if (e.key === 'Escape') cancelGoalEdit(); }
+function saveGoalEdit(k, id) {
+  const g = goalsFor(k).find(x => x.id === id);
+  const t = document.getElementById('edit-goal-text');
+  const n = document.getElementById('edit-goal-note');
+  if (g && t) {
+    const v = (t.value || '').trim();
+    if (!v) { t.focus(); return; }
+    g.text = v; g.note = (n.value || '').trim(); saveData();
+  }
+  editGoalId = null; renderGoals();
+}
+function removeGoal(k, id) {
+  const arr = goalsFor(k);
+  const i = arr.findIndex(x => x.id === id);
+  if (i < 0) return;
+  const g = arr[i];
+  arr.splice(i, 1); saveData(); renderGoals();
+  showUndo('Removed goal: ' + g.text, function () {
+    DATA.quarterGoals[k].splice(Math.min(i, DATA.quarterGoals[k].length), 0, g);
+    saveData(); renderGoals();
+  });
+}
+// Compare what is in the browser against the goals.json the daily agent reads.
+function goalsSignature(list) {
+  return (list || []).map(g => (g.text || '').trim().toLowerCase()).sort().join(' || ');
+}
+function renderGoalSync() {
+  const box = document.getElementById('goals-sync');
+  if (!box) return;
+  const k = quarterKey(curQuarter);
+  const mine = goalsFor(k);
+  const feed = (typeof window !== 'undefined' && window.SSC_GOALS) ? window.SSC_GOALS : null;
+  const theirs = feed && feed.quarters ? (feed.quarters[k] || []) : [];
+  if (!mine.length && !theirs.length) { box.style.display = 'none'; return; }
+  if (goalsSignature(mine) === goalsSignature(theirs)) {
+    box.className = 'goals-sync ok';
+    box.innerHTML = 'The daily agent is working from these goals' +
+      (feed && feed.generated ? ', last synced ' + esc(feed.generated) : '') + '.';
+    box.style.display = 'block';
+    return;
+  }
+  box.className = 'goals-sync warn';
+  box.innerHTML = '<strong>Not yet synced to the daily agent.</strong> These goals live in this browser. ' +
+    'The agent reads goals.json on your Mac, so it is still using ' +
+    (theirs.length ? theirs.length + ' older goal' + (theirs.length === 1 ? '' : 's') : 'no goals') + '. ' +
+    '<button class="act-btn ghost" onclick="copyGoals()">Copy goals for sync</button>';
+  box.style.display = 'block';
+}
+function copyGoals() {
+  const k = quarterKey(curQuarter);
+  const payload = { generated: todayStr(), quarters: {} };
+  Object.keys(DATA.quarterGoals || {}).forEach(q => {
+    payload.quarters[q] = goalsFor(q).map(g => ({ id: g.id, text: g.text, note: g.note || '' }));
+  });
+  const txt = JSON.stringify(payload, null, 2);
+  const done = () => showUndo('Goals copied. Paste them to Claude and ask to sync goals.json.', null);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(done, function () { window.prompt('Copy this:', txt); });
+  } else { window.prompt('Copy this:', txt); }
+}
+
+/* ── Suggested tasks from the daily agent ─────────────────────────────
+   These arrive in staging tagged source "suggestion" and are held in their own
+   block so they never blend into the backlog. */
+function suggestionItems() { return (DATA.staging || []).filter(s => s.source === 'suggestion'); }
+function renderSuggestions() {
+  const block = document.getElementById('suggest-block');
+  const list = document.getElementById('suggest-list');
+  const cnt = document.getElementById('suggest-count');
+  if (!block || !list) return;
+  const items = suggestionItems();
+  block.style.display = items.length ? 'block' : 'none';
+  if (cnt) cnt.textContent = items.length ? items.length : '';
+  list.innerHTML = '';
+  items.forEach(it => {
+    const el = document.createElement('div');
+    el.className = 'stage-item suggest-row';
+    el.innerHTML =
+      '<div class="stage-body">' +
+        '<div class="act-text">' + esc(it.text) + '<span class="src-tag suggest">idea</span></div>' +
+        (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
+      '</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-btn ghost" title="Move into Staging" onclick="acceptSuggestion(\'' + it.id + '\')">Accept</button>' +
+        '<button class="act-ctrl danger" title="Dismiss (undo available)" onclick="dismissSuggestion(\'' + it.id + '\')">✕</button>' +
+      '</div>';
+    list.appendChild(el);
+  });
+}
+function acceptSuggestion(id) {
+  const it = (DATA.staging || []).find(x => x.id === id);
+  if (!it) return;
+  it.source = 'accepted idea';
+  saveData(); renderSuggestions(); renderStaging();
+  showUndo('Accepted: ' + it.text, function () {
+    it.source = 'suggestion'; saveData(); renderSuggestions(); renderStaging();
+  });
+}
+function dismissSuggestion(id) {
+  const i = (DATA.staging || []).findIndex(x => x.id === id);
+  if (i < 0) return;
+  const it = DATA.staging[i];
+  DATA.staging.splice(i, 1);
+  logDiscard(it, 'dismissed goal suggestion');
+  saveData(); renderSuggestions(); renderStaging();
+  showUndo('Dismissed: ' + it.text, function () {
+    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
+    DATA.log = (DATA.log || []).filter(l => l.itemId !== it.id);
+    saveData(); renderSuggestions(); renderStaging();
+  });
 }
 
 /* ── Accomplishments by week ──────────────────────────────────────────

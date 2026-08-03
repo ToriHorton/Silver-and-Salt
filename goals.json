@@ -1,0 +1,14 @@
+{
+  "_README": [
+    "Quarterly goals for Silver & Salt Capital, in the form the daily agent reads.",
+    "The granola-pull-dashboard-deploy task reads this file every morning and writes",
+    "exactly 2 goal-aligned task suggestions into granola-inbox.js tagged source",
+    "'suggestion'. The dashboard shows those in their own block above Staging.",
+    "This file mirrors goals.js. Tori edits goals in the dashboard UI; those edits",
+    "live in browser storage, so this file must be updated deliberately or the agent",
+    "will work from stale goals. The dashboard flags that state rather than hiding it.",
+    "Quarters are keyed YYYY-Qn."
+  ],
+  "generated": "",
+  "quarters": {}
+}
