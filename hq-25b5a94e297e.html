@@ -980,8 +980,37 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
 }
 .stage-body { flex: 1; min-width: 0; }
 
-/* Done this week + Accomplishments page */
-.done-block { background: #FAFAF7; }
+
+/* Editable rows inside the red overdue banner */
+.oa-hint { font-family: inherit; font-size: 11px; text-transform: none; letter-spacing: 0;
+  color: var(--sage); margin-left: 10px; font-style: italic; }
+.oa-row { border-top: 1px solid rgba(176,52,29,0.16); padding: 8px 0 9px; }
+.oa-row:first-of-type { border-top: none; }
+.oa-main { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.oa-text { flex: 1; min-width: 190px; font-size: 14px; color: var(--moss); }
+button.oa-when { background: transparent; border: 1px dashed rgba(176,52,29,0.5); color: var(--dash-red);
+  font-weight: 600; font-size: 12px; border-radius: 5px; padding: 3px 9px; cursor: pointer;
+  white-space: nowrap; font-family: inherit; }
+button.oa-when:hover { background: rgba(176,52,29,0.09); }
+button.oa-when.today { color: #8A6D1F; border-color: rgba(138,109,31,0.55); }
+button.oa-when.today:hover { background: rgba(138,109,31,0.1); }
+.oa-date { border: 1px solid rgba(176,52,29,0.45); border-radius: 5px; padding: 2px 6px;
+  font-family: inherit; font-size: 12px; }
+.oa-actions { display: flex; gap: 3px; align-items: center; }
+.oa-p { width: 24px; height: 24px; border: 1px solid rgba(47,62,52,0.22); background: white;
+  border-radius: 5px; cursor: pointer; font-family: inherit; font-size: 12px; color: var(--moss);
+  line-height: 1; padding: 0; }
+.oa-p:hover { border-color: var(--moss); background: var(--sand); }
+.oa-p.on { background: var(--moss); color: #F7F5F0; border-color: var(--moss); }
+.oa-p.check:hover { background: rgba(90,138,120,0.15); border-color: var(--teal); color: var(--teal); }
+.oa-note { font-size: 12px; color: var(--sage); margin: 5px 0 0 0; cursor: text;
+  padding: 3px 6px; border-radius: 4px; border: 1px solid transparent; }
+.oa-note:hover { background: rgba(255,255,255,0.65); border-color: rgba(47,62,52,0.14); }
+.oa-note.empty { font-style: italic; opacity: 0.72; }
+.oa-note-input { width: 100%; margin-top: 5px; font-family: inherit; font-size: 12px;
+  padding: 4px 7px; border: 1px solid rgba(47,62,52,0.3); border-radius: 4px; }
+
+/* Accomplishments page + weekly review extras */
 .done-week-range { font-size: 12px; color: var(--sage); letter-spacing: 0.02em; }
 .done-row .done-text { color: var(--sage); }
 .done-on { font-size: 11px; color: var(--sage); margin-left: 8px; letter-spacing: 0.03em; }
@@ -2370,15 +2399,6 @@ select.act-select { cursor: pointer; }
 
       <div id="overdue-alert" class="overdue-alert" style="display:none"></div>
 
-      <div class="staging-block done-block">
-        <div class="staging-head">
-          <span class="review-col-title">Done this week <span id="done-week-count" class="acc-tag"></span></span>
-          <span class="done-week-range" id="done-week-label"></span>
-        </div>
-        <div class="staging-sub">Completed actions move here and out of the A, B, and C lists. The week runs Sunday to Saturday, so this clears itself each Sunday. Nothing is lost: everything stays on the Accomplishments page.</div>
-        <div id="done-week-list"></div>
-        <div class="done-week-foot" id="done-week-foot"></div>
-      </div>
 
       <div class="staging-block">
         <div class="staging-head">
@@ -2417,7 +2437,9 @@ select.act-select { cursor: pointer; }
             <span class="review-col-title">Accomplishments this week</span>
             <button class="act-btn ghost" onclick="addAccomplishment()">+ Add</button>
           </div>
+          <div class="staging-sub">Completed actions land here and leave the A, B, and C lists. Weeks run Sunday to Saturday.</div>
           <div id="accomplishment-list"></div>
+          <div class="done-week-foot" id="acc-week-foot"></div>
         </div>
         <div class="review-col">
           <div class="review-col-head">
@@ -3004,34 +3026,111 @@ function renderAccomplishmentsPage() {
 /* ── Overdue alert: everything past due or due today, wherever it lives ──
    Scans prioritized items, staging, and the deprioritized list, so a deadline
    cannot hide just because the item has not been sorted yet. */
+/* Everything in the red banner is editable in place: priority, due date, and
+   notes. No scrolling required. Rows may come from three buckets, so every
+   edit routes by bucket. */
+let oaDueEditId = null, oaNoteEditId = null;
+function oaFind(id) {
+  let o = (DATA.items || []).find(x => x.id === id);
+  if (o) return { obj: o, bucket: 'items' };
+  o = (DATA.staging || []).find(x => x.id === id);
+  if (o) return { obj: o, bucket: 'staging' };
+  o = (DATA.parked || []).find(x => x.id === id);
+  if (o) return { obj: o, bucket: 'parked' };
+  return null;
+}
+function oaRefresh() {
+  renderOverdueAlert(); renderActions(); renderStaging(); renderParked();
+}
+// Priority from the banner. For a staged or deprioritized row this promotes it.
+function oaSetPriority(id, p) {
+  const f = oaFind(id); if (!f) return;
+  if (f.bucket === 'items') { setPriority(id, p); renderOverdueAlert(); return; }
+  if (f.bucket === 'staging') { assignStaged(id, p); renderOverdueAlert(); return; }
+  assignParked(id, p); renderOverdueAlert();
+}
+function oaEditDue(id) { oaDueEditId = id; oaNoteEditId = null; renderOverdueAlert();
+  const i = document.getElementById('oadue-' + id);
+  if (i) { i.focus(); if (i.showPicker) { try { i.showPicker(); } catch (e) {} } } }
+function oaSaveDue(id, val) {
+  const f = oaFind(id); if (f) { f.obj.due = val || ''; saveData(); }
+  oaDueEditId = null; oaRefresh();
+}
+function oaCloseDue() { oaDueEditId = null; renderOverdueAlert(); }
+function oaEditNote(id) { oaNoteEditId = id; oaDueEditId = null; renderOverdueAlert();
+  const i = document.getElementById('oanote-' + id); if (i) { i.focus(); i.select(); } }
+function oaSaveNote(id) {
+  const i = document.getElementById('oanote-' + id);
+  const f = oaFind(id);
+  if (f && i) { f.obj.context = (i.value || '').trim(); saveData(); }
+  oaNoteEditId = null; oaRefresh();
+}
+function oaNoteKey(e, id) {
+  if (e.key === 'Enter') { e.preventDefault(); oaSaveNote(id); }
+  if (e.key === 'Escape') { oaNoteEditId = null; renderOverdueAlert(); }
+}
+function oaDone(id) {
+  const f = oaFind(id); if (!f) return;
+  if (f.bucket === 'items') { toggleDone(id); renderOverdueAlert(); return; }
+  // Staged or deprioritized: promote to C, then immediately complete it.
+  oaSetPriority(id, 'C');
+  const made = DATA.items[DATA.items.length - 1];
+  if (made) { toggleDone(made.id); }
+  renderOverdueAlert();
+}
 function renderOverdueAlert() {
   const box = document.getElementById('overdue-alert');
   if (!box) return;
   const today = todayStr();
   const hits = [];
   (DATA.items || []).forEach(i => {
-    if (i.due && !i.done && i.due <= today) hits.push({ due: i.due, text: i.text, where: i.priority });
+    if (i.due && !i.done && i.due <= today) hits.push({ o: i, bucket: 'items', where: i.priority });
   });
   (DATA.staging || []).forEach(i => {
-    if (i.due && i.due <= today) hits.push({ due: i.due, text: i.text, where: 'staging' });
+    if (i.due && i.due <= today) hits.push({ o: i, bucket: 'staging', where: 'staging' });
   });
   (DATA.parked || []).forEach(i => {
-    if (i.due && i.due <= today) hits.push({ due: i.due, text: i.text, where: 'deprioritized' });
+    if (i.due && i.due <= today) hits.push({ o: i, bucket: 'parked', where: 'deprioritized' });
   });
   if (!hits.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
-  hits.sort((a, b) => a.due < b.due ? -1 : a.due > b.due ? 1 : 0);
-  const od = hits.filter(h => h.due < today).length;
+  hits.sort((a, b) => a.o.due < b.o.due ? -1 : a.o.due > b.o.due ? 1 : 0);
+  const od = hits.filter(h => h.o.due < today).length;
   const td = hits.length - od;
   const parts = [];
   if (od) parts.push(od + ' overdue');
   if (td) parts.push(td + ' due today');
-  box.innerHTML = '<div class="oa-title">' + parts.join(', ') + '</div><ul>' +
+
+  box.innerHTML = '<div class="oa-title">' + parts.join(', ') +
+    '<span class="oa-hint">Edit priority, date, and notes right here</span></div>' +
     hits.map(function (h) {
-      const isToday = h.due === today;
-      return '<li><span class="oa-when' + (isToday ? ' today' : '') + '">' +
-        (isToday ? 'Today' : fmtDue(h.due)) + '</span> &nbsp;' + esc(h.text) +
-        '<span class="oa-where">' + esc(h.where) + '</span></li>';
-    }).join('') + '</ul>';
+      const it = h.o, id = it.id, isToday = it.due === today;
+      const cur = h.bucket === 'items' ? it.priority : '';
+      const prio = ['A','B','C'].map(function (p) {
+        return '<button class="oa-p' + (cur === p ? ' on' : '') + '" title="' +
+          (h.bucket === 'items' ? 'Move to ' + p : 'Prioritize as ' + p) +
+          '" onclick="oaSetPriority(\'' + id + '\',\'' + p + '\')">' + p + '</button>';
+      }).join('');
+      const dueCell = (oaDueEditId === id)
+        ? '<input type="date" class="oa-date" id="oadue-' + id + '" value="' + esc(it.due || '') +
+          '" onchange="oaSaveDue(\'' + id + '\',this.value)" onblur="oaCloseDue()">'
+        : '<button class="oa-when' + (isToday ? ' today' : '') + '" title="Change the due date"' +
+          ' onclick="oaEditDue(\'' + id + '\')">' + (isToday ? 'Today' : fmtDue(it.due)) + '</button>';
+      const noteCell = (oaNoteEditId === id)
+        ? '<input class="oa-note-input" id="oanote-' + id + '" value="' + esc(it.context || '') +
+          '" placeholder="Notes" onkeydown="oaNoteKey(event,\'' + id + '\')" onblur="oaSaveNote(\'' + id + '\')">'
+        : '<div class="oa-note' + (it.context ? '' : ' empty') + '" title="Click to edit notes"' +
+          ' onclick="oaEditNote(\'' + id + '\')">' + (it.context ? esc(it.context) : '+ Add a note') + '</div>';
+      return '<div class="oa-row">' +
+        '<div class="oa-main">' +
+          dueCell +
+          '<span class="oa-text">' + esc(it.text) + '</span>' +
+          '<span class="oa-where">' + esc(h.where) + '</span>' +
+          '<span class="oa-actions">' + prio +
+            '<button class="oa-p check" title="Mark done" onclick="oaDone(\'' + id + '\')">&#10003;</button>' +
+          '</span>' +
+        '</div>' + noteCell +
+      '</div>';
+    }).join('');
   box.style.display = 'block';
 }
 
@@ -3257,10 +3356,9 @@ function renderActions() {
     if (!items.length) { body.innerHTML = '<div class="act-empty">No ' + p + ' items.</div>'; return; }
     items.forEach((it, idx) => body.appendChild(renderItem(it, p, idx + 1, idx, items.length)));
   });
-  renderDoneWeek();
 }
 
-/* ── Done this week ───────────────────────────────────────────────────
+/* ── Week helpers, shared by Weekly Review and the Accomplishments page ───────────────────────────────────────────────────
    Weeks run Sunday to Saturday. Anything completed inside the current week
    shows here; when the week rolls over this list empties on its own and the
    items stay permanently on the Accomplishments page. Nothing is deleted. */
@@ -3275,46 +3373,6 @@ function doneItemsForWeek(key) {
   return DATA.items
     .filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) === key)
     .sort((a,b) => (b.completedDate || '').localeCompare(a.completedDate || ''));
-}
-function renderDoneWeek() {
-  const box = document.getElementById('done-week-list');
-  if (!box) return;
-  const key = weekKey(new Date());
-  const done = doneItemsForWeek(key);
-  const manual = (DATA.accomplishments[key] || []).length;
-  const lbl = document.getElementById('done-week-label');
-  if (lbl) lbl.textContent = weekRangeLabel(new Date());
-  const cnt = document.getElementById('done-week-count');
-  if (cnt) cnt.textContent = (done.length + manual) ? (done.length + manual) : '';
-  const older = DATA.items.filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) !== key).length;
-  const foot = document.getElementById('done-week-foot');
-  if (foot) {
-    foot.innerHTML = older
-      ? older + ' completed in earlier weeks. <a href="#" onclick="switchTab(\'accomplishments\');return false;">See all accomplishments by week</a>.'
-      : '<a href="#" onclick="switchTab(\'accomplishments\');return false;">See all accomplishments by week</a>.';
-  }
-  box.innerHTML = '';
-  if (!done.length) {
-    box.innerHTML = '<div class="act-empty">Nothing completed yet this week. Check off an action and it lands here.</div>';
-    return;
-  }
-  done.forEach(it => box.appendChild(doneItem(it)));
-}
-function doneItem(it) {
-  const el = document.createElement('div');
-  el.className = 'stage-item done-row';
-  el.innerHTML =
-    '<div class="stage-body">' +
-      '<div class="act-text done-text">' + esc(it.text) +
-        '<span class="src-tag">' + esc(it.priority) + '</span>' +
-        (it.completedDate ? '<span class="done-on">' + fmtDue(it.completedDate) + '</span>' : '') +
-      '</div>' +
-      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
-    '</div>' +
-    '<div class="act-controls">' +
-      '<button class="act-ctrl" title="Reopen this action" onclick="toggleDone(\'' + it.id + '\')">↩</button>' +
-    '</div>';
-  return el;
 }
 
 function renderItem(it, p, num, idx, count) {
@@ -3498,7 +3556,7 @@ function toggleDone(id) {
   it.done = !it.done;
   it.completedDate = it.done ? todayStr() : null;
   if (it.done) logEntry(it, 'completed'); else unlogCompletion(it.id);
-  saveData(); renderActions(); renderDoneWeek(); renderAccomplishmentsPage(); renderWeekly(); renderReport(); renderLog();
+  saveData(); renderActions(); renderAccomplishmentsPage(); renderWeekly(); renderReport(); renderLog();
 }
 function setPriority(id, p) {
   const it = DATA.items.find(i => i.id === id); if (!it || it.priority === p) return;
@@ -3576,11 +3634,16 @@ function renderAccomplishments() {
     .sort((a,b) => (a.priority + a.order).localeCompare(b.priority + b.order));
   const manual = DATA.accomplishments[key] || [];
   if (!autos.length && !manual.length && !addingAcc) {
-    list.innerHTML = '<div class="act-empty">Nothing logged yet. Complete an action or add a win.</div>';
-    return;
+    list.innerHTML = '<div class="act-empty">Nothing completed yet this week. Check off an action and it lands here.</div>';
   }
   autos.forEach(it => list.appendChild(autoAccItem(it)));
   manual.forEach(a => list.appendChild(accItem(key, a)));
+  const foot = document.getElementById('acc-week-foot');
+  if (foot) {
+    const other = DATA.items.filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) !== key).length;
+    foot.innerHTML = (other ? other + ' completed in other weeks. ' : '') +
+      '<a href="#" onclick="switchTab(\'accomplishments\');return false;">See all accomplishments by week</a>.';
+  }
 }
 function autoAccItem(it) {
   const el = document.createElement('div');
@@ -3589,7 +3652,12 @@ function autoAccItem(it) {
     '<div class="act-check on" title="Mark not done" onclick="toggleDone(\'' + it.id + '\')">✓</div>' +
     '<div class="goal-text">' + esc(it.text) +
       (it.keyTask ? '<span class="acc-star" title="This was a key task">★</span>' : '') +
-      '<span class="acc-tag">' + it.priority + '</span></div>';
+      '<span class="acc-tag">' + it.priority + '</span>' +
+      (it.completedDate ? '<span class="done-on">' + fmtDue(it.completedDate) + '</span>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Reopen this action" onclick="toggleDone(\'' + it.id + '\')">↩</button>' +
+    '</div>';
   return el;
 }
 function accItem(key, a) {
