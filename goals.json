@@ -9,6 +9,14 @@
     "will work from stale goals. The dashboard flags that state rather than hiding it.",
     "Quarters are keyed YYYY-Qn."
   ],
-  "generated": "",
-  "quarters": {}
+  "generated": "2026-08-03",
+  "quarters": {
+    "2026-Q3": [
+      {
+        "id": "xmsdpymks9ymd",
+        "text": "Begin taking membership payment",
+        "note": "Working signup flow and payment process with the first 20 people signed up"
+      }
+    ]
+  }
 }

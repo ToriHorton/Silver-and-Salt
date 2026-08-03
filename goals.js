@@ -6,6 +6,14 @@
 // To sync: click "Copy goals for sync" in the dashboard and ask Claude to update
 // goals.js and goals.json.
 window.SSC_GOALS = {
-  generated: "",
-  quarters: {}
+  generated: "2026-08-03",
+  quarters: {
+    "2026-Q3": [
+      {
+        id: "xmsdpymks9ymd",
+        text: "Begin taking membership payment",
+        note: "Working signup flow and payment process with the first 20 people signed up"
+      }
+    ]
+  }
 };
