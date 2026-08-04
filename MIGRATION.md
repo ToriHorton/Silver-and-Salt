@@ -57,26 +57,36 @@ Completed locally:
   candidates. Binary media and the stale nested `.claude/worktrees` directory
   are explicitly excluded because security 0.3.1 cannot snapshot their binary
   bytes reliably. The scan still covers the application and Worker source.
-- The deployed dev acceptance suite passes 113 of 114 checks. The sole failure
-  is scheduling readiness. `calendar status --env dev` reports
-  `not_connected`, `writable: false`, and no granted Google scopes.
+- The branch is deployed to the existing dev-only Cloudflare Worker at
+  `https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev`, Worker
+  version `4758b1ac-e6fa-4e1c-b524-7dba40fdd7a0`. The deployment uses tenant
+  `silver-and-salt-capital--dev`; production and GitHub Pages remain untouched.
+- The current app-incarnation credential was provisioned through the normal
+  non-rotating pipeline and pushed to the dev Worker. Schema and all 15
+  deny-all rule namespaces were applied; both guarded seeds already existed.
+- Calendar is connected, healthy, writable, and books to `primary` with 86
+  available slots in the current seven-day probe. Join config reports payments
+  ready at the approved $1,000 standard price and $100 founding discount.
+- `odla-ai smoke --env dev` passes: public config, healthy/bookable Calendar,
+  19 live entities, a 41-record CRM aggregate, and all four Chapter anonymous
+  auth probes. The deployed acceptance suite passes all 114 checks. Its live
+  timeout is 20 seconds to accommodate normal Calendar and odla-db latency;
+  the offline suite retains the five-second default.
 
 Remaining gates before Phase 5 can start:
 
-1. Reconnect the dev Google Calendar with the owner present, then rerun
-   `odla-ai smoke --env dev` and the full read-only deployed acceptance suite.
-2. Complete the owner's browser pass for signup, a Stripe test payment,
+1. Complete the owner's browser pass for signup, a Stripe test payment,
    booking, provisional/member/admin views, and the admin mutation families.
-3. Activate the production instance of the existing Clerk application and
+2. Activate the production instance of the existing Clerk application and
    prepare its publishable key, session config, webhook, and both write-only
    Clerk secret slots for the prod tenant.
-4. Prepare Stripe live-mode product, annual price, webhook, publishable key,
+3. Prepare Stripe live-mode product, annual price, webhook, publishable key,
    and write-only vault secrets. Verify provider amount, currency, interval,
    refund behavior, and payment-domain registration before accepting money.
-5. Onboard `silverandsaltcapital.com` to Cloudflare Email Service in the
+4. Onboard `silverandsaltcapital.com` to Cloudflare Email Service in the
    production Cloudflare account so `membership@silverandsaltcapital.com` is a
    verified sender.
-6. After those human-owned prerequisites, add `prod` to `odla.config.mjs`, add
+5. After those human-owned prerequisites, add `prod` to `odla.config.mjs`, add
    the Clerk production publishable key and public link, run and review the prod
    provision dry run, then enter the Phase 5 approval sequence. Keep GitHub
    Pages enabled for the 72-hour rollback window after DNS cutover.

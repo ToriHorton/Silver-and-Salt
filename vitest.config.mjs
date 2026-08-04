@@ -9,5 +9,9 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.mjs"],
     exclude: ["dist/**", "node_modules/**"],
+    // Live dev calls include Calendar FreeBusy and odla-db round trips. Keep
+    // the offline suite fast while giving deployed acceptance enough room for
+    // normal network variance.
+    testTimeout: process.env.ACCEPTANCE_URL ? 20_000 : 5_000,
   },
 });
