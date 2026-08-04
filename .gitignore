@@ -38,6 +38,7 @@ dist/
 .odla/dev-token.json
 .dev.vars
 .odla/credentials.local.json
+.odla/security/
 
 # Clerk local state (sk_ lives in .env.local; never commit)
 .env.local

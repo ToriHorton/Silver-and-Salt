@@ -6,9 +6,11 @@ file first, then follow the runbook in `.agents/skills/odla-migrate/SKILL.md`
 (read only the current phase's reference file). `npx @odla-ai/cli doctor`
 confirms config state.
 
-**Branch rule (from the project owner):** all migration work happens on the
-branch `odla-conversion-test`. Do not merge to `main`, do not push anything
-that changes production. GitHub Pages (main branch) stays live and untouched
+**Branch rule (updated 2026-08-04):** the historical migration work from
+`odla-conversion-test` and the Chapter rollout branches is now present on
+`origin/main`. Production readiness continues on
+`codex/production-cutover-readiness`. Do not update the local `main` branch or
+push anything that changes production. GitHub Pages stays live and untouched
 until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
 
 ## Phase checklist
@@ -29,6 +31,55 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
   **PAYMENT-SPEC.md** (repo root, excluded from the public build): Tori's
   onboarding-scope.html brief translated to this stack. Phase P1 of that
   spec (payment core) plus the owner's open-item answers gate cutover.
+
+## P5 readiness review (2026-08-04, source only)
+
+The current `origin/main` history, including the odla signup, payment,
+booking, member, admin, and follower-network work, is integrated into
+`codex/production-cutover-readiness`. The local `main` ref was not moved.
+No environment was provisioned or deployed during this review.
+
+Completed locally:
+
+- Upgraded every direct odla runtime and CLI package to the registry release
+  current on 2026-08-04: auth-clerk 0.4.1, calendar 0.3.0, chapter 0.29.0,
+  CLI 0.28.1, CRM 0.6.0, db 0.10.1, email 0.3.1, and UI 0.16.0.
+- Updated the checked-in UI stylesheets to UI 0.16.0, moved Calendar config
+  from the legacy `calendars` alias to `availabilityCalendars` plus an explicit
+  `bookingCalendar`, and refreshed application bundle cache keys.
+- Updated Wrangler to 4.118.0 and added a narrow `undici` 7.29.0 override for
+  Wrangler's transitive advisory. `npm audit` reports zero vulnerabilities.
+- `npm test` passes 83 local tests with 31 deployed acceptance tests skipped.
+  `npm run build` produces 176 files. `odla-ai doctor` passes with 15 schema
+  entities and 15 deny-all rule namespaces. The Chapter provision dry run
+  passes with two guarded seeds and four anonymous smoke probes.
+- The passive pre-cutover scan passes with zero confirmed findings and zero
+  candidates. Binary media and the stale nested `.claude/worktrees` directory
+  are explicitly excluded because security 0.3.1 cannot snapshot their binary
+  bytes reliably. The scan still covers the application and Worker source.
+- The deployed dev acceptance suite passes 113 of 114 checks. The sole failure
+  is scheduling readiness. `calendar status --env dev` reports
+  `not_connected`, `writable: false`, and no granted Google scopes.
+
+Remaining gates before Phase 5 can start:
+
+1. Reconnect the dev Google Calendar with the owner present, then rerun
+   `odla-ai smoke --env dev` and the full read-only deployed acceptance suite.
+2. Complete the owner's browser pass for signup, a Stripe test payment,
+   booking, provisional/member/admin views, and the admin mutation families.
+3. Activate the production instance of the existing Clerk application and
+   prepare its publishable key, session config, webhook, and both write-only
+   Clerk secret slots for the prod tenant.
+4. Prepare Stripe live-mode product, annual price, webhook, publishable key,
+   and write-only vault secrets. Verify provider amount, currency, interval,
+   refund behavior, and payment-domain registration before accepting money.
+5. Onboard `silverandsaltcapital.com` to Cloudflare Email Service in the
+   production Cloudflare account so `membership@silverandsaltcapital.com` is a
+   verified sender.
+6. After those human-owned prerequisites, add `prod` to `odla.config.mjs`, add
+   the Clerk production publishable key and public link, run and review the prod
+   provision dry run, then enter the Phase 5 approval sequence. Keep GitHub
+   Pages enabled for the 72-hour rollback window after DNS cutover.
 
 ## P0 inventory findings (2026-07-11)
 

@@ -26,12 +26,11 @@ export default {
   integrations: [createChapterIntegration(chapter, { basePath: "/api/crm" })],
   calendar: {
     google: {
-      // 0.2.0 live booking: FreeBusy availability over these calendars;
-      // bookings land on the first one. (CLI 0.11.2 still validates the
-      // legacy key name `calendars`; `availabilityCalendars` is the 0.2.0
-      // name.) Our odla-db is the source of truth for meetings; Google is
-      // the invite/Meet projection.
-      calendars: { dev: ["primary"] },
+      // Live booking checks FreeBusy across these calendars and writes to the
+      // explicit booking calendar. Our odla-db remains the source of truth for
+      // meetings; Google is the invite and Meet projection.
+      availabilityCalendars: { dev: ["primary"] },
+      bookingCalendar: { dev: "primary" },
     },
   },
   // No inline `db.schema`/`db.rules`: the Chapter integration above declares
