@@ -979,6 +979,93 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
   border-radius: 6px; padding: 11px 14px; margin-bottom: 8px;
 }
 .stage-body { flex: 1; min-width: 0; }
+
+
+/* Editable rows inside the red overdue banner */
+.oa-hint { font-family: inherit; font-size: 11px; text-transform: none; letter-spacing: 0;
+  color: var(--sage); margin-left: 10px; font-style: italic; }
+.oa-row { border-top: 1px solid rgba(176,52,29,0.16); padding: 8px 0 9px; }
+.oa-row:first-of-type { border-top: none; }
+.oa-main { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.oa-text { flex: 1; min-width: 190px; font-size: 14px; color: var(--moss); }
+button.oa-when { background: transparent; border: 1px dashed rgba(176,52,29,0.5); color: var(--dash-red);
+  font-weight: 600; font-size: 12px; border-radius: 5px; padding: 3px 9px; cursor: pointer;
+  white-space: nowrap; font-family: inherit; }
+button.oa-when:hover { background: rgba(176,52,29,0.09); }
+button.oa-when.today { color: #8A6D1F; border-color: rgba(138,109,31,0.55); }
+button.oa-when.today:hover { background: rgba(138,109,31,0.1); }
+.oa-date { border: 1px solid rgba(176,52,29,0.45); border-radius: 5px; padding: 2px 6px;
+  font-family: inherit; font-size: 12px; }
+.oa-actions { display: flex; gap: 3px; align-items: center; }
+.oa-p { width: 24px; height: 24px; border: 1px solid rgba(47,62,52,0.22); background: white;
+  border-radius: 5px; cursor: pointer; font-family: inherit; font-size: 12px; color: var(--moss);
+  line-height: 1; padding: 0; }
+.oa-p:hover { border-color: var(--moss); background: var(--sand); }
+.oa-p.on { background: var(--moss); color: #F7F5F0; border-color: var(--moss); }
+.oa-p.check:hover { background: rgba(90,138,120,0.15); border-color: var(--teal); color: var(--teal); }
+.oa-note { font-size: 12px; color: var(--sage); margin: 5px 0 0 0; cursor: text;
+  padding: 3px 6px; border-radius: 4px; border: 1px solid transparent; }
+.oa-note:hover { background: rgba(255,255,255,0.65); border-color: rgba(47,62,52,0.14); }
+.oa-note.empty { font-style: italic; opacity: 0.72; }
+.oa-note-input { width: 100%; margin-top: 5px; font-family: inherit; font-size: 12px;
+  padding: 4px 7px; border: 1px solid rgba(47,62,52,0.3); border-radius: 4px; }
+
+
+
+/* Backup and restore bar */
+.databar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: white; border: 1px solid rgba(47,62,52,0.12); border-radius: 8px;
+  padding: 10px 14px; margin-bottom: 18px; font-size: 12px; }
+.databar-label { color: var(--sage); }
+.databar-state { font-weight: 600; }
+.databar-state.never { color: var(--dash-red); }
+.databar-state.stale { color: #8A6D1F; }
+.databar-state.ok { color: var(--teal); }
+.databar-actions { margin-left: auto; display: flex; gap: 7px; }
+
+/* Quarterly goals + agent suggestions */
+.goals-block { background: #F6F4EE; }
+.goals-nav { display: flex; align-items: center; gap: 5px; }
+.goal-row .act-text { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--moss); }
+.goal-num { display: inline-block; min-width: 19px; color: var(--sage); font-size: 13px;
+  font-family: inherit; }
+.goals-sync { margin-top: 11px; font-size: 12px; border-radius: 5px; padding: 9px 12px; }
+.goals-sync.ok { background: rgba(90,138,120,0.1); color: var(--moss);
+  border: 1px solid rgba(90,138,120,0.3); }
+.goals-sync.warn { background: #FFF8E6; color: #6B5410; border: 1px solid #E8D4A0; }
+.goals-sync .act-btn { margin-left: 8px; vertical-align: middle; }
+.suggest-block { background: #F3F6F4; border-color: rgba(90,138,120,0.3); }
+.suggest-row { border-left: 3px solid var(--teal); }
+.src-tag.suggest { color: var(--teal); border-color: rgba(90,138,120,0.5); }
+
+/* Accomplishments page + weekly review extras */
+.done-week-range { font-size: 12px; color: var(--sage); letter-spacing: 0.02em; }
+.done-row .done-text { color: var(--sage); }
+.done-on { font-size: 11px; color: var(--sage); margin-left: 8px; letter-spacing: 0.03em; }
+.done-week-foot { margin-top: 10px; font-size: 12px; color: var(--sage); }
+.done-week-foot a { color: var(--teal); }
+.acc-totals { display: flex; gap: 12px; margin: 6px 0 22px; flex-wrap: wrap; }
+.acc-stat { background: white; border: 1px solid rgba(47,62,52,0.12); border-radius: 8px;
+  padding: 14px 20px; min-width: 118px; }
+.acc-stat-n { font-family: 'Cormorant Garamond', serif; font-size: 30px; color: var(--moss); line-height: 1; }
+.acc-stat-l { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--sage); margin-top: 5px; }
+.acc-week { background: white; border: 1px solid rgba(47,62,52,0.12); border-radius: 8px;
+  margin-bottom: 14px; overflow: hidden; }
+.acc-week.current { border-color: var(--teal); box-shadow: 0 0 0 1px rgba(90,138,120,0.25); }
+.acc-week-head { display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 16px; background: var(--sand); border-bottom: 1px solid rgba(47,62,52,0.1); }
+.acc-week-range { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--moss); }
+.acc-now { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em;
+  background: var(--teal); color: #F7F5F0; padding: 2px 7px; border-radius: 9px; margin-left: 7px;
+  vertical-align: middle; }
+.acc-week-n { font-size: 12px; color: var(--sage); }
+.acc-week-list { list-style: none; margin: 0; padding: 8px 16px 14px; }
+.acc-week-list li { padding: 5px 0; font-size: 14px; color: var(--moss);
+  border-bottom: 1px solid rgba(47,62,52,0.05); }
+.acc-week-list li:last-child { border-bottom: none; }
+.acc-mark { color: var(--teal); margin-right: 9px; font-weight: 600; }
+.acc-mark.manual { color: var(--warm); }
+
 /* Overdue and due-today alert banner */
 .overdue-alert {
   background: var(--dash-red-bg); border: 1px solid rgba(176,52,29,0.28);
@@ -1000,20 +1087,9 @@ body { background: var(--cream); font-family: 'Satoshi', sans-serif; color: var(
 /* Due-date control inside a staging row, sits under the ABC boxes */
 .stage-due-row { flex-basis: 100%; display: flex; justify-content: flex-end; margin-top: 5px; }
 
-/* Parked (deprioritized) list + one-click undo toast */
-.parked-block { margin-top: 14px; border-top: 1px solid rgba(47,62,52,0.12); padding-top: 12px; }
-.parked-head {
-  display: flex; align-items: center; gap: 8px; cursor: pointer;
-  font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--sage);
-  user-select: none; padding: 2px 0;
-}
-.parked-head:hover { color: var(--moss); }
-.parked-caret { font-size: 10px; transition: transform 0.15s; display: inline-block; }
-.parked-head.open .parked-caret { transform: rotate(90deg); }
-.parked-list { margin-top: 8px; }
-.parked-list .stage-item { opacity: 0.72; }
-.parked-list .stage-item:hover { opacity: 1; }
-.act-ctrl.park:hover { background: rgba(126,142,132,0.14); color: var(--sage); border-color: var(--sage); }
+.act-ctrl.check:hover { background: rgba(90,138,120,0.15); color: var(--teal); border-color: var(--teal); }
+
+/* Undo toast */
 .undo-toast {
   position: fixed; left: 50%; transform: translateX(-50%);
   bottom: 26px; z-index: 9999;
@@ -1304,6 +1380,7 @@ select.act-select { cursor: pointer; }
 <nav class="tab-nav">
   <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
   <button class="tab-btn" data-tab="actions" onclick="switchTab('actions')">Actions</button>
+  <button class="tab-btn" data-tab="accomplishments" onclick="switchTab('accomplishments')">Accomplishments</button>
   <button class="tab-btn" data-tab="newsletter" onclick="switchTab('newsletter')">Monthly Newsletter</button>
 </nav>
 
@@ -2337,7 +2414,42 @@ select.act-select { cursor: pointer; }
         <button class="act-btn" onclick="addAction()">+ Add action</button>
       </div>
 
+      <div class="databar">
+        <span class="databar-label">Your data lives in this browser only.</span>
+        <span id="export-state" class="databar-state"></span>
+        <span class="databar-actions">
+          <button class="act-btn" onclick="exportBackup()">Download backup</button>
+          <button class="act-btn ghost" onclick="document.getElementById('restore-file').click()">Restore from file</button>
+          <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this)">
+        </span>
+      </div>
+
       <div id="overdue-alert" class="overdue-alert" style="display:none"></div>
+
+      <div class="staging-block goals-block">
+        <div class="staging-head">
+          <span class="review-col-title">Goals <span id="goals-quarter" class="acc-tag"></span></span>
+          <span class="goals-nav">
+            <button class="act-ctrl" onclick="shiftQuarter(-1)" title="Previous quarter">&#8249;</button>
+            <button class="act-btn ghost" onclick="thisQuarter()">This quarter</button>
+            <button class="act-ctrl" onclick="shiftQuarter(1)" title="Next quarter">&#8250;</button>
+            <button class="act-btn ghost" onclick="addGoal()">+ Add goal</button>
+          </span>
+        </div>
+        <div class="staging-sub">What this quarter is for. The daily agent reads these to suggest two aligned tasks each morning.</div>
+        <div id="goals-list"></div>
+        <div id="goals-sync" class="goals-sync" style="display:none"></div>
+      </div>
+
+      <div class="staging-block suggest-block" id="suggest-block" style="display:none">
+        <div class="staging-head">
+          <span class="review-col-title">Suggested for your goals <span id="suggest-count" class="acc-tag"></span></span>
+          <span class="done-week-range">From the daily agent</span>
+        </div>
+        <div class="staging-sub">Two ideas each morning, drawn from your quarterly goals. Accept moves one into Staging. Dismiss removes it.</div>
+        <div id="suggest-list"></div>
+      </div>
+
 
       <div class="staging-block">
         <div class="staging-head">
@@ -2347,13 +2459,6 @@ select.act-select { cursor: pointer; }
         <div class="staging-sub">Unsorted actions captured from Granola, email, and Claude work, including items owned by others. Review, edit, then assign a priority to move each into the list below.</div>
         <div id="staging-list"></div>
 
-        <div class="parked-block" id="parked-block" style="display:none">
-          <div class="parked-head" id="parked-head" onclick="toggleParked()">
-            <span class="parked-caret">&#9654;</span>
-            <span>Deprioritized <span id="parked-count" class="acc-tag"></span></span>
-          </div>
-          <div class="parked-list" id="parked-list" style="display:none"></div>
-        </div>
       </div>
 
       <div id="abc-groups"></div>
@@ -2376,7 +2481,9 @@ select.act-select { cursor: pointer; }
             <span class="review-col-title">Accomplishments this week</span>
             <button class="act-btn ghost" onclick="addAccomplishment()">+ Add</button>
           </div>
+          <div class="staging-sub">Completed actions land here and leave the A, B, and C lists. Weeks run Sunday to Saturday.</div>
           <div id="accomplishment-list"></div>
+          <div class="done-week-foot" id="acc-week-foot"></div>
         </div>
         <div class="review-col">
           <div class="review-col-head">
@@ -2443,6 +2550,17 @@ select.act-select { cursor: pointer; }
 </section>
 
 <!-- ══ MONTHLY NEWSLETTER TAB ═══════════════════════════════════════════════ -->
+<section class="tab-panel" id="tab-accomplishments">
+  <div class="section-head">
+    <div>
+      <div class="actions-intro">Accomplishments</div>
+      <div class="actions-sub">Every week you have finished something, Sunday to Saturday, newest first. This page never resets.</div>
+    </div>
+  </div>
+  <div id="acc-totals" class="acc-totals"></div>
+  <div id="acc-weeks"></div>
+</section>
+
 <section class="tab-panel" id="tab-newsletter">
   <div class="actions-main">
     <div class="act-section">
@@ -2478,6 +2596,7 @@ select.act-select { cursor: pointer; }
 <script src="granola-inbox.js" onerror="void 0"></script>
 <!-- Monthly newsletter feed (written by the ssc-monthly-update-draft task; absent until first run) -->
 <script src="newsletter-data.js" onerror="void 0"></script>
+<script src="goals.js" onerror="void 0"></script>
 <script>
 // ── Live date ──
 (function() {
@@ -2560,10 +2679,20 @@ function normalize(d) {
   if (!d.items) d.items = [];
   d.items.forEach(i => { if (i.due === undefined) i.due = ''; if (i.keyTask === undefined) i.keyTask = false; });
   if (!d.staging) d.staging = [];
-  if (!d.parked) d.parked = [];   // deprioritized: out of the staging view, not deleted
+  if (!d.quarterGoals) d.quarterGoals = {};   // { "2026-Q3": [ {id, text, note, created} ] }
+  // NOTE: do not name this 'goals'. The legacy migration below does delete d.goals.
+  // Seed from the committed goals.js feed on first run so a fresh browser is not empty.
+  if (typeof window !== 'undefined' && window.SSC_GOALS && window.SSC_GOALS.quarters) {
+    Object.keys(window.SSC_GOALS.quarters).forEach(function (q) {
+      if (!d.quarterGoals[q] || !d.quarterGoals[q].length) d.quarterGoals[q] = window.SSC_GOALS.quarters[q].slice();
+    });
+  }
+  // The deprioritized list was removed; fold anything left there back into staging
+  // so no action item can be stranded.
+  if (d.parked && d.parked.length) { d.staging = d.parked.concat(d.staging); }
+  d.parked = [];
   d.staging.forEach(s => { if (s.due === undefined) s.due = ''; });
-  d.parked.forEach(s => { if (s.due === undefined) s.due = ''; });
-  if (!d.delegated) d.delegated = [];
+    if (!d.delegated) d.delegated = [];
   if (!d.importedInbox) d.importedInbox = {}; // { normalizedText: syncDate } to avoid re-importing
   if (!d.monthlyNotes) d.monthlyNotes = {};
   if (!d.accomplishments) d.accomplishments = {};
@@ -2648,7 +2777,8 @@ function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   document.querySelector('.tab-btn[data-tab="' + name + '"]').classList.add('active');
-  if (name === 'actions') { renderOverdueAlert(); renderStaging(); renderParked(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
+  if (name === 'accomplishments') { renderAccomplishmentsPage(); }
+  if (name === 'actions') { renderExportState(); renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging(); renderActions(); renderWeekly(); renderReport(); renderDelegated(); }
   if (name === 'newsletter') renderNewsletter();
 }
 
@@ -2693,7 +2823,7 @@ function renderStaging() {
   const cnt = document.getElementById('staging-count');
   list.innerHTML = '';
   if (addingStage) list.appendChild(stageAddForm());
-  const items = DATA.staging || [];
+  const items = (DATA.staging || []).filter(s => s.source !== 'suggestion');
   if (cnt) cnt.textContent = items.length ? items.length : '';
   if (!items.length && !addingStage) {
     list.innerHTML = '<div class="act-empty">Nothing staged. Captured actions land here for review before you prioritize them.</div>';
@@ -2739,7 +2869,7 @@ function stageItem(it) {
         '<button class="act-ctrl aB" title="Assign to B (should do)" onclick="assignStaged(\'' + it.id + '\',\'B\')">B</button>' +
         '<button class="act-ctrl aC" title="Assign to C (nice to do)" onclick="assignStaged(\'' + it.id + '\',\'C\')">C</button>' +
       '</span>' +
-      '<button class="act-ctrl park" title="Deprioritize: move out of view, one click" onclick="parkStaged(\'' + it.id + '\')">↓</button>' +
+      '<button class="act-ctrl check" title="Mark accomplished" onclick="completeStaged(\'' + it.id + '\')">✓</button>' +
       '<button class="act-ctrl" title="Edit" onclick="editStaged(\'' + it.id + '\')">✎</button>' +
       '<button class="act-ctrl danger" title="Discard (undo available)" onclick="removeStaged(\'' + it.id + '\')">✕</button>' +
       stageDueControl(it, 'staging') +
@@ -2747,7 +2877,7 @@ function stageItem(it) {
   return el;
 }
 
-/* ── Due dates directly in staging and the deprioritized list ──────────
+/* ── Due dates directly on staged items ───────────────────────────────
    Sits under the ABC boxes. Click to open a native date picker; the badge then
    colours itself red when overdue, amber when due within three days. */
 function stageDueControl(it, bucket) {
@@ -2769,154 +2899,520 @@ function stageDueControl(it, bucket) {
 let stageDueEditId = null;
 function editStageDue(id) {
   stageDueEditId = id; editStageId = null; confirmStageId = null; addingStage = false;
-  renderStaging(); renderParked();
+  renderStaging();
   const i = document.getElementById('sdue-' + id);
   if (i) { i.focus(); if (i.showPicker) { try { i.showPicker(); } catch (e) {} } }
 }
-function closeStageDue() { stageDueEditId = null; renderStaging(); renderParked(); }
+function closeStageDue() { stageDueEditId = null; renderStaging(); }
 function saveStageDue(id, bucket, val) {
-  const arr = bucket === 'parked' ? (DATA.parked || []) : (DATA.staging || []);
+  const arr = (DATA.staging || []);
   const it = arr.find(x => x.id === id);
   if (it) { it.due = val || ''; saveData(); }
   stageDueEditId = null;
-  renderStaging(); renderParked(); renderOverdueAlert();
+  renderStaging(); renderOverdueAlert();
 }
 
-/* ── Deprioritized (parked) list ──────────────────────────────────────
-   One click out of staging, one click back. No confirmation dialogs; every
-   action here is reversible from the undo toast instead. */
-let parkedOpen = false;
-function toggleParked() {
-  parkedOpen = !parkedOpen;
-  const l = document.getElementById('parked-list'), h = document.getElementById('parked-head');
-  if (l) l.style.display = parkedOpen ? 'block' : 'none';
-  if (h) h.classList.toggle('open', parkedOpen);
-}
-function renderParked() {
-  const block = document.getElementById('parked-block');
-  const list = document.getElementById('parked-list');
-  const cnt = document.getElementById('parked-count');
-  if (!block || !list) return;
-  const items = DATA.parked || [];
-  block.style.display = items.length ? 'block' : 'none';
-  if (cnt) cnt.textContent = items.length ? items.length : '';
-  list.innerHTML = '';
-  if (!items.length) { parkedOpen = false; list.style.display = 'none';
-    const h = document.getElementById('parked-head'); if (h) h.classList.remove('open'); return; }
-  list.style.display = parkedOpen ? 'block' : 'none';
-  items.forEach(it => list.appendChild(parkedItem(it)));
-}
-function parkedItem(it) {
-  const el = document.createElement('div');
-  el.className = 'stage-item';
-  el.innerHTML =
-    '<div class="stage-body">' +
-      '<div class="act-text">' + esc(it.text) + (it.source ? '<span class="src-tag">' + esc(it.source) + '</span>' : '') + '</div>' +
-      (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
-    '</div>' +
-    '<div class="act-controls">' +
-      '<span class="stage-assign">' +
-        '<button class="act-ctrl aA" title="Assign to A (must do)" onclick="assignParked(\'' + it.id + '\',\'A\')">A</button>' +
-        '<button class="act-ctrl aB" title="Assign to B (should do)" onclick="assignParked(\'' + it.id + '\',\'B\')">B</button>' +
-        '<button class="act-ctrl aC" title="Assign to C (nice to do)" onclick="assignParked(\'' + it.id + '\',\'C\')">C</button>' +
-      '</span>' +
-      '<button class="act-ctrl park" title="Move back to staging" onclick="unparkStaged(\'' + it.id + '\')">↑</button>' +
-      '<button class="act-ctrl danger" title="Discard (undo available)" onclick="removeParked(\'' + it.id + '\')">✕</button>' +
-      stageDueControl(it, 'parked') +
-    '</div>';
-  return el;
-}
-function parkStaged(id) {
+// Mark a staged task accomplished without prioritizing it first. It becomes a
+// completed action dated today, so it shows up in Accomplishments this week and
+// on the Accomplishments page. Reversible from the undo toast.
+function completeStaged(id) {
   const i = (DATA.staging || []).findIndex(x => x.id === id);
   if (i < 0) return;
   const it = DATA.staging[i];
   DATA.staging.splice(i, 1);
-  (DATA.parked = DATA.parked || []).unshift(it);
-  saveData(); renderStaging(); renderParked();
-  showUndo('Deprioritized: ' + it.text, function () {
-    DATA.parked = (DATA.parked || []).filter(x => x.id !== it.id);
-    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
-    saveData(); renderStaging(); renderParked();
-  });
-}
-function unparkStaged(id) {
-  const i = (DATA.parked || []).findIndex(x => x.id === id);
-  if (i < 0) return;
-  const it = DATA.parked[i];
-  DATA.parked.splice(i, 1);
-  (DATA.staging = DATA.staging || []).unshift(it);
-  saveData(); renderStaging(); renderParked();
-  showUndo('Moved back to staging: ' + it.text, function () {
-    DATA.staging = (DATA.staging || []).filter(x => x.id !== it.id);
-    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
-    saveData(); renderStaging(); renderParked();
-  });
-}
-function assignParked(id, p) {
-  const i = (DATA.parked || []).findIndex(x => x.id === id);
-  if (i < 0) return;
-  const it = DATA.parked[i];
-  DATA.parked.splice(i, 1);
   const nid = uid();
-  DATA.items.push({ id: nid, text: it.text, context: it.context || '', priority: p,
-    order: nextOrder(p), done: false, due: '', keyTask: false,
-    created: new Date().toISOString().slice(0, 10), completedDate: null });
-  saveData(); renderStaging(); renderParked(); renderActions();
-  showUndo('Moved to ' + p + ': ' + it.text, function () {
+  const today = todayStr();
+  const made = { id: nid, text: it.text, context: it.context || '', priority: 'C',
+    order: nextOrder('C'), done: true, due: it.due || '', keyTask: false,
+    created: it.created || today, completedDate: today };
+  DATA.items.push(made);
+  logEntry(made, 'completed');
+  saveData();
+  renderStaging(); renderActions(); renderWeekly(); renderOverdueAlert();
+  renderAccomplishmentsPage(); renderLog();
+  showUndo('Marked accomplished: ' + it.text, function () {
     DATA.items = DATA.items.filter(x => x.id !== nid);
-    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
-    saveData(); renderStaging(); renderParked(); renderActions();
+    unlogCompletion(nid);
+    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
+    saveData();
+    renderStaging(); renderActions(); renderWeekly(); renderOverdueAlert();
+    renderAccomplishmentsPage(); renderLog();
   });
 }
-function removeParked(id) {
-  const i = (DATA.parked || []).findIndex(x => x.id === id);
-  if (i < 0) return;
-  const it = DATA.parked[i];
-  DATA.parked.splice(i, 1);
-  logDiscard(it, 'discarded from the deprioritized list');
-  saveData(); renderParked();
-  showUndo('Discarded: ' + it.text, function () {
-    DATA.parked.splice(Math.min(i, DATA.parked.length), 0, it);
-    DATA.log = (DATA.log || []).filter(l => l.itemId !== it.id);
-    saveData(); renderParked();
-  });
-}
+
+
 function logDiscard(it, note) {
   (DATA.log = DATA.log || []).push({ id: uid(), itemId: it.id, text: it.text,
     priority: '', due: '', action: 'deleted', at: new Date().toISOString(), note: note });
 }
 
+/* ── Export and restore ───────────────────────────────────────────────
+   Everything here lives in one browser's localStorage. That is a single point
+   of failure: clearing site data, a new profile, or a different machine loses
+   the lot. These two buttons are the way out and the way back. */
+const BACKUP_VERSION = 1;
+function backupPayload() {
+  return {
+    _format: 'silver-and-salt-capital-dashboard-backup',
+    _version: BACKUP_VERSION,
+    exportedAt: new Date().toISOString(),
+    storeKey: STORE_KEY,
+    counts: {
+      items: (DATA.items || []).length,
+      openItems: (DATA.items || []).filter(i => !i.done).length,
+      completedItems: (DATA.items || []).filter(i => i.done).length,
+      staging: (DATA.staging || []).length,
+      delegated: (DATA.delegated || []).length,
+      log: (DATA.log || []).length,
+      quarterGoals: Object.keys(DATA.quarterGoals || {}).reduce((n, q) => n + (DATA.quarterGoals[q] || []).length, 0),
+      accomplishmentWeeks: Object.keys(DATA.accomplishments || {}).length
+    },
+    data: DATA
+  };
+}
+function exportBackup() {
+  const payload = backupPayload();
+  const txt = JSON.stringify(payload, null, 2);
+  const name = 'ssc-dashboard-backup-' + todayStr() + '.json';
+  try {
+    const blob = new Blob([txt], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
+    DATA.lastExport = payload.exportedAt;
+    saveData(); renderExportState();
+    const c = payload.counts;
+    showUndo('Saved ' + name + ' (' + c.items + ' actions, ' + c.staging + ' staged, ' +
+      c.log + ' archived)', null);
+  } catch (e) {
+    window.prompt('Could not download automatically. Copy this and save it as ' + name + ':', txt);
+  }
+}
+function restoreBackup(input) {
+  const file = input && input.files && input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function () {
+    let parsed;
+    try { parsed = JSON.parse(reader.result); }
+    catch (e) { showUndo('That file is not valid JSON, nothing was changed.', null); input.value = ''; return; }
+    const incoming = (parsed && parsed.data) ? parsed.data : parsed;
+    if (!incoming || typeof incoming !== 'object' || !Array.isArray(incoming.items)) {
+      showUndo('That does not look like a dashboard backup, nothing was changed.', null);
+      input.value = ''; return;
+    }
+    const before = JSON.stringify(DATA);
+    const n = (incoming.items || []).length, s = (incoming.staging || []).length;
+    const when = parsed && parsed.exportedAt ? parsed.exportedAt.slice(0, 10) : 'unknown date';
+    if (!window.confirm('Restore ' + n + ' actions and ' + s + ' staged items from ' + when + '?\n\n' +
+        'This replaces what is in this browser right now (' + (DATA.items || []).length + ' actions, ' +
+        ((DATA.staging || []).length) + ' staged).\n\nYour current data is snapshotted first, and Undo will put it back.')) {
+      input.value = ''; return;
+    }
+    try { localStorage.setItem(STORE_KEY + '__before_restore_' + todayStr(), before); } catch (e) {}
+    DATA = normalize(incoming);
+    saveData();
+    renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging();
+    renderActions(); renderWeekly(); renderReport(); renderDelegated(); renderLog();
+    renderAccomplishmentsPage(); renderExportState();
+    input.value = '';
+    showUndo('Restored from ' + when + '. Undo puts your previous data back.', function () {
+      DATA = normalize(JSON.parse(before));
+      saveData();
+      renderGoals(); renderSuggestions(); renderOverdueAlert(); renderStaging();
+      renderActions(); renderWeekly(); renderReport(); renderDelegated(); renderLog();
+      renderAccomplishmentsPage(); renderExportState();
+    });
+  };
+  reader.readAsText(file);
+}
+function renderExportState() {
+  const el = document.getElementById('export-state');
+  if (!el) return;
+  if (!DATA.lastExport) {
+    el.className = 'databar-state never';
+    el.textContent = 'Never backed up.';
+    return;
+  }
+  const d = DATA.lastExport.slice(0, 10);
+  const days = Math.floor((new Date(todayStr()) - new Date(d)) / 86400000);
+  el.className = 'databar-state' + (days >= 7 ? ' stale' : ' ok');
+  el.textContent = days <= 0 ? 'Backed up today.'
+    : 'Last backup ' + d + ' (' + days + ' day' + (days === 1 ? '' : 's') + ' ago).';
+}
+
+/* ── Quarterly goals ──────────────────────────────────────────────────
+   Goals are edited here and live in browser storage. The daily agent runs on
+   the Mac and cannot read browser storage, so it reads goals.json from the repo
+   instead. When the two differ, the sync notice below tells you, rather than
+   letting the agent quietly work from stale goals. */
+let curQuarter = new Date();
+let editGoalId = null, addingGoal = false, confirmGoalId = null;
+function quarterKey(d) { return d.getFullYear() + '-Q' + (Math.floor(d.getMonth() / 3) + 1); }
+function quarterLabel(k) {
+  const p = k.split('-Q');
+  const names = { '1': 'Jan to Mar', '2': 'Apr to Jun', '3': 'Jul to Sep', '4': 'Oct to Dec' };
+  return 'Q' + p[1] + ' ' + p[0] + ' (' + names[p[1]] + ')';
+}
+function shiftQuarter(n) {
+  curQuarter.setMonth(curQuarter.getMonth() + n * 3);
+  editGoalId = null; addingGoal = false; confirmGoalId = null; renderGoals();
+}
+function thisQuarter() { curQuarter = new Date(); editGoalId = null; addingGoal = false; renderGoals(); }
+function goalsFor(k) { return (DATA.quarterGoals && DATA.quarterGoals[k]) || []; }
+function renderGoals() {
+  const list = document.getElementById('goals-list');
+  if (!list) return;
+  const k = quarterKey(curQuarter);
+  const lbl = document.getElementById('goals-quarter');
+  if (lbl) lbl.textContent = quarterLabel(k);
+  const goals = goalsFor(k);
+  list.innerHTML = '';
+  if (addingGoal) list.appendChild(goalAddForm());
+  if (!goals.length && !addingGoal) {
+    list.innerHTML = '<div class="act-empty">No goals set for this quarter yet. Add one and the daily agent will start suggesting work against it.</div>';
+  } else {
+    goals.forEach((g, i) => list.appendChild(goalItem(k, g, i)));
+  }
+  renderGoalSync();
+}
+function goalItem(k, g, idx) {
+  const el = document.createElement('div');
+  el.className = 'stage-item goal-row';
+  if (editGoalId === g.id) {
+    el.innerHTML =
+      '<div class="stage-body" style="display:flex;flex-direction:column;gap:6px">' +
+        '<input class="act-input" id="edit-goal-text" value="' + esc(g.text) + '" placeholder="Goal" onkeydown="goalEditKey(event,\'' + k + '\',\'' + g.id + '\')">' +
+        '<input class="act-input" id="edit-goal-note" value="' + esc(g.note || '') + '" placeholder="What does success look like? (optional)" onkeydown="goalEditKey(event,\'' + k + '\',\'' + g.id + '\')">' +
+      '</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-ctrl" title="Save" onclick="saveGoalEdit(\'' + k + '\',\'' + g.id + '\')">✓</button>' +
+        '<button class="act-ctrl" title="Cancel" onclick="cancelGoalEdit()">✕</button>' +
+      '</div>';
+    return el;
+  }
+  el.innerHTML =
+    '<div class="stage-body">' +
+      '<div class="act-text"><span class="goal-num">' + (idx + 1) + '</span>' + esc(g.text) + '</div>' +
+      (g.note ? '<div class="act-context">' + esc(g.note) + '</div>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Edit" onclick="editGoal(\'' + k + '\',\'' + g.id + '\')">✎</button>' +
+      '<button class="act-ctrl danger" title="Remove (undo available)" onclick="removeGoal(\'' + k + '\',\'' + g.id + '\')">✕</button>' +
+    '</div>';
+  return el;
+}
+function goalAddForm() {
+  const el = document.createElement('div');
+  el.className = 'act-addform';
+  el.innerHTML =
+    '<input class="act-input" id="add-goal-text" placeholder="A goal for this quarter" onkeydown="goalAddKey(event)">' +
+    '<div class="addform-row">' +
+      '<input class="act-input" id="add-goal-note" placeholder="What does success look like? (optional)" onkeydown="goalAddKey(event)">' +
+    '</div>' +
+    '<div class="addform-actions">' +
+      '<button class="act-btn" onclick="saveNewGoal()">Add goal</button>' +
+      '<button class="act-btn ghost" onclick="cancelGoalAdd()">Cancel</button>' +
+    '</div>';
+  return el;
+}
+function addGoal() { addingGoal = true; editGoalId = null; renderGoals();
+  const t = document.getElementById('add-goal-text'); if (t) t.focus(); }
+function cancelGoalAdd() { addingGoal = false; renderGoals(); }
+function goalAddKey(e) { if (e.key === 'Enter') { e.preventDefault(); saveNewGoal(); }
+  if (e.key === 'Escape') cancelGoalAdd(); }
+function saveNewGoal() {
+  const k = quarterKey(curQuarter);
+  const t = document.getElementById('add-goal-text');
+  const n = document.getElementById('add-goal-note');
+  const v = (t.value || '').trim();
+  if (!v) { t.focus(); return; }
+  DATA.quarterGoals = DATA.quarterGoals || {};
+  DATA.quarterGoals[k] = DATA.quarterGoals[k] || [];
+  DATA.quarterGoals[k].push({ id: uid(), text: v, note: (n.value || '').trim(), created: todayStr() });
+  addingGoal = false; saveData(); renderGoals();
+}
+function editGoal(k, id) { editGoalId = id; addingGoal = false; renderGoals();
+  const t = document.getElementById('edit-goal-text'); if (t) { t.focus(); t.select(); } }
+function cancelGoalEdit() { editGoalId = null; renderGoals(); }
+function goalEditKey(e, k, id) { if (e.key === 'Enter') { e.preventDefault(); saveGoalEdit(k, id); }
+  if (e.key === 'Escape') cancelGoalEdit(); }
+function saveGoalEdit(k, id) {
+  const g = goalsFor(k).find(x => x.id === id);
+  const t = document.getElementById('edit-goal-text');
+  const n = document.getElementById('edit-goal-note');
+  if (g && t) {
+    const v = (t.value || '').trim();
+    if (!v) { t.focus(); return; }
+    g.text = v; g.note = (n.value || '').trim(); saveData();
+  }
+  editGoalId = null; renderGoals();
+}
+function removeGoal(k, id) {
+  const arr = goalsFor(k);
+  const i = arr.findIndex(x => x.id === id);
+  if (i < 0) return;
+  const g = arr[i];
+  arr.splice(i, 1); saveData(); renderGoals();
+  showUndo('Removed goal: ' + g.text, function () {
+    DATA.quarterGoals[k].splice(Math.min(i, DATA.quarterGoals[k].length), 0, g);
+    saveData(); renderGoals();
+  });
+}
+// Compare what is in the browser against the goals.json the daily agent reads.
+function goalsSignature(list) {
+  return (list || []).map(g => (g.text || '').trim().toLowerCase()).sort().join(' || ');
+}
+function renderGoalSync() {
+  const box = document.getElementById('goals-sync');
+  if (!box) return;
+  const k = quarterKey(curQuarter);
+  const mine = goalsFor(k);
+  const feed = (typeof window !== 'undefined' && window.SSC_GOALS) ? window.SSC_GOALS : null;
+  const theirs = feed && feed.quarters ? (feed.quarters[k] || []) : [];
+  if (!mine.length && !theirs.length) { box.style.display = 'none'; return; }
+  if (goalsSignature(mine) === goalsSignature(theirs)) {
+    box.className = 'goals-sync ok';
+    box.innerHTML = 'The daily agent is working from these goals' +
+      (feed && feed.generated ? ', last synced ' + esc(feed.generated) : '') + '.';
+    box.style.display = 'block';
+    return;
+  }
+  box.className = 'goals-sync warn';
+  box.innerHTML = '<strong>Not yet synced to the daily agent.</strong> These goals live in this browser. ' +
+    'The agent reads goals.json on your Mac, so it is still using ' +
+    (theirs.length ? theirs.length + ' older goal' + (theirs.length === 1 ? '' : 's') : 'no goals') + '. ' +
+    '<button class="act-btn ghost" onclick="copyGoals()">Copy goals for sync</button>';
+  box.style.display = 'block';
+}
+function copyGoals() {
+  const k = quarterKey(curQuarter);
+  const payload = { generated: todayStr(), quarters: {} };
+  Object.keys(DATA.quarterGoals || {}).forEach(q => {
+    payload.quarters[q] = goalsFor(q).map(g => ({ id: g.id, text: g.text, note: g.note || '' }));
+  });
+  const txt = JSON.stringify(payload, null, 2);
+  const done = () => showUndo('Goals copied. Paste them to Claude and ask to sync goals.json.', null);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(done, function () { window.prompt('Copy this:', txt); });
+  } else { window.prompt('Copy this:', txt); }
+}
+
+/* ── Suggested tasks from the daily agent ─────────────────────────────
+   These arrive in staging tagged source "suggestion" and are held in their own
+   block so they never blend into the backlog. */
+function suggestionItems() { return (DATA.staging || []).filter(s => s.source === 'suggestion'); }
+function renderSuggestions() {
+  const block = document.getElementById('suggest-block');
+  const list = document.getElementById('suggest-list');
+  const cnt = document.getElementById('suggest-count');
+  if (!block || !list) return;
+  const items = suggestionItems();
+  block.style.display = items.length ? 'block' : 'none';
+  if (cnt) cnt.textContent = items.length ? items.length : '';
+  list.innerHTML = '';
+  items.forEach(it => {
+    const el = document.createElement('div');
+    el.className = 'stage-item suggest-row';
+    el.innerHTML =
+      '<div class="stage-body">' +
+        '<div class="act-text">' + esc(it.text) + '<span class="src-tag suggest">idea</span></div>' +
+        (it.context ? '<div class="act-context">' + esc(it.context) + '</div>' : '') +
+      '</div>' +
+      '<div class="act-controls">' +
+        '<button class="act-btn ghost" title="Move into Staging" onclick="acceptSuggestion(\'' + it.id + '\')">Accept</button>' +
+        '<button class="act-ctrl danger" title="Dismiss (undo available)" onclick="dismissSuggestion(\'' + it.id + '\')">✕</button>' +
+      '</div>';
+    list.appendChild(el);
+  });
+}
+function acceptSuggestion(id) {
+  const it = (DATA.staging || []).find(x => x.id === id);
+  if (!it) return;
+  it.source = 'accepted idea';
+  saveData(); renderSuggestions(); renderStaging();
+  showUndo('Accepted: ' + it.text, function () {
+    it.source = 'suggestion'; saveData(); renderSuggestions(); renderStaging();
+  });
+}
+function dismissSuggestion(id) {
+  const i = (DATA.staging || []).findIndex(x => x.id === id);
+  if (i < 0) return;
+  const it = DATA.staging[i];
+  DATA.staging.splice(i, 1);
+  logDiscard(it, 'dismissed goal suggestion');
+  saveData(); renderSuggestions(); renderStaging();
+  showUndo('Dismissed: ' + it.text, function () {
+    DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
+    DATA.log = (DATA.log || []).filter(l => l.itemId !== it.id);
+    saveData(); renderSuggestions(); renderStaging();
+  });
+}
+
+/* ── Accomplishments by week ──────────────────────────────────────────
+   Builds the full history from two sources: actions checked off (bucketed by
+   completedDate) and wins logged by hand. Weeks run Sunday to Saturday and are
+   listed newest first. This view is cumulative and never resets. */
+function buildWeekBuckets() {
+  const weeks = {};
+  const touch = k => (weeks[k] = weeks[k] || { key: k, done: [], manual: [] });
+  DATA.items.forEach(i => {
+    if (i.done && i.completedDate) touch(weekKeyFromStr(i.completedDate)).done.push(i);
+  });
+  Object.keys(DATA.accomplishments || {}).forEach(k => {
+    const list = DATA.accomplishments[k] || [];
+    if (list.length) touch(k).manual = list.slice();
+  });
+  return Object.keys(weeks).sort().reverse().map(k => weeks[k]);
+}
+function renderAccomplishmentsPage() {
+  const wrap = document.getElementById('acc-weeks');
+  const tot = document.getElementById('acc-totals');
+  if (!wrap) return;
+  const buckets = buildWeekBuckets();
+  const thisKey = weekKey(new Date());
+  const totalDone = buckets.reduce((n, b) => n + b.done.length, 0);
+  const totalManual = buckets.reduce((n, b) => n + b.manual.length, 0);
+  const thisWeek = buckets.find(b => b.key === thisKey);
+  const thisCount = thisWeek ? thisWeek.done.length + thisWeek.manual.length : 0;
+  if (tot) {
+    tot.innerHTML =
+      '<div class="acc-stat"><div class="acc-stat-n">' + thisCount + '</div><div class="acc-stat-l">this week</div></div>' +
+      '<div class="acc-stat"><div class="acc-stat-n">' + (totalDone + totalManual) + '</div><div class="acc-stat-l">all time</div></div>' +
+      '<div class="acc-stat"><div class="acc-stat-n">' + buckets.length + '</div><div class="acc-stat-l">weeks with wins</div></div>';
+  }
+  wrap.innerHTML = '';
+  if (!buckets.length) {
+    wrap.innerHTML = '<div class="act-empty">Nothing logged yet. Check off an action, or add a win under Actions, and the week will appear here.</div>';
+    return;
+  }
+  buckets.forEach(b => {
+    const d = new Date(b.key + 'T12:00:00');
+    const isNow = b.key === thisKey;
+    const n = b.done.length + b.manual.length;
+    const card = document.createElement('div');
+    card.className = 'acc-week' + (isNow ? ' current' : '');
+    let rows = '';
+    b.done.forEach(function (i) {
+      rows += '<li><span class="acc-mark">&#10003;</span>' + esc(i.text) +
+        '<span class="src-tag">' + esc(i.priority) + '</span>' +
+        (i.completedDate ? '<span class="done-on">' + fmtDue(i.completedDate) + '</span>' : '') + '</li>';
+    });
+    b.manual.forEach(function (a) {
+      rows += '<li><span class="acc-mark manual">&#9733;</span>' + esc(a.text) +
+        '<span class="src-tag">logged</span></li>';
+    });
+    card.innerHTML =
+      '<div class="acc-week-head">' +
+        '<span class="acc-week-range">' + weekRangeLabel(d) + (isNow ? ' <span class="acc-now">this week</span>' : '') + '</span>' +
+        '<span class="acc-week-n">' + n + (n === 1 ? ' win' : ' wins') + '</span>' +
+      '</div><ul class="acc-week-list">' + rows + '</ul>';
+    wrap.appendChild(card);
+  });
+}
+
 /* ── Overdue alert: everything past due or due today, wherever it lives ──
-   Scans prioritized items, staging, and the deprioritized list, so a deadline
+   Scans prioritized items and staging, so a deadline
    cannot hide just because the item has not been sorted yet. */
+/* Everything in the red banner is editable in place: priority, due date, and
+   notes. No scrolling required. Rows may come from three buckets, so every
+   edit routes by bucket. */
+let oaDueEditId = null, oaNoteEditId = null;
+function oaFind(id) {
+  let o = (DATA.items || []).find(x => x.id === id);
+  if (o) return { obj: o, bucket: 'items' };
+  o = (DATA.staging || []).find(x => x.id === id);
+  if (o) return { obj: o, bucket: 'staging' };
+  return null;
+}
+function oaRefresh() {
+  renderOverdueAlert(); renderActions(); renderStaging();
+}
+// Priority from the banner. For a staged row this promotes it into the ABC lists.
+function oaSetPriority(id, p) {
+  const f = oaFind(id); if (!f) return;
+  if (f.bucket === 'items') { setPriority(id, p); renderOverdueAlert(); return; }
+  assignStaged(id, p); renderOverdueAlert();
+}
+function oaEditDue(id) { oaDueEditId = id; oaNoteEditId = null; renderOverdueAlert();
+  const i = document.getElementById('oadue-' + id);
+  if (i) { i.focus(); if (i.showPicker) { try { i.showPicker(); } catch (e) {} } } }
+function oaSaveDue(id, val) {
+  const f = oaFind(id); if (f) { f.obj.due = val || ''; saveData(); }
+  oaDueEditId = null; oaRefresh();
+}
+function oaCloseDue() { oaDueEditId = null; renderOverdueAlert(); }
+function oaEditNote(id) { oaNoteEditId = id; oaDueEditId = null; renderOverdueAlert();
+  const i = document.getElementById('oanote-' + id); if (i) { i.focus(); i.select(); } }
+function oaSaveNote(id) {
+  const i = document.getElementById('oanote-' + id);
+  const f = oaFind(id);
+  if (f && i) { f.obj.context = (i.value || '').trim(); saveData(); }
+  oaNoteEditId = null; oaRefresh();
+}
+function oaNoteKey(e, id) {
+  if (e.key === 'Enter') { e.preventDefault(); oaSaveNote(id); }
+  if (e.key === 'Escape') { oaNoteEditId = null; renderOverdueAlert(); }
+}
+function oaDone(id) {
+  const f = oaFind(id); if (!f) return;
+  if (f.bucket === 'items') { toggleDone(id); renderOverdueAlert(); return; }
+  // Staged: complete it straight away.
+  completeStaged(id);
+  renderOverdueAlert();
+}
 function renderOverdueAlert() {
   const box = document.getElementById('overdue-alert');
   if (!box) return;
   const today = todayStr();
   const hits = [];
   (DATA.items || []).forEach(i => {
-    if (i.due && !i.done && i.due <= today) hits.push({ due: i.due, text: i.text, where: i.priority });
+    if (i.due && !i.done && i.due <= today) hits.push({ o: i, bucket: 'items', where: i.priority });
   });
   (DATA.staging || []).forEach(i => {
-    if (i.due && i.due <= today) hits.push({ due: i.due, text: i.text, where: 'staging' });
-  });
-  (DATA.parked || []).forEach(i => {
-    if (i.due && i.due <= today) hits.push({ due: i.due, text: i.text, where: 'deprioritized' });
+    if (i.due && i.due <= today) hits.push({ o: i, bucket: 'staging', where: 'staging' });
   });
   if (!hits.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
-  hits.sort((a, b) => a.due < b.due ? -1 : a.due > b.due ? 1 : 0);
-  const od = hits.filter(h => h.due < today).length;
+  hits.sort((a, b) => a.o.due < b.o.due ? -1 : a.o.due > b.o.due ? 1 : 0);
+  const od = hits.filter(h => h.o.due < today).length;
   const td = hits.length - od;
   const parts = [];
   if (od) parts.push(od + ' overdue');
   if (td) parts.push(td + ' due today');
-  box.innerHTML = '<div class="oa-title">' + parts.join(', ') + '</div><ul>' +
+
+  box.innerHTML = '<div class="oa-title">' + parts.join(', ') +
+    '<span class="oa-hint">Edit priority, date, and notes right here</span></div>' +
     hits.map(function (h) {
-      const isToday = h.due === today;
-      return '<li><span class="oa-when' + (isToday ? ' today' : '') + '">' +
-        (isToday ? 'Today' : fmtDue(h.due)) + '</span> &nbsp;' + esc(h.text) +
-        '<span class="oa-where">' + esc(h.where) + '</span></li>';
-    }).join('') + '</ul>';
+      const it = h.o, id = it.id, isToday = it.due === today;
+      const cur = h.bucket === 'items' ? it.priority : '';
+      const prio = ['A','B','C'].map(function (p) {
+        return '<button class="oa-p' + (cur === p ? ' on' : '') + '" title="' +
+          (h.bucket === 'items' ? 'Move to ' + p : 'Prioritize as ' + p) +
+          '" onclick="oaSetPriority(\'' + id + '\',\'' + p + '\')">' + p + '</button>';
+      }).join('');
+      const dueCell = (oaDueEditId === id)
+        ? '<input type="date" class="oa-date" id="oadue-' + id + '" value="' + esc(it.due || '') +
+          '" onchange="oaSaveDue(\'' + id + '\',this.value)" onblur="oaCloseDue()">'
+        : '<button class="oa-when' + (isToday ? ' today' : '') + '" title="Change the due date"' +
+          ' onclick="oaEditDue(\'' + id + '\')">' + (isToday ? 'Today' : fmtDue(it.due)) + '</button>';
+      const noteCell = (oaNoteEditId === id)
+        ? '<input class="oa-note-input" id="oanote-' + id + '" value="' + esc(it.context || '') +
+          '" placeholder="Notes" onkeydown="oaNoteKey(event,\'' + id + '\')" onblur="oaSaveNote(\'' + id + '\')">'
+        : '<div class="oa-note' + (it.context ? '' : ' empty') + '" title="Click to edit notes"' +
+          ' onclick="oaEditNote(\'' + id + '\')">' + (it.context ? esc(it.context) : '+ Add a note') + '</div>';
+      return '<div class="oa-row">' +
+        '<div class="oa-main">' +
+          dueCell +
+          '<span class="oa-text">' + esc(it.text) + '</span>' +
+          '<span class="oa-where">' + esc(h.where) + '</span>' +
+          '<span class="oa-actions">' + prio +
+            '<button class="oa-p check" title="Mark done" onclick="oaDone(\'' + id + '\')">&#10003;</button>' +
+          '</span>' +
+        '</div>' + noteCell +
+      '</div>';
+    }).join('');
   box.style.display = 'block';
 }
 
@@ -3011,11 +3507,11 @@ function assignStaged(id, p) {
   DATA.items.push({ id:nid, text:it.text, context:it.context || '', priority:p, order:nextOrder(p),
     done:false, due:it.due || '', keyTask:false,
     created:new Date().toISOString().slice(0,10), completedDate:null });
-  saveData(); renderStaging(); renderParked(); renderActions(); renderOverdueAlert();
+  saveData(); renderStaging(); renderActions(); renderOverdueAlert();
   showUndo('Moved to ' + p + ': ' + it.text, function () {
     DATA.items = DATA.items.filter(x => x.id !== nid);
     DATA.staging.splice(Math.min(i, DATA.staging.length), 0, it);
-    saveData(); renderStaging(); renderParked(); renderActions(); renderOverdueAlert();
+    saveData(); renderStaging(); renderActions(); renderOverdueAlert();
   });
 }
 
@@ -3137,10 +3633,28 @@ function renderActions() {
       '<div class="abc-group-body" id="grp-' + p + '"></div>';
     root.appendChild(group);
     const body = group.querySelector('#grp-' + p);
-    const items = DATA.items.filter(i => i.priority === p).sort((a,b) => a.order - b.order);
+    // Completed items leave the ABC lists and live in the Done section instead.
+    const items = DATA.items.filter(i => i.priority === p && !i.done).sort((a,b) => a.order - b.order);
     if (!items.length) { body.innerHTML = '<div class="act-empty">No ' + p + ' items.</div>'; return; }
     items.forEach((it, idx) => body.appendChild(renderItem(it, p, idx + 1, idx, items.length)));
   });
+}
+
+/* ── Week helpers, shared by Weekly Review and the Accomplishments page ───────────────────────────────────────────────────
+   Weeks run Sunday to Saturday. Anything completed inside the current week
+   shows here; when the week rolls over this list empties on its own and the
+   items stay permanently on the Accomplishments page. Nothing is deleted. */
+function weekRangeLabel(d) {
+  const s = sundayOf(d), e = new Date(s); e.setDate(s.getDate() + 6);
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const sameMonth = s.getMonth() === e.getMonth();
+  return m[s.getMonth()] + ' ' + s.getDate() + ' to ' +
+    (sameMonth ? '' : m[e.getMonth()] + ' ') + e.getDate() + ', ' + e.getFullYear();
+}
+function doneItemsForWeek(key) {
+  return DATA.items
+    .filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) === key)
+    .sort((a,b) => (b.completedDate || '').localeCompare(a.completedDate || ''));
 }
 
 function renderItem(it, p, num, idx, count) {
@@ -3324,7 +3838,7 @@ function toggleDone(id) {
   it.done = !it.done;
   it.completedDate = it.done ? todayStr() : null;
   if (it.done) logEntry(it, 'completed'); else unlogCompletion(it.id);
-  saveData(); renderActions(); renderWeekly(); renderReport(); renderLog();
+  saveData(); renderActions(); renderAccomplishmentsPage(); renderWeekly(); renderReport(); renderLog();
 }
 function setPriority(id, p) {
   const it = DATA.items.find(i => i.id === id); if (!it || it.priority === p) return;
@@ -3402,11 +3916,16 @@ function renderAccomplishments() {
     .sort((a,b) => (a.priority + a.order).localeCompare(b.priority + b.order));
   const manual = DATA.accomplishments[key] || [];
   if (!autos.length && !manual.length && !addingAcc) {
-    list.innerHTML = '<div class="act-empty">Nothing logged yet. Complete an action or add a win.</div>';
-    return;
+    list.innerHTML = '<div class="act-empty">Nothing completed yet this week. Check off an action and it lands here.</div>';
   }
   autos.forEach(it => list.appendChild(autoAccItem(it)));
   manual.forEach(a => list.appendChild(accItem(key, a)));
+  const foot = document.getElementById('acc-week-foot');
+  if (foot) {
+    const other = DATA.items.filter(i => i.done && i.completedDate && weekKeyFromStr(i.completedDate) !== key).length;
+    foot.innerHTML = (other ? other + ' completed in other weeks. ' : '') +
+      '<a href="#" onclick="switchTab(\'accomplishments\');return false;">See all accomplishments by week</a>.';
+  }
 }
 function autoAccItem(it) {
   const el = document.createElement('div');
@@ -3415,7 +3934,12 @@ function autoAccItem(it) {
     '<div class="act-check on" title="Mark not done" onclick="toggleDone(\'' + it.id + '\')">✓</div>' +
     '<div class="goal-text">' + esc(it.text) +
       (it.keyTask ? '<span class="acc-star" title="This was a key task">★</span>' : '') +
-      '<span class="acc-tag">' + it.priority + '</span></div>';
+      '<span class="acc-tag">' + it.priority + '</span>' +
+      (it.completedDate ? '<span class="done-on">' + fmtDue(it.completedDate) + '</span>' : '') +
+    '</div>' +
+    '<div class="act-controls">' +
+      '<button class="act-ctrl" title="Reopen this action" onclick="toggleDone(\'' + it.id + '\')">↩</button>' +
+    '</div>';
   return el;
 }
 function accItem(key, a) {
@@ -3785,8 +4309,9 @@ importInbox();
   }
 })();
 renderStaging();
-renderParked();
+
 renderOverdueAlert();
+renderAccomplishmentsPage();
 renderDelegated();
 renderLog();
 </script>

@@ -244,14 +244,12 @@ describe("follower role", () => {
     expect(chapter.network.targets).toEqual([]);
   });
 
-  it("shares only member names with Built Not Found", () => {
-    expect(chapter.network.readers).toEqual([
-      {
-        id: "built-not-found",
-        fields: { person: ["name"] },
-        sharedNotes: [],
-      },
-    ]);
+  it("exposes only the approved leader read and shared-note lanes", () => {
+    expect(chapter.network.readers).toEqual([{
+      id: "built-not-found",
+      fields: { person: ["name"] },
+      sharedNotes: ["person"],
+    }]);
   });
 
   it("declares person as the only receivable CRM type", () => {

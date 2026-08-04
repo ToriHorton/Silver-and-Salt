@@ -1,6 +1,3 @@
-/* Vendored from @odla-ai/ui@0.6.0 css/components/tabs.css.
-   Consumed per the design-system contract: the page supplies --ui-* tokens.
-   Re-vendor when updating the package. */
 /* @odla-ai/ui — accessible in-content tabs. */
 
 .tabs-root { min-width: 0; container-type: inline-size; }
@@ -13,7 +10,7 @@
   border-bottom: 1px solid var(--ui-border);
   scrollbar-width: thin;
 }
-.tabs > button {
+.tabs > [role="tab"] {
   flex: 0 0 auto;
   margin-bottom: -1px;
   padding: 8px 2px;
@@ -24,10 +21,12 @@
   border: 0;
   border-bottom: 2px solid transparent;
   cursor: pointer;
+  text-decoration: none;
 }
-.tabs > button:hover { color: var(--ui-text); }
-.tabs > button:focus-visible { outline: none; box-shadow: var(--ui-focus); border-radius: var(--ui-radius-sm); }
-.tabs > button:disabled { cursor: default; opacity: 0.45; }
+.tabs > [role="tab"]:hover { color: var(--ui-text); }
+.tabs > [role="tab"]:focus-visible { outline: none; box-shadow: var(--ui-focus); border-radius: var(--ui-radius-sm); }
+.tabs > [role="tab"]:disabled,
+.tabs > [role="tab"][aria-disabled="true"] { cursor: default; opacity: 0.45; }
 /* Trailing slot: panel-scoped filters/actions aligned to the strip's end,
    outside the tablist's tab semantics. */
 .tabs .tabs-trailing {
@@ -37,11 +36,11 @@
   margin-left: auto;
   flex: 0 0 auto;
 }
-.tabs > button.on,
-.tabs > button[aria-selected="true"] {
+.tabs > [role="tab"].on,
+.tabs > [role="tab"][aria-selected="true"] {
   color: var(--ui-text);
   border-bottom-color: var(--ui-accent);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
 }
 .tabs-panels { min-width: 0; }
 .tabs-panel { min-width: 0; padding: var(--ui-space-4) 0; }
@@ -49,13 +48,13 @@
 .tabs-panel[hidden] { display: none; }
 
 .tabs-pill .tabs { gap: var(--ui-space-1); border-bottom: 0; }
-.tabs-pill .tabs > button {
+.tabs-pill .tabs > [role="tab"] {
   margin-bottom: 0;
   padding: 6px 10px;
   border: 0;
   border-radius: var(--ui-radius-pill);
 }
-.tabs-pill .tabs > button[aria-selected="true"] {
+.tabs-pill .tabs > [role="tab"][aria-selected="true"] {
   color: var(--ui-accent-strong);
   background: var(--ui-accent-soft);
 }
@@ -81,14 +80,14 @@
   border-right: 1px solid var(--ui-border);
   border-bottom: 0;
 }
-.tabs-vertical .tabs > button {
+.tabs-vertical .tabs > [role="tab"] {
   margin: 0 -1px 0 0;
   padding: 8px 10px;
   text-align: left;
   border-right: 2px solid transparent;
   border-bottom: 0;
 }
-.tabs-vertical .tabs > button[aria-selected="true"] {
+.tabs-vertical .tabs > [role="tab"][aria-selected="true"] {
   border-right-color: var(--ui-accent);
   border-bottom-color: transparent;
 }
@@ -104,13 +103,13 @@
     border-right: 0;
     border-bottom: 1px solid var(--ui-border);
   }
-  .tabs-vertical .tabs > button,
-  .tabs-vertical .tabs > button[aria-selected="true"] {
+  .tabs-vertical .tabs > [role="tab"],
+  .tabs-vertical .tabs > [role="tab"][aria-selected="true"] {
     margin: 0 0 -1px;
     text-align: center;
     border-right: 0;
     border-bottom: 2px solid transparent;
   }
-  .tabs-vertical .tabs > button[aria-selected="true"] { border-bottom-color: var(--ui-accent); }
+  .tabs-vertical .tabs > [role="tab"][aria-selected="true"] { border-bottom-color: var(--ui-accent); }
   .tabs-vertical .tabs-panel { padding: var(--ui-space-4) 0 0; }
 }

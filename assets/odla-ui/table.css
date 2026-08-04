@@ -1,6 +1,3 @@
-/* Vendored from @odla-ai/ui@0.6.0 css/components/table.css.
-   Consumed per the design-system contract: the page supplies --ui-* tokens.
-   Re-vendor when updating the package. */
 /* @odla-ai/ui — data tables
    `.table` is the class equivalent of a themed bare <table>.
    Wrap in `.table-wrap` for scroll + sticky header. */
@@ -16,7 +13,7 @@
   padding: 7px 8px;
   border-bottom: 1px solid var(--ui-border);
 }
-.table th { color: var(--ui-text-muted); font-weight: 600; }
+.table th { color: var(--ui-text-muted); font-weight: var(--ui-weight-strong); }
 .table td { font-variant-numeric: tabular-nums; }
 
 /* Scroll container; header sticks against the sunken surface. */
