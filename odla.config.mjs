@@ -48,11 +48,12 @@ export default {
     clerk: {
       // Publishable key (public by design). Clerk app "Silver & Salt Capital"
       // in the Built Not Found workspace, app_3G6TCBtJKVZo6Aq5UGgz9URtDqV,
-      // with one dev and one production instance. The current prod key is the
-      // workers.dev rehearsal; cutover replaces it with the key coupled to
+      // with one dev and one production instance. The live odla tenant uses
+      // the dev Clerk instance while it is hosted on Cloudflare's workers.dev
+      // preview domain. Cutover replaces prod with the pk_live key coupled to
       // silverandsaltcapital.com.
       dev: "pk_test_cmVsaWV2ZWQtZWZ0LTkzLmNsZXJrLmFjY291bnRzLmRldiQ",
-      prod: "pk_live_Y2xlcmsuY29yeS1vbmRyZWprYS53b3JrZXJzLmRldiQ",
+      prod: "pk_test_cmVsaWV2ZWQtZWZ0LTkzLmNsZXJrLmFjY291bnRzLmRldiQ",
     },
   },
   // Add "o11y" to services to enable observability; provision then mints the
