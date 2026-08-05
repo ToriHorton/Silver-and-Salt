@@ -19,7 +19,10 @@ import { crm } from "./crm.mjs";
 export const chapter = defineChapter({
   id: "silver-and-salt-capital",
   name: "Silver & Salt Capital",
-  url: "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
+  // Canonical follower origin. The dev Worker remains available for branch
+  // testing, while federation targets should move here only after their live
+  // shared secret is installed on both sides.
+  url: "https://silver-and-salt-capital.cory-ondrejka.workers.dev",
 
   // Public membership site with join, payment, booking, member, and admin
   // surfaces. Not "hub": that profile is admin-only and would drop the entire

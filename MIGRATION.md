@@ -73,7 +73,51 @@ Completed locally:
   timeout is 20 seconds to accommodate normal Calendar and odla-db latency;
   the offline suite retains the five-second default.
 
-Remaining gates before Phase 5 can start:
+## P5 live infrastructure checkpoint (2026-08-05)
+
+The branch now has a separate live odla tenant and top-level Cloudflare Worker.
+This is infrastructure readiness only: the public domain and GitHub Pages have
+not changed, and the Worker is not ready to accept real payments or sign-ins.
+
+- Upgraded `@odla-ai/cli` from 0.28.1 to 0.29.0. The prior release checked
+  access to a new live database before enabling its Registry service, which
+  left first-time prod provisioning stuck. Version 0.29.0 enabled prod `db`
+  and Calendar successfully before continuing.
+- Provisioned tenant `silver-and-salt-capital` without rotating the existing
+  dev credential. Pushed the 15 deny-all rule namespaces and composed schema;
+  both guarded Chapter seeds were created. The live database started fresh:
+  the 41 sandbox CRM records, identity rows, files, provider secrets, and API
+  keys were not copied.
+- Connected the production Calendar environment through the owner-approved
+  Google consent flow. It is healthy, bookable, and writes to `primary` while
+  checking `primary` for availability.
+- Deployed the top-level Worker at
+  `https://silver-and-salt-capital.cory-ondrejka.workers.dev`, version
+  `7cfe64c6-2950-48e1-9cfd-261300480e9b`, and transferred the already-saved
+  prod database key through Wrangler stdin. The odla Registry prod link and
+  Chapter canonical follower URL now use that verified origin. The aligned dev
+  Worker is version `d43fe490-4cce-4826-b28b-b9b75bca92c5`.
+- Upload verification caught two tracked local-only generated files
+  (`granola-inbox.js` and `newsletter-data.js`) in the first asset manifest.
+  They were briefly reachable at the new workers.dev origins before DNS
+  cutover. The build now excludes all six local-only paths explicitly and
+  fails if any reappear; Cloudflare routes those paths around its asset cache
+  to a Worker-level 404. Exact and cache-busted probes return 404 on both
+  origins.
+- Local tests pass 83/83, the build contains 174 files, and the passive
+  security gate reports zero confirmed findings and zero candidates.
+  `odla-ai smoke` passes in prod and dev with healthy Calendar, 19 entities,
+  and four anonymous Chapter probes returning 401.
+- The deployed suite passes 112/114 checks. The two failing launch gates are
+  intentional and visible: Stripe live configuration is absent
+  (`paymentsReady:false`), and the production Clerk publishable key/issuer are
+  absent. The suite's bounded `acceptance-replay-identity-fixed` fixture created
+  exactly one live application/CRM record; repeated runs converge on that row.
+- Production federation with Built Not Found is not active yet. The matching
+  live `network_share_secret` must be installed in both vaults and the leader
+  target changed to this production origin before that edge is tested.
+
+Remaining gates before DNS cutover:
 
 1. Complete the owner's browser pass for signup, a Stripe test payment,
    booking, provisional/member/admin views, and the admin mutation families.
@@ -86,10 +130,10 @@ Remaining gates before Phase 5 can start:
 4. Onboard `silverandsaltcapital.com` to Cloudflare Email Service in the
    production Cloudflare account so `membership@silverandsaltcapital.com` is a
    verified sender.
-5. After those human-owned prerequisites, add `prod` to `odla.config.mjs`, add
-   the Clerk production publishable key and public link, run and review the prod
-   provision dry run, then enter the Phase 5 approval sequence. Keep GitHub
-   Pages enabled for the 72-hour rollback window after DNS cutover.
+5. Install and test the live Built Not Found federation secret on both sides,
+   then point the leader's production target at the verified Worker origin.
+6. After the provider and browser gates pass, attach the custom domain and cut
+   DNS. Keep GitHub Pages enabled for the 72-hour rollback window.
 
 ## P0 inventory findings (2026-07-11)
 

@@ -8,7 +8,9 @@ export default {
     id: "silver-and-salt-capital",
     name: "Silver & Salt Capital",
   },
-  envs: ["dev"],
+  // Phase 5 live infrastructure is explicit, but DNS remains on GitHub Pages
+  // until the remaining provider and browser cutover gates pass.
+  envs: ["dev", "prod"],
   // Sourced from the resolved chapter so the descriptor and the Worker cannot
   // disagree about which services exist.
   services: chapter.services,
@@ -29,8 +31,8 @@ export default {
       // Live booking checks FreeBusy across these calendars and writes to the
       // explicit booking calendar. Our odla-db remains the source of truth for
       // meetings; Google is the invite and Meet projection.
-      availabilityCalendars: { dev: ["primary"] },
-      bookingCalendar: { dev: "primary" },
+      availabilityCalendars: { dev: ["primary"], prod: ["primary"] },
+      bookingCalendar: { dev: "primary", prod: "primary" },
     },
   },
   // No inline `db.schema`/`db.rules`: the Chapter integration above declares
@@ -60,7 +62,9 @@ export default {
     // Copied from the Phase 1 `wrangler deploy --env dev` output and
     // curl-verified 200 before pasting (per runbook: never predict this URL).
     dev: "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
-    // prod is set at Phase 5 from the prod deploy's printed URL.
+    // Captured from the first top-level Wrangler deploy and curl-verified.
+    // DNS remains on GitHub Pages until the explicit cutover checkpoint.
+    prod: "https://silver-and-salt-capital.cory-ondrejka.workers.dev",
   },
   local: {
     tokenFile: ".odla/dev-token.json",

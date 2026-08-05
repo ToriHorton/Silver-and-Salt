@@ -1,9 +1,9 @@
 // Cloudflare Worker config for the Silver & Salt Capital site (odla migration).
 // Serves the static build from dist/ via an assets binding.
 //
-// IMPORTANT (until Phase 5 sign-off): deploy ONLY the dev environment
-//   npx wrangler deploy --env dev
-// Never deploy the top-level (prod) config before Phase 5.
+// The top-level Worker may be deployed at its workers.dev origin during Phase
+// 5 readiness. Do not attach the public domain or change DNS until the remaining
+// provider, browser, and explicit cutover gates pass.
 //
 // The entry is src/worker-chapter.ts: chapterWorker with the three remaining
 // legacy compatibility routes mounted in front of it. It replaced the bare
@@ -45,6 +45,17 @@
     // Always the Phase 0 build dir (npm run build), never the repo root.
     "directory": "dist",
     "binding": "ASSETS",
+    // Force local-only paths through src/worker-chapter.ts before Cloudflare's
+    // static-asset cache, where they are denied even if an old asset is cached.
+    "run_worker_first": [
+      "/api/*",
+      "/dashboard.html",
+      "/ecosystem.html",
+      "/granola-inbox.js",
+      "/newsletter-data.js",
+      "/network/people.js",
+      "/network/people-utah.js"
+    ],
     // Matches the current site: no custom 404.html exists, so missing
     // paths return a plain 404 (GitHub Pages serves its own default page).
     "not_found_handling": "404-page",
@@ -77,6 +88,15 @@
       "assets": {
         "directory": "dist",
         "binding": "ASSETS",
+        "run_worker_first": [
+          "/api/*",
+          "/dashboard.html",
+          "/ecosystem.html",
+          "/granola-inbox.js",
+          "/newsletter-data.js",
+          "/network/people.js",
+          "/network/people-utah.js"
+        ],
         "not_found_handling": "404-page",
         "html_handling": "auto-trailing-slash"
       }

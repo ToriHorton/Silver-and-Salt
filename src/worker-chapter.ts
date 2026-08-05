@@ -81,6 +81,27 @@ const LEGACY_OWNED: Array<RegExp> = [
 
 const ownedByLegacy = (pathname: string) => LEGACY_OWNED.some((re) => re.test(pathname));
 
+// These CEO-only utilities and generated data files belong on a local machine,
+// never on either Cloudflare origin. Wrangler's asset cache can outlive a newer
+// asset manifest, so wrangler.jsonc routes these exact paths through the Worker
+// first and this route fails them closed before any static-asset fallback.
+const PRIVATE_ASSET_PATHS = new Set([
+  "/dashboard.html",
+  "/ecosystem.html",
+  "/granola-inbox.js",
+  "/newsletter-data.js",
+  "/network/people.js",
+  "/network/people-utah.js",
+]);
+
+const rejectPrivateAsset: Route = async (_req, url) => {
+  if (!PRIVATE_ASSET_PATHS.has(url.pathname)) return null;
+  return new Response("Not found", {
+    status: 404,
+    headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+};
+
 /**
  * The legacy API, mounted as a host route. Returns null (falls through to the
  * Chapter built-ins) for anything outside the allowlist, so this cannot silently
@@ -203,5 +224,5 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
 export default chapterWorker({
   chapter,
   crmBasePath: "/api/crm",
-  routes: [migrationReadiness, legacyApi],
+  routes: [rejectPrivateAsset, migrationReadiness, legacyApi],
 });
