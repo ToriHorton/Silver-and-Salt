@@ -48,8 +48,11 @@ export default {
     clerk: {
       // Publishable key (public by design). Clerk app "Silver & Salt Capital"
       // in the Built Not Found workspace, app_3G6TCBtJKVZo6Aq5UGgz9URtDqV,
-      // dev instance. prod pk is set at Phase 5.
+      // with one dev and one production instance. The current prod key is the
+      // workers.dev rehearsal; cutover replaces it with the key coupled to
+      // silverandsaltcapital.com.
       dev: "pk_test_cmVsaWV2ZWQtZWZ0LTkzLmNsZXJrLmFjY291bnRzLmRldiQ",
+      prod: "pk_live_Y2xlcmsuY29yeS1vbmRyZWprYS53b3JrZXJzLmRldiQ",
     },
   },
   // Add "o11y" to services to enable observability; provision then mints the

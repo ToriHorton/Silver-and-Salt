@@ -116,6 +116,16 @@ not changed, and the Worker is not ready to accept real payments or sign-ins.
 - Production federation with Built Not Found is not active yet. The matching
   live `network_share_secret` must be installed in both vaults and the leader
   target changed to this production origin before that edge is tested.
+- Clerk production rehearsal uses the existing application's production
+  instance `ins_3HVA9P4iAGe7TCaRxMAf6fX1hIo` and its public key coupled to
+  `cory-ondrejka.workers.dev`. This is intentionally temporary: Clerk reports
+  that rehearsal domain's DNS, SSL, and mail as pending. The real cutover must
+  run Clerk production setup again for `silverandsaltcapital.com`, replace the
+  prod publishable key, and re-provision auth before DNS moves. The rehearsal
+  public key is provisioned in odla prod and `/api/auth/config` returns it with
+  the expected issuer; both odla smokes pass. Clerk's issuer currently returns
+  404, so this verifies production auth plumbing but cannot verify browser
+  sign-in until the real-domain update.
 
 Remaining gates before DNS cutover:
 
