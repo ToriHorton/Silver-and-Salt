@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Steward: five treatments | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2; --sand:#F4EFE6;
+  --moss:#2F3E34; --moss-light:#4A5E50; --sage:#7E8E84;
+  --lime:#7CB83F; --lime-dark:#6aa535; --gold:#C9A84C; --gold-deep:#A08434;
+  --plum:#8B5E83; --rust:#A3542D;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--moss);
+     font-family:'Satoshi',-apple-system,BlinkMacSystemFont,sans-serif}
+.pg{max-width:1200px;margin:0 auto;padding:44px 28px 100px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+   font-size:clamp(28px,4vw,44px);line-height:1.14;margin:0 0 12px}
+h1 em{font-style:italic;color:var(--gold-deep)}
+.lede{font-size:14.5px;line-height:1.75;color:var(--moss-light);font-weight:300;
+      max-width:840px;margin:0 0 10px}
+.lede b{font-weight:700;color:var(--moss)}
+.warn{max-width:840px;margin:22px 0 0;padding:18px 22px;background:var(--sand);
+      border-left:3px solid var(--rust);border-radius:0 10px 10px 0;
+      font-size:13px;line-height:1.8;color:var(--moss-light);font-weight:300}
+.warn b{color:var(--moss);font-weight:700}
+.opt{margin:46px 0 0;padding-top:30px;border-top:1px solid rgba(47,62,52,.14)}
+.opt .n{font-family:'Cormorant Infant',serif;font-size:15px;font-weight:600;color:var(--gold-deep)}
+.opt h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;margin:2px 0 8px}
+.opt .why{font-size:13px;line-height:1.7;color:var(--moss-light);font-weight:300;max-width:850px;margin:0 0 6px}
+.opt .cost{font-size:12.5px;line-height:1.65;color:var(--sage);font-weight:300;max-width:850px;margin:0 0 22px}
+.opt .cost b{color:var(--moss-light);font-weight:700}
+
+/* ── the row ── */
+.tiers{background:var(--sand);border-radius:14px;padding:34px 28px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+.t{background:#fff;border:1px solid rgba(47,62,52,.12);border-radius:14px;
+   padding:32px 26px 30px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.t.founding{border:1px solid rgba(124,184,63,.45);box-shadow:0 16px 40px rgba(47,62,52,.12);
+            background:linear-gradient(180deg,rgba(124,184,63,.07) 0%,#fff 40%)}
+.t.assoc{border:1px solid rgba(47,62,52,.16);box-shadow:0 8px 22px rgba(47,62,52,.06)}
+.k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin:0 0 8px}
+.t.steward .k{color:var(--gold-deep)} .t.founding .k{color:var(--lime-dark)} .t.assoc .k{color:var(--plum)}
+.price{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:20px;color:var(--moss-light);margin:0 0 12px}
+.who{font-size:11.5px;font-weight:700;color:var(--sage);text-transform:uppercase;
+     letter-spacing:.06em;margin:0 0 14px;min-height:2.8em}
+ul{list-style:none;margin:0 0 20px;padding:0}
+li{font-size:13.5px;line-height:1.6;color:var(--moss-light);font-weight:300;
+   padding:11px 0;border-bottom:1px solid rgba(47,62,52,.1)}
+li:first-child{border-top:1px solid rgba(47,62,52,.1)}
+.cta{display:block;text-align:center;font-weight:700;font-size:14px;min-height:48px;
+     padding:14px 18px;border-radius:8px;text-decoration:none;margin-top:auto}
+.t.steward .cta{background:var(--moss);color:#fff}
+.t.founding .cta{background:var(--lime-dark);color:#fff}
+.t.assoc .cta{background:transparent;border:1px solid var(--moss);color:var(--moss)}
+.foot{font-size:11.5px;line-height:1.55;color:rgba(47,62,52,.55);font-weight:300;margin:12px 0 0;min-height:36px}
+
+/* the seal on Founding */
+.seal-row{display:flex;align-items:center;gap:15px;margin:0 0 2px}
+.seal{flex:0 0 auto;width:58px;height:58px;border-radius:50%;border:1px solid rgba(201,168,76,.6);
+      background:rgba(201,168,76,.1);display:flex;flex-direction:column;align-items:center;
+      justify-content:center;position:relative}
+.seal::before{content:'';position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(201,168,76,.32)}
+.seal .n1{font-family:'Cormorant Infant',serif;font-size:20px;font-weight:600;color:var(--gold-deep);line-height:1}
+.seal .n2{font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--gold-deep);margin-top:2px;opacity:.8}
+.seal-k{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--gold-deep);margin:0 0 4px}
+.seal-v{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--moss);margin:0;line-height:1.2}
+.seal-v .was{color:var(--sage);font-size:17px;margin-right:8px;position:relative;display:inline-block}
+.seal-v .was::after{content:'';position:absolute;left:-4%;right:-4%;top:50%;height:1.5px;
+  background:var(--rust);transform:rotate(-12deg);border-radius:2px}
+.seal-v .now{font-family:'Cormorant Infant',serif;font-size:27px}
+.held{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;line-height:1.45;
+      color:var(--moss-light);margin:11px 0 0}
+.held b{font-style:normal;font-weight:600;color:var(--gold-deep)}
+
+/* the thank-you inside Steward */
+.thx{margin:0 0 18px;padding:16px 16px 15px;background:rgba(201,168,76,.09);
+     border:1px solid rgba(201,168,76,.32);border-radius:12px}
+.thx-k{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.16em;
+       text-transform:uppercase;font-weight:700;color:var(--gold-deep);margin:0 0 13px;white-space:nowrap}
+.thx-k::before,.thx-k::after{content:'';height:1px;background:rgba(201,168,76,.45);flex:1}
+.thx-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;line-height:1.3;
+       color:var(--moss);position:relative;padding-left:22px;margin:0 0 6px}
+.thx-q::before{content:'\201C';position:absolute;left:0;top:-7px;font-family:'Cormorant Garamond',serif;
+               font-size:36px;line-height:1;color:rgba(201,168,76,.6)}
+.thx-a{font-size:12.5px;line-height:1.62;color:var(--moss-light);font-weight:300;margin:0;padding-left:22px}
+.thx-a strong{font-weight:500;color:var(--gold-deep)}
+
+/* ═══ TREATMENTS ═══ */
+/* 2. gold tint, mirroring Founding */
+.v2 .t.steward{border:1px solid rgba(201,168,76,.55);box-shadow:0 16px 40px rgba(47,62,52,.12);
+               background:linear-gradient(180deg,rgba(201,168,76,.1) 0%,#fff 40%)}
+/* 3. gold top edge only */
+.v3 .t.steward::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold) 0%,rgba(201,168,76,.25) 100%)}
+/* 4. inverted, dark with gold */
+.v4 .t.steward{background:var(--moss);border-color:rgba(201,168,76,.4);
+               box-shadow:0 18px 44px rgba(47,62,52,.28)}
+.v4 .t.steward .k{color:var(--gold)}
+.v4 .t.steward .price{color:rgba(251,248,242,.8)}
+.v4 .t.steward .who{color:rgba(251,248,242,.5)}
+.v4 .t.steward li{color:rgba(251,248,242,.82);border-bottom-color:rgba(251,248,242,.14)}
+.v4 .t.steward li:first-child{border-top-color:rgba(251,248,242,.14)}
+.v4 .t.steward .foot{color:rgba(251,248,242,.45)}
+.v4 .t.steward .cta{background:var(--gold);color:var(--moss)}
+.v4 .t.steward .thx{background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.4)}
+.v4 .t.steward .thx-q{color:var(--cream)}
+.v4 .t.steward .thx-a{color:rgba(251,248,242,.75)}
+.v4 .t.steward .thx-a strong{color:var(--gold)}
+.v4 .t.steward .thx-k{color:var(--gold)}
+
+/* 6. plum tint, mirroring Founding */
+.v6 .t.steward{border:1px solid rgba(139,94,131,.5);box-shadow:0 16px 40px rgba(47,62,52,.12);
+               background:linear-gradient(180deg,rgba(139,94,131,.1) 0%,#fff 40%)}
+.v6 .t.steward .k{color:var(--plum)}
+.v6 .t.steward .thx{background:rgba(139,94,131,.08);border-color:rgba(139,94,131,.3)}
+.v6 .t.steward .thx-k{color:var(--plum)}
+.v6 .t.steward .thx-q::before{color:rgba(139,94,131,.55)}
+.v6 .t.steward .thx-a strong{color:var(--plum)}
+.v6 .t.assoc .k{color:var(--sage)}          /* plum has moved, so Associate takes sage */
+
+/* 7. deep plum, inverted, exactly the retired Stewardship panel */
+.v7 .t.steward{background:#3A2536;border-color:rgba(201,168,76,.4);
+               box-shadow:0 18px 44px rgba(47,62,52,.3)}
+.v7 .t.steward .k{color:var(--gold)}
+.v7 .t.steward .price{color:rgba(251,248,242,.8)}
+.v7 .t.steward .who{color:rgba(251,248,242,.5)}
+.v7 .t.steward li{color:rgba(251,248,242,.82);border-bottom-color:rgba(251,248,242,.14)}
+.v7 .t.steward li:first-child{border-top-color:rgba(251,248,242,.14)}
+.v7 .t.steward .foot{color:rgba(251,248,242,.45)}
+.v7 .t.steward .cta{background:var(--gold);color:#3A2536}
+.v7 .t.steward .thx{background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.4)}
+.v7 .t.steward .thx-q{color:var(--cream)}
+.v7 .t.steward .thx-a{color:rgba(251,248,242,.75)}
+.v7 .t.steward .thx-a strong{color:var(--gold)}
+.v7 .t.steward .thx-k{color:var(--gold)}
+.v7 .t.assoc .k{color:var(--sage)}
+
+/* 5. crest */
+.crest{position:absolute;top:-1px;right:22px;width:44px;height:56px;
+  background:linear-gradient(180deg,var(--gold) 0%,#b8953f 100%);
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);
+  display:flex;align-items:flex-start;justify-content:center;padding-top:9px}
+.crest span{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:#fff;line-height:1}
+</style>
+</head>
+<body>
+<div class="pg">
+
+<h1>Seven ways to make Community Steward <em>look like the rare one</em>.</h1>
+<p class="lede">Each is the real row. Founding keeps its lime treatment in every version so you can judge whether the two compete.</p>
+
+<div class="warn">
+  <b>The trade-off.</b> Founding is currently the only distinguished card, and that distinction is what pulls selection toward it. Give Steward equal weight and you have two focal points, which usually means neither leads. The versions below are ordered from least to most competitive with Founding.
+</div>
+
+<div id="out"></div>
+</div>
+
+<script>
+const STEWARD_BODY = `
+  <p class="k">Community Steward</p>
+  <p class="price">$5,000 a year</p>
+  <p class="who">For anyone who wants this shift to be sustainable</p>
+  <ul>
+    <li>Everything in Founding Member</li>
+    <li>2 hours of complimentary and private financial coaching</li>
+    <li>A private hour with every visiting expert, before the workshop</li>
+    <li>The annual retreat, included</li>
+    <li>Your name recognized as a Community Steward</li>
+  </ul>
+  <div class="thx">
+    <p class="thx-k">A word of thanks</p>
+    <p class="thx-q">You are the reason this community can exist.</p>
+    <p class="thx-a">Stewardship pays the finance experts and the team who make every gathering happen. <strong>Your membership has an outsized impact.</strong></p>
+  </div>
+  <a class="cta" href="#">Fund the movement &rarr;</a>
+  <p class="foot">*All members can see open deals. Only accredited investors will have the option to invest.</p>`;
+
+const FOUNDING = `<div class="t founding">
+  <p class="k">Founding Member</p>
+  <div class="seal-row">
+    <div class="seal"><span class="n1">100</span><span class="n2">Only</span></div>
+    <div><p class="seal-k">The founding rate</p>
+         <p class="seal-v"><span class="was">$1,000</span><span class="now">$900</span> a year</p></div>
+  </div>
+  <p class="held">Your founding rate of <b>10 percent</b>, held for as long as you stay.</p>
+  <p class="who" style="margin-top:14px">Designed for women in Utah</p>
+  <ul>
+    <li>6 money classes, developed with Invest for Better</li>
+    <li>20+ optional gatherings, including workshops led by wealth experts</li>
+    <li>Live pitch meetings, deal memos, and the option to invest*</li>
+    <li>A voice in finding and selecting the women we fund</li>
+    <li>A second membership included, for your mother or your daughter</li>
+  </ul>
+  <a class="cta" href="#">Join the action &rarr;</a>
+  <p class="foot">*All members can see open deals. Only accredited investors will have the option to invest.</p>
+</div>`;
+
+const ASSOC = `<div class="t assoc">
+  <p class="k">Associate Member</p>
+  <p class="price">Free</p>
+  <p class="who">Open to everyone, anywhere</p>
+  <ul>
+    <li>Founder pitch recordings in the membership portal</li>
+    <li>Deal memo from our due diligence</li>
+    <li>The option to invest*</li>
+  </ul>
+  <a class="cta" href="#">See the deals &rarr;</a>
+  <p class="foot">*All members can see open deals. Only accredited investors will have the option to invest.</p>
+</div>`;
+
+const V = [
+  { v:'v1', n:'One', name:'What is there now',
+    why:'White card, gold kicker, gold thank-you box. The only gold is in the label and the note.',
+    cost:'<b>Competes with Founding:</b> not at all. Steward currently reads as the plain card that happens to cost the most, which is the thing you noticed.',
+    crest:false },
+
+  { v:'v3', n:'Two', name:'A gold edge',
+    why:'A three-pixel gold rule across the top of an otherwise white card. The lightest possible mark of distinction, and it echoes the lime rule under your hero.',
+    cost:'<b>Competes with Founding:</b> barely. Adds presence without adding a second tinted surface to the row.',
+    crest:false },
+
+  { v:'v5', n:'Three', name:'A gold crest',
+    why:'A struck crest in the top corner, in the same family as the seal on Founding, so the two cards share a visual language instead of shouting over each other.',
+    cost:'<b>Competes with Founding:</b> a little, and deliberately. It borrows the seal idea rather than the tint, so the eye reads it as related rather than rival.',
+    crest:true },
+
+  { v:'v2', n:'Four', name:'Gold tint, mirroring Founding',
+    why:'The direct answer to your question: exactly what Founding has, in gold. Same gradient, same border weight, same shadow.',
+    cost:'<b>Competes with Founding:</b> fully. Two tinted, bordered, shadowed cards side by side, and the row now has two focal points and no leader.',
+    crest:false },
+
+  { v:'v4', n:'Five', name:'Inverted, moss and gold',
+    why:'The card goes dark, the type goes cream, the button goes gold. It reads as the rare one without using tint at all, because it distinguishes by value rather than hue.',
+    cost:'<b>Competes with Founding:</b> strongly, but on a different axis. Distinguishes by value rather than hue.',
+    crest:false },
+
+  { v:'v6', n:'Six', name:'Plum tint',
+    why:'Your brand purple, in the same construction as Founding. Softer than gold and less associated with sale or luxury, and it makes the row read as three distinct identities rather than two greens and a plain one.',
+    cost:'<b>Competes with Founding:</b> fully, same as gold would. <b>And it costs you a colour:</b> plum currently belongs to Associate, so Associate moves to sage in this version.',
+    crest:false },
+
+  { v:'v7', n:'Seven', name:'Deep plum, inverted',
+    why:'The card goes deep plum with gold accents. This is not a new idea: it is exactly the panel your retired Stewardship section used, so the treatment already exists in your design language.',
+    cost:'<b>Competes with Founding:</b> strongly, on a different axis. The most premium of all seven, and the most likely to make a $5,000 tier feel like a distinct thing rather than a bigger version of the same thing.',
+    crest:false }
+];
+
+document.getElementById('out').innerHTML = V.map(o => `
+  <div class="opt">
+    <span class="n">${o.n}</span>
+    <h2>${o.name}</h2>
+    <p class="why">${o.why}</p>
+    <p class="cost">${o.cost}</p>
+    <div class="tiers ${o.v}">
+      <div class="row">
+        <div class="t steward">${o.crest ? '<div class="crest"><span>&amp;</span></div>' : ''}${STEWARD_BODY}</div>
+        ${FOUNDING}
+        ${ASSOC}
+      </div>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

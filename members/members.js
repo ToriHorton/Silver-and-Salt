@@ -15,6 +15,10 @@
 const MEMBERS = [
   // ─── FOUNDING MEMBERS ───
   { name: "Tori Horton", role: "Founding Member", photo: "members/tori-horton.jpg", linkedin: "https://linkedin.com/in/4torihorton" },
+  { name: "Millicent Tracey", role: "Founding Member", photo: "members/millicent-tracey.jpg", linkedin: "https://www.linkedin.com/in/millicenttracey/" },
+  { name: "Lauren Sercu", role: "Founding Member", photo: "members/lauren-sercu.jpg", linkedin: "https://www.linkedin.com/in/lsercu/" },
+  { name: "Lavanya Mahate", role: "Founding Member", photo: "members/lavanya-mahate.jpg", linkedin: "https://www.linkedin.com/in/lavanyamahate/" },
+  { name: "Crystalee Beck", role: "Founding Member", photo: "members/crystalee-beck.jpg", linkedin: "https://www.linkedin.com/in/crystalee/" },
 ];
 
 const ADVISORS = [

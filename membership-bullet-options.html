@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bullet marker options | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2; --sand:#F4EFE6;
+  --moss:#2F3E34; --moss-light:#4A5E50; --sage:#7E8E84;
+  --lime:#7CB83F; --lime-dark:#6aa535; --gold:#C9A84C; --plum:#8B5E83;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--moss);
+     font-family:'Satoshi',-apple-system,BlinkMacSystemFont,sans-serif}
+.pg{max-width:1280px;margin:0 auto;padding:40px 28px 90px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+   font-size:clamp(28px,4vw,42px);line-height:1.15;margin:0 0 10px}
+h1 em{font-style:italic;color:var(--lime-dark)}
+.lede{font-size:14.5px;line-height:1.75;color:var(--moss-light);
+      font-weight:300;max-width:760px;margin:0 0 34px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:26px}
+.slot h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:21px;margin:0 0 4px}
+.slot .n{font-family:'Cormorant Infant',serif;font-size:15px;font-weight:600;color:var(--lime-dark)}
+.slot .why{font-size:12.5px;line-height:1.65;color:var(--moss-light);
+           font-weight:300;margin:0 0 14px}
+.card{background:#fff;border:1px solid rgba(47,62,52,.12);border-radius:14px;
+      padding:24px 22px;box-shadow:0 10px 28px rgba(47,62,52,.07)}
+.k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;
+   color:var(--lime-dark);margin:0 0 8px}
+.card h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:23px;margin:0 0 4px}
+.price{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:20px;
+       color:var(--moss-light);margin:0 0 14px}
+ul{list-style:none;margin:0;padding:0}
+li{font-size:13.5px;line-height:1.6;color:var(--moss-light);font-weight:300;position:relative}
+
+/* ═══ 0. TODAY: the ampersand ═══ */
+.m-amp li{padding:7px 0 7px 26px}
+.m-amp li::before{content:'&';position:absolute;left:0;top:5px;
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--lime-dark)}
+
+/* ═══ 1. Hairline rules, no marker ═══ */
+.m-rule li{padding:11px 0;border-bottom:1px solid rgba(47,62,52,.1)}
+.m-rule li:first-child{border-top:1px solid rgba(47,62,52,.1)}
+
+/* ═══ 2. Small lime square ═══ */
+.m-square li{padding:7px 0 7px 22px}
+.m-square li::before{content:'';position:absolute;left:2px;top:14px;
+  width:5px;height:5px;background:var(--lime-dark);border-radius:1px}
+
+/* ═══ 3. Thin check ═══ */
+.m-check li{padding:7px 0 7px 26px}
+.m-check li::before{content:'';position:absolute;left:2px;top:11px;
+  width:11px;height:6px;border-left:1.5px solid var(--lime-dark);
+  border-bottom:1.5px solid var(--lime-dark);transform:rotate(-45deg)}
+
+/* ═══ 4. The split circle, small ═══ */
+.m-split li{padding:7px 0 7px 26px}
+.m-split li::before{content:'';position:absolute;left:1px;top:12px;
+  width:10px;height:10px;border-radius:50%;
+  background:linear-gradient(90deg,var(--moss) 0 50%,var(--lime) 50% 100%)}
+
+/* ═══ 5. Serif numerals ═══ */
+.m-num{counter-reset:b}
+.m-num li{padding:7px 0 7px 26px;counter-increment:b}
+.m-num li::before{content:counter(b);position:absolute;left:2px;top:6px;
+  font-family:'Cormorant Infant',serif;font-weight:600;font-size:15px;color:var(--lime-dark)}
+
+/* ═══ 6. The ampersand, demoted ═══ */
+.m-quiet li{padding:7px 0 7px 24px}
+.m-quiet li::before{content:'&';position:absolute;left:0;top:7px;
+  font-family:'Cormorant Garamond',serif;font-style:normal;font-weight:400;
+  font-size:12px;color:rgba(47,62,52,.34)}
+
+/* ═══ 7. No marker, hanging space ═══ */
+.m-none li{padding:9px 0}
+</style>
+</head>
+<body>
+<div class="pg">
+  <h1>Seven ways to mark <em>a benefit</em>.</h1>
+  <p class="lede">Same five bullets, same card, seven markers. The first is what is on the cards today, for comparison.</p>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const BULLETS = [
+  '6 money classes, developed with Invest for Better',
+  '20+ optional gatherings, including workshops led by wealth experts',
+  'Live pitch meetings, deal memos, and the option to invest*',
+  'A voice in finding and selecting the women we fund',
+  'A second membership included, for your mother or your daughter'
+];
+
+const OPTIONS = [
+  { cls:'m-amp',   n:'Today',      name:'The ampersand',
+    why:'What is there now. The glyph is larger than the text it introduces and repeats fifteen times across three cards, so the signature mark stops reading as signature.' },
+  { cls:'m-rule',  n:'Option 1',   name:'Hairline rules, no marker',
+    why:'No glyph at all. Each benefit is a row divided by a thin rule. This is the pattern your own membership page already uses for its benefit sections, so it is consistent with the site rather than new. The calmest and most editorial.' },
+  { cls:'m-square',n:'Option 2',   name:'Small lime square',
+    why:'A 5px square in lime, optically aligned to the first line. Modern and quiet, and it disappears into the list instead of competing with it.' },
+  { cls:'m-check', n:'Option 3',   name:'Thin check',
+    why:'Drawn in CSS, not a font glyph, so the weight matches your hairlines. Reads instantly as included, and pairs with the multiplication sign already used on the Associate card for what is held back.' },
+  { cls:'m-split', n:'Option 4',   name:'The split circle',
+    why:'Your actual logo icon at 10px: moss on the left, lime on the right. Uses the identity without repeating the wordmark glyph. The most brand-specific option.' },
+  { cls:'m-num',   n:'Option 5',   name:'Serif numerals',
+    why:'Digits in Cormorant Infant, per your numeral rule. Editorial and premium, but numbering implies ranking or sequence, which a benefit list does not have.' },
+  { cls:'m-quiet', n:'Option 6',   name:'The ampersand, demoted',
+    why:'Same idea, fixed: 12px instead of 16, upright, sage at 34 percent instead of lime. Keeps the brand thought and removes the shout. The smallest possible change.' },
+  { cls:'m-none',  n:'Option 7',   name:'No marker at all',
+    why:'Pure text with generous spacing. The most premium and the least scannable. Works only if every bullet stays to one or two lines.' }
+];
+
+document.getElementById('grid').innerHTML = OPTIONS.map(o => `
+  <div class="slot">
+    <span class="n">${o.n}</span>
+    <h2>${o.name}</h2>
+    <p class="why">${o.why}</p>
+    <div class="card">
+      <p class="k">Founding Member</p>
+      <h3>Investor Experience</h3>
+      <p class="price">$1,000 a year</p>
+      <ul class="${o.cls}">${BULLETS.map(b => `<li>${b}</li>`).join('')}</ul>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

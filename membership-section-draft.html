@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membership section (draft) | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   MEMBERSHIP SECTION, DRAFT
+   Two sections only: the sorter, and the three memberships it highlights.
+   Written mobile first. Every base rule below is the phone layout; the
+   min-width queries add columns as the screen earns them. Nothing here is
+   live, and this page is noindex.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --lime: #7CB83F; --lime-dark: #6aa535; --lime-soft: rgba(124,184,63,0.12);
+  --gold: #C9A84C; --plum: #8B5E83;
+  --pop: #6aa535;
+}
+body { background: var(--sand); }
+
+/* ── 1. THE SORT ─────────────────────────────────────────────────────── */
+.x-sort { background: var(--sand); padding: 96px 20px 22px; }
+.x-sort-in { max-width: 1080px; margin: 0 auto; }
+.x-sort-q {
+  font-family: 'Cormorant Garamond', serif; font-weight: 300;
+  font-size: clamp(25px, 6.4vw, 38px); line-height: 1.16;
+  color: var(--moss); text-align: center; margin: 0 0 8px;
+}
+.x-sort-q em { font-style: italic; color: var(--lime-dark); }
+.x-sort-why {
+  font-size: 13.5px; line-height: 1.6; color: var(--sage);
+  text-align: center; font-weight: 300; margin: 0 auto 22px; max-width: 30em;
+}
+
+/* the four statements: one column on a phone, and the whole card is the target */
+.x-opts { display: grid; grid-template-columns: 1fr; gap: 10px;
+          border: 0; margin: 0 auto; padding: 0; max-width: 520px; }
+.x-opts > legend { position: absolute; width: 1px; height: 1px;
+                   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.x-opt {
+  position: relative; display: block; text-align: left; min-height: 48px;
+  background: #FFFDF7; border: 1px solid rgba(47,62,52,0.15); border-radius: 14px;
+  padding: 18px 18px 18px 48px; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif;
+  transition: transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s,
+              border-color .16s, background .16s;
+}
+.x-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.x-dot {
+  position: absolute; left: 17px; top: 20px; width: 22px; height: 22px;
+  border-radius: 50%; border: 1.5px solid rgba(47,62,52,0.32); background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+}
+.x-dot::after {
+  content: ''; position: absolute; inset: 4px; border-radius: 50%;
+  background: var(--lime-dark); transform: scale(0);
+  transition: transform .17s cubic-bezier(.2,.8,.3,1);
+}
+.x-opt input:focus-visible ~ .x-dot { box-shadow: 0 0 0 3px rgba(124,184,63,0.45); }
+.x-opt.on {
+  border: 2px solid var(--lime-dark); background: rgba(124,184,63,0.09);
+  padding: 17px 17px 17px 47px; box-shadow: 0 14px 34px rgba(124,184,63,0.22);
+}
+.x-opt.on .x-dot { border-color: var(--lime-dark); border-width: 2px; }
+.x-opt.on .x-dot::after { transform: scale(1); }
+.x-opt-q {
+  font-style: italic; font-weight: 400; font-size: 16px; line-height: 1.46;
+  color: var(--moss); margin: 0;
+}
+.x-opt-q .aside { font-style: italic; font-size: 0.88em; color: var(--sage); }
+.x-sort-skip { text-align: center; margin-top: 18px; }
+.x-sort-skip button {
+  font-family: 'Satoshi', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--sage); background: none; border: 0; cursor: pointer;
+  padding: 12px 8px; text-decoration: underline; text-underline-offset: 3px;
+}
+
+/* ── 2. THE THREE MEMBERSHIPS ────────────────────────────────────────── */
+.g-tiers { background: var(--sand); padding: 18px 20px 90px; }
+.g-tier-grid { max-width: 1080px; margin: 0 auto; display: grid;
+               grid-template-columns: 1fr; gap: 14px; align-items: stretch;
+               max-width: 480px; }
+.g-tier {
+  background: #fff; border: 1px solid rgba(47,62,52,0.12); border-radius: 14px;
+  padding: 17px 22px 18px; display: flex; flex-direction: column;
+  position: relative; transition: box-shadow .18s, opacity .18s, border-color .18s;
+}
+.g-tier.reco { border: 2px solid var(--lime-dark);
+               box-shadow: 0 18px 44px rgba(124,184,63,0.22); padding: 16px 21px 17px; }
+.g-tiers.sorted .g-tier { opacity: .55; }
+.g-tiers.sorted .g-tier.reco { opacity: 1; }
+.g-tiers.sorted .g-tier:hover { opacity: 1; }
+
+.g-tier.founding { box-shadow: 0 16px 40px rgba(47,62,52,0.12);
+                   border: 1px solid rgba(124,184,63,0.45);
+                   background: linear-gradient(180deg, rgba(124,184,63,0.07) 0%, #fff 40%); }
+/* Associate reads as the lighter option, not the illegible one: same type
+     sizes and same text colours as the others. It is distinguished only by a
+     plain white surface with no lime tint, and an outlined rather than filled
+     button. */
+  .g-tier.assoc { background: #fff; border: 1px solid rgba(47,62,52,0.16);
+                  box-shadow: 0 8px 22px rgba(47,62,52,0.06); }
+  .g-tier.assoc a { background: transparent; border: 1px solid var(--moss); color: var(--moss); }
+  .g-tier.assoc .g-tier-k { color: var(--plum); }
+
+
+/* Community Steward carries a gold edge: enough to mark it as the rare one,
+   without a second tinted surface competing with Founding for the eye. */
+.g-tier.steward { overflow: hidden; }
+.g-tier.steward::before { content: ''; position: absolute; top: 0; left: 0; right: 0;
+                          height: 3px; border-radius: 14px 14px 0 0;
+                          background: linear-gradient(90deg, var(--gold) 0%,
+                                      rgba(201,168,76,0.25) 100%); }
+
+.g-tier-badge {
+  position: absolute; top: -12px; left: 20px; background: var(--lime-dark);
+  color: #fff; font-family: 'Satoshi', sans-serif; font-weight: 700;
+  font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 999px; display: none;
+}
+.g-tier.reco .g-tier-badge { display: inline-block; }
+.g-tier-k { font-family: 'Cormorant Garamond', serif; font-size: 24px; letter-spacing: 0;
+            font-weight: 600; line-height: 1.15; margin: 0 0 4px; }
+.g-tier.steward  .g-tier-k { color: var(--gold); filter: brightness(0.8); }
+.g-tier.founding .g-tier-k { color: var(--lime-dark); }
+.g-tier h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600;
+             font-size: 23px; color: var(--moss); margin: 0 0 4px; }
+.g-tier-price { font-family: 'Cormorant Garamond', serif; font-weight: 300;
+                font-size: 20px; color: var(--moss-light); margin: 0 0 6px; }
+.g-tier-who { font-family: 'Satoshi', sans-serif; font-size: 11.5px; font-weight: 700;
+              color: var(--sage); text-transform: uppercase; letter-spacing: .06em;
+              margin: 0 0 8px; }
+.g-tier ul { list-style: none; margin: 0 0 10px; padding: 0; }
+.g-tier li { font-size: 13.5px; line-height: 1.5; color: var(--moss-light);
+             font-weight: 300; padding: 6px 0; position: relative;
+             border-bottom: 1px solid rgba(47,62,52,0.1); }
+  .g-tier li:first-child { border-top: 1px solid rgba(47,62,52,0.1); }
+.g-na { font-size: 12.5px; line-height: 1.6; color: rgba(47,62,52,0.58);
+        font-weight: 300; margin: 0 0 16px; padding-left: 24px; position: relative; }
+.g-na::before { content: '\00d7'; position: absolute; left: 4px; top: 1px;
+                font-family: 'Satoshi', sans-serif; font-size: 12px;
+                color: rgba(47,62,52,0.32); }
+.g-detail { margin: 0 0 12px; padding: 11px 15px 10px; background: rgba(47,62,52,0.035);
+            border: 1px solid rgba(47,62,52,0.1); border-radius: 12px; }
+.g-detail-k { font-family: 'Satoshi', sans-serif; font-size: 10px; letter-spacing: .16em;
+              text-transform: uppercase; font-weight: 700; color: var(--sage); margin: 0 0 8px; }
+.g-detail p { font-size: 12.5px; line-height: 1.62; color: var(--moss-light);
+              font-weight: 300; margin: 0; }
+
+/* ── The founding rate, as a struck seal ────────────────────────────────
+   Three levers, per the pricing research: the standard price stays visible
+   so $900 lands as a gain; the gap is shown in dollars, which reads larger
+   than a percentage above $100; and the scarcity is a countable quantity
+   rather than a deadline. The guarantee is stated as the rate, never the
+   dollar, so nothing here breaks when the price changes.
+   ─────────────────────────────────────────────────────────────────────── */
+.g-seal-row { display: flex; align-items: center; gap: 15px; margin: 0 0 2px; }
+.g-seal { flex: 0 0 auto; width: 58px; height: 58px; border-radius: 50%;
+          border: 1px solid rgba(201,168,76,0.6); background: rgba(201,168,76,0.1);
+          display: flex; flex-direction: column; align-items: center;
+          justify-content: center; position: relative; }
+.g-seal::before { content: ''; position: absolute; inset: 4px; border-radius: 50%;
+                  border: 1px solid rgba(201,168,76,0.32); }
+.g-seal-n { font-family: 'Cormorant Infant', serif; font-size: 20px; font-weight: 600;
+            color: #A08434; line-height: 1; }
+.g-seal-l { font-family: 'Satoshi', sans-serif; font-size: 7.5px; letter-spacing: .14em;
+            text-transform: uppercase; font-weight: 700; color: #A08434;
+            margin-top: 2px; opacity: .8; }
+.g-seal-k { font-family: 'Satoshi', sans-serif; font-size: 9.5px; letter-spacing: .2em;
+            text-transform: uppercase; font-weight: 700; color: #A08434; margin: 0 0 4px; }
+.g-seal-v { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--moss);
+            margin: 0; line-height: 1.2; }
+.g-seal-v .g-was { color: var(--sage); font-size: 17px; margin-right: 8px;
+                   position: relative; display: inline-block; text-decoration: none; }
+.g-seal-v .g-was::after { content: ''; position: absolute; left: -4%; right: -4%; top: 50%;
+                          height: 1.5px; background: #A3542D; border-radius: 2px;
+                          transform: rotate(-12deg); }
+.g-seal-v .g-now { font-family: 'Cormorant Infant', serif; font-size: 27px; color: var(--moss); }
+.g-held { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px;
+          line-height: 1.4; color: var(--moss-light); margin: 6px 0 0; }
+.g-held b { font-style: normal; font-weight: 600; color: #A08434; }
+
+
+
+.g-heard { margin: 0 0 10px; padding: 10px 14px 10px; background: rgba(139,94,131,0.055);
+           border: 1px solid rgba(139,94,131,0.16); border-radius: 12px; }
+.g-heard-k { display: flex; align-items: center; gap: 10px; font-family: 'Satoshi', sans-serif;
+             font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+             font-weight: 700; color: var(--plum); margin: 0 0 6px; white-space: nowrap; }
+.g-heard-k::before, .g-heard-k::after { content: ''; height: 1px;
+                                        background: rgba(139,94,131,0.3); flex: 1; }
+.g-heard-item + .g-heard-item { margin-top: 9px; padding-top: 9px;
+                                border-top: 1px solid rgba(139,94,131,0.15); }
+.g-heard-q { font-family: 'Cormorant Garamond', serif; font-style: italic;
+             font-weight: 400; font-size: 15px; line-height: 1.25; color: var(--moss);
+             position: relative; padding-left: 22px; margin: 0 0 6px; }
+.g-heard-q::before { content: '\201C'; position: absolute; left: 0; top: -7px;
+                     font-family: 'Cormorant Garamond', serif; font-size: 36px;
+                     line-height: 1; color: rgba(139,94,131,0.55); }
+.g-heard-a { font-size: 12.5px; line-height: 1.5; color: var(--moss-light);
+             font-weight: 300; margin: 0; padding-left: 22px; }
+.g-heard-a strong { font-weight: 500; color: var(--plum); }
+.g-heard.gold { background: rgba(201,168,76,0.09); border-color: rgba(201,168,76,0.32); }
+.g-heard.gold .g-heard-k { color: #A08434; }
+.g-heard.gold .g-heard-k::before, .g-heard.gold .g-heard-k::after { background: rgba(201,168,76,0.45); }
+.g-heard.gold .g-heard-q::before { color: rgba(201,168,76,0.6); }
+.g-heard.gold .g-heard-a strong { color: #A08434; }
+.g-tier a { display: block; text-align: center; font-family: 'Satoshi', sans-serif;
+            font-weight: 700; font-size: 14px; min-height: 42px; padding: 11px 18px;
+            border-radius: 8px; text-decoration: none; margin-top: auto; }
+.g-tier.steward  a { background: var(--moss); color: #fff; }
+.g-tier.founding a { background: var(--lime-dark); color: #fff; }
+.x-vs { max-width: 1080px; margin: 18px auto 0; text-align: center;
+        font-family: 'Cormorant Garamond', serif; font-weight: 300;
+        font-size: clamp(17px, 4.4vw, 22px); line-height: 1.5; color: var(--moss-light); }
+.x-vs strong { font-weight: 600; color: var(--moss); font-style: italic; }
+
+/* the bold line breaks after "invest," on wide screens so its two lines
+   balance; on phones the narrow measure wraps it naturally instead */
+@media (max-width: 699px) { .x-vs-br { display: none; } }
+
+.x-vs a { color: var(--lime-dark); text-decoration: underline; text-underline-offset: 3px; }
+
+/* the shared asterisk note beneath the section */
+.g-tiers-foot { max-width: 1080px; margin: 10px auto 0; text-align: center;
+                font-family: 'Satoshi', sans-serif; font-size: 13px; line-height: 1.6;
+                color: rgba(47,62,52,0.62); font-weight: 300; }
+.g-tiers-foot a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.g-tiers-foot a:hover { color: var(--lime-dark); }
+
+
+
+/* ── 3. THE CONTINUE BAR, in the thumb zone ──────────────────────────── */
+.x-continue {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(244,239,230,0) 0%, var(--sand) 38%);
+  transform: translateY(130%); transition: transform .28s cubic-bezier(.2,.8,.3,1);
+  pointer-events: none;
+}
+.x-continue.up { transform: translateY(0); pointer-events: auto; }
+.x-continue button {
+  display: block; width: 100%; max-width: 460px; margin: 0 auto; min-height: 54px;
+  border: 0; border-radius: 10px; background: var(--lime-dark); color: #fff;
+  font-family: 'Satoshi', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 10px 30px rgba(47,62,52,0.24);
+}
+.x-continue button:hover { background: var(--moss); }
+@media (prefers-reduced-motion: reduce) { .x-continue { transition: none; } }
+
+/* ── 4. WIDER SCREENS EARN COLUMNS ───────────────────────────────────── */
+/* phone: tighten the parts that cost height without costing clarity */
+@media (max-width: 699px) {
+  .g-tier { padding: 22px 20px 24px; }
+  .g-tier.reco { padding: 21px 19px 23px; }
+  .g-tier h3 { font-size: 22px; }
+  .g-tier-who { margin-bottom: 12px; }
+  .g-tier ul { margin-bottom: 14px; }
+  .g-tier li { padding: 9px 0; line-height: 1.5; }
+}
+
+@media (min-width: 700px) {
+  .x-sort { padding: 110px 32px 24px; }
+  .x-opts { grid-template-columns: 1fr 1fr; max-width: 760px; gap: 14px; }
+  .g-tiers { padding: 20px 32px 100px; }
+  .g-tier-grid { max-width: 560px; }
+  .x-opt:hover { border-color: var(--lime-dark); transform: translateY(-3px);
+                 box-shadow: 0 16px 34px rgba(47,62,52,0.13); }
+}
+@media (min-width: 1000px) {
+  .x-sort { padding: 120px 48px 26px; }
+  .x-opts { grid-template-columns: repeat(4, 1fr); max-width: 1080px; }
+  .x-opt-q { font-size: 16.5px; }
+  .g-tiers { padding: 24px 48px 110px; }
+  /* Three equal columns. Founding is emphasised by its lime tint and border,
+     not by being wider, so the row reads as a set rather than a hierarchy. */
+  .g-tier-grid { max-width: 1080px; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  /* hold the head block to one height so all three bullet lists start on the
+     same line, and the CTAs land together at the bottom */
+  .g-tier-who { min-height: 2.2em; }
+  .g-tier ul { margin-bottom: 22px; }
+  .g-tier a { margin-top: auto; }
+  .g-tier { padding: 32px 28px 34px; }
+  .g-tier.founding { padding: 32px 28px 34px; }
+  .g-tier.founding .g-tier-price { font-size: 22px; font-weight: 400; }
+  /* on a wide screen the bar is a button, not a bar */
+  .x-continue { padding: 18px; background: none; }
+  .x-continue button { max-width: 420px; }
+}
+</style>
+</head>
+<body>
+
+<site-header></site-header>
+
+<!-- ══════ THE SORT ══════ -->
+<section class="x-sort" id="sort">
+  <div class="x-sort-in">
+    <p class="x-sort-q">We&rsquo;re building a community of women who <em>win together.</em></p>
+    <p class="x-sort-why">You know your financial readiness. Where do you belong?</p>
+
+    <fieldset class="x-opts">
+      <legend>Where do you belong?</legend>
+
+      <label class="x-opt" data-opt="pay-forward" data-tier="steward">
+        <input type="radio" name="ss-sort" value="pay-forward">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I want more women to build wealth and I&rsquo;m paying it forward for the next generation of Utah women.&rdquo;</p>
+      </label>
+
+      <label class="x-opt" data-opt="learn" data-tier="founding">
+        <input type="radio" name="ss-sort" value="learn">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I have money set aside and I want to learn with other women how to build wealth through ownership in private companies.&rdquo;</p>
+      </label>
+
+      <label class="x-opt" data-opt="experienced" data-tier="assoc">
+        <input type="radio" name="ss-sort" value="experienced">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I am already an angel investor. Keep me informed with the deals you select and I&rsquo;ll participate when it&rsquo;s time to write a check.&rdquo;</p>
+      </label>
+
+      <label class="x-opt" data-opt="care" data-tier="assoc">
+        <input type="radio" name="ss-sort" value="care">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I don&rsquo;t have this kind of money, but I care about women in Utah and want to see what&rsquo;s happening.&rdquo;</p>
+      </label>
+    </fieldset>
+
+    <p class="x-sort-skip"><button type="button" id="x-skip">Show me the membership options &rarr;</button></p>
+  </div>
+</section>
+
+<!-- ══════ THE THREE MEMBERSHIPS ══════ -->
+<section class="g-tiers" id="g-tiers">
+  <div class="g-tier-grid">
+
+    <div class="g-tier steward" id="tier-steward">
+      <span class="g-tier-badge">Recommended for you</span>
+      <p class="g-tier-k">Community Steward</p>
+      <p class="g-tier-price">$5,000 a year</p>
+      <p class="g-tier-who">For anyone who wants this shift to be sustainable</p>
+      <ul>
+        <li>Everything in Founding Member</li>
+        <li>2 hours of private financial coaching</li>
+        <li>Time with every visiting expert, before the workshop</li>
+        <li>The annual retreat, included</li>
+        <li>Your name recognized as a Community Steward</li>
+      </ul>
+      <div class="g-heard gold">
+      <p class="g-heard-k">A word of thanks</p>
+      <p class="g-heard-q">You are the reason this community can exist.</p>
+      <p class="g-heard-a">Stewardship pays the finance experts and the team who make every gathering happen. <strong>Your membership has an outsized impact.</strong></p>
+      </div>
+      <a href="join.html">Fund the movement &rarr;</a>
+    </div>
+
+    <div class="g-tier founding" id="tier-founding">
+      <span class="g-tier-badge">Recommended for you</span>
+      <p class="g-tier-k">Founding Member</p>
+      <div class="g-seal-row">
+        <div class="g-seal"><span class="g-seal-n">100</span><span class="g-seal-l">Only</span></div>
+        <div class="g-seal-t">
+          <p class="g-seal-k">The founding rate</p>
+          <p class="g-seal-v"><span class="g-was">$1,000</span><span class="g-now">$900</span> a year</p>
+        </div>
+      </div>
+      <p class="g-held">Your founding rate of <b>10 percent</b>, held for as long as you stay.</p>
+      <p class="g-tier-who">Designed for women in Utah</p>
+      <ul>
+        <li>6 money classes, developed with Invest for Better</li>
+        <li>20+ optional gatherings, including workshops led by wealth experts</li>
+        <li>Live pitch meetings, deal memos, and the option to invest*</li>
+        <li>A voice in finding and selecting the women we fund</li>
+        <li>A second membership included, for your mother or your daughter</li>
+      </ul>
+      <a href="join.html">Join the action &rarr;</a>
+    </div>
+
+    <div class="g-tier assoc" id="tier-assoc">
+      <span class="g-tier-badge">Recommended for you</span>
+      <p class="g-tier-k">Associate Member</p>
+      <p class="g-tier-price">Free</p>
+      <p class="g-tier-who">Open to everyone, anywhere</p>
+      <ul>
+        <li>Founder pitch recordings for deals that become available after your join date</li>
+        <li>Deal memos from our completed research</li>
+        <li>The option to invest*</li>
+      </ul>
+      <a href="join.html">Join for free &rarr;</a>
+    </div>
+
+  </div>
+  <p class="x-vs"><strong>Community Stewards and Founding Members learn how to invest,<br class="x-vs-br"> meet the founders, and pick the companies.</strong><br>Every member is first to know when a new deal is available.</p>
+  <p class="g-tiers-foot">*Please note, only <a href="#faq-accredited">accredited investors</a> will have the option to invest.</p>
+</section>
+
+<div class="x-continue" id="x-continue">
+  <button type="button">Continue</button>
+</div>
+
+<site-footer></site-footer>
+<script src="assets/site-header.js?v=5" defer></script>
+<script src="assets/site-footer.js?v=5" defer></script>
+
+<script>
+/* Choosing a statement highlights one membership below and raises the
+   continue bar. Two statements lead to Associate Member, so the highlight
+   follows the statement rather than the membership. If this never runs,
+   the radios still work and all three memberships stay readable. */
+(function () {
+  var tiers = document.getElementById('g-tiers');
+  var bar = document.getElementById('x-continue');
+  if (!tiers || !bar) return;
+  var opts = document.querySelectorAll('.x-opt');
+  var barBtn = bar.querySelector('button');
+  var target = null;
+  var NAMES = { steward: 'Community Steward', founding: 'Founding Member', assoc: 'Associate Member' };
+
+  function choose(optKey, fromUser) {
+    var picked = document.querySelector('.x-opt[data-opt="' + optKey + '"]');
+    if (!picked) return;
+    var key = picked.dataset.tier;
+    document.querySelectorAll('.g-tier').forEach(function (t) { t.classList.remove('reco'); });
+    opts.forEach(function (o) { o.classList.toggle('on', o === picked); });
+    var input = picked.querySelector('input');
+    if (input) input.checked = true;
+    var card = document.getElementById('tier-' + key);
+    if (card) card.classList.add('reco');
+    tiers.classList.add('sorted');
+    target = card;
+    barBtn.textContent = 'Continue as ' + (NAMES[key] || 'a member');
+    if (fromUser) bar.classList.add('up');
+    try { sessionStorage.setItem('ss-opt', optKey); } catch (e) {}
+  }
+
+  opts.forEach(function (o) {
+    var input = o.querySelector('input');
+    if (input) input.addEventListener('change', function () { choose(o.dataset.opt, true); });
+  });
+
+  barBtn.addEventListener('click', function () {
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  document.getElementById('x-skip').addEventListener('click', function () {
+    tiers.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { bar.classList.toggle('up', !en.isIntersecting && !!target); });
+    }, { threshold: 0.18 }).observe(tiers);
+  }
+
+  try {
+    var saved = sessionStorage.getItem('ss-opt');
+    if (saved) choose(saved, false);
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

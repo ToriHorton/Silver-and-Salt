@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Paths (E) | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
+<style>
+  :root { --lime:#7CB83F; --lime-dark:#6aa535; --plum:#8B5E83; --gold:#C9A84C; --sand:#F4EFE6; }
+
+  /* ── Hero: the manifesto ── */
+  .e-hero { background: var(--moss); padding: 104px 48px 64px; text-align: center; position: relative; overflow: hidden; }
+  .e-hero::before { content: '&'; position: absolute; top: -70px; right: -30px; font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(280px, 32vw, 480px); color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .e-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%); }
+  .e-hero > * { position: relative; z-index: 1; }
+  .e-hero h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(36px, 5vw, 58px); line-height: 1.1; color: white; max-width: 680px; margin: 0 auto 22px; }
+  .e-hero h1 em { font-style: italic; color: var(--gold); }
+  .e-manifesto { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic; font-size: clamp(19px, 2.6vw, 26px); line-height: 1.5; color: rgba(255,255,255,0.82); max-width: 620px; margin: 0 auto 30px; }
+  .e-manifesto strong { font-style: normal; font-weight: 600; color: var(--lime); }
+  .e-hero-cue { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.55); }
+
+  /* ── The two paths, side by side, everything visible ── */
+  .e-duo-wrap { background: var(--sand); padding: 64px 48px 84px; }
+  .e-duo { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.55fr 1fr; gap: 22px; align-items: start; }
+  @media (max-width: 780px) { .e-duo { grid-template-columns: 1fr; max-width: 620px; } }
+
+  /* Membership: the whole experience */
+  .e-mem { background: radial-gradient(ellipse 70% 45% at 10% 0%, rgba(124,184,63,0.14) 0%, transparent 60%), white;
+    border-radius: 16px; padding: 42px 40px; position: relative; overflow: hidden;
+    box-shadow: 0 24px 60px rgba(47,62,52,0.16); border: 1px solid rgba(124,184,63,0.35); }
+  .e-mem::after { content: '&'; position: absolute; bottom: -70px; right: -30px; font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 280px; color: rgba(124,184,63,0.07); line-height: 1; pointer-events: none; }
+  .e-mem > * { position: relative; z-index: 1; }
+  .e-badge { display: inline-block; background: var(--gold); color: var(--moss); font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; padding: 5px 13px; border-radius: 999px; margin-bottom: 18px; }
+  .e-mem .e-k { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: var(--lime-dark); margin-bottom: 10px; }
+  .e-mem h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(30px, 3.6vw, 42px); line-height: 1.1; color: var(--moss); margin-bottom: 14px; }
+  .e-mem h2 em { font-style: italic; color: var(--lime-dark); }
+  .e-mem .e-lead { font-size: 15.5px; line-height: 1.8; color: var(--moss-light, #4A5E50); font-weight: 300; margin-bottom: 24px; }
+  .e-mem .e-lead strong { color: var(--moss); font-weight: 600; }
+  .e-get { list-style: none; margin: 0 0 26px; }
+  .e-get li { padding: 12px 0 12px 32px; position: relative; border-bottom: 1px solid rgba(47,62,52,0.06); }
+  .e-get li:last-child { border-bottom: 0; }
+  .e-get li::before { content: '&'; position: absolute; left: 0; top: 10px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 18px; color: var(--lime-dark); }
+  .e-get .g { display: block; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 14.5px; color: var(--moss); margin-bottom: 2px; }
+  .e-get .b { display: block; font-size: 13.5px; line-height: 1.6; color: var(--moss-light, #4A5E50); font-weight: 300; }
+  .e-faces { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+  .e-face { width: 46px; height: 46px; border-radius: 50%; overflow: hidden; background: rgba(124,184,63,0.14); border: 2px solid rgba(47,62,52,0.1); display: flex; align-items: center; justify-content: center; transition: transform .15s; }
+  .e-face:hover { transform: scale(1.08); }
+  .e-face img { width: 100%; height: 100%; object-fit: cover; }
+  .e-face span { color: rgba(47,62,52,0.25); font-size: 15px; }
+  .e-mem-cta-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .e-mem-cta { display: inline-block; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 15px; background: var(--lime-dark); color: white; padding: 14px 30px; border-radius: 8px; text-decoration: none; transition: all .2s; }
+  .e-mem-cta:hover { background: var(--lime); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(124,184,63,0.35); }
+  .e-mem-sub { font-size: 13px; color: var(--sage); font-weight: 300; }
+  .e-steward-line { margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(47,62,52,0.08); font-size: 13.5px; line-height: 1.7; color: var(--moss-light, #4A5E50); font-weight: 300; }
+  .e-steward-line a { color: var(--lime-dark); font-weight: 700; text-decoration: none; }
+
+  /* Investor rail: narrow and plain, on purpose */
+  .e-inv { background: white; border: 1px solid rgba(47,62,52,0.14); border-radius: 16px; padding: 34px 30px; }
+  .e-inv .e-k { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: var(--plum); margin-bottom: 10px; }
+  .e-inv h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.2; color: var(--moss); margin-bottom: 12px; }
+  .e-inv .e-lead { font-size: 13.5px; line-height: 1.75; color: var(--moss-light, #4A5E50); font-weight: 300; margin-bottom: 18px; }
+  .e-inv-list { list-style: none; margin: 0 0 20px; }
+  .e-inv-list li { font-size: 13px; line-height: 1.6; color: var(--moss-light, #4A5E50); font-weight: 300; padding: 8px 0; border-bottom: 1px solid rgba(47,62,52,0.07); }
+  .e-inv-list li strong { color: var(--moss); font-weight: 600; }
+  .e-inv-note { font-size: 12px; line-height: 1.65; color: var(--sage); font-weight: 300; margin-bottom: 22px; }
+
+  .e-check h3 { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 13.5px; color: var(--moss); margin-bottom: 6px; }
+  .e-check .e-q { font-size: 12.5px; line-height: 1.65; color: var(--moss-light, #4A5E50); font-weight: 300; margin-bottom: 12px; }
+  .e-check label { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: var(--moss); font-weight: 300; padding: 6px 0; cursor: pointer; }
+  .e-check input[type="radio"] { margin-top: 3px; accent-color: var(--lime-dark); }
+  .e-check input[type="email"] { width: 100%; font-family: 'Satoshi', sans-serif; font-size: 13px; padding: 11px 12px; border: 1px solid rgba(47,62,52,0.25); border-radius: 8px; margin: 12px 0; background: var(--sand); }
+  .e-check button { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 13px; padding: 11px 20px; border-radius: 8px; border: 0; background: var(--moss); color: white; cursor: pointer; }
+  .e-result { margin-top: 14px; font-size: 13px; line-height: 1.65; color: var(--moss); }
+  .e-result a { color: var(--lime-dark); font-weight: 700; }
+
+  /* Hide the site-wide newsletter band: E is strictly two paths. */
+  .f-news { display: none !important; }
+
+  @media (max-width: 640px) { .e-hero { padding: 88px 24px 52px; } .e-duo-wrap { padding: 44px 16px 64px; } .e-mem { padding: 32px 24px; } .e-inv { padding: 28px 22px; } }
+</style>
+</head>
+<body>
+
+<site-header></site-header>
+
+<!-- ══ HERO ══ -->
+<section class="e-hero">
+  <h1>Utah women, <em>funding Utah women</em>.</h1>
+  <p class="e-manifesto">Most of us were never taught how money grows, or how to build wealth. We were taught to save, to stretch a penny, to make do. <strong>It's time to make our dollars compound.</strong></p>
+  <p class="e-hero-cue">Two ways in &darr;</p>
+</section>
+
+<!-- ══ THE TWO PATHS, SIDE BY SIDE ══ -->
+<section class="e-duo-wrap">
+  <div class="e-duo">
+
+    <article class="e-mem" aria-label="Membership, the whole experience">
+      <span class="e-badge">The whole experience</span>
+      <p class="e-k">Membership &middot; For Utah Women</p>
+      <h2>Everything this movement has <em>is yours</em>.</h2>
+      <p class="e-lead">Membership is where we learn how, together. <strong>Why it matters:</strong> the women who understand investing decide who gets funded, and in Utah that has almost never been us. A year inside changes what you know, who you know, and what your money can do.</p>
+      <ul class="e-get">
+        <li><span class="g">Six classes, from the very beginning</span><span class="b">So the jargon stops being a wall between you and your own money.</span></li>
+        <li><span class="g">Four workshops with national money experts</span><span class="b">We bring them to Utah. You get the access other cities charge thousands for.</span></li>
+        <li><span class="g">More than 20 gatherings a year</span><span class="b">So talking about money becomes normal, with women who get it.</span></li>
+        <li><span class="g">A second seat, included</span><span class="b">Your mother or your daughter learns beside you, because wealth knowledge should run in families.</span></li>
+        <li><span class="g">Every founder presentation and research report</span><span class="b">You learn investing on real Utah companies without spending a dollar beyond your dues.</span></li>
+        <li><span class="g">The option to invest, when you are ready</span><span class="b">In companies you watched being researched, with your money moving only when you say yes.</span></li>
+        <li><span class="g">The receipt, every year</span><span class="b">A plain report of what the movement built, so you see exactly what your membership did.</span></li>
+      </ul>
+      <div class="e-faces" id="e-faces" aria-label="Founding members"></div>
+      <div class="e-mem-cta-row">
+        <a class="e-mem-cta" href="membership.html">See membership details &rarr;</a>
+        <span class="e-mem-sub">Founding 100 forming now &middot; applying is free</span>
+      </div>
+      <p class="e-steward-line">Each year, five women carry more of the movement in their hands as Stewards: private time with every visiting expert, quarterly conversations with Tori, and the retreat included. <a href="membership.html#stewardship">Learn about Stewardship &rarr;</a></p>
+    </article>
+
+    <aside class="e-inv" aria-label="The investor lane">
+      <p class="e-k">The Investor Lane</p>
+      <h2>The investments, and only the investments.</h2>
+      <p class="e-lead">You do not have to join anything to invest with us. If you qualify under federal rules, this lane gives you one thing: the option to invest in the Utah companies we finish researching, on the same terms as every member. The benefit is simple: researched companies, found for you, with weeks of homework already done.</p>
+      <ul class="e-inv-list">
+        <li><strong>You get:</strong> a conversation with Tori, and the investment option on each company we finish</li>
+        <li><strong>You decide:</strong> every time, and your money moves only when you say yes</li>
+        <li><strong>You miss:</strong> the classes, the workshops, the gatherings, the community</li>
+      </ul>
+      <p class="e-inv-note">Everything on the left is membership, and it is the fun part. Any accredited woman in Utah can hold both.</p>
+      <div class="e-check">
+        <h3>Start here</h3>
+        <p class="e-q">The federal definition of an accredited investor: income over $200,000 a year ($300,000 with a spouse) for the past two years, or more than $1 million in assets, leaving out your home. Do you meet that definition?</p>
+        <label><input type="radio" name="acc" value="yes"> Yes</label>
+        <label><input type="radio" name="acc" value="no"> No</label>
+        <label><input type="radio" name="acc" value="unsure"> I'm not sure</label>
+        <input type="email" name="email" placeholder="you@example.com" aria-label="Your email address">
+        <button type="button" id="e-check-go">Continue</button>
+        <p class="e-result" role="status"></p>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<site-footer></site-footer>
+<script src="assets/site-header.js?v=5" defer></script>
+<script src="assets/site-footer.js?v=5" defer></script>
+<script src="members/members.js"></script>
+<script>
+(function () {
+  var faces = document.getElementById('e-faces');
+  if (faces) {
+    var members = (typeof MEMBERS !== 'undefined' && MEMBERS.length) ? MEMBERS : [];
+    var html = members.map(function (m) {
+      return '<div class="e-face">' + (m.photo ? '<img src="' + m.photo + '" alt="' + m.name + '">' : '<span>+</span>') + '</div>';
+    }).join('');
+    for (var i = members.length; i < 8; i++) html += '<div class="e-face"><span>+</span></div>';
+    faces.innerHTML = html;
+  }
+  var go = document.getElementById('e-check-go');
+  var result = document.querySelector('.e-result');
+  go.addEventListener('click', function () {
+    var choice = (document.querySelector('input[name="acc"]:checked') || {}).value;
+    var email = (document.querySelector('.e-check input[type="email"]').value || '').trim();
+    if (!choice) { result.textContent = 'Choose the answer that fits, and we will point you the right way.'; return; }
+    if (choice === 'yes') {
+      result.innerHTML = 'Then it starts with a conversation, the way the rules (and good relationships) work. <a href="mailto:tori@silverandsaltcapital.com?subject=Introduce%20yourself">Introduce yourself to Tori &rarr;</a>';
+      return;
+    }
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      result.textContent = 'Leave your email and we will keep you close to the movement.';
+      return;
+    }
+    fetch('/api/newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, source: 'membership-e:acc-' + choice }) })
+      .then(function (r) { if (!r.ok) throw 0; })
+      .catch(function () {})
+      .finally(function () {
+        result.innerHTML = 'Federal rules gate the private deals, but nothing gates the movement. You are on the monthly update. And the part worth knowing: membership, everything on the left, is wide open to you. No accreditation ever required.';
+      });
+  });
+})();
+</script>
+
+</body>
+</html>

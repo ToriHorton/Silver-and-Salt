@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Pillars section, 5 design options | Silver &amp; Salt Capital</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
+<style>
+  :root {
+    --lime: #7CB83F; --lime-dark: #6aa535; --lime-soft: rgba(124,184,63,0.12);
+    --gold: #C9A84C; --pop: #6aa535;
+  }
+  body { background: var(--cream, #FBF8F2); margin: 0; }
+
+  /* chrome for the comparison page itself */
+  .opt-label {
+    max-width: 1100px; margin: 0 auto; padding: 72px 48px 18px;
+  }
+  .opt-label .tag {
+    display: inline-block; font-family: 'Satoshi', sans-serif; font-weight: 700;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    background: var(--moss); color: #fff; border-radius: 999px; padding: 6px 14px; margin-bottom: 10px;
+  }
+  .opt-label p { font-family: 'Satoshi', sans-serif; font-size: 14px; color: var(--moss-light); max-width: 640px; line-height: 1.6; margin: 0; }
+  .opt-divider { border: none; border-top: 3px solid var(--moss); opacity: .15; margin: 72px 0 0; }
+
+  /* shared type */
+  .pb { background: #fff; border-top: 1px solid rgba(47,62,52,0.08); border-bottom: 1px solid rgba(47,62,52,0.08); padding: 56px 0; }
+  .pb-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+  .pb h2 {
+    font-family: 'Satoshi', sans-serif; font-weight: 900; color: var(--moss);
+    font-size: clamp(30px, 4.5vw, 50px); line-height: 1.06; letter-spacing: -0.03em; margin: 0 0 6px;
+  }
+  .pb h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; color: var(--pop); }
+  .pb-kicker { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(19px,2.4vw,25px); color: var(--moss); margin: 0 0 40px; }
+
+  /* ═══ OPTION 1: THREE COLUMNS ═══ */
+  .o1-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch; }
+  .o1-card { background: #fff; border: 1px solid rgba(47,62,52,0.14); border-radius: 14px; padding: 28px 26px; display: flex; flex-direction: column; }
+  .o1-num { font-family: 'Cormorant Infant', serif; font-weight: 300; font-size: 44px; line-height: 1; color: var(--gold); margin-bottom: 14px; }
+  .o1-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 24px; color: var(--moss); margin: 0 0 6px; }
+  .o1-lead { font-family: 'Satoshi', sans-serif; font-size: 14.5px; color: var(--sage); font-weight: 500; margin: 0 0 16px; }
+  .o1-card ul { list-style: none; margin: 0 0 18px; padding: 0; flex: 1; }
+  .o1-card li { font-family: 'Satoshi', sans-serif; font-size: 14px; line-height: 1.6; color: var(--moss-light); font-weight: 300; padding: 9px 0; border-bottom: 1px solid rgba(47,62,52,0.08); }
+  .o1-card li strong { font-weight: 700; color: var(--moss); }
+  .o1-note { background: var(--lime-soft); border-radius: 8px; padding: 13px 15px; font-family: 'Satoshi', sans-serif; font-size: 12.5px; line-height: 1.6; color: var(--moss); }
+  @media (max-width: 900px) { .o1-grid { grid-template-columns: 1fr; } }
+
+  /* ═══ OPTION 2: EDITORIAL SPLIT ROWS ═══ */
+  .o2-row { display: grid; grid-template-columns: 340px 1fr; gap: 48px; padding: 40px 0; border-top: 1px solid rgba(47,62,52,0.1); }
+  .o2-k { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--pop); margin: 0 0 10px; }
+  .o2-row h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(26px,3vw,34px); line-height: 1.12; color: var(--moss); margin: 0 0 10px; }
+  .o2-lead { font-size: 16px; line-height: 1.7; color: var(--moss-light); font-weight: 300; margin: 0; }
+  .o2-row ul { list-style: none; margin: 0; padding: 0; }
+  .o2-row li { font-family: 'Satoshi', sans-serif; font-size: 15px; line-height: 1.65; color: var(--moss-light); font-weight: 300; padding: 10px 0 10px 30px; position: relative; border-bottom: 1px solid rgba(47,62,52,0.07); }
+  .o2-row li::before { content: '&'; position: absolute; left: 2px; top: 8px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 18px; color: var(--lime); }
+  .o2-row li strong { font-weight: 700; color: var(--moss); }
+  .o2-note { margin-top: 14px; padding-left: 16px; border-left: 3px solid var(--gold); font-family: 'Satoshi', sans-serif; font-size: 13.5px; line-height: 1.65; color: var(--moss); }
+  @media (max-width: 820px) { .o2-row { grid-template-columns: 1fr; gap: 18px; } }
+
+  /* ═══ OPTION 3: TINTED PANELS ═══ */
+  .o3-panel { position: relative; border-radius: 16px; padding: 36px 40px; margin-bottom: 18px; overflow: hidden; }
+  .o3-panel.t1 { background: var(--lime-soft); }
+  .o3-panel.t2 { background: rgba(201,168,76,0.10); }
+  .o3-panel.t3 { background: rgba(47,62,52,0.05); }
+  .o3-num { position: absolute; top: -18px; right: 10px; font-family: 'Cormorant Infant', serif; font-weight: 300; font-size: 150px; line-height: 1; color: rgba(47,62,52,0.07); pointer-events: none; }
+  .o3-panel h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 28px; color: var(--moss); margin: 0 0 4px; }
+  .o3-lead { font-size: 15.5px; color: var(--moss-light); font-weight: 300; margin: 0 0 14px; }
+  .o3-panel ul { list-style: none; margin: 0; padding: 0; max-width: 720px; }
+  .o3-panel li { font-family: 'Satoshi', sans-serif; font-size: 14.5px; line-height: 1.65; color: var(--moss); font-weight: 300; padding: 8px 0; border-bottom: 1px solid rgba(47,62,52,0.09); }
+  .o3-panel li:last-child { border-bottom: none; }
+  .o3-panel li strong { font-weight: 700; }
+  .o3-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: var(--moss); margin: 10px 0 0; }
+
+  /* ═══ OPTION 4: ONE SLAB, THREE COLUMNS INSIDE ═══ */
+  .o4-slab { background: #fff; border: 1px solid rgba(47,62,52,0.14); border-radius: 18px; box-shadow: 0 18px 44px rgba(47,62,52,0.08); display: grid; grid-template-columns: 1fr 1fr 1fr; overflow: hidden; }
+  .o4-col { padding: 32px 28px; }
+  .o4-col + .o4-col { border-left: 1px solid rgba(47,62,52,0.1); }
+  .o4-k { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+  .o4-col h3 { font-family: 'Satoshi', sans-serif; font-weight: 900; font-size: 19px; letter-spacing: -0.01em; color: var(--moss); margin: 0 0 14px; }
+  .o4-col ul { list-style: none; margin: 0; padding: 0; }
+  .o4-col li { font-family: 'Satoshi', sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--moss-light); font-weight: 300; padding: 8px 0; border-bottom: 1px solid rgba(47,62,52,0.07); }
+  .o4-col li:last-child { border-bottom: none; }
+  .o4-col li strong { font-weight: 700; color: var(--moss); }
+  .o4-foot { grid-column: 1 / -1; background: var(--moss); color: rgba(255,255,255,0.85); font-family: 'Satoshi', sans-serif; font-size: 13.5px; padding: 16px 28px; }
+  .o4-foot strong { color: var(--lime); font-weight: 700; }
+  @media (max-width: 900px) { .o4-slab { grid-template-columns: 1fr; } .o4-col + .o4-col { border-left: none; border-top: 1px solid rgba(47,62,52,0.1); } }
+
+  /* ═══ OPTION 5: ACCORDION ═══ */
+  .o5 details { border-top: 1px solid rgba(47,62,52,0.12); }
+  .o5 details:last-of-type { border-bottom: 1px solid rgba(47,62,52,0.12); }
+  .o5 summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: 64px 1fr auto; gap: 20px; align-items: baseline; padding: 24px 0; }
+  .o5 summary::-webkit-details-marker { display: none; }
+  .o5-num { font-family: 'Cormorant Infant', serif; font-weight: 300; font-size: 40px; color: var(--gold); line-height: 1; }
+  .o5-head h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(22px,2.6vw,30px); color: var(--moss); margin: 0; display: inline; }
+  .o5-head span { font-family: 'Satoshi', sans-serif; font-size: 14px; color: var(--sage); font-weight: 300; margin-left: 12px; }
+  .o5-plus { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 30px; color: var(--pop); }
+  .o5 details[open] .o5-plus::before { content: '\2212'; }
+  .o5 details:not([open]) .o5-plus::before { content: '+'; }
+  .o5-body { padding: 0 0 26px 84px; max-width: 760px; }
+  .o5-body ul { list-style: none; margin: 0 0 14px; padding: 0; }
+  .o5-body li { font-family: 'Satoshi', sans-serif; font-size: 15px; line-height: 1.65; color: var(--moss-light); font-weight: 300; padding: 9px 0; border-bottom: 1px solid rgba(47,62,52,0.07); }
+  .o5-body li strong { font-weight: 700; color: var(--moss); }
+  .o5-note { background: var(--lime-soft); border-radius: 8px; padding: 14px 18px; font-family: 'Satoshi', sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--moss); }
+  @media (max-width: 700px) { .o5-body { padding-left: 0; } .o5 summary { grid-template-columns: 44px 1fr auto; } }
+</style>
+</head>
+<body>
+
+<div class="opt-label" style="padding-top:56px">
+  <span class="tag">Option 1 · Three pillars, literally</span>
+  <p>Three equal columns, one per pillar. The most scannable at a glance and the strongest visual echo of "3 pillars." Value notes live inside each card, so nothing needs reading order.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+  <h2>Your membership benefits, <em>in 3 pillars</em>.</h2>
+  <p class="pb-kicker">Pick and choose what matters to you.</p>
+  <div class="o1-grid">
+    <div class="o1-card">
+      <div class="o1-num">1</div>
+      <h3>Education about money</h3>
+      <p class="o1-lead">Six weeks of training, plus workshops and office hours all year.</p>
+      <ul>
+        <li><strong>The Invest for Better course</strong>: six weeks in a cohort of about 20 women, from thoughtfully picking your bank to bonds and private equity, all through the lens of your values. Developed by Janine Firpo, led by impact investment advisor Lauren Sercu, and facilitated by Tori Horton.</li>
+        <li><strong>Quarterly evening workshops</strong> with national money experts.</li>
+        <li><strong>A monthly office hour</strong> with Tori and the community.</li>
+      </ul>
+      <div class="o1-note">Other programs charge <strong>$2,000 a year</strong> for classes like these. The classes alone are worth more than the membership price.</div>
+    </div>
+    <div class="o1-card">
+      <div class="o1-num">2</div>
+      <h3>Deals <span style="font-style:italic">&amp;</span> due diligence</h3>
+      <p class="o1-lead">Learn by doing, on real Utah deals.</p>
+      <ul>
+        <li><strong>Four pitch gatherings a year</strong>: founders pitch live, every member is invited into the due diligence.</li>
+        <li><strong>Real analysis, together</strong>: financials, business plan, marketing strategy, market size, deal terms.</li>
+        <li><strong>Roughly 40 hours of research</strong> on every deal, with you on the inside.</li>
+        <li><strong>You invest deal by deal</strong>; money moves only when you say yes.</li>
+      </ul>
+      <div class="o1-note">If you've been thinking about starting or joining a fund, <strong>this is for you</strong>.</div>
+    </div>
+    <div class="o1-card">
+      <div class="o1-num">3</div>
+      <h3>Friends <span style="font-style:italic">&amp;</span> connections</h3>
+      <p class="o1-lead">Some women join for this alone.</p>
+      <ul>
+        <li><strong>We show up</strong>: with capital, with knowledge, with relationships, with visibility, with advocacy.</li>
+        <li><strong>We lead with curiosity</strong> and assume positive intent.</li>
+        <li><strong>We are kind and we are effective.</strong> Both, always.</li>
+        <li><strong>We amplify each other's voices</strong> and operate from abundance, not scarcity.</li>
+      </ul>
+      <div class="o1-note"><strong>Every membership holds two seats.</strong> Your mother or your daughter gets a seat beside you, included.</div>
+    </div>
+  </div>
+</div></section>
+
+<hr class="opt-divider">
+<div class="opt-label">
+  <span class="tag">Option 2 · Editorial split rows</span>
+  <p>Serif heading and lead on the left, bullets on the right. Calm and premium; reads like a well set annual report. Closest to your current design language, with better information geometry.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+  <h2>Your membership benefits, <em>in 3 pillars</em>.</h2>
+  <p class="pb-kicker">Pick and choose what matters to you.</p>
+
+  <div class="o2-row">
+    <div>
+      <p class="o2-k">Pillar 01</p>
+      <h3>Education about money</h3>
+      <p class="o2-lead">Six weeks of training, plus workshops and office hours all year.</p>
+    </div>
+    <div>
+      <ul>
+        <li><strong>The Invest for Better course</strong>: six weeks in a cohort of about 20 women, from thoughtfully picking your bank to bonds and private equity, all through the lens of your values. Developed by Janine Firpo, led by impact investment advisor Lauren Sercu, and facilitated by Tori Horton.</li>
+        <li><strong>Quarterly evening workshops</strong> with national money experts, from your personal money story to investment vehicles.</li>
+        <li><strong>A monthly office hour</strong> to hang with Tori and others in the community.</li>
+      </ul>
+      <p class="o2-note">Other programs charge $2,000 a year for classes like these. The classes alone are worth more than the membership price.</p>
+    </div>
+  </div>
+
+  <div class="o2-row">
+    <div>
+      <p class="o2-k">Pillar 02</p>
+      <h3>Access to deals and due diligence</h3>
+      <p class="o2-lead">Learn by doing, on real Utah deals.</p>
+    </div>
+    <div>
+      <ul>
+        <li><strong>Four pitch gatherings a year</strong>: founders share their pitch live, and every member is invited into the due diligence.</li>
+        <li><strong>Real analysis, together</strong>: the financials, the business plan, and the marketing strategy. We size the market, evaluate the opportunity, and review the deal terms.</li>
+        <li><strong>Roughly 40 hours of research</strong> on every deal before we make a decision, with you on the inside to see how it happens.</li>
+        <li><strong>You invest deal by deal</strong>, and money moves only when you say yes.</li>
+      </ul>
+      <p class="o2-note">If you've been thinking about starting or joining a fund, this is for you.</p>
+    </div>
+  </div>
+
+  <div class="o2-row">
+    <div>
+      <p class="o2-k">Pillar 03</p>
+      <h3>The friends and connections</h3>
+      <p class="o2-lead">Some women join for this alone. Our commitments, from the manifesto:</p>
+    </div>
+    <div>
+      <ul>
+        <li><strong>We show up</strong>: with capital, with knowledge, with relationships, with visibility, with advocacy.</li>
+        <li><strong>We lead with curiosity</strong> and assume positive intent.</li>
+        <li><strong>We are kind and we are effective.</strong> Both, always.</li>
+        <li><strong>We amplify each other's voices</strong> and operate from abundance, not scarcity.</li>
+      </ul>
+      <p class="o2-note">Every membership holds two seats. Your mother or your daughter gets a seat beside you, included.</p>
+    </div>
+  </div>
+</div></section>
+
+<hr class="opt-divider">
+<div class="opt-label">
+  <span class="tag">Option 3 · Tinted panels</span>
+  <p>Each pillar gets its own softly tinted panel with an oversized numeral. Warmer and more distinct per pillar; the tints give each benefit its own identity without adding any new colors to the brand.</p>
+</div>
+<section class="pb" style="background:var(--cream,#FBF8F2)"><div class="pb-inner">
+  <h2>Your membership benefits, <em>in 3 pillars</em>.</h2>
+  <p class="pb-kicker">Pick and choose what matters to you.</p>
+
+  <div class="o3-panel t1">
+    <div class="o3-num">1</div>
+    <h3>Education about money</h3>
+    <p class="o3-lead">Six weeks of training, plus workshops and office hours all year.</p>
+    <ul>
+      <li><strong>The Invest for Better course</strong>: six weeks in a cohort of about 20 women, from thoughtfully picking your bank to bonds and private equity, all through the lens of your values. Developed by Janine Firpo, led by impact investment advisor Lauren Sercu, and facilitated by Tori Horton.</li>
+      <li><strong>Quarterly evening workshops</strong> with national money experts.</li>
+      <li><strong>A monthly office hour</strong> to hang with Tori and others in the community.</li>
+    </ul>
+    <p class="o3-note">The classes alone are worth more than the membership price.</p>
+  </div>
+
+  <div class="o3-panel t2">
+    <div class="o3-num">2</div>
+    <h3>Access to deals and due diligence</h3>
+    <p class="o3-lead">Learn by doing, on real Utah deals.</p>
+    <ul>
+      <li><strong>Four pitch gatherings a year</strong>: founders pitch live, and every member is invited into the due diligence.</li>
+      <li><strong>Real analysis, together</strong>: financials, business plan, marketing strategy, market size, deal terms.</li>
+      <li><strong>Roughly 40 hours of research</strong> on every deal, with you on the inside to see how it happens.</li>
+      <li><strong>You invest deal by deal</strong>, and money moves only when you say yes.</li>
+    </ul>
+    <p class="o3-note">If you've been thinking about starting or joining a fund, this is for you.</p>
+  </div>
+
+  <div class="o3-panel t3">
+    <div class="o3-num">3</div>
+    <h3>The friends and connections</h3>
+    <p class="o3-lead">Some women join for this alone. Our commitments, from the manifesto:</p>
+    <ul>
+      <li><strong>We show up</strong>: with capital, with knowledge, with relationships, with visibility, with advocacy.</li>
+      <li><strong>We lead with curiosity</strong> and assume positive intent.</li>
+      <li><strong>We are kind and we are effective.</strong> Both, always.</li>
+      <li><strong>We amplify each other's voices</strong> and operate from abundance, not scarcity.</li>
+    </ul>
+    <p class="o3-note">Every membership holds two seats: your mother or your daughter sits beside you, included.</p>
+  </div>
+</div></section>
+
+<hr class="opt-divider">
+<div class="opt-label">
+  <span class="tag">Option 4 · One slab</span>
+  <p>The tightest treatment: one bordered slab, three columns inside, one shared footer line. Most compact by far, reads in a single screen. Trades detail for density, so the longer explanations move to bullets elsewhere or the FAQ.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+  <h2>Your membership benefits, <em>in 3 pillars</em>.</h2>
+  <p class="pb-kicker">Pick and choose what matters to you.</p>
+  <div class="o4-slab">
+    <div class="o4-col">
+      <p class="o4-k">Pillar 01</p>
+      <h3>Education about money</h3>
+      <ul>
+        <li><strong>The Invest for Better course</strong>: six weeks in a cohort of about 20 women, from picking your bank to private equity, through the lens of your values. Led by Lauren Sercu, facilitated by Tori Horton.</li>
+        <li><strong>Quarterly workshops</strong> with national experts</li>
+        <li><strong>Monthly office hour</strong> with Tori</li>
+      </ul>
+    </div>
+    <div class="o4-col">
+      <p class="o4-k">Pillar 02</p>
+      <h3>Deals &amp; due diligence</h3>
+      <ul>
+        <li><strong>Four pitch gatherings</strong> a year, live</li>
+        <li><strong>Join the due diligence</strong>: financials, plan, terms</li>
+        <li><strong>40 hours of research</strong> on every deal</li>
+        <li><strong>Invest deal by deal</strong>, only when you say yes</li>
+      </ul>
+    </div>
+    <div class="o4-col">
+      <p class="o4-k">Pillar 03</p>
+      <h3>Friends &amp; connections</h3>
+      <ul>
+        <li><strong>We show up</strong>: capital, knowledge, advocacy</li>
+        <li><strong>We lead with curiosity</strong></li>
+        <li><strong>We are kind and effective</strong>, both, always</li>
+        <li><strong>We amplify each other's voices</strong></li>
+      </ul>
+    </div>
+    <div class="o4-foot"><strong>Every membership holds two seats.</strong> Your mother or your daughter gets a seat beside you, included.</div>
+  </div>
+</div></section>
+
+<hr class="opt-divider">
+<div class="opt-label">
+  <span class="tag">Option 5 · Accordion</span>
+  <p>Pillar names always visible, details on demand. Keeps the page short and puts the reader in charge, which suits "pick and choose what matters to you." First pillar opens by default so the pattern is obvious.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+  <h2>Your membership benefits, <em>in 3 pillars</em>.</h2>
+  <p class="pb-kicker">Pick and choose what matters to you.</p>
+  <div class="o5">
+    <details open>
+      <summary><span class="o5-num">1</span><span class="o5-head"><h3>Education about money</h3><span>Six weeks of training, plus workshops and office hours all year</span></span><span class="o5-plus"></span></summary>
+      <div class="o5-body">
+        <ul>
+          <li><strong>The Invest for Better course</strong>: six weeks in a cohort of about 20 women, from thoughtfully picking your bank to bonds and private equity, all through the lens of your values. Developed by Janine Firpo, led by impact investment advisor Lauren Sercu, and facilitated by Tori Horton.</li>
+          <li><strong>Quarterly evening workshops</strong> with national money experts, from your personal money story to investment vehicles.</li>
+          <li><strong>A monthly office hour</strong> to hang with Tori and others in the community.</li>
+        </ul>
+        <div class="o5-note">Other programs charge <strong>$2,000 a year</strong> for classes like these. The classes alone are worth more than the membership price.</div>
+      </div>
+    </details>
+    <details>
+      <summary><span class="o5-num">2</span><span class="o5-head"><h3>Access to deals and due diligence</h3><span>Learn by doing, on real Utah deals</span></span><span class="o5-plus"></span></summary>
+      <div class="o5-body">
+        <ul>
+          <li><strong>Four pitch gatherings a year</strong>: founders share their pitch live, and every member is invited into the due diligence.</li>
+          <li><strong>Real analysis, together</strong>: the financials, the business plan, and the marketing strategy. We size the market, evaluate the opportunity, and review the deal terms.</li>
+          <li><strong>Roughly 40 hours of research</strong> on every deal before we make a decision, with you on the inside to see how it happens.</li>
+          <li><strong>You invest deal by deal</strong>, and money moves only when you say yes.</li>
+        </ul>
+        <div class="o5-note">If you've been thinking about starting or joining a fund, <strong>this is for you</strong>.</div>
+      </div>
+    </details>
+    <details>
+      <summary><span class="o5-num">3</span><span class="o5-head"><h3>The friends and connections</h3><span>Some women join for this alone</span></span><span class="o5-plus"></span></summary>
+      <div class="o5-body">
+        <ul>
+          <li><strong>We show up</strong>: with capital, with knowledge, with relationships, with visibility, with advocacy.</li>
+          <li><strong>We lead with curiosity</strong> and assume positive intent.</li>
+          <li><strong>We are kind and we are effective.</strong> Both, always.</li>
+          <li><strong>We amplify each other's voices</strong> and operate from abundance, not scarcity.</li>
+        </ul>
+        <div class="o5-note"><strong>Every membership holds two seats.</strong> Your mother or your daughter gets a seat beside you, included.</div>
+      </div>
+    </details>
+  </div>
+</div></section>
+
+<hr class="opt-divider">
+<div class="opt-label" id="option6">
+  <span class="tag">Option 6 · Tinted accordion</span>
+  <p>Options 3 and 5 combined: each pillar is a softly tinted panel that opens on demand. The tints keep each pillar's identity even when closed, and the page stays short. First pillar opens by default.</p>
+</div>
+<section class="pb" style="background:var(--cream,#FBF8F2)"><div class="pb-inner">
+  <h2>Your membership benefits, <em>in 3 pillars</em>.</h2>
+  <p class="pb-kicker">Pick and choose what matters to you.</p>
+  <div class="o6">
+    <details open class="o6-panel t1">
+      <summary><span class="o6-num">1</span><span class="o6-head"><h3>Education about money</h3><span>Six weeks of training, plus workshops and office hours all year</span></span><span class="o6-plus"></span></summary>
+      <div class="o6-body">
+        <ul>
+          <li><strong>The Invest for Better course</strong>: six weeks in a cohort of about 20 women, from thoughtfully picking your bank to bonds and private equity, all through the lens of your values. Developed by Janine Firpo, led by impact investment advisor Lauren Sercu, and facilitated by Tori Horton.</li>
+          <li><strong>Quarterly evening workshops</strong> with national money experts, from your personal money story to investment vehicles.</li>
+          <li><strong>A monthly office hour</strong> to hang with Tori and others in the community.</li>
+        </ul>
+        <p class="o6-note">Other programs charge <strong>$2,000 a year</strong> for classes like these. The classes alone are worth more than the membership price.</p>
+      </div>
+    </details>
+    <details class="o6-panel t2">
+      <summary><span class="o6-num">2</span><span class="o6-head"><h3>Access to deals and due diligence</h3><span>Learn by doing, on real Utah deals</span></span><span class="o6-plus"></span></summary>
+      <div class="o6-body">
+        <ul>
+          <li><strong>Four pitch gatherings a year</strong>: founders share their pitch live, and every member is invited into the due diligence.</li>
+          <li><strong>Real analysis, together</strong>: the financials, the business plan, and the marketing strategy. We size the market, evaluate the opportunity, and review the deal terms.</li>
+          <li><strong>Roughly 40 hours of research</strong> on every deal before we make a decision, with you on the inside to see how it happens.</li>
+          <li><strong>You invest deal by deal</strong>, and money moves only when you say yes.</li>
+        </ul>
+        <p class="o6-note">If you've been thinking about starting or joining a fund, <strong>this is for you</strong>.</p>
+      </div>
+    </details>
+    <details class="o6-panel t3">
+      <summary><span class="o6-num">3</span><span class="o6-head"><h3>The friends and connections</h3><span>Some women join for this alone</span></span><span class="o6-plus"></span></summary>
+      <div class="o6-body">
+        <ul>
+          <li><strong>We show up</strong>: with capital, with knowledge, with relationships, with visibility, with advocacy.</li>
+          <li><strong>We lead with curiosity</strong> and assume positive intent.</li>
+          <li><strong>We are kind and we are effective.</strong> Both, always.</li>
+          <li><strong>We amplify each other's voices</strong> and operate from abundance, not scarcity.</li>
+        </ul>
+        <p class="o6-note"><strong>Every membership holds two seats.</strong> Your mother or your daughter gets a seat beside you, included.</p>
+      </div>
+    </details>
+  </div>
+</div></section>
+<style>
+  .o6-panel { border-radius: 16px; margin-bottom: 14px; overflow: hidden; border: 1px solid rgba(47,62,52,0.08); }
+  .o6-panel.t1 { background: var(--lime-soft); }
+  .o6-panel.t2 { background: rgba(201,168,76,0.10); }
+  .o6-panel.t3 { background: rgba(47,62,52,0.05); }
+  .o6-panel summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: 56px 1fr auto; gap: 18px; align-items: baseline; padding: 22px 28px; }
+  .o6-panel summary::-webkit-details-marker { display: none; }
+  .o6-num { font-family: 'Cormorant Infant', serif; font-weight: 300; font-size: 38px; color: var(--gold); line-height: 1; }
+  .o6-panel.t1 .o6-num { color: var(--lime-dark); }
+  .o6-head h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(22px,2.6vw,29px); color: var(--moss); margin: 0; display: inline; }
+  .o6-head span { font-family: 'Satoshi', sans-serif; font-size: 14px; color: var(--moss-light); font-weight: 300; margin-left: 12px; }
+  .o6-plus { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 30px; color: var(--pop); }
+  .o6-panel[open] .o6-plus::before { content: '\2212'; }
+  .o6-panel:not([open]) .o6-plus::before { content: '+'; }
+  .o6-body { padding: 0 28px 24px 102px; max-width: 820px; }
+  .o6-body ul { list-style: none; margin: 0 0 12px; padding: 0; }
+  .o6-body li { font-family: 'Satoshi', sans-serif; font-size: 14.5px; line-height: 1.65; color: var(--moss); font-weight: 300; padding: 8px 0; border-bottom: 1px solid rgba(47,62,52,0.09); }
+  .o6-body li:last-child { border-bottom: none; }
+  .o6-body li strong { font-weight: 700; }
+  .o6-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: var(--moss); margin: 6px 0 0; }
+  @media (max-width: 700px) { .o6-body { padding-left: 28px; } .o6-panel summary { grid-template-columns: 40px 1fr auto; } }
+</style>
+
+<div style="height:96px"></div>
+</body>
+</html>

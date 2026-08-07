@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The sorter (marketing asset) | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   THE SORTER, preserved as a marketing asset (2026-08-03).
+   Cut from the membership page when it moved to a conversion-first order.
+   The four first-person statements and the radio-card pattern are ready
+   for reuse: quiz funnels, ads, email, a landing page, or social.
+   Statements route: 1 -> Community Steward, 2 -> Founding Member,
+   3 and 4 -> Associate Member.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --lime: #7CB83F; --lime-dark: #6aa535;
+  --gold: #C9A84C; --plum: #8B5E83;
+}
+body { background: var(--sand); }
+/* ── 1. THE SORT ─────────────────────────────────────────────────────── */
+.x-sort { background: var(--sand); padding: 96px 20px 22px; }
+.x-sort-in { max-width: 1080px; margin: 0 auto; }
+.x-sort-q {
+  font-family: 'Cormorant Garamond', serif; font-weight: 300;
+  font-size: clamp(25px, 6.4vw, 38px); line-height: 1.16;
+  color: var(--moss); text-align: center; margin: 0 0 8px;
+}
+.x-sort-q em { font-style: italic; color: var(--lime-dark); }
+.x-sort-why {
+  font-size: 13.5px; line-height: 1.6; color: var(--sage);
+  text-align: center; font-weight: 300; margin: 0 auto 22px; max-width: 30em;
+}
+
+/* the four statements: one column on a phone, and the whole card is the target */
+.x-opts { display: grid; grid-template-columns: 1fr; gap: 10px;
+          border: 0; margin: 0 auto; padding: 0; max-width: 520px; }
+.x-opts > legend { position: absolute; width: 1px; height: 1px;
+                   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.x-opt {
+  position: relative; display: block; text-align: left; min-height: 48px;
+  background: #FFFDF7; border: 1px solid rgba(47,62,52,0.15); border-radius: 14px;
+  padding: 18px 18px 18px 48px; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif;
+  transition: transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s,
+              border-color .16s, background .16s;
+}
+.x-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.x-dot {
+  position: absolute; left: 17px; top: 20px; width: 22px; height: 22px;
+  border-radius: 50%; border: 1.5px solid rgba(47,62,52,0.32); background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+}
+.x-dot::after {
+  content: ''; position: absolute; inset: 4px; border-radius: 50%;
+  background: var(--lime-dark); transform: scale(0);
+  transition: transform .17s cubic-bezier(.2,.8,.3,1);
+}
+.x-opt input:focus-visible ~ .x-dot { box-shadow: 0 0 0 3px rgba(124,184,63,0.45); }
+.x-opt.on {
+  border: 2px solid var(--lime-dark); background: rgba(124,184,63,0.09);
+  padding: 17px 17px 17px 47px; box-shadow: 0 14px 34px rgba(124,184,63,0.22);
+}
+.x-opt.on .x-dot { border-color: var(--lime-dark); border-width: 2px; }
+.x-opt.on .x-dot::after { transform: scale(1); }
+.x-opt-q {
+  font-style: italic; font-weight: 400; font-size: 16px; line-height: 1.46;
+  color: var(--moss); margin: 0;
+}
+.x-opt-q .aside { font-style: italic; font-size: 0.88em; color: var(--sage); }
+.x-sort-skip { text-align: center; margin-top: 18px; }
+.x-sort-skip button {
+  font-family: 'Satoshi', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--sage); background: none; border: 0; cursor: pointer;
+  padding: 12px 8px; text-decoration: underline; text-underline-offset: 3px;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- ══════ THE SORT ══════ -->
+<section class="x-sort" id="sort">
+  <div class="x-sort-in">
+    <p class="x-sort-q">We&rsquo;re building a community of women who <em>win together.</em></p>
+    <p class="x-sort-why">You know your financial readiness. Where do you belong?</p>
+
+    <fieldset class="x-opts">
+      <legend>Where do you belong?</legend>
+
+      <label class="x-opt" data-opt="pay-forward" data-tier="steward">
+        <input type="radio" name="ss-sort" value="pay-forward">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I want more women to build wealth and I&rsquo;m paying it forward for the next generation of Utah women.&rdquo;</p>
+      </label>
+
+      <label class="x-opt" data-opt="learn" data-tier="founding">
+        <input type="radio" name="ss-sort" value="learn">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I have money set aside and I want to learn with other women how to build wealth through ownership in private companies.&rdquo;</p>
+      </label>
+
+      <label class="x-opt" data-opt="experienced" data-tier="assoc">
+        <input type="radio" name="ss-sort" value="experienced">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I am already an angel investor. Keep me informed with the deals you select and I&rsquo;ll participate when it&rsquo;s time to write a check.&rdquo;</p>
+      </label>
+
+      <label class="x-opt" data-opt="care" data-tier="assoc">
+        <input type="radio" name="ss-sort" value="care">
+        <span class="x-dot"></span>
+        <p class="x-opt-q">&ldquo;I don&rsquo;t have this kind of money, but I care about women in Utah and want to see what&rsquo;s happening.&rdquo;</p>
+      </label>
+    </fieldset>
+
+    <p class="x-sort-skip"><button type="button" id="x-skip">Show me the membership options &rarr;</button></p>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The founding rate: three built on the research | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2; --sand:#F4EFE6;
+  --moss:#2F3E34; --moss-light:#4A5E50; --sage:#7E8E84;
+  --lime:#7CB83F; --lime-dark:#6aa535; --gold:#C9A84C; --gold-deep:#A08434;
+  --plum:#8B5E83; --rust:#A3542D;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--moss);
+     font-family:'Satoshi',-apple-system,BlinkMacSystemFont,sans-serif}
+.pg{max-width:1220px;margin:0 auto;padding:44px 28px 100px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+   font-size:clamp(28px,4vw,44px);line-height:1.14;margin:0 0 12px}
+h1 em{font-style:italic;color:var(--gold-deep)}
+.lede{font-size:14.5px;line-height:1.75;color:var(--moss-light);font-weight:300;
+      max-width:840px;margin:0 0 10px}
+.lede b{font-weight:700;color:var(--moss)}
+.rules{max-width:840px;margin:22px 0 0;padding:18px 22px;background:var(--sand);
+       border-left:3px solid var(--gold);border-radius:0 10px 10px 0;
+       font-size:13px;line-height:1.8;color:var(--moss-light);font-weight:300}
+.rules b{color:var(--moss);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:30px;margin-top:40px}
+.slot .n{font-family:'Cormorant Infant',serif;font-size:15px;font-weight:600;color:var(--gold-deep)}
+.slot h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;margin:2px 0 8px}
+.slot .why{font-size:12.5px;line-height:1.68;color:var(--moss-light);font-weight:300;margin:0 0 6px}
+.slot .ev{font-size:11.5px;line-height:1.65;color:var(--sage);font-weight:300;margin:0 0 16px}
+.slot .ev b{color:var(--moss-light);font-weight:700}
+
+/* the real Founding card head */
+.card{background:linear-gradient(180deg,rgba(124,184,63,.07) 0%,#fff 40%);
+      border:1px solid rgba(124,184,63,.45);border-radius:14px;padding:30px 26px 26px;
+      box-shadow:0 16px 40px rgba(47,62,52,.12)}
+.k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;
+   color:var(--lime-dark);margin:0 0 14px}
+.who{font-size:11.5px;font-weight:700;color:var(--sage);text-transform:uppercase;
+     letter-spacing:.06em;margin:16px 0 0}
+.num{font-family:'Cormorant Infant',serif}
+
+/* ── 1. the seal ── */
+.seal-row{display:flex;align-items:center;gap:15px}
+.seal{flex:0 0 auto;width:58px;height:58px;border-radius:50%;
+      border:1px solid rgba(201,168,76,.6);background:rgba(201,168,76,.1);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.seal::before{content:'';position:absolute;inset:4px;border-radius:50%;
+      border:1px solid rgba(201,168,76,.32)}
+.seal .n1{font-family:'Cormorant Infant',serif;font-size:20px;font-weight:600;
+          color:var(--gold-deep);line-height:1}
+.seal .n2{font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+          color:var(--gold-deep);margin-top:2px;opacity:.8}
+.seal-t .lab{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
+             color:var(--gold-deep);margin:0 0 4px}
+.seal-t .val{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--moss);margin:0;line-height:1.2}
+.seal-t .val .was{color:var(--sage);font-size:17px;margin-right:8px;position:relative;display:inline-block}
+.seal-t .val .was::after{content:'';position:absolute;left:-4%;right:-4%;top:50%;height:1.5px;
+  background:var(--rust);transform:rotate(-12deg);border-radius:2px}
+.seal-t .val .now{font-size:27px;color:var(--moss)}
+
+/* ── 2. the plate ── */
+.plate{border-top:1px solid rgba(201,168,76,.55);border-bottom:1px solid rgba(201,168,76,.55);
+       padding:15px 0 13px;text-align:center}
+.plate-k{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;
+         color:var(--gold-deep);margin:0 0 9px}
+.plate-n{font-family:'Cormorant Infant',serif;font-weight:400;font-size:38px;line-height:1;
+         color:var(--moss);margin:0}
+.plate-n .was{font-size:19px;color:var(--sage);margin-right:11px;position:relative;display:inline-block}
+.plate-n .was::after{content:'';position:absolute;left:-5%;right:-5%;top:50%;height:1.5px;
+  background:var(--rust);transform:rotate(-12deg);border-radius:2px}
+.plate-n span.per{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--moss-light)}
+.plate-c{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+         color:var(--gold-deep);margin:10px 0 0}
+
+/* ── 3. the ledger ── */
+.ledger{border-left:2px solid rgba(201,168,76,.5);padding-left:15px}
+.ledger .row{display:flex;justify-content:space-between;align-items:baseline;
+             padding:8px 0;font-family:'Cormorant Garamond',serif}
+.ledger .row+.row{border-top:1px solid rgba(47,62,52,.1)}
+.ledger .lab{font-family:'Satoshi',sans-serif;font-size:10.5px;letter-spacing:.12em;
+             text-transform:uppercase;font-weight:700;color:var(--sage)}
+.ledger .amt{font-size:19px;color:var(--sage)}
+.ledger .row.you .lab{color:var(--gold-deep)}
+.ledger .row.you .amt{font-size:27px;color:var(--moss)}
+.ledger .row.save .lab{color:var(--rust)}
+.ledger .row.save .amt{font-size:17px;color:var(--rust)}
+
+/* shared held line */
+.held{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14.5px;
+      color:var(--moss-light);margin:11px 0 0;line-height:1.45}
+.held b{font-style:normal;font-weight:600;color:var(--gold-deep)}
+.count{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+       color:var(--gold-deep);margin:9px 0 0}
+</style>
+</head>
+<body>
+<div class="pg">
+
+<h1>Three built on <em>what the research says</em>.</h1>
+<p class="lede">Each carries all three levers: the <b>anchor</b> so $900 lands as a gain, the <b>dollar magnitude</b> because the Rule of 100 says dollars beat percentages above $100, and <b>limited quantity</b> rather than limited time, which outperforms on purchase intention and does so most strongly for symbolic brands.</p>
+
+<div class="rules">
+  <b>Your correction is built in.</b> The guarantee is stated as the rate, never the dollar: <em>your founding rate of 10 percent, held for as long as you stay</em>. The dollars do the persuading, the percentage carries the promise, and nothing here breaks when the price changes.
+</div>
+
+<div class="grid" id="out"></div>
+</div>
+
+<script>
+const HELD = `<p class="held">Your founding rate of <b>10 percent</b>, held for as long as you stay.</p>`;
+
+const STYLES = [
+  { n:'One', name:'The seal',
+    why:'The numeral 100 becomes the focal object, so limited quantity is the first thing the eye lands on rather than a footnote. The struck standard price sits beside it, keeping the anchor and the $100 gap visible.',
+    ev:'<b>Carries:</b> anchor, dollar magnitude, limited quantity as the hero. <b>Strongest on</b> the finding that quantity scarcity beats time scarcity, especially for symbolic brands.',
+    html:`<div class="seal-row">
+            <div class="seal"><span class="n1 num">100</span><span class="n2">Only</span></div>
+            <div class="seal-t">
+              <p class="lab">The founding rate</p>
+              <p class="val"><span class="was num">$1,000</span><span class="now num">$900</span> a year</p>
+            </div>
+          </div>${HELD}` },
+
+  { n:'Two', name:'The plate',
+    why:'The rate set between two gold hairlines like an engraved plaque, with the struck standard price on the same line so the gap is read as one gesture. The count sits beneath in small caps.',
+    ev:'<b>Carries:</b> anchor and dollar magnitude at the largest possible size, quantity stated but not dramatised. <b>Strongest on</b> anchoring, since the two numbers are directly adjacent and the same size class.',
+    html:`<div class="plate">
+            <p class="plate-k">The founding rate</p>
+            <p class="plate-n"><span class="was num">$1,000</span><span class="num">$900</span> <span class="per">a year</span></p>
+            <p class="plate-c num">Only 100 at this rate</p>
+          </div>${HELD}` },
+
+  { n:'Three', name:'The ledger',
+    why:'Three rows: what membership costs, what she saves, and what she pays. The saving is stated in dollars on its own line, which is the single most direct application of the Rule of 100.',
+    ev:'<b>Carries:</b> anchor, dollar magnitude named explicitly as $100, quantity in the line beneath. <b>Strongest on</b> the dollar-versus-percentage finding, and the most legible on a phone since no two numbers share a line.',
+    html:`<div class="ledger">
+            <div class="row"><span class="lab">Membership</span><span class="amt num">$1,000</span></div>
+            <div class="row save"><span class="lab">Founding rate</span><span class="amt num">&minus;$100</span></div>
+            <div class="row you"><span class="lab">You pay</span><span class="amt num">$900</span></div>
+          </div>${HELD}
+          <p class="count num">Only 100 at this rate</p>` }
+];
+
+document.getElementById('out').innerHTML = STYLES.map(s => `
+  <div class="slot">
+    <span class="n">${s.n}</span>
+    <h2>${s.name}</h2>
+    <p class="why">${s.why}</p>
+    <p class="ev">${s.ev}</p>
+    <div class="card">
+      <p class="k">Founding Member</p>
+      ${s.html}
+      <p class="who">Designed for women in Utah</p>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

@@ -30,6 +30,33 @@ root; the runbook is `.agents/skills/odla-migrate/SKILL.md`. Read
 
 ---
 
+## Membership Card Section — FINAL (Tori, 2026-08-05)
+
+The "card selection" section is **finished and locked**. Canonical file:
+`membership-section-draft.html` (mirrored in `membership-signup-section.html`
+and inside `membership-draft.html`). **Use it only as designed; do not
+restyle, reorder, or rewrite it without Tori's explicit direction.**
+Not yet live; the live site is untouched.
+
+The locked design, in order:
+
+1. **Community Steward, $5,000 a year** — "For anyone who wants this shift to be sustainable." Gold top edge. Bullets (hairline rules, no markers): Everything in Founding Member; 2 hours of complimentary and private financial coaching; A private hour with every visiting expert, before the workshop; The annual retreat, included; Your name recognized as a Community Steward. Gold "A word of thanks" box ("You are the reason this community can exist. Stewardship pays the finance experts and the team who make every gathering happen. Your membership has an outsized impact."). CTA: "Fund the movement →".
+2. **Founding Member** — gold seal (100 / ONLY) beside "The founding rate": struck $1,000 → **$900 a year** (Cormorant Infant digits, rust diagonal strike). Italic line: "Your founding rate of **10 percent**, held for as long as you stay." (Guarantee is the RATE, never the dollar.) "Designed for women in Utah." Bullets: 6 money classes, developed with Invest for Better; 20+ optional gatherings, including workshops led by wealth experts; Live pitch meetings, deal memos, and the option to invest*; A voice in finding and selecting the women we fund; A second membership included, for your mother or your daughter. CTA: "Join the action →".
+3. **Associate Member, Free** — "Open to everyone, anywhere." White card, outlined CTA. Bullets: Founder pitch recordings for deals that become available after your join date; Deal memos from our completed research; The option to invest*. CTA: "Join for free →". (Wording revised by Tori 2026-08-06 for Rule 506(b) posture: the page solicits membership and relationship, never open deals; materials are framed as past or post-join-date.)
+4. **Closer:** bold "Community Stewards and Founding Members learn how to invest, / meet the founders, and pick the companies." (order changed by Tori 2026-08-06; break after "invest," on desktop via `.x-vs-br`, hidden under 700px), then plain "Every member is first to know when a new deal is available." (revised from "can see the open deals" in the same 506(b) pass; flag this line for securities counsel review).
+5. **Footnote** (13px Satoshi, enlarged for readability by Tori 2026-08-06): "*Please note, only accredited investors will have the option to invest." with "accredited investors" linking to `#faq-accredited`.
+6. **Vertical rhythm compressed (Tori, 2026-08-06)** so cards, closer, and footnote fit one desktop screen (cards about 663px tall; section bottom padding 48px on desktop). Applied to membership.html, membership-section-draft.html, membership-signup-section.html, and membership-draft.html.
+
+**Hero card FINAL (Tori, 2026-08-06).** The membership.html hero is finished and is the standard; do not rewrite without Tori's direction. Copy, in order: H1 "Utah has over 100,000 accredited women investors." with gold italic second line "Many of us were never taught how to build wealth."; one sub paragraph ("Our money is a powerful tool to shape who gets funded in our neighborhoods. It's time more of our startup founders were women."; the donating line was cut by Tori 2026-08-06); kicker "We're gathering the women who want to win together." with lime bold italic "win together"; CTAs "Pick your membership" (#memberships) + "How it works". No fine-print price line in the hero.
+
+**Formatting standard (Tori, 2026-08-06): membership.html now uses the site tokens** (1100px wrap, 120/48/80 hero padding, --text-h1-scale Cormorant hero, 15px tracked Satoshi labels, Satoshi 900 h2s, 19px/1.76 body). New membership-page sections must use these tokens, never the old 880px/12px/16px scale.
+
+**Benefits pillars section FINAL (Tori, 2026-08-06).** The membership.html benefits section is finished; do not restyle or rewrite without Tori's direction. Design, in order: centered ceremonial header (gold hairline label "MEMBERSHIP BENEFITS", Satoshi 900 h2 "Pick your own adventure.", italic Cormorant kicker "Opt in for as few or as many of these resources as you want."), then the tinted accordion: three `details` panels (`.mb-pillar`, tints lime/gold/moss, Cormorant Infant numerals, pillar 1 open by default). Pillar copy is Tori's final wording: 1 "Education about money" (Invest for Better Course with cohort of about 20; Finance Workshops; Office Hour Invite), 2 "Access to deals and due diligence" (Attend 4 pitch gatherings; See the Data Room; Participate in the research; Own your investment), 3 "A kind &amp; effective community of women" (the four community commitments pulled from the index.html "Our Commitments" section). Each pillar ends with a note styled as a white inset box with a gold left rule (`.mb-pillar-note`: Total value estimate; fund line; free second family seat). After the band: "What we hear" section (`.mb-heard`), two objection cards ("I don't have that kind of money." / "If these were good deals, Utah investors would already be in.") with permission-slip and change-the-system answers. Members grid has 5 founding members (Tori, Millicent, Lauren, Lavanya, Crystalee) with LinkedIn photos in members/; the member count line appears automatically at 30 founding members (SHOW_COUNT_AT in membership.html). Tori may make small copy edits; treat structure and design as locked.
+
+**Assembled page (Tori, 2026-08-05): `membership.html` is now the full final membership page** (hero, locked card section, Who's In social proof, benefits pillars band, What we hear, FAQ with `#faq-accredited`, CTA), built from `membership-draft.html` and updated 2026-08-06 per the notes above. `membership-final.html` is an identical staging copy and can be deleted. Still local only; goes live on push to `main`. Unlinked from site navigation so far.
+
+---
+
 ## Project State (last updated 2026-04-11)
 
 ### Website

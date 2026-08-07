@@ -2055,6 +2055,44 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     return json({ ok: true, id, duplicate: duplicate ?? false, accountCreated }, 201);
   }
 
+  // Monthly-update signup (the free "third yes"). Public, no auth: the only
+  // thing it accepts is an email address plus a source label, and the row it
+  // writes feeds the community-layer list only (Living Document v9 §15.6).
+  if (req.method === "POST" && url.pathname === "/api/newsletter") {
+    const len = Number(req.headers.get("content-length") ?? 0);
+    if (len > 4_096) return json({ error: "body too large" }, 413);
+
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return json({ error: "invalid JSON body" }, 400);
+    }
+
+    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+    if (!email || email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      return json({ error: "invalid email" }, 400);
+    }
+    const source = typeof body.source === "string" ? body.source.trim().slice(0, 100) : "";
+
+    const id = uuidv7();
+    // One active row per address: repeat submissions of the same email
+    // dedupe server-side to the original signup.
+    const { duplicate } = await db.transact(
+      tx.newsletterSignups[id].update({
+        id,
+        email,
+        ...(source ? { source } : {}),
+        groupId: DEFAULT_GROUP_ID,
+        status: "active",
+        createdAt: Date.now(),
+      }),
+      { mutationId: `newsletter:${email}` },
+    );
+
+    return json({ ok: true, duplicate: duplicate ?? false }, 201);
+  }
+
   // Gated: admins only (an internal stat per the owner's role model).
   if (req.method === "GET" && url.pathname === "/api/applications/count") {
     const user = await verifyUser(req, env);
