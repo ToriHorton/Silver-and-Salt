@@ -27,6 +27,7 @@ git ls-files -z -- . \
   ':!:CLAUDE.md' \
   ':!:MIGRATION.md' \
   ':!:PAYMENT-SPEC.md' \
+  ':!:JOURNEYS-PLAN.md' \
   ':!:UI-COMPONENT-SPECS.md' \
   ':!:ADMIN-CALENDAR-SPEC.md' \
   ':!:src' \

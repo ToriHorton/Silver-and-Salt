@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The founding rate: five ways to make it feel special | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F2; --sand:#F4EFE6;
+  --moss:#2F3E34; --moss-light:#4A5E50; --sage:#7E8E84;
+  --lime:#7CB83F; --lime-dark:#6aa535; --gold:#C9A84C; --gold-deep:#A08434;
+  --plum:#8B5E83; --rust:#A3542D; --ink:#41474B;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--moss);
+     font-family:'Satoshi',-apple-system,BlinkMacSystemFont,sans-serif}
+.pg{max-width:1200px;margin:0 auto;padding:44px 28px 100px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;
+   font-size:clamp(28px,4vw,44px);line-height:1.14;margin:0 0 12px}
+h1 em{font-style:italic;color:var(--gold-deep)}
+.lede{font-size:14.5px;line-height:1.75;color:var(--moss-light);font-weight:300;
+      max-width:830px;margin:0 0 10px}
+.lede b{font-weight:700;color:var(--moss)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:30px;margin-top:38px}
+.slot .n{font-family:'Cormorant Infant',serif;font-size:15px;font-weight:600;color:var(--gold-deep)}
+.slot h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:21px;margin:2px 0 8px}
+.slot .why{font-size:12.5px;line-height:1.68;color:var(--moss-light);font-weight:300;margin:0 0 16px}
+
+/* the Founding card head, as it really is */
+.card{background:linear-gradient(180deg,rgba(124,184,63,.07) 0%,#fff 40%);
+      border:1px solid rgba(124,184,63,.45);border-radius:14px;padding:30px 26px 26px;
+      box-shadow:0 16px 40px rgba(47,62,52,.12)}
+.k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;
+   color:var(--lime-dark);margin:0 0 14px}
+.who{font-size:11.5px;font-weight:700;color:var(--sage);text-transform:uppercase;
+     letter-spacing:.06em;margin:16px 0 0}
+.num{font-family:'Cormorant Infant',serif}
+
+/* ── A. the engraved plate ── */
+.plate{border-top:1px solid rgba(201,168,76,.55);border-bottom:1px solid rgba(201,168,76,.55);
+       padding:14px 0 12px;text-align:center}
+.plate-k{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;
+         color:var(--gold-deep);margin:0 0 8px}
+.plate-n{font-family:'Cormorant Infant',serif;font-weight:400;font-size:38px;line-height:1;
+         color:var(--moss);margin:0}
+.plate-n span{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--moss-light)}
+.plate-was{font-family:'Cormorant Garamond',serif;font-size:13.5px;color:var(--sage);
+           margin:9px 0 0;position:relative;display:inline-block}
+.plate-was::after{content:'';position:absolute;left:-3%;right:-3%;top:52%;height:1px;
+  background:var(--sage);transform:rotate(-9deg)}
+
+/* ── B. the gold seal ── */
+.seal-row{display:flex;align-items:center;gap:14px}
+.seal{flex:0 0 auto;width:52px;height:52px;border-radius:50%;
+      border:1px solid rgba(201,168,76,.6);background:rgba(201,168,76,.1);
+      display:flex;align-items:center;justify-content:center;position:relative}
+.seal::before{content:'';position:absolute;inset:4px;border-radius:50%;
+      border:1px solid rgba(201,168,76,.35)}
+.seal b{font-family:'Cormorant Infant',serif;font-size:19px;font-weight:600;
+        color:var(--gold-deep);line-height:1}
+.seal-t .lab{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
+             color:var(--gold-deep);margin:0 0 3px}
+.seal-t .val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--moss);margin:0}
+.seal-t .val s{color:var(--sage);font-size:16px;margin-right:7px;
+               text-decoration-thickness:1px}
+
+/* ── C. the hand-amended price ── */
+.hand{position:relative;font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--moss)}
+.hand .std{color:var(--sage);position:relative;display:inline-block;margin-right:10px}
+.hand .std::after{content:'';position:absolute;left:-6%;right:-6%;top:48%;height:2px;
+  background:var(--rust);border-radius:2px;transform:rotate(-11deg);opacity:.85}
+.hand .yours{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+             font-size:27px;color:var(--moss)}
+.hand-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;
+           color:var(--gold-deep);margin:6px 0 0}
+
+/* ── D. the ledger ── */
+.ledger{border-left:2px solid rgba(201,168,76,.5);padding-left:14px}
+.ledger .row{display:flex;justify-content:space-between;align-items:baseline;
+             padding:7px 0;font-family:'Cormorant Garamond',serif}
+.ledger .row+.row{border-top:1px solid rgba(47,62,52,.1)}
+.ledger .lab{font-family:'Satoshi',sans-serif;font-size:10.5px;letter-spacing:.12em;
+             text-transform:uppercase;font-weight:700;color:var(--sage)}
+.ledger .amt{font-size:19px;color:var(--sage)}
+.ledger .row.you .lab{color:var(--gold-deep)}
+.ledger .row.you .amt{font-size:25px;color:var(--moss)}
+
+/* ── E. the held rate ── */
+.held-n{font-family:'Cormorant Infant',serif;font-weight:400;font-size:36px;line-height:1;
+        color:var(--moss);margin:0}
+.held-n span{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--moss-light)}
+.held-rule{height:1px;background:linear-gradient(90deg,var(--gold) 0%,rgba(201,168,76,0) 70%);
+           margin:11px 0 9px}
+.held-t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15.5px;
+        color:var(--moss-light);margin:0}
+.held-c{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+        color:var(--gold-deep);margin:10px 0 0}
+
+.note{margin-top:46px;padding:20px 24px;background:var(--sand);border-radius:12px;
+      border-left:3px solid var(--gold);font-size:13px;line-height:1.75;
+      color:var(--moss-light);font-weight:300;max-width:830px}
+.note b{color:var(--moss);font-weight:700}
+</style>
+</head>
+<body>
+<div class="pg">
+
+<h1>Five ways to make the founding rate <em>feel like a privilege</em>.</h1>
+<p class="lede">The previous set all said <b>discount</b>. These say <b>granted</b>. The vocabulary shifts from retail (strike, save, percent off) to ceremony: a plate, a seal, a held rate, a ledger with her line on it.</p>
+<p class="lede">All five use <b>gold</b> rather than lime. Gold is the rarest colour in your palette and already carries recognition on the Steward card, which is exactly the register a founding rate wants.</p>
+
+<div class="grid" id="out"></div>
+
+<div class="note">
+  <b>Why gold and not red.</b> Red says clearance. Gold says first, few, and named. Your brand book reserves gold for recognition, and the founding rate is recognition with a number attached. If the concern is that gold belongs to Stewards, the honest answer is that the two never appear on the same card.
+</div>
+</div>
+
+<script>
+const STYLES = [
+  { n:'Style A', name:'The engraved plate',
+    why:'The number set between two gold hairlines, in Cormorant Infant, centred. It reads like a plaque rather than a price tag. The standard rate sits beneath in small type with a light diagonal, present but not shouting.',
+    html:`<div class="plate">
+            <p class="plate-k">The founding rate</p>
+            <p class="plate-n num">$900 <span>a year</span></p>
+            <p class="plate-was">$1,000 standard</p>
+          </div>` },
+
+  { n:'Style B', name:'The gold seal',
+    why:'A struck seal carrying the numeral 100, with the rate beside it. The most literal expression of belonging to a numbered group, and the closest to a wax seal on a letter.',
+    html:`<div class="seal-row">
+            <div class="seal"><b class="num">100</b></div>
+            <div class="seal-t">
+              <p class="lab">Founding rate</p>
+              <p class="val"><s class="num">$1,000</s><span class="num">$900</span> a year</p>
+            </div>
+          </div>` },
+
+  { n:'Style C', name:'Amended by hand',
+    why:'The standard price struck through with a rust ink stroke, and her rate written beside it in italic, as if a person changed it for her personally. The warmest of the five, and the only one that feels like a gesture rather than a policy.',
+    html:`<p class="hand"><span class="std num">$1,000</span><span class="yours num">$900</span> a year</p>
+          <p class="hand-note">for as long as you stay</p>` },
+
+  { n:'Style D', name:'The ledger',
+    why:'Two rows: what membership costs, and what it costs her. No strike at all. The gold rule down the left marks it as an entry in a book, which is the visual language your Utah funding research already uses.',
+    html:`<div class="ledger">
+            <div class="row"><span class="lab">Membership</span><span class="amt num">$1,000</span></div>
+            <div class="row you"><span class="lab">Your founding rate</span><span class="amt num">$900</span></div>
+          </div>` },
+
+  { n:'Style E', name:'The held rate',
+    why:'The emphasis moves from what she saves to what she keeps. One number, a gold rule that fades, and the promise underneath. A quiet counter names the scarcity without a countdown.',
+    html:`<p class="held-n num">$900 <span>a year</span></p>
+          <div class="held-rule"></div>
+          <p class="held-t">Your rate, held for as long as you stay.</p>
+          <p class="held-c num">One of the first 100</p>` }
+];
+
+document.getElementById('out').innerHTML = STYLES.map(s => `
+  <div class="slot">
+    <span class="n">${s.n}</span>
+    <h2>${s.name}</h2>
+    <p class="why">${s.why}</p>
+    <div class="card">
+      <p class="k">Founding Member</p>
+      ${s.html}
+      <p class="who">Designed for women in Utah</p>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

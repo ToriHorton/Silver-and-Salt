@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Pillars header, 5 options | Silver &amp; Salt Capital</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
+<style>
+  :root { --lime: #7CB83F; --lime-dark: #6aa535; --lime-soft: rgba(124,184,63,0.12); --gold: #C9A84C; --pop: #6aa535; }
+  body { background: var(--cream, #FBF8F2); margin: 0; }
+  .opt-label { max-width: 1100px; margin: 0 auto; padding: 56px 48px 18px; }
+  .opt-label .tag { display: inline-block; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; background: var(--moss); color: #fff; border-radius: 999px; padding: 6px 14px; margin-bottom: 10px; }
+  .opt-label p { font-family: 'Satoshi', sans-serif; font-size: 14px; color: var(--moss-light); max-width: 640px; line-height: 1.6; margin: 0; }
+  .opt-divider { border: none; border-top: 3px solid var(--moss); opacity: .15; margin: 64px 0 0; }
+  .pb { background: #fff; border-top: 1px solid rgba(47,62,52,0.08); border-bottom: 1px solid rgba(47,62,52,0.08); padding: 56px 0; }
+  .pb-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+  .hp-label { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--pop); margin: 0 0 14px; }
+  .hp-panels { margin-top: 36px; }
+  .mb-pillar { border-radius: 16px; margin-bottom: 14px; overflow: hidden; border: 1px solid rgba(47,62,52,0.08); }
+  .mb-pillar.t1 { background: var(--lime-soft); }
+  .mb-pillar.t2 { background: rgba(201,168,76,0.10); }
+  .mb-pillar.t3 { background: rgba(47,62,52,0.05); }
+  .mb-pillar summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: 56px 1fr auto; gap: 18px; align-items: baseline; padding: 22px 28px; }
+  .mb-pillar summary::-webkit-details-marker { display: none; }
+  .mb-pillar-num { font-family: 'Cormorant Infant', serif; font-weight: 300; font-size: 38px; color: var(--gold); line-height: 1; }
+  .mb-pillar.t1 .mb-pillar-num { color: var(--lime-dark); }
+  .mb-pillar-head h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(22px,2.6vw,29px); color: var(--moss); margin: 0; display: inline; }
+  .mb-pillar-head > span { font-family: 'Satoshi', sans-serif; font-size: 14px; color: var(--moss-light); font-weight: 300; margin-left: 12px; }
+  .mb-pillar-plus { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 30px; color: var(--pop); }
+  .mb-pillar:not([open]) .mb-pillar-plus::before { content: '+'; }
+
+  .hpA-h { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(34px,4.8vw,58px); line-height: 1.08; letter-spacing: -0.02em; color: var(--moss); margin: 0 0 8px; }
+  .hpA-h em { font-style: italic; color: var(--pop); }
+  .hpA-kick { font-family: 'Satoshi', sans-serif; font-size: 17px; font-weight: 300; color: var(--moss-light); margin: 0; }
+
+  .hpB-wrap { text-align: center; }
+  .hpB-label { display: flex; align-items: center; justify-content: center; gap: 18px; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin: 0 0 16px; }
+  .hpB-label span { display: inline-block; width: 64px; height: 1px; background: var(--gold); opacity: .5; }
+  .hpB-h { font-family: 'Satoshi', sans-serif; font-weight: 900; font-size: clamp(32px,4.5vw,52px); letter-spacing: -0.03em; color: var(--moss); margin: 0 0 10px; }
+  .hpB-kick { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(19px,2.4vw,24px); color: var(--moss); margin: 0; }
+
+  .hpC-wrap { display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center; }
+  .hpC-num { font-family: 'Cormorant Infant', serif; font-weight: 300; font-size: clamp(110px,14vw,170px); line-height: .8; color: var(--pop); }
+  .hpC-h { font-family: 'Satoshi', sans-serif; font-weight: 900; font-size: clamp(28px,4vw,46px); letter-spacing: -0.03em; color: var(--moss); margin: 0 0 8px; }
+  .hpC-kick { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 21px; color: var(--moss-light); margin: 0; }
+
+  .hpD-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; }
+  .hpD-h { font-family: 'Satoshi', sans-serif; font-weight: 900; font-size: clamp(44px,6vw,76px); line-height: .95; letter-spacing: -0.03em; color: var(--moss); margin: 0; }
+  .hpD-side { font-family: 'Satoshi', sans-serif; font-size: 17px; line-height: 1.7; font-weight: 300; color: var(--moss-light); margin: 0 0 6px; }
+  .hpD-side em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; color: var(--pop); }
+  @media (max-width: 800px) { .hpD-wrap { grid-template-columns: 1fr; gap: 16px; } }
+
+  .hpE-h { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic; font-size: clamp(34px,5vw,60px); line-height: 1.1; color: var(--moss); margin: 0; }
+  .hpE-h em { font-style: italic; color: var(--pop); }
+
+</style>
+</head>
+<body>
+
+<hr class="opt-divider">
+<div class="opt-label" id="hA">
+  <span class="tag">Header A · Serif statement</span>
+  <p>The heading moves to Cormorant light, matching the hero. Reads gracious and editorial; the pop italic carries the pillar count.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+<p class="hp-label">Membership</p>
+<h2 class="hpA-h">Your membership benefits, <em>in three pillars</em>.</h2>
+<p class="hpA-kick">Pick and choose what matters to you.</p>
+
+  <div class="hp-panels">
+    <details class="mb-pillar t1"><summary><span class="mb-pillar-num">1</span><span class="mb-pillar-head"><h3>Education about money</h3><span>Six weeks of training, plus workshops and office hours all year</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t2"><summary><span class="mb-pillar-num">2</span><span class="mb-pillar-head"><h3>Access to deals and due diligence</h3><span>Learn by doing, on real Utah deals</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t3"><summary><span class="mb-pillar-num">3</span><span class="mb-pillar-head"><h3>The friends and connections</h3><span>Some women join for this alone</span></span><span class="mb-pillar-plus"></span></summary></details>
+  </div>
+</div></section>
+<hr class="opt-divider">
+<div class="opt-label" id="hB">
+  <span class="tag">Header B · Centered ceremonial</span>
+  <p>Everything centered with gold hairlines around the label. Formal, invitation-like; gives the section a sense of occasion.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+<div class="hpB-wrap">
+  <p class="hpB-label"><span></span>Membership benefits<span></span></p>
+  <h2 class="hpB-h">Three pillars.</h2>
+  <p class="hpB-kick">Pick and choose what matters to you.</p>
+</div>
+
+  <div class="hp-panels">
+    <details class="mb-pillar t1"><summary><span class="mb-pillar-num">1</span><span class="mb-pillar-head"><h3>Education about money</h3><span>Six weeks of training, plus workshops and office hours all year</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t2"><summary><span class="mb-pillar-num">2</span><span class="mb-pillar-head"><h3>Access to deals and due diligence</h3><span>Learn by doing, on real Utah deals</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t3"><summary><span class="mb-pillar-num">3</span><span class="mb-pillar-head"><h3>The friends and connections</h3><span>Some women join for this alone</span></span><span class="mb-pillar-plus"></span></summary></details>
+  </div>
+</div></section>
+<hr class="opt-divider">
+<div class="opt-label" id="hC">
+  <span class="tag">Header C · The giant numeral</span>
+  <p>An oversized Cormorant Infant 3 anchors the header; text stacks beside it. Bold, graphic, unmistakably yours because of the numeral font.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+<div class="hpC-wrap">
+  <div class="hpC-num">3</div>
+  <div>
+    <p class="hp-label">Membership</p>
+    <h2 class="hpC-h">pillars of membership</h2>
+    <p class="hpC-kick">Pick and choose what matters to you.</p>
+  </div>
+</div>
+
+  <div class="hp-panels">
+    <details class="mb-pillar t1"><summary><span class="mb-pillar-num">1</span><span class="mb-pillar-head"><h3>Education about money</h3><span>Six weeks of training, plus workshops and office hours all year</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t2"><summary><span class="mb-pillar-num">2</span><span class="mb-pillar-head"><h3>Access to deals and due diligence</h3><span>Learn by doing, on real Utah deals</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t3"><summary><span class="mb-pillar-num">3</span><span class="mb-pillar-head"><h3>The friends and connections</h3><span>Some women join for this alone</span></span><span class="mb-pillar-plus"></span></summary></details>
+  </div>
+</div></section>
+<hr class="opt-divider">
+<div class="opt-label" id="hD">
+  <span class="tag">Header D · Editorial two-column</span>
+  <p>Heading left, explanation right, like a magazine feature opener. Gives the kicker room to say slightly more.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+<div class="hpD-wrap">
+  <div>
+    <p class="hp-label">Membership</p>
+    <h2 class="hpD-h">Three<br>pillars.</h2>
+  </div>
+  <p class="hpD-side">Every membership includes all three. Education about money, access to real deals, and the women beside you. <em>Pick and choose what matters to you.</em></p>
+</div>
+
+  <div class="hp-panels">
+    <details class="mb-pillar t1"><summary><span class="mb-pillar-num">1</span><span class="mb-pillar-head"><h3>Education about money</h3><span>Six weeks of training, plus workshops and office hours all year</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t2"><summary><span class="mb-pillar-num">2</span><span class="mb-pillar-head"><h3>Access to deals and due diligence</h3><span>Learn by doing, on real Utah deals</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t3"><summary><span class="mb-pillar-num">3</span><span class="mb-pillar-head"><h3>The friends and connections</h3><span>Some women join for this alone</span></span><span class="mb-pillar-plus"></span></summary></details>
+  </div>
+</div></section>
+<hr class="opt-divider">
+<div class="opt-label" id="hE">
+  <span class="tag">Header E · The instruction is the headline</span>
+  <p>Quietest option: a tracked eyebrow carries the facts, and the invitation itself becomes the headline in large italic serif.</p>
+</div>
+<section class="pb"><div class="pb-inner">
+<p class="hp-label">Your membership benefits &middot; 3 pillars</p>
+<h2 class="hpE-h">Pick and choose <em>what matters to you</em>.</h2>
+
+  <div class="hp-panels">
+    <details class="mb-pillar t1"><summary><span class="mb-pillar-num">1</span><span class="mb-pillar-head"><h3>Education about money</h3><span>Six weeks of training, plus workshops and office hours all year</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t2"><summary><span class="mb-pillar-num">2</span><span class="mb-pillar-head"><h3>Access to deals and due diligence</h3><span>Learn by doing, on real Utah deals</span></span><span class="mb-pillar-plus"></span></summary></details>
+    <details class="mb-pillar t3"><summary><span class="mb-pillar-num">3</span><span class="mb-pillar-head"><h3>The friends and connections</h3><span>Some women join for this alone</span></span><span class="mb-pillar-plus"></span></summary></details>
+  </div>
+</div></section>
+<div style="height:96px"></div>
+</body>
+</html>

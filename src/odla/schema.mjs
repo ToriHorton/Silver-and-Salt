@@ -157,6 +157,25 @@ export const schema = {
         createdAt: { type: "number", unique: false, indexed: true, optional: false },
       },
     },
+    // Monthly-update signups (the free "third yes" from the choose-your-yes
+    // panel and the footer band). COMMUNITY-LAYER LIST ONLY per Living
+    // Document v9 §15.6: gatherings, classes, movement news; never deal
+    // content. Dedupe is enforced at write time with mutationId
+    // `newsletter:<lowercased email>`, so email is indexed but not unique
+    // (a re-signup after unsubscribe writes a fresh row).
+    newsletterSignups: {
+      attrs: {
+        id: { type: "string", unique: true, indexed: true, optional: false },
+        email: { type: "string", unique: false, indexed: true, optional: false },
+        // Which surface the signup came from ("index#how", "membership",
+        // "footer:/faqs.html", ...) so we learn which asks convert.
+        source: { type: "string", unique: false, indexed: false, optional: true },
+        groupId: { type: "string", unique: false, indexed: true, optional: true },
+        // active | unsubscribed
+        status: { type: "string", unique: false, indexed: true, optional: false },
+        createdAt: { type: "number", unique: false, indexed: true, optional: false },
+      },
+    },
   },
   links: {},
 };

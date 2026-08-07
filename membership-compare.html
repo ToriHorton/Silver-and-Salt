@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Membership hero variants &mdash; side by side</title>
+<style>
+  :root{
+    --moss:#2F3E34; --moss-light:#4A5E50; --sage:#7B8A80;
+    --cream:#FBF8F2; --sand:#F4EFE6; --lime:#7CB83F; --lime-dark:#6aa535;
+    --gold:#C9A84C; --plum:#8B5E83;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--moss);
+       font-family:'Satoshi',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+       padding:32px 28px 80px}
+  header{max-width:1240px;margin:0 auto 28px}
+  h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;
+     font-size:clamp(28px,4vw,42px);line-height:1.15;margin-bottom:10px}
+  h1 em{font-style:italic;color:var(--lime-dark)}
+  .lede{font-size:14.5px;line-height:1.7;color:var(--moss-light);
+        font-weight:300;max-width:760px}
+  .lede b{font-weight:700;color:var(--moss)}
+  .controls{max-width:1240px;margin:0 auto 22px;display:flex;gap:10px;flex-wrap:wrap;
+            align-items:center;padding-top:20px;border-top:1px solid rgba(47,62,52,.12)}
+  .controls span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+                 font-weight:700;color:var(--sage);margin-right:4px}
+  button{font-family:inherit;font-size:13px;font-weight:700;color:var(--moss);
+         background:var(--sand);border:1px solid rgba(47,62,52,.14);border-radius:999px;
+         padding:8px 16px;cursor:pointer;transition:all .15s}
+  button:hover{border-color:var(--lime-dark);background:rgba(124,184,63,.12)}
+  button.on{background:var(--lime-dark);color:#fff;border-color:var(--lime-dark)}
+  .grid{max-width:1240px;margin:0 auto;display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:26px}
+  .card{background:#fff;border:1px solid rgba(47,62,52,.12);border-radius:14px;
+        overflow:hidden;display:flex;flex-direction:column;
+        box-shadow:0 10px 30px rgba(47,62,52,.07)}
+  .card.hide{display:none}
+  .cap{padding:16px 20px;border-bottom:1px solid rgba(47,62,52,.1);
+       display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .cap h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;
+          font-size:21px;line-height:1.2}
+  .cap .id{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+           font-weight:700;color:var(--sage);white-space:nowrap}
+  .note{padding:0 20px 14px;font-size:12.5px;line-height:1.6;
+        color:var(--moss-light);font-weight:300}
+  .shell{position:relative;height:520px;background:var(--sand);
+         border-top:1px solid rgba(47,62,52,.08)}
+  iframe{position:absolute;top:0;left:0;width:1280px;height:1733px;border:0;
+         transform:scale(.3);transform-origin:0 0}
+  .fail{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+        text-align:center;padding:28px;font-size:13px;line-height:1.7;
+        color:var(--moss-light);font-weight:300}
+  .foot{padding:14px 20px;border-top:1px solid rgba(47,62,52,.1);
+        display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .foot a{font-size:12.5px;font-weight:700;color:var(--lime-dark);
+          text-decoration:none;border-bottom:1px solid transparent}
+  .foot a:hover{border-bottom-color:var(--lime-dark)}
+  .tag{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+       padding:4px 10px;border-radius:999px}
+  .tag.h{background:rgba(124,184,63,.16);color:var(--lime-dark)}
+  .tag.g{background:rgba(139,94,131,.14);color:var(--plum)}
+  .shared{max-width:1240px;margin:34px auto 0;background:var(--sand);
+          border:1px solid rgba(201,168,76,.4);border-radius:12px;padding:20px 24px;
+          font-size:13.5px;line-height:1.7;color:var(--moss);font-weight:300}
+  .shared b{font-weight:700}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Eleven ways in, <em>one set of three</em>.</h1>
+  <p class="lede">Every variant below ends at the same place: <b>Associate (free) &middot; Founding ($1,000) &middot; Steward ($5,000)</b>. What changes is the story you tell above the cards. Scroll each preview to see the tiers; the frame is live, not a screenshot.</p>
+</header>
+
+<div class="controls">
+  <span>Show</span>
+  <button class="on" data-f="all">All eleven</button>
+  <button data-f="h">H series only</button>
+  <button data-f="g">G series only</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="shared">
+  <b>Shared across all eleven:</b> the three membership cards, the Commitment Member note beneath them (a standing annual pledge, set inside the community, never at signup), and the compliance line &mdash; dues fund the community, investing stays a separate deal-by-deal decision limited to accredited investors, certified when a deal opens.
+</div>
+
+<script>
+const V = [
+  {f:'membership-h1.html', s:'h', n:'The Letter',      d:'A signed letter from you to Utah women. Opens with the checks arriving from California and New York, closes with "P.S. I have already written mine."'},
+  {f:'membership-h2.html', s:'h', n:'The Conversation', d:'The pitch as dialogue rather than declaration.'},
+  {f:'membership-h3.html', s:'h', n:'The Front Page',   d:'Newspaper treatment. The funding gap as the story above the fold.'},
+  {f:'membership-h4.html', s:'h', n:'The Ledger',       d:'Your Utah Funding 2025 numbers as ledger entries, animating in one by one, ending with a blank 2027 row waiting for the reader.'},
+  {f:'membership-g.html',  s:'g', n:'Every Member Counts', d:'The original three-card build, with the guided picker above it.'},
+  {f:'membership-g1.html', s:'g', n:'Rail',   d:'Rail layout variation on the G structure.'},
+  {f:'membership-g2.html', s:'g', n:'Years',  d:'Time-based framing: the year ahead as the organizing idea.'},
+  {f:'membership-g3.html', s:'g', n:'Check',  d:'The check illustration carries the hero.'},
+  {f:'membership-g4.html', s:'g', n:'Dawn',   d:'Imagery-forward opening.'},
+  {f:'membership-g5.html', s:'g', n:'Cast',   d:'Leads with the women in the room.'},
+  {f:'membership-g6.html', s:'g', n:'Sort',   d:'Question-and-answer sorter that recommends a tier before the cards lock in.'}
+];
+const grid = document.getElementById('grid');
+grid.innerHTML = V.map(v => `
+  <div class="card" data-s="${v.s}">
+    <div class="cap">
+      <h2>${v.n}</h2>
+      <span class="tag ${v.s}">${v.f.replace('membership-','').replace('.html','')}</span>
+    </div>
+    <p class="note">${v.d}</p>
+    <div class="shell">
+      <iframe src="${v.f}" loading="lazy" title="${v.n}"></iframe>
+      <div class="fail">Preview blocked by the browser.<br>Use the link below to open this one full size.</div>
+    </div>
+    <div class="foot">
+      <a href="${v.f}" target="_blank">Open full size &rarr;</a>
+      <span class="id">${v.f}</span>
+    </div>
+  </div>`).join('');
+
+document.querySelectorAll('.controls button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.controls button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    const f = b.dataset.f;
+    document.querySelectorAll('.card').forEach(c => {
+      c.classList.toggle('hide', f !== 'all' && c.dataset.s !== f);
+    });
+  });
+});
+
+// If a frame never paints (file:// restrictions), surface the fallback link.
+setTimeout(() => {
+  document.querySelectorAll('.shell').forEach(sh => {
+    const fr = sh.querySelector('iframe');
+    let ok = false;
+    try { ok = !!(fr.contentDocument && fr.contentDocument.body && fr.contentDocument.body.childElementCount); }
+    catch (e) { ok = true; } // cross-origin means it loaded
+    if (!ok) { fr.style.display = 'none'; sh.querySelector('.fail').style.display = 'flex'; }
+  });
+}, 2500);
+</script>
+</body>
+</html>

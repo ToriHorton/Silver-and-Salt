@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membership (B) | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
+<style>
+  :root { --lime:#7CB83F; --lime-dark:#6aa535; --lime-soft:rgba(124,184,63,0.12); --gold:#C9A84C; --pop:#6aa535; }
+
+  /* ── Decision hero: pitch left, decision right ── */
+  .b-hero { background: var(--moss); padding: 110px 48px 70px; }
+  .b-hero-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: start; }
+  @media (max-width: 900px) { .b-hero-grid { grid-template-columns: 1fr; gap: 36px; } }
+  .b-eyebrow { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--lime); font-weight: 700; margin-bottom: 18px; }
+  .b-hero h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(36px, 4.8vw, 58px); line-height: 1.1; color: white; margin-bottom: 18px; }
+  .b-hero h1 em { font-style: italic; color: var(--gold); }
+  .b-hero-sub { font-size: 16px; line-height: 1.75; color: rgba(255,255,255,0.7); font-weight: 300; max-width: 480px; margin-bottom: 26px; }
+  .b-checks { list-style: none; margin: 0; }
+  .b-checks li { font-size: 15.5px; line-height: 1.5; color: rgba(255,255,255,0.85); font-weight: 300; padding: 9px 0 9px 32px; position: relative; }
+  .b-checks li::before { content: '&'; position: absolute; left: 2px; top: 7px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 19px; color: var(--lime); }
+  .b-checks strong { font-weight: 700; color: white; }
+
+  /* Decision card */
+  .b-card { background: var(--cream, #FBF8F2); border-radius: 14px; padding: 34px 32px; box-shadow: 0 18px 50px rgba(0,0,0,0.25); }
+  .b-card-price { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 52px; line-height: 1; color: var(--moss); }
+  .b-card-price em { font-style: italic; font-size: 26px; color: var(--pop); }
+  .b-card-founding { font-size: 13.5px; line-height: 1.6; color: var(--moss-light); font-weight: 300; margin: 12px 0 20px; }
+  .b-card-founding strong { color: var(--pop); font-weight: 700; }
+  .b-join { display: block; text-align: center; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 16px; background: var(--lime-dark); color: white; padding: 15px 20px; border-radius: 8px; text-decoration: none; transition: all .2s; }
+  .b-join:hover { background: var(--lime); transform: translateY(-2px); }
+  .b-card-urgency { text-align: center; font-size: 12.5px; color: var(--sage); margin-top: 10px; }
+  .b-card hr { border: 0; border-top: 1px solid rgba(47,62,52,0.12); margin: 22px 0 16px; }
+  .b-alt { font-size: 13.5px; line-height: 1.65; color: var(--moss-light); font-weight: 300; margin-bottom: 12px; }
+  .b-alt a { color: var(--pop); font-weight: 700; text-decoration: none; }
+  .b-alt a:hover { text-decoration: underline; }
+  .b-mini-form { display: flex; gap: 8px; margin-top: 6px; }
+  .b-mini-form input { flex: 1; font-family: 'Satoshi', sans-serif; font-size: 13.5px; padding: 10px 12px; border: 1px solid rgba(47,62,52,0.25); border-radius: 7px; min-width: 0; }
+  .b-mini-form button { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 14px; border-radius: 7px; border: 0; background: var(--moss); color: white; cursor: pointer; white-space: nowrap; }
+  .b-mini-msg { font-size: 12.5px; color: var(--moss-light); margin-top: 6px; }
+  .b-sep-note { font-size: 11.5px; line-height: 1.6; color: var(--sage); margin-top: 16px; }
+
+  /* ── Proof band: faces + founder line ── */
+  .b-proof { max-width: 1100px; margin: 0 auto; padding: 64px 48px 24px; }
+  .b-proof h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 3.5vw, 38px); color: var(--moss); margin-bottom: 8px; }
+  .b-proof h2 em { font-style: italic; color: var(--pop); }
+  .b-proof-sub { font-size: 14.5px; color: var(--moss-light); font-weight: 300; margin-bottom: 28px; max-width: 560px; }
+  .b-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px 16px; max-width: 780px; }
+  @media (max-width: 720px) { .b-grid { grid-template-columns: repeat(3, 1fr); } }
+  .mb-person { text-align: center; }
+  .mb-person-photo { width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 10px; background: var(--lime-soft); border: 2px solid rgba(47,62,52,0.08); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .mb-person-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .mb-person-photo span { font-size: 24px; color: rgba(47,62,52,0.18); }
+  .mb-person-name { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 12px; color: var(--moss); text-decoration: none; display: inline-block; margin-bottom: 2px; }
+  .mb-person-role { font-size: 11px; color: var(--sage); }
+  .b-founder-line { display: flex; align-items: center; gap: 14px; margin-top: 30px; max-width: 640px; }
+  .b-founder-line img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; }
+  .b-founder-line p { font-size: 14px; line-height: 1.65; color: var(--moss-light); font-weight: 300; margin: 0; }
+  .b-founder-line a { color: var(--pop); font-weight: 700; text-decoration: none; }
+
+  /* ── Details accordion ── */
+  .b-details { max-width: 1100px; margin: 0 auto; padding: 40px 48px 72px; }
+  .b-details h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 3.5vw, 38px); color: var(--moss); margin-bottom: 18px; }
+  .b-details h2 em { font-style: italic; color: var(--pop); }
+  .b-details details { border-bottom: 1px solid rgba(47,62,52,0.1); }
+  .b-details summary { cursor: pointer; padding: 18px 0; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 16px; color: var(--moss); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .b-details summary::-webkit-details-marker { display: none; }
+  .b-details summary::after { content: '+'; font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--pop); }
+  .b-details details[open] summary::after { content: '\2212'; }
+  .b-details .b-a { padding: 0 0 20px; font-size: 15px; line-height: 1.75; color: var(--moss-light); font-weight: 300; max-width: 720px; }
+  .b-details .b-a strong { color: var(--moss); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .b-hero { padding: 96px 24px 56px; }
+    .b-proof, .b-details { padding-left: 24px; padding-right: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<site-header></site-header>
+
+<!-- ══ DECISION HERO ══ -->
+<section class="b-hero">
+  <div class="b-hero-grid">
+    <div>
+      <p class="b-eyebrow">Membership</p>
+      <h1>This is the room where <em>women fund each other</em>.</h1>
+      <p class="b-hero-sub">A community of Utah women learning to invest and funding women-founded companies, deal by deal. Here is what $1,000 a year holds:</p>
+      <ul class="b-checks">
+        <li><strong>Six classes</strong> with Invest for Better, in plain English, built for beginners</li>
+        <li><strong>More than 20 gatherings a year</strong>: workshops, Pitch Parties, drop-in hours</li>
+        <li><strong>A second seat, included</strong>: your mother or your daughter beside you</li>
+        <li><strong>Every pitch and every deal memo</strong>, whether or not you ever invest</li>
+        <li><strong>The receipt</strong>: what the movement built, published every year</li>
+      </ul>
+    </div>
+    <div class="b-card">
+      <div class="b-card-price">$1,000 <em>a year</em></div>
+      <p class="b-card-founding"><strong>Founding offer:</strong> the first 100 members keep 10 percent off for as long as they stay. Open to women in Utah; accreditation is never part of the application. Applying is free.</p>
+      <a class="b-join" href="/join.html" target="_blank" rel="noopener">Join Us</a>
+      <p class="b-card-urgency">The January cohort holds 25 seats.</p>
+      <hr>
+      <p class="b-alt"><strong>Accredited investor?</strong> Investing is separate from membership and never requires it. <a href="mailto:tori@silverandsaltcapital.com?subject=Introduce%20yourself">Introduce Yourself &rarr;</a></p>
+      <p class="b-alt" style="margin-bottom:6px"><strong>Just curious?</strong> Follow along free, once a month:</p>
+      <form class="b-mini-form" novalidate>
+        <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address for the monthly update">
+        <button type="submit">Sign Up</button>
+      </form>
+      <p class="b-mini-msg" role="status"></p>
+      <p class="b-sep-note">Membership provides access to education, networking, and community benefits. Membership does not guarantee access to private investment opportunities.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROOF ══ -->
+<section class="b-proof">
+  <h2>The community is <em>growing</em>.</h2>
+  <p class="b-proof-sub">These are the women who said yes first. The first 100 founding members shape everything that follows, and one of these seats is yours.</p>
+  <div class="b-grid" id="members-grid"></div>
+  <div class="b-founder-line">
+    <img src="members/tori-horton.jpg" alt="Tori Horton">
+    <p>"One of my early startups had an exit, and I came back. Silver <span class="brand-amp">&amp;</span> Salt Capital is what I wish had existed when I needed it." <strong>Tori Horton, Founder.</strong> <a href="index.html#story">Her story &rarr;</a></p>
+  </div>
+</section>
+
+<!-- ══ DETAILS, COLLAPSED ══ -->
+<section class="b-details">
+  <h2>The details, <em>when you want them</em>.</h2>
+
+  <details>
+    <summary>The classes and workshops</summary>
+    <div class="b-a">Six classes on money and values, developed by Invest for Better, the national program that teaches women to invest with their values, and led by Tori Horton and Lauren Sercu. Four in-person workshops a year with national money experts. The tools and templates are yours on day one. <strong>Other programs charge $2,000 a year for classes like these.</strong></div>
+  </details>
+
+  <details>
+    <summary>The gatherings</summary>
+    <div class="b-a">We gather September through June and rest in July and August: a drop-in hour every month, four online Pitch Parties, four in-person workshops along the Wasatch Front, your six classes, and a weekend retreat once a year (tickets separate, members pay 20 percent less). You get every date the day you join.</div>
+  </details>
+
+  <details>
+    <summary>The investment opportunities</summary>
+    <div class="b-a">Each year we find and screen six to ten Utah companies founded by women, with 40 or more hours of research on every deal we finish. Every member watches every pitch and reads every deal memo. Investing itself is a separate decision, deal by deal, open to accredited investors, and money moves only when you say yes. Investments with that much research behind them earned <strong>7.1 times the money</strong> (Wiltbank and Boeker).</div>
+  </details>
+
+  <details>
+    <summary>The receipt</summary>
+    <div class="b-a">In 2025, half a cent of every venture dollar in Utah reached a woman-founded team (0.5 percent, per our <a href="utah-funding-2025.html">Utah Funding 2025</a> analysis). Every year we publish what we paid to bring in experts, what capital reached women-founded companies, how many women learned to invest or wrote a first check, and what we gave back. Our first gift is set: <strong>$2,500 to Mama High-Five Grants in 2026</strong>.</div>
+  </details>
+
+  <details>
+    <summary>Common questions</summary>
+    <div class="b-a"><strong>Do I have to invest?</strong> No. Membership is complete on its own, and many members join to learn and be part of the community.<br><br><strong>Am I an "accredited investor"?</strong> That is a federal definition (income over $200,000 a year, or $1 million outside your home) and it only matters if you choose to write a check. It is never part of the application.<br><br><strong>Could I lose money?</strong> Dues buy a year of classes and community, full stop. Investing in a startup is a separate choice and carries real risk, which is why we research hard and never require it.<br><br><strong>How does joining work?</strong> Applying is free. Tell us about yourself, book a conversation with Tori, and decide together.</div>
+  </details>
+</section>
+
+<site-footer></site-footer>
+<script src="assets/site-header.js?v=5" defer></script>
+<script src="assets/site-footer.js?v=5" defer></script>
+<script src="members/members.js"></script>
+<script>
+(function () {
+  var grid = document.getElementById('members-grid');
+  if (grid) {
+    var li = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="#0A66C2" style="vertical-align:-1px;margin-left:4px" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>';
+    function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    var members = (typeof MEMBERS !== 'undefined' && MEMBERS.length) ? MEMBERS : [];
+    var cells = Math.max(10, Math.ceil((members.length + 1) / 5) * 5);
+    var html = members.map(function (m) {
+      var photo = m.photo ? '<img src="' + esc(m.photo) + '" alt="' + esc(m.name) + '">' : '<span>+</span>';
+      var name = m.linkedin ? '<a class="mb-person-name" href="' + esc(m.linkedin) + '" target="_blank" rel="noopener">' + esc(m.name) + li + '</a>' : '<div class="mb-person-name">' + esc(m.name) + '</div>';
+      return '<div class="mb-person"><div class="mb-person-photo">' + photo + '</div>' + name + '<div class="mb-person-role">' + esc(m.role || 'Founding Member') + '</div></div>';
+    }).join('');
+    for (var i = members.length; i < cells; i++) html += '<div class="mb-person"><div class="mb-person-photo"><span>+</span></div><div class="mb-person-name">Your name here</div><div class="mb-person-role">Founding Member</div></div>';
+    grid.innerHTML = html;
+  }
+  var form = document.querySelector('.b-mini-form');
+  var msg = document.querySelector('.b-mini-msg');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = (form.querySelector('input').value || '').trim();
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = 'Enter your email address and we will take it from there.'; return; }
+    fetch('/api/newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, source: 'membership-b' }) })
+      .then(function (r) { if (!r.ok) throw 0; form.style.display = 'none'; msg.textContent = 'You are in. The next update will find you.'; })
+      .catch(function () { msg.innerHTML = 'That did not go through. Email <a href="mailto:tori@silverandsaltcapital.com">tori@silverandsaltcapital.com</a> and we will add you ourselves.'; });
+  });
+})();
+</script>
+
+</body>
+</html>

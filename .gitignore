@@ -43,3 +43,8 @@ dist/
 .env.local
 .clerk/
 .odla/handshake.local.json
+
+# CEO dashboard goals feed (private, read by the daily agent; belongs with
+# dashboard.html and granola-inbox.js, never in a deploy)
+goals.js
+goals.json

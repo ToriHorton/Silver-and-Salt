@@ -287,7 +287,7 @@
 
     <h3>Task 3: Backend CRM (Google Sheets)</h3>
     <ul>
-        <li>Build a master Google Sheet as the unified CRM. Columns map to: <em>Timestamp, Group, Legal Name, Email, Phone, Residential Address, State, Referral Source, Membership Vetting Status (Pending Vetting / Paid, Pending Vetting / Approved / Refunded), Stripe Customer ID, Stripe Subscription ID, Renewal Date, Refund Policy Acknowledged (timestamp), Prep Email Sent (timestamp), Investor Qualification Status (Pending Questionnaire / Accredited / Non-Accredited),</em> and <em>System Tags</em>. The <em>Group</em> column tags every record with the group it belongs to (for launch, Silver <span class="brand-amp">&amp;</span> Salt Capital).</li>
+        <li>Build a master Google Sheet as the unified CRM. Columns map to: <em>Timestamp, Group, Legal Name, Email, Phone, Residential Address, State, Referral Source, Membership Vetting Status (Pending Vetting / Paid, Pending Vetting / Approved / Refunded), Stripe Customer ID, Stripe Subscription ID, Renewal Date, Refund Policy Acknowledged (timestamp), Prep Email Sent (timestamp), Investor Qualification Status (Pending Questionnaire / Accredited / Non-Accredited), Directory Consent (timestamp),</em> and <em>System Tags</em>. The <em>Group</em> column tags every record with the group it belongs to (for launch, Silver <span class="brand-amp">&amp;</span> Salt Capital).</li>
         <li><strong>Approval is a deliberate CRM action, decoupled from payment.</strong> Because the $900 is charged at application, payment alone never approves anyone. After the vetting call, the CEO sets the row's Membership Vetting Status to <em>Approved</em> (a status dropdown). An installable <code>onEdit</code> trigger watches for that change and then sends the onboarding invite, appends the <code>[Active Member]</code> tag, opens the accreditation gate (Task 5), and writes any referral credit (Task 6). The non-fit path is handled in Stripe: the CEO issues the refund, and the <code>charge.refunded</code> webhook flips the row to <em>Refunded</em>. Guard the trigger so it fires once per row and only on a transition into <em>Approved</em>.</li>
         <li><strong>Groups configuration tab.</strong> Add a <code>Groups</code> tab holding the per-group settings the backend reads at runtime: group name, theme reference (colors, fonts, logo, copy), standard price and any founding discount, Stripe product or price ID, notification email, booking calendar link, disclaimer text, refund policy text, community commitment text, group norms text, and pre-meeting prep email template. The backend never hardcodes a single group's values. For launch this tab has one row, Silver <span class="brand-amp">&amp;</span> Salt Capital.</li>
         <li>Apply conditional formatting and separate structural views so membership lists stay distinct from any future deal-flow or accredited-investor tracking, and so each group's records filter cleanly with no cross-group leakage. The goal is to keep general membership data segmented from investment data, per group, to support the 506(b) separation.</li>
@@ -307,9 +307,10 @@
     <ul>
         <li>Build a post-call destination panel reachable only by applicants the CEO has approved (status <em>Approved</em>, $900 already charged and not refunded). This panel is the primary onboarding hub.</li>
         <li>Embed a two-part onboarding questionnaire:
-            <br>&bull; <em>Part A (Community &amp; profile):</em> full residential address (deferred from intake), chapter choice, educational stream preferences, and event interests.
+            <br>&bull; <em>Part A (Community &amp; profile):</em> full residential address (deferred from intake), chapter choice, educational stream preferences, event interests, and the public directory consent described below.
             <br>&bull; <em>Part B (Regulatory Compliance Gate):</em> self-certification against the accreditation criteria of Rule 501 of Regulation D.
         </li>
+        <li><strong>Public directory consent (opt-in, never default-on).</strong> Part A asks the new member whether she would like to appear in the public "who's in the room" grid on the membership page: her photo, her name, and (optionally) a link to her LinkedIn profile. The question is presented unchecked, is never required, and never gates any other onboarding step. On a yes, record <em>Directory Consent (timestamp)</em> on the CRM row and collect the headshot and LinkedIn URL; only rows carrying that consent timestamp may ever be published to the public grid. A member can withdraw at any time (an email to the owner suffices), which clears the timestamp and removes her from the grid on the next publish.</li>
         <li>Backend routing: if the member self-certifies as accredited and opts into deal information, apply the <code>[Accredited Investor]</code> tag and add their email to the separate investment communication platform. If they select "No," keep them in the insulated <code>[Active Member]</code> community pipeline only.</li>
     </ul>
 
@@ -379,6 +380,10 @@
             <tr>
                 <td><strong>Pre-Meeting Prep</strong></td>
                 <td>When the applicant confirms their booking, a brand-styled email is sent containing the group's community commitment and group norms, pulled from the Groups settings (so a second brand sends its own commitment without code changes). The send is timestamped on the CRM row, and a booked row with no Prep Email Sent timestamp surfaces as an alert on the System Health dashboard.</td>
+            </tr>
+            <tr>
+                <td><strong>Directory Consent</strong></td>
+                <td>The onboarding panel presents the public-directory opt-in unchecked and optional. A yes records <em>Directory Consent (timestamp)</em> on the CRM row; a member with no consent timestamp never appears in any export or view used to publish the public member grid. Withdrawing consent clears the timestamp.</td>
             </tr>
             <tr>
                 <td><strong>Referral Tracking</strong></td>

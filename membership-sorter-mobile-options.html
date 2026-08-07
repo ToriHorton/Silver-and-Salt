@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorter: six mobile-first card designs | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#FBF8F2; --sand:#F4EFE6;
+    --moss:#2F3E34; --moss-light:#4A5E50; --sage:#7E8E84;
+    --lime:#7CB83F; --lime-dark:#6aa535;
+    --plum:#8B5E83; --gold:#C9A84C;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--moss);
+         font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif; }
+
+  /* ── page chrome ── */
+  .pg { max-width: 1320px; margin: 0 auto; padding: 40px 28px 90px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300;
+       font-size: clamp(28px, 4vw, 44px); line-height: 1.14; margin: 0 0 12px; }
+  h1 em { font-style: italic; color: var(--lime-dark); }
+  .lede { font-size: 14.5px; line-height: 1.75; color: var(--moss-light);
+          font-weight: 300; max-width: 780px; margin: 0 0 8px; }
+  .lede b { font-weight: 700; color: var(--moss); }
+  .rules { max-width: 780px; margin: 22px 0 44px; padding: 18px 22px;
+           background: var(--sand); border-left: 3px solid var(--lime-dark);
+           border-radius: 0 10px 10px 0; font-size: 13px; line-height: 1.8;
+           color: var(--moss-light); font-weight: 300; }
+  .rules b { font-weight: 700; color: var(--moss); }
+
+  /* ── the shelf of phones ── */
+  .shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(392px, 1fr));
+           gap: 40px 28px; }
+  .opt-head { margin-bottom: 14px; }
+  .opt-head .n { font-family: 'Cormorant Infant', serif; font-size: 15px; font-weight: 600;
+                 color: var(--lime-dark); letter-spacing: .04em; }
+  .opt-head h2 { font-family: 'Cormorant Garamond', serif; font-weight: 600;
+                 font-size: 23px; margin: 2px 0 8px; }
+  .opt-head p { font-size: 12.5px; line-height: 1.7; color: var(--moss-light);
+                font-weight: 300; margin: 0 0 8px; }
+  .opt-head .ev { font-size: 11.5px; line-height: 1.65; color: var(--sage);
+                  font-weight: 300; margin: 0; }
+  .opt-head .ev b { color: var(--moss-light); font-weight: 700; }
+
+  /* ── phone frame ── */
+  .phone { width: 390px; height: 660px; background: #1B231E; border-radius: 38px;
+           padding: 10px; box-shadow: 0 22px 50px rgba(47,62,52,.22); margin: 0 auto; }
+  .screen { width: 100%; height: 100%; background: var(--sand); border-radius: 30px;
+            overflow-y: auto; overflow-x: hidden; position: relative;
+            -webkit-overflow-scrolling: touch; }
+  .screen::-webkit-scrollbar { width: 0; }
+  .notch { position: sticky; top: 0; z-index: 5; height: 26px; background: var(--sand);
+           display: flex; align-items: center; justify-content: center; }
+  .notch i { display: block; width: 74px; height: 5px; border-radius: 3px;
+             background: rgba(47,62,52,.18); }
+  .pad { padding: 6px 18px 30px; }
+
+  /* ── shared sorter copy ── */
+  .s-q { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 25px;
+         line-height: 1.22; text-align: center; margin: 10px 0 6px; }
+  .s-q em { font-style: italic; color: var(--lime-dark); }
+  .s-why { font-size: 12.5px; line-height: 1.6; color: var(--sage); text-align: center;
+           font-weight: 300; margin: 0 0 20px; }
+  fieldset { border: 0; margin: 0; padding: 0; }
+  legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  /* ── the base selectable card, shared by most options ── */
+  .c { display: block; position: relative; background: #FFFDF7;
+       border: 1px solid rgba(47,62,52,.15); border-radius: 14px;
+       padding: 16px 16px 16px 50px; margin-bottom: 10px; cursor: pointer;
+       min-height: 48px; transition: border-color .15s, background .15s, box-shadow .15s; }
+  .c:active { transform: scale(.995); }
+  .c input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .c .dot { position: absolute; left: 17px; top: 18px; width: 22px; height: 22px;
+            border-radius: 50%; border: 1.5px solid rgba(47,62,52,.32); background: #fff;
+            transition: border-color .15s, box-shadow .15s; }
+  .c .dot::after { content: ''; position: absolute; inset: 4px; border-radius: 50%;
+                   background: var(--lime-dark); transform: scale(0);
+                   transition: transform .16s cubic-bezier(.2,.8,.3,1); }
+  .c .t { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400;
+          font-size: 16.5px; line-height: 1.45; color: var(--moss); margin: 0; }
+  .c input:focus-visible ~ .dot { box-shadow: 0 0 0 3px rgba(124,184,63,.45); }
+  .c:has(input:checked) { border-color: var(--lime-dark); border-width: 2px;
+                          background: rgba(124,184,63,.08); padding: 15px 15px 15px 49px;
+                          box-shadow: 0 10px 26px rgba(124,184,63,.2); }
+  .c:has(input:checked) .dot { border-color: var(--lime-dark); border-width: 2px; }
+  .c:has(input:checked) .dot::after { transform: scale(1); }
+
+  /* option 3: destination strip, always visible, never hover only */
+  .c .dest { display: block; font-family: 'Satoshi', sans-serif; font-size: 10.5px;
+             font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+             color: var(--sage); margin-top: 11px; padding-top: 10px;
+             border-top: 1px solid rgba(47,62,52,.1); }
+  .c:has(input:checked) .dest { color: var(--lime-dark); }
+
+  /* option 4: plain-language tag */
+  .c .tag { display: inline-block; font-family: 'Satoshi', sans-serif; font-size: 10.5px;
+            font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+            color: var(--plum); background: rgba(139,94,131,.1); border-radius: 999px;
+            padding: 4px 10px; margin-top: 11px; }
+
+  /* option 2: list rows, no card chrome */
+  .row { display: flex; align-items: flex-start; gap: 14px; position: relative;
+         padding: 18px 4px; border-bottom: 1px solid rgba(47,62,52,.13);
+         cursor: pointer; min-height: 48px; }
+  .row:first-of-type { border-top: 1px solid rgba(47,62,52,.13); }
+  .row input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .row .t { font-family: 'Cormorant Garamond', serif; font-style: italic;
+            font-size: 17px; line-height: 1.45; margin: 0; flex: 1; }
+  .row .dot { flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+              border: 1.5px solid rgba(47,62,52,.32); background: #fff; position: relative;
+              margin-top: 2px; }
+  .row .dot::after { content: ''; position: absolute; inset: 4px; border-radius: 50%;
+                     background: var(--lime-dark); transform: scale(0); transition: transform .16s; }
+  .row:has(input:checked) .dot { border-color: var(--lime-dark); border-width: 2px; }
+  .row:has(input:checked) .dot::after { transform: scale(1); }
+  .row:has(input:checked) .t { color: var(--moss); font-weight: 600; }
+  .row input:focus-visible ~ .dot { box-shadow: 0 0 0 3px rgba(124,184,63,.45); }
+
+  /* option 5: sticky continue inside the thumb zone */
+  .sticky { position: sticky; bottom: 0; margin: 0 -18px -30px; padding: 14px 18px 18px;
+            background: linear-gradient(180deg, rgba(244,239,230,0) 0%, var(--sand) 34%);
+            transform: translateY(120%); transition: transform .26s cubic-bezier(.2,.8,.3,1);
+            pointer-events: none; }
+  .sticky.up { transform: translateY(0); pointer-events: auto; }
+  .sticky button { width: 100%; min-height: 52px; border: 0; border-radius: 10px;
+                   background: var(--lime-dark); color: #fff; font-family: 'Satoshi', sans-serif;
+                   font-size: 15px; font-weight: 700; cursor: pointer; }
+
+  /* option 6: accordion, collapsed first */
+  .acc { border: 1px solid rgba(47,62,52,.15); border-radius: 14px; background: #FFFDF7;
+         margin-bottom: 10px; overflow: hidden; }
+  .acc.open { border-color: var(--lime-dark); }
+  .acc > .head { display: flex; align-items: center; justify-content: space-between;
+                 gap: 12px; width: 100%; min-height: 56px; padding: 16px;
+                 background: none; border: 0; cursor: pointer; text-align: left;
+                 font-family: 'Cormorant Garamond', serif; font-style: italic;
+                 font-size: 17px; color: var(--moss); }
+  .acc > .head::after { content: '+'; font-family: 'Cormorant Garamond', serif;
+                        font-size: 22px; color: var(--lime-dark); line-height: 1; }
+  .acc.open > .head::after { content: '\2013'; }
+  .acc .body { display: none; padding: 0 16px 16px; }
+  .acc.open .body { display: block; }
+  .acc .body p { font-family: 'Cormorant Garamond', serif; font-style: italic;
+                 font-size: 15.5px; line-height: 1.5; color: var(--moss-light);
+                 margin: 0 0 14px; }
+  .acc .body button { width: 100%; min-height: 48px; border: 0; border-radius: 9px;
+                      background: var(--lime-dark); color: #fff; font-size: 13.5px;
+                      font-weight: 700; font-family: 'Satoshi', sans-serif; cursor: pointer; }
+  .acc.chosen .body button { background: var(--moss); }
+
+  /* the result line every option lands on */
+  .res { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: #FFFDF7;
+         border: 1px dashed rgba(47,62,52,.22); font-size: 12.5px; line-height: 1.6;
+         color: var(--sage); font-weight: 300; text-align: center; }
+  .res b { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
+           font-size: 15px; color: var(--moss); display: block; margin-top: 3px; }
+  .aside { font-size: .86em; color: var(--sage); }
+</style>
+</head>
+<body>
+<div class="pg">
+
+  <h1>Six mobile-first ways to <em>ask the question</em>.</h1>
+  <p class="lede">Same four statements, same words, six card designs. Each phone below is live, so tap through them. <b>Every option keeps the whole card as the tap target, stacks in one column, and carries a real radio control</b>, because those three are not stylistic choices.</p>
+
+  <div class="rules">
+    <b>Applied to all six:</b> full-card tap target with a 48px minimum height (Apple 44&times;44, Material 48&times;48) &middot;
+    single column stack, never a horizontal scroll (GOV.UK, Salt) &middot;
+    a visible form control so mutual exclusivity is obvious before tapping, and for ADA compliance (Salt) &middot;
+    equal card heights and comparable text length (Salt) &middot;
+    visible focus states for keyboard and switch users (GOV.UK).
+  </div>
+
+  <div class="shelf" id="shelf"></div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   One source of copy, six renderings. Statement text is
+   identical everywhere so the comparison is about form only.
+   ───────────────────────────────────────────────────────────── */
+const S = [
+  { id:'pay-forward', tier:'Community Steward',
+    short:'I am paying it forward',
+    tag:'Giving back · Utah',
+    text:'“I wish there was more support to help women build wealth and I am paying it forward for the next generation of women in Utah. <span class="aside">(I also want the 1:1 coaching and wellness retreat.)</span>”',
+    plain:'I wish there was more support to help women build wealth and I am paying it forward for the next generation of women in Utah.' },
+  { id:'learn', tier:'Founding Member',
+    short:'I am ready to learn to invest',
+    tag:'Ready to invest · Utah',
+    text:'“I have money set aside to invest, and I want to learn how to make money through ownership in private companies with other women.”',
+    plain:'I have money set aside to invest, and I want to learn how to make money through ownership in private companies with other women.' },
+  { id:'experienced', tier:'Associate Member',
+    short:'I already know how to invest',
+    tag:'Experienced · Anywhere',
+    text:'“I know everything needed to make good investment decisions, keep me informed and let me see the deals.”',
+    plain:'I know everything needed to make good investment decisions, keep me informed and let me see the deals.' },
+  { id:'care', tier:'Associate Member',
+    short:'I care, and I am not there yet',
+    tag:'Following along · Anywhere',
+    text:'“I don’t have this kind of money, but I care about women in Utah.”',
+    plain:'I don’t have this kind of money, but I care about women in Utah.' }
+];
+
+const HEAD = `<p class="s-q">We&rsquo;re building a community of women who <em>win together.</em></p>
+              <p class="s-why">You know your financial readiness. Where do you belong?</p>`;
+const RES = id => `<div class="res" id="res-${id}">Your membership appears here<b>Nothing chosen yet</b></div>`;
+
+const OPTIONS = [
+  {
+    n: 'Option 1',
+    name: 'The radio card',
+    why: 'The convention. A bordered card per statement, radio on the left, selected state is a lime border plus tint. This is what Stripe, Notion and most plan pickers use, which means visitors already know how it works.',
+    ev: '<b>Strongest on:</b> familiarity and accessibility. <b>Weakest on:</b> personality. It looks like every other form.',
+    build: id => `<fieldset><legend>Where do you belong?</legend>${S.map(s => `
+      <label class="c">
+        <input type="radio" name="${id}" value="${s.id}">
+        <span class="dot"></span>
+        <p class="t">${s.text}</p>
+      </label>`).join('')}</fieldset>`
+  },
+  {
+    n: 'Option 2',
+    name: 'The quiet list',
+    why: 'No card chrome at all. Full-width rows divided by hairlines, radio on the right where the thumb already is. Fits more on one screen than any other option, and reads as calm rather than salesy.',
+    ev: '<b>Strongest on:</b> scroll economy and register. All four fit above the fold on a phone. <b>Weakest on:</b> tap affordance, since nothing looks raised.',
+    build: id => `<fieldset><legend>Where do you belong?</legend>${S.map(s => `
+      <label class="row">
+        <input type="radio" name="${id}" value="${s.id}">
+        <p class="t">${s.text}</p>
+        <span class="dot"></span>
+      </label>`).join('')}</fieldset>`
+  },
+  {
+    n: 'Option 3',
+    name: 'The card that tells you where it goes',
+    why: 'The radio card plus a permanent footer naming the membership it leads to. Solves the hover problem: on a phone there is no hover, so the destination has to be visible or it does not exist.',
+    ev: '<b>Strongest on:</b> informed choice, and it removes the surprise after tapping. <b>Weakest on:</b> it puts the price conversation in front of the self-identification.',
+    build: id => `<fieldset><legend>Where do you belong?</legend>${S.map(s => `
+      <label class="c">
+        <input type="radio" name="${id}" value="${s.id}">
+        <span class="dot"></span>
+        <p class="t">${s.text}</p>
+        <span class="dest">Leads to ${s.tier}</span>
+      </label>`).join('')}</fieldset>`
+  },
+  {
+    n: 'Option 4',
+    name: 'Statement plus plain tag',
+    why: 'Her words in serif, then a small sans tag naming the readiness in two words. The tag is what a skimmer reads; the sentence is what a reader reads. Serves both without asking either to work.',
+    ev: '<b>Strongest on:</b> scanning speed, and it fixes your uneven statement lengths. <b>Weakest on:</b> the tags edge toward labelling people, which your own research warns against.',
+    build: id => `<fieldset><legend>Where do you belong?</legend>${S.map(s => `
+      <label class="c">
+        <input type="radio" name="${id}" value="${s.id}">
+        <span class="dot"></span>
+        <p class="t">${s.text}</p>
+        <span class="tag">${s.tag}</span>
+      </label>`).join('')}</fieldset>`
+  },
+  {
+    n: 'Option 5',
+    name: 'Sticky continue',
+    why: 'Plain cards, but choosing one raises a bar in the thumb zone: Continue as Founding Member. Selection and progression become two separate taps, so she is never left wondering what happens next.',
+    ev: '<b>Strongest on:</b> activation. Sticky bottom CTAs report 15 to 25 percent lifts on long pages, and the bottom third is the one-handed reach zone. <b>Weakest on:</b> it covers content, so it must stay slim.',
+    build: id => `<fieldset><legend>Where do you belong?</legend>${S.map(s => `
+      <label class="c">
+        <input type="radio" name="${id}" value="${s.id}">
+        <span class="dot"></span>
+        <p class="t">${s.text}</p>
+      </label>`).join('')}</fieldset>
+      <div class="sticky" id="sticky-${id}"><button type="button">Continue</button></div>`
+  },
+  {
+    n: 'Option 6',
+    name: 'Collapsed, then open',
+    why: 'Each statement starts as one short line. Tapping expands the full sentence and reveals the choose button. All four options fit on screen at once with no scrolling at all.',
+    ev: '<b>Strongest on:</b> overview. Baymard found 60 percent of users missed an option until three paths were collapsed into three tappable headers. <b>Weakest on:</b> it hides your best writing behind a tap.',
+    build: id => `<div>${S.map(s => `
+      <div class="acc" data-acc>
+        <button type="button" class="head">${s.short}</button>
+        <div class="body">
+          <p>${s.text}</p>
+          <button type="button" class="pick" data-tier="${s.tier}">Choose this</button>
+        </div>
+      </div>`).join('')}</div>`
+  }
+];
+
+/* ── render the shelf ── */
+document.getElementById('shelf').innerHTML = OPTIONS.map((o, i) => {
+  const id = 'o' + (i + 1);
+  return `<div class="slot">
+    <div class="opt-head">
+      <span class="n">${o.n}</span>
+      <h2>${o.name}</h2>
+      <p>${o.why}</p>
+      <p class="ev">${o.ev}</p>
+    </div>
+    <div class="phone"><div class="screen" data-screen="${id}">
+      <div class="notch"><i></i></div>
+      <div class="pad">${HEAD}${o.build(id)}${RES(id)}</div>
+    </div></div>
+  </div>`;
+}).join('');
+
+/* ── behaviour, shared ── */
+function land(id, tier, statement) {
+  const res = document.getElementById('res-' + id);
+  if (res) res.innerHTML = 'Recommended for you<b>' + tier + '</b>';
+}
+
+document.querySelectorAll('input[type=radio]').forEach(r => {
+  r.addEventListener('change', () => {
+    const s = S.find(x => x.id === r.value);
+    const id = r.name;
+    land(id, s.tier, s.plain);
+    const sticky = document.getElementById('sticky-' + id);
+    if (sticky) {
+      sticky.classList.add('up');
+      sticky.querySelector('button').textContent = 'Continue as ' + s.tier;
+    }
+  });
+});
+
+document.querySelectorAll('[data-acc] .head').forEach(h => {
+  h.addEventListener('click', () => {
+    const acc = h.closest('[data-acc]');
+    const open = acc.classList.contains('open');
+    acc.parentElement.querySelectorAll('[data-acc]').forEach(a => a.classList.remove('open'));
+    if (!open) acc.classList.add('open');
+  });
+});
+document.querySelectorAll('[data-acc] .pick').forEach(b => {
+  b.addEventListener('click', () => {
+    const screen = b.closest('.screen');
+    const id = screen.dataset.screen;
+    screen.querySelectorAll('[data-acc]').forEach(a => a.classList.remove('chosen'));
+    b.closest('[data-acc]').classList.add('chosen');
+    b.textContent = 'Chosen';
+    screen.querySelectorAll('[data-acc] .pick').forEach(o => { if (o !== b) o.textContent = 'Choose this'; });
+    land(id, b.dataset.tier);
+  });
+});
+</script>
+</body>
+</html>

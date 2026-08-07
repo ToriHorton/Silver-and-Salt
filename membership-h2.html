@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Conversation (H2) | Silver &amp; Salt Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2026-07-13">
+<style>
+  /* ── The three memberships ── */
+  .g-tiers { background: var(--sand); padding: 24px 24px 64px; }
+  .g-tier-grid { max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+  @media (max-width: 860px) { .g-tier-grid { grid-template-columns: 1fr; max-width: 480px; } }
+  .g-tier { background: white; border: 1px solid rgba(47,62,52,0.12); border-radius: 14px; padding: 28px 26px; display: flex; flex-direction: column; position: relative; transition: transform .18s, box-shadow .18s; }
+  .g-tier.reco { border: 2px solid var(--lime-dark); box-shadow: 0 18px 44px rgba(124,184,63,0.22); }
+  .g-tier-badge { position: absolute; top: -12px; left: 22px; background: var(--lime-dark); color: white; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; display: none; }
+  .g-tier.reco .g-tier-badge { display: inline-block; }
+  .g-tier-k { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+  .g-tier.assoc .g-tier-k { color: var(--plum); }
+  .g-tier.founding .g-tier-k { color: var(--lime-dark); }
+  .g-tier.steward .g-tier-k { color: var(--gold); filter: brightness(0.8); }
+  .g-tier h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 24px; color: var(--moss); margin-bottom: 4px; }
+  .g-tier-price { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 19px; color: var(--moss-light, #4A5E50); margin-bottom: 14px; }
+  .g-tier-who { font-size: 12.5px; font-weight: 700; color: var(--sage); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+  .g-tier ul { list-style: none; margin: 0 0 20px; flex: 1; }
+  .g-tier li { font-size: 13.5px; line-height: 1.6; color: var(--moss-light, #4A5E50); font-weight: 300; padding: 7px 0 7px 26px; position: relative; }
+  .g-tier li::before { content: '&'; position: absolute; left: 0; top: 5px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 16px; color: var(--lime-dark); }
+  .g-tier li.na { color: rgba(47,62,52,0.35); }
+  .g-tier li.na::before { content: '\00d7'; color: rgba(47,62,52,0.25); font-family: 'Satoshi', sans-serif; font-size: 13px; top: 8px; }
+  .g-tier a { display: block; text-align: center; font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 14px; padding: 12px 18px; border-radius: 8px; text-decoration: none; }
+  .g-tier.assoc a { border: 1px solid var(--moss); color: var(--moss); }
+  .g-tier.founding a { background: var(--lime-dark); color: white; }
+  .g-tier.steward a { background: var(--moss); color: white; }
+  .g-commit { max-width: 1060px; margin: 22px auto 0; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.4); border-radius: 12px; padding: 18px 24px; font-size: 13.5px; line-height: 1.7; color: var(--moss); font-weight: 300; }
+  .g-commit strong { font-weight: 700; }
+  .g-fine { max-width: 1060px; margin: 16px auto 0; font-size: 12px; line-height: 1.65; color: var(--sage); font-weight: 300; }
+
+  :root { --lime:#7CB83F; --lime-dark:#6aa535; --plum:#8B5E83; --gold:#C9A84C; --sand:#F4EFE6; --ink:#1F2A24; }
+
+  .f-news { display: none !important; }
+  .h-conv-wrap { background: var(--ink); padding: 104px 24px 64px; }
+  .h-conv { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  .h-bub { max-width: 82%; padding: 16px 22px; border-radius: 16px; font-family: 'Cormorant Garamond', serif; font-size: clamp(17px, 2.3vw, 21px); line-height: 1.5; opacity: 0; animation: h-in .5s ease forwards; }
+  .h-them { align-self: flex-start; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); border-bottom-left-radius: 4px; }
+  .h-them::before { content: 'THEY SAY'; display: block; font-family: 'Satoshi', sans-serif; font-size: 9.5px; letter-spacing: .14em; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
+  .h-us { align-self: flex-end; background: var(--cream, #FBF8F2); color: var(--moss); border-bottom-right-radius: 4px; }
+  .h-us::before { content: 'WE ANSWER'; display: block; font-family: 'Satoshi', sans-serif; font-size: 9.5px; letter-spacing: .14em; color: var(--sage); margin-bottom: 6px; }
+  .h-us em { font-style: italic; color: var(--lime-dark); }
+  .h-bub:nth-child(1) { animation-delay: .2s; }
+  .h-bub:nth-child(2) { animation-delay: 1s; }
+  .h-bub:nth-child(3) { animation-delay: 1.9s; }
+  .h-bub:nth-child(4) { animation-delay: 2.8s; }
+  .h-bub:nth-child(5) { animation-delay: 3.7s; }
+  .h-bub:nth-child(6) { animation-delay: 4.6s; }
+  @keyframes h-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .h-check-bub { align-self: flex-end; opacity: 0; animation: h-in .5s ease forwards 4.6s; }
+  .h-you { text-align: center; padding: 34px 24px 0; background: var(--ink); }
+  .h-you p { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic; font-size: clamp(22px, 3vw, 30px); color: var(--gold); opacity: 0; animation: h-in .6s ease forwards 5.4s; }
+  .h-you-sub { padding: 10px 24px 44px; background: var(--ink); text-align: center; }
+  .h-you-sub span { font-family: 'Satoshi', sans-serif; font-size: 12.5px; color: rgba(255,255,255,0.45); opacity: 0; animation: h-in .6s ease forwards 5.8s; display: inline-block; }
+</style>
+</head>
+<body>
+
+<site-header></site-header>
+
+<section class="h-conv-wrap">
+  <div class="h-conv">
+    <div class="h-bub h-them">Utah women don't start investable companies.</div>
+    <div class="h-bub h-us">In 2025, Utah women started them and raised real money (Utah Funding 2025).</div>
+    <div class="h-bub h-them">Then why didn't Utah investors fund them?</div>
+    <div class="h-bub h-us">Exactly. The checks came from California and New York. That is the problem, and it has a fix.</div>
+    <div class="h-bub h-them">And who is going to fix it?</div>
+    <div class="h-bub h-us">We are. We are done asking. <em>We write the checks ourselves.</em></div>
+    <div class="h-check-bub"><div style="background:var(--cream,#FBF8F2);border:1px solid rgba(47,62,52,0.15);border-radius:10px;padding:20px 24px;max-width:480px;box-shadow:0 16px 40px rgba(0,0,0,0.18);transform:rotate(-1.2deg)">
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+    <span style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:14px;color:var(--moss)">Silver <span style="font-style:normal">&amp;</span> Salt Capital</span>
+    <span style="font-family:'Satoshi',sans-serif;font-size:10.5px;color:var(--sage)">DATE <span style="border-bottom:1px solid rgba(47,62,52,0.3);padding:0 12px;color:var(--moss)">January 2027</span></span>
+  </div>
+  <div style="font-family:'Satoshi',sans-serif;font-size:10.5px;color:var(--sage);letter-spacing:.06em;margin-bottom:2px">PAY TO THE ORDER OF</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--moss);border-bottom:1px solid rgba(47,62,52,0.3);padding-bottom:4px;margin-bottom:12px">Utah women founders</div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:14px">
+    <span style="font-family:'Satoshi',sans-serif;font-size:10.5px;color:var(--sage)">MEMO <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--moss)">the first of many</span></span>
+    <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--moss);border-bottom:1px solid rgba(47,62,52,0.3);padding:0 6px 2px">the women of Silver <span style="font-style:normal">&amp;</span> Salt Capital</span>
+  </div>
+</div></div>
+  </div>
+</section>
+<section class="h-you"><p>And you? Everyone can be a member.</p></section>
+<section class="h-you-sub"><span>Pick your reply below.</span></section>
+
+<!-- ══ THE THREE MEMBERSHIPS ══ -->
+<section class="g-tiers" id="g-tiers">
+  <div class="g-tier-grid">
+
+    <div class="g-tier assoc" id="tier-assoc">
+      <span class="g-tier-badge">Recommended for you</span>
+      <p class="g-tier-k">Associate Member</p>
+      <h3>See the deals, with the option to invest</h3>
+      <p class="g-tier-price">Free</p>
+      <p class="g-tier-who">Open to everyone, anywhere</p>
+      <ul>
+        <li>Every founder pitch, recorded and posted</li>
+        <li>Our full research report on every company we finish</li>
+        <li>The monthly update</li>
+        <li class="na">Classes, workshops, and in-person gatherings</li>
+      </ul>
+      <form class="g-join-free" novalidate style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="email" placeholder="you@example.com" required aria-label="Email address to join free" style="flex:1;min-width:0;font-family:'Satoshi',sans-serif;font-size:13px;padding:11px 12px;border:1px solid rgba(47,62,52,0.25);border-radius:8px;background:var(--sand)">
+        <button type="submit" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13px;padding:11px 16px;border-radius:8px;border:1px solid var(--moss);background:transparent;color:var(--moss);cursor:pointer">Start with a conversation</button>
+        <p class="g-join-msg" role="status" style="font-size:12px;color:var(--moss-light,#4A5E50);margin:4px 0 0;flex-basis:100%"></p>
+      </form>
+      <p style="margin-top:12px;font-size:11.5px;line-height:1.6;color:var(--sage);font-weight:300">All Associate Members can see the deals, but only accredited investors will have the option to invest.</p>
+    </div>
+
+    <div class="g-tier founding" id="tier-founding">
+      <span class="g-tier-badge">Recommended for you</span>
+      <p class="g-tier-k">Founding Member</p>
+      <h3>The whole experience</h3>
+      <p class="g-tier-price">$1,000 a year &middot; first 100 keep 10 percent off for good</p>
+      <p class="g-tier-who">For Utah women</p>
+      <ul>
+        <li>Six classes that make money make sense, from the very beginning</li>
+        <li>More than 20 gatherings a year, with workshops led by national experts</li>
+        <li>A second membership included, for your mother or your daughter</li>
+        <li>Every pitch, every research report, and the option to invest</li>
+        <li>The receipt: what the movement built, published every year</li>
+      </ul>
+      <a href="membership.html">See membership details &rarr;</a>
+    </div>
+
+    <div class="g-tier steward" id="tier-steward">
+      <span class="g-tier-badge">Recommended for you</span>
+      <p class="g-tier-k">Steward</p>
+      <h3>Make it last</h3>
+      <p class="g-tier-price">$5,000 a year</p>
+      <p class="g-tier-who">For anyone who wants this shift to be sustainable</p>
+      <ul>
+        <li>Everything in your membership, plus the work of keeping it alive</li>
+        <li>Private time with every visiting expert</li>
+        <li>Quarterly conversations with Tori</li>
+        <li>The annual retreat, included</li>
+        <li>Your name in the receipt, on the record as one who built this</li>
+      </ul>
+      <a href="mailto:tori@silverandsaltcapital.com?subject=Stewardship">Start the conversation &rarr;</a>
+    </div>
+
+  </div>
+  <div class="g-commit"><strong>One more choice, made later and entirely optional:</strong> some members choose to become Commitment Members, setting a standing annual pledge so founders can count on the collective year after year. It is an on-off decision you make inside the community, never a requirement, and you can change it anytime.</div>
+  <p class="g-fine">Every membership, at every level, begins with a conversation. Investing in any deal remains limited by federal rules to accredited investors. Accreditation is certified when a deal opens, never at signup. Dues fund the community and its materials; investing is always a separate, deal-by-deal decision, and money moves only when you say yes.</p>
+</section>
+
+
+<site-footer></site-footer>
+<script src="assets/site-header.js?v=5" defer></script>
+<script src="assets/site-footer.js?v=5" defer></script>
+<script>
+(function () {
+  var jf = document.querySelector('.g-join-free');
+  if (jf) {
+    var jm = jf.querySelector('.g-join-msg');
+    jf.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = (jf.querySelector('input').value || '').trim();
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { jm.textContent = 'Enter your email address and you are in.'; return; }
+      fetch('/api/newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, source: 'membership-g:associate-conversation' }) })
+        .then(function (r) { if (!r.ok) throw 0; jf.innerHTML = '<p class="g-join-msg" style="font-size:13px;margin:0">Got it. Tori will reach out to find twenty minutes, and that conversation starts your membership.</p>'; })
+        .catch(function () { jm.innerHTML = 'That did not go through. Email <a href="mailto:tori@silverandsaltcapital.com">tori@silverandsaltcapital.com</a> and we will add you ourselves.'; });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
