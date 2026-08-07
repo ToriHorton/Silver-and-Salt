@@ -41,9 +41,22 @@ supersedes those figures: Associate free, Founding Member $900 a year
 3. **Everyone books an intro call with Tori, including free Associates.**
 4. **Steward $5,000 is an annual auto-renewing Stripe subscription**, same
    machinery as Founding (refund-until-approved, card and wallet).
-5. **Newsletter lives in our database** (odla-db signup with unsubscribe,
-   visible in the admin CRM; sends composed from the console). No external
-   provider.
+5. **Newsletter lives in our database**; no external provider. SUPERSEDED
+   in part by decision 7 below: there is no public signup anymore.
+7. **The monthly update is a member benefit, gated behind Associate
+   membership** (decided later on 2026-08-07, superseding the map's open
+   "stay informed" path). Anyone who wants the newsletter joins as a free
+   Associate through the one signup flow. Consequences:
+   - The footer band and the three-yeses "follow along" card repoint to
+     the Associate signup instead of collecting an email.
+   - The public `POST /api/newsletter` route and the footer email form are
+     retired (built 2026-08 but never launched; the `newsletterSignups`
+     entity can be dropped after its test rows are cleared).
+   - Members of every tier receive the monthly update; it is composed and
+     sent from the console via the CRM's consent-gated announcement class,
+     which already carries unsubscribe handling.
+   - The locked Associate card copy gains a monthly-update bullet; exact
+     wording is Tori's, at J1.
 6. **The in-between state is the odla dev worker.** Tori is not ready to
    publish; work is committed to `odla-conversion-test` and deployed to
    https://silver-and-salt-capital-dev.silver-and-salt.workers.dev (her
@@ -64,13 +77,12 @@ supersedes those figures: Associate free, Founding Member $900 a year
   Billing from live Stripe data, Settings, email audit log.
 - Email through Cloudflare Email Service (dev sends redirect to the debug
   inbox). Branded 404. Preact app pages.
-- **Newsletter capture, partially built** (found uncommitted in the main
-  working tree 2026-08-07, now committed to the branch): worker route
-  `POST /api/newsletter` (validated, deduped by email), schema entity
-  `newsletterSignups` (community-layer list only per Living Document v9
-  section 15.6), and the site-footer signup band posting to it. Remaining
-  in J3: confirm the schema is pushed to the dev tenant, unsubscribe
-  handling, CRM/admin visibility, and composing the monthly send.
+- **Newsletter capture, built but SLATED FOR RETIREMENT** (decision 7):
+  worker route `POST /api/newsletter` (validated, deduped; schema entity
+  `newsletterSignups`; verified working on dev 2026-08-07) and the
+  site-footer signup band posting to it. Never launched publicly. J1
+  removes the route and repurposes the band; the entity holds only test
+  rows and can be dropped.
 - Marketing/site work carried on the same branch: membership.html (final,
   unlinked), the membership design exploration series, new homepage and
   faqs copy, header Membership tab, footer legal rewrite.
@@ -92,6 +104,12 @@ supersedes those figures: Associate free, Founding Member $900 a year
     price and trust copy.
   - Tier stored on the application and surfaced in admin People/Billing
     and the member area.
+  - Newsletter gating (decision 7): repoint the footer band and the
+    three-yeses "follow along" card to the Associate signup; remove
+    `POST /api/newsletter` and the band's email form.
+  - Admin heads-up for free signups: the notification email currently
+    fires only on payment, so Associates would arrive silently; fire it
+    when any application books its call (flow-map review finding).
   - Acceptance: Test Mode E2E per tier (Associate free signup with booked
     call, Founding $900, Steward $5,000), refund path on both paid tiers,
     tier visible in admin and member area.
@@ -106,11 +124,11 @@ supersedes those figures: Associate free, Founding Member $900 a year
     with Tori at phase start). Associate view honors the locked tier copy:
     recordings and memos framed as post-join-date; option to invest for
     accredited members; a become-a-Founding-Member prompt.
-- [ ] **J3: Newsletter completion.** Capture is built (see above). Finish:
-  verify the `newsletterSignups` schema is live on the dev tenant,
-  unsubscribe link handling, signups visible in the CRM, monthly send
-  composed from the console using the existing consent-gated announcement
-  email class.
+- [ ] **J3: The monthly update, as a member benefit.** Per decision 7,
+  the update goes to members of every tier. Auto-enroll on approval with
+  announcement consent recorded; compose and send from the console via the
+  CRM's announcement class (unsubscribe handling already built there);
+  drop the retired `newsletterSignups` entity after clearing test rows.
 - [ ] **J4: Production cutover and hardening.** MIGRATION.md P5 (DNS,
   prod Stripe/Clerk/email pastes, Apple Pay domain verification,
   silverandsaltcapital.com sender onboarding) plus PAYMENT-SPEC.md P2
@@ -146,3 +164,9 @@ supersedes those figures: Associate free, Founding Member $900 a year
   files, membership series, newsletter capture, newer site copy) off main
   onto `odla-conversion-test` and deployed to the dev worker; main is
   clean again so the 4am dashboard task can pull.
+- **2026-08-07 (flow review):** Built the signup-flow map artifact (all
+  pages, outcomes, emails, seven open UX questions). Tori then decided to
+  gate the monthly update behind Associate membership (decision 7): the
+  open newsletter signup is retired before it ever launched, and J3
+  becomes a member-benefit send. The flow-map finding about silent free
+  signups was added to J1 (heads-up email fires on booking).
