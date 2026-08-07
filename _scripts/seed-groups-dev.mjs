@@ -99,10 +99,10 @@ await db.transact(
     commitmentText: "(Community commitment: owner-supplied copy pending.)",
     normsText: "(Group norms: owner-supplied copy pending.)",
     emailTemplates,
-    // First-party scheduling rules (matches the retired appointment
-    // schedule: 45 minute calls, Pacific time).
+    // First-party scheduling rules (20 minute calls per Tori 2026-08-07,
+    // Pacific time).
     schedulingJson: {
-      slotMinutes: 45,
+      slotMinutes: 20,
       days: [1, 2, 3, 4, 5],
       startHour: 9,
       endHour: 17,
