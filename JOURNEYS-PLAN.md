@@ -57,6 +57,21 @@ supersedes those figures: Associate free, Founding Member $900 a year
      which already carries unsubscribe handling.
    - The locked Associate card copy gains a monthly-update bullet; exact
      wording is Tori's, at J1.
+8. **The intro call is 20 minutes** (2026-08-07). Slot length is group
+   data (`groups.schedulingJson.slotMinutes`); already applied to the dev
+   tenant and the seed script, verified on the live slots API.
+9. **Tier selection is mandatory before the application** (2026-08-07).
+   join.html reached without a valid tier shows "choose your membership"
+   as the first step of the application; membership.html's CTAs preselect
+   the tier and skip that step. Nobody reaches the form tierless.
+10. **Two kinds of "not a fit," for every tier including Associates**
+    (2026-08-07). After the call: (a) **Approve** at their tier;
+    (b) **Not a paid fit**: refund and cancel if they paid, and they land
+    as a free Associate, still part of the community; (c) **Not a
+    community fit**: a full and graceful exit, refund included if they
+    paid. Associates can receive (c) too, so approval gates the free tier
+    as much as the paid ones. The admin console grows from two post-call
+    actions to three.
 6. **The in-between state is the odla dev worker.** Tori is not ready to
    publish; work is committed to `odla-conversion-test` and deployed to
    https://silver-and-salt-capital-dev.silver-and-salt.workers.dev (her
@@ -94,10 +109,16 @@ supersedes those figures: Associate free, Founding Member $900 a year
   prospects, comes through this flow; every tier books an intro call.
   - `groups` row gains Steward pricing (stripePriceId per tier); extend
     `_scripts/setup-stripe-dev.mjs` to create the $5,000/year Price.
-  - Tier selection: membership.html's three CTAs (finished page, still
-    unlinked) carry the tier into join.html (e.g. `?tier=`), and join.html
-    shows the chosen tier's line items. The locked card section copy is
-    final; wire it, do not restyle it.
+  - Tier selection (decision 9): membership.html's three CTAs carry the
+    tier into join.html (e.g. `?tier=`) and skip straight to the form;
+    arriving without a valid tier shows a "choose your membership" step
+    first. The locked card section copy is final; wire it, do not restyle
+    it.
+  - Vetting outcomes (decision 10): admin console offers Approve /
+    Not a paid fit (refund + cancel + tier flips to associate, membership
+    continues) / Not a community fit (refund if paid, graceful exit).
+    Status model and member-area states extended to match; the wording of
+    the two not-a-fit notices is counsel-adjacent copy.
   - Associate (free): application form, account creation, and the call
     booking step, with no payment step.
   - Steward ($5,000/year): same subscription flow as Founding with its own
@@ -170,3 +191,10 @@ supersedes those figures: Associate free, Founding Member $900 a year
   open newsletter signup is retired before it ever launched, and J3
   becomes a member-benefit send. The flow-map finding about silent free
   signups was added to J1 (heads-up email fires on booking).
+- **2026-08-07 (flow review, continued):** Three more decisions from
+  Tori: the intro call is 20 minutes (decision 8, applied to the dev
+  tenant immediately and verified on the slots API), tier selection is a
+  mandatory first step when arriving tierless (decision 9), and not-a-fit
+  splits into "not a paid fit" (downgrade to Associate with refund) and
+  "not a community fit" (graceful exit), applying to Associates too
+  (decision 10). Flow map updated to match.
