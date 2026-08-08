@@ -20,9 +20,11 @@ entities:
 - Target in the Living Document: 4+ local market brands, each with its
   own programming and a Community Lead.
 
-**Monarch Capital Platform, LLC** is the separate investment entity
-(SPVs, carry). It is NOT part of this plan: membership money is the
-PBC's rail, and the two rails stay independent by design.
+**The investment side is out of scope here regardless of its structure.**
+Membership money is the PBC's rail and is the only thing this plan or the
+Stripe account touches. (Tori deprecated the previously documented
+investment entity on 2026-08-08; see the note under "Stale business
+documents" below before citing any entity name.)
 
 **Why one Stripe account is the right call, not just convenient:** DBAs
 are trade names of one legal entity with one EIN. Stripe accounts are
@@ -49,6 +51,25 @@ Far more than expected. The parent org is **already live in production**:
 So the hub-and-chapter topology Tori is asking for is not new work. It
 was designed and partly built; what changes is the boundary and the
 billing.
+
+## Stale business documents (flagged 2026-08-08)
+
+Tori deprecated the previously documented investment entity ("the monarch
+work should be deprecated at this point") and asked that references be
+removed. **Her own business documents have not caught up**, which is how
+it got cited in the first place:
+
+- `built-not-found-capital-living-document-v9.md` (updated 2026-08-05):
+  25 mentions
+- `two-entity-structure-map.md` (2026-06-27): 4 mentions, including a
+  section heading, plus the matching `.docx` versions
+
+Those are Tori's canonical strategy documents and were not edited here:
+removing an entity from a document that describes formation, inter-entity
+agreements, and tax treatment is her call with counsel, not a find and
+replace. **Ask her what replaced it before describing the investment side
+at all.** Until then, the safe move in any copy is to describe membership
+only, which is all this plan and the Stripe account touch anyway.
 
 ## Decisions (Tori, 2026-08-08)
 
