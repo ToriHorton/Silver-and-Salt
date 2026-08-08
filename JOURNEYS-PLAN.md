@@ -246,20 +246,43 @@ older shape and would need redoing on chapter: the worker routes
 route), the schema attrs, and the join.html tier chooser (that file's
 inline script no longer exists on main).
 
-**Two risks introduced today, both worth verifying before more work:**
-1. A schema + rules push went to the SHARED dev tenant
-   (`silver-and-salt-capital--dev`) from this older branch, which may
-   have reverted the tenant to the pre-chapter shape. The platform did
-   refuse to drop a data-bearing attr, which suggests data is protected,
-   but main ships `_scripts/check-deployed-schema.mjs` for exactly this
-   check and it has not been run.
-2. The Stripe dev webhook was repointed to Tori's worker (correct for
-   her, but it is shared infrastructure and Cory's worker no longer
-   receives events).
+**Risk 1 (schema push to the shared dev tenant): CHECKED, CLEAN.**
+Verified 2026-08-07 against the installed chapter engine. All 15
+namespaces chapter expects are present and queryable on the dev tenant,
+and every attr chapter writes is declared: applications 26/26 (plus our
+`tier`), groups 18/18 (plus the four steward attrs), meetings 15/15,
+emailLog 13/13, superAdmins 4/4. Today's push only ADDED attrs, so the
+silent-write-failure mode that `_scripts/check-deployed-schema.mjs`
+guards against did not occur. (That script itself could not run: `app
+export` needs a signed-in human, not the agent principal. The check was
+done by diffing the engine's expected schema against what was pushed and
+probing every namespace live.)
 
-**Recommendation:** treat `main` as canonical, and port the J1 product
-work onto the chapter implementation rather than continuing here. Do not
-start J2 until Tori and Cory agree which line wins.
+**Risk 2 (Stripe webhook):** repointed to Tori's worker. Owner-approved
+2026-08-07 ("Cory is okay with this"). It resolves naturally once the
+canonical worker deploys to her account.
+
+**Risk 3, THE REAL BLOCKER (found 2026-08-07): the chapter engine cannot
+express three tiers.** `JoinConfigGroup` models exactly one membership:
+`standardPriceCents` + `foundingDiscountCents`, a single
+`stripePriceId`, one `trustCopy`, one `refundPolicyText`. No tier or
+plan concept exists anywhere in its typed surface. So J1's product
+design is not portable to the canonical architecture as it stands.
+Filed with odla as
+[bug fd944a76](https://odla.ai/studio/pm/bugs/fd944a76-460a-54f4-915d-f19a7edc0c68)
+(severity high), asking for per-tier pricing and copy, a free tier, and
+the third vetting outcome, and offering this branch's proven
+implementation as the reference.
+
+**Where that leaves us.** Tori endorsed `main` as canonical 2026-08-07.
+The port is blocked on the odla feature request, so the honest options
+are: (a) wait for chapter to grow multi-tier support, then port (clean,
+but externally paced); (b) ship J1 from this branch as an interim while
+chapter catches up (works today, but it is the stale architecture and
+the divergence widens); (c) override chapter locally for the join
+surface (fights the parity tests and the engine's whole design). Not a
+decision to make silently: pick it with Cory, since the answer depends
+on his roadmap for the feature request.
 
 ## Open items
 
