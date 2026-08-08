@@ -13,12 +13,13 @@
    - The investor card must carry the "membership is never required
      to invest" clarity and stay relationship-first: no returns
      language, no deal names, no urgency. 506(b) quiet lane.
-   - The email card is community-layer only: gatherings, classes,
+   - The monthly update is community-layer only: gatherings, classes,
      movement news. Never deal content.
 
-   The email form POSTs {email, source} to /api/newsletter (odla
-   worker). On failure it falls back to a mailto link so no reader
-   is ever stranded.
+   The monthly update is a member benefit (Tori, 2026-08-07): the
+   third card invites the reader to join as a free Associate rather
+   than collecting an email. The old /api/newsletter capture is
+   retired.
    ═══════════════════════════════════════════════════════════════ */
 
 const THREE_YESES_CSS = `
@@ -93,51 +94,14 @@ const THREE_YESES_HTML = `
 
     <div class="ty-card ty-free">
       <p class="ty-kicker">Follow the Movement</p>
-      <p class="ty-price">Free, once a month</p>
-      <p class="ty-copy">The monthly update: the gatherings, the classes, the women, and what the movement built, in your inbox each month during the season. For anyone who wants to watch women fund each other.</p>
-      <form class="ty-form" novalidate>
-        <input class="ty-input" type="email" name="email" placeholder="you@example.com" required aria-label="Email address for the monthly update">
-        <button class="ty-btn" type="submit">Get the Monthly Update</button>
-        <p class="ty-msg" role="status"></p>
-      </form>
+      <p class="ty-price">Free, with membership</p>
+      <p class="ty-copy">The monthly update: the gatherings, the classes, the women, and what the movement built, in your inbox each month during the season. It arrives with membership, and Associate membership is free. Apply, meet Tori, and follow along from the inside.</p>
+      <a class="ty-btn" href="join.html?tier=associate">Become an Associate</a>
     </div>
 
   </div>
 </section>
 `;
-
-async function tySubscribe(email, source) {
-  const res = await fetch('/api/newsletter', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, source }),
-  });
-  if (!res.ok) throw new Error('subscribe failed');
-  return res.json();
-}
-
-function tyWireForm(form, source) {
-  const input = form.querySelector('input[type="email"]');
-  const msg = form.querySelector('.ty-msg');
-  const btn = form.querySelector('button');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = (input.value || '').trim();
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      msg.textContent = 'Enter your email address and we will take it from there.';
-      return;
-    }
-    btn.disabled = true;
-    msg.textContent = 'One moment...';
-    try {
-      await tySubscribe(email, source);
-      form.innerHTML = '<p class="ty-msg" role="status" style="font-size:14.5px">You are in. The next update will find you. Welcome to the movement.</p>';
-    } catch (err) {
-      btn.disabled = false;
-      msg.innerHTML = 'That did not go through. Email <a href="mailto:tori@silverandsaltcapital.com?subject=Monthly%20update">tori@silverandsaltcapital.com</a> and we will add you ourselves.';
-    }
-  });
-}
 
 class ThreeYeses extends HTMLElement {
   connectedCallback() {
@@ -148,10 +112,7 @@ class ThreeYeses extends HTMLElement {
       document.head.appendChild(style);
     }
     this.innerHTML = THREE_YESES_HTML;
-    const form = this.querySelector('.ty-form');
-    if (form) tyWireForm(form, this.getAttribute('source') || location.pathname);
   }
 }
 
 customElements.define('three-yeses', ThreeYeses);
-window.tyWireForm = tyWireForm;

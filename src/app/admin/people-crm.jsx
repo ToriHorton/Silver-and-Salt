@@ -22,7 +22,7 @@ import {
   useCrmRecord,
 } from "@odla-ai/crm/ui";
 import { crm, PERSON_STAGES } from "../../crm.mjs";
-import { api, bus, ROLES, STATUS_LABELS, APPROVABLE, fmtTzTime } from "../lib.js";
+import { api, bus, ROLES, STATUS_LABELS, APPROVABLE, tierLabel, fmtTzTime } from "../lib.js";
 import { SlotPicker } from "../slot-picker.jsx";
 
 // Stage filter chips for the exploration rail: "All" plus each pipeline stage.
@@ -122,8 +122,15 @@ function LifecycleActions({ record, onChanged }) {
   if (!appId) return <p class="muted" style="margin:0 0 12px">No application on file, so payment and approval actions do not apply.</p>;
 
   const stage = record.stage;
-  const approvable = APPROVABLE.includes(stage);
-  const refundable = record.billingStatus === "active" && !["approved", "refunded"].includes(stage);
+  const tier = (record.fields && record.fields.tier) || "founding";
+  const paid = record.billingStatus === "active";
+  // Tori's three-outcome decision after the call (JOURNEYS-PLAN.md
+  // decision 10): Approve at their tier; "not a paid fit" refunds and
+  // continues the membership as a free Associate; "not a community fit"
+  // is the graceful exit for any tier, refund included.
+  const decidable = APPROVABLE.includes(stage);
+  const downgradable = decidable && tier !== "associate";
+  const declinable = !["approved", "declined", "refunded"].includes(stage);
 
   const run = async (kind, url, confirmMsg) => {
     if (confirmMsg && !confirm(confirmMsg)) return;
@@ -144,17 +151,27 @@ function LifecycleActions({ record, onChanged }) {
   return (
     <div class="crm-lifecycle">
       <span class="crm-stage-chip">{STATUS_LABELS[stage] || stage || "—"}</span>
-      {approvable && (
+      <span class="crm-stage-chip" title="Membership tier">{tierLabel(tier)}</span>
+      {decidable && (
         <button class="row-save row-approve" disabled={busy === "approve"}
           onClick={() => run("approve", `/api/admin/applications/${appId}/approve`)}>
-          {busy === "approve" ? "Approving…" : "Approve"}
+          {busy === "approve" ? "Approving…" : `Approve as ${tierLabel(tier)}`}
         </button>
       )}
-      {refundable && (
-        <button class="row-save row-refund" disabled={busy === "refund"}
-          onClick={() => run("refund", `/api/admin/applications/${appId}/refund`,
-            "Refund this member in full and cancel their subscription? This is the non-fit action.")}>
-          {busy === "refund" ? "Refunding…" : "Refund"}
+      {downgradable && (
+        <button class="row-save" disabled={busy === "downgrade"}
+          onClick={() => run("downgrade", `/api/admin/applications/${appId}/downgrade`,
+            "Not a paid fit: approve as a free Associate instead? Any payment refunds in full, the subscription cancels, and the membership continues at the Associate tier.")}>
+          {busy === "downgrade" ? "Moving…" : "Not a paid fit"}
+        </button>
+      )}
+      {declinable && (
+        <button class="row-save row-refund" disabled={busy === "decline"}
+          onClick={() => run("decline", `/api/admin/applications/${appId}/decline`,
+            paid
+              ? "Not a community fit: decline this application? The payment refunds in full and the subscription cancels."
+              : "Not a community fit: decline this application?")}>
+          {busy === "decline" ? "Declining…" : "Not a community fit"}
         </button>
       )}
       {err && <span class="crm-error">{err}</span>}

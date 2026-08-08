@@ -815,6 +815,18 @@
       .quote-name     { font-size: 13px; }
       .quote-title    { font-size: 11px; line-height: 1.7; }
     }
+    /* ── Tier choice (JOURNEYS-PLAN.md decisions 9 and 2) ── */
+    .tier-chooser-label { font-family: 'Satoshi', sans-serif; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: var(--sage); margin: 0 0 14px; }
+    .tier-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .tier-option { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; width: 100%; text-align: left; font-family: 'Satoshi', sans-serif; background: #fff; border: 1.5px solid rgba(47,62,52,0.18); border-radius: 8px; padding: 16px 18px; cursor: pointer; transition: border-color .15s; }
+    .tier-option:hover { border-color: var(--lime, #7CB83F); }
+    .tier-option .t-name { font-weight: 700; font-size: 15.5px; color: var(--moss, #2F3E34); }
+    .tier-option .t-sub { display: block; font-weight: 300; font-size: 13px; color: var(--sage); margin-top: 3px; }
+    .tier-option .t-price { font-weight: 700; font-size: 14.5px; color: var(--moss, #2F3E34); white-space: nowrap; }
+    .tier-compare { font-size: 13px; }
+    .tier-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; background: rgba(124,184,63,0.10); border-radius: 8px; padding: 12px 16px; margin-bottom: 22px; font-family: 'Satoshi', sans-serif; font-size: 14px; }
+    .tier-line strong { font-weight: 700; }
+    .tier-line a { color: var(--sage); font-size: 13px; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -852,12 +864,41 @@
       </div>
     </div>
 
-    <!-- STEP 1: Form -->
+    <!-- STEP 1: Form. Nobody reaches the form without a tier: arriving
+         with a valid ?tier= (the membership page's CTAs) preselects it;
+         everyone else chooses here first (JOURNEYS-PLAN.md decision 9). -->
     <div id="step-1">
       <div class="card">
         <div class="card-label">Before we meet</div>
 
-        <form id="inquiry-form">
+        <div id="tier-chooser" style="display:none;">
+          <p class="tier-chooser-label">First, choose your membership</p>
+          <div class="tier-options">
+            <button type="button" class="tier-option" data-tier="associate">
+              <span><span class="t-name">Associate</span>
+              <span class="t-sub">Community, classes, and the monthly update. Open to everyone, anywhere.</span></span>
+              <span class="t-price">Free</span>
+            </button>
+            <button type="button" class="tier-option" data-tier="founding">
+              <span><span class="t-name">Founding Member</span>
+              <span class="t-sub">The full membership at the founding rate, locked in for as long as you stay.</span></span>
+              <span class="t-price">$900 a year</span>
+            </button>
+            <button type="button" class="tier-option" data-tier="steward">
+              <span><span class="t-name">Community Steward</span>
+              <span class="t-sub">Everything in membership, and your support carries the movement.</span></span>
+              <span class="t-price">$5,000 a year</span>
+            </button>
+          </div>
+          <p class="tier-compare"><a href="membership.html">Compare every benefit on the membership page &rarr;</a></p>
+        </div>
+
+        <div class="tier-line" id="tier-line" style="display:none;">
+          <span>Applying as <strong id="tier-line-name"></strong><span id="tier-line-price"></span></span>
+          <a href="#" id="tier-change">Change</a>
+        </div>
+
+        <form id="inquiry-form" style="display:none;">
 
           <div class="two-col">
             <div class="form-group">
@@ -1092,27 +1133,83 @@
 
     const fmtCents = (c) => '$' + (c / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    // No backend (or payments off): fold the tracker back to two steps.
-    function downgradeTracker() {
-      document.getElementById('dot-pay').style.display = 'none';
-      document.querySelector('#dot-2 .step-dot').textContent = '2';
+    // ── Tier (JOURNEYS-PLAN.md decisions 2 and 9) ──
+    // Nobody reaches the form without a tier: membership.html's CTAs carry
+    // ?tier=, and everyone else picks in the chooser panel first. The
+    // choice survives wallet/3DS redirects via sessionStorage.
+    const TIER_META = {
+      associate: { name: 'Associate', priceNote: ' (free)' },
+      founding: { name: 'Founding Member', priceNote: ', $900 a year' },
+      steward: { name: 'Community Steward', priceNote: ', $5,000 a year' },
+    };
+    let tier = (function () {
+      const t = new URLSearchParams(location.search).get('tier');
+      if (TIER_META[t]) { sessionStorage.setItem('ssc-tier', t); return t; }
+      return sessionStorage.getItem('ssc-tier') || '';
+    })();
+
+    // The per-tier config slice; falls back to the legacy single-tier
+    // shape when the backend predates tiers.
+    function tierCfg() {
+      if (!joinConfig) return null;
+      if (joinConfig.tiers && joinConfig.tiers[tier]) return joinConfig.tiers[tier];
+      return { lineItems: joinConfig.lineItems, trustCopy: joinConfig.trustCopy, refundPolicyText: joinConfig.refundPolicyText, paymentsReady: joinConfig.paymentsReady };
     }
+    function tierPaymentsReady() {
+      if (tier === 'associate') return false;
+      const tc = tierCfg();
+      return Boolean(tc && tc.paymentsReady);
+    }
+
+    // Tracker: the payment step appears only for a paid tier with Stripe
+    // ready (an Associate, or static hosting, sees two steps).
+    function refreshTracker() {
+      const dot2 = document.getElementById('dot-2');
+      const show = tierPaymentsReady();
+      document.getElementById('dot-pay').style.display = show ? '' : 'none';
+      if (!dot2.classList.contains('complete') && !dot2.classList.contains('active')) {
+        dot2.querySelector('.step-dot').textContent = show ? '3' : '2';
+      }
+    }
+
+    const tierChooser = document.getElementById('tier-chooser');
+    const tierLine = document.getElementById('tier-line');
+    const inquiryForm = document.getElementById('inquiry-form');
+    function applyTier(t) {
+      tier = t;
+      sessionStorage.setItem('ssc-tier', t);
+      tierChooser.style.display = 'none';
+      inquiryForm.style.display = 'block';
+      tierLine.style.display = 'flex';
+      document.getElementById('tier-line-name').textContent = TIER_META[t].name;
+      document.getElementById('tier-line-price').textContent = TIER_META[t].priceNote;
+      refreshTracker();
+    }
+    function showTierChooser() {
+      tierChooser.style.display = 'block';
+      inquiryForm.style.display = 'none';
+      tierLine.style.display = 'none';
+    }
+    document.querySelectorAll('.tier-option').forEach(function(btn) {
+      btn.addEventListener('click', function() { applyTier(btn.dataset.tier); });
+    });
+    document.getElementById('tier-change').addEventListener('click', function(e) {
+      e.preventDefault();
+      showTierChooser();
+    });
+    if (tier) { applyTier(tier); } else { showTierChooser(); }
 
     fetch('/api/groups/silver-and-salt-capital/join-config')
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(cfg) {
-        if (!cfg) { downgradeTracker(); return; }
+        if (!cfg) { refreshTracker(); return; }
         joinConfig = cfg;
         if (cfg.disclaimerText) document.getElementById('disclaimer-text').textContent = cfg.disclaimerText;
-        if (cfg.paymentsReady) {
-          renderPayArea(cfg);
-        } else {
-          downgradeTracker();
-        }
+        refreshTracker();
         const params = new URLSearchParams(location.search);
         // Wallet/3DS redirects return here with a status flag; resume at
         // booking when the payment succeeded.
-        if (params.get('redirect_status') === 'succeeded' && cfg.paymentsReady) advanceToBooking(true);
+        if (params.get('redirect_status') === 'succeeded' && tierPaymentsReady()) advanceToBooking(true);
         // The member area links here to change an existing booking.
         const resume = params.get('reschedule');
         if (resume) {
@@ -1121,17 +1218,23 @@
           advanceToBooking(false);
         }
       })
-      .catch(function() { downgradeTracker(); /* static hosting: no backend */ });
+      .catch(function() { refreshTracker(); /* static hosting: no backend */ });
 
-    function renderPayArea(cfg) {
-      const li = cfg.lineItems;
-      document.getElementById('pay-lines').innerHTML =
-        '<div class="pay-line"><span>Membership</span><span class="amount">' + fmtCents(li.standardCents) + '/year</span></div>' +
-        '<div class="pay-line"><span>Founding-member discount</span><span class="amount">−' + fmtCents(li.discountCents) + '</span></div>' +
-        '<div class="pay-line total"><span>Total due today</span><span class="amount">' + fmtCents(li.dueTodayCents) + '</span></div>' +
-        '<p class="pay-renews">Membership renews automatically each year at your locked-in rate.</p>';
-      document.getElementById('trust-copy').textContent = cfg.trustCopy || '';
-      document.getElementById('refund-policy-text').textContent = cfg.refundPolicyText || '';
+    function renderPayArea() {
+      const tc = tierCfg();
+      if (!tc) return;
+      const li = tc.lineItems;
+      const lines = tier === 'steward'
+        ? '<div class="pay-line"><span>Community Steward membership</span><span class="amount">' + fmtCents(li.standardCents) + '/year</span></div>' +
+          '<div class="pay-line total"><span>Total due today</span><span class="amount">' + fmtCents(li.dueTodayCents) + '</span></div>' +
+          '<p class="pay-renews">Membership renews automatically each year.</p>'
+        : '<div class="pay-line"><span>Membership</span><span class="amount">' + fmtCents(li.standardCents) + '/year</span></div>' +
+          '<div class="pay-line"><span>Founding-member discount</span><span class="amount">−' + fmtCents(li.discountCents) + '</span></div>' +
+          '<div class="pay-line total"><span>Total due today</span><span class="amount">' + fmtCents(li.dueTodayCents) + '</span></div>' +
+          '<p class="pay-renews">Membership renews automatically each year at your locked-in rate.</p>';
+      document.getElementById('pay-lines').innerHTML = lines;
+      document.getElementById('trust-copy').textContent = tc.trustCopy || (joinConfig && joinConfig.trustCopy) || '';
+      document.getElementById('refund-policy-text').textContent = tc.refundPolicyText || (joinConfig && joinConfig.refundPolicyText) || '';
       document.getElementById('pay-btn').textContent = 'Pay ' + fmtCents(li.dueTodayCents);
     }
 
@@ -1146,16 +1249,19 @@
       if (stage === 'pay') { mark(dot1, 'complete'); mark(dotPay, 'active'); }
       if (stage === 'booking') {
         mark(dot1, 'complete');
-        if (joinConfig && joinConfig.paymentsReady) mark(dotPay, 'complete');
+        if (tierPaymentsReady()) mark(dotPay, 'complete');
         mark(dot2, 'active');
       }
     }
 
     function showPayStep() {
+      renderPayArea();
       document.getElementById('step-1').style.display = 'none';
       document.getElementById('step-pay').style.display = 'block';
       setDots('pay');
-      document.getElementById('hero-subtitle').textContent = 'Secure your founding-member place to continue.';
+      document.getElementById('hero-subtitle').textContent = tier === 'steward'
+        ? 'Secure your place as a Community Steward to continue.'
+        : 'Secure your founding-member place to continue.';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1322,6 +1428,7 @@
             linkedin:     formData.get('linkedin') || '',
             message:      formData.get('message') || '',
             focus:        checked,
+            tier:         tier || 'founding',
             disclaimerAck: document.getElementById('disclaimer-check').checked,
             submissionId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
           }),
@@ -1333,7 +1440,9 @@
           sessionStorage.setItem('ssc-application-id', data.id);
         }
 
-        if (joinConfig && joinConfig.paymentsReady && dbApplicationId) {
+        // Associates are free: straight to booking. Paid tiers see the
+        // payment step whenever Stripe is ready for their tier.
+        if (tierPaymentsReady() && dbApplicationId) {
           showPayStep();
         } else {
           advanceToBooking(false);

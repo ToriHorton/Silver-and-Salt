@@ -31,6 +31,11 @@ export const schema = {
         linkedin: { type: "string", unique: false, indexed: false, optional: true },
         message: { type: "string", unique: false, indexed: false, optional: false },
         status: { type: "string", unique: false, indexed: true, optional: false },
+        // Membership tier: "associate" (free) | "founding" | "steward".
+        // Legacy rows without a tier are founding (the only tier that
+        // existed before 2026-08-07). A "not a paid fit" decision flips a
+        // paid tier to associate while the membership continues.
+        tier: { type: "string", unique: false, indexed: true, optional: true },
         createdAt: { type: "number", unique: false, indexed: true, optional: false },
         // Epoch ms of the scheduled intro call. Authoritative source is the
         // $bookings mirror (matched by attendee email); admins may also set
@@ -64,6 +69,13 @@ export const schema = {
         standardPriceCents: { type: "number", unique: false, indexed: false, optional: false },
         foundingDiscountCents: { type: "number", unique: false, indexed: false, optional: false },
         stripePriceId: { type: "string", unique: false, indexed: false, optional: true },
+        // ── Community Steward tier (decision 4, JOURNEYS-PLAN.md) ──
+        stewardPriceCents: { type: "number", unique: false, indexed: false, optional: true },
+        stripeStewardPriceId: { type: "string", unique: false, indexed: false, optional: true },
+        // Steward variants of the payment-step trust copy and refund
+        // policy (counsel-pending, like trustCopy/refundPolicyText).
+        stewardTrustCopy: { type: "string", unique: false, indexed: false, optional: true },
+        stewardRefundPolicyText: { type: "string", unique: false, indexed: false, optional: true },
         stripePublishableKey: { type: "string", unique: false, indexed: false, optional: true },
         notificationEmail: { type: "string", unique: false, indexed: false, optional: false },
         replyTo: { type: "string", unique: false, indexed: false, optional: false },

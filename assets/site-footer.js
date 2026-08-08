@@ -51,12 +51,8 @@ const SITE_FOOTER_HTML = `
       </div>
     </div>
     <div class="f-news" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:18px 0;border-top:1px solid rgba(47,62,52,0.1);border-bottom:1px solid rgba(47,62,52,0.1)">
-      <p style="font-size:14px;font-weight:300;flex:1;min-width:220px;margin:0">Follow the movement. The monthly update, free, each month during the season.</p>
-      <form class="f-news-form" novalidate style="display:flex;gap:8px;flex-wrap:wrap">
-        <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address for the monthly update" style="font-family:'Satoshi',sans-serif;font-size:13.5px;padding:9px 12px;border:1px solid rgba(47,62,52,0.25);border-radius:6px;min-width:210px">
-        <button type="submit" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:6px;border:0;background:var(--moss,#2F3E34);color:#fff;cursor:pointer">Get the Monthly Update</button>
-        <p class="f-news-msg" role="status" style="font-size:12.5px;margin:0;flex-basis:100%"></p>
-      </form>
+      <p style="font-size:14px;font-weight:300;flex:1;min-width:220px;margin:0">Follow the movement. The monthly update arrives with membership, and Associate membership is free.</p>
+      <a href="join.html?tier=associate" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:6px;background:var(--moss,#2F3E34);color:#fff;text-decoration:none;white-space:nowrap">Become an Associate</a>
     </div>
     <div class="f-brand-row">
       <div class="f-left">
@@ -81,36 +77,9 @@ const SITE_FOOTER_HTML = `
 class SiteFooter extends HTMLElement {
   connectedCallback() {
     this.innerHTML = SITE_FOOTER_HTML;
-    // Monthly-update signup band. Community-layer list only (Living
-    // Document v9 §15.6): never deal content.
-    const form = this.querySelector('.f-news-form');
-    if (form) {
-      const input = form.querySelector('input[type="email"]');
-      const msg = form.querySelector('.f-news-msg');
-      const btn = form.querySelector('button');
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = (input.value || '').trim();
-        if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-          msg.textContent = 'Enter your email address and we will take it from there.';
-          return;
-        }
-        btn.disabled = true;
-        msg.textContent = 'One moment...';
-        try {
-          const res = await fetch('/api/newsletter', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, source: 'footer:' + location.pathname }),
-          });
-          if (!res.ok) throw new Error('subscribe failed');
-          form.innerHTML = '<p class="f-news-msg" role="status" style="font-size:13.5px;margin:0">You are in. The next update will find you.</p>';
-        } catch (err) {
-          btn.disabled = false;
-          msg.innerHTML = 'That did not go through. Email <a href="mailto:tori@silverandsaltcapital.com?subject=Monthly%20update">tori@silverandsaltcapital.com</a> and we will add you ourselves.';
-        }
-      });
-    }
+    // The monthly update is a member benefit (Tori, 2026-08-07): the
+    // band invites the reader to join as a free Associate. The old
+    // /api/newsletter email capture is retired.
     this.querySelectorAll('a[data-home-tab]').forEach(a => {
       a.addEventListener('click', (e) => {
         if (typeof window.showPage === 'function') {
