@@ -1156,7 +1156,9 @@
       return { lineItems: joinConfig.lineItems, trustCopy: joinConfig.trustCopy, refundPolicyText: joinConfig.refundPolicyText, paymentsReady: joinConfig.paymentsReady };
     }
     function tierPaymentsReady() {
-      if (tier === 'associate') return false;
+      // No tier chosen yet (the chooser is open): promise nothing about a
+      // payment step, since Associate never has one.
+      if (!tier || tier === 'associate') return false;
       const tc = tierCfg();
       return Boolean(tc && tc.paymentsReady);
     }
@@ -1189,6 +1191,7 @@
       tierChooser.style.display = 'block';
       inquiryForm.style.display = 'none';
       tierLine.style.display = 'none';
+      refreshTracker();
     }
     document.querySelectorAll('.tier-option').forEach(function(btn) {
       btn.addEventListener('click', function() { applyTier(btn.dataset.tier); });

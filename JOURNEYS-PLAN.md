@@ -300,7 +300,7 @@ and what still runs through his accounts:
 | Repo, branch, site code | **Tori's** | done |
 | Stripe webhook endpoint | **Tori's worker** (moved 2026-08-07) | done |
 | **Stripe account** | Cory's: `acct_1TnTBX3sLwQtiao1`, "odla sandbox", cory.ondrejka@gmail.com | Tori creates her own Stripe account; paste the test secret key into Studio; `_scripts/setup-stripe-dev.mjs` + `setup-stripe-steward-dev.mjs` rebuild product, both prices, and the webhook against it |
-| **Google Calendar** | Cory's: bookings land on `cory.ondrejka@gmail.com` | `odla-ai calendar connect --env dev`, consenting as Tori's Google account. Note this is app-wide for the env, so his worker follows |
+| ~~Google Calendar~~ | **Tori's** (`tori@silverandsaltcapital.com`) since 2026-08-07 | done. She reconnected it herself in Studio; the CLI cannot (`human_session_required`: a device/agent token is never enough to change a calendar, so this is always an owner-in-Studio task). Verified: availability now computes from her real calendar, 229 slots over the 14-day window |
 | **Email sender** | Cory's: `silver-and-salt-capital@odla.ai` verified on his Cloudflare account, so Tori's worker cannot send at all (`E_SENDER_DOMAIN_NOT_AVAILABLE`) | Onboard a silverandsaltcapital.com sender to Cloudflare Email Service on Tori's account, then point `EMAIL_FROM` at it |
 | odla app + dev db tenant | Shared (`silver-and-salt-capital`, app owner-held by Cory) | Only matters if the shared tenant becomes a problem; her own app id means re-provisioning everything, so not worth doing pre-emptively |
 | Clerk instance | Shared dev instance in the Built Not Found workspace | Prod instance at cutover is hers regardless |
@@ -312,10 +312,18 @@ a single real email. None of that blocks building, but all of it blocks
 *operating*.
 
 Recommended order (each needs a few minutes of Tori at a browser, and
-nothing here touches production): **calendar first** (it is actively
-wrong today and cheapest to fix), **Stripe second** (needed before any
-real money moves, and the scripts rebuild everything automatically),
-**email third** (needs DNS records, so it is the longest).
+nothing here touches production): ~~calendar first~~ **done
+2026-08-07**, **Stripe second** (needed before any real money moves, and
+the scripts rebuild everything automatically), **email third** (needs
+DNS records, so it is the longest).
+
+**Open question raised by the calendar switch: what timezone and hours
+should bookings use?** `groups.schedulingJson` still says
+`America/Los_Angeles`, 9am-5pm, weekdays, which was almost certainly set
+for the previous calendar owner. Members are Utah women, so
+`America/Denver` is the likely answer, but Tori's machine currently
+reports America/Costa_Rica, so it cannot be inferred. One field on the
+group row, changed the same way `slotMinutes` was.
 
 ## Open items
 
