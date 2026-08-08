@@ -274,15 +274,48 @@ Filed with odla as
 the third vetting outcome, and offering this branch's proven
 implementation as the reference.
 
-**Where that leaves us.** Tori endorsed `main` as canonical 2026-08-07.
-The port is blocked on the odla feature request, so the honest options
-are: (a) wait for chapter to grow multi-tier support, then port (clean,
-but externally paced); (b) ship J1 from this branch as an interim while
-chapter catches up (works today, but it is the stale architecture and
-the divergence widens); (c) override chapter locally for the join
-surface (fights the parity tests and the engine's whole design). Not a
-decision to make silently: pick it with Cory, since the answer depends
-on his roadmap for the feature request.
+**DECIDED 2026-08-07 (Tori): option (b). Keep building on this dev
+branch until the product works end to end.** The port to chapter waits
+on odla shipping multi-tier support (bug fd944a76); until then this
+branch is where the product lives and J2+ continue here. Consequences to
+hold in mind, not to act on yet:
+- The divergence from `main` widens with every phase built here. That is
+  accepted, and the odla feature request is the thing that eventually
+  closes it.
+- Nothing from this branch merges to `main` (the MIGRATION.md branch
+  rule still holds), so production stays untouched regardless.
+- When chapter grows tiers, the port is mostly the worker and the join
+  surface: the schema already matches main except for our five added
+  attrs, and the marketing pages are architecture-independent.
+
+## Independence from Cory's accounts (Tori, 2026-08-07)
+
+Owner directive: **"I should not need Cory to move forward on my own
+work."** Audited the dev environment the same day. What is already hers,
+and what still runs through his accounts:
+
+| Piece | Whose today | Path off it |
+|---|---|---|
+| Cloudflare account + worker | **Tori's** (`aa3582f8…`, `silver-and-salt.workers.dev`) | done |
+| Repo, branch, site code | **Tori's** | done |
+| Stripe webhook endpoint | **Tori's worker** (moved 2026-08-07) | done |
+| **Stripe account** | Cory's: `acct_1TnTBX3sLwQtiao1`, "odla sandbox", cory.ondrejka@gmail.com | Tori creates her own Stripe account; paste the test secret key into Studio; `_scripts/setup-stripe-dev.mjs` + `setup-stripe-steward-dev.mjs` rebuild product, both prices, and the webhook against it |
+| **Google Calendar** | Cory's: bookings land on `cory.ondrejka@gmail.com` | `odla-ai calendar connect --env dev`, consenting as Tori's Google account. Note this is app-wide for the env, so his worker follows |
+| **Email sender** | Cory's: `silver-and-salt-capital@odla.ai` verified on his Cloudflare account, so Tori's worker cannot send at all (`E_SENDER_DOMAIN_NOT_AVAILABLE`) | Onboard a silverandsaltcapital.com sender to Cloudflare Email Service on Tori's account, then point `EMAIL_FROM` at it |
+| odla app + dev db tenant | Shared (`silver-and-salt-capital`, app owner-held by Cory) | Only matters if the shared tenant becomes a problem; her own app id means re-provisioning everything, so not worth doing pre-emptively |
+| Clerk instance | Shared dev instance in the Built Not Found workspace | Prod instance at cutover is hers regardless |
+
+Consequences of the current state, which are not acceptable long-term:
+her business's introduction calls land on someone else's calendar, her
+payments run through someone else's sandbox, and her worker cannot send
+a single real email. None of that blocks building, but all of it blocks
+*operating*.
+
+Recommended order (each needs a few minutes of Tori at a browser, and
+nothing here touches production): **calendar first** (it is actively
+wrong today and cheapest to fix), **Stripe second** (needed before any
+real money moves, and the scripts rebuild everything automatically),
+**email third** (needs DNS records, so it is the longest).
 
 ## Open items
 
