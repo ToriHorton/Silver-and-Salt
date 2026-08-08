@@ -55,6 +55,9 @@ supersedes those figures: Associate free, Founding Member $900 a year
    - Members of every tier receive the monthly update; it is composed and
      sent from the console via the CRM's consent-gated announcement class,
      which already carries unsubscribe handling.
+   - Past updates live in the member portal as a **monthly newsletter
+     archive** (Tori, 2026-08-07), browsable by every member; an
+     unsubscribed member still has the archive.
    - The locked Associate card copy gains a monthly-update bullet; exact
      wording is Tori's, at J1.
 8. **The intro call is 20 minutes** (2026-08-07). Slot length is group
@@ -167,11 +170,12 @@ supersedes those figures: Associate free, Founding Member $900 a year
     dollar commitment); no renders observer access only, with invest
     surfaces absent from the page, not merely disabled. Accredited
     marker kept in a separate namespace (506(b) segregation).
-  - Portal sections from the map: deal flow, events, education materials
-    (structure plus admin-editable content; scope the minimum real version
-    with Tori at phase start). Associate view honors the locked tier copy:
-    recordings and memos framed as post-join-date; option to invest for
-    accredited members; a become-a-Founding-Member prompt.
+  - Portal sections from the map: deal flow, events, education materials,
+    and the monthly newsletter archive (structure plus admin-editable
+    content; scope the minimum real version with Tori at phase start).
+    Associate view honors the locked tier copy: recordings and memos
+    framed as post-join-date; option to invest for accredited members; a
+    become-a-Founding-Member prompt.
   - Second-membership redemption (decision 11): portal "Invite your
     second member" for Founding members; personal invitation email with a
     one-use link; invitee's application skips payment; she books her own
@@ -183,6 +187,9 @@ supersedes those figures: Associate free, Founding Member $900 a year
   announcement consent recorded; compose and send from the console via the
   CRM's announcement class (unsubscribe handling already built there);
   drop the retired `newsletterSignups` entity after clearing test rows.
+  Store each update as a canonical issue row (title, body, sent date) so
+  the portal's newsletter archive renders from issues rather than from
+  the send log; the J2 archive section fills from these.
 - [ ] **J4: Production cutover and hardening.** MIGRATION.md P5 (DNS,
   prod Stripe/Clerk/email pastes, Apple Pay domain verification,
   silverandsaltcapital.com sender onboarding) plus PAYMENT-SPEC.md P2
