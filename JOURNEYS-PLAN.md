@@ -218,6 +218,49 @@ supersedes those figures: Associate free, Founding Member $900 a year
 7. The closer line "Every member is first to know when a new deal is
    available" (flag carried from CLAUDE.md).
 
+## BLOCKING DECISION: which odla line is canonical (found 2026-08-07)
+
+`main` already contains a **newer odla implementation than this branch**,
+merged there by Cory Ondrejka through July while this branch's line of
+work continued in parallel. Nobody flagged it, and J1 was built here
+before it was noticed. The facts:
+
+| | `main` | `odla-conversion-test` (J1 built here) |
+|---|---|---|
+| Architecture | `@odla-ai/chapter` 0.27.1 (`src/chapter.config.mjs`, `src/worker-chapter.ts`) | no chapter; inline worker + crm integration |
+| Deps | crm 0.5.0, db 0.9.1, ui 0.12.2, auth-clerk 0.4.1 | crm 0.1.3, db 0.6.6, ui 0.8.2 |
+| join.html | 856 lines; flow moved into `src/app/join-island.jsx` (Preact) | 1460 lines; flow still an inline script |
+| Tests | `tests/acceptance.test.mjs`, `tests/chapter-parity.test.mjs`, `_scripts/check-deployed-schema.mjs` | none |
+| Newest work | 2026-07-30 (signed leader edge rollout) | 2026-07-18 before today |
+| membership.html + tier work | absent | present (this branch only) |
+
+**Neither line has tiers**: zero mentions of tier/steward/associate in
+main's implementation, so the J1 product work is genuinely new either
+way. What is at risk is only where it lives.
+
+What survives regardless: every decision in this plan, the flow map, and
+the marketing-page work (membership.html and its tier CTAs, the footer
+band, three-yeses) which is plain HTML/JS. What was written against the
+older shape and would need redoing on chapter: the worker routes
+(`downgrade`, `decline`, per-tier join-config, tier on the payment
+route), the schema attrs, and the join.html tier chooser (that file's
+inline script no longer exists on main).
+
+**Two risks introduced today, both worth verifying before more work:**
+1. A schema + rules push went to the SHARED dev tenant
+   (`silver-and-salt-capital--dev`) from this older branch, which may
+   have reverted the tenant to the pre-chapter shape. The platform did
+   refuse to drop a data-bearing attr, which suggests data is protected,
+   but main ships `_scripts/check-deployed-schema.mjs` for exactly this
+   check and it has not been run.
+2. The Stripe dev webhook was repointed to Tori's worker (correct for
+   her, but it is shared infrastructure and Cory's worker no longer
+   receives events).
+
+**Recommendation:** treat `main` as canonical, and port the J1 product
+work onto the chapter implementation rather than continuing here. Do not
+start J2 until Tori and Cory agree which line wins.
+
 ## Open items
 
 1. **Platform bug, REPORTED to odla 2026-08-07** (`odla-ai bug report`,
