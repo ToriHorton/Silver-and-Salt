@@ -11,7 +11,7 @@
 // part of the rowKey, remounting rows onto fresh server state.
 import { useState, useEffect, useCallback, useMemo } from "preact/hooks";
 import { DataTable } from "@odla-ai/ui/components";
-import { api, bus, ROLES, STATUS_LABELS, APPROVABLE, toLocalInputValue } from "../lib.js";
+import { api, bus, ROLES, STATUS_LABELS, APPROVABLE, tierLabel, toLocalInputValue } from "../lib.js";
 
 function RowActions({ p, draft, reload }) {
   const app = p.application;
@@ -159,6 +159,14 @@ export const peopleColumns = (myUserId, reload) => [
       ) : (
         <span class="muted">No application</span>
       ),
+  },
+  {
+    key: "tier",
+    header: "Tier",
+    sortAs: "string",
+    sortValue: (r) => (r.application ? tierLabel(r.application.tier) : ""),
+    filterText: (r) => (r.application ? tierLabel(r.application.tier) : ""),
+    cell: (r) => (r.application ? tierLabel(r.application.tier) : null),
   },
   {
     key: "payment",

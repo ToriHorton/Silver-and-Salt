@@ -43,6 +43,8 @@ function personInputFromApp(app) {
     focus: Array.isArray(app.focus) ? app.focus : [],
     message: str(app.message),
     applicationId: str(app.id),
+    // "associate" | "founding" | "steward"; legacy rows read as founding.
+    tier: str(app.tier) || "founding",
   };
 }
 

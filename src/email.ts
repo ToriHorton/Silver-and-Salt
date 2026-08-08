@@ -39,6 +39,10 @@ export interface GroupRow {
   standardPriceCents: number;
   foundingDiscountCents: number;
   stripePriceId?: string;
+  stewardPriceCents?: number;
+  stripeStewardPriceId?: string;
+  stewardTrustCopy?: string;
+  stewardRefundPolicyText?: string;
   stripePublishableKey?: string;
   notificationEmail: string;
   replyTo: string;

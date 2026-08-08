@@ -191,6 +191,13 @@ const STATUSES = [
   "refunded",
 ] as const;
 
+// Membership tiers (JOURNEYS-PLAN.md decisions 2 and 4). Rows written
+// before tiers existed carry no tier attr and read as founding.
+const TIERS = ["associate", "founding", "steward"] as const;
+type Tier = (typeof TIERS)[number];
+const appTier = (app: Record<string, unknown>): Tier =>
+  TIERS.includes(app.tier as Tier) ? (app.tier as Tier) : "founding";
+
 // The default (and at launch, only) group. Applications may carry another
 // groupId when a second brand exists (PAYMENT-SPEC.md lift-and-shift).
 const DEFAULT_GROUP_ID = "silver-and-salt-capital";
@@ -210,12 +217,105 @@ async function getGroup(db: Db, groupId: string): Promise<GroupRow | null> {
   return row;
 }
 
-const groupLineItems = (g: GroupRow) => ({
-  standardCents: g.standardPriceCents,
-  discountCents: g.foundingDiscountCents,
-  dueTodayCents: g.standardPriceCents - g.foundingDiscountCents,
-  renews: "annually",
-});
+const groupLineItems = (g: GroupRow, tier: Tier = "founding") => {
+  if (tier === "associate") {
+    return { standardCents: 0, discountCents: 0, dueTodayCents: 0, renews: "never", tier };
+  }
+  if (tier === "steward") {
+    const cents = g.stewardPriceCents ?? 0;
+    return { standardCents: cents, discountCents: 0, dueTodayCents: cents, renews: "annually", tier };
+  }
+  return {
+    standardCents: g.standardPriceCents,
+    discountCents: g.foundingDiscountCents,
+    dueTodayCents: g.standardPriceCents - g.foundingDiscountCents,
+    renews: "annually",
+    tier,
+  };
+};
+
+// The Stripe Price and trust copy for a paid tier; null for associate.
+const tierBilling = (g: GroupRow, tier: Tier) =>
+  tier === "steward"
+    ? { priceId: g.stripeStewardPriceId ?? null, trustCopy: g.stewardTrustCopy ?? g.trustCopy }
+    : tier === "founding"
+      ? { priceId: g.stripePriceId ?? null, trustCopy: g.trustCopy }
+      : null;
+
+// ── Vetting decision helpers (JOURNEYS-PLAN.md decision 10) ────────
+// Promote the applicant's Clerk account to the member role. clerkUserId
+// links lazily at first sign-in, so fall back to a Clerk email lookup for
+// accounts that have never signed in. Best effort; reported.
+async function promoteToMember(db: Db, app: Record<string, unknown>): Promise<boolean> {
+  const sk = await getVaultSecret(db, "clerk_secret_key");
+  if (!sk) return false;
+  let targetUserId = (app.clerkUserId as string) || null;
+  if (!targetUserId) {
+    try {
+      const found = await fetch(
+        `https://api.clerk.com/v1/users?email_address=${encodeURIComponent(app.email as string)}`,
+        { headers: { authorization: `Bearer ${sk}` } },
+      );
+      const users = (await found.json()) as Array<{ id: string }>;
+      targetUserId = users?.[0]?.id ?? null;
+      if (targetUserId) {
+        await db.transact(tx.applications[app.id as string].update({ clerkUserId: targetUserId }));
+      }
+    } catch (err) {
+      console.error("promote: clerk lookup failed", err);
+    }
+  }
+  if (!targetUserId) return false;
+  const res = await fetch(`https://api.clerk.com/v1/users/${targetUserId}/metadata`, {
+    method: "PATCH",
+    headers: { authorization: `Bearer ${sk}`, "content-type": "application/json" },
+    body: JSON.stringify({ public_metadata: { role: "member" } }),
+  });
+  if (!res.ok) console.error("promote: role promotion failed", res.status);
+  return res.ok;
+}
+
+// Refund the customer's first (earliest succeeded, unrefunded) charge in
+// full and cancel the subscription. The caller decides what the refund
+// MEANS (exit vs downgrade); the charge.refunded webhook flips status to
+// "refunded" only for rows that are not approved.
+async function refundAndCancel(
+  db: Db,
+  app: Record<string, unknown>,
+): Promise<{ ok: boolean; refundedCents: number | null; subscriptionCanceled: boolean; error?: string; httpStatus?: number }> {
+  const subscriptionId = app.stripeSubscriptionId as string | undefined;
+  const customerId = app.stripeCustomerId as string | undefined;
+  if (!subscriptionId || !customerId) {
+    return { ok: false, refundedCents: null, subscriptionCanceled: false, error: "no subscription on file", httpStatus: 409 };
+  }
+  const sk = await getVaultSecret(db, "stripe_secret_key");
+  if (!sk) return { ok: false, refundedCents: null, subscriptionCanceled: false, error: "payments not configured", httpStatus: 503 };
+
+  // 2025+ Stripe API: invoices no longer expose payment_intent, so find
+  // the earliest succeeded, unrefunded charge on the customer.
+  const charges = await stripeCall(sk, "GET", "/v1/charges", { customer: customerId, limit: 100 });
+  if (!charges.ok) {
+    console.error("refund: charge list failed", charges.status);
+    return { ok: false, refundedCents: null, subscriptionCanceled: false, error: "refund failed upstream", httpStatus: 502 };
+  }
+  const chargeRows = ((charges.body.data as Array<Record<string, unknown>>) ?? [])
+    .filter((c) => c.status === "succeeded" && c.refunded !== true);
+  const firstCharge = chargeRows[chargeRows.length - 1];
+  if (!firstCharge) {
+    return { ok: false, refundedCents: null, subscriptionCanceled: false, error: "no paid charge to refund", httpStatus: 409 };
+  }
+
+  const refund = await stripeCall(sk, "POST", "/v1/refunds", { charge: firstCharge.id as string });
+  if (!refund.ok) {
+    console.error("refund failed", refund.status, refund.body?.error);
+    return { ok: false, refundedCents: null, subscriptionCanceled: false, error: "refund failed upstream", httpStatus: 502 };
+  }
+
+  const cancel = await stripeCall(sk, "DELETE", `/v1/subscriptions/${subscriptionId}`);
+  if (!cancel.ok) console.error("subscription cancel failed", cancel.status);
+
+  return { ok: true, refundedCents: (refund.body.amount as number) ?? null, subscriptionCanceled: cancel.ok };
+}
 
 // ── Stripe (REST via fetch; secret key from the tenant vault) ──────
 async function getVaultSecret(db: Db, name: string): Promise<string | null> {
@@ -430,6 +530,7 @@ const applicationSummary = (a: Record<string, unknown>) => ({
   lastName: a.lastName,
   email: a.email,
   status: a.status,
+  tier: appTier(a),
   meetingAt: (a.meetingAt as number) || null,
   meetingLink: (a.meetingLink as string) || null,
   createdAt: a.createdAt,
@@ -638,6 +739,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     const group = await getGroup(db, joinConfigMatch[1]);
     if (!group) return json({ error: "not found" }, 404);
     const stripeKey = await getVaultSecret(db, "stripe_secret_key");
+    const stripeUp = Boolean(group.stripePublishableKey && stripeKey);
     return json({
       groupId: group.id,
       name: group.name,
@@ -646,7 +748,25 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       trustCopy: group.trustCopy,
       lineItems: groupLineItems(group),
       publishableKey: group.stripePublishableKey ?? null,
-      paymentsReady: Boolean(group.stripePublishableKey && group.stripePriceId && stripeKey),
+      paymentsReady: Boolean(stripeUp && group.stripePriceId),
+      // Per-tier rendering data (JOURNEYS-PLAN.md J1). A tier whose
+      // paymentsReady is false renders without its payment step, exactly
+      // like the legacy single-tier behavior.
+      tiers: {
+        associate: { lineItems: groupLineItems(group, "associate"), paymentsReady: true },
+        founding: {
+          lineItems: groupLineItems(group, "founding"),
+          trustCopy: group.trustCopy,
+          refundPolicyText: group.refundPolicyText,
+          paymentsReady: Boolean(stripeUp && group.stripePriceId),
+        },
+        steward: {
+          lineItems: groupLineItems(group, "steward"),
+          trustCopy: group.stewardTrustCopy ?? group.trustCopy,
+          refundPolicyText: group.stewardRefundPolicyText ?? group.refundPolicyText,
+          paymentsReady: Boolean(stripeUp && group.stripeStewardPriceId && group.stewardPriceCents),
+        },
+      },
     });
   }
 
@@ -673,8 +793,12 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     if (!app) return json({ error: "not found" }, 404);
     if (app.status !== "submitted") return json({ error: "already processed" }, 409);
 
+    const tier = appTier(app);
     const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
-    if (!group?.stripePriceId) return json({ error: "payments not configured" }, 503);
+    if (!group) return json({ error: "payments not configured" }, 503);
+    const billing = tierBilling(group, tier);
+    if (!billing) return json({ error: "associate membership is free; no payment step" }, 400);
+    if (!billing.priceId) return json({ error: "payments not configured" }, 503);
     const sk = await getVaultSecret(db, "stripe_secret_key");
     if (!sk) return json({ error: "payments not configured" }, 503);
 
@@ -682,6 +806,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       applicationId,
       groupId: group.id,
       email: app.email as string,
+      tier,
     };
 
     let customerId = app.stripeCustomerId as string | undefined;
@@ -700,7 +825,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
 
     const sub = await stripeCall(sk, "POST", "/v1/subscriptions", {
       customer: customerId,
-      "items[0][price]": group.stripePriceId,
+      "items[0][price]": billing.priceId,
       payment_behavior: "default_incomplete",
       "payment_settings[save_default_payment_method]": "on_subscription",
       // Card only: keeps Link/Amazon Pay/Cash App/Klarna (and Link's
@@ -739,7 +864,8 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     return json({
       clientSecret,
       publishableKey: group.stripePublishableKey ?? null,
-      lineItems: groupLineItems(group),
+      lineItems: groupLineItems(group, tier),
+      trustCopy: billing.trustCopy,
     });
   }
 
@@ -895,6 +1021,27 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         }
       }
 
+      // Tori's heads-up: exactly one per application, at payment or first
+      // booking, whichever happens first (JOURNEYS-PLAN.md, flow-review
+      // finding: free Associates never pay, so without this they would
+      // land on the calendar silently). The shared dedupeKey with the
+      // invoice.paid send makes the pair fire-once.
+      await sendTemplated(db, env.ODLA_ENV, mailer, group, {
+        template: "adminNotification",
+        to: group.notificationEmail,
+        vars: {
+          firstName: app.firstName as string,
+          lastName: app.lastName as string,
+          email: app.email as string,
+          phone: (app.phone as string) ?? "",
+          state: (app.state as string) ?? "",
+          tier: appTier(app),
+          adminUrl: `${url.origin}/admin/?tab=people`,
+        },
+        applicationId,
+        dedupeKey: `admin:${applicationId}`,
+      });
+
       return json({ ok: true, startAt, endAt, meetUrl: meetUrl ?? null, rescheduled: Boolean(existing) });
     } catch (err) {
       const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
@@ -988,6 +1135,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
             email: app.email as string,
             phone: (app.phone as string) ?? "",
             state: (app.state as string) ?? "",
+            tier: appTier(app),
             // ?tab= survives mail-client link rewriting better than a #hash
             // and lands the admin on the vetting view.
             adminUrl: `${url.origin}/admin/?tab=people`,
@@ -998,7 +1146,9 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
             to: group.notificationEmail,
             vars,
             applicationId: app.id as string,
-            dedupeKey: `${event.id}:admin`,
+            // Per-application, shared with the booking-time send: Tori
+            // gets exactly one heads-up per application.
+            dedupeKey: `admin:${app.id}`,
           });
           await sendTemplated(db, env.ODLA_ENV, mailer, group, {
             template: "paymentConfirmation",
@@ -1023,6 +1173,12 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     if (event.type === "charge.refunded") {
       const app = await findApplication();
       if (!app) return json({ ok: true, matched: false });
+      // A "not a paid fit" downgrade approves the person as an Associate
+      // and THEN refunds (JOURNEYS-PLAN.md decision 10), so a refund must
+      // never regress an approved membership to "refunded".
+      if (app.status === "approved") {
+        return json({ ok: true, kept: "approved" });
+      }
       await db.transact(tx.applications[app.id as string].update({ status: "refunded" }), {
         mutationId: `stripe:${event.id}`,
       });
@@ -1842,38 +1998,7 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
         stage: "approved",
       }).catch((e) => console.error("crm sync failed (approve)", e));
 
-      // Promote the linked account to member (best effort; reported).
-      // clerkUserId links lazily at first sign-in, so fall back to a Clerk
-      // lookup by email for accounts that have never signed in.
-      let rolePromoted = false;
-      const sk = await getVaultSecret(db, "clerk_secret_key");
-      if (sk) {
-        let targetUserId = (app.clerkUserId as string) || null;
-        if (!targetUserId) {
-          try {
-            const found = await fetch(
-              `https://api.clerk.com/v1/users?email_address=${encodeURIComponent(app.email as string)}`,
-              { headers: { authorization: `Bearer ${sk}` } },
-            );
-            const users = (await found.json()) as Array<{ id: string }>;
-            targetUserId = users?.[0]?.id ?? null;
-            if (targetUserId) {
-              await db.transact(tx.applications[id].update({ clerkUserId: targetUserId }));
-            }
-          } catch (err) {
-            console.error("approve: clerk lookup failed", err);
-          }
-        }
-        if (targetUserId) {
-          const res = await fetch(`https://api.clerk.com/v1/users/${targetUserId}/metadata`, {
-            method: "PATCH",
-            headers: { authorization: `Bearer ${sk}`, "content-type": "application/json" },
-            body: JSON.stringify({ public_metadata: { role: "member" } }),
-          });
-          rolePromoted = res.ok;
-          if (!res.ok) console.error("approve: role promotion failed", res.status);
-        }
-      }
+      const rolePromoted = await promoteToMember(db, app);
 
       let emailLogged = false;
       const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
@@ -1910,43 +2035,116 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       if (app.status === "approved") {
         return json({ error: "approved memberships are non-refundable per policy; handle in Stripe if truly needed" }, 409);
       }
-      const subscriptionId = app.stripeSubscriptionId as string | undefined;
-      if (!subscriptionId) return json({ error: "no subscription on file" }, 409);
-      const sk = await getVaultSecret(db, "stripe_secret_key");
-      if (!sk) return json({ error: "payments not configured" }, 503);
 
-      // 2025+ Stripe API: invoices no longer expose payment_intent, so
-      // find the earliest succeeded, unrefunded charge on the customer.
-      const customerId = app.stripeCustomerId as string | undefined;
-      if (!customerId) return json({ error: "no customer on file" }, 409);
-      const charges = await stripeCall(sk, "GET", "/v1/charges", {
-        customer: customerId,
-        limit: 100,
+      const result = await refundAndCancel(db, app);
+      if (!result.ok) return json({ error: result.error }, result.httpStatus ?? 502);
+      return json({
+        ok: true,
+        refundedCents: result.refundedCents,
+        subscriptionCanceled: result.subscriptionCanceled,
       });
-      if (!charges.ok) {
-        console.error("refund: charge list failed", charges.status);
-        return json({ error: "refund failed upstream" }, 502);
-      }
-      const chargeRows = ((charges.body.data as Array<Record<string, unknown>>) ?? [])
-        .filter((c) => c.status === "succeeded" && c.refunded !== true);
-      const firstCharge = chargeRows[chargeRows.length - 1];
-      if (!firstCharge) return json({ error: "no paid charge to refund" }, 409);
+    }
 
-      const refund = await stripeCall(sk, "POST", "/v1/refunds", {
-        charge: firstCharge.id as string,
+    // "Not a paid fit" (JOURNEYS-PLAN.md decision 10b): the person belongs
+    // in the community at the free tier. Any payment refunds in full, the
+    // subscription cancels, the tier flips to associate, and the
+    // membership CONTINUES: approved, member role, onboarding invite. The
+    // approval is written before the refund so the charge.refunded webhook
+    // (which skips approved rows) can never regress it.
+    const downgradeMatch = url.pathname.match(/^\/api\/admin\/applications\/([0-9a-f-]+)\/downgrade$/);
+    if (req.method === "POST" && downgradeMatch) {
+      const id = downgradeMatch[1];
+      const { applications } = await db.query({
+        applications: { $: { where: { id }, limit: 1 } },
       });
-      if (!refund.ok) {
-        console.error("refund failed", refund.status, refund.body?.error);
-        return json({ error: "refund failed upstream" }, 502);
+      const app = applications?.[0];
+      if (!app) return json({ error: "not found" }, 404);
+      const from = app.status as string;
+      if (!["paid_pending_vetting", "call_scheduled", "interviewed"].includes(from)) {
+        return json({ error: `cannot decide from status "${from}"` }, 409);
+      }
+      if (appTier(app) === "associate") {
+        return json({ error: "already an associate; use approve or decline" }, 409);
       }
 
-      const cancel = await stripeCall(sk, "DELETE", `/v1/subscriptions/${subscriptionId}`);
-      if (!cancel.ok) console.error("subscription cancel failed", cancel.status);
+      await db.transact(tx.applications[id].update({ tier: "associate", status: "approved" }));
+      await syncPersonToCrm(db, {
+        app: { ...app, tier: "associate", status: "approved" },
+        stage: "approved",
+      }).catch((e) => console.error("crm sync failed (downgrade)", e));
+
+      const rolePromoted = await promoteToMember(db, app);
+
+      // Refund whatever was paid. A card-abandoned row has a subscription
+      // but no charge; that reports cleanly as nothing to refund.
+      const paid = Boolean(app.stripeSubscriptionId);
+      const refund = paid
+        ? await refundAndCancel(db, app)
+        : { ok: true, refundedCents: null, subscriptionCanceled: false };
+
+      let emailLogged = false;
+      const group = await getGroup(db, (app.groupId as string) ?? DEFAULT_GROUP_ID);
+      if (group) {
+        const invite = await sendTemplated(db, env.ODLA_ENV, mailer, group, {
+          template: "onboardingInvite",
+          to: app.email as string,
+          vars: {
+            firstName: app.firstName as string,
+            membersUrl: `${url.origin}/members/`,
+          },
+          applicationId: id,
+          dedupeKey: `approve:${id}`,
+        });
+        emailLogged = invite.sent;
+      }
 
       return json({
         ok: true,
-        refundedCents: (refund.body.amount as number) ?? null,
-        subscriptionCanceled: cancel.ok,
+        status: "approved",
+        tier: "associate",
+        rolePromoted,
+        refundedCents: refund.refundedCents,
+        subscriptionCanceled: refund.subscriptionCanceled,
+        refundError: refund.ok ? null : refund.error,
+        emailLogged,
+      });
+    }
+
+    // "Not a community fit" (JOURNEYS-PLAN.md decision 10c): a full and
+    // graceful exit at any tier, Associates included. Paid rows refund in
+    // full and the webhook settles them at "refunded"; free rows rest at
+    // "declined". No notice email yet: that wording is on the counsel
+    // review list, and the member area shows the closing state.
+    const declineMatch = url.pathname.match(/^\/api\/admin\/applications\/([0-9a-f-]+)\/decline$/);
+    if (req.method === "POST" && declineMatch) {
+      const id = declineMatch[1];
+      const { applications } = await db.query({
+        applications: { $: { where: { id }, limit: 1 } },
+      });
+      const app = applications?.[0];
+      if (!app) return json({ error: "not found" }, 404);
+      const from = app.status as string;
+      if (["approved", "declined", "refunded"].includes(from)) {
+        return json({ error: `cannot decline from status "${from}"` }, 409);
+      }
+
+      await db.transact(tx.applications[id].update({ status: "declined" }));
+      await syncPersonToCrm(db, {
+        app: { ...app, status: "declined" },
+        stage: "declined",
+      }).catch((e) => console.error("crm sync failed (decline)", e));
+
+      const paid = Boolean(app.stripeSubscriptionId);
+      const refund = paid
+        ? await refundAndCancel(db, app)
+        : { ok: true, refundedCents: null, subscriptionCanceled: false };
+
+      return json({
+        ok: true,
+        status: "declined",
+        refundedCents: refund.refundedCents,
+        subscriptionCanceled: refund.subscriptionCanceled,
+        refundError: refund.ok ? null : refund.error,
       });
     }
 
@@ -2019,12 +2217,18 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
       ? body.submissionId.trim().slice(0, 100)
       : undefined;
 
+    // Tier comes from the page (mandatory choice per JOURNEYS-PLAN.md
+    // decision 9). An invalid or absent tier falls back to founding: the
+    // paid default can never accidentally hand out a free membership.
+    const tier: Tier = TIERS.includes(body.tier as Tier) ? (body.tier as Tier) : "founding";
+
     const { duplicate } = await db.transact(
       tx.applications[id].update({
         id, // mirrored as an attr per @odla-ai/db porting notes
         ...parsed.attrs,
         groupId: DEFAULT_GROUP_ID,
         status: "submitted",
+        tier,
         createdAt: Date.now(),
         ...(body.disclaimerAck === true ? { disclaimerAckAt: Date.now() } : {}),
       }),
@@ -2055,43 +2259,10 @@ async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
     return json({ ok: true, id, duplicate: duplicate ?? false, accountCreated }, 201);
   }
 
-  // Monthly-update signup (the free "third yes"). Public, no auth: the only
-  // thing it accepts is an email address plus a source label, and the row it
-  // writes feeds the community-layer list only (Living Document v9 §15.6).
-  if (req.method === "POST" && url.pathname === "/api/newsletter") {
-    const len = Number(req.headers.get("content-length") ?? 0);
-    if (len > 4_096) return json({ error: "body too large" }, 413);
-
-    let body: Record<string, unknown>;
-    try {
-      body = await req.json();
-    } catch {
-      return json({ error: "invalid JSON body" }, 400);
-    }
-
-    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-    if (!email || email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      return json({ error: "invalid email" }, 400);
-    }
-    const source = typeof body.source === "string" ? body.source.trim().slice(0, 100) : "";
-
-    const id = uuidv7();
-    // One active row per address: repeat submissions of the same email
-    // dedupe server-side to the original signup.
-    const { duplicate } = await db.transact(
-      tx.newsletterSignups[id].update({
-        id,
-        email,
-        ...(source ? { source } : {}),
-        groupId: DEFAULT_GROUP_ID,
-        status: "active",
-        createdAt: Date.now(),
-      }),
-      { mutationId: `newsletter:${email}` },
-    );
-
-    return json({ ok: true, duplicate: duplicate ?? false }, 201);
-  }
+  // The public newsletter capture (POST /api/newsletter) was retired
+  // 2026-08-07: the monthly update is a member benefit (JOURNEYS-PLAN.md
+  // decision 7), so the route is gone and the footer band invites the
+  // reader to join as a free Associate instead.
 
   // Gated: admins only (an internal stat per the owner's role model).
   if (req.method === "GET" && url.pathname === "/api/applications/count") {

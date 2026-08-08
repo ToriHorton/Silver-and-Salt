@@ -70,11 +70,14 @@ function Rescheduler({ application, onReschedule, label = "Change your time" }) 
   );
 }
 
+const TIER_NAMES = { associate: "Associate", founding: "founding", steward: "Community Steward" };
+
 function MembershipLine({ application }) {
   if (!application?.paid) return null;
+  const t = TIER_NAMES[application.tier] || "founding";
   return (
     <div class="meeting-note" style="margin-top:16px;">
-      Your founding membership is active
+      Your {t} membership is active
       {application.renewalAt
         ? " and renews " + new Date(application.renewalAt).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })
         : ""}.
@@ -89,7 +92,14 @@ function ProvisionalCard({ application, onReschedule }) {
     block = (
       <div class="meeting-block">
         <div class="meeting-kicker">Membership refunded</div>
-        <div class="meeting-note">Your founding-member fee has been refunded in full and your membership is canceled. Thank you for your interest in Silver <span class="brand-amp">&amp;</span> Salt Capital.</div>
+        <div class="meeting-note">Your membership fee has been refunded in full and your membership is canceled. Thank you for your interest in Silver <span class="brand-amp">&amp;</span> Salt Capital.</div>
+      </div>
+    );
+  } else if (application && application.status === "declined") {
+    block = (
+      <div class="meeting-block">
+        <div class="meeting-kicker">Thank you for applying</div>
+        <div class="meeting-note">After careful consideration, we are unable to offer membership at this time.{application.paid ? " Any membership fee has been refunded in full." : ""} Thank you for your interest in Silver <span class="brand-amp">&amp;</span> Salt Capital, and we wish you every success.</div>
       </div>
     );
   } else if (application && application.meetingAt) {

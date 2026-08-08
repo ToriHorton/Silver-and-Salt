@@ -53,6 +53,9 @@ export const crm = defineCrm({
         // the admin UI can drive lifecycle actions through the existing
         // /api/admin/applications/:id routes.
         applicationId: { type: "string", label: "Application id", search: false },
+        // "associate" | "founding" | "steward" (JOURNEYS-PLAN.md decision
+        // 2). Promoted to a slot so the rail and views can filter by tier.
+        tier: { type: "string", label: "Tier", slot: "s4" },
       },
       // Mirrors the applications.status pipeline (STATUSES in src/worker.ts /
       // STATUS_LABELS in src/app/lib.js). Declaration order sets stageIndex

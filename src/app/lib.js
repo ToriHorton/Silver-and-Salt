@@ -23,6 +23,15 @@ export const STATUS_LABELS = {
 
 export const APPROVABLE = ["paid_pending_vetting", "call_scheduled", "interviewed"];
 
+// Membership tiers (JOURNEYS-PLAN.md decision 2). Rows written before
+// tiers existed carry no tier and read as founding.
+export const TIER_LABELS = {
+  associate: "Associate",
+  founding: "Founding Member",
+  steward: "Community Steward",
+};
+export const tierLabel = (t) => TIER_LABELS[t] || TIER_LABELS.founding;
+
 export const TEMPLATE_META = {
   adminNotification: {
     title: "Admin alert: application paid",
