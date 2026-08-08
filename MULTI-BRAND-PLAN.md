@@ -145,18 +145,43 @@ work. It does block step 4. The unblocker remains odla shipping
 multi-tier membership in chapter
 ([bug fd944a76](https://odla.ai/studio/pm/bugs/fd944a76-460a-54f4-915d-f19a7edc0c68)).
 
+## Stripe consolidation: DONE on dev (2026-08-08)
+
+Silver & Salt dev now charges through **Tori's own account**,
+`acct_1U2IOXAg5KcDIAiw`, business name "Built Not Found Capital sandbox"
+(named at the parent level, which is correct).
+
+- Product `prod_V2Nq2eZ1C5vSlm`; prices `price_1U2J4TAg…Gzp` (Founding
+  $900/yr) and `price_1U2J4TAg…Bwu` (Steward $5,000/yr).
+- Webhook `we_1U2J4UAg…` delivering to her worker; signing secret written
+  to the vault at creation, never printed.
+- **The secret key lives in BOTH vaults**, which is the intended shape:
+  the parent holds the PBC account key, and each chapter's vault holds the
+  same value so every brand charges through the one account. Tori pasted
+  it into `built-not-found--dev`; it was copied programmatically into
+  `silver-and-salt-capital--dev` (read, piped over stdin, never printed).
+- **Full acceptance passed on her account:** Founding charged $900 and
+  Steward charged $5,000, both webhooks flipped the rows to
+  paid_pending_vetting with a 2027-08-08 renewal and logged both emails;
+  "not a paid fit" refunded $900, canceled the subscription, promoted the
+  member and left the row **approved/associate** (the guard held); "not a
+  community fit" refunded $5,000 and settled at declined.
+
+Note for whoever sets up the next brand: a key that starts `mk_` or `pk_`
+is not the secret key. The real one starts `sk_test_` and is ~107
+characters. The setup script refuses a publishable/secret account
+mismatch, but only a real secret key gets past the vault check at all.
+
 ## Immediate next steps
 
-1. **Confirm the Stripe account is the PBC's** and rename it if needed.
-2. **Tori pastes the PBC secret key** into Studio as `stripe_secret_key`
-   for the Silver & Salt dev env (and later each chapter's).
-3. Run `_scripts/setup-stripe-account-dev.mjs <pk_test_…>`, which creates
-   the product, both prices, and the webhook, and refuses if the two keys
-   disagree about which account they belong to.
-4. Add statement descriptors per brand.
-5. Fix the parent's Cory-pointing URL and email addresses.
-6. Decide Tidal Collective's tiers and pricing, then it is one `groups`
-   row plus a themed page.
+1. Add **statement descriptors** per brand so a member's statement reads
+   the brand rather than the parent's legal name.
+2. Fix the parent's Cory-pointing network URL and its three notification
+   addresses.
+3. Decide The Tidal Collective's tiers and pricing, then it is one
+   `groups` row plus a themed page.
+4. Repeat the Stripe wiring for prod at cutover (a live key, a live
+   webhook, and the same acceptance run).
 
 ## Working agreement (Tori, 2026-08-08)
 
