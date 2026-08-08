@@ -220,12 +220,18 @@ supersedes those figures: Associate free, Founding Member $900 a year
 
 ## Open items
 
-1. **Platform bug, report to odla:** `cal.actions.cancel` returns HTTP
-   400 for every event, which breaks the admin console's "Cancel call"
-   button (booking, rescheduling, and drift detection are fine). Two
-   leftover J1 test events need deleting by hand in Google Calendar on
-   the dev-connected account. See MIGRATION.md for the probe that proved
-   it is not test-data-specific.
+1. **Platform bug, REPORTED to odla 2026-08-07** (`odla-ai bug report`,
+   the sanctioned channel; the CLI states odla product defects do not
+   belong in GitHub Issues): `cal.actions.cancel` returns HTTP 400 for
+   every event, which breaks the admin console's "Cancel call" button
+   (booking, rescheduling, and drift detection are fine).
+   [bug 58554e4b](https://odla.ai/studio/pm/bugs/58554e4b-bd7a-5cd2-bc53-a6446defa2c3),
+   severity high. Two leftover J1 test events still need deleting by
+   hand in Google Calendar on the dev-connected account until it is
+   fixed. Filed alongside it:
+   [Studio approve-button placement](https://odla.ai/studio/pm/bugs/c41b53d1-8815-589e-8052-9ba1a51a4250)
+   (Tori's request) and
+   [the stale-CLI handshake error](https://odla.ai/studio/pm/bugs/595426f9-88a7-5586-bfe7-69ea4be547e2).
 2. **Tier copy Tori still owns:** the Associate card's monthly-update
    bullet on membership.html, and a read-through of the join page's
    three tier descriptions (written to match the locked cards, but they
