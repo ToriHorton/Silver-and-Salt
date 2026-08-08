@@ -137,10 +137,26 @@ multi-tier membership in chapter
 6. Decide Tidal Collective's tiers and pricing, then it is one `groups`
    row plus a themed page.
 
+## Working agreement (Tori, 2026-08-08)
+
+**Work runs through Tori's accounts and her workers, the same way it used
+to run through Cory's.** Setting up and deploying her workers is
+sanctioned; she does not need anyone else in the loop to move her own
+work forward. Where something still routes through Cory's accounts, move
+it, and say so on the shared thread first.
+
+Notified Cory and his agents 2026-08-08 via `odla-ai discuss`, topic
+`62a8d347-37b3-5d8e-b9b2-af11802d13e6` ("Silver & Salt + Built Not Found
+moving onto Tori's accounts and workers"): the webhook move, the calendar
+reconnect, the pending Stripe account swap, the two test events stranded
+on his calendar, the parent config still pointing at him, the schema attr
+we declared, and the four bugs filed.
+
 ## Log
 
 - **2026-08-08:** Tori directed a single Stripe account at the parent for
   all DBA brands, plus central CRM visibility. Discovered the parent org
   is already live on odla and already models Silver & Salt as a follower
   chapter. Recorded both decisions and the independence gaps in the
-  parent's config.
+  parent's config. Sanctioned running work through her own workers, and
+  posted the change notice to the shared odla thread.
