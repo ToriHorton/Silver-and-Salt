@@ -72,6 +72,22 @@ supersedes those figures: Associate free, Founding Member $900 a year
     paid. Associates can receive (c) too, so approval gates the free tier
     as much as the paid ones. The admin console grows from two post-call
     actions to three.
+11. **The second membership redeems through the portal, with its own
+    meeting** (2026-08-07). After approval, a Founding member's portal
+    offers "Invite your second member" (her mother or daughter). The
+    invitation sends a personal link that opens the application with the
+    payment step skipped; the invitee books her own 20-minute call with
+    Tori, and the membership activates when Tori approves after that
+    conversation. Build in J2.
+12. **Abandoned payments: keep the record, skip the chase** (2026-08-07).
+    The application row and member account are created and stored at
+    Step 1 (already built), so every abandoned payment is preserved and
+    visible in the console. No recovery email at launch; revisit once
+    real traffic shows the drop-off rate.
+13. **Accreditation self-certification lives inside the membership
+    portal** (2026-08-07), reachable only after approval. Tori wants
+    legal counsel on this placement specifically; it is on the counsel
+    review list below and remains a launch gate.
 6. **The in-between state is the odla dev worker.** Tori is not ready to
    publish; work is committed to `odla-conversion-test` and deployed to
    https://silver-and-salt-capital-dev.silver-and-salt.workers.dev (her
@@ -137,14 +153,21 @@ supersedes those figures: Associate free, Founding Member $900 a year
 - [ ] **J2: Member portal content and accreditation.** This phase also
   delivers what the map's journey 2 needed, since those users are now
   Associates.
-  - PAYMENT-SPEC.md P3: post-approval accreditation self-certification
-    panel; accredited marker kept in a separate namespace (506(b)
-    segregation); non-accredited members stay community-only.
+  - PAYMENT-SPEC.md P3: accreditation self-certification panel inside the
+    membership portal, reachable only after approval (decision 13,
+    counsel-gated); accredited marker kept in a separate namespace
+    (506(b) segregation); non-accredited members stay community-only.
   - Portal sections from the map: deal flow, events, education materials
     (structure plus admin-editable content; scope the minimum real version
     with Tori at phase start). Associate view honors the locked tier copy:
     recordings and memos framed as post-join-date; option to invest for
     accredited members; a become-a-Founding-Member prompt.
+  - Second-membership redemption (decision 11): portal "Invite your
+    second member" for Founding members; personal invitation email with a
+    one-use link; invitee's application skips payment; she books her own
+    20-minute call; activation on Tori's approve. Guards: one invite per
+    Founding membership, revocable before redemption, invite tier
+    recorded on the application.
 - [ ] **J3: The monthly update, as a member benefit.** Per decision 7,
   the update goes to members of every tier. Auto-enroll on approval with
   announcement consent recorded; compose and send from the console via the
@@ -153,24 +176,36 @@ supersedes those figures: Associate free, Founding Member $900 a year
 - [ ] **J4: Production cutover and hardening.** MIGRATION.md P5 (DNS,
   prod Stripe/Clerk/email pastes, Apple Pay domain verification,
   silverandsaltcapital.com sender onboarding) plus PAYMENT-SPEC.md P2
-  referrals and P4 monitoring. Launch gate: securities counsel sign-off on
-  disclaimers, refund policy, trust copy, accreditation gate, and the
-  506(b) approach.
+  referrals and P4 monitoring. Launch gate: securities counsel sign-off
+  on the full counsel review list below.
+
+## Counsel review list (launch gate; Tori requested 2026-08-07)
+
+1. Intake disclaimer text (on the application form).
+2. Refund policy text (acknowledged before payment).
+3. Trust copy at the payment step: the Founding version and the new
+   Steward $5,000 variant (same structure, Steward numbers).
+4. The two not-a-fit notices: the "not a paid fit" downgrade wording and
+   the "not a community fit" exit wording (decision 10).
+5. **Accreditation self-certification inside the membership portal**
+   (decision 13; Tori explicitly wants counsel on this placement): the
+   Rule 501 questionnaire, post-approval-only access, and the 506(b)
+   segregation of accredited status from membership data.
+6. The referral restraint text (PAYMENT-SPEC.md section 3.4, when P2
+   referrals build).
+7. The closer line "Every member is first to know when a new deal is
+   available" (flag carried from CLAUDE.md).
 
 ## Open items
 
 1. Steward perk fulfillment (coaching hours, expert hours, retreat) is
    manual/operational; nothing to build unless Tori wants tracking in CRM.
-2. Whether the Steward flow repeats the refund-until-approved policy
-   verbatim or needs its own counsel-reviewed wording.
-3. Counsel review flag from CLAUDE.md: the closer line "Every member is
-   first to know when a new deal is available."
-4. The new `_reference/membership-*` planning docs are git-tracked and the
+2. The new `_reference/membership-*` planning docs are git-tracked and the
    `_reference` directory is publicly served; decide whether they should
    be excluded from the build before cutover.
-5. Schema pushes from Tori's machine 403 ("not your app", see MIGRATION.md
-   2026-07-18); new-entity pushes (e.g. `newsletterSignups`) may need to
-   run from Cory's machine or with the owner dev token.
+3. Schema pushes from Tori's machine 403 ("not your app", see MIGRATION.md
+   2026-07-18); new-entity pushes may need to run from Cory's machine or
+   with the owner dev token.
 
 ## Log
 
@@ -198,3 +233,12 @@ supersedes those figures: Associate free, Founding Member $900 a year
   splits into "not a paid fit" (downgrade to Associate with refund) and
   "not a community fit" (graceful exit), applying to Associates too
   (decision 10). Flow map updated to match.
+- **2026-08-07 (review closed):** Tori answered the remaining flow-map
+  questions: second membership redeems via a portal invitation and the
+  invitee's own call with Tori (decision 11, J2); abandoned payments keep
+  the stored application and account with no chase email at launch
+  (decision 12); Steward trust copy follows the Founding structure; and
+  the accreditation panel lives in the membership portal, explicitly
+  flagged for counsel (decision 13). Consolidated the counsel review
+  list as its own launch-gate section. All seven flow-map questions are
+  now resolved.
