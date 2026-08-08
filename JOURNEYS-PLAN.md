@@ -130,9 +130,11 @@ supersedes those figures: Associate free, Founding Member $900 a year
 
 ## Phase checklist
 
-- [ ] **J1: Three-tier membership signup and payment.** Extend the built
-  flow from one tier to three. Everyone, including investment-first
-  prospects, comes through this flow; every tier books an intro call.
+- [x] **J1: Three-tier membership signup and payment.** BUILT AND
+  VERIFIED ON DEV 2026-08-07 (full acceptance detail in MIGRATION.md,
+  section "J1: three membership tiers"). Everyone, including
+  investment-first prospects, comes through this flow; every tier books
+  an intro call.
   - `groups` row gains Steward pricing (stripePriceId per tier); extend
     `_scripts/setup-stripe-dev.mjs` to create the $5,000/year Price.
   - Tier selection (decision 9): membership.html's three CTAs carry the
@@ -218,7 +220,17 @@ supersedes those figures: Associate free, Founding Member $900 a year
 
 ## Open items
 
-1. Steward perk fulfillment (coaching hours, expert hours, retreat) is
+1. **Platform bug, report to odla:** `cal.actions.cancel` returns HTTP
+   400 for every event, which breaks the admin console's "Cancel call"
+   button (booking, rescheduling, and drift detection are fine). Two
+   leftover J1 test events need deleting by hand in Google Calendar on
+   the dev-connected account. See MIGRATION.md for the probe that proved
+   it is not test-data-specific.
+2. **Tier copy Tori still owns:** the Associate card's monthly-update
+   bullet on membership.html, and a read-through of the join page's
+   three tier descriptions (written to match the locked cards, but they
+   are new sentences).
+3. Steward perk fulfillment (coaching hours, expert hours, retreat) is
    manual/operational; nothing to build unless Tori wants tracking in CRM.
 2. The new `_reference/membership-*` planning docs are git-tracked and the
    `_reference` directory is publicly served; decide whether they should
@@ -253,6 +265,16 @@ supersedes those figures: Associate free, Founding Member $900 a year
   splits into "not a paid fit" (downgrade to Associate with refund) and
   "not a community fit" (graceful exit), applying to Associates too
   (decision 10). Flow map updated to match.
+- **2026-08-07 (J1 shipped to dev):** Built and deployed the three-tier
+  signup: tier CTAs, the choose-your-membership step, the free Associate
+  path, the Steward $5,000 subscription, the retired newsletter capture,
+  the heads-up-on-booking email, and the three-outcome vetting decision.
+  Acceptance passed on all three tiers plus both not-a-fit paths
+  (MIGRATION.md has the run). Along the way: updated the odla CLI to
+  0.34.0 (Studio rejects the old handshake), declared a missing schema
+  attr from the other dev machine, and moved the Stripe dev webhook onto
+  Tori's own worker so payment events actually reach it. Found a
+  platform bug: calendar cancel 400s for every event.
 - **2026-08-07 (review closed):** Tori answered the remaining flow-map
   questions: second membership redeems via a portal invitation and the
   invitee's own call with Tori (decision 11, J2); abandoned payments keep

@@ -798,6 +798,77 @@ eyeball Billing/Calendar/Email-Settings under ui 0.7.0. New files are untracked;
 `git add` before the next `npm run build` (build-site.sh copies git-tracked
 files only — `assets/odla-ui/odla-ui.css` especially).
 
+## J1: three membership tiers (2026-08-07, DEPLOYED AND VERIFIED ON DEV)
+
+JOURNEYS-PLAN.md J1 is built and live on the dev worker. Schema gained
+`applications.tier` and the group's steward pricing
+(`stewardPriceCents`, `stripeStewardPriceId`, `stewardTrustCopy`,
+`stewardRefundPolicyText`); `_scripts/setup-stripe-steward-dev.mjs`
+created the $5,000/year Price (`price_1U29lp...`) and rewrote the
+adminNotification template to neutral wording (it now fires for free
+signups too, so "New paid application" was wrong).
+
+- **Schema push snag (fixed):** the push 400'd with
+  `schema omits data-bearing attribute applications.clerkPrivateMetadataSyncedAt`
+  — an attr written from the other dev machine but never declared here.
+  Declared it in `src/odla/schema.mjs`; the push then succeeded. Any
+  future "schema omits" 400 means the same thing: declare the attr, do
+  not delete the data.
+- **CLI 0.13.1 -> 0.34.0 (required):** Studio rejected the old
+  handshake with "this request does not contain a complete immutable
+  grant". The current CLI sends the full grant and approval works.
+- **Stripe webhook MOVED to the owner-account worker.** The dev endpoint
+  pointed at Cory's worker, so webhooks never reached the worker Tori
+  deploys to. New endpoint `we_1U2AFX...` ->
+  `https://silver-and-salt-capital-dev.silver-and-salt.workers.dev/api/webhooks/stripe`,
+  signing secret piped straight into the vault
+  (`secrets set stripe_webhook_secret --stdin`, never printed), old
+  endpoint `we_1Ts7rX...` disabled. Both dev workers still share the
+  backend; only one can own the webhook.
+- **Acceptance run (Stripe Test Mode, deployed dev worker):**
+  - Associate: application -> account created -> 20-minute slot booked
+    (real FreeBusy) -> row `call_scheduled`, tier `associate`, NO payment
+    step. Heads-up email logged at booking (`admin:<appId>`), which is
+    the fix for free signups arriving silently.
+  - Founding: $900 subscription created, `pm_card_visa` confirmed,
+    `invoice.paid` flipped the row to `paid_pending_vetting` with
+    renewal 2027-08-08.
+  - Steward: $5,000 subscription with steward line items and steward
+    trust copy; paid, then refunded + canceled -> webhook settled the
+    row at `refunded`, `canceled: true`.
+  - **Not a paid fit** (`POST .../downgrade`) on the paid Founding row:
+    returned approved/associate, role promoted to member, $900 refunded,
+    subscription canceled, onboarding invite logged. The
+    `charge.refunded` guard held: the row stayed **approved**, not
+    refunded. This is the ordering that matters (approve first, then
+    refund).
+  - **Not a community fit** (`POST .../decline`) on the free Associate
+    row: status `declined`, nothing to refund.
+- **Test fixtures left in the dev tenant** (harmless, and useful as
+  worked examples of each end state): j1-associate-test@example.com
+  (declined), j1-founding-test@example.com (approved as associate after
+  downgrade), j1-steward-test@example.com (refunded).
+
+### Two known gaps found during the run (neither blocks J1)
+
+1. **`cal.actions.cancel` is broken platform-side: HTTP 400
+   `bad_request` for EVERY event**, verified with a purpose-built probe
+   event carrying a valid attendee (so it is not the test data's
+   `example.com` address). This breaks the admin console's "Cancel call"
+   button, which calls the same API; booking, rescheduling, and drift
+   detection are unaffected. Report to odla. Two leftover events sit on
+   the dev-connected calendar (cory.ondrejka@gmail.com) until someone
+   deletes them by hand in Google Calendar: the Astrid AcceptanceTest
+   intro call on 2026-08-21 and "TEMP probe: cancel-API test" on
+   2026-08-29.
+2. **Real email delivery still fails from the owner-account worker**
+   (`E_SENDER_DOMAIN_NOT_AVAILABLE`, audited in emailLog, non-fatal):
+   dev `EMAIL_FROM` is `silver-and-salt-capital@odla.ai`, a sender
+   verified on Cory's Cloudflare account, not Tori's. Known since
+   2026-07-18. Sends are constructed, deduped, and logged correctly;
+   only the handoff to Email Service fails. Fix at P5 by onboarding a
+   silverandsaltcapital.com sender on Tori's account.
+
 ## Log
 
 - **2026-07-11 (P0):** Created branch `odla-conversion-test`. Ran
