@@ -46,6 +46,9 @@ export const schema = {
         meetingLink: { type: "string", unique: false, indexed: false, optional: true },
         // Clerk user id, linked lazily when a signed-in user's email matches.
         clerkUserId: { type: "string", unique: false, indexed: true, optional: true },
+        // Present on the live dev tenant (written from the other dev
+        // machine); declared here so schema pushes never omit it.
+        clerkPrivateMetadataSyncedAt: { type: "number", unique: false, indexed: false, optional: true },
         // ── Payment flow (PAYMENT-SPEC.md P1) ──
         phone: { type: "string", unique: false, indexed: false, optional: true },
         state: { type: "string", unique: false, indexed: false, optional: true },
