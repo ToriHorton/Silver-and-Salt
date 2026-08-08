@@ -88,6 +88,13 @@ supersedes those figures: Associate free, Founding Member $900 a year
     portal** (2026-08-07), reachable only after approval. Tori wants
     legal counsel on this placement specifically; it is on the counsel
     review list below and remains a launch gate.
+14. **The certification is a yes-or-no gate on portal capability**
+    (2026-08-07). Every approved member answers it, and the answer
+    decides what she can do: yes (accredited) unlocks invest access
+    (deal flow participation and her dollar commitment); no means
+    observer access (education, events, recordings, memos, community)
+    with invest surfaces hidden entirely. The access split itself is on
+    the counsel review list, per Tori.
 6. **The in-between state is the odla dev worker.** Tori is not ready to
    publish; work is committed to `odla-conversion-test` and deployed to
    https://silver-and-salt-capital-dev.silver-and-salt.workers.dev (her
@@ -155,8 +162,11 @@ supersedes those figures: Associate free, Founding Member $900 a year
   Associates.
   - PAYMENT-SPEC.md P3: accreditation self-certification panel inside the
     membership portal, reachable only after approval (decision 13,
-    counsel-gated); accredited marker kept in a separate namespace
-    (506(b) segregation); non-accredited members stay community-only.
+    counsel-gated). The yes/no answer gates portal capability (decision
+    14): yes renders the invest surfaces (deal flow participation,
+    dollar commitment); no renders observer access only, with invest
+    surfaces absent from the page, not merely disabled. Accredited
+    marker kept in a separate namespace (506(b) segregation).
   - Portal sections from the map: deal flow, events, education materials
     (structure plus admin-editable content; scope the minimum real version
     with Tori at phase start). Associate view honors the locked tier copy:
@@ -188,9 +198,12 @@ supersedes those figures: Associate free, Founding Member $900 a year
 4. The two not-a-fit notices: the "not a paid fit" downgrade wording and
    the "not a community fit" exit wording (decision 10).
 5. **Accreditation self-certification inside the membership portal**
-   (decision 13; Tori explicitly wants counsel on this placement): the
-   Rule 501 questionnaire, post-approval-only access, and the 506(b)
-   segregation of accredited status from membership data.
+   (decisions 13 and 14; Tori explicitly wants counsel here): the
+   Rule 501 questionnaire as a yes-or-no certification,
+   post-approval-only access, the 506(b) segregation of accredited
+   status from membership data, and the resulting access split
+   (certified members can invest; every other member has observer
+   access with invest surfaces hidden).
 6. The referral restraint text (PAYMENT-SPEC.md section 3.4, when P2
    referrals build).
 7. The closer line "Every member is first to know when a new deal is
