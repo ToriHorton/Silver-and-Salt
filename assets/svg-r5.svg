@@ -1,0 +1,16 @@
+<svg viewBox="0 0 960 258" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One deal: one hundred women, one special purpose vehicle of one hundred thousand dollars, one company. Ten deals a year is one million dollars."><rect x="30" y="58" width="900" height="128" rx="14" fill="#8B5E83" fill-opacity="0.035" stroke="#8B5E83" stroke-opacity="0.24"/>
+<rect x="46" y="46" width="94" height="24" rx="12" fill="#FBF8F2"/>
+<text x="93" y="62" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.7" fill="#8B5E83" opacity="1">ONE DEAL</text>
+<circle cx="180" cy="124" r="36" fill="#8B5E83" opacity="0.13"/>
+<text x="180" y="132" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="27" font-style="normal" fill="#8B5E83" opacity="1">100</text>
+<path d="M 224 124 L 384 124" stroke="#8B5E83" stroke-opacity="0.24" stroke-width="1.1"/>
+<rect x="390" y="100" width="180" height="48" rx="9" fill="#6E4568"/>
+<text x="480" y="133" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="26" font-style="normal" fill="#fff" opacity="1">$100,000</text>
+<path d="M 578 124 L 748 124" stroke="#8B5E83" stroke-opacity="0.24" stroke-width="1.1"/>
+<circle cx="790" cy="124" r="36" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.42" stroke-width="1.4"/>
+<circle cx="790" cy="124" r="14" fill="#C9A84C"/>
+<text x="180" y="172" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">WOMEN</text>
+<text x="480" y="172" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">ONE SPV</text>
+<text x="790" y="172" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">ONE COMPANY</text>
+<text x="30" y="232" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="27" font-style="italic" fill="#7E8E84" opacity="1">Ten deals a year.</text>
+<text x="930" y="236" text-anchor="end" font-family="Cormorant Garamond, serif" font-size="38" font-style="normal" fill="#2F3E34" opacity="1">$1,000,000</text></svg>

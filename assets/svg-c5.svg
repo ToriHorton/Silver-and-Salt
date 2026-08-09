@@ -1,0 +1,44 @@
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ripples from many small points overlapping into one wave"><circle cx="150" cy="200" r="26" fill="none" stroke="#8B5E83" stroke-opacity="0.300" stroke-width="1.3"/>
+<circle cx="150" cy="200" r="52" fill="none" stroke="#8B5E83" stroke-opacity="0.150" stroke-width="1.3"/>
+<circle cx="150" cy="200" r="78" fill="none" stroke="#8B5E83" stroke-opacity="0.100" stroke-width="1.3"/>
+<circle cx="150" cy="200" r="104" fill="none" stroke="#8B5E83" stroke-opacity="0.075" stroke-width="1.3"/>
+<circle cx="150" cy="200" r="130" fill="none" stroke="#8B5E83" stroke-opacity="0.060" stroke-width="1.3"/>
+<circle cx="150" cy="200" r="6" fill="#C9A84C"/>
+<circle cx="255" cy="150" r="26" fill="none" stroke="#8B5E83" stroke-opacity="0.300" stroke-width="1.3"/>
+<circle cx="255" cy="150" r="52" fill="none" stroke="#8B5E83" stroke-opacity="0.150" stroke-width="1.3"/>
+<circle cx="255" cy="150" r="78" fill="none" stroke="#8B5E83" stroke-opacity="0.100" stroke-width="1.3"/>
+<circle cx="255" cy="150" r="104" fill="none" stroke="#8B5E83" stroke-opacity="0.075" stroke-width="1.3"/>
+<circle cx="255" cy="150" r="130" fill="none" stroke="#8B5E83" stroke-opacity="0.060" stroke-width="1.3"/>
+<circle cx="255" cy="150" r="6" fill="#C9A84C"/>
+<circle cx="250" cy="262" r="26" fill="none" stroke="#8B5E83" stroke-opacity="0.300" stroke-width="1.3"/>
+<circle cx="250" cy="262" r="52" fill="none" stroke="#8B5E83" stroke-opacity="0.150" stroke-width="1.3"/>
+<circle cx="250" cy="262" r="78" fill="none" stroke="#8B5E83" stroke-opacity="0.100" stroke-width="1.3"/>
+<circle cx="250" cy="262" r="104" fill="none" stroke="#8B5E83" stroke-opacity="0.075" stroke-width="1.3"/>
+<circle cx="250" cy="262" r="130" fill="none" stroke="#8B5E83" stroke-opacity="0.060" stroke-width="1.3"/>
+<circle cx="250" cy="262" r="6" fill="#C9A84C"/>
+<circle cx="360" cy="196" r="26" fill="none" stroke="#8B5E83" stroke-opacity="0.300" stroke-width="1.3"/>
+<circle cx="360" cy="196" r="52" fill="none" stroke="#8B5E83" stroke-opacity="0.150" stroke-width="1.3"/>
+<circle cx="360" cy="196" r="78" fill="none" stroke="#8B5E83" stroke-opacity="0.100" stroke-width="1.3"/>
+<circle cx="360" cy="196" r="104" fill="none" stroke="#8B5E83" stroke-opacity="0.075" stroke-width="1.3"/>
+<circle cx="360" cy="196" r="130" fill="none" stroke="#8B5E83" stroke-opacity="0.060" stroke-width="1.3"/>
+<circle cx="360" cy="196" r="6" fill="#C9A84C"/>
+<circle cx="455" cy="150" r="26" fill="none" stroke="#8B5E83" stroke-opacity="0.300" stroke-width="1.3"/>
+<circle cx="455" cy="150" r="52" fill="none" stroke="#8B5E83" stroke-opacity="0.150" stroke-width="1.3"/>
+<circle cx="455" cy="150" r="78" fill="none" stroke="#8B5E83" stroke-opacity="0.100" stroke-width="1.3"/>
+<circle cx="455" cy="150" r="104" fill="none" stroke="#8B5E83" stroke-opacity="0.075" stroke-width="1.3"/>
+<circle cx="455" cy="150" r="130" fill="none" stroke="#8B5E83" stroke-opacity="0.060" stroke-width="1.3"/>
+<circle cx="455" cy="150" r="6" fill="#C9A84C"/>
+<circle cx="455" cy="254" r="26" fill="none" stroke="#8B5E83" stroke-opacity="0.300" stroke-width="1.3"/>
+<circle cx="455" cy="254" r="52" fill="none" stroke="#8B5E83" stroke-opacity="0.150" stroke-width="1.3"/>
+<circle cx="455" cy="254" r="78" fill="none" stroke="#8B5E83" stroke-opacity="0.100" stroke-width="1.3"/>
+<circle cx="455" cy="254" r="104" fill="none" stroke="#8B5E83" stroke-opacity="0.075" stroke-width="1.3"/>
+<circle cx="455" cy="254" r="130" fill="none" stroke="#8B5E83" stroke-opacity="0.060" stroke-width="1.3"/>
+<circle cx="455" cy="254" r="6" fill="#C9A84C"/>
+<circle cx="560" cy="200" r="26" fill="none" stroke="#8B5E83" stroke-opacity="0.300" stroke-width="1.3"/>
+<circle cx="560" cy="200" r="52" fill="none" stroke="#8B5E83" stroke-opacity="0.150" stroke-width="1.3"/>
+<circle cx="560" cy="200" r="78" fill="none" stroke="#8B5E83" stroke-opacity="0.100" stroke-width="1.3"/>
+<circle cx="560" cy="200" r="104" fill="none" stroke="#8B5E83" stroke-opacity="0.075" stroke-width="1.3"/>
+<circle cx="560" cy="200" r="130" fill="none" stroke="#8B5E83" stroke-opacity="0.060" stroke-width="1.3"/>
+<circle cx="560" cy="200" r="6" fill="#C9A84C"/>
+<text x="680" y="180" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="32" font-style="italic" fill="#7E8E84" opacity="1">Small stones,</text>
+<text x="680" y="224" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="38" font-style="normal" fill="#2F3E34" opacity="1">one wave.</text></svg>

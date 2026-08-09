@@ -1,0 +1,38 @@
+<svg viewBox="0 0 960 306" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One deal: one hundred women, one SPV of one hundred thousand dollars, one company. Ten deals a year is one million dollars."><rect x="30" y="56" width="900" height="176" rx="14" fill="#8B5E83" fill-opacity="0.035" stroke="#8B5E83" stroke-opacity="0.26"/>
+<rect x="46" y="44" width="94" height="24" rx="12" fill="#FBF8F2"/>
+<text x="93" y="60" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.7" fill="#8B5E83" opacity="1">ONE DEAL</text>
+<circle cx="150" cy="126" r="36" fill="#8B5E83" opacity="0.13"/>
+<text x="150" y="135" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="27" font-style="normal" fill="#8B5E83" opacity="1">100</text>
+<text x="150" y="178" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">WOMEN</text>
+<path d="M 196 126 L 300 126" stroke="#8B5E83" stroke-opacity="0.26" stroke-width="1.1"/>
+<rect x="306" y="102" width="172" height="48" rx="9" fill="#6E4568"/>
+<text x="392" y="135" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="25" font-style="normal" fill="#fff" opacity="1">$100,000</text>
+<text x="392" y="178" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">ONE SPV</text>
+<path d="M 486 126 L 590 126" stroke="#8B5E83" stroke-opacity="0.26" stroke-width="1.1"/>
+<circle cx="632" cy="126" r="36" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.4"/>
+<circle cx="632" cy="126" r="14" fill="#C9A84C"/>
+<text x="632" y="178" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">ONE COMPANY</text>
+<path d="M 720 76 L 720 212" stroke="#8B5E83" stroke-opacity="0.16"/>
+<text x="760" y="92" text-anchor="start" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.6" fill="#8B5E83" opacity="1">THE YEAR</text>
+<circle cx="768" cy="124" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="768" cy="124" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="804" cy="124" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="804" cy="124" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="840" cy="124" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="840" cy="124" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="876" cy="124" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="876" cy="124" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="912" cy="124" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="912" cy="124" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="768" cy="162" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="768" cy="162" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="804" cy="162" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="804" cy="162" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="840" cy="162" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="840" cy="162" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="876" cy="162" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="876" cy="162" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<circle cx="912" cy="162" r="12" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.2"/>
+<circle cx="912" cy="162" r="4.5" fill="#C9A84C" opacity="0.8"/>
+<text x="30" y="278" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="26" font-style="italic" fill="#7E8E84" opacity="1">Ten deals a year.</text>
+<text x="930" y="282" text-anchor="end" font-family="Cormorant Garamond, serif" font-size="38" font-style="normal" fill="#2F3E34" opacity="1">$1,000,000</text></svg>

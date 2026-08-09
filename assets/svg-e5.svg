@@ -1,0 +1,65 @@
+<svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The first deal drawn in full and the remaining nine shown as simplified strips">
+<text x="30" y="36" text-anchor="start" font-family="Satoshi, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6" fill="#8B5E83" opacity="1">THIS IS ONE DEAL</text>
+<circle cx="70" cy="96" r="40.0" fill="#8B5E83" opacity="0.12" stroke="#8B5E83" stroke-opacity="0.4"/>
+<text x="70" y="100.0" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="26.0" font-style="normal" fill="#8B5E83" opacity="1.0">100</text>
+<text x="70" y="116.0" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="8.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1.0">WOMEN</text>
+<path d="M 118.0 96 L 154.0 96" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.5"/>
+<rect x="160.0" y="76.0" width="124.0" height="40.0" rx="7.0" fill="#8B5E83" opacity="1.0"/>
+<text x="222.0" y="98.0" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20.0" font-style="normal" fill="#fff" opacity="1.0">$100,000</text>
+<text x="222.0" y="111.0" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="7.5" font-weight="700" letter-spacing="1.5" fill="rgba(255,255,255,0.72)" opacity="1.0">ONE SPV</text>
+<path d="M 290.0 96 L 326.0 96" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.5"/>
+<circle cx="352.0" cy="96" r="24.0" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.55" stroke-width="1.5"/>
+<circle cx="352.0" cy="96" r="8.0" fill="#C9A84C" opacity="1.0"/>
+<text x="352.0" y="142.0" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="8.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1.0">ONE COMPANY</text>
+<circle cx="86" cy="168" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 168 L 152 168" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="161" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 168 L 286 168" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="168" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="184" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 184 L 152 184" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="177" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 184 L 286 184" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="184" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="200" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 200 L 152 200" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="193" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 200 L 286 200" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="200" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="216" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 216 L 152 216" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="209" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 216 L 286 216" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="216" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="232" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 232 L 152 232" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="225" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 232 L 286 232" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="232" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="248" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 248 L 152 248" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="241" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 248 L 286 248" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="248" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="264" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 264 L 152 264" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="257" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 264 L 286 264" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="264" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="280" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 280 L 152 280" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="273" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 280 L 286 280" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="280" r="6" fill="#C9A84C" opacity="0.4"/>
+<circle cx="86" cy="296" r="6" fill="#8B5E83" opacity="0.3"/>
+<path d="M 100 296 L 152 296" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<rect x="158" y="289" width="70" height="14" rx="3" fill="#8B5E83" opacity="0.22"/>
+<path d="M 234 296 L 286 296" stroke="#8B5E83" stroke-opacity="0.2" stroke-width="1.2"/>
+<circle cx="302" cy="296" r="6" fill="#C9A84C" opacity="0.4"/>
+<text x="30" y="158" text-anchor="start" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">AND NINE MORE THIS YEAR</text>
+<path d="M 400 70 L 400 300" stroke="#2F3E34" stroke-opacity="0.14"/>
+<text x="448" y="168" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="30" font-style="normal" fill="#7E8E84" opacity="1">ten deals</text>
+<text x="448" y="206" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="30" font-style="normal" fill="#7E8E84" opacity="1">a year</text>
+<text x="448" y="264" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="40" font-style="normal" fill="#2F3E34" opacity="1">$1,000,000</text>
+<text x="448" y="286" text-anchor="start" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.6" fill="#8B5E83" opacity="1">INTO UTAH COMPANIES</text>
+</svg>
