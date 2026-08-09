@@ -177,11 +177,19 @@ referral fees, transaction percentages, or finder's bonuses may be mapped,
 computed, or paid based on anyone's eventual participation in, or capital
 allocation to, any private placement or SPV. Membership referrals only.
 
-Open questions for Tori when she is ready: whether a free Associate can
-earn credits or only paying members; whether there is a cap per referrer;
-what happens to a credit when the referred member is refunded (the spec
-says reverse it); and whether a credit stacks on top of the 10 percent
-founding discount.
+**Associates earn credits too, and they bank** (Tori, 2026-08-08). A free
+Associate who refers a paying member earns the same 10 percent. She has no
+renewal for it to land on, so it is held for her and applies as a discount
+if she ever upgrades to a paying tier. A credit is therefore a standing
+balance on the person, spent at a paying member's renewal or at an
+Associate's first payment on upgrade, and her balance shows in the member
+portal beside her member number.
+
+Still open for Tori: the per-referrer ceiling (unbounded stacking plus the
+Associate case means ten referrals then an upgrade reads as a free
+membership); what happens to a credit when the referred member is refunded
+(PAYMENT-SPEC says reverse it); and whether a credit stacks on top of the
+founding 10 percent.
 
 ## What is already built (verified on dev; see MIGRATION.md for detail)
 

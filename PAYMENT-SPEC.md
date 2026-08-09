@@ -88,11 +88,33 @@ dollars. The founding benefit is 10 percent held forever, and a referral
 credit is 10 percent of next year. Nothing about a member's price should
 be stored as a fixed amount that a future price change can strand.
 
-OPEN (owner): referrals stack per person referred, but there is no cap
-yet. Ten referrals reading as 100 percent off is the obvious hazard.
-Section 3.4 already provides a configurable per-referrer cap; the value
-is Tori's to set. Also open: whether a free Associate can earn credits at
-all, given she has no renewal for one to land on.
+**Associates earn credits too, and they bank** (owner, 2026-08-08). A free
+Associate who refers a paying member earns the same 10 percent, and it is
+held for her. She has no renewal for it to land on, so it waits, and it
+applies as a discount if she ever becomes a paying member herself.
+
+That makes a credit a **standing balance on the person, not an adjustment
+to one invoice.** Two moments consume it:
+- a paying member's **renewal**, where her banked credits reduce that
+  invoice;
+- an Associate's **first payment on upgrade**, where they reduce it in
+  exactly the same way.
+
+Both need her balance visible to her, in the member portal alongside her
+member number, so a member can see what she has earned and what it is
+worth. An earned credit that nobody can see is one nobody trusts.
+
+Read the design intent plainly: the free tier is not a dead end. An
+Associate can bring in paying members and earn her way to a discounted
+membership. That is a growth engine, and it is exactly why the cap below
+matters.
+
+OPEN (owner): referrals stack per person referred, and there is still no
+ceiling. The Associate case sharpens it rather than softening it: someone
+who refers ten paying members and then upgrades reads as 100 percent off
+a membership. Section 3.4 provides a configurable per-referrer cap; the
+value is Tori's to set. Also open: whether a credit stacks on top of the
+founding 10 percent for someone inside the hundred.
 
 This requires linking a new member to the member who referred her. The
 join form's existing `referral` and `referralName` are free text that
@@ -212,7 +234,15 @@ everything else; worker-mediated only.
 
 `referralCredits`: `id`, `groupId`, `referrerUserId`,
 `referredApplicationId`, **`percentOff` (10)**, `status`
-(pending / applied / reversed), `createdAt`.
+(**banked** / applied / reversed), `createdAt`, `appliedAt`,
+`appliedInvoiceId`.
+
+`banked` replaces the old `pending`, because a credit is now a standing
+balance rather than something queued against one known invoice. A free
+Associate earns credits with no renewal to spend them on; they simply
+wait, indefinitely, until she upgrades. The balance belongs to the
+PERSON, and it is spent at whichever comes first: a paying member's
+renewal, or an Associate's first payment on upgrade.
 
 **Changed 2026-08-08:** this was `amountCents` (a flat 10000 = $100). The
 owner's rule is 10 PERCENT off the referrer's next-year rate, so the
@@ -230,7 +260,9 @@ percent off); scoped per group; never tied to investment activity
 
 Only referrals that convert to a PAID tier earn a credit: Founding Member
 or Community Steward. An Associate joining earns the referrer nothing,
-since the free tier is not a sale.
+since the free tier is not a sale. Note the asymmetry, which is
+deliberate: an Associate can EARN credits by referring paying members,
+but referring someone INTO the free tier earns nobody anything.
 
 > Regulatory compliance restraint (verbatim from the brief): This referral
 > tracking exists only to measure community membership growth. No referral
