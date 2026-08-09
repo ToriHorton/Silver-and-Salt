@@ -1,6 +1,8 @@
 # Payment Flow Specification: Silver & Salt Capital on the odla Stack
 
-**Status:** draft for owner review, v0.1 (2026-07-11)
+**Status:** living document. v0.2 (2026-08-08): three membership tiers,
+the 100-place founding pool with member numbering, and the referral credit
+rule, all per owner decisions on 2026-08-07/08. v0.1 was 2026-07-11.
 **Source of business design:** `onboarding-scope.html` (Tori Horton's project
 brief, May 2026, written for the previous GitHub Pages + Apps Script + Google
 Sheet stack). This spec translates that brief onto the odla stack running on
@@ -19,15 +21,83 @@ at application, Tori vets them in the introduction call, and the outcome is
 either approval (they become a member and the subscription simply continues)
 or, on a rare non-fit, a full refund plus subscription cancellation.
 
-Pricing (per the brief's confirmed decision):
-- Standard membership: $1,000 per year.
-- Founding members: a $100 founding-member discount, so $900 per year,
-  locked in for as long as the membership stays continuously active.
-- The payment step shows the line-item breakdown, always: Membership
-  $1,000/year, Founding-member discount minus $100, Total due today $900,
-  with a clear note that membership renews annually.
-- Prices, discount, and all policy copy live in per-group settings (section
-  4), never in code.
+### 1.1 The three tiers (owner, 2026-08-05, cards locked)
+
+| Tier | Price | Payment step |
+|---|---|---|
+| Associate | free | none; application and call only |
+| Founding Member | $1,000 a year | annual subscription |
+| Community Steward | $5,000 a year | annual subscription |
+
+Every tier applies, books the same 20-minute introduction call, and is
+approved by the same deliberate action. Tier is chosen before the
+application: the membership page's three CTAs carry it, and arriving
+without one opens a "choose your membership" step first.
+
+### 1.2 The founding hundred (owner, 2026-08-08)
+
+- **The first 100 people who join as Founding Member OR Community
+  Steward form ONE combined pool.** Both tiers consume places.
+- **Each of the 100 receives a member number**, permanently theirs, shown
+  in their member portal as the standing confirmation of what they hold.
+- **Founding members inside the hundred receive 10 percent off, forever.**
+  On today's $1,000 that is $900.
+- **Community Stewards inside the hundred pay the full $5,000.** They take
+  a place and receive a number; the discount is a Founding benefit only.
+  (Recorded because it narrows the owner's first phrasing, which said both
+  tiers received the discount. Confirmed deliberately on 2026-08-08.)
+- **After the 100 places are claimed**, both tiers remain and both go to
+  full price ($1,000 and $5,000). Everyone already inside keeps their rate.
+
+**Implement the discount as a percentage, never a second fixed price.**
+The locked card promises "your founding rate of 10 percent, held for as
+long as you stay," and states explicitly that the guarantee is the RATE,
+never the dollar. A 10-percent Stripe coupon of duration `forever` on top
+of the $1,000 price honours that: raise the standard price later and
+founding members keep 10 percent off the new number instead of being
+stranded at $900. A hardcoded $900 price silently breaks the promise.
+
+The payment step still shows the full line-item breakdown, always:
+membership price, the founding discount as its own line when it applies,
+total due today, and a clear note that membership renews annually.
+
+Prices, the discount rate, the cap, and all policy copy live in per-group
+settings (section 4), never in code.
+
+### 1.3 The public count
+
+The membership page already renders "N of the first 100 have said yes,"
+and deliberately hides that line until there are 30 members
+(`SHOW_COUNT_AT` in membership.html). Keep the threshold and the wording;
+what changes is only the source, from the hand-maintained
+`members/members.js` list to the real count of numbered members.
+
+### 1.4 Referral credit (owner, 2026-08-08)
+
+**Every member who refers a new Community Steward or Founding Member
+receives 10 percent off her next year's rate, for each person who joins.**
+The credit is a PERCENTAGE of whatever next year's price turns out to be,
+not a fixed dollar amount (owner correction, 2026-08-08: an earlier
+phrasing said $100, which is 10 percent of today's $1,000 and would drift
+the moment the price moves). It applies to the referrer's renewal invoice,
+never as a cash payment and never as a refund. Section 3.4 holds the data
+model and its guards.
+
+Note the consistency: both discounts in this system are rates, not
+dollars. The founding benefit is 10 percent held forever, and a referral
+credit is 10 percent of next year. Nothing about a member's price should
+be stored as a fixed amount that a future price change can strand.
+
+OPEN (owner): referrals stack per person referred, but there is no cap
+yet. Ten referrals reading as 100 percent off is the obvious hazard.
+Section 3.4 already provides a configurable per-referrer cap; the value
+is Tori's to set. Also open: whether a free Associate can earn credits at
+all, given she has no renewal for one to land on.
+
+This requires linking a new member to the member who referred her. The
+join form's existing `referral` and `referralName` are free text that
+records how someone heard about us; they cannot drive a credit on their
+own.
 
 ## 2. Stack mapping (brief -> this branch)
 
@@ -61,6 +131,24 @@ New attrs (all optional in schema; written when known):
 - `prepEmailSentAt` (number): pre-meeting prep email stamp.
 - `canceled` (boolean): set by `customer.subscription.deleted`.
 
+Added 2026-08-08 for the tiers and the founding hundred:
+- `tier` (string, indexed): `associate` | `founding` | `steward`. Rows
+  written before tiers existed carry none and read as `founding`.
+- `memberNumber` (number, **unique**, indexed): her place in the founding
+  hundred, 1 to 100. Assigned when the first payment succeeds, because
+  paying is what holds a place (the trust copy says the card is charged
+  "to hold your founding-member place"). Free Associates get no number:
+  they take no place. Declare it UNIQUE so a race between two
+  simultaneous signups fails loudly and can be retried, rather than
+  quietly issuing the same number twice.
+- `foundingRatePercent` (number, optional): the discount this member
+  holds forever, 10 for the founding hundred's Founding members. Stored
+  on the row so the promise survives independently of any Stripe object.
+- `referredByApplicationId` (string, indexed, optional): the member who
+  referred her. This is the link the free-text `referral` /
+  `referralName` fields cannot provide, and the thing a credit is
+  computed from.
+
 Status enum grows. Full lifecycle:
 
 ```
@@ -88,10 +176,28 @@ Attrs: `id` (slug, unique), `name`, `themeRef`, `standardPriceCents`,
 `normsText`, `emailTemplates` (json: the four templates in section 8),
 `replyTo`, `createdAt`.
 
+Added 2026-08-08, so the founding hundred stays owner-editable data rather
+than code:
+- `stewardPriceCents` (500000) and `stripeStewardPriceId`.
+- `stewardTrustCopy`, `stewardRefundPolicyText`: the Steward variants of
+  the counsel-reviewed payment-step copy.
+- `foundingCapCount` (100): how many places the combined pool holds.
+- `foundingDiscountPercent` (10): the founding rate, as a percentage.
+- `stripeFoundingCouponId`: the Stripe coupon (10 percent, duration
+  `forever`) applied to a Founding subscription while places remain.
+- `referralPercentOff` (10) and `referralMaxPercentOff`: the referral
+  credit and its ceiling.
+
+`foundingDiscountCents` is retained for the existing rows but is no longer
+the source of truth for the discount; `foundingDiscountPercent` is.
+
 Lift-and-shift criterion (brief section 5): launching a second group means
 inserting one `groups` row and pointing a themed page at the same worker;
-records, notifications, and future referral credits stay scoped by
-`groupId` with no leakage.
+records, notifications, and referral credits stay scoped by `groupId` with
+no leakage. Each brand's row carries its own prices, its own founding cap,
+and its own numbering, so The Tidal Collective's hundred is separate from
+Silver & Salt Capital's. All brands charge through the one parent Stripe
+account (MULTI-BRAND-PLAN.md).
 
 ### 3.3 `emailLog` (new)
 
@@ -102,13 +208,29 @@ everything else; worker-mediated only.
 ### 3.4 Phase R entities (spec'd now, built later)
 
 `referralCodes`: `code` (unique), `groupId`, `memberUserId`, `createdAt`,
-`active`. `referralCredits`: `id`, `groupId`, `referrerUserId`,
-`referredApplicationId`, `amountCents` (flat 10000 = $100), `status`
-(pending / applied / reversed), `createdAt`. Guards carried from the brief:
-credit written only on the Approve action; reversed by `charge.refunded`;
-self-referral blocked; one credit per converted referral; configurable per-
-referrer cap; scoped per group; never tied to investment activity and never
-scaling beyond the flat amount (restraint text below, counsel-reviewed).
+`active`.
+
+`referralCredits`: `id`, `groupId`, `referrerUserId`,
+`referredApplicationId`, **`percentOff` (10)**, `status`
+(pending / applied / reversed), `createdAt`.
+
+**Changed 2026-08-08:** this was `amountCents` (a flat 10000 = $100). The
+owner's rule is 10 PERCENT off the referrer's next-year rate, so the
+credit stores a percentage and is resolved against the price at renewal
+time. Storing cents would silently become the wrong benefit the moment
+the standard price changes, exactly the failure the founding rate's
+"guarantee is the RATE, never the dollar" language exists to prevent.
+
+Guards carried from the brief: credit written only on the Approve action;
+reversed by `charge.refunded`; self-referral blocked; one credit per
+converted referral; configurable per-referrer cap (now a percentage
+ceiling, and needed more than before: unbounded stacking reaches 100
+percent off); scoped per group; never tied to investment activity
+(restraint below, counsel-reviewed).
+
+Only referrals that convert to a PAID tier earn a credit: Founding Member
+or Community Steward. An Associate joining earns the referrer nothing,
+since the free tier is not a sale.
 
 > Regulatory compliance restraint (verbatim from the brief): This referral
 > tracking exists only to measure community membership growth. No referral
