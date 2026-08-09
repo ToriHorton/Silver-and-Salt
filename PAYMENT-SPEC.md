@@ -109,12 +109,57 @@ Associate can bring in paying members and earn her way to a discounted
 membership. That is a growth engine, and it is exactly why the cap below
 matters.
 
-OPEN (owner): referrals stack per person referred, and there is still no
-ceiling. The Associate case sharpens it rather than softening it: someone
-who refers ten paying members and then upgrades reads as 100 percent off
-a membership. Section 3.4 provides a configurable per-referrer cap; the
-value is Tori's to set. Also open: whether a credit stacks on top of the
-founding 10 percent for someone inside the hundred.
+### 1.5 How the discounts combine (owner, 2026-08-08)
+
+**There is no ceiling, and ten referrals means a free membership.** That
+is intended, not an oversight: "I'm fine giving a membership away if they
+bring in 10 new members."
+
+The two discounts apply in order, never added together:
+
+1. **The founding rate first**, if she is inside the hundred and Founding:
+   10 percent off the standard price.
+2. **Referral credits second, against the remainder.** Credits SUM at 10
+   percent each (they do not compound), and the total is capped at 100
+   percent of that remainder.
+
+```
+due = standard
+      x (1 - foundingPercent)        // 0.10 inside the hundred, else 0
+      x (1 - min(referrals x 0.10, 1))
+```
+
+Worked, on today's prices:
+
+| Member | Referrals | Arithmetic | Due |
+|---|---|---|---|
+| Founding, in the hundred | 0 | 1000 x 0.9 | $900 |
+| Founding, in the hundred | 1 | 1000 x 0.9 x 0.9 | $810 |
+| Founding, in the hundred | 3 | 1000 x 0.9 x 0.7 | $630 |
+| Founding, in the hundred | 10 | 1000 x 0.9 x 0 | **$0** |
+| Founding, after the hundred | 2 | 1000 x 1.0 x 0.8 | $800 |
+| Steward | 10 | 5000 x 1.0 x 0 | **$0** |
+| Associate upgrading to Founding | 4 banked | 1000 x 0.9 x 0.6 | $540 |
+
+Summing rather than compounding is what makes ten referrals land exactly
+at free; ten compounded 10-percent cuts would leave 35 percent still
+payable, which is not the promise.
+
+**Worth Tori's eye, not a blocker:** the same ten referrals frees a $5,000
+Steward membership as readily as a $1,000 Founding one, so the giveaway is
+five times larger for the tier most able to pay. If that is wrong, the fix
+is a per-tier cap rather than a global one.
+
+Implementation: two Stripe discounts on the subscription. The founding
+coupon is 10 percent with duration `forever`; the referral credit is a
+`once` coupon for the summed percentage, recomputed at each renewal from
+the credits banked that year. Stripe applies multiple discounts
+sequentially against the running total, which is exactly the order above.
+
+**Reversal (owner-confirmed 2026-08-08):** if a referred member is
+refunded, the credit she earned her referrer is reversed. A credit already
+spent on a past invoice is not clawed back; it stops counting toward
+future ones.
 
 This requires linking a new member to the member who referred her. The
 join form's existing `referral` and `referralName` are free text that
@@ -252,11 +297,16 @@ the standard price changes, exactly the failure the founding rate's
 "guarantee is the RATE, never the dollar" language exists to prevent.
 
 Guards carried from the brief: credit written only on the Approve action;
-reversed by `charge.refunded`; self-referral blocked; one credit per
-converted referral; configurable per-referrer cap (now a percentage
-ceiling, and needed more than before: unbounded stacking reaches 100
-percent off); scoped per group; never tied to investment activity
-(restraint below, counsel-reviewed).
+reversed by `charge.refunded` (owner-confirmed 2026-08-08); self-referral
+blocked; one credit per converted referral; scoped per group; never tied
+to investment activity (restraint below, counsel-reviewed).
+
+The per-referrer cap the brief contemplated is **deliberately not set**
+(owner, 2026-08-08): ten referrals reaching a free membership is the
+intended incentive. `referralMaxPercentOff` therefore defaults to 100.
+Keep the setting, because a per-tier limit may be wanted later (section
+1.5 notes that ten referrals frees a $5,000 Steward as easily as a $1,000
+Founding membership).
 
 Only referrals that convert to a PAID tier earn a credit: Founding Member
 or Community Steward. An Associate joining earns the referrer nothing,

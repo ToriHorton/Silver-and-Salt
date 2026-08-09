@@ -185,11 +185,13 @@ balance on the person, spent at a paying member's renewal or at an
 Associate's first payment on upgrade, and her balance shows in the member
 portal beside her member number.
 
-Still open for Tori: the per-referrer ceiling (unbounded stacking plus the
-Associate case means ten referrals then an upgrade reads as a free
-membership); what happens to a credit when the referred member is refunded
-(PAYMENT-SPEC says reverse it); and whether a credit stacks on top of the
-founding 10 percent.
+**Resolved 2026-08-08.** No ceiling: ten referrals earning a free
+membership is the intended incentive, not a leak. Credits SUM at 10
+percent each and apply to the remainder AFTER the founding discount, so a
+founding member with three referrals pays 1000 x 0.9 x 0.7 = $630, and ten
+referrals lands exactly at zero. A refunded referred member reverses the
+credit. Full arithmetic, worked examples, and the Stripe mechanics are in
+PAYMENT-SPEC.md section 1.5.
 
 ## What is already built (verified on dev; see MIGRATION.md for detail)
 
