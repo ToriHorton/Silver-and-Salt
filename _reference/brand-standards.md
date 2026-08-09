@@ -32,6 +32,28 @@ Our written voice is approachable and premium. Punctuation should feel calm and 
 6. **Exception:** Personal-narrative negations are fine ("I didn't know it existed," "I'd never considered this before"). The rule targets how we describe the brand, product, or concepts, not how members describe their own story.
 7. **Reasoning:** Negation invites the reader to picture the thing you're denying. Stating what something IS keeps attention on the brand's actual identity, which is already strong enough to stand on its own.
 
+### Pronouns when talking about investing
+
+8. **Use "they" and "their" for the investor, not "she" and "her."** Added
+   2026-08-08 by Tori.
+   - Bad: `Nobody should invest money she cannot set aside.`
+   - Good: `Nobody should invest money they cannot set aside.`
+   - Bad: `Everyone makes their own money decisions and writes her own checks.`
+   - Good: `Everyone makes their own money decisions and writes their own checks.`
+9. **This applies to the investing side specifically.** Silver & Salt Capital
+   is a community of women and says so proudly: "women who talk about money
+   out loud," "the women we fund," "a seat for your mother or your daughter."
+   That collective language stays. What changes is the pronoun standing in
+   for a single investor in an explanation, a policy, an FAQ answer, or a
+   disclosure.
+10. **Reasoning:** two reasons, and the second is the one that matters more.
+    Deal access is open to accredited investors on federal criteria alone,
+    so copy describing who may invest should not read as though it is
+    describing only women. And a member's spouse, a trust, or a self-directed
+    IRA may be the actual investor, so "she" can simply be wrong.
+    Practically, "they" also reads as neutral rather than as a correction,
+    which suits a calm voice.
+
 Codified in project-level `CLAUDE.md` so Claude Code sessions enforce these rules automatically.
 
 ---

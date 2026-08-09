@@ -1,0 +1,19 @@
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One hundred women fund one special purpose vehicle of one hundred thousand dollars into one company, repeated ten times a year for one million dollars">
+<text x="60" y="42" text-anchor="start" font-family="Satoshi, sans-serif" font-size="12" font-weight="700" letter-spacing="1.8" fill="#8B5E83">ONE DEAL</text>
+<circle cx="130" cy="120" r="52" fill="#8B5E83" opacity="0.12" stroke="#8B5E83" stroke-opacity="0.4"/>
+<text x="130" y="116" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="30" font-style="normal" fill="#8B5E83">100</text>
+<text x="130" y="136" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.6" fill="#7E8E84">WOMEN</text>
+<path d="M 194 120 L 250 120" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.6"/>
+<rect x="256" y="94" width="150" height="52" rx="8" fill="#8B5E83"/>
+<text x="331" y="122" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="25" font-style="normal" fill="#fff">$100,000</text>
+<text x="331" y="138" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9" font-weight="700" letter-spacing="1.6" fill="rgba(255,255,255,0.7)">ONE SPV</text>
+<path d="M 412 120 L 468 120" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.6"/>
+<circle cx="504" cy="120" r="30" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.55" stroke-width="1.6"/>
+<circle cx="504" cy="120" r="10" fill="#C9A84C"/>
+<text x="504" y="178" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.6" fill="#7E8E84">ONE COMPANY</text>
+<path d="M 600 40 L 600 200" stroke="#2F3E34" stroke-opacity="0.14" stroke-width="1"/>
+<text x="648" y="104" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="27" font-style="normal" fill="#7E8E84">ten deals</text>
+<text x="648" y="140" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="27" font-style="normal" fill="#7E8E84">a year</text>
+<text x="648" y="196" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="34" font-style="normal" fill="#2F3E34">$1,000,000</text>
+<text x="648" y="216" text-anchor="start" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.6" fill="#8B5E83">INTO UTAH COMPANIES</text>
+</svg>

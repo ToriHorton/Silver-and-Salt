@@ -1,0 +1,33 @@
+<svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One hundred women times one thousand dollars equals one hundred thousand into one company, times ten a year equals one million dollars">
+<text x="60" y="90" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="34" font-style="normal" fill="#2F3E34">100 women</text>
+<text x="60" y="128" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="26" font-style="normal" fill="#7E8E84">x $1,000 each</text>
+<path d="M 60 150 L 330 150" stroke="#8B5E83" stroke-opacity="0.35" stroke-width="1.4"/>
+<text x="60" y="192" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="38" font-style="normal" fill="#8B5E83">$100,000</text>
+<text x="60" y="214" text-anchor="start" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.6" fill="#7E8E84">ONE SPV, ONE COMPANY</text>
+<text x="392" y="150" font-family="Cormorant Garamond, serif" font-size="40" fill="#7E8E84">x</text>
+<text x="444" y="120" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="30" font-style="normal" fill="#2F3E34">10 companies</text>
+<text x="444" y="156" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="30" font-style="normal" fill="#7E8E84">a year</text>
+<path d="M 620 150 L 660 150" stroke="#8B5E83" stroke-opacity="0.35" stroke-width="1.4"/>
+<text x="690" y="140" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="44" font-style="normal" fill="#2F3E34">$1,000,000</text>
+<text x="690" y="164" text-anchor="start" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.6" fill="#8B5E83">INTO UTAH COMPANIES</text>
+<circle cx="690" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="690" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="710" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="710" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="730" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="730" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="750" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="750" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="770" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="770" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="790" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="790" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="810" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="810" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="830" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="830" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="850" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="850" cy="196" r="2.6" fill="#C9A84C"/>
+<circle cx="870" cy="196" r="7" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.45" stroke-width="1.2"/>
+<circle cx="870" cy="196" r="2.6" fill="#C9A84C"/>
+</svg>
