@@ -102,7 +102,7 @@
      the persuading, and the brand stays in Cormorant and moss instead of
      opening a second visual language. Digits render in Cormorant Infant
      automatically via the styles.css numeral override. */
-  .hc-contrast { max-width: 1100px; margin: 0 auto; padding: 44px 48px 8px; }
+  .hc-contrast { max-width: 1100px; margin: 0 auto; padding: 0 48px 8px; }
   .hc-cgrid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; align-items: start; }
   @media (max-width: 860px) { .hc-cgrid { grid-template-columns: 1fr; gap: 34px; } }
   .hc-panel { }
@@ -128,12 +128,12 @@
   }
   .hc-cfoot {
     font-size: var(--text-2xl); line-height: 1.76; color: var(--moss-light); font-weight: 300;
-    max-width: 720px; margin: 30px 0 0; padding-top: 22px; border-top: 1px solid rgba(47,62,52,0.14);
+    max-width: 680px; margin: 4px 0 0;
   }
   .hc-cfoot strong { color: var(--moss); font-weight: 600; }
 
   /* ── Drawn figures ── */
-  .hc-figure { margin: 10px 0 26px; }
+  .hc-figure { margin: 26px 0 22px; }
   .hc-figure.wide { margin: 22px 0 26px; }
   .hc-svg { width: 100%; height: auto; display: block; }
 
@@ -275,9 +275,7 @@
 <section class="hc-do">
   <h2>Our investment plan.</h2>
   <p>Rather than playing a single-player finance game where you bet big, and risk losing big, we are lifting and shifting how we play in the private equity market. Join us for a community experience where we learn and review deals together and then write a lot of small dollar checks into as many profitable women-owned Utah businesses as we can find.</p>
-</section>
 
-<section class="hc-contrast">
   <div class="hc-figure">
 <svg class="hc-svg" viewBox="0 0 960 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One deal: one hundred women, one special purpose vehicle of one hundred thousand dollars, one company. Ten deals a year is one million dollars."><rect x="30" y="72" width="560" height="132" rx="13" fill="#8B5E83" fill-opacity="0.04" stroke="#8B5E83" stroke-opacity="0.22"/>
 <text x="44" y="62" text-anchor="start" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.7" fill="#8B5E83" opacity="1">ONE DEAL</text>
@@ -296,7 +294,7 @@
 <text x="670" y="120" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="25" font-style="italic" fill="#7E8E84" opacity="1">ten deals a year</text>
 <text x="670" y="178" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="50" font-style="normal" fill="#2F3E34" opacity="1">$1,000,000</text></svg>
   </div>
-  <p class="hc-cfoot"><strong>Angel investing used to mean writing a $25,000 check, thirty times over, to be properly spread out.</strong> Almost nobody can. So we write small checks together, pool them into one investment a founder can build with, and each of us carries a little of the risk instead of one of us carrying all of it.</p>
+  <p class="hc-cfoot" style="max-width:680px">Angel investing used to mean writing a $25,000 check (minimum!) and almost nobody can do this 30 times on their own to reduce the investment risk. <strong>This is why building a community matters.</strong> We pool our investment and each carry a smaller percentage of the total risk, instead of one investor carrying all of it.</p>
 </section>
 
 <!-- ══ PROOF ══ -->
