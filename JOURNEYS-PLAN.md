@@ -105,6 +105,82 @@ supersedes those figures: Associate free, Founding Member $900 a year
    only happen by pushing `main`, which this plan never does before
    cutover.
 
+## Pricing and credits (Tori, 2026-08-08) — NOT YET BUILT
+
+Two rules stated by Tori that the current build does not implement. Both
+change what is collected, stored, and shown to a member.
+
+### Rule 1: the price is $1,000, and the first 100 get 10 percent off
+
+- **Standard membership is $1,000 a year.** Founding is not a separate
+  price; it is the standard price with a founding discount applied.
+- **The first 100 people to join as Founding Member OR Community Steward,
+  counted as one combined pool, receive 10 percent off forever.**
+- **Each of those 100 has a number** ("what number investor they are in
+  the community"), and that number is **shown in their member portal as
+  the standing confirmation that they hold the discount.**
+
+What the build does today, all of which is wrong against this:
+`stripePriceId` charges a flat $900 with no cap and no numbering, and the
+Steward price is a flat $5,000 with no discount. The group row currently
+reads standardPriceCents 100000, foundingDiscountCents 10000,
+stewardPriceCents 500000.
+
+Resolved 2026-08-08:
+
+- **A Steward pays $5,000 with no discount.** The 10 percent applies to
+  Founding members only. Stewards still occupy one of the 100 places and
+  still receive a number. (Noted at the time: this narrows Tori's first
+  phrasing, which said both tiers receive 10 percent off. She chose this
+  deliberately when asked the direct question.)
+- **After the 100 places are claimed, the tiers stay and the prices go to
+  full:** Founding $1,000, Steward $5,000. Everyone already inside keeps
+  10 percent off forever.
+- **The count is public, but only once it has earned it.** This was
+  already decided and already built: `SHOW_COUNT_AT = 30` in
+  membership.html hides the line until there are 30 founding members,
+  then renders "N of the first 100 have said yes." Do not add a second
+  count display or lower the threshold. What changes is only its SOURCE:
+  it currently counts hand-maintained entries in `members/members.js`,
+  and should count real paid members once numbering exists.
+
+The locked membership cards are already correct against this: Founding
+shows struck $1,000 -> $900 with the "100 / ONLY" seal, and Steward shows
+a flat $5,000. No card copy needs to change. The italic promise that the
+guarantee is the RATE (10 percent), never the dollar, is why the discount
+is implemented as a percentage coupon rather than a second fixed price:
+it must survive any future change to the $1,000 standard.
+
+### Rule 2: $100 off next year for each paid member you refer
+
+- **Every person who refers a new Community Steward or Founding Member
+  gets $100 off their next year's rate**, per person who joins, so three
+  referrals means $300 off the next renewal.
+- It is a credit against the **referrer's renewal**, not a refund, and it
+  stacks.
+- This requires **linking a new member to the member who referred her**.
+  The join form collects `referral` and `referralName` as free text
+  today, which records how someone heard about us but does not connect to
+  a member record, so it cannot drive a credit.
+
+PAYMENT-SPEC.md section 3.4 already specifies this as Phase R
+(`referralCodes` and `referralCredits`, flat 10000 cents, credit written
+on approval, reversed on refund, self-referral blocked, per-referrer cap
+configurable). Build against that spec rather than inventing a second
+model.
+
+**Compliance restraint carries over verbatim and is not optional:** this
+referral tracking exists only to measure community membership growth. No
+referral fees, transaction percentages, or finder's bonuses may be mapped,
+computed, or paid based on anyone's eventual participation in, or capital
+allocation to, any private placement or SPV. Membership referrals only.
+
+Open questions for Tori when she is ready: whether a free Associate can
+earn credits or only paying members; whether there is a cap per referrer;
+what happens to a credit when the referred member is refunded (the spec
+says reverse it); and whether a credit stacks on top of the 10 percent
+founding discount.
+
 ## What is already built (verified on dev; see MIGRATION.md for detail)
 
 - Founding-tier journey spine on `odla-conversion-test`: join.html apply,
