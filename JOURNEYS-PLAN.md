@@ -154,10 +154,12 @@ it must survive any future change to the $1,000 standard.
 ### Rule 2: $100 off next year for each paid member you refer
 
 - **Every person who refers a new Community Steward or Founding Member
-  gets $100 off their next year's rate**, per person who joins, so three
-  referrals means $300 off the next renewal.
+  gets 10 percent off their next year's rate**, per person who joins.
+  (Corrected by Tori 2026-08-08: an earlier phrasing said $100, which is
+  10 percent of today's $1,000 and would drift as soon as the price moves.
+  The rule is the percentage.)
 - It is a credit against the **referrer's renewal**, not a refund, and it
-  stacks.
+  stacks per person referred, which is why a ceiling is needed.
 - This requires **linking a new member to the member who referred her**.
   The join form collects `referral` and `referralName` as free text
   today, which records how someone heard about us but does not connect to
