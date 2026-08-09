@@ -80,7 +80,7 @@ const THREE_YESES_HTML = `
       <p class="ty-kicker">Become a Member</p>
       <p class="ty-price">$1,000 a year</p>
       <p class="ty-copy">Six classes developed by Invest for Better, more than 20 gatherings a year, a seat for your mother or your daughter, and a community of women who talk about money out loud. Open to women in Utah, and accreditation is never part of the application.</p>
-      <a class="ty-btn" href="/join.html" target="_blank" rel="noopener">Join Us</a>
+      <a class="ty-btn" href="membership.html">Join Us</a>
       <p class="ty-more"><a href="membership.html">Read every benefit &rarr;</a></p>
     </div>
 
