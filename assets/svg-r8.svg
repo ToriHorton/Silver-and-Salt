@@ -1,0 +1,16 @@
+<svg viewBox="0 0 960 226" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One deal: one hundred women, one SPV of one hundred thousand dollars, one company. Ten deals a year is one million dollars."><rect x="30" y="60" width="600" height="150" rx="14" fill="#8B5E83" fill-opacity="0.03" stroke="#8B5E83" stroke-opacity="0.2"/>
+<text x="46" y="50" text-anchor="start" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.7" fill="#8B5E83" opacity="1">ONE DEAL</text>
+<circle cx="118" cy="136" r="28" fill="#8B5E83" opacity="0.12"/>
+<text x="118" y="143" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="21" font-style="normal" fill="#8B5E83" opacity="1">100</text>
+<text x="118" y="182" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">WOMEN</text>
+<path d="M 152 136 L 202 136" stroke="#8B5E83" stroke-opacity="0.24" stroke-width="1.1"/>
+<rect x="208" y="117" width="132" height="38" rx="7" fill="#6E4568" opacity="0.9"/>
+<text x="274" y="142" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20" font-style="normal" fill="#fff" opacity="1">$100,000</text>
+<text x="274" y="182" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1">ONE SPV</text>
+<path d="M 346 136 L 396 136" stroke="#8B5E83" stroke-opacity="0.24" stroke-width="1.1"/>
+<circle cx="500" cy="136" r="56" fill="#FBF8F2" stroke="#C9A84C" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="500" cy="136" r="26" fill="#C9A84C"/>
+<text x="500" y="208" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.4" fill="#2F3E34" opacity="1">ONE WOMAN-OWNED UTAH COMPANY</text>
+<text x="690" y="124" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="42" font-style="normal" fill="#7E8E84" opacity="1">x 10</text>
+<text x="690" y="148" text-anchor="start" font-family="Satoshi, sans-serif" font-size="10" font-weight="700" letter-spacing="1.6" fill="#7E8E84" opacity="1">A YEAR</text>
+<text x="690" y="194" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="36" font-style="normal" fill="#2F3E34" opacity="1">$1,000,000</text></svg>

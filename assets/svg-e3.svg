@@ -1,0 +1,42 @@
+<svg viewBox="0 0 920 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The deal repeated ten times, drawn as a receding stack">
+<circle cx="164" cy="98" r="40.0" fill="#8B5E83" opacity="0.006585599999999998" stroke="#8B5E83" stroke-opacity="0.021951999999999996"/>
+<path d="M 212.0 98 L 248.0 98" stroke="#8B5E83" stroke-opacity="0.021951999999999996" stroke-width="1.5"/>
+<rect x="254.0" y="78.0" width="124.0" height="40.0" rx="7.0" fill="#8B5E83" opacity="0.054879999999999984"/>
+<path d="M 384.0 98 L 420.0 98" stroke="#8B5E83" stroke-opacity="0.021951999999999996" stroke-width="1.5"/>
+<circle cx="446.0" cy="98" r="24.0" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.030183999999999996" stroke-width="1.5"/>
+<circle cx="446.0" cy="98" r="8.0" fill="#C9A84C" opacity="0.054879999999999984"/>
+<circle cx="151" cy="111" r="40.0" fill="#8B5E83" opacity="0.009408" stroke="#8B5E83" stroke-opacity="0.03136"/>
+<path d="M 199.0 111 L 235.0 111" stroke="#8B5E83" stroke-opacity="0.03136" stroke-width="1.5"/>
+<rect x="241.0" y="91.0" width="124.0" height="40.0" rx="7.0" fill="#8B5E83" opacity="0.0784"/>
+<path d="M 371.0 111 L 407.0 111" stroke="#8B5E83" stroke-opacity="0.03136" stroke-width="1.5"/>
+<circle cx="433.0" cy="111" r="24.0" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.043120000000000006" stroke-width="1.5"/>
+<circle cx="433.0" cy="111" r="8.0" fill="#C9A84C" opacity="0.0784"/>
+<circle cx="138" cy="124" r="40.0" fill="#8B5E83" opacity="0.013439999999999999" stroke="#8B5E83" stroke-opacity="0.0448"/>
+<path d="M 186.0 124 L 222.0 124" stroke="#8B5E83" stroke-opacity="0.0448" stroke-width="1.5"/>
+<rect x="228.0" y="104.0" width="124.0" height="40.0" rx="7.0" fill="#8B5E83" opacity="0.11199999999999999"/>
+<path d="M 358.0 124 L 394.0 124" stroke="#8B5E83" stroke-opacity="0.0448" stroke-width="1.5"/>
+<circle cx="420.0" cy="124" r="24.0" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.0616" stroke-width="1.5"/>
+<circle cx="420.0" cy="124" r="8.0" fill="#C9A84C" opacity="0.11199999999999999"/>
+<circle cx="125" cy="137" r="40.0" fill="#8B5E83" opacity="0.0192" stroke="#8B5E83" stroke-opacity="0.064"/>
+<path d="M 173.0 137 L 209.0 137" stroke="#8B5E83" stroke-opacity="0.064" stroke-width="1.5"/>
+<rect x="215.0" y="117.0" width="124.0" height="40.0" rx="7.0" fill="#8B5E83" opacity="0.16"/>
+<path d="M 345.0 137 L 381.0 137" stroke="#8B5E83" stroke-opacity="0.064" stroke-width="1.5"/>
+<circle cx="407.0" cy="137" r="24.0" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.08800000000000001" stroke-width="1.5"/>
+<circle cx="407.0" cy="137" r="8.0" fill="#C9A84C" opacity="0.16"/>
+<circle cx="112" cy="150" r="40.0" fill="#8B5E83" opacity="0.12" stroke="#8B5E83" stroke-opacity="0.4"/>
+<text x="112" y="154.0" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="26.0" font-style="normal" fill="#8B5E83" opacity="1.0">100</text>
+<text x="112" y="170.0" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="8.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1.0">WOMEN</text>
+<path d="M 160.0 150 L 196.0 150" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.5"/>
+<rect x="202.0" y="130.0" width="124.0" height="40.0" rx="7.0" fill="#8B5E83" opacity="1.0"/>
+<text x="264.0" y="152.0" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20.0" font-style="normal" fill="#fff" opacity="1.0">$100,000</text>
+<text x="264.0" y="165.0" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="7.5" font-weight="700" letter-spacing="1.5" fill="rgba(255,255,255,0.72)" opacity="1.0">ONE SPV</text>
+<path d="M 332.0 150 L 368.0 150" stroke="#8B5E83" stroke-opacity="0.4" stroke-width="1.5"/>
+<circle cx="394.0" cy="150" r="24.0" fill="#FBF8F2" stroke="#8B5E83" stroke-opacity="0.55" stroke-width="1.5"/>
+<circle cx="394.0" cy="150" r="8.0" fill="#C9A84C" opacity="1.0"/>
+<text x="394.0" y="196.0" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="8.5" font-weight="700" letter-spacing="1.5" fill="#7E8E84" opacity="1.0">ONE COMPANY</text>
+<text x="30" y="52" text-anchor="start" font-family="Satoshi, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6" fill="#8B5E83" opacity="1">ONE DEAL, TEN TIMES A YEAR</text>
+<path d="M 470 90 L 470 218" stroke="#2F3E34" stroke-opacity="0.14"/>
+<text x="514" y="140" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="40" font-style="normal" fill="#7E8E84" opacity="1">x 10</text>
+<text x="646" y="132" text-anchor="start" font-family="Cormorant Garamond, serif" font-size="34" font-style="normal" fill="#2F3E34" opacity="1">$1,000,000</text>
+<text x="646" y="154" text-anchor="start" font-family="Satoshi, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.6" fill="#8B5E83" opacity="1">INTO UTAH COMPANIES</text>
+</svg>
