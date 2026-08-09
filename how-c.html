@@ -143,6 +143,9 @@
   .hc-face { width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
              border: 2px solid var(--cream); margin-left: -10px; }
   .hc-face:first-child { margin-left: 0; }
+  .hc-face-more { display: inline-flex; align-items: center; justify-content: center;
+    background: var(--pop); color: #fff; font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; }
   .hc-proof p { font-size: var(--text-lg); line-height: 1.7; color: var(--moss-light);
                 font-weight: 300; margin: 0; max-width: 640px; }
   .hc-proof strong { color: var(--moss); font-weight: 600; }
@@ -299,14 +302,8 @@
 
 <!-- ══ PROOF ══ -->
 <section class="hc-proof">
-  <div class="hc-faces">
-    <img class="hc-face" src="members/tori-horton.jpg" alt="Tori Horton" loading="lazy">
-    <img class="hc-face" src="members/millicent-tracey.jpg" alt="Millicent Tracey" loading="lazy">
-    <img class="hc-face" src="members/lauren-sercu.jpg" alt="Lauren Sercu" loading="lazy">
-    <img class="hc-face" src="members/lavanya-mahate.jpg" alt="Lavanya Mahate" loading="lazy">
-    <img class="hc-face" src="members/crystalee-beck.jpg" alt="Crystalee Beck" loading="lazy">
-  </div>
-  <p>The first founding members have already said yes, and our education is built on the <strong>Invest for Better</strong> curriculum, used by women's investing communities across the country.</p>
+  <div class="hc-faces" id="hc-faces"></div>
+  <p><strong>Our first founding members are saying yes now.</strong></p>
 </section>
 
 <!-- ══ 2. CAN I ACTUALLY DO THIS ══ -->
@@ -400,6 +397,29 @@
 </section>
 
 <site-footer></site-footer>
+<script src="members/members.js"></script>
+<script>
+/* Faces come from members/members.js, the single list the membership page
+   also reads. Add a member there and she appears here too, no edit needed.
+   Shows founding members, newest last, capped so the row stays a row. */
+(function () {
+  var el = document.getElementById('hc-faces');
+  if (!el || typeof MEMBERS === 'undefined') return;
+  var CAP = 12;
+  var founding = MEMBERS.filter(function (m) {
+    return (m.role || 'Founding Member') === 'Founding Member';
+  });
+  var shown = founding.slice(0, CAP);
+  el.innerHTML = shown.map(function (m) {
+    return '<img class="hc-face" src="' + m.photo + '" alt="' + m.name + '" title="' + m.name + '" loading="lazy">';
+  }).join('');
+  var extra = founding.length - shown.length;
+  if (extra > 0) {
+    el.insertAdjacentHTML('beforeend',
+      '<span class="hc-face hc-face-more">+' + extra + '</span>');
+  }
+})();
+</script>
 <script src="assets/site-header.js?v=6" defer></script>
 <script src="assets/site-footer.js?v=6" defer></script>
 
