@@ -172,12 +172,40 @@ is not the secret key. The real one starts `sk_test_` and is ~107
 characters. The setup script refuses a publishable/secret account
 mismatch, but only a real secret key gets past the vault check at all.
 
+## Parent config: DONE, and one incident (2026-08-08)
+
+Fixed in `~/Projects/bnfCapWeb` on branch `tori/prod-builtnotfoundcapital`
+(committed, NOT pushed: the remote is the other developer's repo):
+
+- Network target now `https://silver-and-salt-capital-dev.silver-and-salt.workers.dev`.
+- `notificationEmail` / `replyTo` -> `tori@silverandsaltcapital.com`;
+  `debugEmail` -> `tori+debug@silverandsaltcapital.com`.
+- The parent's dev worker now runs on **Tori's** Cloudflare at
+  `built-not-found-dev.silver-and-salt.workers.dev`. Because the
+  `SILVER_AND_SALT` service binding resolves by worker NAME within one
+  account, deploying it to her account made it point at her Silver & Salt
+  worker with no further config change.
+
+**INCIDENT, worth remembering.** `wrangler deploy --env dev` took
+builtnotfoundcapital.com and www away from the production Worker and
+pointed the live site at the dev tenant. **Wrangler environments inherit
+top-level `routes` even though they inherit no bindings.** The site stayed
+up (200) but served dev data until production was redeployed and the
+domain move confirmed at the prompt. `env.dev` now declares
+`"routes": []`, so a dev deploy can never claim a custom domain again.
+
+Lesson for any repo with a live custom domain: check whether the env you
+are deploying inherits `routes` BEFORE deploying, not after.
+
+Still to do here: the parent's prod worker keeps sending from
+`no-reply@builtnotfoundcapital.com` (already Tori's domain and working),
+but the config changes above are **not deployed to prod** yet. Deploy them
+deliberately, with her approval.
+
 ## Immediate next steps
 
 1. Add **statement descriptors** per brand so a member's statement reads
    the brand rather than the parent's legal name.
-2. Fix the parent's Cory-pointing network URL and its three notification
-   addresses.
 3. Decide The Tidal Collective's tiers and pricing, then it is one
    `groups` row plus a themed page.
 4. Repeat the Stripe wiring for prod at cutover (a live key, a live
