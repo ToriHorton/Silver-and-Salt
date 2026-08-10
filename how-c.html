@@ -33,7 +33,21 @@
 
      Palette keeps the plum of the (B) draft, since this is the purple page.
      ═══════════════════════════════════════════════════════════════════════ */
-  :root { --plum:#3A2536; --plum-pop:#A06E97; --gold:#C9A84C; --pop:#8B5E83; --lime:#7CB83F; }
+  /* The plum palette, matching index.html's palettes.plum exactly. That page
+     applies it with data-palette="plum" + applyPalette(); this page is
+     standalone, so it declares the same values. Setting --pop alone was the
+     bug: --pop-hover, --accent and --highlight fell back to the rust and
+     teal defaults in styles.css, so the copied card drew the wrong colours. */
+  :root {
+    --plum:#3A2536; --plum-pop:#A06E97; --gold:#C9A84C; --lime:#7CB83F;
+    --pop:#8B5E83;
+    --pop-hover:#A06E97;
+    --pop-glow:rgba(139,94,131,0.16);
+    --pop-text:white;
+    --accent:#C9A84C;
+    --accent-soft:rgba(201,168,76,0.10);
+    --highlight:#C9A84C;
+  }
 
   /* ── Hero ── */
   .hc-hero { background: var(--plum); padding: 120px 48px 80px; position: relative; overflow: hidden; }
@@ -239,14 +253,12 @@
 }
 
   /* ── "Can I actually do this?" as its own card ──
-     Lime, because it is the site's affirmative: the same green the pipeline
-     uses for "deployed by you" and "working for you". This section is the
-     permission slip, so it gets the yes colour rather than the plum the rest
-     of the page runs on. ── */
+     Gold (Tori, 2026-08-08). The lime fought the plum and gold this page
+     runs on; gold is the page's own accent and sits with it. ── */
   .hc-can { max-width: 1100px; margin: 0 auto; padding: 8px 48px 44px; }
   .hc-can-card {
-    background: rgba(124,184,63,0.09);
-    border: 1px solid rgba(124,184,63,0.34);
+    background: rgba(201,168,76,0.10);
+    border: 1px solid rgba(201,168,76,0.36);
     border-radius: 16px;
     padding: 40px 44px 36px;
     position: relative;
@@ -254,7 +266,7 @@
   }
   .hc-can-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--lime);
+    background: var(--gold);
   }
   .hc-can-card h2 {
     font-family: 'Satoshi', sans-serif; font-weight: 900;
@@ -344,52 +356,58 @@
   #page-how .hiw-101-item .hiw-101-body{padding:0 18px 20px}
 }
 
-  /* ── Social proof, celebrated ──
-     This is the strongest proof on the page, so it gets a full-width gold
-     band rather than a hairline: gold because these are FOUNDING members,
-     the same colour the membership page gives its 100/ONLY seal. Faces run
-     larger here than anywhere else on the site on purpose. ── */
+  /* ── Override on the verbatim copy (Tori, 2026-08-08) ──
+     index.html marks the last two steps in lime. On this plum and gold page
+     the green fought everything, so those go gold too. Deliberately left as
+     an override rather than edited into the copied rules above, so the
+     verbatim block stays a true copy of index.html. ── */
+  #page-how .hiw-pl-dot-go { background: var(--gold); }
+  #page-how .hiw-pl-money-text em.go { color: var(--gold); }
+  /* the connector under that row is a gold-into-lime gradient on index.html */
+  #page-how .hiw-pl-money-row::before { background: var(--gold); }
+
+  /* ── The founding one hundred, as a horizontal banner ──
+     Gold, because these are FOUNDING members and it matches the 100/ONLY
+     seal on the membership page. Sized as a band across the page rather
+     than a section: one row, faces beside the line, so it punctuates the
+     page instead of interrupting it. ── */
   .hc-proof {
     background: rgba(201,168,76,0.11);
     border-top: 1px solid rgba(201,168,76,0.4);
     border-bottom: 1px solid rgba(201,168,76,0.4);
-    padding: 60px 48px 56px;
-    margin: 44px 0;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+    padding: 22px 48px;
+    margin: 40px 0;
   }
-  .hc-proof::before {
-    content: '&'; position: absolute; bottom: -90px; right: -10px;
-    font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 300px;
-    line-height: 1; color: rgba(201,168,76,0.10); pointer-events: none; user-select: none;
+  .hc-proof-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center; gap: 22px;
+    flex-wrap: wrap;
   }
-  .hc-proof-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
-  .hc-proof-label {
-    font-family: 'Satoshi', sans-serif; font-size: 13px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: #9a7c22; margin: 0 0 24px;
-  }
-  .hc-faces { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 26px; }
+  .hc-faces { display: flex; align-items: center; gap: 0; flex: none; }
   .hc-face {
-    width: 76px; height: 76px; border-radius: 50%; object-fit: cover;
-    border: 3px solid var(--cream); margin-left: -16px;
-    box-shadow: 0 2px 10px rgba(47,62,52,0.10);
+    width: 52px; height: 52px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--cream); margin-left: -12px;
   }
   .hc-face:first-child { margin-left: 0; }
   .hc-face-more {
     display: inline-flex; align-items: center; justify-content: center;
-    background: var(--pop); color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 25px;
+    background: var(--pop); color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 19px;
   }
   .hc-proof p {
     font-family: 'Satoshi', sans-serif; font-weight: 900;
-    font-size: clamp(24px, 3.4vw, 38px); line-height: 1.14;
-    letter-spacing: var(--tracking-tight); color: var(--moss);
-    margin: 0 auto; max-width: 20ch;
+    font-size: clamp(17px, 2vw, 23px); line-height: 1.25;
+    letter-spacing: var(--tracking-tight); color: var(--moss); margin: 0;
   }
-  .hc-proof p strong { font-weight: 900; }
-  @media (max-width: 640px) {
-    .hc-proof { padding: 44px 24px 40px; }
-    .hc-face { width: 58px; height: 58px; margin-left: -12px; }
+  .hc-proof-label {
+    font-family: 'Satoshi', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #9a7c22;
+    margin: 0; padding-right: 4px; flex: none;
+  }
+  @media (max-width: 760px) {
+    .hc-proof { padding: 20px 24px; }
+    .hc-proof-inner { gap: 14px; }
+    .hc-face { width: 42px; height: 42px; margin-left: -10px; }
+    .hc-proof p { text-align: center; }
   }
 
   /* ── Common questions ── */
@@ -545,7 +563,7 @@
 <!-- ══ PROOF ══ -->
 <section class="hc-proof">
   <div class="hc-proof-inner">
-    <p class="hc-proof-label">The founding hundred</p>
+    <p class="hc-proof-label">The founding one hundred</p>
     <div class="hc-faces" id="hc-faces"></div>
     <p><strong>Our first founding members are saying yes now.</strong></p>
   </div>
