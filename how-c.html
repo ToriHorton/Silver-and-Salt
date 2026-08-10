@@ -137,10 +137,12 @@
   .hc-figure.wide { margin: 22px 0 26px; }
   .hc-svg { width: 100%; height: auto; display: block; }
 
-  /* ── The five steps (lifted from the live How It Works tab, 2026-08-08).
-     Kept byte-identical in structure so it stays in sync with the version
-     on index.html; it inherits this page's plum through --plum/--gold. ── */
-.hiw-pl-wrap{padding:0 48px 72px;background:var(--cream)}
+  /* ══ COPIED VERBATIM FROM index.html ══
+     The pipeline and Angel Investing 101 rules, exactly as they are on the
+     live How It Works tab, line for line. Every one is scoped to #page-how,
+     so the markup below sits inside a wrapper with that id. Do not retype
+     these: copy them again if index.html changes. ══ */
+#page-how .hiw-pl-wrap{padding:0 48px 72px;background:var(--cream)}
 #page-how .hiw-pl-card{background:#3A2536;border-radius:12px;max-width:1100px;width:100%;margin:0 auto;padding:56px 48px 40px;position:relative;overflow:hidden}
 #page-how .hiw-pl-card::before{content:'&';position:absolute;bottom:-50px;right:-20px;font-family:'Cormorant Garamond',serif;font-size:320px;font-weight:300;color:rgba(139,94,131,0.08);line-height:1;pointer-events:none}
 #page-how .hiw-pl-header{text-align:center;margin-bottom:48px;position:relative}
@@ -175,39 +177,6 @@
 #page-how .hiw-pl-money-text{font-size:11px;font-weight:600;color:rgba(251,248,242,0.55);line-height:1.3;text-align:center;max-width:120px}
 #page-how .hiw-pl-money-text em{font-style:normal;color:#C9A84C}
 #page-how .hiw-pl-money-text em.go{color:#7CB83F}
-
-/* How It Works — Commitment */
-#page-how .hiw-commit-section{background:var(--sand);padding:72px 48px}
-#page-how .hiw-commit-inner{max-width:1100px;margin:0 auto}
-#page-how .hiw-commit-heading{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(24px,3.5vw,36px);color:var(--moss);line-height:1.3;margin-bottom:20px}
-#page-how .hiw-commit-heading em{font-style:italic;color:#8B5E83}
-#page-how .hiw-commit-math{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(20px,3vw,28px);color:var(--moss);line-height:1.4;margin-top:32px;padding-top:24px;border-top:1px solid rgba(139,94,131,0.2)}
-#page-how .hiw-commit-math em{font-style:italic;color:#8B5E83}
-#page-how .hiw-commit-body{font-size:17px;line-height:1.8;color:var(--moss-light);font-weight:300;margin-top:20px}
-#page-how .hiw-naf{margin-top:32px;padding:24px 28px;background:rgba(139,94,131,0.06);border-radius:10px;display:flex;align-items:flex-start;gap:20px}
-#page-how .hiw-naf-amp{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:#8B5E83;line-height:1;flex-shrink:0}
-#page-how .hiw-naf-text{font-size:16px;color:var(--moss-light);line-height:1.7;font-weight:300}
-#page-how .hiw-naf-text strong{font-weight:600;color:var(--moss)}
-
-/* How It Works — Fund Your Investment */
-#page-how .hiw-funding{background:var(--cream);padding:80px 48px}
-#page-how .hiw-funding-inner{max-width:880px;margin:0 auto}
-#page-how .hiw-funding .label{text-align:center;margin-bottom:16px}
-#page-how .hiw-funding-heading{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(24px,3.5vw,36px);color:var(--moss);line-height:1.2;margin-bottom:12px;text-align:center}
-#page-how .hiw-funding-heading em{font-style:italic;color:#8B5E83}
-#page-how .hiw-funding-intro{font-size:17px;line-height:1.8;color:var(--moss-light);font-weight:300;max-width:640px;margin:0 auto 48px;text-align:center}
-#page-how .hiw-funding-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px}
-#page-how .hiw-funding-card{background:white;border-radius:10px;padding:36px 28px 32px;border:1px solid rgba(47,62,52,0.08);transition:transform .2s,box-shadow .2s}
-#page-how .hiw-funding-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(47,62,52,0.08)}
-#page-how .hiw-funding-icon{width:56px;height:56px;border-radius:50%;background:rgba(139,94,131,0.09);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-#page-how .hiw-funding-icon svg{width:26px;height:26px;stroke:#8B5E83;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-#page-how .hiw-funding-num{font-family:'Satoshi',sans-serif;font-weight:900;font-size:11px;color:#C9A84C;letter-spacing:.06em;margin-bottom:8px}
-#page-how .hiw-funding-title{font-family:'Satoshi',sans-serif;font-weight:700;font-size:16px;color:var(--moss);margin-bottom:10px;line-height:1.3}
-#page-how .hiw-funding-desc{font-size:16px;color:var(--moss-light);line-height:1.75;font-weight:300}
-#page-how .hiw-funding-desc strong{font-weight:600;color:var(--moss)}
-#page-how .hiw-funding-footnote{max-width:640px;margin:40px auto 0;text-align:center;font-size:12px;color:var(--sage);line-height:1.7;font-weight:300}
-
-/* How It Works — 101 Section */
 #page-how .hiw-101{background:var(--sand);padding:80px 48px}
 #page-how .hiw-101-inner{max-width:880px;margin:0 auto}
 #page-how .hiw-101 .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
@@ -220,80 +189,6 @@
 #page-how .hiw-101-item[open] summary::after{content:'\2212'}
 #page-how .hiw-101-item .hiw-101-body{padding:0 24px 24px;font-size:16px;color:var(--moss-light);line-height:1.8;font-weight:300}
 #page-how .hiw-101-item .hiw-101-body strong{font-weight:600;color:var(--moss)}
-#page-how .hiw-101-item .hiw-101-body p{margin-bottom:12px}
-#page-how .hiw-101-item .hiw-101-body p:last-child{margin-bottom:0}
-
-/* How It Works — CTA */
-#page-how .hiw-cta{background:#3A2536;padding:80px 48px;text-align:center}
-#page-how .hiw-cta h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(32px,5vw,52px);color:var(--cream);margin-bottom:24px}
-#page-how .hiw-cta-btn{display:inline-block;font-size:17px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--moss);background:var(--cream);border:none;border-radius:4px;padding:16px 36px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s}
-#page-how .hiw-cta-btn:hover{background:#A06E97;color:white}
-
-/* HOW responsive */
-@media(max-width:768px){
-  #page-how .hiw-hero{padding:120px 24px 64px}
-  #page-how .hiw-qa-row{grid-template-columns:1fr;gap:24px}
-  #page-how .hiw-qa-divider{display:none}
-  #page-how .hiw-pillars{padding:40px 24px}
-  #page-how .hiw-pillars-inner{grid-template-columns:1fr}
-  #page-how .hiw-community{padding:56px 24px}
-  #page-how .hiw-pl-wrap{padding:0 24px 56px}
-  #page-how .hiw-pl-card{padding:40px 28px 32px}
-  #page-how .hiw-pl-pipeline{grid-template-columns:1fr}
-  #page-how .hiw-pl-pipeline::before{display:none}
-  #page-how .hiw-pl-step{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:20px;row-gap:0;text-align:left;padding:0 0 28px 0;position:relative}
-  #page-how .hiw-pl-step::before{content:'';position:absolute;top:0;left:33px;bottom:0;width:2px;background:rgba(201,168,76,0.15);z-index:0}
-  #page-how .hiw-pl-step:last-child::before{display:none}
-  #page-how .hiw-pl-icon{grid-row:1/4;grid-column:1;width:66px;height:66px;margin-bottom:0;position:relative;z-index:1;box-shadow:0 0 0 3px rgba(201,168,76,0.12)}
-  #page-how .hiw-pl-icon svg{width:24px;height:24px}
-  #page-how .hiw-pl-num{font-size:8px}
-  #page-how .hiw-pl-who{grid-column:2;align-self:end;margin-bottom:2px}
-  #page-how .hiw-pl-stitle{grid-column:2;min-height:auto;font-size:20px;margin-bottom:4px}
-  #page-how .hiw-pl-sdesc{grid-column:2;max-width:none;margin:0;font-size:13px;line-height:1.6}
-  #page-how .hiw-pl-money{margin-top:28px}
-  #page-how .hiw-pl-money-row{grid-template-columns:1fr;gap:10px}
-  #page-how .hiw-pl-money-row::before{display:none}
-  #page-how .hiw-pl-money-step{flex-direction:row;gap:12px}
-  #page-how .hiw-pl-dot{margin-bottom:0;flex-shrink:0;font-size:10px}
-  #page-how .hiw-pl-money-text{text-align:left;max-width:none;font-size:12px}
-  #page-how .hiw-commit-section{padding:56px 24px}
-  #page-how .hiw-funding{padding:56px 24px}
-  #page-how .hiw-funding-grid{grid-template-columns:1fr;gap:20px}
-  #page-how .hiw-cta{padding:56px 24px}
-  #page-how .hiw-naf{flex-direction:column}
-  #page-how .hiw-101{padding:56px 24px}
-}
-@media(max-width:480px){
-  #page-how .hiw-hero{padding:112px 16px 48px}
-  #page-how .hiw-community{padding:40px 16px}
-  #page-how .hiw-pl-wrap{padding:0 16px 40px}
-  #page-how .hiw-pl-card{padding:32px 20px 28px}
-  #page-how .hiw-pl-icon{width:56px;height:56px}
-  #page-how .hiw-pl-step::before{left:27px}
-  #page-how .hiw-pl-icon svg{width:22px;height:22px}
-
-.hiw-101{background:var(--sand);padding:80px 48px}
-#page-how .hiw-101-inner{max-width:880px;margin:0 auto}
-#page-how .hiw-101 .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
-#page-how .hiw-101 h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(24px,3.5vw,36px);color:var(--moss);line-height:1.2;margin-bottom:32px}
-#page-how .hiw-101 h2 em{font-style:italic;color:#8B5E83}
-#page-how .hiw-101-item{background:white;border-radius:10px;padding:0;margin-bottom:12px;border:1px solid rgba(47,62,52,0.08);border-left:3px solid #8B5E83;overflow:hidden}
-#page-how .hiw-101-item summary{font-family:'Satoshi',sans-serif;font-weight:700;font-size:17px;color:var(--moss);padding:20px 24px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;line-height:1.4}
-#page-how .hiw-101-item summary::-webkit-details-marker{display:none}
-#page-how .hiw-101-item summary::after{content:'+';font-family:'Satoshi',sans-serif;font-weight:300;font-size:22px;color:#8B5E83;flex-shrink:0;transition:transform .2s}
-#page-how .hiw-101-item[open] summary::after{content:'\2212'}
-#page-how .hiw-101-item .hiw-101-body{padding:0 24px 24px;font-size:16px;color:var(--moss-light);line-height:1.8;font-weight:300}
-#page-how .hiw-101-item .hiw-101-body strong{font-weight:600;color:var(--moss)}
-#page-how .hiw-101-item .hiw-101-body p{margin-bottom:12px}
-#page-how .hiw-101-item .hiw-101-body p:last-child{margin-bottom:0}
-
-/* How It Works — CTA */
-#page-how .hiw-cta{background:#3A2536;padding:80px 48px;text-align:center}
-#page-how .hiw-cta h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(32px,5vw,52px);color:var(--cream);margin-bottom:24px}
-#page-how .hiw-cta-btn{display:inline-block;font-size:17px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--moss);background:var(--cream);border:none;border-radius:4px;padding:16px 36px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s}
-#page-how .hiw-cta-btn:hover{background:#A06E97;color:white}
-
-/* HOW responsive */
 @media(max-width:768px){
   #page-how .hiw-hero{padding:120px 24px 64px}
   #page-how .hiw-qa-row{grid-template-columns:1fr;gap:24px}
@@ -341,21 +236,32 @@
   #page-how .hiw-101{padding:40px 16px}
   #page-how .hiw-101-item summary{padding:16px 18px;font-size:14px}
   #page-how .hiw-101-item .hiw-101-body{padding:0 18px 20px}
-
-  }
 }
 
-  /* ── Proof band ── */
-  .hc-proof { max-width: 1100px; margin: 0 auto; padding: 10px 48px 0; }
-  .hc-faces { display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
+  /* ── Social proof, as a page divider ──
+     Sits between two card sections, so it reads as a rule across the page
+     with the faces set into it rather than as a block of its own. Mirrors
+     the hairline label pattern used on membership.html. */
+  .hc-proof { max-width: 1100px; margin: 0 auto; padding: 44px 48px; }
+  .hc-proof-inner { display: flex; align-items: center; gap: 20px; }
+  .hc-proof-inner::before, .hc-proof-inner::after {
+    content: ''; height: 1px; background: rgba(47,62,52,0.16); flex: 1;
+  }
+  .hc-proof-mid { display: flex; align-items: center; gap: 16px; flex: none; }
+  .hc-faces { display: flex; align-items: center; gap: 0; }
   .hc-face { width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
              border: 2px solid var(--cream); margin-left: -10px; }
   .hc-face:first-child { margin-left: 0; }
+  @media (max-width: 720px) {
+    .hc-proof-inner { flex-direction: column; gap: 14px; }
+    .hc-proof-inner::before, .hc-proof-inner::after { width: 100%; flex: none; }
+    .hc-proof-mid { flex-direction: column; text-align: center; gap: 10px; }
+  }
   .hc-face-more { display: inline-flex; align-items: center; justify-content: center;
     background: var(--pop); color: #fff; font-family: 'Cormorant Garamond', serif;
     font-size: 17px; }
   .hc-proof p { font-size: var(--text-lg); line-height: 1.7; color: var(--moss-light);
-                font-weight: 300; margin: 0; max-width: 640px; }
+                font-weight: 300; margin: 0; white-space: nowrap; }
   .hc-proof strong { color: var(--moss); font-weight: 600; }
 
   /* ── Common questions ── */
@@ -510,8 +416,12 @@
 
 <!-- ══ PROOF ══ -->
 <section class="hc-proof">
-  <div class="hc-faces" id="hc-faces"></div>
-  <p><strong>Our first founding members are saying yes now.</strong></p>
+  <div class="hc-proof-inner">
+    <div class="hc-proof-mid">
+      <div class="hc-faces" id="hc-faces"></div>
+      <p><strong>Our first founding members are saying yes now.</strong></p>
+    </div>
+  </div>
 </section>
 
 <!-- ══ 2. CAN I ACTUALLY DO THIS ══ -->
@@ -521,6 +431,7 @@
   <p>A thousand dollars into ten companies. It is a vacation. It is a handbag. It is money that would otherwise be spent and gone, put instead into women building businesses in Utah.</p>
 </section>
 
+<div id="page-how">
 <!-- ══ THE FIVE STEPS ══ -->
 <div class="hiw-pl-wrap">
     <div class="hiw-pl-card">
@@ -574,6 +485,8 @@
     </div>
   </div>
 
+</div>
+
 <!-- ══ 3. HOW TO JOIN ══ -->
 <section class="hc-path">
   <p class="hc-label"><span></span>How to join<span></span></p>
@@ -622,6 +535,7 @@
   </div>
 </section>
 
+<div id="page-how">
 <!-- ══ 5. ANGEL INVESTING 101 (the existing one) ══ -->
 <section class="hiw-101">
     <div class="hiw-101-inner">
@@ -681,6 +595,8 @@
 
     </div>
   </section>
+
+</div>
 
 <!-- ══ 6. THE CLOSE ══ -->
 <three-yeses source="how-c"></three-yeses>
