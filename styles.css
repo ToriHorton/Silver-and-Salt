@@ -479,6 +479,26 @@ body.nav-open .nav-dropdown { display: flex; }
   font-weight: 400;
   margin: 0 -.08em;
 }
+.nav-cta { display: flex; align-items: center; gap: var(--space-3); }
+.nav-login {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--pop);
+  border: 1px solid var(--pop);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .25s;
+}
+.nav-login:hover {
+  background: var(--pop);
+  color: var(--pop-text);
+  transform: translateY(-1px);
+}
 .nav-apply {
   font-family: 'Satoshi', sans-serif;
   font-weight: 700;
@@ -868,6 +888,8 @@ footer::after {
   .nav-rail { padding: 0 16px; height: 44px; }
   .nav-tab { font-size: 10px; letter-spacing: .06em; padding: 0 10px; min-height: 44px; white-space: nowrap; }
   .nav-apply { font-size: 10px; padding: 7px 14px; }
+  .nav-login { font-size: 10px; padding: 6px 12px; }
+  .nav-cta { gap: 8px; }
 
   /* Sources table: stack vertically on mobile */
   .page-sources-list li { flex-direction: column; gap: 2px; }

@@ -94,7 +94,10 @@ class SiteHeader extends HTMLElement {
       <div class="split-circle"><div class="sc-left"></div><div class="sc-right"></div><div class="sc-amp">&amp;</div></div>
       <span class="wordmark">Silver <span class="wm-amp">&amp;</span> Salt Capital</span>
     </a>
-    <a href="/join.html" target="_blank" rel="noopener" class="nav-apply">Join</a>
+    <div class="nav-cta">
+      <a href="/members/" class="nav-login">Login</a>
+      <a href="/join.html" target="_blank" rel="noopener" class="nav-apply">Join</a>
+    </div>
   </div>
   <div class="nav-rail">
     <div class="nav-tabs">
@@ -103,7 +106,6 @@ class SiteHeader extends HTMLElement {
       <a class="nav-tab" href="index.html#thesis" data-home-tab="thesis" data-page="thesis">The Thesis</a>
       <a class="nav-tab" href="index.html#how" data-home-tab="how" data-page="how">How It Works</a>
       <a class="nav-tab${currentFile === 'membership.html' ? ' active' : ''}" href="membership.html">Membership</a>${sectionTabHTML}
-      <a class="nav-tab" href="/members/">Members</a>
     </div>
   </div>
 </nav>
