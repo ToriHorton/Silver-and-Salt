@@ -51,8 +51,8 @@ const SITE_FOOTER_HTML = `
       </div>
     </div>
     <div class="f-news" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:18px 0;border-top:1px solid rgba(47,62,52,0.1);border-bottom:1px solid rgba(47,62,52,0.1)">
-      <p style="font-size:14px;font-weight:300;flex:1;min-width:220px;margin:0">Follow the movement. The monthly update arrives with membership, and Associate membership is free.</p>
-      <a href="join.html?tier=associate" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:6px;background:var(--moss,#2F3E34);color:#fff;text-decoration:none;white-space:nowrap">Become an Associate</a>
+      <p style="font-size:14px;font-weight:300;flex:1;min-width:220px;margin:0">Follow the movement. Join as a member at the price point that best fits your interest and stay informed.</p>
+      <a href="membership.html" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:6px;background:var(--moss,#2F3E34);color:#fff;text-decoration:none;white-space:nowrap">Become a member</a>
     </div>
     <div class="f-brand-row">
       <div class="f-left">
@@ -69,7 +69,7 @@ const SITE_FOOTER_HTML = `
         <div class="f-copy">Utah</div>
       </div>
     </div>
-    <p class="f-legal">Membership provides access to education, networking, and community benefits. Membership does not guarantee access to private investment opportunities. Silver <span class="brand-amp">&amp;</span> Salt Capital does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
+    <p class="f-legal">Membership provides access to education, networking, and community benefits. Membership does not guarantee access to private investment opportunities. Silver <span class="brand-amp">&amp;</span> Salt Capital is not a registered broker-dealer or investment adviser and does not provide investment advice. All investment decisions are made independently by individual members. This site does not constitute an offer to sell or a solicitation of an offer to buy any securities.</p>
   </div>
 </footer>
 `;
