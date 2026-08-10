@@ -238,31 +238,159 @@
   #page-how .hiw-101-item .hiw-101-body{padding:0 18px 20px}
 }
 
-  /* ── Social proof, as a page divider ──
-     Sits between two card sections, so it reads as a rule across the page
-     with the faces set into it rather than as a block of its own. Mirrors
-     the hairline label pattern used on membership.html. */
-  .hc-proof { max-width: 1100px; margin: 0 auto; padding: 44px 48px; }
-  .hc-proof-inner { display: flex; align-items: center; gap: 20px; }
-  .hc-proof-inner::before, .hc-proof-inner::after {
-    content: ''; height: 1px; background: rgba(47,62,52,0.16); flex: 1;
+  /* ── "Can I actually do this?" as its own card ──
+     Lime, because it is the site's affirmative: the same green the pipeline
+     uses for "deployed by you" and "working for you". This section is the
+     permission slip, so it gets the yes colour rather than the plum the rest
+     of the page runs on. ── */
+  .hc-can { max-width: 1100px; margin: 0 auto; padding: 8px 48px 44px; }
+  .hc-can-card {
+    background: rgba(124,184,63,0.09);
+    border: 1px solid rgba(124,184,63,0.34);
+    border-radius: 16px;
+    padding: 40px 44px 36px;
+    position: relative;
+    overflow: hidden;
   }
-  .hc-proof-mid { display: flex; align-items: center; gap: 16px; flex: none; }
-  .hc-faces { display: flex; align-items: center; gap: 0; }
-  .hc-face { width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
-             border: 2px solid var(--cream); margin-left: -10px; }
+  .hc-can-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--lime);
+  }
+  .hc-can-card h2 {
+    font-family: 'Satoshi', sans-serif; font-weight: 900;
+    font-size: clamp(26px, 3.6vw, 40px); line-height: 1.06;
+    letter-spacing: var(--tracking-tight); color: var(--moss); margin: 0 0 18px;
+  }
+  .hc-can-card p {
+    font-size: var(--text-2xl); line-height: 1.76; color: var(--moss-light);
+    font-weight: 300; max-width: 720px; margin: 0 0 18px;
+  }
+  .hc-can-card p:last-child { margin-bottom: 0; }
+  @media (max-width: 640px) {
+    .hc-can { padding-left: 24px; padding-right: 24px; }
+    .hc-can-card { padding: 30px 24px 26px; }
+  }
+
+  /* ══ COPIED VERBATIM FROM PRODUCTION (main:index.html) ══
+     Angel Investing 101 and the Founding Cohort close, line for line.
+     Production's closer is the one Tori wants; the three-yeses panel that
+     this branch put on the dev page is not used here. ══ */
+#page-how .hiw-101{background:var(--sand);padding:80px 48px}
+#page-how .hiw-101-inner{max-width:880px;margin:0 auto}
+#page-how .hiw-101 .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
+#page-how .hiw-101 h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(24px,3.5vw,36px);color:var(--moss);line-height:1.2;margin-bottom:32px}
+#page-how .hiw-101 h2 em{font-style:italic;color:#8B5E83}
+#page-how .hiw-101-item{background:white;border-radius:10px;padding:0;margin-bottom:12px;border:1px solid rgba(47,62,52,0.08);border-left:3px solid #8B5E83;overflow:hidden}
+#page-how .hiw-101-item summary{font-family:'Satoshi',sans-serif;font-weight:700;font-size:17px;color:var(--moss);padding:20px 24px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;line-height:1.4}
+#page-how .hiw-101-item summary::-webkit-details-marker{display:none}
+#page-how .hiw-101-item summary::after{content:'+';font-family:'Satoshi',sans-serif;font-weight:300;font-size:22px;color:#8B5E83;flex-shrink:0;transition:transform .2s}
+#page-how .hiw-101-item[open] summary::after{content:'\2212'}
+#page-how .hiw-101-item .hiw-101-body{padding:0 24px 24px;font-size:16px;color:var(--moss-light);line-height:1.8;font-weight:300}
+#page-how .hiw-101-item .hiw-101-body strong{font-weight:600;color:var(--moss)}
+#page-how .hiw-101-item .hiw-101-body p{margin-bottom:12px}
+#page-how .hiw-101-item .hiw-101-body p:last-child{margin-bottom:0}
+
+/* How It Works — CTA */
+#page-how .hiw-cta{background:#3A2536;padding:80px 48px;text-align:center}
+#page-how .hiw-cta h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(32px,5vw,52px);color:var(--cream);margin-bottom:24px}
+#page-how .hiw-cta-btn{display:inline-block;font-size:17px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--moss);background:var(--cream);border:none;border-radius:4px;padding:16px 36px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s}
+#page-how .hiw-cta-btn:hover{background:#A06E97;color:white}
+@media(max-width:768px){
+  #page-how .hiw-hero{padding:120px 24px 64px}
+  #page-how .hiw-qa-row{grid-template-columns:1fr;gap:24px}
+  #page-how .hiw-qa-divider{display:none}
+  #page-how .hiw-pillars{padding:40px 24px}
+  #page-how .hiw-pillars-inner{grid-template-columns:1fr}
+  #page-how .hiw-community{padding:56px 24px}
+  #page-how .hiw-pl-wrap{padding:0 24px 56px}
+  #page-how .hiw-pl-card{padding:40px 28px 32px}
+  #page-how .hiw-pl-pipeline{grid-template-columns:1fr}
+  #page-how .hiw-pl-pipeline::before{display:none}
+  #page-how .hiw-pl-step{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:20px;row-gap:0;text-align:left;padding:0 0 28px 0;position:relative}
+  #page-how .hiw-pl-step::before{content:'';position:absolute;top:0;left:33px;bottom:0;width:2px;background:rgba(201,168,76,0.15);z-index:0}
+  #page-how .hiw-pl-step:last-child::before{display:none}
+  #page-how .hiw-pl-icon{grid-row:1/4;grid-column:1;width:66px;height:66px;margin-bottom:0;position:relative;z-index:1;box-shadow:0 0 0 3px rgba(201,168,76,0.12)}
+  #page-how .hiw-pl-icon svg{width:24px;height:24px}
+  #page-how .hiw-pl-num{font-size:8px}
+  #page-how .hiw-pl-who{grid-column:2;align-self:end;margin-bottom:2px}
+  #page-how .hiw-pl-stitle{grid-column:2;min-height:auto;font-size:20px;margin-bottom:4px}
+  #page-how .hiw-pl-sdesc{grid-column:2;max-width:none;margin:0;font-size:13px;line-height:1.6}
+  #page-how .hiw-pl-money{margin-top:28px}
+  #page-how .hiw-pl-money-row{grid-template-columns:1fr;gap:10px}
+  #page-how .hiw-pl-money-row::before{display:none}
+  #page-how .hiw-pl-money-step{flex-direction:row;gap:12px}
+  #page-how .hiw-pl-dot{margin-bottom:0;flex-shrink:0;font-size:10px}
+  #page-how .hiw-pl-money-text{text-align:left;max-width:none;font-size:12px}
+  #page-how .hiw-commit-section{padding:56px 24px}
+  #page-how .hiw-funding{padding:56px 24px}
+  #page-how .hiw-funding-grid{grid-template-columns:1fr;gap:20px}
+  #page-how .hiw-cta{padding:56px 24px}
+  #page-how .hiw-naf{flex-direction:column}
+  #page-how .hiw-101{padding:56px 24px}
+}
+@media(max-width:480px){
+  #page-how .hiw-hero{padding:112px 16px 48px}
+  #page-how .hiw-community{padding:40px 16px}
+  #page-how .hiw-pl-wrap{padding:0 16px 40px}
+  #page-how .hiw-pl-card{padding:32px 20px 28px}
+  #page-how .hiw-pl-icon{width:56px;height:56px}
+  #page-how .hiw-pl-step::before{left:27px}
+  #page-how .hiw-pl-icon svg{width:22px;height:22px}
+  #page-how .hiw-commit-section{padding:40px 16px}
+  #page-how .hiw-funding{padding:40px 16px}
+  #page-how .hiw-cta{padding:40px 16px}
+  #page-how .hiw-101{padding:40px 16px}
+  #page-how .hiw-101-item summary{padding:16px 18px;font-size:14px}
+  #page-how .hiw-101-item .hiw-101-body{padding:0 18px 20px}
+}
+
+  /* ── Social proof, celebrated ──
+     This is the strongest proof on the page, so it gets a full-width gold
+     band rather than a hairline: gold because these are FOUNDING members,
+     the same colour the membership page gives its 100/ONLY seal. Faces run
+     larger here than anywhere else on the site on purpose. ── */
+  .hc-proof {
+    background: rgba(201,168,76,0.11);
+    border-top: 1px solid rgba(201,168,76,0.4);
+    border-bottom: 1px solid rgba(201,168,76,0.4);
+    padding: 60px 48px 56px;
+    margin: 44px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hc-proof::before {
+    content: '&'; position: absolute; bottom: -90px; right: -10px;
+    font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 300px;
+    line-height: 1; color: rgba(201,168,76,0.10); pointer-events: none; user-select: none;
+  }
+  .hc-proof-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  .hc-proof-label {
+    font-family: 'Satoshi', sans-serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #9a7c22; margin: 0 0 24px;
+  }
+  .hc-faces { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 26px; }
+  .hc-face {
+    width: 76px; height: 76px; border-radius: 50%; object-fit: cover;
+    border: 3px solid var(--cream); margin-left: -16px;
+    box-shadow: 0 2px 10px rgba(47,62,52,0.10);
+  }
   .hc-face:first-child { margin-left: 0; }
-  @media (max-width: 720px) {
-    .hc-proof-inner { flex-direction: column; gap: 14px; }
-    .hc-proof-inner::before, .hc-proof-inner::after { width: 100%; flex: none; }
-    .hc-proof-mid { flex-direction: column; text-align: center; gap: 10px; }
+  .hc-face-more {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--pop); color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 25px;
   }
-  .hc-face-more { display: inline-flex; align-items: center; justify-content: center;
-    background: var(--pop); color: #fff; font-family: 'Cormorant Garamond', serif;
-    font-size: 17px; }
-  .hc-proof p { font-size: var(--text-lg); line-height: 1.7; color: var(--moss-light);
-                font-weight: 300; margin: 0; white-space: nowrap; }
-  .hc-proof strong { color: var(--moss); font-weight: 600; }
+  .hc-proof p {
+    font-family: 'Satoshi', sans-serif; font-weight: 900;
+    font-size: clamp(24px, 3.4vw, 38px); line-height: 1.14;
+    letter-spacing: var(--tracking-tight); color: var(--moss);
+    margin: 0 auto; max-width: 20ch;
+  }
+  .hc-proof p strong { font-weight: 900; }
+  @media (max-width: 640px) {
+    .hc-proof { padding: 44px 24px 40px; }
+    .hc-face { width: 58px; height: 58px; margin-left: -12px; }
+  }
 
   /* ── Common questions ── */
   .hc-101 { max-width: 1100px; margin: 0 auto; padding: 56px 48px 20px; }
@@ -417,18 +545,19 @@
 <!-- ══ PROOF ══ -->
 <section class="hc-proof">
   <div class="hc-proof-inner">
-    <div class="hc-proof-mid">
-      <div class="hc-faces" id="hc-faces"></div>
-      <p><strong>Our first founding members are saying yes now.</strong></p>
-    </div>
+    <p class="hc-proof-label">The founding hundred</p>
+    <div class="hc-faces" id="hc-faces"></div>
+    <p><strong>Our first founding members are saying yes now.</strong></p>
   </div>
 </section>
 
 <!-- ══ 2. CAN I ACTUALLY DO THIS ══ -->
-<section class="hc-do">
-  <h2>Can I actually do this?</h2>
+<section class="hc-can">
+  <div class="hc-can-card">
+    <h2>Can I actually do this?</h2>
   <p>You do not have to be ultra-wealthy. The accreditation standard was written in the 1980s and never adjusted for inflation, so far more women qualify today than realize it. We estimate more than 120,000 women along the Wasatch Front are accredited investors and have never written an angel investment.</p>
   <p>A thousand dollars into ten companies. It is a vacation. It is a handbag. It is money that would otherwise be spent and gone, put instead into women building businesses in Utah.</p>
+  </div>
 </section>
 
 <div id="page-how">
@@ -536,7 +665,8 @@
 </section>
 
 <div id="page-how">
-<!-- ══ 5. ANGEL INVESTING 101 (the existing one) ══ -->
+<!-- ══ FAQ + CLOSE, COPIED VERBATIM FROM PRODUCTION (main:index.html) ══ -->
+<div id="page-how">
 <section class="hiw-101">
     <div class="hiw-101-inner">
       <div class="label">Angel Investing 101</div>
@@ -545,8 +675,8 @@
       <details class="hiw-101-item">
         <summary>What is angel investing?</summary>
         <div class="hiw-101-body">
-          <p>Angel investing means writing a personal check into an early-stage startup, typically before the company has significant revenue. In return, you receive equity (ownership) in that company.</p>
-          <p>It's different from <strong>venture capital (VC)</strong>, where a professional fund manager pools money from many investors and decides where it goes. It's also different from <strong>public market investing</strong> (stocks, ETFs), where you buy shares in established companies on an exchange. Angel investing is direct, early, and personal: you choose the founders you believe in.</p>
+          <p>Angel investing means writing a personal check into an early-stage startup — typically before the company has significant revenue. In return, you receive equity (ownership) in that company.</p>
+          <p>It's different from <strong>venture capital (VC)</strong>, where a professional fund manager pools money from many investors and decides where it goes. It's also different from <strong>public market investing</strong> (stocks, ETFs), where you buy shares in established companies on an exchange. Angel investing is direct, early, and personal — you choose the founders you believe in.</p>
         </div>
       </details>
 
@@ -554,41 +684,42 @@
         <summary>What is an accredited investor?</summary>
         <div class="hiw-101-body">
           <p>The SEC requires that investors in most private deals meet certain financial thresholds. You qualify as an <strong>accredited investor</strong> if you have an annual income of $200K+ ($300K with a spouse) or a net worth exceeding $1M (excluding your primary residence).</p>
-          <p>This requirement exists because private investments are illiquid and carry higher risk than public markets. Membership in Silver <span class="brand-amp">&amp;</span> Salt Capital is open to women in Utah, and accreditation is never part of the application. Federal rules apply to the investing side only, so private deals are open to accredited investors.</p>
+          <p>This requirement exists because private investments are illiquid and carry higher risk than public markets. Silver <span class="brand-amp">&amp;</span> Salt Capital members must be accredited investors.</p>
         </div>
       </details>
 
       <details class="hiw-101-item">
         <summary>Why would someone angel invest?</summary>
         <div class="hiw-101-body">
-          <p><strong>Return potential.</strong> Top-performing angel portfolios can significantly outperform public markets, but returns follow a power law, where a small number of investments drive the majority of gains. Diversification across many companies is essential.</p>
+          <p><strong>Return potential.</strong> Top-performing angel portfolios can significantly outperform public markets — but returns follow a power law, where a small number of investments drive the majority of gains. Diversification across many companies is essential.</p>
           <p><strong>Portfolio diversification.</strong> Private markets give you exposure to a completely different asset class than stocks and bonds.</p>
-          <p><strong>Direct impact.</strong> Your capital goes directly to a founder building something new. You can also add value as an advisor, customer, or connector, beyond your check.</p>
+          <p><strong>Direct impact.</strong> Your capital goes directly to a founder building something new. You can also add value as an advisor, customer, or connector — not just as a check-writer.</p>
         </div>
       </details>
 
       <details class="hiw-101-item">
         <summary>What happens to my capital when I angel invest?</summary>
         <div class="hiw-101-body">
-          <p>When you invest, your capital typically converts into <strong>equity</strong>, meaning ownership in the startup. Most early-stage deals use a SAFE (Simple Agreement for Future Equity) or a convertible note, which convert into shares at the company's next priced funding round.</p>
-          <p>Your money is <strong>illiquid</strong>: expect a 7 to 10 year hold before a potential return through an acquisition, IPO, or secondary sale. You won't work in the business day-to-day, but you may support the founder as a champion, advisor, or customer.</p>
+          <p>When you invest, your capital typically converts into <strong>equity</strong> — ownership in the startup. Most early-stage deals use a SAFE (Simple Agreement for Future Equity) or a convertible note, which convert into shares at the company's next priced funding round.</p>
+          <p>Your money is <strong>illiquid</strong> — expect a 7–10 year hold before a potential return through an acquisition, IPO, or secondary sale. You won't work in the business day-to-day, but you may support the founder as a champion, advisor, or customer.</p>
         </div>
       </details>
 
       <details class="hiw-101-item">
-        <summary>How is this different from a fund?</summary>
+        <summary>What is an angel investor vs. a syndicate?</summary>
         <div class="hiw-101-body">
-          <p>In a <strong>fund</strong>, you hand your money to a manager, and the manager chooses the investments for you. Here, your money stays in your account. We screen companies together, and <strong>you choose each deal yourself</strong>: when you say yes to one, your check joins the other yeses in an <strong>SPV (Special Purpose Vehicle)</strong>, one shared account for that single company, appearing as one clean line on the founder's cap table.</p>
-          <p>Investing together this way gives you <strong>shared research, collective leverage, and company access</strong> that is hard to find alone, while every decision stays yours. Silver <span class="brand-amp">&amp;</span> Salt Capital never holds or manages your money.</p>
+          <p>An <strong>angel investor</strong> is an individual who invests their own money into startups. When you invest solo, you find deals on your own, negotiate terms directly, and manage your own diligence.</p>
+          <p>A <strong>syndicate</strong> is a group of angels who invest together. A lead investor sources and vets the deal, then invites the group to participate. Individual checks are bundled into a single <strong>SPV (Special Purpose Vehicle)</strong> — one clean line on the founder's cap table instead of dozens of individual investors.</p>
+          <p>Syndicates give you <strong>better deal access, shared diligence, and collective leverage</strong> — without requiring you to source every opportunity yourself. Silver <span class="brand-amp">&amp;</span> Salt Capital operates as a syndicate.</p>
         </div>
       </details>
 
       <details class="hiw-101-item">
         <summary>What kind of returns should I expect?</summary>
         <div class="hiw-101-body">
-          <p>Angel returns are measured by <strong>IRR (Internal Rate of Return)</strong>: the annualized rate at which your investment grows over its lifetime, accounting for the timing of cash flows in and out.</p>
-          <p>For context: the S&amp;P 500 has historically returned roughly 10% annually. Top-quartile angel portfolios have reported IRRs of 20 to 30%, though outcomes vary widely. Most startups fail; returns are driven by the few that succeed dramatically.</p>
-          <p>This is why research and diversification matter. Investments backed by 40 or more hours of due diligence earned 7.1 times the money (Wiltbank and Boeker), and spreading your checks across many companies gives the power law a chance to work in your favor.</p>
+          <p>Angel returns are measured by <strong>IRR (Internal Rate of Return)</strong> — the annualized rate at which your investment grows over its lifetime, accounting for the timing of cash flows in and out.</p>
+          <p>For context: the S&amp;P 500 has historically returned roughly 10% annually. Top-quartile angel portfolios have reported IRRs of 20–30%, though outcomes vary widely. Most startups fail; returns are driven by the few that succeed dramatically.</p>
+          <p>This is why portfolio construction matters. At $10K+/year over five years, you build a portfolio of 30+ companies — enough diversification to give the power law a chance to work in your favor.</p>
           <p><em style="font-size:12px;color:var(--sage)">Past performance is not indicative of future results. Angel investing carries significant risk, including the potential loss of your entire investment. Consult your financial advisor.</em></p>
         </div>
       </details>
@@ -596,10 +727,14 @@
     </div>
   </section>
 
+  <!-- CTA (Invitation copy moved from #page-join hero) -->
+  <section class="hiw-cta">
+    <p class="label r" style="font-size:15px;font-weight:700;letter-spacing:.14em;color:var(--pop);margin-bottom:20px">The Founding Cohort</p>
+    <h2 class="r" style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,5.5vw,56px);line-height:1.15;max-width:720px;margin:0 auto 28px">We understand that collective finance will fund Utah's future. <em style="font-style:italic;color:var(--pop)">We can't afford to miss this investment.</em></h2>
+    <p class="r" style="font-size:17px;line-height:1.8;max-width:560px;margin:0 auto 32px;font-weight:300">Silver <span class="brand-amp">&amp;</span> Salt Capital is forming with 100 women who will shape the culture, influence who gets funded, and define the standards for everything that follows.</p>
+    <a href="membership.html" class="hiw-cta-btn">Join Us</a>
+  </section>
 </div>
-
-<!-- ══ 6. THE CLOSE ══ -->
-<three-yeses source="how-c"></three-yeses>
 
 <site-footer></site-footer>
 <script src="members/members.js"></script>
@@ -627,7 +762,6 @@
 </script>
 <script src="assets/site-header.js?v=6" defer></script>
 <script src="assets/site-footer.js?v=6" defer></script>
-<script src="assets/three-yeses.js?v=5" defer></script>
 
 </body>
 </html>
