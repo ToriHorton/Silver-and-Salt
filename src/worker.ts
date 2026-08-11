@@ -821,7 +821,14 @@ export async function handleApi(req: Request, env: Env, url: URL): Promise<Respo
       if (existing?.googleEventId) {
         // Rebooking: move the existing event so the invite thread and Meet
         // link survive; Google notifies the attendee of the change.
-        await cal.actions.reschedule(existing.googleEventId as string, { startAt, endAt });
+        // @odla-ai/calendar 0.3.0 requires idempotencyKey on reschedule/cancel
+        // (create takes it as a second argument instead). Key on the target
+        // slot so an exact retry replays rather than moving the event twice.
+        await cal.actions.reschedule(existing.googleEventId as string, {
+          startAt,
+          endAt,
+          idempotencyKey: `meeting:${existing.id as string}:reschedule:${startAt}`,
+        });
         eventId = existing.googleEventId as string;
         meetUrl = (existing.meetUrl as string) || undefined;
         htmlLink = (existing.htmlLink as string) || undefined;
@@ -1704,7 +1711,11 @@ export async function handleApi(req: Request, env: Env, url: URL): Promise<Respo
         if (!slots.some((s: { startAt: number }) => s.startAt === startAt)) {
           return json({ error: "slot no longer available", code: "calendar_slot_unavailable" }, 409);
         }
-        await cal.actions.reschedule(meeting.googleEventId as string, { startAt, endAt });
+        await cal.actions.reschedule(meeting.googleEventId as string, {
+          startAt,
+          endAt,
+          idempotencyKey: `meeting:${meeting.id as string}:reschedule:${startAt}`,
+        });
       } catch (err) {
         const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
         if (code === "calendar_slot_unavailable") {
@@ -1736,7 +1747,12 @@ export async function handleApi(req: Request, env: Env, url: URL): Promise<Respo
 
       if (meeting.googleEventId) {
         try {
-          await cal.actions.cancel(meeting.googleEventId as string);
+          // Cancellation is terminal, so the key is stable for the meeting:
+          // a retry after a timeout replays the first result instead of
+          // issuing a second provider delete.
+          await cal.actions.cancel(meeting.googleEventId as string, {
+            idempotencyKey: `meeting:${meeting.id as string}:cancel`,
+          });
         } catch (err) {
           const code = err instanceof OdlaError ? err.code : (err as { code?: string })?.code;
           if (code !== "booking_not_found") {
