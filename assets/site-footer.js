@@ -52,7 +52,7 @@ const SITE_FOOTER_HTML = `
     </div>
     <div class="f-news" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:18px 0;border-top:1px solid rgba(47,62,52,0.1);border-bottom:1px solid rgba(47,62,52,0.1)">
       <p style="font-size:14px;font-weight:300;flex:1;min-width:220px;margin:0">Follow the movement. Join as a member at the price point that best fits your interest and stay informed.</p>
-      <a href="membership.html" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:6px;background:var(--moss,#2F3E34);color:#fff;text-decoration:none;white-space:nowrap">Become a member</a>
+      <a href="membership.html#memberships" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:6px;background:var(--moss,#2F3E34);color:#fff;text-decoration:none;white-space:nowrap">Become a member</a>
     </div>
     <div class="f-brand-row">
       <div class="f-left">
