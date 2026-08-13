@@ -173,7 +173,9 @@
 
 /* ─── 2. RESET & BASE ──────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* scroll-padding clears the fixed 96px nav so an anchor target does not
+   land underneath it. */
+html { scroll-behavior: smooth; scroll-padding-top: 112px; }
 body {
   font-family: 'Satoshi', sans-serif;
   background: var(--cream);
@@ -181,7 +183,11 @@ body {
   -webkit-font-smoothing: antialiased;
   font-size: var(--text-2xl);
   line-height: var(--leading-relaxed);
-  overflow-x: hidden;
+  /* clip, not hidden: overflow-x:hidden makes body a scroll container,
+     which stops in-page anchors (#memberships, the nav tabs) from
+     scrolling the viewport at all. clip suppresses the same horizontal
+     overflow without creating that container. */
+  overflow-x: clip;
 }
 
 /* ─── 3. TYPOGRAPHY ─────────────────────────────────────────── */

@@ -105,6 +105,84 @@ supersedes those figures: Associate free, Founding Member $900 a year
    only happen by pushing `main`, which this plan never does before
    cutover.
 
+## Decisions (Tori, 2026-08-13)
+
+15. **Every Join CTA routes through the membership page** (2026-08-13).
+    Extends decision 9. The site's "Join Us" buttons went straight to
+    join.html, so most visitors chose a tier from the chooser's one-line
+    summaries and never saw the cards. Every Join CTA now points at
+    `membership.html#memberships`, landing on the three cards, and the
+    card CTAs carry `?tier=`. join.html's chooser stays as the fallback
+    for direct links and bookmarks, so decision 9 still holds. Two
+    deliberate exceptions carry a tier of their own: the three-yeses
+    "Become an Associate" button, and the FAQ prose link to the interest
+    form. Applied to index.html (4 buttons), the shared nav in
+    `assets/site-header.js`, faqs.html, manifesto.html, opportunity.html,
+    networks.html (2), membership.html (2, which scroll in place),
+    how-c.html, and `assets/three-yeses.js`. The `target="_blank"` came
+    off these, since they are now internal navigation and a new tab
+    breaks the back button.
+
+16. **The second family seat is $500 a year for Founding Members, and
+    included for Community Stewards** (2026-08-13). Supersedes the free
+    second seat described in decision 11 and in the membership copy. The
+    seat is still a full membership: she completes her own application
+    and consents for herself. Associate does not include it. Priced per
+    year alongside her own membership year, not one time. Applied to
+    membership.html (Founding card, Steward card, pillar note, FAQ) and
+    membership-in-full.html (comparison table, Founding list, Steward
+    list, program callout, FAQ).
+
+17. **Community Stewards receive an exclusive welcome gift, and the gift
+    itself is undecided** (2026-08-13). The card reads "An exclusive
+    welcome gift, revealed when you join," written as deliberate intrigue
+    rather than a placeholder. Tori picks the gift later. Candidates
+    discussed: a signed copy of Janine Firpo's "Activate Your Money"
+    (ties the gift to the Invest for Better curriculum), a silver
+    keepsake, a named gift to Mama High-Five Grants, or a curated welcome
+    box. The benefit also appears on membership-in-full.html, in the
+    Steward list and as a comparison-table row, so the two pages agree.
+
+18. **How It Works is a standalone page, reached from the nav**
+    (2026-08-13). The nav tab pointed at `index.html#how`, so how-c.html
+    had no inbound links from anywhere. The tab now points at how-c.html,
+    and that page's CTA lands on the membership cards. Two things stay
+    open: index.html still carries a roughly 15KB `page-how` SPA section
+    with its own How It Works content, now unreachable from the nav, and
+    Tori decides whether it becomes a homepage teaser linking to
+    how-c.html or is removed. how-c.html also keeps a draft filename and
+    a noindex tag, both of which need settling before cutover.
+
+19. **The tier recommendation badges are removed** (2026-08-13). All
+    three cards carried a hidden "Recommended for you" badge left from
+    the sorter that was cut to membership-sorter-marketing.html. The
+    `.reco` class that would have revealed one was never applied by
+    anything, so no card was ever recommended. Markup and CSS both
+    removed. Recover the pattern from the sorter file if a real
+    recommendation rule is built later.
+
+## Site fixes found while tracing the journey (2026-08-13)
+
+- **In-page anchors did not scroll at all.** `styles.css` set
+  `body { overflow-x: hidden }`, which makes body a scroll container and
+  stops fragment navigation from moving the viewport. Both
+  `membership.html#memberships` and the membership hero's own "Pick your
+  membership" button landed at the top of the page instead of the cards.
+  Changed to `overflow-x: clip`, which suppresses the same horizontal
+  overflow without creating that container. Verified by Tori in a real
+  browser on 2026-08-13.
+- **Anchor targets sat under the fixed nav.** The nav is `position:
+  fixed` at 96px tall, so an anchor landed beneath it. Added
+  `scroll-padding-top: 112px` to `html`.
+- Cache-busters bumped so returning visitors pick up the changed shared
+  files: `styles.css?v=2026-08-12` and `assets/site-header.js?v=11`.
+
+**Working-copy warning (2026-08-13):** every change above was made in
+`dist/` on branch `main`. `dist/` is git-ignored on both branches, while
+these same files are tracked at the root of `odla-conversion-test`. The
+work is therefore untracked and unbacked-up. It needs to be copied onto
+`odla-conversion-test` and committed before anything else lands.
+
 ## Pricing and credits (Tori, 2026-08-08) — NOT YET BUILT
 
 Two rules stated by Tori that the current build does not implement. Both

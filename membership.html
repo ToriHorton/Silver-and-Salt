@@ -13,7 +13,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2026-08-09">
+<link rel="stylesheet" href="styles.css?v=2026-08-12">
 <style>
   /* ── Membership page overrides — moss/lime, bridging to join.html ── */
   :root {
@@ -315,13 +315,6 @@
                           background: linear-gradient(90deg, var(--gold) 0%,
                                       rgba(201,168,76,0.25) 100%); }
 
-.g-tier-badge {
-  position: absolute; top: -12px; left: 20px; background: var(--lime-dark);
-  color: #fff; font-family: 'Satoshi', sans-serif; font-weight: 700;
-  font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
-  padding: 5px 12px; border-radius: 999px; display: none;
-}
-.g-tier.reco .g-tier-badge { display: inline-block; }
 .g-tier-k { font-family: 'Cormorant Garamond', serif; font-size: 24px; letter-spacing: 0;
             font-weight: 600; line-height: 1.15; margin: 0 0 4px; }
 .g-tier.steward  .g-tier-k { color: var(--gold); filter: brightness(0.8); }
@@ -489,15 +482,16 @@
   <div class="g-tier-grid">
 
     <div class="g-tier steward" id="tier-steward">
-      <span class="g-tier-badge">Recommended for you</span>
       <p class="g-tier-k">Community Steward</p>
       <p class="g-tier-price">$5,000 a year</p>
       <p class="g-tier-who">For anyone who wants this shift to be sustainable</p>
       <ul>
         <li>Everything in Founding Member</li>
+        <li>An exclusive welcome gift, revealed when you join</li>
         <li>2 hours of private financial coaching</li>
         <li>Time with every visiting expert, before the workshop</li>
         <li>The annual retreat, included</li>
+        <li>The second family seat, included</li>
         <li>Your name recognized as a Community Steward</li>
       </ul>
       <div class="g-heard gold">
@@ -509,7 +503,6 @@
     </div>
 
     <div class="g-tier founding" id="tier-founding">
-      <span class="g-tier-badge">Recommended for you</span>
       <p class="g-tier-k">Founding Member</p>
       <div class="g-seal-row">
         <div class="g-seal"><span class="g-seal-n">100</span><span class="g-seal-l">Only</span></div>
@@ -525,13 +518,12 @@
         <li>20+ optional gatherings, including workshops led by wealth experts</li>
         <li>Live pitch meetings, deal memos, and the option to invest*</li>
         <li>A voice in finding and selecting the women we fund</li>
-        <li>A second membership included, for your mother or your daughter</li>
+        <li>A second membership for your mother or your daughter, at $500 a year</li>
       </ul>
       <a href="join.html?tier=founding">Join the action &rarr;</a>
     </div>
 
     <div class="g-tier assoc" id="tier-assoc">
-      <span class="g-tier-badge">Recommended for you</span>
       <p class="g-tier-k">Associate Member</p>
       <p class="g-tier-price">Free</p>
       <p class="g-tier-who">Open to everyone, anywhere</p>
@@ -598,7 +590,7 @@
         <li><strong>We are kind and we are effective.</strong> Both, always.</li>
         <li><strong>We amplify each other's voices</strong> and operate from abundance, not scarcity.</li>
       </ul>
-      <p class="mb-pillar-note">Let's make talking about money with our family a normal conversation. We want more mothers and daughters joining in, so <strong>every membership includes a second family seat, free</strong>.</p>
+      <p class="mb-pillar-note">Let's make talking about money with our family a normal conversation. We want more mothers and daughters joining in, so <strong>every membership can add a second family seat</strong>, at $500 a year for Founding Members and included for Community Stewards.</p>
     </div>
   </details>
 </div>
@@ -660,7 +652,7 @@
 
   <details>
     <summary>Who can hold my second seat?</summary>
-    <div class="mb-faq-a">Your mother or your daughter(s) are invited to join because we want more families learning to talk with each other about money. (It is not as taboo as grandma said!) Everyone has access to a full membership and all the benefits. Please note she will have to consent and complete her own application.</div>
+    <div class="mb-faq-a">Your mother or your daughter(s) are invited to join because we want more families learning to talk with each other about money. (It is not as taboo as grandma said!) The second seat is $500 a year for Founding Members, and included for Community Stewards. Everyone has access to a full membership and all the benefits. Please note she will have to consent and complete her own application.</div>
   </details>
 </section>
 
@@ -681,14 +673,14 @@
       <div class="mb-convo-rule"></div>
       <h2>Every membership starts <em>with a conversation</em>.</h2>
       <p class="mb-convo-p">Membership is by application only. A quick intake form and a call with Tori.</p>
-      <a href="join.html" class="mb-btn mb-btn-lime mb-convo-btn">Join Us</a>
+      <a href="#memberships" class="mb-btn mb-btn-lime mb-convo-btn">Join Us</a>
     </div>
   </div>
 </section>
 
 <site-footer></site-footer>
-<script src="assets/site-header.js?v=8" defer></script>
-<script src="assets/site-footer.js?v=8" defer></script>
+<script src="assets/site-header.js?v=11" defer></script>
+<script src="assets/site-footer.js?v=9" defer></script>
 <script src="members/members.js"></script>
 <script>
 /* Who's-in-the-room grid. Data lives in members/members.js: drop a square
@@ -735,7 +727,7 @@
 
 <div id="mb-sticky" style="position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--moss);display:none;align-items:center;justify-content:center;gap:18px;padding:10px 20px;box-shadow:0 -4px 18px rgba(0,0,0,0.12)">
   <p style="font-size:14px;color:rgba(255,255,255,0.85);font-weight:300;margin:0">Founding membership, <strong style="color:var(--lime);font-weight:700">$900 a year</strong> to learn how to invest.</p>
-  <a href="/join.html" target="_blank" rel="noopener" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;background:var(--lime);color:var(--moss);padding:9px 22px;border-radius:6px;text-decoration:none;white-space:nowrap">Join Us</a>
+  <a href="#memberships" style="font-family:'Satoshi',sans-serif;font-weight:700;font-size:13.5px;background:var(--lime);color:var(--moss);padding:9px 22px;border-radius:6px;text-decoration:none;white-space:nowrap">Join Us</a>
 </div>
 <script>
 (function(){
