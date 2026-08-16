@@ -4,9 +4,10 @@
 # Copies GIT-TRACKED files only. This matters for two reasons:
 #   1. Parity: GitHub Pages serves exactly what is committed on main.
 #   2. Privacy: local-only CEO tools (dashboard.html, ecosystem.html,
-#      granola-inbox.js, newsletter-data.js, network/people*.js) are
-#      gitignored and must never reach a deploy directory. A blind
-#      `cp -r` would leak them; `git ls-files` cannot.
+#      granola-inbox.js, newsletter-data.js, network/people*.js) must never
+#      reach a deploy directory. They are excluded explicitly even if a branch
+#      accidentally tracks one; relying on gitignore alone is not a safety
+#      boundary.
 #
 # Agent/migration infrastructure is excluded because it is not part of
 # the public website.
@@ -37,11 +38,34 @@ git ls-files -z -- . \
   ':!:odla.config.mjs' \
   ':!:package.json' \
   ':!:package-lock.json' \
+  ':!:dashboard.html' \
+  ':!:ecosystem.html' \
+  ':!:granola-inbox.js' \
+  ':!:newsletter-data.js' \
+  ':!:network/people.js' \
+  ':!:network/people-utah.js' \
   | rsync -a --files-from=- --from0 . dist/
 
 # App islands (admin console, member area, join booking step): Preact via
 # Vite, bundled into dist/assets/app/. Worker and island SOURCE is excluded
 # from the copy above; only bundles ship. Marketing pages never touch this.
 npx vite build --logLevel warn
+
+# Defense in depth: fail closed if either the tracked-file copy or a future
+# bundler input reintroduces a private CEO tool.
+private_paths=(
+  dashboard.html
+  ecosystem.html
+  granola-inbox.js
+  newsletter-data.js
+  network/people.js
+  network/people-utah.js
+)
+for private_path in "${private_paths[@]}"; do
+  if [[ -e "dist/$private_path" ]]; then
+    echo "Refusing deploy: private path reached dist/$private_path" >&2
+    exit 1
+  fi
+done
 
 echo "Built dist/ with $(find dist -type f | wc -l | tr -d ' ') files."

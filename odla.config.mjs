@@ -8,7 +8,9 @@ export default {
     id: "silver-and-salt-capital",
     name: "Silver & Salt Capital",
   },
-  envs: ["dev"],
+  // Phase 5 live infrastructure is explicit, but DNS remains on GitHub Pages
+  // until the remaining provider and browser cutover gates pass.
+  envs: ["dev", "prod"],
   // Sourced from the resolved chapter so the descriptor and the Worker cannot
   // disagree about which services exist.
   services: chapter.services,
@@ -26,12 +28,11 @@ export default {
   integrations: [createChapterIntegration(chapter, { basePath: "/api/crm" })],
   calendar: {
     google: {
-      // 0.2.0 live booking: FreeBusy availability over these calendars;
-      // bookings land on the first one. (CLI 0.11.2 still validates the
-      // legacy key name `calendars`; `availabilityCalendars` is the 0.2.0
-      // name.) Our odla-db is the source of truth for meetings; Google is
-      // the invite/Meet projection.
-      calendars: { dev: ["primary"] },
+      // Live booking checks FreeBusy across these calendars and writes to the
+      // explicit booking calendar. Our odla-db remains the source of truth for
+      // meetings; Google is the invite and Meet projection.
+      availabilityCalendars: { dev: ["primary"], prod: ["primary"] },
+      bookingCalendar: { dev: "primary", prod: "primary" },
     },
   },
   // No inline `db.schema`/`db.rules`: the Chapter integration above declares
@@ -47,8 +48,12 @@ export default {
     clerk: {
       // Publishable key (public by design). Clerk app "Silver & Salt Capital"
       // in the Built Not Found workspace, app_3G6TCBtJKVZo6Aq5UGgz9URtDqV,
-      // dev instance. prod pk is set at Phase 5.
+      // with one dev and one production instance. The live odla tenant uses
+      // the dev Clerk instance while it is hosted on Cloudflare's workers.dev
+      // preview domain. Cutover replaces prod with the pk_live key coupled to
+      // silverandsaltcapital.com.
       dev: "pk_test_cmVsaWV2ZWQtZWZ0LTkzLmNsZXJrLmFjY291bnRzLmRldiQ",
+      prod: "pk_test_cmVsaWV2ZWQtZWZ0LTkzLmNsZXJrLmFjY291bnRzLmRldiQ",
     },
   },
   // Add "o11y" to services to enable observability; provision then mints the
@@ -61,7 +66,9 @@ export default {
     // Copied from the Phase 1 `wrangler deploy --env dev` output and
     // curl-verified 200 before pasting (per runbook: never predict this URL).
     dev: "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
-    // prod is set at Phase 5 from the prod deploy's printed URL.
+    // Captured from the first top-level Wrangler deploy and curl-verified.
+    // DNS remains on GitHub Pages until the explicit cutover checkpoint.
+    prod: "https://silver-and-salt-capital.cory-ondrejka.workers.dev",
   },
   local: {
     tokenFile: ".odla/dev-token.json",

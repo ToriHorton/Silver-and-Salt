@@ -33,6 +33,16 @@
   --ui-danger-soft: rgba(168, 67, 58, 0.1);
   --ui-code-bg: #efefec;
   --ui-code-text: #33363b;
+  --ui-hl-keyword: #7c3aed;
+  --ui-hl-string: #15803d;
+  --ui-hl-comment: #6b7280;
+  --ui-hl-number: #b45309;
+  --ui-hl-title: #1f2937;
+  --ui-hl-attr: #0369a1;
+  --ui-hl-type: #0f766e;
+  --ui-hl-meta: #a16207;
+  --ui-hl-addition: #15803d;
+  --ui-hl-deletion: #b91c1c;
   --ui-shadow: 0 1px 2px rgba(36, 39, 43, 0.04), 0 8px 24px rgba(36, 39, 43, 0.06);
   --ui-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --ui-font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
@@ -40,6 +50,21 @@
   --ui-font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* ─── Defaulted tier: universal scales ─── */
+  /* Reading preferences. --ui-font-size-root defaults to 100% — a percentage,
+     not a pixel value, so a reader who has raised their browser's default font
+     size keeps that raise; hard-coding 16px would silently cancel it. Themes
+     with their own body measure override it (the blog themes use 17px).
+     --ui-font-scale is the reader's text-size multiplier and stays 1 until
+     css/a11y.css turns it. Smoothing defaults to `auto` (subpixel on macOS):
+     `antialiased` thins every stroke, which is the usual reason body copy
+     reads too light — opt into it deliberately, per surface. */
+  --ui-font-size-root: 100%;
+  --ui-font-scale: 1;
+  --ui-font-smoothing: auto;
+  --ui-weight-body: 400;
+  --ui-weight-medium: 500;
+  --ui-weight-strong: 600;
+  --ui-weight-heading: 700;
   /* Accent family extensions (derived; themes with richer palettes override).
      accent-2 collapses onto the single accent unless a theme separates them. */
   --ui-accent-glow: color-mix(in srgb, var(--ui-accent) 16%, transparent);
@@ -90,6 +115,8 @@
   --ui-sidebar-width: 240px;
   --ui-bottom-bar-height: 42px;
   --ui-dock-card-width: 320px;
+  --ui-master-detail-columns: minmax(280px, 0.38fr) minmax(0, 0.62fr);
+  --ui-master-detail-min-height: 480px;
   --ui-layer-chrome: 50;
   --ui-layer-dock: 80;
   --ui-layer-toast: 110;
@@ -214,6 +241,16 @@
   --ui-danger-soft: rgba(207, 122, 114, 0.14);
   --ui-code-bg: #26282d;
   --ui-code-text: #d4d5d2;
+  --ui-hl-keyword: #c4b5fd;
+  --ui-hl-string: #86efac;
+  --ui-hl-comment: #9199a5;
+  --ui-hl-number: #fcd34d;
+  --ui-hl-title: #e5e7eb;
+  --ui-hl-attr: #7dd3fc;
+  --ui-hl-type: #5eead4;
+  --ui-hl-meta: #fbbf24;
+  --ui-hl-addition: #86efac;
+  --ui-hl-deletion: #fca5a5;
   --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
   --ui-accent-glow: color-mix(in srgb, var(--ui-accent) 16%, transparent);
   --ui-accent-2: var(--ui-accent);
@@ -281,6 +318,16 @@
   --ui-danger-soft: rgba(207, 122, 114, 0.14);
   --ui-code-bg: #26282d;
   --ui-code-text: #d4d5d2;
+  --ui-hl-keyword: #c4b5fd;
+  --ui-hl-string: #86efac;
+  --ui-hl-comment: #9199a5;
+  --ui-hl-number: #fcd34d;
+  --ui-hl-title: #e5e7eb;
+  --ui-hl-attr: #7dd3fc;
+  --ui-hl-type: #5eead4;
+  --ui-hl-meta: #fbbf24;
+  --ui-hl-addition: #86efac;
+  --ui-hl-deletion: #fca5a5;
   --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
@@ -306,8 +353,181 @@
     --ui-danger-soft: rgba(207, 122, 114, 0.14);
     --ui-code-bg: #26282d;
     --ui-code-text: #d4d5d2;
+    --ui-hl-keyword: #c4b5fd;
+    --ui-hl-string: #86efac;
+    --ui-hl-comment: #9199a5;
+    --ui-hl-number: #fcd34d;
+    --ui-hl-title: #e5e7eb;
+    --ui-hl-attr: #7dd3fc;
+    --ui-hl-type: #5eead4;
+    --ui-hl-meta: #fbbf24;
+    --ui-hl-addition: #86efac;
+    --ui-hl-deletion: #fca5a5;
     --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
   }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   @odla-ai/ui — reading preferences
+   Four axes a reader can set independently, each an attribute on
+   <html>, each composing with the existing `data-theme` mode:
+
+     data-ui-text    md | lg | xl        text size
+     data-ui-weight  normal | medium | bold
+     data-ui-motion  system | reduce | allow
+     data-ui-palette default | mono | contrast   (css/palettes/*)
+
+   Absent attribute == the default, so a page that never sets one
+   renders exactly as it did before this sheet existed.
+
+   js/prefs.js owns the model: it persists the choices and stamps
+   the attributes before first paint. The axis names/values there
+   and the selectors here are one contract — test-enforced.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Base wiring, at ZERO specificity so any theme or app rule still wins a
+   tie. A surface that sets its own `html { font-size }` opts out of the
+   text-size axis entirely — the documented adoption step is to express that
+   rule through these two custom properties instead. */
+:where(html) {
+  font-size: calc(var(--ui-font-size-root) * var(--ui-font-scale));
+  font-weight: var(--ui-weight-body);
+  -webkit-font-smoothing: var(--ui-font-smoothing);
+}
+
+/* ─── Text size ───────────────────────────────────────────────
+   Two mechanisms, one axis, because odla surfaces size text two ways.
+   Long-form content (the blog themes) is rem-based off the root font
+   size, so --ui-font-scale carries it. App chrome reads the fixed
+   --ui-text-* rungs, which no root-size change can reach — so each step
+   also restates the ladder. Rungs are the base scale multiplied and
+   rounded to whole pixels, never fractional: half-pixel type renders
+   blurry at 1x. --ui-text-md is the body rung. */
+html[data-ui-text="lg"] {
+  --ui-font-scale: 1.125;
+  --ui-text-xs: 12px;
+  --ui-text-sm: 13px;
+  --ui-text-md: 15px;
+  --ui-text-lg: 17px;
+  --ui-text-xl: 19px;
+  --ui-text-2xl: 21px;
+  --ui-text-3xl: 23px;
+  --ui-text-4xl: 25px;
+}
+
+html[data-ui-text="xl"] {
+  --ui-font-scale: 1.25;
+  --ui-text-xs: 13px;
+  --ui-text-sm: 15px;
+  --ui-text-md: 16px;
+  --ui-text-lg: 19px;
+  --ui-text-xl: 21px;
+  --ui-text-2xl: 24px;
+  --ui-text-3xl: 25px;
+  --ui-text-4xl: 28px;
+}
+
+/* ─── Text weight ─────────────────────────────────────────────
+   The rungs stay ordered (body < medium <= strong <= heading) at every
+   step so emphasis never inverts, and none exceeds 700: a step that asks
+   for a weight the loaded font lacks gets a synthesized fake-bold, which
+   looks worse than the weight it replaced. Themes that load a variable
+   font, or static faces beyond 700, may extend these. */
+html[data-ui-weight="medium"] {
+  --ui-weight-body: 500;
+  --ui-weight-medium: 600;
+  --ui-weight-strong: 700;
+  --ui-weight-heading: 700;
+}
+
+html[data-ui-weight="bold"] {
+  --ui-weight-body: 600;
+  --ui-weight-medium: 700;
+  --ui-weight-strong: 700;
+  --ui-weight-heading: 700;
+}
+
+/* ─── Motion ──────────────────────────────────────────────────
+   The OS preference is honoured by default; "allow" is the reader's
+   explicit opt-back-in, and "reduce" turns motion off on a machine that
+   never asked the OS. Durations go to a hair above zero rather than
+   zero so `transitionend`/`animationend` handlers still fire — a chain
+   that waits on one would otherwise stall forever. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-ui-motion="allow"]) *,
+  html:not([data-ui-motion="allow"]) *::before,
+  html:not([data-ui-motion="allow"]) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html[data-ui-motion="reduce"] *,
+html[data-ui-motion="reduce"] *::before,
+html[data-ui-motion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ─── Local colour scopes yield to an accessibility palette ───
+   A reader who asked for monochrome or high contrast asked for the WHOLE
+   page, and both of the ui's local-colour mechanisms would otherwise punch
+   holes in it: `[data-ui-accent]` swaps the accent family inside a subtree,
+   and `.ui-invert` renders a band in the dark palette regardless of mode.
+   Both win by tree proximity, not specificity, so no amount of weight on the
+   root reaches them — the scope element itself has to give the roles back.
+
+   `inherit` on a custom property means "take the parent's computed value",
+   which is precisely the palette in force one level up. Only the LITERAL
+   declarations need cancelling: a derived role like --ui-surface-2, declared
+   on the scope as a color-mix() of --ui-text, recomputes on its own once the
+   ink it references is the inherited one. Keyed on any non-default palette so
+   this sheet never has to know their names. */
+html[data-ui-palette]:not([data-ui-palette="default"]) [data-ui-accent],
+html[data-ui-palette]:not([data-ui-palette="default"]) .ui-invert {
+  --ui-bg: inherit;
+  --ui-surface: inherit;
+  --ui-surface-2: inherit;
+  --ui-text: inherit;
+  --ui-text-muted: inherit;
+  --ui-text-faint: inherit;
+  --ui-border: inherit;
+  --ui-border-strong: inherit;
+  --ui-accent: inherit;
+  --ui-accent-strong: inherit;
+  --ui-accent-soft: inherit;
+  --ui-accent-glow: inherit;
+  --ui-accent-2: inherit;
+  --ui-accent-2-soft: inherit;
+  --ui-highlight: inherit;
+  --ui-on-accent: inherit;
+  --ui-good: inherit;
+  --ui-good-soft: inherit;
+  --ui-warn: inherit;
+  --ui-warn-soft: inherit;
+  --ui-danger: inherit;
+  --ui-danger-soft: inherit;
+  --ui-code-bg: inherit;
+  --ui-code-text: inherit;
+  --ui-shadow: inherit;
+  --ui-hl-keyword: inherit;
+  --ui-hl-string: inherit;
+  --ui-hl-comment: inherit;
+  --ui-hl-number: inherit;
+  --ui-hl-title: inherit;
+  --ui-hl-attr: inherit;
+  --ui-hl-type: inherit;
+  --ui-hl-meta: inherit;
+  --ui-hl-addition: inherit;
+  --ui-hl-deletion: inherit;
+}
+
+html[data-ui-palette]:not([data-ui-palette="default"]) .ui-invert {
+  color-scheme: inherit;
 }
 
 /* @odla-ai/ui — buttons & controls
@@ -317,7 +537,7 @@
 
 .btn {
   font: inherit;
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   background: var(--ui-accent);
   color: var(--ui-on-accent);
   border: 0;
@@ -358,7 +578,7 @@
    are the marketing secondary/tertiary looks (`.ghost` above is the app
    tertiary and unchanged). Compose freely: .btn.lg.lift */
 .btn.lg {
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   font-size: var(--ui-text-md);
   letter-spacing: var(--ui-tracking-wide);
   padding: var(--ui-space-4) var(--ui-space-7);
@@ -415,10 +635,12 @@
 .seg button[aria-pressed="true"] {
   background: var(--ui-accent-soft);
   color: var(--ui-accent-strong);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
 }
 
-/* Status/metadata pill: quiet, mono, rounded. */
+/* Status/metadata pill: quiet, mono, rounded. Never wraps — a pill is a single
+   short label, and as a flex item under pressure it would otherwise break
+   mid-phrase into a tall multi-line lozenge instead of staying on one line. */
 .pill {
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-sm);
@@ -427,6 +649,8 @@
   padding: 3px 9px;
   border-radius: var(--ui-radius-pill);
   color: var(--ui-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Interactive chip (link chips, removable filters). */
@@ -454,7 +678,7 @@
 .chips .chip {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   padding: 4px 12px;
   margin: 0;
   border-radius: var(--ui-radius-pill);
@@ -469,7 +693,7 @@
 }
 .chips .chip:focus-visible { outline: none; box-shadow: var(--ui-focus); }
 .chip-count {
-  font-weight: 400;
+  font-weight: var(--ui-weight-body);
   opacity: 0.7;
   margin-left: 5px;
   font-variant-numeric: tabular-nums;
@@ -487,7 +711,7 @@
   border-bottom: 1px solid var(--ui-border);
   scrollbar-width: thin;
 }
-.tabs > button {
+.tabs > [role="tab"] {
   flex: 0 0 auto;
   margin-bottom: -1px;
   padding: 8px 2px;
@@ -498,10 +722,12 @@
   border: 0;
   border-bottom: 2px solid transparent;
   cursor: pointer;
+  text-decoration: none;
 }
-.tabs > button:hover { color: var(--ui-text); }
-.tabs > button:focus-visible { outline: none; box-shadow: var(--ui-focus); border-radius: var(--ui-radius-sm); }
-.tabs > button:disabled { cursor: default; opacity: 0.45; }
+.tabs > [role="tab"]:hover { color: var(--ui-text); }
+.tabs > [role="tab"]:focus-visible { outline: none; box-shadow: var(--ui-focus); border-radius: var(--ui-radius-sm); }
+.tabs > [role="tab"]:disabled,
+.tabs > [role="tab"][aria-disabled="true"] { cursor: default; opacity: 0.45; }
 /* Trailing slot: panel-scoped filters/actions aligned to the strip's end,
    outside the tablist's tab semantics. */
 .tabs .tabs-trailing {
@@ -511,11 +737,11 @@
   margin-left: auto;
   flex: 0 0 auto;
 }
-.tabs > button.on,
-.tabs > button[aria-selected="true"] {
+.tabs > [role="tab"].on,
+.tabs > [role="tab"][aria-selected="true"] {
   color: var(--ui-text);
   border-bottom-color: var(--ui-accent);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
 }
 .tabs-panels { min-width: 0; }
 .tabs-panel { min-width: 0; padding: var(--ui-space-4) 0; }
@@ -523,13 +749,13 @@
 .tabs-panel[hidden] { display: none; }
 
 .tabs-pill .tabs { gap: var(--ui-space-1); border-bottom: 0; }
-.tabs-pill .tabs > button {
+.tabs-pill .tabs > [role="tab"] {
   margin-bottom: 0;
   padding: 6px 10px;
   border: 0;
   border-radius: var(--ui-radius-pill);
 }
-.tabs-pill .tabs > button[aria-selected="true"] {
+.tabs-pill .tabs > [role="tab"][aria-selected="true"] {
   color: var(--ui-accent-strong);
   background: var(--ui-accent-soft);
 }
@@ -555,14 +781,14 @@
   border-right: 1px solid var(--ui-border);
   border-bottom: 0;
 }
-.tabs-vertical .tabs > button {
+.tabs-vertical .tabs > [role="tab"] {
   margin: 0 -1px 0 0;
   padding: 8px 10px;
   text-align: left;
   border-right: 2px solid transparent;
   border-bottom: 0;
 }
-.tabs-vertical .tabs > button[aria-selected="true"] {
+.tabs-vertical .tabs > [role="tab"][aria-selected="true"] {
   border-right-color: var(--ui-accent);
   border-bottom-color: transparent;
 }
@@ -578,15 +804,82 @@
     border-right: 0;
     border-bottom: 1px solid var(--ui-border);
   }
-  .tabs-vertical .tabs > button,
-  .tabs-vertical .tabs > button[aria-selected="true"] {
+  .tabs-vertical .tabs > [role="tab"],
+  .tabs-vertical .tabs > [role="tab"][aria-selected="true"] {
     margin: 0 0 -1px;
     text-align: center;
     border-right: 0;
     border-bottom: 2px solid transparent;
   }
-  .tabs-vertical .tabs > button[aria-selected="true"] { border-bottom-color: var(--ui-accent); }
+  .tabs-vertical .tabs > [role="tab"][aria-selected="true"] { border-bottom-color: var(--ui-accent); }
   .tabs-vertical .tabs-panel { padding: var(--ui-space-4) 0 0; }
+}
+
+/* @odla-ai/ui — responsive master/detail workspaces. */
+
+.ui-master-detail {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: var(--ui-master-detail-columns);
+  min-width: 0;
+  min-height: var(--ui-master-detail-min-height);
+  overflow: hidden;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow);
+}
+.ui-master-detail-master,
+.ui-master-detail-detail {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+.ui-master-detail-master { border-right: 1px solid var(--ui-border); }
+.ui-master-detail-detail {
+  position: relative;
+  padding: var(--ui-space-4);
+  background: var(--ui-bg);
+}
+.ui-master-detail-detail:focus { outline: none; }
+.ui-master-detail-detail:focus-visible { box-shadow: inset var(--ui-focus); }
+
+/* Opt-in (`collapseClosedDetail`): give the master the full width until a record
+   is actually selected, instead of reserving the detail column for an empty
+   pane. For a master that is itself wide — a kanban board, a wide table — the
+   reserved-but-empty column is what squeezes the content into a scroller. */
+.ui-master-detail[data-collapse-closed="true"][data-detail-open="false"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ui-master-detail[data-collapse-closed="true"][data-detail-open="false"] .ui-master-detail-master {
+  border-right: 0;
+}
+.ui-master-detail[data-collapse-closed="true"][data-detail-open="false"] .ui-master-detail-detail {
+  display: none;
+}
+.ui-master-detail-close { margin-bottom: var(--ui-space-3); }
+.ui-master-detail-empty {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  padding: var(--ui-space-6);
+  text-align: center;
+  color: var(--ui-text-muted);
+}
+
+@container (max-width: 680px) {
+  .ui-master-detail { display: block; min-height: 360px; }
+  .ui-master-detail-master { border-right: 0; }
+  .ui-master-detail[data-detail-open="true"] .ui-master-detail-master { display: none; }
+  .ui-master-detail[data-detail-open="false"] .ui-master-detail-detail { display: none; }
+}
+
+/* @odla-ai/ui — an isolated semantic theme and brand boundary. */
+
+.ui-theme-scope {
+  color: var(--ui-text);
+  background: var(--ui-bg);
+  font-family: var(--ui-font-sans);
 }
 
 /* @odla-ai/ui — form fields
@@ -734,7 +1027,7 @@
 .card h4 {
   margin: 0 0 var(--ui-space-2);
   color: var(--ui-text-muted);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   font-size: var(--ui-text-xs);
   text-transform: uppercase;
   letter-spacing: var(--ui-tracking-caps);
@@ -747,7 +1040,7 @@
   gap: var(--ui-space-3);
   margin: var(--ui-space-4) 0;
 }
-.metric { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.metric { font-size: 24px; font-weight: var(--ui-weight-heading); font-variant-numeric: tabular-nums; }
 
 .panel {
   background: var(--ui-surface);
@@ -757,14 +1050,14 @@
   margin: var(--ui-space-4) 0;
   box-shadow: var(--ui-shadow);
 }
-.panel h3 { margin: 0 0 var(--ui-space-3); font-weight: 700; }
+.panel h3 { margin: 0 0 var(--ui-space-3); font-weight: var(--ui-weight-heading); }
 
 /* Status badge: neutral by default, status variants chain. */
 .badge {
   display: inline-block;
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-xs);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 2px 8px;
@@ -782,7 +1075,7 @@
 .verdict {
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-sm);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   padding: 3px 10px;
   border-radius: var(--ui-radius-pill);
 }
@@ -804,7 +1097,7 @@
   padding: 7px 8px;
   border-bottom: 1px solid var(--ui-border);
 }
-.table th { color: var(--ui-text-muted); font-weight: 600; }
+.table th { color: var(--ui-text-muted); font-weight: var(--ui-weight-strong); }
 .table td { font-variant-numeric: tabular-nums; }
 
 /* Scroll container; header sticks against the sunken surface. */
@@ -844,15 +1137,15 @@
   align-items: baseline;
   gap: var(--ui-space-4);
 }
-.head h2 { margin: 0; font-weight: 700; }
+.head h2 { margin: 0; font-weight: var(--ui-weight-heading); }
 .brand {
   font-family: var(--ui-font-display);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: -0.02em;
   font-size: 18px;
   margin-bottom: var(--ui-space-4);
 }
-.brand small { color: var(--ui-text-muted); font-weight: 500; }
+.brand small { color: var(--ui-text-muted); font-weight: var(--ui-weight-medium); }
 
 /* Sidebar nav entry (button or link). */
 .navitem {
@@ -860,7 +1153,7 @@
   width: 100%;
   text-align: left;
   font: inherit;
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   background: var(--ui-surface);
   color: var(--ui-text-muted);
   border: 1px solid var(--ui-border);
@@ -942,7 +1235,14 @@
   position: sticky;
   top: 0;
   z-index: var(--ui-layer-chrome);
+  /* Never wider than its container, and never wrap: the brand and the trailing
+     actions stay pinned + fully visible while a long link row shrinks and
+     scrolls (see .topbar-nav). Without this a busy bar clips its actions — the
+     "Sign out" button vanishes off the right edge. */
   width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  flex-wrap: nowrap;
   padding: 10px var(--ui-space-5);
   background: var(--ui-surface);
   border-bottom: 1px solid var(--ui-border);
@@ -950,21 +1250,36 @@
 
 .topbar-brand {
   font-family: var(--ui-font-display);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: -0.02em;
   font-size: 18px;
   color: var(--ui-text);
   text-decoration: none;
+  /* Brand never shrinks; the nav absorbs tight space instead. */
+  flex-shrink: 0;
 }
-.topbar-brand small { color: var(--ui-text-muted); font-weight: 500; }
+.topbar-brand small { color: var(--ui-text-muted); font-weight: var(--ui-weight-medium); }
 
 /* The link row. baseline (matching the bar) so the links define a clean shared
-   baseline with the brand rather than a center-derived one. */
-.topbar-nav { display: flex; align-items: baseline; gap: var(--ui-space-1); }
+   baseline with the brand rather than a center-derived one. It is the flexible
+   part of the bar: when the links don't fit, it shrinks (min-width: 0) and
+   scrolls horizontally instead of pushing the trailing actions off-screen. The
+   scrollbar is hidden — the row is short and the active link marks position. */
+.topbar-nav {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  flex-shrink: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.topbar-nav::-webkit-scrollbar { display: none; }
+.topbar-link { flex-shrink: 0; }
 
 .topbar-link {
   font: inherit;
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   font-size: var(--ui-text-md);
   background: transparent;
   color: var(--ui-text-muted);
@@ -986,8 +1301,9 @@
 
 /* Trailing controls (buttons, avatars, a whoami block) center as a block —
    align-self: center opts them out of the bar's baseline so they don't hang off
-   the text baseline. */
-.topbar-actions { display: flex; align-items: center; align-self: center; gap: var(--ui-space-3); }
+   the text baseline. Never shrinks: the actions (esp. a sign-out button) stay
+   fully visible; the nav row absorbs tight space instead. */
+.topbar-actions { display: flex; align-items: center; align-self: center; gap: var(--ui-space-3); flex-shrink: 0; }
 
 /* Embedded or preview chrome: never sticks to the outer page viewport. */
 .topbar.contained {
@@ -1041,8 +1357,11 @@
   right: 0;
   bottom: 100%;
   left: 0;
+  /* The dock spans the shell so cards can align and scroll, but its empty
+   * surface must not cover the work behind it. Cards opt back into input. */
+  pointer-events: none;
 }
-.ui-app-shell-edge > .edge-dock,
+.ui-app-shell-edge > .edge-dock > .dock-card,
 .ui-app-shell-edge > .edge-notification { pointer-events: auto; }
 
 .ui-navigation-rail {
@@ -1114,7 +1433,7 @@
 }
 .ui-sidebar-item:hover { color: var(--ui-text); background: var(--ui-surface-2); }
 .ui-sidebar-item:focus-visible { outline: none; box-shadow: var(--ui-focus); }
-.ui-sidebar-item.active { color: var(--ui-accent-strong); background: var(--ui-accent-soft); font-weight: 600; }
+.ui-sidebar-item.active { color: var(--ui-accent-strong); background: var(--ui-accent-soft); font-weight: var(--ui-weight-strong); }
 
 @container (max-width: 680px) {
   .ui-sidebar { display: none; }
@@ -1169,7 +1488,7 @@
 .docsnav-link:focus-visible { outline: none; box-shadow: var(--ui-focus); }
 .docsnav-link.active {
   color: var(--ui-accent-strong);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   border-left-color: var(--ui-accent);
   background: var(--ui-accent-soft);
 }
@@ -1232,6 +1551,48 @@
   margin-right: 6px;
   animation: ui-pulse 1.4s infinite;
 }
+
+/* Accessible live/background-work status. The component owns the announcement;
+ * the dot is decorative and motion is strictly progressive enhancement. */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ui-text-muted);
+  font-size: var(--ui-text-xs);
+  white-space: nowrap;
+}
+.status-indicator-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--ui-text-faint);
+  box-shadow: 0 0 0 3px var(--ui-surface-2);
+}
+.status-indicator.good .status-indicator-dot {
+  background: var(--ui-good);
+  box-shadow: 0 0 0 3px var(--ui-good-soft);
+}
+.status-indicator.accent .status-indicator-dot {
+  background: var(--ui-accent-2);
+  box-shadow: 0 0 0 3px var(--ui-accent-2-soft);
+}
+.status-indicator.warn .status-indicator-dot {
+  background: var(--ui-warn);
+  box-shadow: 0 0 0 3px var(--ui-warn-soft);
+}
+.status-indicator.danger .status-indicator-dot {
+  background: var(--ui-danger);
+  box-shadow: 0 0 0 3px var(--ui-danger-soft);
+}
+.status-indicator[data-active="true"] .status-indicator-dot {
+  animation: ui-status-pulse 1.4s ease-in-out infinite;
+}
+@keyframes ui-status-pulse {
+  0%, 100% { opacity: .45; transform: scale(.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
 @keyframes ui-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
@@ -1248,7 +1609,11 @@
 }
 .skeleton + .skeleton { margin-top: 6px; }
 @media (prefers-reduced-motion: reduce) {
+  .live-dot,
   .skeleton { animation: none; }
+  .status-indicator[data-active="true"] .status-indicator-dot {
+    animation: none;
+  }
 }
 
 /* Border spinner. */
@@ -1266,16 +1631,299 @@
   to { transform: rotate(360deg); }
 }
 
+/* @odla-ai/ui — friendly principal identity for collaboration surfaces */
+
+.principal-badge {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: var(--ui-space-1);
+  color: var(--ui-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-snug);
+  vertical-align: middle;
+}
+
+.principal-badge-mark {
+  display: inline-grid;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-surface-2);
+  color: var(--ui-text-muted);
+  font-family: var(--ui-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: var(--ui-leading-none);
+}
+
+.principal-badge[data-principal-kind="agent"] .principal-badge-mark {
+  border-color: var(--ui-accent);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-strong);
+}
+
+.principal-badge[data-principal-kind="service"] .principal-badge-mark {
+  border: 3px double var(--ui-border-strong);
+  border-radius: 2px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+
+.principal-badge-name {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.principal-badge-kind {
+  flex: 0 0 auto;
+  padding: 1px 5px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-surface-2);
+  color: var(--ui-text-muted);
+  font-family: var(--ui-font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: var(--ui-tracking-caps);
+  line-height: var(--ui-leading-snug);
+  text-transform: uppercase;
+}
+
+.principal-badge-handle,
+.principal-badge-manager {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ui-text-muted);
+  font-size: var(--ui-text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.principal-badge-handle {
+  font-family: var(--ui-font-mono);
+}
+
+.principal-badge-manager::before {
+  margin-right: var(--ui-space-1);
+  color: var(--ui-text-faint);
+  content: "·";
+}
+
+.principal-badge-manager-name {
+  color: var(--ui-text);
+  font-weight: 600;
+}
+
+/* Exact-artifact human review. Authority stays in the host; this is presentation. */
+.review-card {
+  display: grid;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-4);
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow);
+}
+
+.review-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.review-card-heading {
+  min-width: 0;
+}
+
+.review-card-title {
+  font-size: var(--ui-text-lg);
+  font-weight: 650;
+  line-height: var(--ui-leading-snug);
+}
+
+.review-card-meta {
+  margin-top: var(--ui-space-1);
+  color: var(--ui-text-muted);
+  font-size: var(--ui-text-sm);
+}
+
+.review-card-status {
+  flex: 0 0 auto;
+  padding: 3px var(--ui-space-2);
+  color: var(--ui-text-muted);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+  font-size: var(--ui-text-xs);
+  font-weight: 650;
+  line-height: var(--ui-leading-snug);
+}
+
+.review-card-status.approved {
+  color: var(--ui-good);
+  background: var(--ui-good-soft);
+  border-color: color-mix(in srgb, var(--ui-good) 28%, var(--ui-border));
+}
+
+.review-card-status.rejected {
+  color: var(--ui-danger);
+  background: var(--ui-danger-soft);
+  border-color: color-mix(in srgb, var(--ui-danger) 28%, var(--ui-border));
+}
+
+.review-card-body {
+  min-width: 0;
+}
+
+.review-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  padding-top: var(--ui-space-3);
+  border-top: 1px solid var(--ui-border);
+}
+
+@media (max-width: 480px) {
+  .review-card-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .review-card-status {
+    align-self: flex-start;
+  }
+}
+
+/* @odla-ai/ui — upload surfaces: Dropzone internals + attachment chips.
+   The base .dropzone / .dropzone.drag contract ships in feedback.css; these
+   are structural additions for the Preact wrapper. Chrome is --ui-* tokens
+   only; progress runs --ui-accent on a --ui-surface-2 track. */
+
+.dropzone-input { display: none; }
+
+/* The Preact Dropzone is a keyboard-openable role="button". */
+.dropzone:focus-visible {
+  outline: none;
+  border-color: var(--ui-accent);
+  box-shadow: var(--ui-focus);
+}
+.dropzone[role="button"] { cursor: pointer; }
+.dropzone[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dropzone-label {
+  color: var(--ui-text);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+}
+.dropzone-hint {
+  color: var(--ui-text-faint);
+  font-size: var(--ui-text-sm);
+  margin-top: 2px;
+}
+.dropzone-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-3);
+  text-align: left;
+}
+
+/* Attachment chip — mirrors the .chat-attachment scale so composer and
+   dropzone chips read as one family. */
+.upload-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-surface);
+  color: var(--ui-text-muted);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  padding: 3px 8px;
+}
+.upload-item img {
+  max-height: 32px;
+  border-radius: var(--ui-radius-sm);
+  display: block;
+}
+.upload-item.error {
+  border-color: var(--ui-danger);
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger);
+}
+.upload-name {
+  max-width: 16em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.upload-size { color: var(--ui-text-faint); }
+.upload-error { color: var(--ui-danger); }
+
+.upload-progress {
+  display: inline-block;
+  width: 64px;
+  height: 4px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-surface-2);
+  overflow: hidden;
+}
+.upload-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-accent);
+}
+
+.upload-remove {
+  border: 0;
+  background: none;
+  color: var(--ui-text-faint);
+  cursor: pointer;
+  font-size: var(--ui-text-md);
+  line-height: 1;
+  padding: 0 2px;
+  border-radius: var(--ui-radius-sm);
+}
+.upload-remove:hover { color: var(--ui-danger); }
+.upload-remove:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+
 /* @odla-ai/ui — segmented scope switch (environment, time range). The
    selected segment is deliberately LOUD: these controls silently change what
    an entire view means, and a subtle toggle invites reading the wrong data.
    The optional label sits OUTSIDE the bordered track — inside it, a caption
    is indistinguishable from an unselected choice. */
 
+/* Wraps rather than overflows: the track sizes to its segments, so in a narrow
+   column (a detail pane, a sidebar) a 4–5 option switch used to run past the
+   edge and clip the last choice — which reads as that option not existing. */
 .segmented {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
+  max-width: 100%;
+  min-width: 0;
 }
 .segmented-label {
   font-size: var(--ui-text-sm);
@@ -1285,8 +1933,10 @@
 .segmented-track {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 2px;
   padding: 2px;
+  max-width: 100%;
   background: var(--ui-surface-2);
   border: 1px solid var(--ui-border);
   border-radius: var(--ui-radius-pill);
@@ -1307,7 +1957,65 @@
 .segmented-track button[aria-checked="true"] {
   color: var(--ui-on-accent);
   background: var(--ui-accent);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
+}
+
+/* @odla-ai/ui — inline confirmation (InlineConfirm).
+   The armed state is a bordered, tinted strip rather than a bare button row:
+   a destructive question sitting flush in a dense panel reads as just more
+   chrome, and the one control that must never be clicked absent-mindedly is
+   the one that most needs a visual boundary. The tint tracks the variant, so
+   a danger confirm is unmistakably not a primary one. */
+
+.inline-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.inline-confirm.armed {
+  flex-wrap: wrap;
+  padding: var(--ui-space-2) var(--ui-space-3);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--ui-radius-md);
+}
+.inline-confirm.danger.armed {
+  background: var(--ui-danger-soft);
+  border-color: var(--ui-danger);
+}
+
+.inline-confirm-message {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text);
+}
+
+.inline-confirm-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin-left: auto;
+}
+
+/* The type-to-confirm gate. Breaking to its own line keeps the target string
+   legible next to the field the user must copy it into. */
+.inline-confirm-gate {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  flex-basis: 100%;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+}
+.inline-confirm-gate code {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text);
+}
+.inline-confirm-gate .input {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* @odla-ai/ui — persistent bottom notification and Gmail-style work dock. */
@@ -1334,11 +2042,14 @@
 .edge-dock {
   display: flex;
   align-items: flex-end;
-  justify-content: flex-end;
+  /* Trailing alignment while cards fit, leading alignment once they overflow:
+   * no card can disappear into an unreachable negative scroll range. */
+  justify-content: safe flex-end;
   gap: var(--ui-space-3);
   max-width: 100%;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
+  scroll-padding-inline: var(--ui-space-4);
   padding: 0 var(--ui-space-4);
 }
 .dock-card {
@@ -1352,6 +2063,10 @@
   border-bottom: 0;
   border-radius: var(--ui-radius-lg) var(--ui-radius-lg) 0 0;
   box-shadow: var(--ui-shadow);
+}
+.dock-card.size-lg {
+  width: min(34rem, calc(100cqw - var(--ui-space-5)));
+  max-height: min(70dvh, 42rem);
 }
 .dock-card.minimized { width: min(220px, calc(100cqw - var(--ui-space-5))); }
 .dock-card-header { display: flex; align-items: stretch; min-height: 40px; background: var(--ui-surface-2); }
@@ -1372,7 +2087,7 @@
 }
 .dock-card-toggle:focus-visible,
 .dock-card-dismiss:focus-visible { outline: none; box-shadow: inset var(--ui-focus); }
-.dock-card-title { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.dock-card-title { overflow: hidden; font-weight: var(--ui-weight-strong); text-overflow: ellipsis; white-space: nowrap; }
 .dock-card-meta { flex: 0 0 auto; color: var(--ui-text-faint); font-size: var(--ui-text-xs); }
 .dock-card-dismiss {
   flex: 0 0 36px;
@@ -1391,6 +2106,13 @@
   overflow: auto;
   padding: var(--ui-space-4);
   border-top: 1px solid var(--ui-border);
+}
+.dock-card.size-lg .dock-card-body {
+  max-height: calc(min(70dvh, 42rem) - 40px);
+}
+.dock-card.body-contained .dock-card-body {
+  padding: 0;
+  overflow: hidden;
 }
 .dock-card-body[hidden] { display: none; }
 
@@ -1414,6 +2136,12 @@
 
 .chat-msg { display: flex; flex-direction: column; align-items: flex-start; }
 .chat-msg.user { align-items: flex-end; }
+
+.chat-msg-byline {
+  display: flex;
+  margin: 0 0 var(--ui-space-1);
+}
+.chat-msg.user .chat-msg-byline { justify-content: flex-end; }
 
 .chat-bubble {
   max-width: 88%;
@@ -1472,7 +2200,7 @@
 .chat-tool-name {
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-sm);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-chat-tool-accent);
 }
 .chat-tool-args {
@@ -1559,6 +2287,36 @@
 .chat-banner.warn { background: var(--ui-warn-soft); border-color: var(--ui-warn); color: var(--ui-warn); }
 .chat-banner.error { background: var(--ui-danger-soft); border-color: var(--ui-danger); color: var(--ui-danger); }
 
+/* ── Preact wrapper additions (ChatThread / ChatComposer) ─────────
+   Structural only; the surfaces above stay the class contract. */
+
+/* The thread scrolls itself so stick-to-bottom has an owner. */
+.chat-thread { overflow-y: auto; }
+
+.chat-empty {
+  color: var(--ui-text-faint);
+  font-size: var(--ui-text-md);
+  text-align: center;
+  padding: var(--ui-space-5) 0;
+}
+
+/* Attachment chips under a message bubble. */
+.chat-msg-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-1);
+}
+
+/* Chips row above the composer's input row (wraps to its own line). */
+.chat-composer { flex-wrap: wrap; }
+.chat-composer-attachments {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+}
+
 /* Attachment chip (image/document blocks in history or composer). */
 .chat-attachment {
   display: inline-flex;
@@ -1624,7 +2382,7 @@
   margin: 0;
   overflow: hidden;
   font-size: var(--ui-text-lg);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -1645,7 +2403,7 @@
 .cal-dow {
   padding: 6px 8px;
   font-size: var(--ui-text-xs);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text-muted);
   text-align: center;
   text-transform: uppercase;
@@ -1676,7 +2434,7 @@
 button.cal-cell-num { cursor: pointer; }
 button.cal-cell-num:hover { background: var(--ui-accent-soft); color: var(--ui-accent-strong); }
 .cal-cell.today .cal-cell-num {
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-on-accent);
   background: var(--ui-accent);
 }
@@ -1725,7 +2483,7 @@ button.cal-chip:hover, a.cal-chip:hover {
   padding: 6px 8px;
   overflow: hidden;
   font-size: var(--ui-text-xs);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text-muted);
   text-align: center;
   text-transform: uppercase;
@@ -1776,7 +2534,7 @@ button.cal-event:hover, a.cal-event:hover {
 }
 .cal-event-title {
   overflow: hidden;
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -1812,7 +2570,7 @@ button.cal-event:hover, a.cal-event:hover {
 .cal-agenda-date {
   margin: 0 0 var(--ui-space-2);
   font-size: var(--ui-text-xs);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text-muted);
   text-transform: uppercase;
   letter-spacing: var(--ui-tracking-caps);
@@ -1850,7 +2608,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  font-weight: 500;
+  font-weight: var(--ui-weight-medium);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -1876,7 +2634,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
   padding: 6px 12px;
   font: inherit;
   font-size: var(--ui-text-sm);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text-muted);
   white-space: nowrap;
   cursor: pointer;
@@ -1909,7 +2667,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 }
 .cal-slot:hover { border-color: var(--ui-border-strong); box-shadow: var(--ui-shadow); }
 .cal-slot[aria-pressed="true"] {
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-on-accent);
   background: var(--ui-accent);
   border-color: var(--ui-accent);
@@ -1938,99 +2696,6 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
   box-shadow: var(--ui-focus);
 }
 
-/* @odla-ai/ui — timeline scrubber (TimeScrubber): transport button, slider
-   track with playhead + event markers, readout, optional rate select. */
-
-.timescrub {
-  display: flex;
-  align-items: center;
-  gap: var(--ui-space-3);
-  min-width: 0;
-  padding: var(--ui-space-2) 0;
-}
-
-.timescrub-play {
-  flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--ui-text-sm);
-  color: var(--ui-text);
-  background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--ui-radius-pill);
-  cursor: pointer;
-}
-.timescrub-play:hover { border-color: var(--ui-border-strong); }
-.timescrub-play:focus-visible { outline: none; box-shadow: var(--ui-focus); }
-.timescrub-play[aria-pressed="true"] {
-  color: var(--ui-on-accent);
-  background: var(--ui-accent);
-  border-color: var(--ui-accent);
-}
-
-.timescrub-track {
-  position: relative;
-  flex: 1 1 auto;
-  height: 8px;
-  min-width: 80px;
-  background: var(--ui-surface-2);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--ui-radius-pill);
-  cursor: pointer;
-  touch-action: none;
-}
-.timescrub-track:focus-visible { outline: none; box-shadow: var(--ui-focus); }
-
-.timescrub-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: var(--ui-accent-soft);
-  border-radius: var(--ui-radius-pill);
-  pointer-events: none;
-}
-
-.timescrub-handle {
-  position: absolute;
-  top: 50%;
-  width: 14px;
-  height: 14px;
-  transform: translate(-50%, -50%);
-  background: var(--ui-accent);
-  border: 2px solid var(--ui-bg);
-  border-radius: var(--ui-radius-pill);
-  box-shadow: var(--ui-shadow);
-  pointer-events: none;
-}
-
-.timescrub-marker {
-  position: absolute;
-  top: -4px;
-  bottom: -4px;
-  width: 2px;
-  transform: translateX(-50%);
-  background: var(--ui-text-faint);
-  border-radius: 1px;
-  pointer-events: none;
-}
-.timescrub-marker-accent { background: var(--ui-accent); }
-.timescrub-marker-good { background: var(--ui-good); }
-.timescrub-marker-warn { background: var(--ui-warn); }
-.timescrub-marker-danger { background: var(--ui-danger); }
-
-.timescrub-readout {
-  flex: 0 0 auto;
-  font-family: var(--ui-font-mono);
-  font-size: var(--ui-text-sm);
-  color: var(--ui-text-muted);
-  min-width: 84px;
-  text-align: right;
-}
-
-.timescrub-rate { flex: 0 0 auto; width: auto; }
-
 /* @odla-ai/ui — marketing section scaffolding
    Full-bleed bands with centered content wells and the editorial text
    ladder (eyebrow label → display title → lead → body). Surfaces compose:
@@ -2057,7 +2722,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-label {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-lg);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-widest);
   text-transform: uppercase;
   color: var(--ui-accent);
@@ -2144,7 +2809,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-hero-eyebrow {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-xl);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-ultra);
   text-transform: uppercase;
   color: var(--ui-accent);
@@ -2165,7 +2830,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-hero-closer {
   font-family: var(--ui-font-display);
   font-size: var(--ui-display-h6);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-text-muted);
   margin-top: var(--ui-space-4);
   line-height: var(--ui-leading-tight);
@@ -2328,7 +2993,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
   transform: translate(-50%, -50%);
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-4xl);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: #fff;
   z-index: 2;
   line-height: var(--ui-leading-none);
@@ -2337,7 +3002,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 /* Inline brand glyph (the upright serif "&" inside sans copy). */
 .mk-amp {
   font-family: var(--ui-font-display);
-  font-weight: 400;
+  font-weight: var(--ui-weight-body);
   font-size: 0.8em;
   font-style: normal;
   margin: 0 -0.04em;
@@ -2386,7 +3051,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-stat-num em { font-style: normal; color: var(--ui-accent); }
 .mk-stat-num.serif {
   font-family: var(--ui-font-display);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   font-size: var(--ui-display-h2);
 }
 .mk-stat-label {
@@ -2441,7 +3106,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 }
 .mk-stat-anchor .mk-stat-num {
   font-family: var(--ui-font-display);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   font-size: clamp(48px, 6vw, 64px);
 }
 
@@ -2485,13 +3150,13 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-proof-name {
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-3xl);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text);
 }
 .mk-proof-loc {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-xs);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   letter-spacing: var(--ui-tracking-caps);
   text-transform: uppercase;
   color: var(--ui-text-muted);
@@ -2505,7 +3170,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-proof-stat {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-accent);
   text-align: right;
   line-height: 1.6;
@@ -2539,7 +3204,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-quote-name {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-md);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-text);
   margin-bottom: var(--ui-space-1);
 }
@@ -2579,7 +3244,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-sources-heading {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-xs);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-widest);
   text-transform: uppercase;
   color: var(--ui-text-muted);
@@ -2615,7 +3280,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
   gap: var(--ui-space-2);
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-caps);
   text-transform: uppercase;
   color: var(--ui-accent);
@@ -2634,7 +3299,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-fn-title {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-xs);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-widest);
   text-transform: uppercase;
   color: var(--ui-text-muted);
@@ -2651,7 +3316,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-fn-item .n {
   position: absolute;
   left: 0;
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-accent);
   opacity: 0.6;
 }
@@ -2667,7 +3332,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
    stat claims; `.mk-ref` the quiet gray one. */
 .mk-fn-sup {
   font-size: 9px;
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-accent);
   vertical-align: super;
   line-height: 0;
@@ -2681,7 +3346,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
   vertical-align: super;
   line-height: 0;
   color: var(--ui-text-faint);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   margin-left: 1px;
 }
 
@@ -2721,7 +3386,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
   align-items: center;
   justify-content: center;
   font-size: var(--ui-text-sm);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   transition: all 0.3s ease;
   background: color-mix(in srgb, var(--ui-accent) 22%, var(--ui-surface));
   color: var(--ui-text-muted);
@@ -2730,13 +3395,13 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-step.complete .mk-step-dot { background: var(--ui-accent); color: var(--ui-on-accent); }
 .mk-step-label {
   font-size: var(--ui-text-xs);
-  font-weight: 500;
+  font-weight: var(--ui-weight-medium);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ui-text-muted);
   transition: color 0.3s;
 }
-.mk-step.active .mk-step-label { color: var(--ui-text); font-weight: 700; }
+.mk-step.active .mk-step-label { color: var(--ui-text); font-weight: var(--ui-weight-heading); }
 .mk-step.complete .mk-step-label { color: var(--ui-accent); }
 .mk-step-line {
   width: 52px;
@@ -2807,7 +3472,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-pipeline-num {
   font-family: var(--ui-font-sans);
   font-size: 9px;
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-caps);
   margin-top: 2px;
   text-transform: uppercase;
@@ -2815,7 +3480,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-pipeline-who {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-xs);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-caps);
   text-transform: uppercase;
   color: var(--ui-text-muted);
@@ -2824,7 +3489,7 @@ button.cal-agenda-item:hover, a.cal-agenda-item:hover {
 .mk-pipeline-title {
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-3xl);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text);
   line-height: var(--ui-leading-snug);
   margin-bottom: var(--ui-space-1);
@@ -2867,7 +3532,7 @@ details.mk-faq-item {
   justify-content: space-between;
   gap: var(--ui-space-4);
   padding: var(--ui-space-4) var(--ui-space-5);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text);
   font-size: var(--ui-text-lg);
 }
@@ -2929,7 +3594,7 @@ details.mk-faq-item {
 }
 .mk-nav-wordmark {
   font-family: var(--ui-font-display);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   font-size: var(--ui-display-h6);
   color: var(--ui-text);
   letter-spacing: -0.01em;
@@ -2940,7 +3605,7 @@ details.mk-faq-item {
 /* Small solid CTA pill. */
 .mk-nav-apply {
   font-family: var(--ui-font-sans);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   font-size: var(--ui-text-sm);
   letter-spacing: var(--ui-tracking-wide);
   padding: var(--ui-space-2) var(--ui-space-5);
@@ -2977,7 +3642,7 @@ details.mk-faq-item {
 }
 .mk-nav-links a {
   font-size: var(--ui-text-sm);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-text-muted);
   text-decoration: none;
   letter-spacing: var(--ui-tracking-caps);
@@ -2988,7 +3653,7 @@ details.mk-faq-item {
 .mk-nav-links a.active { color: var(--ui-text); }
 .mk-nav-cta {
   font-size: var(--ui-text-sm);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-accent);
   text-decoration: none;
   letter-spacing: var(--ui-tracking-caps);
@@ -3047,7 +3712,7 @@ details.mk-faq-item {
 .mk-nav-tabs button.mk-nav-tab {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ui-text);
@@ -3093,7 +3758,7 @@ details.mk-faq-item {
 .mk-nav-dd-link {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: 500;
+  font-weight: var(--ui-weight-medium);
   letter-spacing: 0;
   text-transform: none;
   color: var(--ui-text);
@@ -3103,7 +3768,7 @@ details.mk-faq-item {
   transition: background 0.15s, color 0.15s;
 }
 .mk-nav-dd-link:hover { background: var(--ui-surface); color: var(--ui-accent); }
-.mk-nav-dd-link.current { color: var(--ui-accent); font-weight: 700; }
+.mk-nav-dd-link.current { color: var(--ui-accent); font-weight: var(--ui-weight-heading); }
 
 @media (max-width: 768px) {
   /* Bar shape collapses to hamburger; the links list becomes the dropdown. */
@@ -3126,7 +3791,7 @@ details.mk-faq-item {
   }
   .mk-nav.bar.open .mk-nav-links a {
     font-size: var(--ui-text-md);
-    font-weight: 600;
+    font-weight: var(--ui-weight-strong);
     color: var(--ui-text);
     letter-spacing: normal;
     text-transform: none;
@@ -3219,7 +3884,7 @@ details.mk-faq-item {
 .mk-footer-heading {
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-xs);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ui-text);
@@ -3325,7 +3990,7 @@ details.mk-faq-item {
 .table-sort {
   font: inherit;
   font-size: inherit;
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text-muted);
   background: none;
   border: 0;
@@ -3475,6 +4140,142 @@ details.mk-faq-item {
   color: var(--ui-text-muted);
 }
 
+/* @odla-ai/ui — MentionEditor (.ui-mention-editor): a contenteditable prose
+   field whose `@` typeahead inserts atomic chips (.ui-mention). The wrapper
+   anchors the popup; the chips are contenteditable="false" spans, so they read
+   as one character to the caret. Kinds are exposed as [data-mention-kind] so a
+   host can tint a person differently from a task without new classes. */
+
+.ui-mention-editor {
+  position: relative;
+  display: grid;
+}
+.ui-mention-input {
+  min-height: calc(var(--ui-space-8) * 2);
+  padding: var(--ui-space-3);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-normal);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+.ui-mention-input:focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 1px;
+}
+/* The placeholder is an ::after rather than a real node: a text node inside a
+   contenteditable would be editable, selectable, and would serialize. */
+.ui-mention-input[data-empty]::after {
+  content: attr(data-placeholder);
+  color: var(--ui-text-faint);
+  pointer-events: none;
+}
+.ui-mention-editor.disabled .ui-mention-input {
+  background: var(--ui-surface-2);
+  color: var(--ui-text-muted);
+  cursor: not-allowed;
+}
+
+.ui-mention {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-strong);
+  font-weight: var(--ui-weight-medium);
+  /* Chips sit on the text baseline but must not stretch the line box. */
+  line-height: inherit;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+}
+.ui-mention[data-mention-kind="pm"] {
+  background: var(--ui-accent-2-soft);
+  color: var(--ui-text);
+}
+.ui-mention[data-mention-kind="brand"] {
+  background: var(--ui-warn-soft);
+  color: var(--ui-text);
+}
+
+.ui-mention-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: var(--ui-layer-overlay);
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  box-shadow: var(--ui-shadow);
+  max-height: 280px;
+  overflow-y: auto;
+}
+.ui-mention-editor[data-menu-placement="above"] .ui-mention-list {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+.ui-mention-option {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-3);
+  padding: 6px 8px;
+  border-radius: var(--ui-radius-sm);
+  cursor: pointer;
+  font-size: var(--ui-text-md);
+  color: var(--ui-text);
+}
+.ui-mention-option.active {
+  background: var(--ui-accent-soft);
+}
+.ui-mention-option-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-mention-option-hint {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+  flex-shrink: 0;
+}
+.ui-mention-option-availability {
+  padding: 1px 5px;
+  border-radius: var(--ui-radius-sm);
+  font-size: var(--ui-text-xs);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.ui-mention-option-availability.runnable {
+  background: var(--ui-good-soft);
+  color: var(--ui-good);
+}
+.ui-mention-option-availability.reference {
+  background: var(--ui-surface-2);
+  color: var(--ui-text-muted);
+}
+.ui-mention-option-kind {
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-faint);
+  font-family: var(--ui-font-mono);
+  flex-shrink: 0;
+}
+.ui-mention-empty {
+  padding: 6px 8px;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+}
+
 /* @odla-ai/ui — choropleth map
    SVG region map. The component stamps each shape with a continuous
    `--ui-heat` (0..1) custom property AND a stepped data-heat="0..5" bucket;
@@ -3559,6 +4360,134 @@ details.mk-faq-item {
   );
 }
 
+/* @odla-ai/ui — color swatches + palette editing.
+   The fill color is CONTENT, not chrome: components pass it as the inline
+   `--ui-swatch` custom property (the choropleth --ui-heat precedent) and this
+   sheet paints it. Every other color here is a --ui-* token. */
+
+.swatch {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: none;
+  padding: 4px;
+  border-radius: var(--ui-radius-md);
+  font-family: var(--ui-font-sans);
+  color: var(--ui-text-muted);
+}
+button.swatch { cursor: pointer; }
+.swatch:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+
+.swatch-fill {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ui-radius-md);
+  border: 1px solid var(--ui-border);
+  background: var(--ui-swatch);
+}
+.swatch[data-size="sm"] .swatch-fill {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--ui-radius-sm);
+}
+.swatch[data-size="lg"] .swatch-fill {
+  width: 48px;
+  height: 48px;
+}
+.swatch.selected .swatch-fill {
+  border-color: var(--ui-accent);
+  box-shadow: var(--ui-focus);
+}
+
+.swatch-label {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text);
+}
+.swatch-value {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  color: var(--ui-text-faint);
+}
+
+/* WCAG badge: data-level = AAA | AA | AA-large | fail. */
+.swatch-contrast {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-surface-2);
+  color: var(--ui-text-muted);
+  padding: 1px 6px;
+}
+.swatch-contrast[data-level="AAA"],
+.swatch-contrast[data-level="AA"] {
+  border-color: var(--ui-good);
+  background: var(--ui-good-soft);
+  color: var(--ui-good);
+}
+.swatch-contrast[data-level="AA-large"] {
+  border-color: var(--ui-warn);
+  background: var(--ui-warn-soft);
+  color: var(--ui-warn);
+}
+.swatch-contrast[data-level="fail"] {
+  border-color: var(--ui-danger);
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger);
+}
+
+/* A strip of swatches sharing one selection. */
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+}
+
+/* Editor: one row per color — preview, native picker, hex input, actions. */
+.palette-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+}
+.palette-editor-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+.palette-editor-row .input {
+  width: 110px;
+  font-family: var(--ui-font-mono);
+}
+.palette-editor-name {
+  font-size: var(--ui-text-sm);
+  color: var(--ui-text-muted);
+}
+.palette-pick {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  background: none;
+  cursor: pointer;
+}
+.palette-pick:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.palette-pick:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+.palette-lock[aria-pressed="true"] { color: var(--ui-accent); }
+
 /* @odla-ai/ui — cycle diagram
    N labeled nodes on a circle with an aria-hidden connector ring (SVG arcs,
    stroked with the chart series colors by the component). The node list is
@@ -3617,12 +4546,12 @@ details.mk-faq-item {
   justify-content: center;
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-on-accent);
   flex-shrink: 0;
 }
 .cycle-node-label {
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text);
 }
 
@@ -3685,7 +4614,7 @@ details.mk-faq-item {
 
 .metric-value {
   font-family: var(--ui-font-display);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   letter-spacing: var(--ui-tracking-tight);
   line-height: var(--ui-leading-none);
   color: var(--ui-text);
@@ -3693,7 +4622,7 @@ details.mk-faq-item {
 
 .metric-delta {
   font-size: var(--ui-text-sm);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   white-space: nowrap;
 }
 .metric-delta.pos { color: var(--ui-chart-pos); }
@@ -3719,7 +4648,7 @@ details.mk-faq-item {
 }
 .metric-peak-value {
   font-size: var(--ui-text-md);
-  font-weight: 600;
+  font-weight: var(--ui-weight-strong);
   color: var(--ui-text);
 }
 
@@ -3816,7 +4745,7 @@ details.mk-faq-item {
 .metric-tip.end { transform: translate(-100%, calc(-100% - 8px)); }
 .metric-tip-label {
   margin-bottom: var(--ui-space-1);
-  font-weight: 700;
+  font-weight: var(--ui-weight-heading);
   color: var(--ui-chart-tip-text);
 }
 .metric-tip-row {
@@ -3859,3 +4788,395 @@ details.mk-faq-item {
 .metric-medium .metric-value { font-size: var(--ui-display-h4); }
 .metric-large { gap: var(--ui-space-4); }
 .metric-large .metric-value { font-size: var(--ui-display-h2); }
+
+/* @odla-ai/ui — syntax highlighting for build-time highlight.js output.
+   @odla-ai/blog emits `hljs-*` class markup at build time, but until now only
+   the four blog themes carried rules to color it: every app surface rendering
+   the same markdown (Studio docs, the docs site under paper/odla-brand) showed
+   the tokens monochrome. The palettes existed — each theme defines --hl-* —
+   they simply had nothing consuming them.
+
+   Living here rather than in each theme's styles.css means one definition
+   serves every consumer, and app themes (which ship tokens.css, a tokens-only
+   extract with no page rules) get highlighting for the first time. */
+
+.hljs { color: var(--ui-code-text); }
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-tag { color: var(--ui-hl-keyword); }
+.hljs-string,
+.hljs-regexp { color: var(--ui-hl-string); }
+.hljs-comment,
+.hljs-quote { color: var(--ui-hl-comment); font-style: italic; }
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet { color: var(--ui-hl-number); }
+.hljs-title,
+.hljs-section,
+.hljs-name { color: var(--ui-hl-title); font-weight: var(--ui-weight-strong); }
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-property { color: var(--ui-hl-attr); }
+.hljs-type,
+.hljs-built_in,
+.hljs-selector-class,
+.hljs-selector-id { color: var(--ui-hl-type); }
+.hljs-meta,
+.hljs-doctag { color: var(--ui-hl-meta); }
+.hljs-addition { color: var(--ui-hl-addition); }
+.hljs-deletion { color: var(--ui-hl-deletion); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: var(--ui-weight-heading); }
+
+/* @odla-ai/ui — reading-preferences popover
+   Built from the design system's own parts rather than a private look: the
+   panel is the `.card` contract (surface, hairline, radius-lg, shadow), each
+   axis is a `.segmented` pill track, and the axis captions are the same
+   uppercase micro-label `.card h4` uses. Nothing here invents a control — a
+   new look belongs in a theme, not in this sheet.
+
+   The disclosure is a native <details>. That matters more here than anywhere
+   else in the system: this is what a reader reaches for when the defaults are
+   failing them, and it is the last thing that should wait on a script.
+   js/prefs.js only adds persistence.
+
+   Sizing is in px and --ui-space-*, deliberately NOT rem: this is chrome, and
+   chrome must not grow when the reader turns the text-size axis up. */
+
+.ui-prefs {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.ui-prefs-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: transparent;
+  color: var(--ui-text-muted);
+  cursor: pointer;
+  /* Kill the disclosure triangle in every engine: `display` for WebKit's
+     pseudo-element, `list-style` for the modern marker. */
+  list-style: none;
+}
+.ui-prefs-trigger::-webkit-details-marker {
+  display: none;
+}
+.ui-prefs-trigger:hover {
+  color: var(--ui-text);
+  border-color: var(--ui-border-strong);
+}
+.ui-prefs-trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+.ui-prefs[open] > .ui-prefs-trigger {
+  color: var(--ui-text);
+  border-color: var(--ui-border-strong);
+}
+
+/* Sliders glyph in currentColor: tracks the trigger's state, costs no request. */
+.ui-prefs-icon {
+  width: 15px;
+  height: 15px;
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor),
+    radial-gradient(circle 2.5px at center, currentColor 98%, transparent 100%),
+    radial-gradient(circle 2.5px at center, currentColor 98%, transparent 100%);
+  background-size: 13px 1.5px, 13px 1.5px, 5px 5px, 5px 5px;
+  background-position: 1px 4.25px, 1px 9.75px, 2.5px 2px, 7.5px 7.5px;
+  background-repeat: no-repeat;
+}
+
+.ui-prefs-panel {
+  position: absolute;
+  top: calc(100% + var(--ui-space-2));
+  right: 0;
+  z-index: var(--ui-layer-overlay);
+  /* Sized by its widest pill track, floored so short axes do not look ragged
+     and capped so it never scrolls the page sideways from the right edge. */
+  width: max-content;
+  min-width: 240px;
+  max-width: min(340px, calc(100vw - var(--ui-space-5)));
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-4);
+  text-align: left;
+  font-family: var(--ui-font-sans);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow-strong);
+  /* The trigger lives in a top bar, and bars are routinely set in tracked
+     uppercase — which the panel would inherit, turning "High contrast" into a
+     label half again as wide and pushing every row into wrapping. A popover
+     speaks in its own voice. */
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: var(--ui-weight-body);
+  font-style: normal;
+}
+
+.ui-prefs-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+/* The `.card h4` micro-label: uppercase, tracked, muted. */
+.ui-prefs-legend {
+  padding: 0 0 var(--ui-space-2);
+  font-size: var(--ui-text-xs);
+  font-weight: var(--ui-weight-strong);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-tracking-caps);
+  color: var(--ui-text-muted);
+}
+
+/* The `.segmented-track` contract, re-declared for labels rather than the
+   buttons Segmented uses — the radios are the accessible control here, so the
+   selected state hangs off `input:checked + span` instead of aria-checked.
+   Values stay in step with css/components/segmented.css (test-enforced). */
+.ui-prefs-options {
+  /* flex, not Segmented's inline-flex: there the track sits inline beside a
+     caption, here each axis owns its row and a content-width track leaves the
+     panel looking ragged. */
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 2px;
+  max-width: 100%;
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-pill);
+}
+
+/* grow 1 / shrink 0 / basis auto. The shrink is load-bearing: left
+   shrinkable, an over-long row does not wrap — the options squeeze below
+   their own labels and the text spills across the neighbouring pill.
+   Refusing to shrink pushes the option that does not fit onto a second line,
+   where it then grows to fill it. */
+.ui-prefs-option {
+  flex: 1 0 auto;
+  max-width: 100%;
+  display: flex;
+  cursor: pointer;
+}
+
+/* The radio stays in the accessibility tree — clipped, never `display: none`,
+   which would drop it from tab order and from the group semantics. All of the
+   selected/focused styling therefore hangs off the adjacent <span>, via plain
+   sibling combinators rather than :has(), so the control is never one
+   unsupported selector away from having no visible selection at all. */
+.ui-prefs-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ui-prefs-option span {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-snug);
+  color: var(--ui-text-muted);
+  border-radius: var(--ui-radius-pill);
+  text-align: center;
+  white-space: nowrap;
+}
+.ui-prefs-option:hover span {
+  color: var(--ui-text);
+}
+.ui-prefs-option input:checked + span {
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+  font-weight: var(--ui-weight-strong);
+}
+.ui-prefs-option input:focus-visible + span {
+  outline: none;
+  box-shadow: var(--ui-focus);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   @odla-ai/ui — monochrome palette   html[data-ui-palette="mono"]
+   Every colour role collapses onto one neutral ink over one neutral
+   ground. Layers over ANY theme rather than replacing it: only the
+   colour roles move, so type, spacing, radii and layout stay the
+   theme's own.
+
+   Specificity is the whole trick. `html[data-ui-palette="mono"]` is
+   (0,1,1), which outranks a theme's `:root` and its generated
+   `[data-ui-theme="…"]` scope (both 0,1,0) no matter which stylesheet
+   loads last. The dark twins carry one more attribute (0,2,1) so they
+   also outrank a theme's `[data-ui-theme][data-theme="dark"]` (0,2,0).
+
+   The dark blocks restate only the ink and the ground. Custom
+   properties substitute var() on the DECLARING element, and every
+   block here declares on <html>, so the derived roles below recompute
+   against whichever ink won the cascade — no second copy needed.
+   ══════════════════════════════════════════════════════════════ */
+
+html[data-ui-palette="mono"] {
+  color-scheme: light;
+  --ui-bg: #ffffff;
+  --ui-text: #111111;
+
+  /* Surfaces separate by hairline, not by fill — with hue gone, a tinted
+     panel and its page read as the same value anyway. */
+  --ui-surface: var(--ui-bg);
+  --ui-surface-2: color-mix(in srgb, var(--ui-text) 7%, var(--ui-bg));
+  --ui-text-muted: color-mix(in srgb, var(--ui-text) 68%, var(--ui-bg));
+  --ui-text-faint: color-mix(in srgb, var(--ui-text) 45%, var(--ui-bg));
+  --ui-border: color-mix(in srgb, var(--ui-text) 22%, var(--ui-bg));
+  --ui-border-strong: color-mix(in srgb, var(--ui-text) 45%, var(--ui-bg));
+
+  --ui-accent: var(--ui-text);
+  --ui-accent-strong: var(--ui-text);
+  --ui-accent-soft: color-mix(in srgb, var(--ui-text) 10%, transparent);
+  --ui-on-accent: var(--ui-bg);
+
+  /* Status keeps a value ladder — danger is full ink, warn the lightest —
+     so the three stay tellable apart. It is a ladder, not a language:
+     monochrome is exactly the case that proves colour alone was never
+     enough, so status must also carry an icon, a label, or a shape. */
+  --ui-danger: var(--ui-text);
+  --ui-danger-soft: color-mix(in srgb, var(--ui-text) 12%, transparent);
+  --ui-good: color-mix(in srgb, var(--ui-text) 78%, var(--ui-bg));
+  --ui-good-soft: color-mix(in srgb, var(--ui-text) 9%, transparent);
+  --ui-warn: color-mix(in srgb, var(--ui-text) 58%, var(--ui-bg));
+  --ui-warn-soft: color-mix(in srgb, var(--ui-text) 7%, transparent);
+
+  --ui-code-bg: color-mix(in srgb, var(--ui-text) 6%, var(--ui-bg));
+  --ui-code-text: var(--ui-text);
+  --ui-shadow: 0 1px 2px color-mix(in srgb, var(--ui-text) 10%, transparent);
+
+  /* Syntax highlighting: token classes that survive as weight/value
+     differences instead of hues. Comments recede, titles hold full ink. */
+  --ui-hl-keyword: var(--ui-text);
+  --ui-hl-title: var(--ui-text);
+  --ui-hl-string: color-mix(in srgb, var(--ui-text) 78%, var(--ui-code-bg));
+  --ui-hl-number: color-mix(in srgb, var(--ui-text) 78%, var(--ui-code-bg));
+  --ui-hl-type: color-mix(in srgb, var(--ui-text) 66%, var(--ui-code-bg));
+  --ui-hl-attr: color-mix(in srgb, var(--ui-text) 66%, var(--ui-code-bg));
+  --ui-hl-meta: color-mix(in srgb, var(--ui-text) 55%, var(--ui-code-bg));
+  --ui-hl-comment: color-mix(in srgb, var(--ui-text) 48%, var(--ui-code-bg));
+  --ui-hl-addition: color-mix(in srgb, var(--ui-text) 82%, var(--ui-code-bg));
+  --ui-hl-deletion: color-mix(in srgb, var(--ui-text) 62%, var(--ui-code-bg));
+
+  /* Series default to accent/good/warn/danger, which have just collapsed
+     onto one ink — a mono chart needs its own ramp or every line is the
+     same line. Six evenly-spaced steps; pair with dash/marker variation. */
+  --ui-chart-1: color-mix(in srgb, var(--ui-text) 100%, var(--ui-bg));
+  --ui-chart-2: color-mix(in srgb, var(--ui-text) 84%, var(--ui-bg));
+  --ui-chart-3: color-mix(in srgb, var(--ui-text) 68%, var(--ui-bg));
+  --ui-chart-4: color-mix(in srgb, var(--ui-text) 54%, var(--ui-bg));
+  --ui-chart-5: color-mix(in srgb, var(--ui-text) 41%, var(--ui-bg));
+  --ui-chart-6: color-mix(in srgb, var(--ui-text) 29%, var(--ui-bg));
+  --ui-chart-pos: var(--ui-text);
+  --ui-chart-neg: color-mix(in srgb, var(--ui-text) 55%, var(--ui-bg));
+  --ui-chart-heat-lo: color-mix(in srgb, var(--ui-text) 30%, var(--ui-bg));
+  --ui-chart-heat-mid: color-mix(in srgb, var(--ui-text) 62%, var(--ui-bg));
+  --ui-chart-heat-hi: var(--ui-text);
+}
+
+html[data-ui-palette="mono"][data-theme="dark"] {
+  color-scheme: dark;
+  --ui-bg: #0b0b0b;
+  --ui-text: #f0f0f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-ui-palette="mono"]:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ui-bg: #0b0b0b;
+    --ui-text: #f0f0f0;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   @odla-ai/ui — high contrast   html[data-ui-palette="contrast"]
+   SHARPENS the theme; it does not replace it. Every declaration here
+   is a var() reference to a role the theme already owns, so the page
+   keeps its own colours — a reader who chose high contrast on the
+   green theme still gets the green theme.
+
+   Three habits of a normal palette are inverted on purpose:
+     · surfaces stop tinting and separate by border instead, because a
+       wash light enough to sit under body text carries no contrast of
+       its own to begin with;
+     · muted text stops being muted — dimming is the exact thing a
+       reader asking for contrast is asking us to stop doing;
+     · shadows go away. Depth drawn in blurred alpha is invisible at
+       this end of the scale and only softens the edges that aren't.
+
+   What this sheet CANNOT do is move a hue. `--ui-accent: <something
+   derived from --ui-accent>` on the same element is a self-reference,
+   which CSS resolves as a cycle, so a theme whose accent sits at
+   4:1 has to deepen it itself: each theme ships its own
+   `html[data-ui-palette="contrast"]` block in ui.css, the same way it
+   ships a dark block, with the hue held and only the lightness moved.
+   test/palette-contrast.test.js measures every theme and fails the
+   build if a role lands under 7:1 — the AAA claim is enforced per
+   theme, not asserted here.
+
+   No dark twin: every value is a reference, so the whole sheet tracks
+   whatever mode the theme is in.
+   ══════════════════════════════════════════════════════════════ */
+
+html[data-ui-palette="contrast"] {
+  --ui-text-muted: var(--ui-text);
+  --ui-text-faint: var(--ui-text);
+
+  --ui-surface: var(--ui-bg);
+  --ui-surface-2: var(--ui-bg);
+  --ui-border: var(--ui-text);
+  --ui-border-strong: var(--ui-text);
+  --ui-code-bg: var(--ui-bg);
+  --ui-code-text: var(--ui-text);
+
+  --ui-shadow: none;
+  --ui-shadow-strong: none;
+
+  /* Tone washes mark a region; they never carry the contrast. Mixed toward
+     the page rather than toward transparent so full-ink text still clears
+     7:1 on top of one whatever sits behind it. */
+  --ui-accent-soft: color-mix(in srgb, var(--ui-accent) 14%, var(--ui-bg));
+  --ui-accent-2-soft: color-mix(in srgb, var(--ui-accent-2) 14%, var(--ui-bg));
+  --ui-good-soft: color-mix(in srgb, var(--ui-good) 14%, var(--ui-bg));
+  --ui-warn-soft: color-mix(in srgb, var(--ui-warn) 14%, var(--ui-bg));
+  --ui-danger-soft: color-mix(in srgb, var(--ui-danger) 14%, var(--ui-bg));
+
+  /* A focus ring that cannot be lost against either ground: an inner band in
+     the page colour, an outer band in full ink. */
+  --ui-focus: 0 0 0 3px var(--ui-bg), 0 0 0 6px var(--ui-text);
+
+  /* Grid and axes come up off the usual whisper-alpha so the frame of a
+     chart is legible too, not just the series drawn on it. */
+  --ui-chart-grid: color-mix(in srgb, var(--ui-text) 35%, var(--ui-bg));
+  --ui-chart-grid-zero: var(--ui-text);
+  --ui-chart-axis: var(--ui-text);
+  --ui-chart-axis-faint: var(--ui-text);
+  --ui-chart-tip-bg: var(--ui-bg);
+  --ui-chart-tip-text: var(--ui-text);
+}

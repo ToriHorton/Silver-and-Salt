@@ -6,9 +6,11 @@ file first, then follow the runbook in `.agents/skills/odla-migrate/SKILL.md`
 (read only the current phase's reference file). `npx @odla-ai/cli doctor`
 confirms config state.
 
-**Branch rule (from the project owner):** all migration work happens on the
-branch `odla-conversion-test`. Do not merge to `main`, do not push anything
-that changes production. GitHub Pages (main branch) stays live and untouched
+**Branch rule (updated 2026-08-04):** the historical migration work from
+`odla-conversion-test` and the Chapter rollout branches is now present on
+`origin/main`. Production readiness continues on
+`codex/production-cutover-readiness`. Do not update the local `main` branch or
+push anything that changes production. GitHub Pages stays live and untouched
 until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
 
 ## Phase checklist
@@ -29,6 +31,117 @@ until Phase 5 sign-off. Rollback before Phase 5 is always "do nothing."
   **PAYMENT-SPEC.md** (repo root, excluded from the public build): Tori's
   onboarding-scope.html brief translated to this stack. Phase P1 of that
   spec (payment core) plus the owner's open-item answers gate cutover.
+
+## P5 readiness review (2026-08-04, source only)
+
+The current `origin/main` history, including the odla signup, payment,
+booking, member, admin, and follower-network work, is integrated into
+`codex/production-cutover-readiness`. The local `main` ref was not moved.
+No environment was provisioned or deployed during this review.
+
+Completed locally:
+
+- Upgraded every direct odla runtime and CLI package to the registry release
+  current on 2026-08-04: auth-clerk 0.4.1, calendar 0.3.0, chapter 0.29.0,
+  CLI 0.28.1, CRM 0.6.0, db 0.10.1, email 0.3.1, and UI 0.16.0.
+- Updated the checked-in UI stylesheets to UI 0.16.0, moved Calendar config
+  from the legacy `calendars` alias to `availabilityCalendars` plus an explicit
+  `bookingCalendar`, and refreshed application bundle cache keys.
+- Updated Wrangler to 4.118.0 and added a narrow `undici` 7.29.0 override for
+  Wrangler's transitive advisory. `npm audit` reports zero vulnerabilities.
+- `npm test` passes 83 local tests with 31 deployed acceptance tests skipped.
+  `npm run build` produces 176 files. `odla-ai doctor` passes with 15 schema
+  entities and 15 deny-all rule namespaces. The Chapter provision dry run
+  passes with two guarded seeds and four anonymous smoke probes.
+- The passive pre-cutover scan passes with zero confirmed findings and zero
+  candidates. Binary media and the stale nested `.claude/worktrees` directory
+  are explicitly excluded because security 0.3.1 cannot snapshot their binary
+  bytes reliably. The scan still covers the application and Worker source.
+- The branch is deployed to the existing dev-only Cloudflare Worker at
+  `https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev`, Worker
+  version `4758b1ac-e6fa-4e1c-b524-7dba40fdd7a0`. The deployment uses tenant
+  `silver-and-salt-capital--dev`; production and GitHub Pages remain untouched.
+- The current app-incarnation credential was provisioned through the normal
+  non-rotating pipeline and pushed to the dev Worker. Schema and all 15
+  deny-all rule namespaces were applied; both guarded seeds already existed.
+- Calendar is connected, healthy, writable, and books to `primary` with 86
+  available slots in the current seven-day probe. Join config reports payments
+  ready at the approved $1,000 standard price and $100 founding discount.
+- `odla-ai smoke --env dev` passes: public config, healthy/bookable Calendar,
+  19 live entities, a 41-record CRM aggregate, and all four Chapter anonymous
+  auth probes. The deployed acceptance suite passes all 114 checks. Its live
+  timeout is 20 seconds to accommodate normal Calendar and odla-db latency;
+  the offline suite retains the five-second default.
+
+## P5 live infrastructure checkpoint (2026-08-05)
+
+The branch now has a separate live odla tenant and top-level Cloudflare Worker.
+This is infrastructure readiness only: the public domain and GitHub Pages have
+not changed, and the Worker is not ready to accept real payments or sign-ins.
+
+- Upgraded `@odla-ai/cli` from 0.28.1 to 0.29.0. The prior release checked
+  access to a new live database before enabling its Registry service, which
+  left first-time prod provisioning stuck. Version 0.29.0 enabled prod `db`
+  and Calendar successfully before continuing.
+- Provisioned tenant `silver-and-salt-capital` without rotating the existing
+  dev credential. Pushed the 15 deny-all rule namespaces and composed schema;
+  both guarded Chapter seeds were created. The live database started fresh:
+  the 41 sandbox CRM records, identity rows, files, provider secrets, and API
+  keys were not copied.
+- Connected the production Calendar environment through the owner-approved
+  Google consent flow. It is healthy, bookable, and writes to `primary` while
+  checking `primary` for availability.
+- Deployed the top-level Worker at
+  `https://silver-and-salt-capital.cory-ondrejka.workers.dev`, version
+  `7cfe64c6-2950-48e1-9cfd-261300480e9b`, and transferred the already-saved
+  prod database key through Wrangler stdin. The odla Registry prod link and
+  Chapter canonical follower URL now use that verified origin. The aligned dev
+  Worker is version `d43fe490-4cce-4826-b28b-b9b75bca92c5`.
+- Upload verification caught two tracked local-only generated files
+  (`granola-inbox.js` and `newsletter-data.js`) in the first asset manifest.
+  They were briefly reachable at the new workers.dev origins before DNS
+  cutover. The build now excludes all six local-only paths explicitly and
+  fails if any reappear; Cloudflare routes those paths around its asset cache
+  to a Worker-level 404. Exact and cache-busted probes return 404 on both
+  origins.
+- Local tests pass 83/83, the build contains 174 files, and the passive
+  security gate reports zero confirmed findings and zero candidates.
+  `odla-ai smoke` passes in prod and dev with healthy Calendar, 19 entities,
+  and four anonymous Chapter probes returning 401.
+- The deployed suite passes 112/114 checks. The two failing launch gates are
+  intentional and visible: Stripe live configuration is absent
+  (`paymentsReady:false`), and the production Clerk publishable key/issuer are
+  absent. The suite's bounded `acceptance-replay-identity-fixed` fixture created
+  exactly one live application/CRM record; repeated runs converge on that row.
+- Production federation with Built Not Found is not active yet. The matching
+  live `network_share_secret` must be installed in both vaults and the leader
+  target changed to this production origin before that edge is tested.
+- A `pk_live` rehearsal against `cory-ondrejka.workers.dev` proved the odla
+  production auth update path, but Clerk's required Frontend API hostname
+  returned 404 because the host-provided `workers.dev` DNS zone is not ours to
+  configure. The live odla tenant therefore temporarily uses the existing
+  Clerk development instance while the site remains on its workers.dev preview
+  origin. The real cutover must update the existing Clerk production instance
+  to `silverandsaltcapital.com`, replace the prod publishable key, and
+  re-provision auth before DNS moves.
+
+Remaining gates before DNS cutover:
+
+1. Complete the owner's browser pass for signup, a Stripe test payment,
+   booking, provisional/member/admin views, and the admin mutation families.
+2. Activate the production instance of the existing Clerk application and
+   prepare its publishable key, session config, webhook, and both write-only
+   Clerk secret slots for the prod tenant.
+3. Prepare Stripe live-mode product, annual price, webhook, publishable key,
+   and write-only vault secrets. Verify provider amount, currency, interval,
+   refund behavior, and payment-domain registration before accepting money.
+4. Onboard `silverandsaltcapital.com` to Cloudflare Email Service in the
+   production Cloudflare account so `membership@silverandsaltcapital.com` is a
+   verified sender.
+5. Install and test the live Built Not Found federation secret on both sides,
+   then point the leader's production target at the verified Worker origin.
+6. After the provider and browser gates pass, attach the custom domain and cut
+   DNS. Keep GitHub Pages enabled for the 72-hour rollback window.
 
 ## P0 inventory findings (2026-07-11)
 
