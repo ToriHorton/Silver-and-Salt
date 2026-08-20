@@ -1,5 +1,8 @@
 import { createChapterIntegration } from "@odla-ai/chapter";
 import { chapter } from "./src/chapter.config.mjs";
+import { createInviteIntegration } from "./src/odla/invites.mjs";
+import { createNewsletterIntegration } from "./src/odla/newsletter.mjs";
+import { withTierAttrs } from "./src/odla/tier-attrs.mjs";
 
 export default {
   platformUrl: process.env.ODLA_PLATFORM_URL ?? "https://odla.ai",
@@ -23,7 +26,17 @@ export default {
   // schema and rules survive as frozen parity fixtures under tests/fixtures/,
   // and tests/chapter-parity.test.mjs asserts this integration against them
   // (59 assertions, exact attribute-level parity on all 13 namespaces).
-  integrations: [createChapterIntegration(chapter, { basePath: "/api/crm" })],
+  // The Chapter integration composes the operational + crm_* namespaces; the
+  // invite integration adds this app's own `memberInvites` (the "you met her
+  // first" signup path). Kept as a separate integration so the chapter parity
+  // gate, which asserts createChapterIntegration alone, stays untouched.
+  integrations: [
+    withTierAttrs(createChapterIntegration(chapter, { basePath: "/api/crm" })),
+    createInviteIntegration(),
+    // Declared so provisioning from this branch does not propose deleting a
+    // namespace another branch owns in the shared dev tenant. See the file.
+    createNewsletterIntegration(),
+  ],
   calendar: {
     google: {
       // 0.2.0 live booking: FreeBusy availability over these calendars;

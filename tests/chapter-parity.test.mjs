@@ -40,9 +40,30 @@ const integration = createChapterIntegration(chapter);
 // publicProfileRemoval ({applicationId:null, profile:null}) on every sync, so
 // the legacy public copy on our 37 existing dev accounts is cleared the next
 // time each account is touched. Optional, additive, never read by the browser.
+//
+// tierId (@odla-ai/chapter, added between the pinned 0.27.1 and 0.31.4): names
+// which membership tier an applicant chose, so ONE join flow can serve the
+// Associate / Founding Member / Steward row (living document Decision #33,
+// §15.2) instead of the single `prices` block this site shipped with. Optional
+// and indexed, so the 36 frozen dev rows stay valid and untouched: an
+// application written before tiers existed carries no tierId and keeps
+// resolving through `prices`.
 const REVIEWED_ADDITIONS = {
-  applications: ["clerkPrivateMetadataSyncedAt"],
+  applications: ["clerkPrivateMetadataSyncedAt", "tierId"],
 };
+
+// Whole NAMESPACES Chapter composes beyond the frozen contract. Same review
+// rule as REVIEWED_ADDITIONS: listed here with a reason, or the gate fails.
+// Deliberately not "fixed" by editing tests/fixtures/legacy-schema.json — that
+// fixture is acceptance authority for what is deployed, and the anchor test
+// above pins it to this branch's legacy source, which has no tiers.
+//
+// tiers (@odla-ai/chapter, added between the pinned 0.27.1 and 0.31.4): the
+// offerable membership tiers for a group (name, priceCents, stripePriceId,
+// blurb, sortOrder, active). Additive and default-deny like every other
+// namespace, and EMPTY until deliberately seeded, so composing it changes no
+// live behavior on its own. Nothing reads it until the tier seed runs.
+const REVIEWED_NAMESPACES = ["tiers"];
 
 // The fixture was captured from the shared dev TENANT, and that tenant is also
 // written by other branches. If someone else's build ever pushes a different
@@ -75,7 +96,7 @@ describe("schema parity vs the frozen legacy contract", () => {
   const chapterNs = Object.keys(integration.schema.entities).sort();
 
   it("composes exactly the deployed namespace set", () => {
-    expect(chapterNs).toEqual(legacyNs);
+    expect(chapterNs).toEqual([...legacyNs, ...REVIEWED_NAMESPACES].sort());
   });
 
   for (const ns of legacyNs) {
@@ -127,7 +148,9 @@ describe("schema parity vs the frozen legacy contract", () => {
 
 describe("rules stay default-deny", () => {
   it("covers exactly the deployed namespaces", () => {
-    expect(Object.keys(integration.rules).sort()).toEqual(Object.keys(legacyRules).sort());
+    expect(Object.keys(integration.rules).sort()).toEqual(
+      [...Object.keys(legacyRules), ...REVIEWED_NAMESPACES].sort(),
+    );
   });
 
   it("denies every operation on every namespace", () => {
@@ -260,9 +283,43 @@ describe("follower role", () => {
 });
 
 describe("group seed is insert-only and cannot overwrite owner edits", () => {
-  it("seeds the groups row and the crm_config singleton", () => {
+  // The three `tiers` seeds arrived 2026-08-20 with the J1 port: declaring
+  // Associate / Founding / Steward in src/chapter.config.mjs makes the engine
+  // seed one row per tier. Insert-only like every other seed, so re-running
+  // provision never overwrites a price the owner has since edited in the
+  // console. Reviewed and expected — a FOURTH tier appearing here without a
+  // decision should fail this test, which is the point of asserting the exact
+  // list rather than a count.
+  it("seeds the groups row, the crm_config singleton, and the three tiers", () => {
     const namespaces = integration.seeds.map((s) => s.ns ?? s.namespace).sort();
-    expect(namespaces).toEqual(["crm_config", "groups"]);
+    expect(namespaces).toEqual(["crm_config", "groups", "tiers", "tiers", "tiers"]);
+  });
+
+  it("seeds exactly the three decided tiers", () => {
+    const tiers = integration.seeds
+      .filter((s) => (s.ns ?? s.namespace) === "tiers")
+      .map((s) => s.attrs.id)
+      .sort();
+    expect(tiers).toEqual(["associate", "founding", "steward"]);
+  });
+
+  it("keeps Associate free and the paid tiers priced", () => {
+    const byId = Object.fromEntries(
+      integration.seeds
+        .filter((s) => (s.ns ?? s.namespace) === "tiers")
+        .map((s) => [s.attrs.id, s.attrs]),
+    );
+    // Associate free and deliberately without a Stripe price: the engine drops
+    // the payment step for a zero-priced tier.
+    expect(byId.associate.priceCents).toBe(0);
+    expect(byId.associate.stripePriceId ?? null).toBe(null);
+    // Both paid tiers must carry a Stripe price, or `tierPayable` silently
+    // stops offering them on the join page.
+    expect(byId.founding.stripePriceId).toBeTruthy();
+    expect(byId.steward.stripePriceId).toBeTruthy();
+    expect(byId.steward.priceCents).toBe(500000);
+    // $1,000 standard less the 10% founding discount (owner, 2026-08-20).
+    expect(byId.founding.priceCents).toBe(90000);
   });
 
   it("seeds the group under the live group id", () => {

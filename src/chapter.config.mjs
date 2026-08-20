@@ -52,6 +52,68 @@ export const chapter = defineChapter({
     }],
   },
 
+  // ── Membership tiers ─────────────────────────────────────────────────
+  // The three tiers J1 built by hand, now declared to the engine instead.
+  // @odla-ai/chapter grew native tiers between 0.27.1 and 0.31.4, which is the
+  // multi-tier support that odla bug fd944a76 asked for and that JOURNEYS-PLAN
+  // decision (b) was waiting on — so the port is unblocked and this is it.
+  //
+  // The engine seeds these into the `tiers` namespace and stamps the chosen one
+  // on `applications.tierId`. The J1 `applications.tier` string stays written
+  // alongside it until the migration is verified (see src/odla/tier-attrs.mjs),
+  // so nothing depends on a single cut-over moment.
+  //
+  // A tier priced above zero is only OFFERED once it has a Stripe price id;
+  // `tierPayable` drops it otherwise. That fails safe: a mispriced tier
+  // disappears from the join page rather than charging the wrong amount.
+  tiers: [
+    {
+      id: "associate",
+      name: "Associate",
+      // Free. The engine needs no Stripe price for a zero-priced tier, and the
+      // join page drops the payment step for it. She still books the intro
+      // call: decision 3 covers every tier, Associates included.
+      priceCents: 0,
+      blurb: "Join the community, come to everything, and follow the movement.",
+      sortOrder: 1,
+    },
+    {
+      id: "founding",
+      name: "Founding Member",
+      // RESOLVED by the owner 2026-08-20: the price is $1,000 with a 10%
+      // Founding discount, landing at $900. The dev `groups` row had drifted to
+      // foundingDiscountCents 15000 ($850) with nothing recording why; it was
+      // corrected back to 10000 the same day.
+      //
+      // 90000 is the EFFECTIVE founding price, which is what the join page
+      // shows and what this tier charges today. It is not the whole story: the
+      // owner's standing rule is that the guarantee is the RATE, not the
+      // dollar, so the 10% is eventually a percentage coupon against the
+      // $1,000 standard rather than a second fixed price — that way it survives
+      // any future change to the standard. Building it that way is P2 (numbering
+      // and the founding discount), and the plan already records that today's
+      // flat-price setup is wrong against the rule.
+      //
+      // Worth confirming in the Stripe dashboard rather than assuming: this
+      // price id is the authority for what a card is actually charged, and
+      // nothing in the repo proves its amount.
+      priceCents: 90000,
+      stripePriceId: "price_1U6JAuPEM4G7HsuYuIZ9xJvt",
+      blurb: "The founding rate, held for as long as you are a member.",
+      sortOrder: 2,
+    },
+    {
+      id: "steward",
+      name: "Community Steward",
+      // $5,000. Agrees across the cards, the plan, and the group row's
+      // stewardPriceCents, so no ambiguity here.
+      priceCents: 500000,
+      stripePriceId: "price_1U6IxNPEM4G7HsuYPSbRrQ9W",
+      blurb: "Fund the movement, and bring a second seat with you.",
+      sortOrder: 3,
+    },
+  ],
+
   services: ["db", "calendar"],
 
   // ── Brand ────────────────────────────────────────────────────────────

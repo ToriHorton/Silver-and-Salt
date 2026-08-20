@@ -897,3 +897,46 @@ files only — `assets/odla-ui/odla-ui.css` especially).
   admin structure, and local pipeline authority. The source change targets the
   primary `main` branch; only the development Worker is deployed. The
   production Worker remains untouched.
+- **2026-08-20 (P0, package alignment with the Built Not Found hub):** Branch
+  `p0-align-odla-packages`. Brought this follower up to the versions the hub
+  (`~/Projects/bnfCapWeb`) already runs, so anything spanning the network edge
+  is not comparing two different package generations: `@odla-ai/chapter`
+  0.27.1 → 0.31.4, `@odla-ai/crm` 0.5.0 → 0.8.0, `@odla-ai/ui` 0.12.2 →
+  0.16.0, `@odla-ai/calendar` 0.2.0 → 0.3.0, `@odla-ai/cli` 0.24.0 → 0.27.17.
+  `@odla-ai/db` stays 0.9.1 (already hub-matched).
+  **Verified additive before installing, not after:** the exported symbol set
+  of `chapter` (incl. `/worker`, `/ui`, `/ui/admin`), `crm`, `ui`, and `db` was
+  diffed across the gap — ZERO removals in any package, 14 additions to
+  `chapter` (the tiers system), 5 to `chapter/ui`, 7 to `crm`, 31 to `ui`.
+  The version jump looked far more dangerous than the surface actually is.
+  **Parity gate caught exactly one real change,** which is the gate working:
+  Chapter now composes a `tiers` namespace and an `applications.tierId`
+  attribute. Both are recorded in `tests/chapter-parity.test.mjs` as reviewed
+  additions (`REVIEWED_ADDITIONS` + a new `REVIEWED_NAMESPACES` list) with the
+  reasoning inline. The frozen fixtures were deliberately NOT edited: they are
+  acceptance authority for what is deployed, and the anchor test pins them to
+  this branch's legacy source, which has no tiers. `tierId` is optional and
+  indexed, so the 36 frozen dev application rows stay valid and unmodified.
+  Note for the membership work: `tiers` (name, priceCents, stripePriceId,
+  blurb, sortOrder, active) is the packaged form of the Associate / Founding
+  Member / Steward row already published under living-document Decision #33
+  (§15.2), which this site could not express with its single `prices` block.
+  **Verified:** `npm test` green at 83 passed / 31 skipped, identical to the
+  pre-upgrade baseline (the 31 skips are `tests/acceptance.test.mjs`, which
+  needs `ACCEPTANCE_URL` and a deployed origin). `npm run build` clean, 176
+  files. `npx @odla-ai/cli doctor` → `ok`, now 16 entities / 16 namespaces
+  (was 15; the delta is `tiers`). The follower-role tests still pass unchanged,
+  so the reader boundary — Built Not Found may read `person: ["name"]` and
+  append shared notes, nothing else — is intact and still gated by a test.
+  **Owner decision recorded this session:** that boundary STAYS as-is. The hub
+  dashboard will show name, stage rollup, and shared notes, and deep-link into
+  this admin for anything further; contact details, application narrative,
+  billing, and account state continue to never leave this site.
+  **NOT done, and each needs a human checkpoint:** nothing was provisioned,
+  no schema was pushed, and nothing was deployed — the new `tiers` namespace
+  exists only in composed config, and is empty and default-deny until someone
+  deliberately provisions and seeds it. The hub→follower edge was verified only
+  STATICALLY (ids and Cloudflare service bindings line up on both sides); a
+  live handshake needs a dev deploy plus the vaulted `network_share_secret`.
+  `npx odla-ai runbook get chapter-network` currently refuses without an
+  `app.manage` grant (`provision --request-grant`), which is owner-approved.
