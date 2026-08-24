@@ -4,20 +4,72 @@
     {
       "name": "dev",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "3000"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "3000"
+      ],
       "port": 3000
     },
     {
       "name": "eager-goodall",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "3000", "--directory", "/Users/tori_horton/Projects/Silver-and-Salt/.claude/worktrees/eager-goodall"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "3000",
+        "--directory",
+        "/Users/tori_horton/Projects/Silver-and-Salt/.claude/worktrees/eager-goodall"
+      ],
       "port": 3000
     },
     {
       "name": "built-not-found-preview",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "/Users/tori/Projects/built-not-found-capital"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8765",
+        "--directory",
+        "/Users/tori/Projects/built-not-found-capital"
+      ],
       "port": 8765
+    },
+    {
+      "name": "sgc",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8811",
+        "--directory",
+        "/Users/tori/Projects/second-growth-capital"
+      ],
+      "port": 8811
+    },
+    {
+      "name": "ss-dist",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8822",
+        "--directory",
+        "/Users/tori/Projects/Silver-and-Salt/dist"
+      ],
+      "port": 8822
+    },
+    {
+      "name": "ss-dist-verify",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8823",
+        "--directory",
+        "/Users/tori/Projects/Silver-and-Salt/dist"
+      ],
+      "port": 8823
     }
   ]
 }
