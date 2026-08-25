@@ -39,6 +39,39 @@ git ls-files -z -- . \
   ':!:faq-complete.md' \
   ':!:report-headers.numbers' \
   ':!:report-headers.xlsx' \
+  ':!:_reference' \
+  ':!:_mockups' \
+  ':!:_research' \
+  ':!:_archive' \
+  ':!:_scripts' \
+  ':!:generate-faq-pdf.py' \
+  ':!:enriched_data.tsv' \
+  ':!:women_orgs_additions.csv' \
+  ':!:hq-*.html' \
+  ':!:granola-inbox.js' \
+  ':!:newsletter-data.js' \
+  ':!:goals.js' \
+  ':!:goals.json' \
+  ':!:deploy-dashboard.sh' \
+  ':!:deploy-stamp.txt' \
+  ':!:onboarding-scope.html' \
+  ':!:*-options.html' \
+  ':!:membership-[b-h].html' \
+  ':!:membership-[fgh][0-9].html' \
+  ':!:membership-draft.html' \
+  ':!:membership-final.html' \
+  ':!:membership-compare.html' \
+  ':!:membership-section-draft.html' \
+  ':!:membership-signup-section*.html' \
+  ':!:membership-sorter-marketing.html' \
+  ':!:membership-price-final3.html' \
+  ':!:membership-price-special.html' \
+  ':!:how-b.html' \
+  ':!:how-c.html' \
+  ':!:how-it-works-additions.html' \
+  ':!:hen-variants.html' \
+  ':!:hero-type.html' \
+  ':!:map-mockup.html' \
   ':!:src' \
   ':!:tests' \
   ':!:vitest.config.mjs' \
