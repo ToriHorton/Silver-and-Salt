@@ -8,8 +8,10 @@
 #      gitignored and must never reach a deploy directory. A blind
 #      `cp -r` would leak them; `git ls-files` cannot.
 #
-# Agent/migration infrastructure is excluded because it is not part of
-# the public website.
+# Agent/migration infrastructure and internal documents are excluded
+# because they are not part of the public website. NOTE: this list only
+# shapes dist/. GitHub Pages serves the repo root directly, so anything
+# below is STILL public on Pages until the cutover retires it.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -31,6 +33,12 @@ git ls-files -z -- . \
   ':!:MULTI-BRAND-PLAN.md' \
   ':!:UI-COMPONENT-SPECS.md' \
   ':!:ADMIN-CALENDAR-SPEC.md' \
+  ':!:LEGAL-REVIEW-HOW-IT-WORKS.md' \
+  ':!:BRAND.md' \
+  ':!:WORKFLOW.md' \
+  ':!:faq-complete.md' \
+  ':!:report-headers.numbers' \
+  ':!:report-headers.xlsx' \
   ':!:src' \
   ':!:tests' \
   ':!:vitest.config.mjs' \
