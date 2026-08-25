@@ -14,6 +14,13 @@
        below loads AFTER this link, so the page's brand overrides of any shared
        generic class (.card/.tabs/.spinner) win. -->
   <link rel="stylesheet" href="/assets/odla-ui/odla-ui.css?v=4">
+  <!-- Phase 5: the ChapterAdmin island's own stylesheet, extracted by Vite from
+       the theme + component + CRM imports in src/app/admin/index.jsx (salt
+       scope.css, @odla-ai/ui/index.css, @odla-ai/crm/ui.css). ChapterAdmin
+       checks at runtime that a .panel has a background and renders a loud red
+       banner if this layer is missing, so this link is load-bearing. It sits
+       BEFORE the inline <style> below so the page's brand overrides still win. -->
+  <link rel="stylesheet" href="/assets/app/admin.css?v=1">
   <style>
     /* Brand numeral override (styles.css section 0 / BRAND.md): digits 0-9
        always render in Cormorant Infant wherever Cormorant Garamond is
@@ -816,6 +823,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=4"></script>
-  <script type="module" src="/assets/app/admin.js?v=20"></script>
+  <script type="module" src="/assets/app/admin.js?v=21"></script>
 </body>
 </html>

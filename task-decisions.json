@@ -1,0 +1,423 @@
+{
+  "_README": [
+    "Decision ledger for the Silver & Salt Capital task intake.",
+    "The daily granola-pull-dashboard-deploy task MUST read this file before proposing items.",
+    "Any item whose text or thread_id appears here with verdict not-a-task, done, superseded or",
+    "expired must NOT be re-proposed. snooze-until suppresses until the given date.",
+    "This file is committed to git on purpose: it is the memory the generator lacks.",
+    "Verdict 'expired' means the deadline passed and the item was escalated into the dashboard action list as overdue. It is suppressed from re-proposal, NOT dismissed."
+  ],
+  "version": 1,
+  "updated": "2026-07-30",
+  "standing_rules": [
+    {
+      "rule": "GitHub Pages deploy-failure notifications are never tasks",
+      "reason": "The daily deploy task already verifies the live stamp and reports failures.",
+      "match": "source=email AND sender contains github.com AND subject contains 'pages build'"
+    },
+    {
+      "rule": "Scheduling logistics collapse to one task per person, not one per step",
+      "reason": "Invites, reschedules and time confirmations churned Sharlene Wells into 6 items.",
+      "match": "thread already has an open scheduling task for the same person"
+    },
+    {
+      "rule": "An intro email is not a task until Tori has replied",
+      "reason": "Crystalee's six intros each generated a 'reply to intro' plus a 'schedule call'.",
+      "match": "source=email AND subject starts with 'Intro'"
+    },
+    {
+      "rule": "Never re-propose an item whose thread_id appears in decisions with verdict not-a-task",
+      "reason": "This is the feedback loop that was missing entirely.",
+      "match": "thread_id in decisions"
+    }
+  ],
+  "decisions": [
+    {
+      "thread_id": "sharlene-wells",
+      "text": "Reply to intro to Sharlene Wells",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "sharlene-wells",
+      "text": "Send Sharlene Wells an updated invite for Jul 28 at noon to her MACU email",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "sharlene-wells",
+      "text": "Check Jul 28 noon overlap: Amanda Worsfold call vs Sharlene Wells invite",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "sharlene-wells",
+      "text": "Confirm the Sharlene Wells reschedule for Wed Jul 22 at 6pm MDT holds",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "sharlene-wells",
+      "text": "Follow up with Sharlene Wells to lock a Monday Jul 27 reschedule time",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "climate-first-bank",
+      "text": "Send Climate First Bank call availability for account onboarding",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "climate-first-bank",
+      "text": "Confirm Climate First Bank call time with Dario for Thursday or Friday",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "erynn-kerrigan",
+      "text": "Schedule intro call with Erynn Kerrigan of XL PR",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "morgan-lemaitre",
+      "text": "Schedule intro call with Morgan Lemaitre of Park City Wealth Advisors",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "morgan-lemaitre",
+      "text": "Reply to Melissa to book the Morgan Lemaitre call, Jul 27 afternoon offered",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "github-tokens",
+      "text": "Review failed GitHub Pages deploy on the Silver-and-Salt repo (commit 49313cc)",
+      "verdict": "done",
+      "decided": "2026-07-29",
+      "reason": "Evidence it already happened",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "github-tokens",
+      "text": "Confirm the old GitHub token shared in chat was deleted",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "tracey-lam",
+      "text": "Follow up with Tracey Lam on the user journey trial",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "anne-marie",
+      "text": "Reply to intro to Anne Marie of AMMP Growth",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "anne-marie",
+      "text": "Schedule intro call with Allyse Jackson of Beehive Meals",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "multiplier",
+      "text": "Reply to Lauren's intro to Colby and Mikelle at Multiplier Advisors",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "high-five",
+      "text": "Decide on High Five Grant for Moms sponsorship by Jul 24",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "juliana",
+      "text": "Reply to intro to Juliana",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "heather-gb",
+      "text": "Send Heather Griffith Barber a calendar invite for Jul 28 at 11am",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "maryam",
+      "text": "Send Maryam the Silver & Salt Capital website and two-pager",
+      "verdict": "done",
+      "decided": "2026-07-29",
+      "reason": "Evidence it already happened",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "maryam",
+      "text": "Reconnect with Maryam on Monday to discuss scope and a working arrangement",
+      "verdict": "expired",
+      "decided": "2026-07-29",
+      "reason": "Deadline passed. Escalated into the dashboard action list as an A-priority item with its original past-due date so it renders overdue and forces a decision. Suppressed here only to stop the daily pull re-proposing it.",
+      "decided_by": "backlog collapse 2026-07-29",
+      "escalated_to": "dashboard action list, priority A, overdue"
+    },
+    {
+      "thread_id": "podcast-lisa",
+      "text": "Text intro connecting Lisa and Annie before Friday",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "podcast-lisa",
+      "text": "Share Annie's community podcast list with Lisa",
+      "verdict": "superseded",
+      "decided": "2026-07-29",
+      "reason": "Superseded by a later task in the same thread",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "crystalee-intros",
+      "text": "Make intros to Jeff Durham, Anne-Marie McDonald, and Juliana",
+      "verdict": "done",
+      "decided": "2026-07-29",
+      "reason": "Evidence it already happened",
+      "decided_by": "backlog collapse 2026-07-29"
+    },
+    {
+      "thread_id": "singles",
+      "text": "Prep for the Cory Ondrejka intro call, Mon Jul 20 at 9:45am PT",
+      "verdict": "expired",
+      "decided": "2026-07-29",
+      "reason": "Deadline passed. Escalated into the dashboard action list as an A-priority item with its original past-due date so it renders overdue and forces a decision. Suppressed here only to stop the daily pull re-proposing it.",
+      "decided_by": "backlog collapse 2026-07-29",
+      "escalated_to": "dashboard action list, priority A, overdue"
+    },
+    {
+      "thread_id": "singles",
+      "text": "Have the investment conversation with Corey by Friday Jul 24",
+      "verdict": "expired",
+      "decided": "2026-07-29",
+      "reason": "Deadline passed. Escalated into the dashboard action list as an A-priority item with its original past-due date so it renders overdue and forces a decision. Suppressed here only to stop the daily pull re-proposing it.",
+      "decided_by": "backlog collapse 2026-07-29",
+      "escalated_to": "dashboard action list, priority A, overdue"
+    },
+    {
+      "thread_id": "singles",
+      "text": "Accept the Cloudflare account invitation before it expires Jul 21",
+      "verdict": "expired",
+      "decided": "2026-07-29",
+      "reason": "Deadline passed. Escalated into the dashboard action list as an A-priority item with its original past-due date so it renders overdue and forces a decision. Suppressed here only to stop the daily pull re-proposing it.",
+      "decided_by": "backlog collapse 2026-07-29",
+      "escalated_to": "dashboard action list, priority A, overdue"
+    },
+    {
+      "thread_id": "singles",
+      "text": "Decide on Google Cloud paid upgrade before free trial resources expire",
+      "verdict": "expired",
+      "decided": "2026-07-29",
+      "reason": "Deadline passed. Escalated into the dashboard action list as an A-priority item with its original past-due date so it renders overdue and forces a decision. Suppressed here only to stop the daily pull re-proposing it.",
+      "decided_by": "backlog collapse 2026-07-29",
+      "escalated_to": "dashboard action list, priority A, overdue"
+    }
+  ],
+  "open_threads": [
+    {
+      "thread_id": "sharlene-wells",
+      "title": "Get a meeting with Sharlene Wells on the calendar",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "climate-first-bank",
+      "title": "Open the Climate First Bank business account",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "erynn-kerrigan",
+      "title": "Intro call with Erynn Kerrigan of XL PR",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "morgan-lemaitre",
+      "title": "Morgan Lemaitre of Park City Wealth Advisors",
+      "kind": "churn",
+      "open_count": 2
+    },
+    {
+      "thread_id": "github-tokens",
+      "title": "Revoke the leaked GitHub tokens",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "tracey-lam",
+      "title": "Tracey Lam user journey trial",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "anne-marie",
+      "title": "Anne Marie of AMMP Growth + Allyse Jackson",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "multiplier",
+      "title": "Multiplier Advisors (Colby + Mikelle)",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "high-five",
+      "title": "High Five Grant for Moms sponsorship",
+      "kind": "churn",
+      "open_count": 3
+    },
+    {
+      "thread_id": "juliana",
+      "title": "Juliana (investor)",
+      "kind": "churn",
+      "open_count": 2
+    },
+    {
+      "thread_id": "heather-gb",
+      "title": "Heather Griffith Barber ($10k commitment)",
+      "kind": "churn",
+      "open_count": 4
+    },
+    {
+      "thread_id": "maryam",
+      "title": "Maryam marketing project (she declined Jul 29)",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "shalini-sardana",
+      "title": "Shalini Sardana August reconvene",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "citrine-angels",
+      "title": "Citrine Angels (Lisa Friedlander, Elyssa Haynes)",
+      "kind": "project",
+      "open_count": 2
+    },
+    {
+      "thread_id": "podcast-lisa",
+      "title": "Built Not Found podcast buildout with Lisa",
+      "kind": "project",
+      "open_count": 7
+    },
+    {
+      "thread_id": "claire-larsen",
+      "title": "Claire Larsen of Vamo",
+      "kind": "project",
+      "open_count": 5
+    },
+    {
+      "thread_id": "golden-hills",
+      "title": "Golden Hills Capital with Lauren Friedman",
+      "kind": "project",
+      "open_count": 4
+    },
+    {
+      "thread_id": "crystalee-intros",
+      "title": "Crystalee Beck intro replies",
+      "kind": "project",
+      "open_count": 3
+    },
+    {
+      "thread_id": "crystalee-membership",
+      "title": "Crystalee Beck membership + investing",
+      "kind": "project",
+      "open_count": 3
+    },
+    {
+      "thread_id": "pat-jones",
+      "title": "Pat Jones and the Jacki Zehner endorsement",
+      "kind": "project",
+      "open_count": 4
+    },
+    {
+      "thread_id": "payments",
+      "title": "Take payments (Stripe + banking)",
+      "kind": "project",
+      "open_count": 3
+    },
+    {
+      "thread_id": "dawn-myers",
+      "title": "Dawn Myers / Loon fund structure",
+      "kind": "project",
+      "open_count": 3
+    },
+    {
+      "thread_id": "josh",
+      "title": "Josh (personal)",
+      "kind": "project",
+      "open_count": 3
+    },
+    {
+      "thread_id": "intro-calls",
+      "title": "Intro calls still unscheduled",
+      "kind": "project",
+      "open_count": 7
+    },
+    {
+      "thread_id": "website",
+      "title": "Website, dashboard and messaging decisions",
+      "kind": "project",
+      "open_count": 6
+    },
+    {
+      "thread_id": "singles",
+      "title": "Standalone items",
+      "kind": "single",
+      "open_count": 16
+    }
+  ]
+}

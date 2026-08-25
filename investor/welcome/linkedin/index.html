@@ -160,6 +160,19 @@
       font-size:20px;color:var(--moss);line-height:1.25;
     }
     .tpl-meta{font-size:11px;color:var(--sage);letter-spacing:.04em;}
+    .tiers{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px}
+    .tier{
+      font:inherit; font-size:.9rem; font-weight:600; cursor:pointer;
+      padding:10px 18px; border-radius:999px; background:transparent;
+      border:1px solid rgba(126,142,132,.45); color:#4A5E50;
+      transition:background .15s, color .15s, border-color .15s;
+    }
+    .tier:hover{border-color:#7E8E84; color:#2F3E34}
+    .tier[aria-checked="true"]{background:#2F3E34; border-color:#2F3E34; color:#F0EDE7}
+    .tier:focus-visible{outline:2px solid #D16B4F; outline-offset:2px}
+    .tier-note{
+      margin-top:14px; font-size:.88rem; color:#7E8E84; line-height:1.6;
+    }
     .tpl-body{
       font-size:14.5px;line-height:1.7;color:var(--moss-light);
       background:var(--bg);border-radius:8px;padding:18px 20px;
@@ -308,24 +321,36 @@
       <div class="hero-inner">
         <div class="hero-eyebrow">Member Resource</div>
         <h1>Add Silver <span class="brand-amp">&amp;</span> Salt Capital to your LinkedIn</h1>
-        <p class="hero-sub">Your LinkedIn tells your network who you are and what you back. Adding Silver <span class="brand-amp">&amp;</span> Salt Capital builds credibility, brings deal flow to our community, and makes us visible to the founders and investors we want to find us. Please add Silver <span class="brand-amp">&amp;</span> Salt Capital to your profile.</p>
+        <p class="hero-sub">Your LinkedIn tells your network who you are and what you back. Adding Silver <span class="brand-amp">&amp;</span> Salt Capital builds your credibility as an investor, brings founders and deal flow to our community, and makes us visible to the founders and investors we want to find us. Please add Silver <span class="brand-amp">&amp;</span> Salt Capital to your profile.</p>
       </div>
     </header>
 
     <main class="container">
 
+      <!-- Tier -->
+      <section>
+        <div class="eyebrow">Start here</div>
+        <h2>Which membership do you hold?</h2>
+        <p class="lede">Every suggestion on this page updates to match, so you are never pasting the wrong one.</p>
+        <div class="tiers" role="radiogroup" aria-label="Your membership tier">
+          <button type="button" class="tier" role="radio" aria-checked="true" data-tier="founding">Founding Member</button>
+          <button type="button" class="tier" role="radio" aria-checked="false" data-tier="steward">Community Steward</button>
+        </div>
+        <p class="tier-note" data-slot="note">Founding Members hold the founding rate for as long as they stay.</p>
+      </section>
+
       <!-- Headline -->
       <section>
         <div class="eyebrow">Step One</div>
         <h2>Update your headline.</h2>
-        <p class="lede">Your headline is the first thing anyone sees on LinkedIn. Paste this after your current title so you show up as a founding member at a glance.</p>
+        <p class="lede">Your headline is the first thing anyone sees on LinkedIn. Paste this after your current title so your membership reads at a glance.</p>
 
         <div class="tpl" style="margin-top:24px">
           <div class="tpl-head">
             <div class="tpl-title">Suggested headline</div>
             <div class="tpl-meta">Replace [Your title] with your actual title</div>
           </div>
-          <div class="tpl-body" data-copy>[Your title] | Founding Member, Silver &amp; Salt Capital</div>
+          <div class="tpl-body" data-copy data-slot="headline">[Your title] | Founding Member, Silver &amp; Salt Capital</div>
           <button class="copy-btn" type="button" data-copy-btn>Copy</button>
         </div>
       </section>
@@ -353,7 +378,7 @@
             </ol>
             <div class="fields">
               <div class="fields-label">Suggested Fields</div>
-              <div class="field-row"><span class="field-key">Title</span><span class="field-val">Founding Member</span></div>
+              <div class="field-row"><span class="field-key">Title</span><span class="field-val" data-slot="role">Founding Member</span></div>
               <div class="field-row"><span class="field-key">Company</span><span class="field-val">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
               <div class="field-row"><span class="field-key">Type</span><span class="field-val">Remote</span></div>
               <div class="field-row"><span class="field-key">Location</span><span class="field-val">Your city, Utah <em>(or "Remote")</em></span></div>
@@ -374,7 +399,7 @@
             <div class="fields">
               <div class="fields-label">Suggested Fields</div>
               <div class="field-row"><span class="field-key">Organization</span><span class="field-val">Silver <span class="brand-amp">&amp;</span> Salt Capital</span></div>
-              <div class="field-row"><span class="field-key">Role</span><span class="field-val">Founding Member</span></div>
+              <div class="field-row"><span class="field-key">Role</span><span class="field-val" data-slot="role">Founding Member</span></div>
               <div class="field-row"><span class="field-key">Cause</span><span class="field-val">Economic Empowerment</span></div>
               <div class="field-row"><span class="field-key">Start date</span><span class="field-val">The month you joined</span></div>
             </div>
@@ -393,25 +418,25 @@
 
           <div class="tpl">
             <div class="tpl-head">
-              <div class="tpl-title">Founding Cohort: Experience</div>
+              <div class="tpl-title"><span data-slot="label">Founding Member</span>: Experience</div>
               <div class="tpl-meta">For the Experience section (recommended)</div>
             </div>
-            <div class="tpl-body" data-copy>Silver &amp; Salt Capital is Utah's first angel investment collective of accredited women investors.
+            <div class="tpl-body" data-copy data-slot="desc1">Silver &amp; Salt Capital is an angel investment community for women in Utah.
 
-As a founding member, I vet opportunities alongside our community and individually back the Utah founders we believe in. Members commit $10,000 per year for five years, building a diversified portfolio of more than 30 Utah companies founded by women through shared diligence and individual decisions.
+As a founding member, I help research and select the Utah companies we back, and I invest in the ones I believe in. Members back founders deal by deal, with a minimum of $1,000, with the intent of building a diversified portfolio of more than 30 companies over five years. We take on a company only after real diligence, and every decision is the member's own. There is no fund and no pooled commitment.
 
 Deals are structured as SPVs on a syndicate platform, so individual checks become a single, clean line on the founder's cap table.
 
-Companies founded by women return more revenue per dollar invested, yet rarely see capital. We exist to connect capital to the Utah founders who use it best.</div>
+The community also runs a full year of investor education, so women who are new to this can learn it properly rather than guessing.</div>
             <button class="copy-btn" type="button" data-copy-btn>Copy</button>
           </div>
 
           <div class="tpl">
             <div class="tpl-head">
-              <div class="tpl-title">Founding Cohort: Volunteer</div>
+              <div class="tpl-title"><span data-slot="label">Founding Member</span>: Volunteer</div>
               <div class="tpl-meta">For the Volunteer section</div>
             </div>
-            <div class="tpl-body" data-copy>Silver &amp; Salt Capital is Utah's first angel investment collective of accredited women investors. As a founding member, I vet deals with our community and individually fund the Utah founders we believe in.
+            <div class="tpl-body" data-copy data-slot="desc2">Silver &amp; Salt Capital is an angel investment community for women in Utah. As a founding member, I help research the companies we back and individually fund the Utah founders I believe in, deal by deal, starting at $1,000.
 
 Our thesis: companies founded by women deliver stronger returns per dollar invested, yet rarely see capital. We're building the infrastructure to change that, connecting capital to the Utah founders who use it best, one founder at a time.</div>
             <button class="copy-btn" type="button" data-copy-btn>Copy</button>
@@ -419,10 +444,10 @@ Our thesis: companies founded by women deliver stronger returns per dollar inves
 
           <div class="tpl">
             <div class="tpl-head">
-              <div class="tpl-title">Founding Cohort: Short</div>
+              <div class="tpl-title"><span data-slot="label">Founding Member</span>: Short</div>
               <div class="tpl-meta">For your headline or a brief role</div>
             </div>
-            <div class="tpl-body" data-copy>Founding member at Silver &amp; Salt Capital, Utah's first angel investment collective of accredited women investors.</div>
+            <div class="tpl-body" data-copy data-slot="desc3">Founding member at Silver &amp; Salt Capital, an angel investment community for women in Utah.</div>
             <button class="copy-btn" type="button" data-copy-btn>Copy</button>
           </div>
 
@@ -488,6 +513,64 @@ Our thesis: companies founded by women deliver stronger returns per dollar inves
           input.select();
         }
       });
+    })();
+
+
+    // ── Tier switcher: drives the headline, the fields, and all three
+    //    descriptions, so a Steward never pastes "founding member". ──
+    (function(){
+      var TIERS = {
+        founding: {
+          label: 'Founding Member',
+          role: 'Founding Member',
+          note: 'Founding Members hold the founding rate for as long as they stay.',
+          headline: '[Your title] | Founding Member, Silver & Salt Capital',
+          desc1: "Silver & Salt Capital is an angel investment community for women in Utah.\n\nAs a founding member, I help research and select the Utah companies we back, and I invest in the ones I believe in. Members back founders deal by deal, with a minimum of $1,000, with the intent of building a diversified portfolio of more than 30 companies over five years. We take on a company only after real diligence, and every decision is the member's own. There is no fund and no pooled commitment.\n\nDeals are structured as SPVs on a syndicate platform, so individual checks become a single, clean line on the founder's cap table.\n\nThe community also runs a full year of investor education, so women who are new to this can learn it properly rather than guessing.",
+          desc2: "Silver & Salt Capital is an angel investment community for women in Utah. As a founding member, I help research the companies we back and individually fund the Utah founders I believe in, deal by deal, starting at $1,000.\n\nOur thesis: companies founded by women deliver stronger returns per dollar invested, yet rarely see capital. We're building the infrastructure to change that, connecting capital to the Utah founders who use it best, one founder at a time.",
+          desc3: "Founding member at Silver & Salt Capital, an angel investment community for women in Utah."
+        },
+        steward: {
+          label: 'Community Steward',
+          role: 'Community Steward',
+          note: 'Community Stewards fund the experts, the education, and the team behind every gathering.',
+          headline: '[Your title] | Community Steward, Silver & Salt Capital',
+          desc1: "Silver & Salt Capital is an angel investment community for women in Utah.\n\nAs a Community Steward, I help fund the work itself: the visiting experts, the education program, and the team who make our gatherings happen. I also research and select the Utah companies we back, and invest in the ones I believe in. Members back founders deal by deal, with a minimum of $1,000, with the intent of building a diversified portfolio of more than 30 companies over five years.\n\nDeals are structured as SPVs on a syndicate platform, so individual checks become a single, clean line on the founder's cap table.\n\nUtah has one of the widest gaps in the country between the number of women with capital and the number of women founders who ever see any of it. This is a serious attempt to close it.",
+          desc2: "Silver & Salt Capital is an angel investment community for women in Utah. As a Community Steward, I help fund the education program, the visiting experts, and the team behind our gatherings, and I invest in the Utah founders I believe in, deal by deal, starting at $1,000.\n\nUtah has one of the widest gaps in the country between the number of women with capital and the number of women founders who ever see any of it. This is a serious attempt to close it.",
+          desc3: "Community Steward at Silver & Salt Capital, an angel investment community for women in Utah."
+        }
+      };
+
+      var buttons = document.querySelectorAll('.tier');
+      if (!buttons.length) return;
+
+      function apply(key){
+        var t = TIERS[key]; if (!t) return;
+        document.querySelectorAll('[data-slot]').forEach(function(el){
+          var slot = el.dataset.slot;
+          if (slot === 'label') { el.textContent = t.label; return; }
+          if (t[slot] !== undefined) el.textContent = t[slot];
+        });
+        buttons.forEach(function(b){
+          b.setAttribute('aria-checked', String(b.dataset.tier === key));
+        });
+        try { sessionStorage.setItem('ssc-tier', key); } catch (e) {}
+      }
+
+      buttons.forEach(function(b){
+        b.addEventListener('click', function(){ apply(b.dataset.tier); });
+        b.addEventListener('keydown', function(e){
+          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+          e.preventDefault();
+          var list = Array.prototype.slice.call(buttons);
+          var i = list.indexOf(b);
+          var next = list[(i + (e.key === 'ArrowRight' ? 1 : list.length - 1)) % list.length];
+          next.focus(); apply(next.dataset.tier);
+        });
+      });
+
+      var saved;
+      try { saved = sessionStorage.getItem('ssc-tier'); } catch (e) {}
+      apply(TIERS[saved] ? saved : 'founding');
     })();
 
     // ── Copy-to-clipboard for templates ──

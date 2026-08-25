@@ -32,6 +32,8 @@ git ls-files -z -- . \
   ':!:UI-COMPONENT-SPECS.md' \
   ':!:ADMIN-CALENDAR-SPEC.md' \
   ':!:src' \
+  ':!:tests' \
+  ':!:vitest.config.mjs' \
   ':!:vite.config.mjs' \
   ':!:wrangler.jsonc' \
   ':!:odla.config.mjs' \
