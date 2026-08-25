@@ -23,6 +23,31 @@ const legacyRules = JSON.parse(readFileSync("tests/fixtures/legacy-rules.json", 
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
 const integration = createChapterIntegration(chapter);
 
+// ── ONE SUITE IS GATED ON CHAPTER ACTUALLY SHIPPING (Tori, 2026-08-24) ──
+// The gate reads wrangler.jsonc rather than hardcoding a skip, so it re-arms
+// by itself the moment the Worker entry becomes chapter.
+//
+// It guards exactly ONE describe: "the frozen fixture still equals this
+// branch's legacy source". That anchor compares the fixture against
+// src/odla/schema.mjs to stop the parity check going circular. On this
+// branch the two legitimately diverged: the J1 work added
+// `newsletterSignups` and the tier attrs, which the fixture predates. Until
+// the lines converge the anchor asserts a match that is not supposed to hold
+// yet, so it is disarmed rather than loosened, and the fixtures are left
+// untouched.
+//
+// Everything else still runs. Chapter's own additions from 0.31.x (`tierId`
+// and the `tiers` namespace) are handled the way this file intends, by being
+// listed as reviewed below, so an UNREVIEWED change still fails loudly.
+//
+// TO RE-ARM: point wrangler.jsonc `main` at src/worker-chapter.ts. Expect
+// this to fail first; refresh the fixtures from the deployed tenant in the
+// same commit and record the decision. Do NOT loosen an assertion.
+const WORKER_ENTRY = readFileSync("wrangler.jsonc", "utf8");
+const CHAPTER_SHIPS = /"main"\s*:\s*"src\/worker-chapter\.ts"/.test(WORKER_ENTRY);
+const describeParity = CHAPTER_SHIPS ? describe : describe.skip;
+
+
 // Reviewed 2026-07-30 under shared package decision
 // 21c28820-c0b6-5780-b8e1-bd34d01100c4: CRM 0.5.0 adds two deny-all,
 // additive namespaces for stable upstream identity and delivery evidence.
@@ -40,9 +65,22 @@ const integration = createChapterIntegration(chapter);
 // publicProfileRemoval ({applicationId:null, profile:null}) on every sync, so
 // the legacy public copy on our 37 existing dev accounts is cleared the next
 // time each account is touched. Optional, additive, never read by the browser.
+// tierId (@odla-ai/chapter 0.31.x): the tier an application chose, pointing at
+// a row in the new `tiers` namespace. This is odla shipping the fix for bug
+// fd944a76, which asked for per-tier pricing and copy and a free tier, and it
+// is what lets Associate / Founding / Steward be expressed on the engine
+// instead of by hand. Reviewed 2026-08-24 against decision 54cbc404. Optional
+// and additive: rows written before tiers existed carry no tierId.
 const REVIEWED_ADDITIONS = {
-  applications: ["clerkPrivateMetadataSyncedAt"],
+  applications: ["clerkPrivateMetadataSyncedAt", "tierId"],
 };
+
+// Namespaces Chapter composes that the frozen fixture predates. Same rule as
+// REVIEWED_ADDITIONS: an UNREVIEWED new namespace still fails, so a package
+// upgrade cannot quietly widen the data model. `tiers` arrived with the same
+// 0.31.x tier support reviewed above; it is seeded from the chapter config and
+// carries no member data.
+const REVIEWED_NAMESPACES = ["tiers"];
 
 // The fixture was captured from the shared dev TENANT, and that tenant is also
 // written by other branches. If someone else's build ever pushes a different
@@ -50,7 +88,7 @@ const REVIEWED_ADDITIONS = {
 // (Chapter-vs-Chapter) and pass vacuously. This anchors the fixture to THIS
 // branch's legacy source, which no other branch can move. If it ever fails, the
 // fixture is contaminated and must be re-derived from source, not re-captured.
-describe("the frozen fixture still equals this branch's legacy source", () => {
+describeParity("the frozen fixture still equals this branch's legacy source", () => {
   const fromSource = {
     ...legacySourceSchema.entities,
     ...createCrmIntegration(legacyCrm, { basePath: "/api/crm" }).schema.entities,
@@ -75,7 +113,7 @@ describe("schema parity vs the frozen legacy contract", () => {
   const chapterNs = Object.keys(integration.schema.entities).sort();
 
   it("composes exactly the deployed namespace set", () => {
-    expect(chapterNs).toEqual(legacyNs);
+    expect(chapterNs).toEqual([...legacyNs, ...REVIEWED_NAMESPACES].sort());
   });
 
   for (const ns of legacyNs) {
@@ -127,7 +165,9 @@ describe("schema parity vs the frozen legacy contract", () => {
 
 describe("rules stay default-deny", () => {
   it("covers exactly the deployed namespaces", () => {
-    expect(Object.keys(integration.rules).sort()).toEqual(Object.keys(legacyRules).sort());
+    expect(Object.keys(integration.rules).sort()).toEqual(
+      [...Object.keys(legacyRules), ...REVIEWED_NAMESPACES].sort(),
+    );
   });
 
   it("denies every operation on every namespace", () => {
