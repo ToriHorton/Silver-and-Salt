@@ -47,6 +47,16 @@
   "env": {
     "dev": {
       "name": "silver-and-salt-capital-dev",
+      // ROUTE GUARD, do not remove. Wrangler environments inherit top-level
+      // `routes` even though they inherit no bindings. On 2026-08-08 a
+      // `deploy --env dev` in the Built Not Found repo took
+      // builtnotfoundcapital.com and www away from the production Worker and
+      // pointed the live site at the dev tenant. It stayed up at 200 while
+      // serving dev data, which is the worst kind of failure: invisible.
+      // The top level has no routes today, so this is harmless; it becomes
+      // load-bearing the moment silverandsaltcapital.com is attached to the
+      // prod Worker. An explicit empty list cannot inherit anything.
+      "routes": [],
       "vars": {
         "ODLA_ENDPOINT": "https://db.odla.ai",
         "ODLA_TENANT": "silver-and-salt-capital--dev",

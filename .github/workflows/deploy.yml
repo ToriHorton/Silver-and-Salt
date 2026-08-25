@@ -1,0 +1,88 @@
+# Deploy the site to the Cloudflare Worker on every push to main.
+#
+# WHY THIS EXISTS. Until the DNS cutover, GitHub Pages published the site
+# straight from the main branch, so a push WAS a deploy. Once
+# silverandsaltcapital.com points at the Worker, Pages no longer serves the
+# domain, and a push does nothing until someone runs wrangler by hand. This
+# closes that gap so the live site keeps tracking main.
+#
+# SAFETY. This deploys the TOP-LEVEL (production) wrangler config only. It must
+# never run `--env dev`: the dev environment shares the dev tenant with other
+# branches and other machines. The dev Worker stays a manual
+# `npm run deploy:app:dev`.
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      # Private CEO tooling and its feeds. The daily dashboard routine commits
+      # these to main, and none of them reach the build, so redeploying for
+      # them would burn a run to change nothing.
+      - 'hq-*.html'
+      - 'granola-inbox.js'
+      - 'newsletter-data.js'
+      - 'goals.js'
+      - 'goals.json'
+      - 'deploy-stamp.txt'
+      - 'deploy-dashboard.sh'
+      - '_scripts/publish-dashboard.sh'
+      - '_scripts/commit-dashboard-work.sh'
+      # Documentation that is excluded from the build.
+      - '**/*.md'
+  # Lets you redeploy the current main without an empty commit.
+  workflow_dispatch:
+
+# One deploy at a time. Two pushes in quick succession should not race to
+# upload assets to the same Worker.
+concurrency:
+  group: deploy-cloudflare
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Gate the deploy on the suites. A red parity test means the composed
+      # schema drifted from the frozen contract, which is exactly the kind of
+      # change that should never reach production unreviewed.
+      - name: Test
+        run: npm test
+
+      # Builds dist/ from git-tracked files only, minus the exclusions in
+      # _scripts/build-site.sh, then bundles the Preact islands with Vite.
+      - name: Build
+        run: npm run build
+
+      # Fail loudly rather than silently shipping an empty site if the build
+      # ever produces nothing useful.
+      - name: Sanity-check the build
+        run: |
+          test -f dist/index.html || { echo "dist/index.html missing"; exit 1; }
+          test -f dist/404.html   || { echo "dist/404.html missing";   exit 1; }
+          count=$(find dist -type f | wc -l | tr -d ' ')
+          echo "dist contains $count files"
+          [ "$count" -ge 100 ] || { echo "suspiciously small build"; exit 1; }
+          for leaked in hq-25b5a94e297e.html goals.json MIGRATION.md PAYMENT-SPEC.md LEGAL-REVIEW-HOW-IT-WORKS.md; do
+            [ -e "dist/$leaked" ] && { echo "private file reached the build: $leaked"; exit 1; }
+          done
+          echo "no private file in the build"
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # No `environment:` on purpose. That would deploy --env dev.
+          command: deploy
