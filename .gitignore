@@ -64,3 +64,16 @@ MEMBER-KIT-COPY.md
 DESIGN-OPTIONS.html
 GTM-REVIEW-4.html
 PORTAL-DESIGN.html
+
+# Internal planning and state documents (untracked 2026-08-24). GitHub Pages
+# serves the repo ROOT, so anything tracked here is publicly readable
+# regardless of the exclusions in _scripts/build-site.sh, which only shape
+# dist/. These stay on disk and are read by agents; they are simply not
+# published. Revisit once Pages is decommissioned.
+MIGRATION.md
+PAYMENT-SPEC.md
+JOURNEYS-PLAN.md
+MULTI-BRAND-PLAN.md
+LEGAL-REVIEW-HOW-IT-WORKS.md
+_reference/
+
