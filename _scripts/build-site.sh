@@ -55,6 +55,8 @@ git ls-files -z -- . \
   ':!:deploy-dashboard.sh' \
   ':!:deploy-stamp.txt' \
   ':!:onboarding-scope.html' \
+  ':!:membership-in-full.html' \
+  ':!:brand-book.html' \
   ':!:*-options.html' \
   ':!:membership-[b-h].html' \
   ':!:membership-[fgh][0-9].html' \

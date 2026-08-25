@@ -34,8 +34,9 @@
     // Always the Phase 0 build dir (npm run build), never the repo root.
     "directory": "dist",
     "binding": "ASSETS",
-    // Matches the current site: no custom 404.html exists, so missing
-    // paths return a plain 404 (GitHub Pages serves its own default page).
+    // Serves the branded dist/404.html for any unmatched path. The comment
+    // here used to say no custom 404 existed; one has since been added, and
+    // Tori confirmed 2026-08-24 that it ships.
     "not_found_handling": "404-page",
     // GitHub Pages serves /join.html AND /join both as 200. Cloudflare has
     // no exact equivalent; this default keeps both forms reachable
