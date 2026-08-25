@@ -3,25 +3,30 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "test": "vitest run",
     "dev": "python3 -m http.server 3000",
     "build": "bash _scripts/build-site.sh",
     "dev:worker": "npm run build && wrangler dev --env dev",
-    "deploy:app:dev": "npm run build && wrangler deploy --env dev"
+    "deploy:app:dev": "npm run build && wrangler deploy --env dev",
+    "check:schema": "node _scripts/check-deployed-schema.mjs"
   },
   "devDependencies": {
-    "@odla-ai/cli": "^0.34.0",
+    "@odla-ai/cli": "^0.27.2",
     "@preact/preset-vite": "^2.10.5",
     "preact-render-to-string": "^6.7.0",
     "vite": "^8.1.4",
+    "vitest": "^4.1.10",
     "wrangler": "^4.111.0"
   },
   "dependencies": {
-    "@odla-ai/calendar": "^0.2.0",
-    "@odla-ai/crm": "^0.1.3",
-    "@odla-ai/db": "^0.6.6",
+    "@odla-ai/auth-clerk": "^0.4.1",
+    "@odla-ai/calendar": "^0.3.0",
+    "@odla-ai/chapter": "^0.31.3",
+    "@odla-ai/crm": "^0.8.0",
+    "@odla-ai/db": "^0.9.1",
     "@odla-ai/email": "^0.3.1",
-    "@odla-ai/ui": "^0.8.2",
-    "jose": "^6.2.3",
+    "@odla-ai/ui": "^0.16.0",
+    "jose": "^6.2.4",
     "preact": "^10.29.7"
   },
   "allowScripts": {

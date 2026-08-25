@@ -104,7 +104,7 @@ class SiteHeader extends HTMLElement {
       <a class="nav-tab" href="index.html#start" data-home-tab="start" data-page="start">Start</a>
       <a class="nav-tab" href="index.html" data-home-tab="welcome" data-page="welcome">Home</a>
       <a class="nav-tab" href="index.html#thesis" data-home-tab="thesis" data-page="thesis">The Thesis</a>
-      <a class="nav-tab${currentFile === 'how-c.html' ? ' active' : ''}" href="how-c.html">How It Works</a>
+      <a class="nav-tab${currentFile === 'how-it-works.html' ? ' active' : ''}" href="how-it-works.html">How It Works</a>
       <a class="nav-tab${currentFile === 'membership.html' ? ' active' : ''}" href="membership.html">Membership</a>${sectionTabHTML}
     </div>
   </div>

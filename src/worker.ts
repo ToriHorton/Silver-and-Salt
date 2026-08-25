@@ -26,7 +26,7 @@ import { createCrmRoutes } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
 import { syncPersonToCrm, backfillCrm } from "./crm-sync.mjs";
 
-interface Env {
+export interface Env {
   ASSETS: Fetcher;
   ODLA_ENDPOINT: string;
   ODLA_TENANT: string;
@@ -140,7 +140,7 @@ function crmSender(mailer: EmailTransport) {
   };
 }
 
-const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
+export const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), {
     status,
     headers: { "content-type": "application/json", ...headers },
@@ -687,7 +687,7 @@ function subAnnualCents(s: Record<string, unknown>): number {
   return cents * (interval === "month" ? 12 : 1);
 }
 
-async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
+export async function handleApi(req: Request, env: Env, url: URL): Promise<Response> {
   // Public: the sign-in page bootstraps ClerkJS from this (same-origin, so
   // the page needs no hardcoded key and prod picks up its own config).
   if (req.method === "GET" && url.pathname === "/api/auth/config") {
