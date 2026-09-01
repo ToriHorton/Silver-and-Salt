@@ -14,7 +14,6 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   classifyMemberStripeEvent,
-  createChapterIntegration,
   normalizeWebhookEvent,
   planMemberSystemEventReplay,
 } from "@odla-ai/chapter";
@@ -27,7 +26,7 @@ import { crm as legacyCrm } from "../src/crm.mjs";
 const legacySchema = JSON.parse(readFileSync("tests/fixtures/legacy-schema.json", "utf8"));
 const legacyRules = JSON.parse(readFileSync("tests/fixtures/legacy-rules.json", "utf8"));
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
-const integration = createChapterIntegration(chapter);
+const integration = odlaConfig.integrations[0];
 
 // ── THE INDEPENDENT LEGACY ANCHOR RE-ARMS WHEN CHAPTER SHIPS ────────────
 // The deployed fixture remains immutable evidence. Later legacy-source work
@@ -96,9 +95,16 @@ const REVIEWED_ADDITIONS = {
     "giftRevokedAt",
     "interviewWaivedAt",
     "stripeRuntime",
+    "tier",
     "tierId",
   ],
-  groups: ["merchantDisclosureText"],
+  groups: [
+    "merchantDisclosureText",
+    "stewardPriceCents",
+    "stewardRefundPolicyText",
+    "stewardTrustCopy",
+    "stripeStewardPriceId",
+  ],
 };
 
 // Namespaces Chapter composes that the frozen fixture predates. Same rule as
@@ -380,9 +386,15 @@ describe("follower role", () => {
 describe("group seed is insert-only and cannot overwrite owner edits", () => {
   it("uses Chapter plus a data-only descriptor for the retired newsletter rows", () => {
     expect(odlaConfig.integrations).toHaveLength(2);
-    expect(Object.keys(odlaConfig.integrations[0].schema.entities).sort()).toEqual(
-      Object.keys(integration.schema.entities).sort(),
+    expect(odlaConfig.integrations[0]).toBe(integration);
+    expect(integration.schema.entities.applications.attrs.tier).toEqual(
+      legacySourceSchema.entities.applications.attrs.tier,
     );
+    for (const attr of REVIEWED_LEGACY_SOURCE_ATTRS.groups) {
+      expect(integration.schema.entities.groups.attrs[attr]).toEqual(
+        legacySourceSchema.entities.groups.attrs[attr],
+      );
+    }
     expect(odlaConfig.integrations[1]).toMatchObject({
       id: "retained-newsletter-data",
       seeds: [],

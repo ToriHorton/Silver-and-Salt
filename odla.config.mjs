@@ -30,6 +30,41 @@ const retainedNewsletterData = {
   probes: [],
 };
 
+const baseChapterIntegration = createChapterIntegration(chapter);
+
+// These attributes predate managed Chapter tiers. They may contain historical
+// development data, so strict provisioning must retain their exact definitions.
+// They are schema-only compatibility fields: Chapter routes do not read them,
+// the public field contract does not expose them, and all namespace rules stay
+// deny-all. New membership decisions use tiers/tierId instead.
+const activeChapterIntegration = {
+  ...baseChapterIntegration,
+  schema: {
+    ...baseChapterIntegration.schema,
+    entities: {
+      ...baseChapterIntegration.schema.entities,
+      applications: {
+        ...baseChapterIntegration.schema.entities.applications,
+        attrs: {
+          ...baseChapterIntegration.schema.entities.applications.attrs,
+          tier: legacySourceSchema.entities.applications.attrs.tier,
+        },
+      },
+      groups: {
+        ...baseChapterIntegration.schema.entities.groups,
+        attrs: {
+          ...baseChapterIntegration.schema.entities.groups.attrs,
+          stewardPriceCents: legacySourceSchema.entities.groups.attrs.stewardPriceCents,
+          stripeStewardPriceId: legacySourceSchema.entities.groups.attrs.stripeStewardPriceId,
+          stewardTrustCopy: legacySourceSchema.entities.groups.attrs.stewardTrustCopy,
+          stewardRefundPolicyText:
+            legacySourceSchema.entities.groups.attrs.stewardRefundPolicyText,
+        },
+      },
+    },
+  },
+};
+
 export default {
   platformUrl: process.env.ODLA_PLATFORM_URL ?? "https://odla.ai",
   dbEndpoint: process.env.ODLA_ENDPOINT ?? process.env.ODLA_DB_ENDPOINT ?? "https://db.odla.ai",
@@ -42,7 +77,7 @@ export default {
   // Chapter composes the active membership and CRM namespaces, default-deny
   // rules, insert-only seeds, and managed founding tier. The second descriptor
   // retains a populated, retired namespace without restoring its public route.
-  integrations: [createChapterIntegration(chapter), retainedNewsletterData],
+  integrations: [activeChapterIntegration, retainedNewsletterData],
   calendar: {
     google: {
       // 0.2.0 live booking: FreeBusy availability over these calendars;
