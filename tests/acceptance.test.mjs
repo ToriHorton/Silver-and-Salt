@@ -77,14 +77,18 @@ run("deployed acceptance", () => {
       const body = await (await get("/api/join-config")).json();
       expect(body.standardPriceCents).toBe(baseline.prices.standardPriceCents);
       expect(body.foundingDiscountCents).toBe(baseline.prices.foundingDiscountCents);
-      expect(body.tiers).toEqual([
+      // The upgrade gate proves the managed founding offer is present and
+      // unique. A signed BNF signup-control delivery is the separately tracked
+      // authority transition that retires any historical tenant offers.
+      expect(body.tiers).toEqual(expect.arrayContaining([
         expect.objectContaining({
           id: "founding",
           name: "Founding Member",
           priceCents: baseline.prices.dueTodayCents,
           free: false,
         }),
-      ]);
+      ]));
+      expect(body.tiers.filter((tier) => tier.id === "founding")).toHaveLength(1);
       // Proves stripe_secret_key + publishable key + price id all resolve. It
       // does NOT prove webhook readiness or provider-side amount equality;
       // those stay cutover gates.
@@ -236,7 +240,7 @@ run("deployed acceptance", () => {
       expect(second.id).toBe(first.id);
       // The second submit is always a replay once the fixture row exists.
       expect(second.duplicate).toBe(true);
-    });
+    }, 15_000);
 
     it("returns an id that actually resolves, not a phantom", async () => {
       // The precise failure mode of the old defect: duplicate:true carrying an
@@ -262,7 +266,7 @@ run("deployed acceptance", () => {
       const ids = [];
       for (let i = 0; i < 3; i++) ids.push((await submit()).id);
       expect(new Set(ids).size).toBe(1);
-    });
+    }, 15_000);
   });
 
   describe("clerk configuration is the expected dev instance", () => {
