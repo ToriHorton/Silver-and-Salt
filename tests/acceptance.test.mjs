@@ -77,6 +77,14 @@ run("deployed acceptance", () => {
       const body = await (await get("/api/join-config")).json();
       expect(body.standardPriceCents).toBe(baseline.prices.standardPriceCents);
       expect(body.foundingDiscountCents).toBe(baseline.prices.foundingDiscountCents);
+      expect(body.tiers).toEqual([
+        expect.objectContaining({
+          id: "founding",
+          name: "Founding Member",
+          priceCents: baseline.prices.dueTodayCents,
+          free: false,
+        }),
+      ]);
       // Proves stripe_secret_key + publishable key + price id all resolve. It
       // does NOT prove webhook readiness or provider-side amount equality;
       // those stay cutover gates.
@@ -123,11 +131,12 @@ run("deployed acceptance", () => {
     it("rejects a wrong share secret with 401", async () => {
       const res = await fetch(`${BASE}/api/network/shared`, {
         method: "POST",
-        headers: { "content-type": "application/json", "x-network-secret": "wrong-secret" },
+        headers: { "content-type": "application/json", authorization: "Bearer wrong-secret" },
         body: JSON.stringify({
           version: 1,
           type: "person",
-          record: { name: "Acceptance Probe", email: "acceptance-probe@example.invalid" },
+          hubRecordId: "acceptance-probe-person",
+          input: { name: "Acceptance Probe" },
         }),
       });
       expect(res.status).toBe(401);
@@ -210,6 +219,7 @@ run("deployed acceptance", () => {
       message: "Automated acceptance fixture for replay identity. Safe to delete.",
       focus: ["Building financial confidence"],
       disclaimerAck: true,
+      tierId: "founding",
       submissionId: SUBMISSION_ID,
     };
     const submit = () =>
@@ -256,12 +266,11 @@ run("deployed acceptance", () => {
   });
 
   describe("clerk configuration is the expected dev instance", () => {
-    it("serves the dev publishable key and issuer", async () => {
-      const body = await (await get("/api/auth/config")).json();
-      expect(body.publishableKey).toBe(baseline.clerk.publishableKey);
-      expect(body.issuer).toBe(baseline.clerk.issuer);
+    it("serves the dev publishable key from Chapter config", async () => {
+      const body = await (await get("/api/config")).json();
+      expect(body.clerkPublishableKey).toBe(baseline.clerk.publishableKey);
       // Never a live key on a dev origin.
-      expect(body.publishableKey.startsWith("pk_live_")).toBe(false);
+      expect(body.clerkPublishableKey.startsWith("pk_live_")).toBe(false);
     });
   });
 });
