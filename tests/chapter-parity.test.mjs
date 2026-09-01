@@ -114,6 +114,8 @@ const REVIEWED_NAMESPACES = [
   "giftOrders",
   "giftPurchaseIntents",
   "giftRedemptionAttempts",
+  "memberContentControls",
+  "memberContentLocal",
   "signupControls",
   "tiers",
 ];
@@ -360,6 +362,17 @@ describe("follower role", () => {
       sourceId: "built-not-found",
       secretName: "signup_control_secret",
       stripeMode: "test",
+    });
+  });
+
+  it("preserves local member content under a separate signed BNF parent layer", () => {
+    expect(chapter.memberContent).toEqual({
+      enabled: true,
+      localAuthoring: true,
+      parent: {
+        sourceId: "built-not-found",
+        secretName: "member_content_control_secret",
+      },
     });
   });
 });

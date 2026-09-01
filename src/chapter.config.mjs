@@ -66,6 +66,14 @@ export const chapter = defineChapter({
     stripeMode: "test",
   },
 
+  // Preserve the populated dev content namespaces discovered by the strict
+  // schema gate. Chapter admins retain their local layer; Built Not Found may
+  // deliver a separate signed parent layer without replacing local pages.
+  memberContent: {
+    localAuthoring: true,
+    parent: { sourceId: "built-not-found" },
+  },
+
   services: ["db", "calendar"],
 
   // ── Brand ────────────────────────────────────────────────────────────
