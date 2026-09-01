@@ -49,7 +49,21 @@ export const chapter = defineChapter({
       id: "built-not-found",
       fields: { person: ["name"] },
       sharedNotes: ["person"],
+      // Keep the current edge read/note-only during the package upgrade. The
+      // current Chapter line can also grant field edits, stage transitions,
+      // and admission decisions, but each is a later reviewed roadmap slice.
+      editableFields: {},
+      stageTransitions: [],
+      admissionGrants: false,
     }],
+  },
+
+  // Built Not Found may publish complete, signed signup revisions to this
+  // follower. Development accepts test-mode Stripe objects only; production
+  // remains absent from this repository descriptor until the human checkpoint.
+  signupControl: {
+    sourceId: "built-not-found",
+    stripeMode: "test",
   },
 
   services: ["db", "calendar"],
@@ -119,6 +133,19 @@ export const chapter = defineChapter({
     currency: "usd",
     interval: "year",
   },
+
+  // Managed tier authority replaces the ambiguous single-price fallback while
+  // retaining the same immutable Stripe Price and $900 annual charge. Additional
+  // tiers require a later signed BNF signup-control revision and their own
+  // reviewed Stripe Prices.
+  tiers: [{
+    id: "founding",
+    name: "Founding Member",
+    priceCents: 90_000,
+    stripePriceId: "price_1Ts7rW3sLwQtiao1DTAj0iS0",
+    sortOrder: 0,
+    active: true,
+  }],
 
   // ── Policy copy ──────────────────────────────────────────────────────
   // Seed values only. createChapterIntegration inserts the group row ONLY when

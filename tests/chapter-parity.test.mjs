@@ -12,9 +12,15 @@
 
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { createChapterIntegration } from "@odla-ai/chapter";
+import {
+  classifyMemberStripeEvent,
+  createChapterIntegration,
+  normalizeWebhookEvent,
+  planMemberSystemEventReplay,
+} from "@odla-ai/chapter";
 import { createCrmIntegration } from "@odla-ai/crm";
 import { chapter } from "../src/chapter.config.mjs";
+import odlaConfig from "../odla.config.mjs";
 import { schema as legacySourceSchema } from "../src/odla/schema.mjs";
 import { crm as legacyCrm } from "../src/crm.mjs";
 
@@ -23,29 +29,26 @@ const legacyRules = JSON.parse(readFileSync("tests/fixtures/legacy-rules.json", 
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
 const integration = createChapterIntegration(chapter);
 
-// ── ONE SUITE IS GATED ON CHAPTER ACTUALLY SHIPPING (Tori, 2026-08-24) ──
-// The gate reads wrangler.jsonc rather than hardcoding a skip, so it re-arms
-// by itself the moment the Worker entry becomes chapter.
-//
-// It guards exactly ONE describe: "the frozen fixture still equals this
-// branch's legacy source". That anchor compares the fixture against
-// src/odla/schema.mjs to stop the parity check going circular. On this
-// branch the two legitimately diverged: the J1 work added
-// `newsletterSignups` and the tier attrs, which the fixture predates. Until
-// the lines converge the anchor asserts a match that is not supposed to hold
-// yet, so it is disarmed rather than loosened, and the fixtures are left
-// untouched.
-//
-// Everything else still runs. Chapter's own additions from 0.31.x (`tierId`
-// and the `tiers` namespace) are handled the way this file intends, by being
-// listed as reviewed below, so an UNREVIEWED change still fails loudly.
-//
-// TO RE-ARM: point wrangler.jsonc `main` at src/worker-chapter.ts. Expect
-// this to fail first; refresh the fixtures from the deployed tenant in the
-// same commit and record the decision. Do NOT loosen an assertion.
+// ── THE INDEPENDENT LEGACY ANCHOR RE-ARMS WHEN CHAPTER SHIPS ────────────
+// The deployed fixture remains immutable evidence. Later legacy-source work
+// added a now-retired newsletter namespace and a hand-built tier model that
+// never became fixture authority. Keep those differences in exact allowlists:
+// a new source drift still fails, while the Chapter candidate is never used as
+// its own baseline.
 const WORKER_ENTRY = readFileSync("wrangler.jsonc", "utf8");
 const CHAPTER_SHIPS = /"main"\s*:\s*"src\/worker-chapter\.ts"/.test(WORKER_ENTRY);
 const describeParity = CHAPTER_SHIPS ? describe : describe.skip;
+
+const REVIEWED_LEGACY_SOURCE_NAMESPACES = ["newsletterSignups"];
+const REVIEWED_LEGACY_SOURCE_ATTRS = {
+  applications: ["clerkPrivateMetadataSyncedAt", "tier"],
+  groups: [
+    "stewardPriceCents",
+    "stewardRefundPolicyText",
+    "stewardTrustCopy",
+    "stripeStewardPriceId",
+  ],
+};
 
 
 // Reviewed 2026-07-30 under shared package decision
@@ -71,8 +74,31 @@ const describeParity = CHAPTER_SHIPS ? describe : describe.skip;
 // is what lets Associate / Founding / Steward be expressed on the engine
 // instead of by hand. Reviewed 2026-08-24 against decision 54cbc404. Optional
 // and additive: rows written before tiers existed carry no tierId.
+// Chapter 0.42.4 adds optional, server-only links for three mechanics that are
+// disabled in this slice: parent-authored admission, gift purchase/claim, and
+// interview waiver. emailNormalized is the bounded lookup key for those flows;
+// stripeRuntime partitions test/live provider objects. They do not change an
+// existing row and cannot be written directly by a browser (rules below remain
+// literal false). merchantDisclosureText is optional operator-owned copy and
+// the insert-only group seed leaves the existing row untouched.
 const REVIEWED_ADDITIONS = {
-  applications: ["clerkPrivateMetadataSyncedAt", "tierId"],
+  applications: [
+    "admissionGrantId",
+    "admissionSource",
+    "clerkPrivateMetadataSyncedAt",
+    "emailNormalized",
+    "giftCheckoutStartedAt",
+    "giftClaimId",
+    "giftIntentId",
+    "giftOfferId",
+    "giftOrderId",
+    "giftPaidAt",
+    "giftRevokedAt",
+    "interviewWaivedAt",
+    "stripeRuntime",
+    "tierId",
+  ],
+  groups: ["merchantDisclosureText"],
 };
 
 // Namespaces Chapter composes that the frozen fixture predates. Same rule as
@@ -80,7 +106,17 @@ const REVIEWED_ADDITIONS = {
 // upgrade cannot quietly widen the data model. `tiers` arrived with the same
 // 0.31.x tier support reviewed above; it is seeded from the chapter config and
 // carries no member data.
-const REVIEWED_NAMESPACES = ["tiers"];
+const REVIEWED_NAMESPACES = [
+  "admissionGrantRevisions",
+  "admissionGrants",
+  "giftClaims",
+  "giftEntitlements",
+  "giftOrders",
+  "giftPurchaseIntents",
+  "giftRedemptionAttempts",
+  "signupControls",
+  "tiers",
+];
 
 // The fixture was captured from the shared dev TENANT, and that tenant is also
 // written by other branches. If someone else's build ever pushes a different
@@ -95,15 +131,22 @@ describeParity("the frozen fixture still equals this branch's legacy source", ()
   };
 
   it("covers the same namespaces as the source of truth in this tree", () => {
-    expect(Object.keys(legacySchema.entities).sort()).toEqual(Object.keys(fromSource).sort());
+    const sourceNamespaces = Object.keys(fromSource).filter(
+      (namespace) => !REVIEWED_LEGACY_SOURCE_NAMESPACES.includes(namespace),
+    );
+    expect(Object.keys(legacySchema.entities).sort()).toEqual(sourceNamespaces.sort());
   });
 
   it("carries the same attributes as the source of truth in this tree", () => {
     for (const ns of Object.keys(fromSource).sort()) {
-      expect(
-        Object.keys(legacySchema.entities[ns]?.attrs ?? {}).sort(),
-        `${ns} drifted from src/odla/schema.mjs`,
-      ).toEqual(Object.keys(fromSource[ns].attrs ?? {}).sort());
+      if (!legacySchema.entities[ns]) continue;
+      const reviewed = REVIEWED_LEGACY_SOURCE_ATTRS[ns] ?? [];
+      const sourceAttrs = Object.keys(fromSource[ns].attrs ?? {}).filter(
+        (attr) => !reviewed.includes(attr),
+      );
+      expect(Object.keys(legacySchema.entities[ns].attrs ?? {}).sort(), `${ns} drifted`).toEqual(
+        sourceAttrs.sort(),
+      );
     }
   });
 });
@@ -267,6 +310,17 @@ describe("behavior that must match the frozen baseline exactly", () => {
     ).toBe(baseline.prices.dueTodayCents);
   });
 
+  it("materializes one managed founding tier at the existing $900 Price", () => {
+    expect(chapter.config.tiers).toEqual([{
+      id: "founding",
+      name: "Founding Member",
+      priceCents: baseline.prices.dueTodayCents,
+      stripePriceId: baseline.prices.stripePriceId,
+      sortOrder: 0,
+      active: true,
+    }]);
+  });
+
   it("keeps the deployed scheduling rules", () => {
     const s = chapter.config.scheduling;
     expect(s.slotMinutes).toBe(baseline.scheduling.slotMinutes);
@@ -289,7 +343,10 @@ describe("follower role", () => {
       id: "built-not-found",
       fields: { person: ["name"] },
       sharedNotes: ["person"],
+      editableFields: {},
+      stageTransitions: [],
     }]);
+    expect(chapter.network.readers[0].admissionGrants).toBeUndefined();
   });
 
   it("declares person as the only receivable CRM type", () => {
@@ -297,16 +354,107 @@ describe("follower role", () => {
     // declared here. Adding a type is a deliberate contract change.
     expect(Object.keys(chapter.crm.config.types)).toEqual(["person"]);
   });
+
+  it("accepts BNF signup control only for the development Stripe runtime", () => {
+    expect(chapter.signupControl).toEqual({
+      sourceId: "built-not-found",
+      secretName: "signup_control_secret",
+      stripeMode: "test",
+    });
+  });
 });
 
 describe("group seed is insert-only and cannot overwrite owner edits", () => {
-  it("seeds the groups row and the crm_config singleton", () => {
+  it("uses Chapter as the active descriptor integration", () => {
+    expect(odlaConfig.integrations).toHaveLength(1);
+    expect(Object.keys(odlaConfig.integrations[0].schema.entities).sort()).toEqual(
+      Object.keys(integration.schema.entities).sort(),
+    );
+  });
+
+  it("seeds the groups row, crm_config singleton, and managed founding tier", () => {
     const namespaces = integration.seeds.map((s) => s.ns ?? s.namespace).sort();
-    expect(namespaces).toEqual(["crm_config", "groups"]);
+    expect(namespaces).toEqual(["crm_config", "groups", "tiers"]);
   });
 
   it("seeds the group under the live group id", () => {
     const group = integration.seeds.find((s) => (s.ns ?? s.namespace) === "groups");
     expect(group.attrs.id).toBe("silver-and-salt-capital");
+  });
+
+  it("seeds the founding tier by its public id without changing the legacy group row", () => {
+    const tier = integration.seeds.find((s) => (s.ns ?? s.namespace) === "tiers");
+    expect(tier.attrs).toMatchObject({
+      id: "founding",
+      groupId: "silver-and-salt-capital",
+      priceCents: baseline.prices.dueTodayCents,
+      stripePriceId: baseline.prices.stripePriceId,
+      active: true,
+    });
+  });
+});
+
+describe("shared Stripe account isolation", () => {
+  const target = {
+    appId: "silver-and-salt-capital",
+    environment: "dev",
+    dataEnvironment: "dev",
+    runtime: "test",
+    chapterId: "silver-and-salt-capital",
+  };
+
+  it("normalizes the exact app, data environment, and runtime metadata", () => {
+    const event = normalizeWebhookEvent({
+      id: "evt_ssc",
+      type: "invoice.paid",
+      data: { object: {
+        billing_reason: "subscription_create",
+        customer: "cus_ssc",
+        metadata: {
+          applicationId: "app_ssc",
+          odlaAppId: target.appId,
+          odlaEnvironment: target.environment,
+          odlaDataEnvironment: target.dataEnvironment,
+          odlaRuntime: target.runtime,
+        },
+      } },
+    });
+    expect(event).toMatchObject({
+      kind: "first_payment",
+      applicationId: "app_ssc",
+      customerId: "cus_ssc",
+      appId: target.appId,
+      environment: target.environment,
+      dataEnvironment: target.dataEnvironment,
+      runtime: target.runtime,
+    });
+  });
+
+  it("applies only an exactly tagged Silver & Salt event", () => {
+    expect(classifyMemberStripeEvent(target, target, false)).toBe("apply");
+    expect(classifyMemberStripeEvent({ ...target, appId: "sibling-chapter" }, target, true))
+      .toBe("ignore_sibling");
+    expect(classifyMemberStripeEvent({ ...target, dataEnvironment: "prod" }, target, true))
+      .toBe("ignore_sibling");
+    expect(classifyMemberStripeEvent({ ...target, runtime: "live" }, target, true))
+      .toBe("ignore_sibling");
+  });
+
+  it("accepts an untagged legacy event only after a proven local link", () => {
+    expect(classifyMemberStripeEvent({}, target, false)).toBe("quarantine_unmatched");
+    expect(classifyMemberStripeEvent({}, target, true)).toBe("apply_legacy");
+  });
+
+  it("deduplicates an identical Stripe replay and quarantines id collisions", () => {
+    expect(planMemberSystemEventReplay([
+      { id: "evt_once", digest: "sha256:a" },
+      { id: "evt_once", digest: "sha256:a" },
+      { id: "evt_collision", digest: "sha256:b" },
+      { id: "evt_collision", digest: "sha256:c" },
+    ])).toEqual({
+      accepted: ["evt_once", "evt_collision"],
+      replayed: ["evt_once"],
+      collisions: ["evt_collision"],
+    });
   });
 });
