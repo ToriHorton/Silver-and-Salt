@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    SSCAuth — shared auth bootstrap for the member and admin pages.
-   Loads ClerkJS from the publishable key served by /api/auth/config,
+   Loads ClerkJS from the publishable key served by Chapter's /api/config,
    holds the session token, and provides an authenticated fetch helper
    plus shared formatting utilities.
 
@@ -30,7 +30,7 @@
   // (refreshing the cache in the background), so repeat visits skip the
   // config round trip that used to serialize in front of the ~300KB
   // clerk-js download. A stale cached key falls back to a fresh fetch.
-  const CONFIG_CACHE_KEY = 'ssc-auth-config-v1';
+  const CONFIG_CACHE_KEY = 'ssc-auth-config-v2';
 
   async function bootClerkWith(pk) {
     // The Clerk frontend API host is encoded in the publishable key.
@@ -54,11 +54,14 @@
     let cached = null;
     try { cached = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || 'null'); } catch (e) { /* ignore */ }
 
-    const freshPromise = fetch('/api/auth/config')
+    const freshPromise = fetch('/api/config')
       .then(function (r) { return r.json(); })
       .then(function (c) {
-        if (c && c.publishableKey) localStorage.setItem(CONFIG_CACHE_KEY, JSON.stringify(c));
-        return c;
+        const normalized = c && c.clerkPublishableKey
+          ? { publishableKey: c.clerkPublishableKey }
+          : null;
+        if (normalized) localStorage.setItem(CONFIG_CACHE_KEY, JSON.stringify(normalized));
+        return normalized;
       })
       .catch(function () { return null; });
 

@@ -7,7 +7,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "silver-and-salt-capital",
-  "main": "src/worker.ts",
+  "main": "src/worker-chapter.ts",
   "compatibility_date": "2026-07-11",
   "compatibility_flags": ["nodejs_compat"],
   // Plain vars, not secrets. The secret (ODLA_API_KEY) is pushed by the odla
@@ -19,6 +19,7 @@
     "ODLA_PLATFORM": "https://odla.ai",
     "ODLA_APP_ID": "silver-and-salt-capital",
     "ODLA_ENV": "prod",
+    "ODLA_RUNTIME": "live",
     // Verified sender for Cloudflare Email Service. Phase 5 pre-requisite:
     // onboard silverandsaltcapital.com to Email Service in the Cloudflare
     // dashboard BEFORE the first prod deploy, or sends fail with
@@ -63,6 +64,7 @@
         "ODLA_PLATFORM": "https://odla.ai",
         "ODLA_APP_ID": "silver-and-salt-capital",
         "ODLA_ENV": "dev",
+        "ODLA_RUNTIME": "test",
         // Dev sends from the odla.ai domain (already onboarded to Email
         // Service on this Cloudflare account) until the Phase 5 cutover
         // onboards silverandsaltcapital.com. Dev deliveries are further

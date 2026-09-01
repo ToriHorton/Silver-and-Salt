@@ -190,7 +190,7 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
   return json(
     {
       ready,
-      chapter: { id: chapter.id, mode: chapter.mode, release: "0.26.0" },
+      chapter: { id: chapter.id, mode: chapter.mode, release: "0.42.4" },
       checks,
     },
     ready ? 200 : 503,
