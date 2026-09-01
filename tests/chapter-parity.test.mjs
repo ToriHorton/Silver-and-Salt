@@ -378,11 +378,27 @@ describe("follower role", () => {
 });
 
 describe("group seed is insert-only and cannot overwrite owner edits", () => {
-  it("uses Chapter as the active descriptor integration", () => {
-    expect(odlaConfig.integrations).toHaveLength(1);
+  it("uses Chapter plus a data-only descriptor for the retired newsletter rows", () => {
+    expect(odlaConfig.integrations).toHaveLength(2);
     expect(Object.keys(odlaConfig.integrations[0].schema.entities).sort()).toEqual(
       Object.keys(integration.schema.entities).sort(),
     );
+    expect(odlaConfig.integrations[1]).toMatchObject({
+      id: "retained-newsletter-data",
+      seeds: [],
+      probes: [],
+      rules: {
+        newsletterSignups: {
+          view: "false",
+          create: "false",
+          update: "false",
+          delete: "false",
+        },
+      },
+    });
+    expect(Object.keys(odlaConfig.integrations[1].schema.entities)).toEqual([
+      "newsletterSignups",
+    ]);
   });
 
   it("seeds the groups row, crm_config singleton, and managed founding tier", () => {
