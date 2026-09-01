@@ -22,8 +22,7 @@
 import { execFileSync } from "node:child_process";
 import { gunzipSync } from "node:zlib";
 import { readFileSync, rmSync } from "node:fs";
-import { createChapterIntegration } from "@odla-ai/chapter";
-import { chapter } from "../src/chapter.config.mjs";
+import odlaConfig from "../odla.config.mjs";
 
 const ENV = process.argv[2] ?? "dev";
 const OUT = `/tmp/odla-schema-check-${ENV}.jsonl.gz`;
@@ -76,7 +75,10 @@ if (!deployed) {
   process.exit(2);
 }
 
-const expected = createChapterIntegration(chapter, { basePath: "/api/crm" }).schema.entities;
+const expected = Object.assign(
+  {},
+  ...odlaConfig.integrations.map((integration) => integration.schema?.entities ?? {}),
+);
 const missing = [];
 for (const [ns, def] of Object.entries(expected)) {
   const live = deployed[ns]?.attrs;

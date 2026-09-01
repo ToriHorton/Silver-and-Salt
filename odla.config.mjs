@@ -1,5 +1,34 @@
 import { createChapterIntegration } from "@odla-ai/chapter";
 import { chapter } from "./src/chapter.config.mjs";
+import { schema as legacySourceSchema } from "./src/odla/schema.mjs";
+
+const denyAll = {
+  view: "false",
+  create: "false",
+  update: "false",
+  delete: "false",
+};
+
+// The public newsletter route is retired, but the development tenant still
+// contains rows in this strict namespace. Keep the data queryable only through
+// operator tooling until a separately reviewed export/retention decision is
+// made; this descriptor deliberately has no route, seed, or smoke probe.
+const retainedNewsletterData = {
+  id: "retained-newsletter-data",
+  title: "Retained newsletter data",
+  npm: "silver-and-salt-capital",
+  schema: {
+    entities: {
+      newsletterSignups: legacySourceSchema.entities.newsletterSignups,
+    },
+    links: {},
+  },
+  rules: {
+    newsletterSignups: denyAll,
+  },
+  seeds: [],
+  probes: [],
+};
 
 export default {
   platformUrl: process.env.ODLA_PLATFORM_URL ?? "https://odla.ai",
@@ -10,11 +39,10 @@ export default {
   },
   envs: ["dev"],
   services: ["db", "calendar"],
-  // Chapter composes the membership and CRM namespaces, default-deny rules,
-  // insert-only group/CRM seeds, and the managed founding tier from the same
-  // reviewed config used by the Worker. The legacy descriptor remains in
-  // src/odla only as an independent parity fixture; it is not provisioned.
-  integrations: [createChapterIntegration(chapter)],
+  // Chapter composes the active membership and CRM namespaces, default-deny
+  // rules, insert-only seeds, and managed founding tier. The second descriptor
+  // retains a populated, retired namespace without restoring its public route.
+  integrations: [createChapterIntegration(chapter), retainedNewsletterData],
   calendar: {
     google: {
       // 0.2.0 live booking: FreeBusy availability over these calendars;
