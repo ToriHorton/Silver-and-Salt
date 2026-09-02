@@ -349,13 +349,14 @@ describe("follower role", () => {
     expect(chapter.network.targets).toEqual([]);
   });
 
-  it("exposes only the approved leader read and shared-note lanes", () => {
+  it("exposes only the approved leader read, shared-note, and commercial parity lanes", () => {
     expect(chapter.network.readers).toEqual([{
       id: "built-not-found",
       fields: { person: ["name"] },
       sharedNotes: ["person"],
       editableFields: {},
       stageTransitions: [],
+      commercialParity: true,
     }]);
     expect(chapter.network.readers[0].admissionGrants).toBeUndefined();
   });

@@ -55,6 +55,10 @@ export const chapter = defineChapter({
       editableFields: {},
       stageTransitions: [],
       admissionGrants: false,
+      // This is a separate, read-only lane: the signed response contains only
+      // partition-bound keyed digests plus lifecycle status/cancellation.
+      // Raw application, customer, and subscription identifiers never cross.
+      commercialParity: true,
     }],
   },
 
