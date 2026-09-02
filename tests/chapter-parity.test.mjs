@@ -123,6 +123,9 @@ const REVIEWED_NAMESPACES = [
   "memberContentControls",
   "memberContentLocal",
   "signupControls",
+  // Chapter 0.43.1 records only event identity, digest, partition, disposition,
+  // match state, and receipt time. It retains no Stripe payload or member PII.
+  "stripeEventReceipts",
   "tiers",
 ];
 
