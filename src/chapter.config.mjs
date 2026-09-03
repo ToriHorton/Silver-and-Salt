@@ -40,14 +40,14 @@ export const chapter = defineChapter({
   crm,
 
   // Follower-owned federation boundary. Built Not Found can browse only the
-  // approved minimum person projection (name; stage/timestamps are bounded
-  // package metadata) and can append deliberately shared notes to that
-  // person's normal CRM Notes feed. Direct contact, referral, application,
-  // message, billing, and follower-private activity never leave this site.
+  // approved routine person projection (name and email; stage/timestamps are
+  // bounded package metadata) and can append deliberately shared notes to that
+  // person's normal CRM Notes feed. Phone, referral, application, message,
+  // billing, and follower-private activity never leave this site.
   network: {
     readers: [{
       id: "built-not-found",
-      fields: { person: ["name"] },
+      fields: { person: ["name", "email"] },
       sharedNotes: ["person"],
       // Keep the current edge read/note-only during the package upgrade. The
       // current Chapter line can also grant field edits, stage transitions,
