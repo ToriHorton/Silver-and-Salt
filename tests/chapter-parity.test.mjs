@@ -352,7 +352,7 @@ describe("follower role", () => {
   it("exposes only the approved leader read, shared-note, and commercial parity lanes", () => {
     expect(chapter.network.readers).toEqual([{
       id: "built-not-found",
-      fields: { person: ["name"] },
+      fields: { person: ["name", "email"] },
       sharedNotes: ["person"],
       editableFields: {},
       stageTransitions: [],
