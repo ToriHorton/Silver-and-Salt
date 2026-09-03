@@ -40,6 +40,7 @@ git ls-files -z -- . \
   ':!:report-headers.numbers' \
   ':!:report-headers.xlsx' \
   ':!:_reference' \
+  ':!:_newsletter' \
   ':!:_mockups' \
   ':!:_research' \
   ':!:_archive' \

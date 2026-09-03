@@ -189,6 +189,79 @@ export const schema = {
         // active | unsubscribed
         status: { type: "string", unique: false, indexed: true, optional: false },
         createdAt: { type: "number", unique: false, indexed: true, optional: false },
+        // ── Newsletter sending (2026-08-25) ──
+        // Stable per-person unsubscribe token. It is minted once and reused by
+        // every issue, so a link in an old letter keeps working and a re-send
+        // never invalidates one already in someone's inbox. Optional because
+        // rows written before this attr existed have none; the import path
+        // backfills any row it touches.
+        token: { type: "string", unique: true, indexed: true, optional: true },
+        // Greeting name for {{firstName}}. Absent is fine; the render falls
+        // back to a name-free greeting rather than printing an empty word.
+        firstName: { type: "string", unique: false, indexed: false, optional: true },
+        unsubscribedAt: { type: "number", unique: false, indexed: false, optional: true },
+        // Delivery health, set by the outbox drain: ok | bounced | complained.
+        // Checked at SEND time, so a bounce recorded during issue 1 suppresses
+        // the address for issue 2 without anyone curating a list by hand.
+        deliveryStatus: { type: "string", unique: false, indexed: true, optional: true },
+      },
+    },
+
+    // One row per issue. The rendered bodies are stored ON the row rather than
+    // re-rendered at send time: an issue that goes out must be the exact bytes
+    // that were previewed and approved, and the archive has to stay readable
+    // years later even after the template changes.
+    newsletters: {
+      attrs: {
+        id: { type: "string", unique: true, indexed: true, optional: false },
+        groupId: { type: "string", unique: false, indexed: true, optional: true },
+        // Shown in the inbox. Rendered with the same {{var}} substitution as
+        // the body so a subject can carry a first name.
+        subject: { type: "string", unique: false, indexed: false, optional: false },
+        // The hidden preview line Gmail shows beside the subject.
+        preheader: { type: "string", unique: false, indexed: false, optional: true },
+        html: { type: "string", unique: false, indexed: false, optional: false },
+        // Plaintext alternative. Required, not optional: an HTML-only message
+        // is a strong spam signal and is unreadable in text-only clients.
+        text: { type: "string", unique: false, indexed: false, optional: false },
+        // draft | sending | sent | canceled
+        status: { type: "string", unique: false, indexed: true, optional: false },
+        // Human label for where the list came from ("CSV 2026-08-25"), so the
+        // audit can answer "who did this go to" without replaying the import.
+        audienceLabel: { type: "string", unique: false, indexed: false, optional: true },
+        recipientCount: { type: "number", unique: false, indexed: false, optional: true },
+        sentCount: { type: "number", unique: false, indexed: false, optional: true },
+        failedCount: { type: "number", unique: false, indexed: false, optional: true },
+        skippedCount: { type: "number", unique: false, indexed: false, optional: true },
+        createdAt: { type: "number", unique: false, indexed: true, optional: false },
+        sentAt: { type: "number", unique: false, indexed: true, optional: true },
+      },
+    },
+
+    // The outbox: one row per address per issue. This exists because Cloudflare
+    // Email Service caps a send at 50 recipients and a Worker request cannot
+    // hold a long loop, so a send is drained in batches across many
+    // invocations. The row IS the unit of idempotency: a row already marked
+    // "sent" is never sent again, no matter how often the drain reruns.
+    newsletterRecipients: {
+      attrs: {
+        id: { type: "string", unique: true, indexed: true, optional: false },
+        newsletterId: { type: "string", unique: false, indexed: true, optional: false },
+        // Lowercased at write time. Dedupe happens on this value.
+        email: { type: "string", unique: false, indexed: true, optional: false },
+        firstName: { type: "string", unique: false, indexed: false, optional: true },
+        // Copied from the signup row at queue time so the drain never has to
+        // join, and so the link in a sent letter matches what was queued.
+        token: { type: "string", unique: false, indexed: false, optional: true },
+        // pending | sent | failed | skipped
+        status: { type: "string", unique: false, indexed: true, optional: false },
+        // Why a row was skipped (unsubscribed, bounced, invalid) or the
+        // transport error code when it failed.
+        reason: { type: "string", unique: false, indexed: false, optional: true },
+        messageId: { type: "string", unique: false, indexed: false, optional: true },
+        attempts: { type: "number", unique: false, indexed: false, optional: true },
+        createdAt: { type: "number", unique: false, indexed: true, optional: false },
+        sentAt: { type: "number", unique: false, indexed: false, optional: true },
       },
     },
   },

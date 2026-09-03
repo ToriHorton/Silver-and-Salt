@@ -36,4 +36,27 @@ export const rules = {
     update: "false",
     delete: "false",
   },
+  // Newsletter namespaces. Deny-all like everything else: the unsubscribe
+  // route is public, but it runs IN the Worker with the app key, so the
+  // browser still never touches odla-db directly. newsletterSignups was
+  // previously absent from this file and leaned on defaultRules; it is
+  // written out here so the posture is readable rather than inferred.
+  newsletterSignups: {
+    view: "false",
+    create: "false",
+    update: "false",
+    delete: "false",
+  },
+  newsletters: {
+    view: "false",
+    create: "false",
+    update: "false",
+    delete: "false",
+  },
+  newsletterRecipients: {
+    view: "false",
+    create: "false",
+    update: "false",
+    delete: "false",
+  },
 };
