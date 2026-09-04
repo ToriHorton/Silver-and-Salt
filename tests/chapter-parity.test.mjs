@@ -42,6 +42,12 @@ const WORKER_ENTRY = readFileSync("wrangler.jsonc", "utf8");
 const CHAPTER_SHIPS = /"main"\s*:\s*"src\/worker-chapter\.ts"/.test(WORKER_ENTRY);
 const describeParity = CHAPTER_SHIPS ? describe : describe.skip;
 
+it("does not overwrite account-bound dev runtime identity with Stripe test mode", () => {
+  const devConfig = WORKER_ENTRY.slice(WORKER_ENTRY.indexOf('"dev":'));
+  expect(devConfig).not.toMatch(/"ODLA_RUNTIME"\s*:/);
+  expect(WORKER_ENTRY.slice(0, WORKER_ENTRY.indexOf('"env":'))).toContain('"ODLA_RUNTIME": "live"');
+});
+
 const REVIEWED_LEGACY_SOURCE_NAMESPACES = ["newsletterSignups"];
 const REVIEWED_LEGACY_SOURCE_ATTRS = {
   applications: ["clerkPrivateMetadataSyncedAt", "tier"],
