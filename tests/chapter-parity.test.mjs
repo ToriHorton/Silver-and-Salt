@@ -80,6 +80,10 @@ const REVIEWED_LEGACY_SOURCE_ATTRS = {
 // existing row and cannot be written directly by a browser (rules below remain
 // literal false). merchantDisclosureText is optional operator-owned copy and
 // the insert-only group seed leaves the existing row untouched.
+// Chapter 0.47.7 adds optional group currency and interval so the exact amount,
+// currency, and cadence can be compared with the immutable Stripe Price. The
+// existing row remains valid and resolves to this site's configured usd/year
+// defaults; the browser still cannot write either attribute directly.
 const REVIEWED_ADDITIONS = {
   applications: [
     "admissionGrantId",
@@ -99,6 +103,8 @@ const REVIEWED_ADDITIONS = {
     "tierId",
   ],
   groups: [
+    "currency",
+    "interval",
     "merchantDisclosureText",
     "stewardPriceCents",
     "stewardRefundPolicyText",

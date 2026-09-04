@@ -74,6 +74,25 @@ export default {
   },
   envs: ["dev"],
   services: ["db", "calendar"],
+  // Cory and Tori intentionally run separate authoritative development
+  // Workers against the same Chapter data environment. Provider-facing
+  // receipts and secrets remain runtime-scoped; neither sandbox is a replica
+  // or a fallback for the other.
+  runtimes: {
+    cory: {
+      dataEnvironment: "dev",
+      wranglerEnvironment: "dev",
+      origin: "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
+    },
+    tori: {
+      dataEnvironment: "dev",
+      wranglerEnvironment: "dev",
+      origin: "https://silver-and-salt-capital-dev.silver-and-salt.workers.dev",
+    },
+  },
+  stripe: {
+    webhookPath: "/api/webhooks/stripe",
+  },
   // Chapter composes the active membership and CRM namespaces, default-deny
   // rules, insert-only seeds, and managed founding tier. The second descriptor
   // retains a populated, retired namespace without restoring its public route.
