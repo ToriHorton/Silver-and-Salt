@@ -136,6 +136,11 @@ const REVIEWED_NAMESPACES = [
   // Chapter 0.43.1 records only event identity, digest, partition, disposition,
   // match state, and receipt time. It retains no Stripe payload or member PII.
   "stripeEventReceipts",
+  // Chapter 0.47.9 commits an immutable, deny-all purchase intent before Stripe
+  // is called so a response loss or later odla write failure cannot orphan or
+  // duplicate a subscription. It stores the bounded checkout contract and
+  // provider identifiers, never a client secret or provider payload.
+  "subscriptionCheckoutIntents",
   "tiers",
 ];
 
