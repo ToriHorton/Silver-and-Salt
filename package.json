@@ -7,7 +7,7 @@
     "dev": "python3 -m http.server 3000",
     "build": "bash _scripts/build-site.sh",
     "dev:worker": "npm run build && wrangler dev --env dev",
-    "deploy:app:dev": "npm run build && wrangler deploy --env dev",
+    "deploy:app:dev": "node _scripts/assert-dev-deploy-target.mjs && npm run build && wrangler deploy --env dev",
     "check:schema": "node _scripts/check-deployed-schema.mjs"
   },
   "devDependencies": {
