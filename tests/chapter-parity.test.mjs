@@ -22,6 +22,10 @@ import { chapter } from "../src/chapter.config.mjs";
 import odlaConfig from "../odla.config.mjs";
 import { schema as legacySourceSchema } from "../src/odla/schema.mjs";
 import { crm as legacyCrm } from "../src/crm.mjs";
+import {
+  assertDevDeployAccount,
+  assertDevDeployBindings,
+} from "../_scripts/assert-dev-deploy-target.mjs";
 
 const legacySchema = JSON.parse(readFileSync("tests/fixtures/legacy-schema.json", "utf8"));
 const legacyRules = JSON.parse(readFileSync("tests/fixtures/legacy-rules.json", "utf8"));
@@ -507,5 +511,76 @@ describe("shared Stripe account isolation", () => {
       replayed: ["evt_once"],
       collisions: ["evt_collision"],
     });
+  });
+});
+
+describe("owner-bound development deploys", () => {
+  const cory = { loggedIn: true, accounts: [{ id: "cory-cloudflare-account" }] };
+  const tori = { loggedIn: true, accounts: [{ id: "tori-cloudflare-account" }] };
+  const inventory = {
+    environments: [
+      {
+        runtime: "cory",
+        dataEnvironment: "dev",
+        desired: {
+          active: true,
+          worker: {
+            provider: "cloudflare",
+            accountId: cory.accounts[0].id,
+            scriptName: "silver-and-salt-capital-dev",
+          },
+        },
+      },
+      {
+        runtime: "tori",
+        dataEnvironment: "dev",
+        desired: {
+          active: true,
+          worker: {
+            provider: "cloudflare",
+            accountId: tori.accounts[0].id,
+            scriptName: "silver-and-salt-capital-dev",
+          },
+        },
+      },
+    ],
+  };
+
+  it("selects either authoritative developer runtime from its Cloudflare account", () => {
+    expect(assertDevDeployAccount(JSON.stringify(cory), JSON.stringify(inventory))).toEqual({
+      account: cory.accounts[0],
+      runtime: "cory",
+    });
+    expect(assertDevDeployAccount(JSON.stringify(tori), JSON.stringify(inventory))).toEqual({
+      account: tori.accounts[0],
+      runtime: "tori",
+    });
+  });
+
+  it("fails closed on ambiguous accounts, unmanaged targets, and missing bindings", () => {
+    expect(() => assertDevDeployAccount("not json", JSON.stringify(inventory))).toThrow(/JSON identity/);
+    expect(() => assertDevDeployAccount(
+      JSON.stringify({ ...cory, accounts: [...cory.accounts, { id: "another-account" }] }),
+      JSON.stringify(inventory),
+    )).toThrow(/exclusively/);
+    expect(() => assertDevDeployAccount(
+      JSON.stringify({ loggedIn: true, accounts: [{ id: "unmanaged-account" }] }),
+      JSON.stringify(inventory),
+    )).toThrow(/does not match exactly one/);
+    expect(() => assertDevDeployBindings("[]")).toThrow(/not provisioned/);
+    expect(() => assertDevDeployBindings(JSON.stringify([
+      { name: "ODLA_API_KEY", type: "secret_text" },
+    ]))).toThrow(/ODLA_RUNTIME/);
+    expect(assertDevDeployBindings(JSON.stringify([
+      { name: "ODLA_API_KEY", type: "secret_text" },
+      { name: "ODLA_RUNTIME", type: "secret_text" },
+    ]))).toHaveLength(2);
+  });
+
+  it("runs the target guard before the build and Wrangler deploy", () => {
+    const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+    expect(pkg.scripts["deploy:app:dev"]).toMatch(
+      /^node _scripts\/assert-dev-deploy-target\.mjs && npm run build && wrangler deploy --env dev$/,
+    );
   });
 });
