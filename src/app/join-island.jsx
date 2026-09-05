@@ -201,7 +201,7 @@ function ApplicationFields({ config, referral, onReferral, referralName, onRefer
   );
 }
 
-function Join({ config }) {
+export function Join({ config, initialTierId }) {
   const [referral, setReferral] = useState("");
   const [referralName, setReferralName] = useState("");
   const [ack, setAck] = useState(false);
@@ -219,6 +219,19 @@ function Join({ config }) {
         <div class="card-label">Before we meet</div>
         <JoinIsland
           config={config}
+          initialTierId={initialTierId}
+          renderTiers={({ tiers, selectedTierId, selectTier }) => (
+            <fieldset class="membership-choice">
+              <legend>Choose your membership</legend>
+              {tiers.map((tier) => (
+                <label class="membership-option" key={tier.id}>
+                  <input type="radio" name="__chapterTier" value={tier.id}
+                    checked={selectedTierId === tier.id} onChange={() => selectTier(tier.id)} />
+                  <span><strong>{tier.name}</strong><span class="membership-price">{tier.free ? "Free" : money(tier.priceCents)}</span></span>
+                </label>
+              ))}
+            </fieldset>
+          )}
           membersHref="/members/"
           // The legacy page gated submit on the consent box; preserve that
           // exactly rather than relying on the server's 400.
@@ -385,7 +398,10 @@ async function boot() {
     const res = await fetch("/api/join-config");
     if (!res.ok) throw new Error(`join-config ${res.status}`);
     const config = await res.json();
-    render(<Join config={config} />, root);
+    const initialTierId = new URLSearchParams(window.location.search).get("tier") ?? undefined;
+    // Preact owns the island after loading; remove the static loading status.
+    root.replaceChildren();
+    render(<Join config={config} initialTierId={initialTierId} />, root);
   } catch (err) {
     console.error(err);
     root.innerHTML =
@@ -394,4 +410,4 @@ async function boot() {
   }
 }
 
-boot();
+if (typeof document !== "undefined") boot();
