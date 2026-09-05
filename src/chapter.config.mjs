@@ -68,6 +68,12 @@ export const chapter = defineChapter({
   signupControl: {
     sourceId: "built-not-found",
     stripeMode: "test",
+    // Each developer Worker verifies only its own addressed delivery. Declaring
+    // another runtime is not permission to deploy or install its credential.
+    runtimeSecrets: {
+      cory: "signup_control_silver_and_salt_capital__cory",
+      tori: "signup_control_silver_and_salt_capital__tori",
+    },
   },
 
   // Preserve the populated dev content namespaces discovered by the strict
