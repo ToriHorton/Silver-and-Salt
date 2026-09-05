@@ -203,6 +203,7 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
 // odla.config.mjs).
 export default chapterWorker({
   chapter,
+  requirePaymentQuote: true,
   crmBasePath: "/api/crm",
   routes: [devJoin, migrationReadiness, legacyApi],
 });

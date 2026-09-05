@@ -345,12 +345,11 @@ export function Join({ config, initialTierId }) {
             </>
           )}
           payment={{
-            // Site-owned price presentation, fed by the server's own line items
-            // from the subscription route (the contract v9 points at).
+            // The shared quote shows these server-owned amounts before consent.
             renderPriceLines: (lines) => (
               <div class="pay-lines" id="pay-lines">
                 <div class="pay-line">
-                  <span>Annual membership</span>
+                  <span>Membership price</span>
                   <span>{money(lines.standardCents)}</span>
                 </div>
                 {lines.discountCents > 0 && (
@@ -365,7 +364,6 @@ export function Join({ config, initialTierId }) {
                 </div>
               </div>
             ),
-            children: config.trustCopy ? <p class="pay-trust">{config.trustCopy}</p> : null,
           }}
         >
           <ApplicationFields
