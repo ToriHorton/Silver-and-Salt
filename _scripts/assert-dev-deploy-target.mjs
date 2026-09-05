@@ -8,9 +8,18 @@
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { resolve } from "node:path";
+import { chapter } from "../src/chapter.config.mjs";
 
 const REQUIRED_BINDINGS = ["ODLA_API_KEY", "ODLA_RUNTIME"];
 const DEV_SCRIPT_NAME = "silver-and-salt-capital-dev";
+
+export function assertDevSignupAuthority(config, runtime) {
+  if (!["cory", "tori"].includes(runtime) ||
+      config.signupControl?.runtimeSecrets?.[runtime] !==
+        `signup_control_silver_and_salt_capital__${runtime}`) {
+    throw new Error("The installed Chapter package does not enforce runtime-addressed signup authority; refusing to deploy.");
+  }
+}
 
 export function assertDevDeployAccount(rawIdentity, rawEnvironments) {
   let identity;
@@ -99,6 +108,7 @@ function main() {
     throw new Error("Could not inspect ODLA's managed runtimes; refusing to deploy.");
   }
   const target = assertDevDeployAccount(identity.stdout, inventory.stdout);
+  assertDevSignupAuthority(chapter, target.runtime);
 
   const result = spawnSync(
     process.execPath,

@@ -25,12 +25,40 @@ import { crm as legacyCrm } from "../src/crm.mjs";
 import {
   assertDevDeployAccount,
   assertDevDeployBindings,
+  assertDevSignupAuthority,
 } from "../_scripts/assert-dev-deploy-target.mjs";
 
+it("refuses to deploy a package that discards runtime signup isolation", () => {
+  expect(() => assertDevSignupAuthority({ signupControl: {} }, "cory"))
+    .toThrow(/runtime-addressed/);
+  const config = { signupControl: { runtimeSecrets: {
+    cory: "signup_control_silver_and_salt_capital__cory",
+    tori: "signup_control_silver_and_salt_capital__tori",
+  } } };
+  expect(() => assertDevSignupAuthority(config, "cory")).not.toThrow();
+  expect(() => assertDevSignupAuthority(config, "tori")).not.toThrow();
+  expect(() => assertDevSignupAuthority(config, "live")).toThrow(/runtime-addressed/);
+  expect(() => assertDevSignupAuthority({ signupControl: { runtimeSecrets: {
+    cory: config.signupControl.runtimeSecrets.tori,
+  } } }, "cory")).toThrow(/runtime-addressed/);
+});
 const legacySchema = JSON.parse(readFileSync("tests/fixtures/legacy-schema.json", "utf8"));
 const legacyRules = JSON.parse(readFileSync("tests/fixtures/legacy-rules.json", "utf8"));
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
 const integration = odlaConfig.integrations[0];
+// Decision 30502e22-e735-51a6-9925-cf74b1542ab1: keep the committed npm
+// baseline testable while rehearsing the unpublished candidate in dev. This
+// explicit version contract never derives expectations from Chapter's schema.
+const chapterVersion = JSON.parse(readFileSync(
+  new URL("../node_modules/@odla-ai/chapter/package.json", import.meta.url), "utf8",
+)).version;
+const reviewedVersionNamespaces = {
+  "0.47.10": [],
+  "0.47.11": ["signupControlHeads"],
+};
+if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
+  throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
+}
 
 // ── THE INDEPENDENT LEGACY ANCHOR RE-ARMS WHEN CHAPTER SHIPS ────────────
 // The deployed fixture remains immutable evidence. Later legacy-source work
@@ -129,6 +157,7 @@ const REVIEWED_ADDITIONS = {
 // 0.31.x tier support reviewed above; it is seeded from the chapter config and
 // carries no member data.
 const REVIEWED_NAMESPACES = [
+  ...reviewedVersionNamespaces[chapterVersion],
   "admissionGrantRevisions",
   "admissionGrants",
   "giftClaims",
@@ -189,6 +218,18 @@ describe("schema parity vs the frozen legacy contract", () => {
 
   it("composes exactly the deployed namespace set", () => {
     expect(chapterNs).toEqual([...legacyNs, ...REVIEWED_NAMESPACES].sort());
+  });
+
+  it("keeps the reviewed publication head bounded and browser-inaccessible", () => {
+    if (chapterVersion === "0.47.10") {
+      expect(integration.schema.entities.signupControlHeads).toBeUndefined();
+      return;
+    }
+    expect(Object.keys(integration.schema.entities.signupControlHeads.attrs).sort())
+      .toEqual(["digest", "environment", "id", "revision", "targetId"]);
+    expect(integration.rules.signupControlHeads).toEqual({
+      view: "false", create: "false", update: "false", delete: "false",
+    });
   });
 
   for (const ns of legacyNs) {
@@ -393,6 +434,10 @@ describe("follower role", () => {
       sourceId: "built-not-found",
       secretName: "signup_control_secret",
       stripeMode: "test",
+      ...(chapterVersion === "0.47.11" ? { runtimeSecrets: {
+        cory: "signup_control_silver_and_salt_capital__cory",
+        tori: "signup_control_silver_and_salt_capital__tori",
+      } } : {}),
     });
   });
 
