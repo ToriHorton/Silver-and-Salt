@@ -18,6 +18,7 @@
 
 import { chapterWorker, type Route } from "@odla-ai/chapter/worker";
 import { chapter } from "./chapter.config.mjs";
+import { devJoin } from "./dev-join";
 import { handleApi, json, type Env as LegacyEnv } from "./worker";
 
 // Phase 4 state. Only routes Chapter does NOT own remain here. Each retirement
@@ -203,5 +204,5 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
 export default chapterWorker({
   chapter,
   crmBasePath: "/api/crm",
-  routes: [migrationReadiness, legacyApi],
+  routes: [devJoin, migrationReadiness, legacyApi],
 });

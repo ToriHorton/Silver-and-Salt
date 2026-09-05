@@ -73,6 +73,20 @@ run("deployed acceptance", () => {
   });
 
   describe("public join contract matches the frozen baseline", () => {
+    it("mounts the real join form bundle on the reviewed Cory dev entry", async () => {
+      // This acceptance target is intentionally dev; production stays closed.
+      expect(new URL(BASE).origin).toBe("https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev");
+      const res = await get("/join.html?tier=steward");
+      expect(res.status).toBe(200);
+      const html = await res.text();
+      expect(html).toContain('id="join-root"');
+      expect(html).not.toContain('id="coming-soon"');
+      expect(html).toContain('src="/assets/app/join-island.js"');
+      const bundle = await get("/assets/app/join-island.js");
+      expect(bundle.status).toBe(200);
+      expect(bundle.headers.get("content-type")).toMatch(/javascript/);
+    });
+
     it("exposes the approved prices and payment readiness", async () => {
       const body = await (await get("/api/join-config")).json();
       expect(body.standardPriceCents).toBe(baseline.prices.standardPriceCents);
