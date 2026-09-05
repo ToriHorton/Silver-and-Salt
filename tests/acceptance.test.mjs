@@ -6,7 +6,8 @@
 // and fast. This asserts the deployed contract, not the source: it is the check
 // that the thing actually serving traffic behaves as the frozen baseline says.
 //
-// SCOPE AND ITS LIMITS. Everything here is non-side-effecting and unauthenticated.
+// SCOPE AND ITS LIMITS. Checks are unauthenticated; the replay-identity group
+// reuses one labelled synthetic dev application. Other checks do not write.
 // The runbook's Phase 7 also requires a real authenticated journey (submit the
 // join form, take a Stripe test payment, book and receive the debug-routed mail,
 // sign in as provisional/member/admin, run every admin mutation family, then
@@ -21,6 +22,9 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
 const BASE = process.env.ACCEPTANCE_URL;
+if (BASE && new URL(BASE).origin !== "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev") {
+  throw new Error("Acceptance fixture writes are restricted to the reviewed Cory dev origin.");
+}
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
 const run = BASE ? describe : describe.skip;
 
