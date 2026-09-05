@@ -51,6 +51,7 @@ describe("dev-only join entry", () => {
     const config = readFileSync("wrangler.jsonc", "utf8");
     expect(config.indexOf('"run_worker_first"')).toBeGreaterThan(config.indexOf('"env"'));
     expect(config.match(/"run_worker_first"/g)).toHaveLength(1);
+    expect(config).toMatch(/"run_worker_first":\s*\["\/api\/\*", "\/join", "\/join\/", "\/join.html"\]/);
   });
 
   it("preserves asset redirects and fails closed if the holding marker contract drifts", async () => {
