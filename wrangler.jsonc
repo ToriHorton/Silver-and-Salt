@@ -48,6 +48,7 @@
   "env": {
     "dev": {
       "name": "silver-and-salt-capital-dev",
+      "triggers": { "crons": ["*/5 * * * *"] },
       // ROUTE GUARD, do not remove. Wrangler environments inherit top-level
       // `routes` even though they inherit no bindings. On 2026-08-08 a
       // `deploy --env dev` in the Built Not Found repo took

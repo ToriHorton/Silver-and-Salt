@@ -16,9 +16,10 @@
 // it doesn't 404 on". An allowlist is auditable (you can read what legacy owns),
 // and retiring a route is a one-line deletion rather than a behavioral guess.
 
-import { chapterWorker, type Route } from "@odla-ai/chapter/worker";
+import { chapterWorker, createWorkerContext, type ChapterEnv, type Route } from "@odla-ai/chapter/worker";
 import { chapter } from "./chapter.config.mjs";
 import { devJoin } from "./dev-join";
+import { recoverPendingApprovals } from "./approval-recovery";
 import { handleApi, json, type Env as LegacyEnv } from "./worker";
 
 // Phase 4 state. Only routes Chapter does NOT own remain here. Each retirement
@@ -201,9 +202,18 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
 // Observability stays a host concern; wrap here with withObservability from
 // @odla-ai/o11y once "o11y" is added to services (it is not, per the current
 // odla.config.mjs).
-export default chapterWorker({
+const workerOptions = {
   chapter,
   requirePaymentQuote: true,
   crmBasePath: "/api/crm",
   routes: [devJoin, migrationReadiness, legacyApi],
-});
+};
+const worker = chapterWorker(workerOptions);
+const background = createWorkerContext(workerOptions);
+
+export default {
+  fetch: worker.fetch.bind(worker),
+  scheduled(_controller: ScheduledController, env: ChapterEnv, ctx: ExecutionContext) {
+    ctx.waitUntil(recoverPendingApprovals(background, env));
+  },
+};
