@@ -54,7 +54,7 @@ const chapterVersion = JSON.parse(readFileSync(
 )).version;
 const reviewedVersionNamespaces = {
   "0.47.10": [],
-  "0.47.11": ["signupControlHeads"],
+  "0.47.11": ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
@@ -124,6 +124,9 @@ const REVIEWED_LEGACY_SOURCE_ATTRS = {
 // defaults; the browser still cannot write either attribute directly.
 const REVIEWED_ADDITIONS = {
   applications: [
+    // Decision 346b7b00-6b5e-5748-8949-e4528c93868b: additive dev-only candidate contract.
+    ...(chapterVersion === "0.47.11" ? ["approvalEffectsPending", "approvalEffectsOrigin", "approvalEffectsLastAttemptAt",
+      "namedSeatId", "namedSeatPrimaryApplicationId", "namedSeatClaimPending", "namedSeatAcceptedAt"] : []),
     "admissionGrantId",
     "admissionSource",
     "clerkPrivateMetadataSyncedAt",
@@ -149,6 +152,7 @@ const REVIEWED_ADDITIONS = {
     "stewardTrustCopy",
     "stripeStewardPriceId",
   ],
+  emailLog: chapterVersion === "0.47.11" ? ["deliveryState", "deliveryAttempt", "deliveryResolution"] : [],
 };
 
 // Namespaces Chapter composes that the frozen fixture predates. Same rule as
@@ -230,6 +234,25 @@ describe("schema parity vs the frozen legacy contract", () => {
     expect(integration.rules.signupControlHeads).toEqual({
       view: "false", create: "false", update: "false", delete: "false",
     });
+  });
+  it("keeps the candidate consent and quote projections bounded without installing membership authority", () => {
+    if (chapterVersion !== "0.47.11") return;
+    const expected = {
+      namedSeatConsents: ["id", "applicationId", "chapterId", "runtime", "userId", "quoteDigest", "recipientName", "recipientEmail",
+        "refundPolicyText", "merchantDisclosureText", "acceptedAt"],
+      membershipQuoteProjections: ["id", "applicationId", "appId", "chapterId", "environment", "runtime", "skuId", "requestId",
+        "revision", "status", "updatedAt", "offer", "offerDigest", "tier", "quote"],
+    };
+    for (const [namespace, attrs] of Object.entries(expected)) {
+      expect(Object.keys(integration.schema.entities[namespace].attrs).sort()).toEqual(attrs.sort());
+      expect(integration.rules[namespace]).toEqual({ view: "false", create: "false", update: "false", delete: "false" });
+    }
+    for (const namespace of ["networkMembership", "networkEntitlement", "networkSeat", "membershipAuthorityState"]) {
+      expect(integration.schema.entities[namespace]).toBeUndefined();
+    }
+    for (const attr of ["billingTerms", "paymentQuote", "membershipOffer"]) {
+      expect(integration.schema.entities.subscriptionCheckoutIntents.attrs[attr]).toMatchObject({ type: "json", optional: true });
+    }
   });
 
   for (const ns of legacyNs) {
