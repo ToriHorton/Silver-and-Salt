@@ -48,6 +48,8 @@
   "env": {
     "dev": {
       "name": "silver-and-salt-capital-dev",
+      "account_id": "c4f7c2b79a8ec203b50e1e36790ef038",
+      "services": [{ "binding": "BUILT_NOT_FOUND", "service": "built-not-found-dev" }],
       "triggers": { "crons": ["*/5 * * * *"] },
       // ROUTE GUARD, do not remove. Wrangler environments inherit top-level
       // `routes` even though they inherit no bindings. On 2026-08-08 a
@@ -65,6 +67,7 @@
         "ODLA_PLATFORM": "https://odla.ai",
         "ODLA_APP_ID": "silver-and-salt-capital",
         "ODLA_ENV": "dev",
+        "MEMBERSHIP_AUTHORITY_OWNER": "built-not-found",
         // ODLA installs the account-bound cory/tori runtime binding. Stripe
         // test/live mode is separate; a static value here would overwrite it.
         // Dev sends from the odla.ai domain (already onboarded to Email

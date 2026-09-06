@@ -9,7 +9,7 @@ import preact from "@preact/preset-vite";
 export default defineConfig({
   plugins: [preact()],
   test: {
-    include: ["tests/**/*.test.mjs", "tests/**/*.test.jsx"],
+    include: ["tests/**/*.test.mjs", "tests/**/*.test.jsx", "tests/**/*.test.ts"],
     exclude: ["dist/**", "node_modules/**"],
   },
 });
