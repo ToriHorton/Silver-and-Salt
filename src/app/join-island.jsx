@@ -26,6 +26,7 @@
 import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { JoinIsland, loadJoinResume } from "@odla-ai/chapter/ui/member";
+import { namedSeatClaimApi } from "./named-seat-api.mjs";
 
 // Same key the legacy page used, so an in-flight applicant keeps their place
 // across this deploy.
@@ -219,6 +220,8 @@ export function Join({ config, initialTierId }) {
         <div class="card-label">Before we meet</div>
         <JoinIsland
           config={config}
+          initialNamedSeatId={typeof window === "undefined" ? undefined : new URLSearchParams(window.location.search).get("seat") ?? undefined}
+          namedSeatClaimApi={namedSeatClaimApi}
           initialTierId={initialTierId}
           renderTiers={({ tiers, selectedTierId, selectTier }) => (
             <fieldset class="membership-choice">
