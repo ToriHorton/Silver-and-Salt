@@ -1,0 +1,25 @@
+{
+  "sourceRepository": "https://github.com/cory/odla-ai",
+  "sourceCommit": "19f510f52784d52d5db2a0f0acefd3d2ebd4ad1b",
+  "packages": [
+    {
+      "name": "@odla-ai/chapter",
+      "version": "0.47.11",
+      "file": "odla-ai-chapter-0.47.11.tgz",
+      "sha256": "3d5ffd89b8171656c79f3c909cec24013012f6e702a77a23412e2b091aeb2ff2",
+      "entries": {
+        "dist/worker/index.js": "395b0e7db9af99c9969c845b0d421b650f768fbd81cd00b6e023bae3ff74468f",
+        "dist/ui/admin/index.js": "b87924ce25127fcc7264d004739002ea82f3b56dfca090598f79d9cab05da9a4"
+      }
+    },
+    {
+      "name": "@odla-ai/stripe",
+      "version": "0.1.1",
+      "file": "odla-ai-stripe-0.1.1.tgz",
+      "sha256": "4f18f543666543b8a54cf656c5e487cb3441ae10f3bf1ad453021b5f99363207",
+      "entries": {
+        "dist/index.js": "5d4259ce289feb40d449d1614a2148406a5592a066e30f6db49ccb8c40331853"
+      }
+    }
+  ]
+}
