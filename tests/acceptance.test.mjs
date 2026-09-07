@@ -93,20 +93,19 @@ run("deployed acceptance", () => {
 
     it("exposes the approved prices and payment readiness", async () => {
       const body = await (await get("/api/join-config")).json();
-      expect(body.standardPriceCents).toBe(baseline.prices.standardPriceCents);
-      expect(body.foundingDiscountCents).toBe(baseline.prices.foundingDiscountCents);
-      // The upgrade gate proves the managed founding offer is present and
-      // unique. A signed BNF signup-control delivery is the separately tracked
-      // authority transition that retires any historical tenant offers.
+      // The approved Standard cutover supersedes legacy pricing, but does not
+      // rewrite the historical baseline. Personalized discounts live in quotes.
+      expect(body.standardPriceCents).toBe(100000);
+      expect(body.foundingDiscountCents).toBe(0);
       expect(body.tiers).toEqual(expect.arrayContaining([
         expect.objectContaining({
-          id: "founding",
-          name: "Founding Member",
-          priceCents: baseline.prices.dueTodayCents,
+          id: "standard",
+          priceCents: 100000,
           free: false,
         }),
       ]));
-      expect(body.tiers.filter((tier) => tier.id === "founding")).toHaveLength(1);
+      expect(body.tiers.filter((tier) => tier.id === "standard")).toHaveLength(1);
+      expect(body.tiers.some((tier) => tier.id === "founding")).toBe(false);
       // Proves stripe_secret_key + publishable key + price id all resolve. It
       // does NOT prove webhook readiness or provider-side amount equality;
       // those stay cutover gates.
@@ -229,19 +228,18 @@ run("deployed acceptance", () => {
     // BY the fix itself: the id is derived from the fixed submissionId below,
     // so every run of this test converges on the same single row rather than
     // accumulating one per run. Re-running is free; the row is labelled.
-    const SUBMISSION_ID = "acceptance-replay-identity-fixed";
+    const SUBMISSION_ID = "acceptance-replay-standard-20260906";
     const applicant = {
       firstName: "Acceptance",
       lastName: "Replayfixture",
-      email: "cory.ondrejka+acceptance-replay@gmail.com",
+      email: "cory.ondrejka+acceptance-replay-standard@gmail.com",
       phone: "(801) 555-0000",
       state: "Utah",
       referral: "other",
       whoYouAre: "Working professional",
       message: "Automated acceptance fixture for replay identity. Safe to delete.",
-      focus: ["Building financial confidence"],
       disclaimerAck: true,
-      tierId: "founding",
+      tierId: "standard",
       submissionId: SUBMISSION_ID,
     };
     const submit = () =>
