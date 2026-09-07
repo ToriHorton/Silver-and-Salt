@@ -275,15 +275,14 @@ export const chapter = defineChapter({
   },
 
   // ── Auth ─────────────────────────────────────────────────────────────
-  // Claim-mode ladder read from Clerk publicMetadata.role, with the read-only
-  // superAdmins table above admin. These are Chapter's chapter-mode defaults;
-  // they are stated explicitly because they are authorization, and a silent
-  // default change here would be a privilege bug.
+  // Backend-only Clerk roles; stale browser claims cannot authorize requests.
+  // Privileged grants come only from protected odla users, bound by Clerk id.
+  // Dev cutover requires private-role migration and existing Studio grants.
   auth: {
-    source: "claim",
-    claim: "role",
+    source: "clerk",
     ladder: ["provisional", "member", "admin"],
     superAdmins: true,
+    superAdminSource: "odla",
   },
 
   // ── Account side effects ─────────────────────────────────────────────
