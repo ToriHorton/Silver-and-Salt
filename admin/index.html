@@ -62,6 +62,9 @@
     }
 
     .container { width: 100%; max-width: 960px; padding: 0 20px; }
+    /* The authenticated application owns the viewport width. Keep only the
+       sign-in/status cards in the centered container; no 100vw breakout. */
+    #console-root { width: 100%; min-width: 0; }
 
     /* ── Hero (compact variant for the console) ── */
     .hero {
@@ -815,12 +818,10 @@
 
     <div id="signin-mount" class="hidden"></div>
 
-    <!-- The console renders here (src/app/admin/, Preact via the Vite
-         build in _scripts/build-site.sh); markup and classes match the
-         previous inline version so the CSS above applies unchanged. -->
-    <div id="console-root" class="hidden"></div>
-
   </div>
+
+  <!-- Full-width authenticated CRM shell; the branded header stays above. -->
+  <div id="console-root" class="hidden"></div>
 
   <script src="/assets/member-auth.js?v=4"></script>
   <script type="module" src="/assets/app/admin.js?v=21"></script>
