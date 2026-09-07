@@ -221,7 +221,9 @@ describe("schema parity vs the frozen legacy contract", () => {
   const chapterNs = Object.keys(integration.schema.entities).sort();
 
   it("composes exactly the deployed namespace set", () => {
-    expect(chapterNs).toEqual([...legacyNs, ...REVIEWED_NAMESPACES].sort());
+    // Reviewed auth migration: old rows need not be deleted, but the legacy
+    // allowlist is no longer provisioned or used as privilege authority.
+    expect(chapterNs).toEqual([...legacyNs.filter(ns => ns !== "superAdmins"), ...REVIEWED_NAMESPACES].sort());
   });
 
   it("keeps the reviewed publication head bounded and browser-inaccessible", () => {
@@ -255,7 +257,7 @@ describe("schema parity vs the frozen legacy contract", () => {
     }
   });
 
-  for (const ns of legacyNs) {
+  for (const ns of legacyNs.filter(ns => ns !== "superAdmins")) {
     describe(ns, () => {
       const L = legacySchema.entities[ns].attrs ?? {};
 
@@ -305,7 +307,7 @@ describe("schema parity vs the frozen legacy contract", () => {
 describe("rules stay default-deny", () => {
   it("covers exactly the deployed namespaces", () => {
     expect(Object.keys(integration.rules).sort()).toEqual(
-      [...Object.keys(legacyRules), ...REVIEWED_NAMESPACES].sort(),
+      [...Object.keys(legacyRules).filter(ns => ns !== "superAdmins"), ...REVIEWED_NAMESPACES].sort(),
     );
   });
 
@@ -373,9 +375,9 @@ describe("behavior that must match the frozen baseline exactly", () => {
     expect([...chapter.pipeline.approvableFrom]).toEqual(baseline.pipeline.approvableFrom);
   });
 
-  it("keeps the claim-mode ladder and the read-only super-admin tier", () => {
-    expect(chapter.auth.source).toBe(baseline.auth.source);
-    expect(chapter.auth.claim).toBe(baseline.auth.claim);
+  it("keeps the ladder while moving roles private and super-admin authority to odla", () => {
+    expect(chapter.auth.source).toBe("clerk");
+    expect(chapter.auth.superAdminSource).toBe("odla");
     expect([...chapter.auth.ladder]).toEqual(baseline.auth.ladder);
     expect(chapter.auth.adminRole).toBe("admin");
     expect(chapter.auth.superAdmins).toBe(true);
