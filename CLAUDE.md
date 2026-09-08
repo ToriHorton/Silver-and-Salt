@@ -21,7 +21,10 @@ When writing anything related to the company (copy, HTML, alt text, commit messa
    out loud"). What changes is the pronoun standing in for one investor in an
    explanation, FAQ, policy, or disclosure. Deal access runs on federal accredited
    criteria alone, and the actual investor may be a spouse, a trust, or an IRA.
-8. **Full brand standards live in `_reference/brand-standards.md`.** Consult it before any brand-facing work (logo, color, typography, voice, punctuation).
+8. **Full brand standards live in `brand-standards.md` in the private document
+   library at `~/Projects/Silver-and-Salt-Library`.** That copy is canonical.
+   Consult it before any brand-facing work (logo, color, typography, voice,
+   punctuation). It is not in this repository, because this repository is public.
 
 ---
 
@@ -96,5 +99,5 @@ The locked design, in order:
 - Added 768px breakpoint for tablets — was only 480px before
 
 ### Brand
-- Full standards in `BRAND.md`
+- Full standards in `brand-standards.md`, in the private document library
 - Use `join.html` copy as the voice reference for new pages
