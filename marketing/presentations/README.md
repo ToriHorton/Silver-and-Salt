@@ -3,7 +3,7 @@
 A set of on-brand decks for Google Slides, built in Slides' native format. Every
 color, font, and layout follows
 [`_reference/brand-standards.md`](../../_reference/brand-standards.md) and
-[`BRAND.md`](../../BRAND.md).
+`brand-standards.md` in the private document library.
 
 ### Files in this folder
 
