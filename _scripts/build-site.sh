@@ -74,6 +74,8 @@ git ls-files -z -- . \
   ':!:hero-type.html' \
   ':!:map-mockup.html' \
   ':!:src' \
+  ':!:scripts' \
+  ':!:vendor' \
   ':!:tests' \
   ':!:vitest.config.mjs' \
   ':!:vite.config.mjs' \
@@ -87,5 +89,10 @@ git ls-files -z -- . \
 # Vite, bundled into dist/assets/app/. Worker and island SOURCE is excluded
 # from the copy above; only bundles ship. Marketing pages never touch this.
 npx vite build --logLevel warn
+
+if [ -e dist/vendor ] || [ -e dist/scripts ]; then
+  echo "Build refused: development packages or scripts reached public assets." >&2
+  exit 1
+fi
 
 echo "Built dist/ with $(find dist -type f | wc -l | tr -d ' ') files."
