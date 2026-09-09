@@ -436,16 +436,17 @@ describe("follower role", () => {
     expect(chapter.network.targets).toEqual([]);
   });
 
-  it("exposes only the approved leader read, shared-note, and commercial parity lanes", () => {
+  it("delegates the approved operational profile, application, note and admission lanes", () => {
     expect(chapter.network.readers).toEqual([{
       id: "built-not-found",
-      fields: { person: ["name", "email"] },
+      fields: { person: ["name", "email", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
       sharedNotes: ["person"],
-      editableFields: {},
-      stageTransitions: [],
+      editableFields: { person: ["name", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
+      stageTransitions: ["person"],
+      admissionGrants: true,
       commercialParity: true,
     }]);
-    expect(chapter.network.readers[0].admissionGrants).toBeUndefined();
+    for (const field of ["email", "role", "superAdmin", "applicationId", "tierId"]) expect(chapter.network.readers[0].editableFields.person).not.toContain(field);
   });
 
   it("declares person as the only receivable CRM type", () => {

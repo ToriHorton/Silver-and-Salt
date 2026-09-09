@@ -39,22 +39,19 @@ export const chapter = defineChapter({
   // payload is rejected before any CRM write.
   crm,
 
-  // Follower-owned federation boundary. Built Not Found can browse only the
-  // approved routine person projection (name and email; stage/timestamps are
-  // bounded package metadata) and can append deliberately shared notes to that
-  // person's normal CRM Notes feed. Phone, referral, application, message,
-  // billing, and follower-private activity never leave this site.
+  // Follower-owned operational delegation. BNF super admins may manage these
+  // profile fields and application actions; login identity, privilege, billing
+  // internals, and follower-private activity are not generic editable fields.
   network: {
     readers: [{
       id: "built-not-found",
-      fields: { person: ["name", "email"] },
+      fields: { person: ["name", "email", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
       sharedNotes: ["person"],
-      // Keep the current edge read/note-only during the package upgrade. The
-      // current Chapter line can also grant field edits, stage transitions,
-      // and admission decisions, but each is a later reviewed roadmap slice.
-      editableFields: {},
-      stageTransitions: [],
-      admissionGrants: false,
+      // BNF delegates operator intent; this chapter remains profile and
+      // application authority. Login identity and privilege are not fields.
+      editableFields: { person: ["name", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
+      stageTransitions: ["person"],
+      admissionGrants: true,
       // This is a separate, read-only lane: the signed response contains only
       // partition-bound keyed digests plus lifecycle status/cancellation.
       // Raw application, customer, and subscription identifiers never cross.
