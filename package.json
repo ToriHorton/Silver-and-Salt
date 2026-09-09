@@ -28,7 +28,7 @@
   "dependencies": {
     "@odla-ai/auth-clerk": "^0.4.1",
     "@odla-ai/calendar": "^0.3.0",
-    "@odla-ai/chapter": "file:vendor/odla-ai-chapter-0.47.11-private-1f45e8f2.tgz",
+    "@odla-ai/chapter": "file:vendor/odla-ai-chapter-0.47.11-private-12a823e0.tgz",
     "@odla-ai/crm": "file:vendor/odla-ai-crm-0.9.2-private-1f45e8f2.tgz",
     "@odla-ai/db": "^0.9.1",
     "@odla-ai/email": "^0.3.1",
