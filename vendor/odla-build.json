@@ -1,25 +1,25 @@
 {
   "sourceRepository": "https://github.com/cory/odla-ai",
-  "sourceCommit": "8a8bc5ee4a1728875190e0a95fbb5095b642757c",
+  "sourceCommit": "1f45e8f2d2f59ce814b0069c2efa3bb994c671fc",
   "packages": [
     {
       "name": "@odla-ai/chapter",
       "version": "0.47.11",
-      "file": "odla-ai-chapter-0.47.11-private-8a8bc5ee.tgz",
-      "sha256": "770a6aae291c52ca807df57f723ce87704853dc5e447e9085a10efbc54836170",
+      "file": "odla-ai-chapter-0.47.11-private-1f45e8f2.tgz",
+      "sha256": "6b8800663037f628a307f389fed4e7d7263afc0eb5e75fc959648a1464575a45",
       "entries": {
-        "dist/worker/index.js": "2a9f5edd33d627c45fbf402ded8dd20399922caceb38b8e76a70d267cfabac52",
-        "dist/ui/admin/index.js": "d69c487c98d8b76e398089061f9d3afeea251f3beea299a24e8927215bb0dce4",
+        "dist/worker/index.js": "11f188cd97a21ca75eada7cdd245161c9bd4afcd87c5ef9d3ec04a0d5846935a",
+        "dist/ui/admin/index.js": "0453dfac6b46af7d5e3ecdc4dd8134bbddd110c8fe9cce6285458e4aee5d0ce6",
         "dist/ui/member/index.js": "6f13df9aff2aa8a77a4ae7b02fb237ecfdf8dd40930e66fe806e39cf63956c6a"
       }
     },
     {
       "name": "@odla-ai/crm",
       "version": "0.9.2",
-      "file": "odla-ai-crm-0.9.2-directory-13fad0d4.tgz",
-      "sha256": "d36fd8c0f75617f54ff98417f9821406d3ea845a396f019441b648ed752ccca3",
+      "file": "odla-ai-crm-0.9.2-private-1f45e8f2.tgz",
+      "sha256": "485e4c287623d1268e3d14e53851e06e4cc7e8009d947202e51c42ff5d40564b",
       "entries": {
-        "dist/index.js": "3d3ba9b9da0c1cc4871af08f9a5878062affe836967110bc741e2298ce8fc330",
+        "dist/index.js": "8102aba1ebc82c279edd2a1b200630344f670e3bd1d6fe5537e87e5774607ee0",
         "dist/ui/index.js": "348ab5d01ebc4f934b3270dc7d878d8ee8d959ab6b3ea12b31955c492f1c6344"
       }
     },

@@ -21,7 +21,7 @@ function npm(args, capture = false) {
   const command = linux ? "npm" : "container";
   const commandArgs = linux ? args : [
     "run", "--rm", `--mount=type=bind,source=${temporary},target=/workspace`,
-    "--workdir=/workspace", image, "npm", ...args,
+    "--workdir=/workspace", "--", image, "npm", ...args,
   ];
   const result = spawnSync(command, commandArgs, {
     cwd: temporary, encoding: "utf8", stdio: capture ? "pipe" : "inherit",
