@@ -1,15 +1,15 @@
 {
   "sourceRepository": "https://github.com/cory/odla-ai",
-  "sourceCommit": "a19568ffd90c3f377320259c7a70feff2b6531df",
+  "sourceCommit": "878ea219a1046c6c0da69e286adea110572741c4",
   "packages": [
     {
       "name": "@odla-ai/chapter",
       "version": "0.47.11",
-      "file": "odla-ai-chapter-0.47.11-private-a19568ff.tgz",
-      "sha256": "8df2abe9ea2b550dff8d01d83bc3e1acfcbd44dd35c0e7e1ca264c34e9ffe4c3",
+      "file": "odla-ai-chapter-0.47.11-private-878ea219.tgz",
+      "sha256": "541b41901fccd0b1b9253aff2f2331bd97d46c31aa98b0922c20217043f3b76b",
       "entries": {
         "dist/worker/index.js": "9cae6ce707576642e30a9a0844674903e9c0727f31c75a9b99b4d68d6dab8c9a",
-        "dist/ui/admin/index.js": "f0329eb12a849ba033b7ad97ceed71989ff2f6b61065bce2309f6e4e746c910e",
+        "dist/ui/admin/index.js": "2d42883732c05b5cf0dd701242dd9124a1d041a3da0e0d3338ea35bbe1ba32ba",
         "dist/ui/member/index.js": "6f13df9aff2aa8a77a4ae7b02fb237ecfdf8dd40930e66fe806e39cf63956c6a"
       }
     },
