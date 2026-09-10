@@ -28,13 +28,18 @@ When writing anything related to the company (copy, HTML, alt text, commit messa
 
 ---
 
-## odla Migration (branch `odla-conversion-test` only)
+## odla Migration (cutover done; verified 2026-09-10)
 
-A phased test migration to odla.ai/Cloudflare is in progress on the branch
-`odla-conversion-test`. Durable state lives in `MIGRATION.md` at the repo
-root; the runbook is `.agents/skills/odla-migrate/SKILL.md`. Read
-`MIGRATION.md` before touching migration work. Production (GitHub Pages on
-`main`) stays untouched until Phase 5 sign-off.
+**The DNS cutover has happened.** silverandsaltcapital.com resolves through
+Cloudflare nameservers and is served by the Cloudflare Worker
+`silver-and-salt-capital`, and `main` is the production branch that deploys to
+it. Earlier notes here described production as GitHub Pages awaiting a Phase 5
+sign-off; that is no longer true, so do not plan work around it.
+
+Continuing migration work still happens on `odla-conversion-test`, where
+`MIGRATION.md` holds the durable state. That file is deliberately absent from
+`main` and the build asserts it never ships. The runbook is
+`.agents/skills/odla-migrate/SKILL.md`.
 
 ---
 
@@ -75,12 +80,22 @@ cross-check); those are the math and stay as they are. Do not reintroduce
 
 ---
 
-## Project State (last updated 2026-04-11)
+## Project State (last updated 2026-09-10)
 
 ### Website
-- **Live at:** silverandsaltcapital.com (GitHub Pages, auto-deploys on push to `main`)
-- **Repo:** github.com/ToriHorton/Silver-and-Salt
-- **Stack:** Static HTML/CSS, no build step
+- **Live at:** silverandsaltcapital.com, served by the Cloudflare Worker
+  `silver-and-salt-capital` (entry `src/worker-chapter.ts`, assets from `dist/`)
+- **Repo:** github.com/ToriHorton/Silver-and-Salt (the repo is on GitHub; the
+  site is not)
+- **Deploys:** a push to `main` runs `.github/workflows/deploy.yml`, which runs
+  `npm test`, builds `dist/` from git-tracked files, sanity-checks the output,
+  then deploys with wrangler. Never run it with `--env dev`. Markdown sits in
+  `paths-ignore`, so a docs-only commit deploys nothing. GitHub Pages still
+  builds on every push and no longer serves the domain, which is why each push
+  shows two green Actions runs.
+- **Stack:** static HTML and CSS plus Preact islands bundled by Vite. There is a
+  build step. `dist/` is the build output on `main` and is git-ignored, so never
+  hand-edit a file there expecting it to survive.
 
 ### Pages
 - `index.html` — Homepage
