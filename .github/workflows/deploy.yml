@@ -79,10 +79,96 @@ jobs:
           done
           echo "no private file in the build"
 
+      # Retried on purpose. On 2026-09-10 the assets uploaded fine and the
+      # final POST that ACTIVATES the new version came back 503 from the
+      # Cloudflare API. The run went red, the site stayed up on the previous
+      # version, and the stale copy looked like an editing mistake for
+      # twenty minutes. Deploying is idempotent (each attempt just creates a
+      # version), so a transient API error should cost seconds, not a day.
+      #
+      # Raw wrangler rather than cloudflare/wrangler-action, which has no
+      # retry. wrangler is pinned in devDependencies and installed by npm ci,
+      # so `npx` runs that exact version, never a floating download.
+      #
+      # SAFETY: bare `deploy`, never `--env dev`. See the header of this file
+      # and the ROUTE GUARD comment in wrangler.jsonc.
       - name: Deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # No `environment:` on purpose. That would deploy --env dev.
-          command: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          for attempt in 1 2 3; do
+            echo "::group::wrangler deploy (attempt $attempt of 3)"
+            if npx wrangler deploy; then
+              echo "::endgroup::"
+              echo "deployed on attempt $attempt"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "attempt $attempt failed"
+            if [ "$attempt" -lt 3 ]; then sleep $((attempt * 20)); fi
+          done
+          echo "::error::wrangler deploy failed three times"
+          exit 1
+
+      # The step that would have caught the 2026-09-10 stale deploy. A green
+      # wrangler run only means the API accepted the call; it does not mean
+      # the edge is serving the new build. Ask the live domain what commit it
+      # is running and refuse to call the deploy done until it answers with
+      # this one.
+      #
+      # Do not "fix" a red result here by deleting this step. Red means the
+      # live site is genuinely serving something other than main.
+      - name: Verify the live site is serving this commit
+        run: |
+          expected="$GITHUB_SHA"
+          url="https://silverandsaltcapital.com/version.txt"
+          for attempt in $(seq 1 20); do
+            live=$(curl -fsS --max-time 10 "$url?cb=$(date +%s%N)" | tr -d '[:space:]' || true)
+            if [ "$live" = "$expected" ]; then
+              echo "live site is serving $expected (after $attempt check(s))"
+              exit 0
+            fi
+            echo "check $attempt: live=${live:-<unreachable>} expected=$expected"
+            sleep 15
+          done
+          echo "::error::silverandsaltcapital.com is not serving $expected after ~5 minutes. The deploy reported success but the live site is stale. Re-run this workflow; if it fails again, check the Cloudflare dashboard for the Worker silver-and-salt-capital."
+          exit 1
+
+  # Deploy failures used to be silent: the site simply kept serving the old
+  # version, with nothing in the repo to say so. This leaves a visible record
+  # that someone has to close.
+  report-failure:
+    needs: deploy
+    if: failure()
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open an issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "The live site may be serving an older version than main."
+            echo
+            echo "- Commit: \`$GITHUB_SHA\`"
+            echo "- Failed run: $RUN_URL"
+            echo
+            echo "**Check whether the live site is stale**"
+            echo
+            echo '```'
+            echo 'curl -s https://silverandsaltcapital.com/version.txt'
+            echo '```'
+            echo
+            echo "If that does not match \`git rev-parse origin/main\`, the live site"
+            echo "is stale. Most failures here are transient Cloudflare API errors, so"
+            echo "re-running the failed run is the first thing to try."
+            echo
+            echo "Close this issue once the live site matches main."
+          } > body.md
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Deploy to Cloudflare failed for ${GITHUB_SHA:0:7}" \
+            --body-file body.md

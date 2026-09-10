@@ -92,7 +92,21 @@ cross-check); those are the math and stay as they are. Do not reintroduce
   then deploys with wrangler. Never run it with `--env dev`. Markdown sits in
   `paths-ignore`, so a docs-only commit deploys nothing. GitHub Pages still
   builds on every push and no longer serves the domain, which is why each push
-  shows two green Actions runs.
+  shows two green Actions runs. **A green Pages run proves nothing about the
+  live site; the run that matters is "Deploy to Cloudflare."**
+- **Confirming a change is actually live:** the build stamps the commit it came
+  from into `dist/version.txt`, and the deploy workflow polls the live domain
+  for it before reporting success, so a deploy that uploads assets but never
+  activates them now fails red instead of silently serving the old version
+  (that happened on 2026-09-10). To check by hand at any time:
+
+  ```
+  curl -s https://silverandsaltcapital.com/version.txt
+  git rev-parse origin/main
+  ```
+
+  Matching means the live site is current. Never conclude a change shipped from
+  a green push alone; a push is not a deploy.
 - **Stack:** static HTML and CSS plus Preact islands bundled by Vite. There is a
   build step. `dist/` is the build output on `main` and is git-ignored, so never
   hand-edit a file there expecting it to survive.
