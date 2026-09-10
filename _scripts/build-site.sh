@@ -88,4 +88,15 @@ git ls-files -z -- . \
 # from the copy above; only bundles ship. Marketing pages never touch this.
 npx vite build --logLevel warn
 
+# Deploy fingerprint. The commit this build came from, served as a plain file
+# at /version.txt. The deploy workflow polls it on the LIVE domain after
+# deploying, so a deploy that reports success without actually reaching the
+# edge fails loudly instead of silently serving the previous version. That is
+# the failure that shipped stale copy on 2026-09-10: wrangler uploaded the
+# asset, the API call that activates the version got a 503, and nothing
+# noticed. To check by hand:
+#   curl -s https://silverandsaltcapital.com/version.txt
+# and compare it to `git rev-parse HEAD` on main.
+printf '%s\n' "${GITHUB_SHA:-$(git rev-parse HEAD)}" > dist/version.txt
+
 echo "Built dist/ with $(find dist -type f | wc -l | tr -d ' ') files."
