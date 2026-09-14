@@ -92,6 +92,18 @@ export default {
   },
   stripe: {
     webhookPath: "/api/webhooks/stripe",
+    // Preserve the complete deployed billing contract during reconciliation.
+    // The CLI's legacy defaults omit paid-invoice and renewal-failure events.
+    enabledEvents: [
+      "charge.refunded",
+      "customer.subscription.deleted",
+      "customer.subscription.updated",
+      "invoice.paid",
+      "invoice.payment_failed",
+      "invoice.payment_succeeded",
+      "payment_intent.canceled",
+      "payment_intent.succeeded",
+    ],
   },
   // Chapter composes the active membership and CRM namespaces, default-deny
   // rules, insert-only seeds, and managed founding tier. The second descriptor

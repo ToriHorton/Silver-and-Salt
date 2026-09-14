@@ -25,12 +25,40 @@ import { crm as legacyCrm } from "../src/crm.mjs";
 import {
   assertDevDeployAccount,
   assertDevDeployBindings,
+  assertDevSignupAuthority,
 } from "../_scripts/assert-dev-deploy-target.mjs";
 
+it("refuses to deploy a package that discards runtime signup isolation", () => {
+  expect(() => assertDevSignupAuthority({ signupControl: {} }, "cory"))
+    .toThrow(/runtime-addressed/);
+  const config = { signupControl: { runtimeSecrets: {
+    cory: "signup_control_silver_and_salt_capital__cory",
+    tori: "signup_control_silver_and_salt_capital__tori",
+  } } };
+  expect(() => assertDevSignupAuthority(config, "cory")).not.toThrow();
+  expect(() => assertDevSignupAuthority(config, "tori")).not.toThrow();
+  expect(() => assertDevSignupAuthority(config, "live")).toThrow(/runtime-addressed/);
+  expect(() => assertDevSignupAuthority({ signupControl: { runtimeSecrets: {
+    cory: config.signupControl.runtimeSecrets.tori,
+  } } }, "cory")).toThrow(/runtime-addressed/);
+});
 const legacySchema = JSON.parse(readFileSync("tests/fixtures/legacy-schema.json", "utf8"));
 const legacyRules = JSON.parse(readFileSync("tests/fixtures/legacy-rules.json", "utf8"));
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
 const integration = odlaConfig.integrations[0];
+// Decision 30502e22-e735-51a6-9925-cf74b1542ab1: keep the committed npm
+// baseline testable while rehearsing the unpublished candidate in dev. This
+// explicit version contract never derives expectations from Chapter's schema.
+const chapterVersion = JSON.parse(readFileSync(
+  new URL("../node_modules/@odla-ai/chapter/package.json", import.meta.url), "utf8",
+)).version;
+const reviewedVersionNamespaces = {
+  "0.47.10": [],
+  "0.47.11": ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"],
+};
+if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
+  throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
+}
 
 // ── THE INDEPENDENT LEGACY ANCHOR RE-ARMS WHEN CHAPTER SHIPS ────────────
 // The deployed fixture remains immutable evidence. Later legacy-source work
@@ -96,6 +124,9 @@ const REVIEWED_LEGACY_SOURCE_ATTRS = {
 // defaults; the browser still cannot write either attribute directly.
 const REVIEWED_ADDITIONS = {
   applications: [
+    // Decision 346b7b00-6b5e-5748-8949-e4528c93868b: additive dev-only candidate contract.
+    ...(chapterVersion === "0.47.11" ? ["approvalEffectsPending", "approvalEffectsOrigin", "approvalEffectsLastAttemptAt",
+      "namedSeatId", "namedSeatPrimaryApplicationId", "namedSeatClaimPending", "namedSeatAcceptedAt"] : []),
     "admissionGrantId",
     "admissionSource",
     "clerkPrivateMetadataSyncedAt",
@@ -121,6 +152,7 @@ const REVIEWED_ADDITIONS = {
     "stewardTrustCopy",
     "stripeStewardPriceId",
   ],
+  emailLog: chapterVersion === "0.47.11" ? ["deliveryState", "deliveryAttempt", "deliveryResolution"] : [],
 };
 
 // Namespaces Chapter composes that the frozen fixture predates. Same rule as
@@ -129,6 +161,7 @@ const REVIEWED_ADDITIONS = {
 // 0.31.x tier support reviewed above; it is seeded from the chapter config and
 // carries no member data.
 const REVIEWED_NAMESPACES = [
+  ...reviewedVersionNamespaces[chapterVersion],
   "admissionGrantRevisions",
   "admissionGrants",
   "giftClaims",
@@ -188,10 +221,43 @@ describe("schema parity vs the frozen legacy contract", () => {
   const chapterNs = Object.keys(integration.schema.entities).sort();
 
   it("composes exactly the deployed namespace set", () => {
-    expect(chapterNs).toEqual([...legacyNs, ...REVIEWED_NAMESPACES].sort());
+    // Reviewed auth migration: old rows need not be deleted, but the legacy
+    // allowlist is no longer provisioned or used as privilege authority.
+    expect(chapterNs).toEqual([...legacyNs.filter(ns => ns !== "superAdmins"), ...REVIEWED_NAMESPACES].sort());
   });
 
-  for (const ns of legacyNs) {
+  it("keeps the reviewed publication head bounded and browser-inaccessible", () => {
+    if (chapterVersion === "0.47.10") {
+      expect(integration.schema.entities.signupControlHeads).toBeUndefined();
+      return;
+    }
+    expect(Object.keys(integration.schema.entities.signupControlHeads.attrs).sort())
+      .toEqual(["digest", "environment", "id", "revision", "targetId"]);
+    expect(integration.rules.signupControlHeads).toEqual({
+      view: "false", create: "false", update: "false", delete: "false",
+    });
+  });
+  it("keeps the candidate consent and quote projections bounded without installing membership authority", () => {
+    if (chapterVersion !== "0.47.11") return;
+    const expected = {
+      namedSeatConsents: ["id", "applicationId", "chapterId", "runtime", "userId", "quoteDigest", "recipientName", "recipientEmail",
+        "refundPolicyText", "merchantDisclosureText", "acceptedAt"],
+      membershipQuoteProjections: ["id", "applicationId", "appId", "chapterId", "environment", "runtime", "skuId", "requestId",
+        "revision", "status", "updatedAt", "offer", "offerDigest", "tier", "quote"],
+    };
+    for (const [namespace, attrs] of Object.entries(expected)) {
+      expect(Object.keys(integration.schema.entities[namespace].attrs).sort()).toEqual(attrs.sort());
+      expect(integration.rules[namespace]).toEqual({ view: "false", create: "false", update: "false", delete: "false" });
+    }
+    for (const namespace of ["networkMembership", "networkEntitlement", "networkSeat", "membershipAuthorityState"]) {
+      expect(integration.schema.entities[namespace]).toBeUndefined();
+    }
+    for (const attr of ["billingTerms", "paymentQuote", "membershipOffer"]) {
+      expect(integration.schema.entities.subscriptionCheckoutIntents.attrs[attr]).toMatchObject({ type: "json", optional: true });
+    }
+  });
+
+  for (const ns of legacyNs.filter(ns => ns !== "superAdmins")) {
     describe(ns, () => {
       const L = legacySchema.entities[ns].attrs ?? {};
 
@@ -241,7 +307,7 @@ describe("schema parity vs the frozen legacy contract", () => {
 describe("rules stay default-deny", () => {
   it("covers exactly the deployed namespaces", () => {
     expect(Object.keys(integration.rules).sort()).toEqual(
-      [...Object.keys(legacyRules), ...REVIEWED_NAMESPACES].sort(),
+      [...Object.keys(legacyRules).filter(ns => ns !== "superAdmins"), ...REVIEWED_NAMESPACES].sort(),
     );
   });
 
@@ -309,9 +375,9 @@ describe("behavior that must match the frozen baseline exactly", () => {
     expect([...chapter.pipeline.approvableFrom]).toEqual(baseline.pipeline.approvableFrom);
   });
 
-  it("keeps the claim-mode ladder and the read-only super-admin tier", () => {
-    expect(chapter.auth.source).toBe(baseline.auth.source);
-    expect(chapter.auth.claim).toBe(baseline.auth.claim);
+  it("keeps the ladder while moving roles private and super-admin authority to odla", () => {
+    expect(chapter.auth.source).toBe("clerk");
+    expect(chapter.auth.superAdminSource).toBe("odla");
     expect([...chapter.auth.ladder]).toEqual(baseline.auth.ladder);
     expect(chapter.auth.adminRole).toBe("admin");
     expect(chapter.auth.superAdmins).toBe(true);
@@ -370,16 +436,17 @@ describe("follower role", () => {
     expect(chapter.network.targets).toEqual([]);
   });
 
-  it("exposes only the approved leader read, shared-note, and commercial parity lanes", () => {
+  it("delegates the approved operational profile, application, note and admission lanes", () => {
     expect(chapter.network.readers).toEqual([{
       id: "built-not-found",
-      fields: { person: ["name", "email"] },
+      fields: { person: ["name", "email", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
       sharedNotes: ["person"],
-      editableFields: {},
-      stageTransitions: [],
+      editableFields: { person: ["name", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
+      stageTransitions: ["person"],
+      admissionGrants: true,
       commercialParity: true,
     }]);
-    expect(chapter.network.readers[0].admissionGrants).toBeUndefined();
+    for (const field of ["email", "role", "superAdmin", "applicationId", "tierId"]) expect(chapter.network.readers[0].editableFields.person).not.toContain(field);
   });
 
   it("declares person as the only receivable CRM type", () => {
@@ -393,6 +460,10 @@ describe("follower role", () => {
       sourceId: "built-not-found",
       secretName: "signup_control_secret",
       stripeMode: "test",
+      ...(chapterVersion === "0.47.11" ? { runtimeSecrets: {
+        cory: "signup_control_silver_and_salt_capital__cory",
+        tori: "signup_control_silver_and_salt_capital__tori",
+      } } : {}),
     });
   });
 

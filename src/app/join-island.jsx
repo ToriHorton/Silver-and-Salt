@@ -26,6 +26,7 @@
 import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { JoinIsland, loadJoinResume } from "@odla-ai/chapter/ui/member";
+import { namedSeatClaimApi } from "./named-seat-api.mjs";
 
 // Same key the legacy page used, so an in-flight applicant keeps their place
 // across this deploy.
@@ -201,7 +202,7 @@ function ApplicationFields({ config, referral, onReferral, referralName, onRefer
   );
 }
 
-function Join({ config }) {
+export function Join({ config, initialTierId }) {
   const [referral, setReferral] = useState("");
   const [referralName, setReferralName] = useState("");
   const [ack, setAck] = useState(false);
@@ -219,6 +220,21 @@ function Join({ config }) {
         <div class="card-label">Before we meet</div>
         <JoinIsland
           config={config}
+          initialNamedSeatId={typeof window === "undefined" ? undefined : new URLSearchParams(window.location.search).get("seat") ?? undefined}
+          namedSeatClaimApi={namedSeatClaimApi}
+          initialTierId={initialTierId}
+          renderTiers={({ tiers, selectedTierId, selectTier }) => (
+            <fieldset class="membership-choice">
+              <legend>Choose your membership</legend>
+              {tiers.map((tier) => (
+                <label class="membership-option" key={tier.id}>
+                  <input type="radio" name="__chapterTier" value={tier.id}
+                    checked={selectedTierId === tier.id} onChange={() => selectTier(tier.id)} />
+                  <span><strong>{tier.name}</strong><span class="membership-price">{tier.free ? "Free" : money(tier.priceCents)}</span></span>
+                </label>
+              ))}
+            </fieldset>
+          )}
           membersHref="/members/"
           // The legacy page gated submit on the consent box; preserve that
           // exactly rather than relying on the server's 400.
@@ -332,12 +348,11 @@ function Join({ config }) {
             </>
           )}
           payment={{
-            // Site-owned price presentation, fed by the server's own line items
-            // from the subscription route (the contract v9 points at).
+            // The shared quote shows these server-owned amounts before consent.
             renderPriceLines: (lines) => (
               <div class="pay-lines" id="pay-lines">
                 <div class="pay-line">
-                  <span>Annual membership</span>
+                  <span>Membership price</span>
                   <span>{money(lines.standardCents)}</span>
                 </div>
                 {lines.discountCents > 0 && (
@@ -352,7 +367,6 @@ function Join({ config }) {
                 </div>
               </div>
             ),
-            children: config.trustCopy ? <p class="pay-trust">{config.trustCopy}</p> : null,
           }}
         >
           <ApplicationFields
@@ -385,7 +399,10 @@ async function boot() {
     const res = await fetch("/api/join-config");
     if (!res.ok) throw new Error(`join-config ${res.status}`);
     const config = await res.json();
-    render(<Join config={config} />, root);
+    const initialTierId = new URLSearchParams(window.location.search).get("tier") ?? undefined;
+    // Preact owns the island after loading; remove the static loading status.
+    root.replaceChildren();
+    render(<Join config={config} initialTierId={initialTierId} />, root);
   } catch (err) {
     console.error(err);
     root.innerHTML =
@@ -394,4 +411,4 @@ async function boot() {
   }
 }
 
-boot();
+if (typeof document !== "undefined") boot();
