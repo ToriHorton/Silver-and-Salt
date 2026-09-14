@@ -29,6 +29,8 @@ import "@odla-ai/crm/ui.css";
 import { render } from "preact";
 import { ChapterAdmin } from "@odla-ai/chapter/ui/admin";
 import { chapter } from "../../chapter.config.mjs";
+import { WorkspaceFrame } from "./workspace-frame.jsx";
+import { isAdminAuthorized } from "./authorization.mjs";
 
 // Inbound compatibility: the admin notification email links with ?tab=people,
 // and older links used ?tab=billing / calendar / calls / email, which the
@@ -81,7 +83,7 @@ async function boot() {
       return;
     }
     const me = await window.SSCAuth.api("/api/me");
-    if (me.role !== "admin") {
+    if (!isAdminAuthorized(me)) {
       $("auth-loading").innerHTML =
         'This area is for administrators. Your member area is at <a href="/members/">silverandsaltcapital.com/members</a>.';
       return;
@@ -97,6 +99,7 @@ async function boot() {
       <ChapterAdmin
         chapter={chapter}
         chrome="embedded"
+        renderWorkspaceFrame={WorkspaceFrame}
         basePath="/admin/"
         crmBasePath="/api/crm"
         // Reuse the Clerk session this page already established instead of
@@ -106,7 +109,7 @@ async function boot() {
         auth={{
           currentUserPath: "/api/me",
           loadCurrentUser: async () => me,
-          isAuthorized: (u) => u?.role === "admin",
+          isAuthorized: isAdminAuthorized,
         }}
       />,
       root,

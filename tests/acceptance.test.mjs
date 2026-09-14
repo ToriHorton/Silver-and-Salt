@@ -6,7 +6,8 @@
 // and fast. This asserts the deployed contract, not the source: it is the check
 // that the thing actually serving traffic behaves as the frozen baseline says.
 //
-// SCOPE AND ITS LIMITS. Everything here is non-side-effecting and unauthenticated.
+// SCOPE AND ITS LIMITS. Checks are unauthenticated; the replay-identity group
+// reuses one labelled synthetic dev application. Other checks do not write.
 // The runbook's Phase 7 also requires a real authenticated journey (submit the
 // join form, take a Stripe test payment, book and receive the debug-routed mail,
 // sign in as provisional/member/admin, run every admin mutation family, then
@@ -21,6 +22,9 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
 const BASE = process.env.ACCEPTANCE_URL;
+if (BASE && new URL(BASE).origin !== "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev") {
+  throw new Error("Acceptance fixture writes are restricted to the reviewed Cory dev origin.");
+}
 const baseline = JSON.parse(readFileSync("tests/fixtures/legacy-baseline.json", "utf8"));
 const run = BASE ? describe : describe.skip;
 
@@ -73,22 +77,35 @@ run("deployed acceptance", () => {
   });
 
   describe("public join contract matches the frozen baseline", () => {
+    it("mounts the real join form bundle on the reviewed Cory dev entry", async () => {
+      // This acceptance target is intentionally dev; production stays closed.
+      expect(new URL(BASE).origin).toBe("https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev");
+      const res = await get("/join.html?tier=steward");
+      expect(res.status).toBe(200);
+      const html = await res.text();
+      expect(html).toContain('id="join-root"');
+      expect(html).not.toContain('id="coming-soon"');
+      expect(html).toContain('src="/assets/app/join-island.js"');
+      const bundle = await get("/assets/app/join-island.js");
+      expect(bundle.status).toBe(200);
+      expect(bundle.headers.get("content-type")).toMatch(/javascript/);
+    });
+
     it("exposes the approved prices and payment readiness", async () => {
       const body = await (await get("/api/join-config")).json();
-      expect(body.standardPriceCents).toBe(baseline.prices.standardPriceCents);
-      expect(body.foundingDiscountCents).toBe(baseline.prices.foundingDiscountCents);
-      // The upgrade gate proves the managed founding offer is present and
-      // unique. A signed BNF signup-control delivery is the separately tracked
-      // authority transition that retires any historical tenant offers.
+      // The approved Standard cutover supersedes legacy pricing, but does not
+      // rewrite the historical baseline. Personalized discounts live in quotes.
+      expect(body.standardPriceCents).toBe(100000);
+      expect(body.foundingDiscountCents).toBe(0);
       expect(body.tiers).toEqual(expect.arrayContaining([
         expect.objectContaining({
-          id: "founding",
-          name: "Founding Member",
-          priceCents: baseline.prices.dueTodayCents,
+          id: "standard",
+          priceCents: 100000,
           free: false,
         }),
       ]));
-      expect(body.tiers.filter((tier) => tier.id === "founding")).toHaveLength(1);
+      expect(body.tiers.filter((tier) => tier.id === "standard")).toHaveLength(1);
+      expect(body.tiers.some((tier) => tier.id === "founding")).toBe(false);
       // Proves stripe_secret_key + publishable key + price id all resolve. It
       // does NOT prove webhook readiness or provider-side amount equality;
       // those stay cutover gates.
@@ -211,19 +228,18 @@ run("deployed acceptance", () => {
     // BY the fix itself: the id is derived from the fixed submissionId below,
     // so every run of this test converges on the same single row rather than
     // accumulating one per run. Re-running is free; the row is labelled.
-    const SUBMISSION_ID = "acceptance-replay-identity-fixed";
+    const SUBMISSION_ID = "acceptance-replay-standard-20260906";
     const applicant = {
       firstName: "Acceptance",
       lastName: "Replayfixture",
-      email: "cory.ondrejka+acceptance-replay@gmail.com",
+      email: "cory.ondrejka+acceptance-replay-standard@gmail.com",
       phone: "(801) 555-0000",
       state: "Utah",
       referral: "other",
       whoYouAre: "Working professional",
       message: "Automated acceptance fixture for replay identity. Safe to delete.",
-      focus: ["Building financial confidence"],
       disclaimerAck: true,
-      tierId: "founding",
+      tierId: "standard",
       submissionId: SUBMISSION_ID,
     };
     const submit = () =>

@@ -16,8 +16,12 @@
 // it doesn't 404 on". An allowlist is auditable (you can read what legacy owns),
 // and retiring a route is a one-line deletion rather than a behavioral guess.
 
-import { chapterWorker, type Route } from "@odla-ai/chapter/worker";
+import { chapterWorker, createWorkerContext, type ChapterEnv, type Route } from "@odla-ai/chapter/worker";
 import { chapter } from "./chapter.config.mjs";
+import { devJoin } from "./dev-join";
+import { recoverPendingApprovals } from "./approval-recovery";
+import { membershipNetwork } from "./membership-network";
+import chapterPackage from "@odla-ai/chapter/package.json";
 import { handleApi, json, type Env as LegacyEnv } from "./worker";
 
 // Phase 4 state. Only routes Chapter does NOT own remain here. Each retirement
@@ -190,7 +194,7 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
   return json(
     {
       ready,
-      chapter: { id: chapter.id, mode: chapter.mode, release: "0.42.4" },
+      chapter: { id: chapter.id, mode: chapter.mode, release: chapterPackage.version },
       checks,
     },
     ready ? 200 : 503,
@@ -200,8 +204,26 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
 // Observability stays a host concern; wrap here with withObservability from
 // @odla-ai/o11y once "o11y" is added to services (it is not, per the current
 // odla.config.mjs).
-export default chapterWorker({
+const workerOptions = {
   chapter,
+  requirePaymentQuote: true,
   crmBasePath: "/api/crm",
-  routes: [migrationReadiness, legacyApi],
-});
+  routes: [devJoin, migrationReadiness, legacyApi],
+};
+const legacyWorker = chapterWorker(workerOptions);
+const legacyBackground = createWorkerContext(workerOptions);
+const network = membershipNetwork(legacyBackground.makeDb);
+const authorityOptions = { ...workerOptions, membershipAuthority: network.authority,
+  routes: [network.route, ...workerOptions.routes] };
+const worker = chapterWorker(authorityOptions);
+const background = createWorkerContext(authorityOptions);
+const usesAuthority = (env: ChapterEnv) => env.MEMBERSHIP_AUTHORITY_OWNER === "built-not-found";
+
+export default {
+  fetch(req: Request, env: ChapterEnv, ctx: ExecutionContext) {
+    return (usesAuthority(env) ? worker : legacyWorker).fetch(req, env, ctx);
+  },
+  scheduled(_controller: ScheduledController, env: ChapterEnv, ctx: ExecutionContext) {
+    ctx.waitUntil(recoverPendingApprovals(usesAuthority(env) ? background : legacyBackground, env));
+  },
+};

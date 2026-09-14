@@ -1,111 +1,76 @@
 #!/usr/bin/env node
-// Does the DEPLOYED tenant schema declare everything the INSTALLED Chapter
-// engine will try to write?
-//
-// Why this exists. odla-db is schema_strict_v1: a write to an undeclared attr
-// is rejected. Chapter's provisioning path wraps that write in an empty
-// `catch {}`, so the rejection is invisible — the symptom is a field that is
-// silently never populated, with no error anywhere.
-//
-// That is exactly how `clerkPrivateMetadataSyncedAt` went missing here: the
-// attr arrived in @odla-ai/chapter 0.25.x, tests/chapter-parity.test.mjs
-// correctly reported it as a new addition, but the tenant was never
-// re-provisioned, so every applicant silently lost the stamp until this was
-// diagnosed. The lesson the parity test alone could not teach: a reviewed
-// schema addition is a DEPLOYMENT step, not just a documentation step.
-//
-// Run after any @odla-ai/* upgrade, and after any change to
-// src/chapter.config.mjs:
-//     npm run check:schema
-// A non-zero exit means: run `npx @odla-ai/cli provision --yes`.
+// Metadata-only deployment gate. Exports intentionally require a human session.
+import { readFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 
-import { execFileSync } from "node:child_process";
-import { gunzipSync } from "node:zlib";
-import { readFileSync, rmSync } from "node:fs";
-import odlaConfig from "../odla.config.mjs";
-
-const ENV = process.argv[2] ?? "dev";
-const OUT = `/tmp/odla-schema-check-${ENV}.jsonl.gz`;
-
-console.log(`checking deployed ${ENV} tenant against the installed engine…`);
-try {
-  execFileSync(
-    "npx",
-    ["@odla-ai/cli", "app", "export", "--env", ENV, "--fresh", "--out", OUT],
-    { stdio: ["ignore", "inherit", "inherit"] },
-  );
-} catch (err) {
-  // Exit 75 is the odla CLI's "device handshake still pending" code: the local
-  // token expired and a human has to approve a code in Studio. That is not a
-  // schema failure, and reporting it as one (or as a raw Node stack trace)
-  // sends whoever runs this looking in entirely the wrong place.
-  if (err?.status === 75) {
-    console.error(
-      "\n  Cannot check: this terminal is not signed in to odla.\n" +
-        "  The command above prints an approval code and a Studio URL —\n" +
-        "  approve it, then re-run `npm run check:schema`.\n" +
-        "  The schema itself has NOT been checked either way.\n",
-    );
-    process.exit(75);
+export function compareSchema(expected, live) {
+  if (!live || typeof live !== "object" || !live.entities) throw new Error("Database returned no schema metadata; schema has NOT been checked.");
+  const missing = [], changed = [];
+  for (const [ns, def] of Object.entries(expected.entities)) {
+    const actual = live.entities[ns];
+    if (!actual) { missing.push(ns); continue; }
+    for (const [attr, definition] of Object.entries(def.attrs ?? {})) {
+      if (!(attr in (actual.attrs ?? {}))) missing.push(`${ns}.${attr}`);
+      else if (!isDeepStrictEqual(definition, actual.attrs[attr])) changed.push(`${ns}.${attr}`);
+    }
   }
-  console.error(`\n  Could not export the ${ENV} tenant (exit ${err?.status ?? "?"}).`);
-  console.error("  The schema has NOT been checked.\n");
-  process.exit(2);
+  for (const [name, definition] of Object.entries(expected.links ?? {})) {
+    if (!(name in (live.links ?? {}))) missing.push(`link:${name}`);
+    else if (!isDeepStrictEqual(definition, live.links[name])) changed.push(`link:${name}`);
+  }
+  return { missing, changed };
 }
 
-const lines = gunzipSync(readFileSync(OUT)).toString("utf8").split("\n");
-let deployed = null;
-let strict = false;
-for (const line of lines) {
-  if (!line.trim()) continue;
-  let row;
+export async function checkDeployedSchema({ config, credentials, env, fetcher = fetch }) {
+  if (!config.envs.includes(env)) throw new Error(`Environment ${env} is not configured; refusing schema read.`);
+  if (credentials.appId !== config.app.id) throw new Error("Credentials belong to a different app; refusing schema read.");
+  const entry = credentials.envs?.[env];
+  const expectedTenant = env === "prod" ? config.app.id : `${config.app.id}--${env}`;
+  if (!entry?.dbKey || entry.tenantId !== expectedTenant) throw new Error("Missing or mismatched exact-environment database credentials; schema has NOT been checked.");
+  const endpoint = new URL(config.dbEndpoint);
+  if (endpoint.protocol !== "https:" || endpoint.username || endpoint.password || endpoint.search || endpoint.hash || endpoint.pathname !== "/") throw new Error("Schema check requires the configured HTTPS database origin.");
+  if (credentials.dbEndpoint && new URL(credentials.dbEndpoint).origin !== endpoint.origin) throw new Error("Database credential endpoint does not match config; refusing schema read.");
+  let response;
   try {
-    row = JSON.parse(line);
-  } catch {
-    continue;
+    response = await fetcher(`${endpoint.origin}/app/${encodeURIComponent(entry.tenantId)}/schema`, {
+      headers: { Authorization: `Bearer ${entry.dbKey}` }, redirect: "error", signal: AbortSignal.timeout(15_000),
+    });
+  } catch { throw new Error("Schema metadata request failed; schema has NOT been checked."); }
+  // Never include remote bodies or credentials in diagnostic output.
+  if (!response.ok) throw new Error(`Schema metadata request returned HTTP ${response.status}; schema has NOT been checked.`);
+  let payload;
+  try { payload = await response.json(); } catch { throw new Error("Invalid schema metadata response."); }
+  const expected = { entities: {}, links: {} };
+  for (const integration of config.integrations) {
+    Object.assign(expected.entities, integration.schema?.entities ?? {});
+    Object.assign(expected.links, integration.schema?.links ?? {});
   }
-  if (row.t !== "meta") continue;
-  if (row.key === "schema") deployed = JSON.parse(row.value).entities;
-  if (row.key === "schema_strict_v1") strict = row.value === "true";
-}
-rmSync(OUT, { force: true });
-
-if (!deployed) {
-  console.error("could not read the deployed schema from the snapshot");
-  process.exit(2);
+  return { ...compareSchema(expected, payload.schema), mode: payload.status?.mode ?? "unknown", expectedNamespaces: Object.keys(expected.entities).length };
 }
 
-const expected = Object.assign(
-  {},
-  ...odlaConfig.integrations.map((integration) => integration.schema?.entities ?? {}),
-);
-const missing = [];
-for (const [ns, def] of Object.entries(expected)) {
-  const live = deployed[ns]?.attrs;
-  if (!live) {
-    missing.push(`${ns} (entire namespace)`);
-    continue;
-  }
-  for (const attr of Object.keys(def.attrs ?? {})) {
-    if (!(attr in live)) missing.push(`${ns}.${attr}`);
-  }
+async function main() {
+  const configPath = resolve(dirname(fileURLToPath(import.meta.url)), "../odla.config.mjs");
+  const { default: config } = await import(pathToFileURL(configPath).href);
+  const env = process.argv[2] ?? "dev";
+  const credentialPath = config.local?.credentialsFile
+    ? resolve(dirname(configPath), config.local.credentialsFile)
+    : resolve(process.env.ODLA_HOME ?? resolve(homedir(), ".odla"), "apps", config.app.id, "credentials.json");
+  let credentials;
+  try { credentials = JSON.parse(readFileSync(credentialPath, "utf8")); }
+  catch { throw new Error("Existing local database credentials unavailable; schema has NOT been checked."); }
+  const result = await checkDeployedSchema({ config, credentials, env });
+  console.log(`Schema ${config.app.id}/${env}: ${result.mode}; ${result.expectedNamespaces} expected namespaces`);
+  for (const field of result.missing) console.error(`  missing: ${field}`);
+  for (const field of result.changed) console.error(`  definition differs: ${field}`);
+  if (result.missing.length || result.changed.length || result.mode !== "strict") {
+    console.error("Deployment gate failed. Review the exact schema delta before applying the approved dev provision procedure.");
+    process.exitCode = 1;
+  } else console.log("ok: deployed metadata matches every installed field and link (no records exported)");
 }
 
-console.log(`  strict schema: ${strict}`);
-console.log(`  namespaces expected: ${Object.keys(expected).length}`);
-
-if (missing.length === 0) {
-  console.log("  ✓ deployed tenant declares every attribute the engine writes");
-  process.exit(0);
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  main().catch((error) => { console.error(error.message); process.exitCode = 2; });
 }
-
-console.error(`\n  ✗ ${missing.length} attribute(s) the engine writes are NOT declared on the tenant:`);
-for (const m of missing) console.error(`      ${m}`);
-console.error(
-  strict
-    ? "\n  The tenant is schema-strict, so these writes are REJECTED — and Chapter\n" +
-        "  swallows the rejection, so the field just silently stays empty.\n" +
-        "  Fix: npx @odla-ai/cli provision --yes\n"
-    : "\n  Fix: npx @odla-ai/cli provision --yes\n",
-);
-process.exit(1);
