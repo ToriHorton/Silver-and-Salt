@@ -48,7 +48,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          # Pinned by .nvmrc (24.13.0), matching package.json engines; the
+          # launch dependency checkpoint of 2026-09-14 qualified on that line.
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install

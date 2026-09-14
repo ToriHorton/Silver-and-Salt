@@ -36,10 +36,14 @@ Cloudflare nameservers and is served by the Cloudflare Worker
 it. Earlier notes here described production as GitHub Pages awaiting a Phase 5
 sign-off; that is no longer true, so do not plan work around it.
 
-Continuing migration work still happens on `odla-conversion-test`, where
-`MIGRATION.md` holds the durable state. That file is deliberately absent from
-`main` and the build asserts it never ships. The runbook is
-`.agents/skills/odla-migrate/SKILL.md`.
+**Membership commerce cutover (2026-09-14 onward) happens on the branch
+`prod-cutover`**, which merged the proven dev branch and moved every
+`@odla-ai/*` dependency to its newest published version. Durable state lives in
+the private Library repo (`production-launch-plan.md`, `launch-manifest.md`,
+`launch-resource-map.md`, `launch-commercial-examples.md`) and in the odla PM
+tracker under BNF goal `c162d0c7` and Silver goal `ca34e66a`. `main` is frozen
+until a candidate is proven off the domain; merge with `--ff-only` when the
+gates pass. The old `odla-conversion-test` line and `MIGRATION.md` are history.
 
 ---
 
@@ -113,14 +117,14 @@ cross-check); those are the math and stay as they are. Do not reintroduce
 
 ### Pages
 - `index.html` — Homepage
-- `join.html` — ✅ LIVE: Two-step investor application (form → calendar booking)
+- `join.html` — a mailto holding page since 2026-08-24 (the `?tier=` query only rewrites the subject line). The Preact join island (`src/app/join-island.jsx`) builds but is not mounted on `main`; it mounts on `prod-cutover` behind a server-enforced sales state.
 - `dashboard.html` — CEO command center (gitignored; published daily as an unlinked, noindexed copy at the obscure URL `hq-25b5a94e297e.html` with `granola-inbox.js` + `newsletter-data.js`, per Tori's 2026-07-14 decision, pending password protection; never link that URL from any public page)
   - **Canonical version (Tori, 2026-07-14): the single-page `dashboard.html` on the MacBook Pro.** The split pages on the other computer (`dashboard-actions.html`, `dashboard-newsletter.html`, `dashboard.css`, `dashboard-app.js`) are deprecated; do not build on them.
 - `manifesto.html`, `opportunity.html`, `networks.html` etc. — Supporting pages
 
-### join.html — Application Flow
+### join.html — Application Flow (target design; the page is a holding page on `main`)
 - **Step 1:** Form captures name, email, org, referral, focus areas, intro message
-- **Step 2:** Google Calendar Appointments iframe for scheduling a 30-min intro call
+- **Step 2:** Native booking through the odla calendar service (the Google Calendar Appointments iframe was retired)
 - **Step 3:** Confirmation screen with Ivy Baker Priest quote and sepia photo
 - **Backend:** the odla worker (`POST /api/applications` into odla-db). The
   former Google Apps Script backend (Sheet + Gmail sends; was FORM-SETUP.md
