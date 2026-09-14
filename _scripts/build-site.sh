@@ -76,6 +76,7 @@ git ls-files -z -- . \
   ':!:src' \
   ':!:scripts' \
   ':!:vendor' \
+  ':!:.nvmrc' \
   ':!:tests' \
   ':!:vitest.config.mjs' \
   ':!:vite.config.mjs' \
