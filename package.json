@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "packageManager": "npm@11.6.2",
-  "engines": { "node": "24.13.0", "npm": "11.6.2" },
+  "engines": {
+    "node": "24.13.0",
+    "npm": "11.6.2"
+  },
   "scripts": {
     "pretest": "node scripts/verify-dev-dependencies.mjs",
     "prebuild": "node scripts/verify-dev-dependencies.mjs",
@@ -42,10 +45,10 @@
   },
   "allowScripts": {
     "esbuild@0.28.1": true,
-    "workerd@1.20260710.1": true,
     "sharp@0.34.5": true,
     "fsevents@2.3.3": true,
-    "protobufjs@7.6.5": true,
-    "@google/genai@1.52.0": true
+    "@google/genai@1.52.0": true,
+    "protobufjs@7.6.6": true,
+    "workerd@1.20260831.1": true
   }
 }
