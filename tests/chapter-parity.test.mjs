@@ -52,9 +52,17 @@ const integration = odlaConfig.integrations[0];
 const chapterVersion = JSON.parse(readFileSync(
   new URL("../node_modules/@odla-ai/chapter/package.json", import.meta.url), "utf8",
 )).version;
+// 0.48.0 is the npm publication of the reviewed 0.47.11 private build
+// (source commit 3eab2284): its dist/ tree is byte-identical, verified
+// 2026-09-14 at the launch dependency checkpoint, so it carries the same
+// reviewed namespaces and attributes.
+const candidateVersions = ["0.47.11", "0.48.0"];
+const isCandidate = candidateVersions.includes(chapterVersion);
+const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
   "0.47.10": [],
-  "0.47.11": ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"],
+  "0.47.11": candidateNamespaces,
+  "0.48.0": candidateNamespaces,
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
@@ -125,7 +133,7 @@ const REVIEWED_LEGACY_SOURCE_ATTRS = {
 const REVIEWED_ADDITIONS = {
   applications: [
     // Decision 346b7b00-6b5e-5748-8949-e4528c93868b: additive dev-only candidate contract.
-    ...(chapterVersion === "0.47.11" ? ["approvalEffectsPending", "approvalEffectsOrigin", "approvalEffectsLastAttemptAt",
+    ...(isCandidate ? ["approvalEffectsPending", "approvalEffectsOrigin", "approvalEffectsLastAttemptAt",
       "namedSeatId", "namedSeatPrimaryApplicationId", "namedSeatClaimPending", "namedSeatAcceptedAt"] : []),
     "admissionGrantId",
     "admissionSource",
@@ -152,7 +160,7 @@ const REVIEWED_ADDITIONS = {
     "stewardTrustCopy",
     "stripeStewardPriceId",
   ],
-  emailLog: chapterVersion === "0.47.11" ? ["deliveryState", "deliveryAttempt", "deliveryResolution"] : [],
+  emailLog: isCandidate ? ["deliveryState", "deliveryAttempt", "deliveryResolution"] : [],
 };
 
 // Namespaces Chapter composes that the frozen fixture predates. Same rule as
@@ -238,7 +246,7 @@ describe("schema parity vs the frozen legacy contract", () => {
     });
   });
   it("keeps the candidate consent and quote projections bounded without installing membership authority", () => {
-    if (chapterVersion !== "0.47.11") return;
+    if (!isCandidate) return;
     const expected = {
       namedSeatConsents: ["id", "applicationId", "chapterId", "runtime", "userId", "quoteDigest", "recipientName", "recipientEmail",
         "refundPolicyText", "merchantDisclosureText", "acceptedAt"],
@@ -460,7 +468,7 @@ describe("follower role", () => {
       sourceId: "built-not-found",
       secretName: "signup_control_secret",
       stripeMode: "test",
-      ...(chapterVersion === "0.47.11" ? { runtimeSecrets: {
+      ...(isCandidate ? { runtimeSecrets: {
         cory: "signup_control_silver_and_salt_capital__cory",
         tori: "signup_control_silver_and_salt_capital__tori",
       } } : {}),
