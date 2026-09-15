@@ -1,23 +1,28 @@
 import { createMembershipWorkerAdapter, createMembershipChapterEffectRoute, type ChapterEnv } from "@odla-ai/chapter/worker";
 import type { ChapterDb } from "@odla-ai/chapter";
+import { APP_ID, membershipSecretName, resolveDeployment, type Deployment } from "./deployment";
 
-const appId = "silver-and-salt-capital";
-const secretName = "membership_authority_silver_and_salt_capital_cory";
-const origin = "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev";
-const authorityOrigin = "https://built-not-found-dev.cory-ondrejka.workers.dev";
-
-export function membershipNetwork(makeDb: (env: ChapterEnv) => ChapterDb) {
+// The membership authority edge to Built Not Found for ONE deployment. Each
+// deployment (dev/cory, dev/tori, prod/live) signs with its own vault secret
+// and talks to its own authority origin; the table in src/deployment.ts is the
+// only place those are named.
+export function membershipNetwork(makeDb: (env: ChapterEnv) => ChapterDb, deployment: Deployment) {
+  const secretName = membershipSecretName(deployment.runtime);
   const adapter = createMembershipWorkerAdapter({
-    chapterId: appId, secretName, makeDb, namedSeats: true,
-    targetUrl: () => authorityOrigin,
+    chapterId: APP_ID, secretName, makeDb, namedSeats: true,
+    targetUrl: () => deployment.authorityOrigin,
     fetch: env => {
-      if (env.ODLA_APP_ID !== appId || env.ODLA_TENANT !== `${appId}--dev` || env.ODLA_ENV !== "dev" ||
-          env.ODLA_RUNTIME !== "cory" || env.ODLA_ENDPOINT !== "https://db.odla.ai") throw new Error("membership deployment scope mismatch");
+      // Re-check the live env against the deployment this adapter was built
+      // for: a Worker never talks to an authority on behalf of another scope.
+      const live = resolveDeployment(env);
+      if (live.envName !== deployment.envName || live.runtime !== deployment.runtime) {
+        throw new Error("membership deployment scope mismatch");
+      }
       const binding = env.BUILT_NOT_FOUND as { fetch?: typeof fetch } | undefined;
       if (typeof binding?.fetch !== "function") throw new Error("BNF membership service unavailable");
       return binding.fetch.bind(binding);
     },
   });
-  return { ...adapter, route: createMembershipChapterEffectRoute({ sender: "built-not-found", secretName, origin,
-    applicationPath: "/join", readEffect: adapter.readEffect }) };
+  return { ...adapter, route: createMembershipChapterEffectRoute({ sender: "built-not-found", secretName,
+    origin: deployment.origin, applicationPath: "/join", readEffect: adapter.readEffect }) };
 }

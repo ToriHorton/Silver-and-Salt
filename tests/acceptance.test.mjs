@@ -285,12 +285,35 @@ run("deployed acceptance", () => {
     }, 15_000);
   });
 
-  describe("clerk configuration is the expected dev instance", () => {
-    it("serves the dev publishable key from Chapter config", async () => {
+  // ACCEPTANCE_ENV=prod runs this suite against a production-identity origin
+  // (the staging candidate or the live domain); anything else is a dev origin.
+  const acceptanceEnv = process.env.ACCEPTANCE_ENV === "prod" ? "prod" : "dev";
+
+  describe(`clerk configuration is the expected ${acceptanceEnv} instance`, () => {
+    it(`serves the ${acceptanceEnv} publishable key from Chapter config`, async () => {
       const body = await (await get("/api/config")).json();
-      expect(body.clerkPublishableKey).toBe(baseline.clerk.publishableKey);
-      // Never a live key on a dev origin.
-      expect(body.clerkPublishableKey.startsWith("pk_live_")).toBe(false);
+      if (acceptanceEnv === "prod") {
+        // Never a test key on a production-identity origin.
+        expect(body.env).toBe("prod");
+        expect(body.clerkPublishableKey.startsWith("pk_live_")).toBe(true);
+      } else {
+        expect(body.clerkPublishableKey).toBe(baseline.clerk.publishableKey);
+        // Never a live key on a dev origin.
+        expect(body.clerkPublishableKey.startsWith("pk_live_")).toBe(false);
+      }
+    });
+  });
+
+  describe("sales state is server-enforced", () => {
+    it("reports the sales state and refuses closed entry points", async () => {
+      const state = await (await get("/api/sales-state")).json();
+      expect(["disabled", "restricted", "public"]).toContain(state.state);
+      if (state.state === "public") return;
+      const res = await fetch(`${BASE}/api/payments/quote`, {
+        method: "POST", headers: { "content-type": "application/json" }, body: "{}",
+      });
+      expect([403, 503]).toContain(res.status);
+      expect((await res.json()).error).toMatch(/^sales_(disabled|restricted)$/);
     });
   });
 });

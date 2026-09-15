@@ -11,7 +11,7 @@ export function AvailabilityTab() {
   const [note, setNote] = useState(null);
 
   useEffect(() => {
-    api("/api/admin/group/scheduling")
+    api("/api/admin/scheduling")
       .then(({ scheduling }) => setS(scheduling))
       .catch(console.error);
   }, []);
@@ -21,9 +21,11 @@ export function AvailabilityTab() {
     setSaveLabel("Saving…");
     setNote(null);
     try {
-      await api("/api/admin/group/scheduling", {
+      await api("/api/admin/scheduling", {
         method: "PUT",
-        body: JSON.stringify({ scheduling: {
+        // Chapter's /api/admin/scheduling takes the bare scheduling object
+        // (the retired legacy alias wrapped it in { scheduling }).
+        body: JSON.stringify({
           days: s.days,
           startHour: Number(s.startHour),
           endHour: Number(s.endHour),
@@ -31,7 +33,7 @@ export function AvailabilityTab() {
           timezone: s.timezone,
           minNoticeHours: Number(s.minNoticeHours),
           windowDays: Number(s.windowDays),
-        }}),
+        }),
       });
       setNote("Saved. New bookings offer these times.");
     } catch (e) {

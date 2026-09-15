@@ -94,6 +94,34 @@ jobs:
       #
       # SAFETY: bare `deploy`, never `--env dev`. See the header of this file
       # and the ROUTE GUARD comment in wrangler.jsonc.
+      # Fail closed before anything is uploaded: the token must see exactly
+      # one Cloudflare account (Tori's), the production Worker must already
+      # hold its ODLA_API_KEY secret, and wrangler.jsonc must still describe
+      # the production identity with sales closed by default. Names only;
+      # no secret value is ever read.
+      - name: Assert the production deploy target
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node _scripts/assert-prod-deploy-target.mjs
+
+      # Optional candidate gate. When the repository variable
+      # SILVER_STAGING_URL names a deployed staging candidate, prove that it
+      # serves the production identity with sales closed before promoting
+      # the same commit to the domain.
+      - name: Probe the staging candidate
+        if: ${{ vars.SILVER_STAGING_URL != '' }}
+        run: |
+          set -e
+          base="${{ vars.SILVER_STAGING_URL }}"
+          config=$(curl -fsS "$base/api/config")
+          echo "$config"
+          echo "$config" | grep -q '"env":"prod"' || { echo "::error::staging is not a prod-identity candidate"; exit 1; }
+          echo "$config" | grep -q '"clerkPublishableKey":"pk_live_' || { echo "::error::staging serves no live Clerk key"; exit 1; }
+          sales=$(curl -fsS "$base/api/sales-state")
+          echo "$sales"
+          echo "$sales" | grep -q '"state":"disabled"' || { echo "::error::staging sales are not disabled"; exit 1; }
+
       - name: Deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

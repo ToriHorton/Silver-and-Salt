@@ -16,10 +16,67 @@
 import { defineChapter } from "@odla-ai/chapter";
 import { crm } from "./crm.mjs";
 
-export const chapter = defineChapter({
+// The values that differ between the development and production
+// deployments. Everything else in the chapter is identical in both, so the
+// same reviewed behaviour ships to production; only identity, addressing,
+// Stripe mode and the seeded tier set change. src/deployment.ts holds the
+// matching Worker-side table (tenants, runtimes, origins).
+export const ENVIRONMENTS = {
+  dev: {
+    url: "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
+    stripeMode: "test",
+    // Each developer Worker verifies only its own addressed delivery.
+    // Declaring another runtime is not permission to deploy or install its
+    // credential.
+    runtimeSecrets: {
+      cory: "signup_control_silver_and_salt_capital__cory",
+      tori: "signup_control_silver_and_salt_capital__tori",
+    },
+    // Addressing matches the live dev group row: every dev send lands in the
+    // owner's debug inbox (src/email.ts redirects outside prod).
+    emails: {
+      notificationEmail: "cory.ondrejka+debug@gmail.com",
+      replyTo: "cory.ondrejka+debug@gmail.com",
+      debugEmail: "cory.ondrejka+debug@gmail.com",
+    },
+    // Managed tier authority replaces the ambiguous single-price fallback while
+    // retaining the same immutable TEST Stripe Price and $900 annual charge.
+    tiers: [{
+      id: "founding",
+      name: "Founding Member",
+      priceCents: 90_000,
+      stripePriceId: "price_1Ts7rW3sLwQtiao1DTAj0iS0",
+      sortOrder: 0,
+      active: true,
+    }],
+  },
+  prod: {
+    url: "https://silverandsaltcapital.com",
+    stripeMode: "live",
+    runtimeSecrets: {
+      live: "signup_control_silver_and_salt_capital__live",
+    },
+    // Real recipients. There is no debugEmail: src/email.ts ignores it in
+    // prod anyway, and leaving it out makes the intent visible here.
+    emails: {
+      notificationEmail: "tori@silverandsaltcapital.com",
+      replyTo: "tori@silverandsaltcapital.com",
+    },
+    // No seeded tiers in production. Live tiers and their immutable live
+    // Stripe Prices arrive only through a signed Built Not Found signup
+    // revision, so a test Price can never be materialized on the prod tenant
+    // by this file.
+    tiers: [],
+  },
+};
+
+export function chapterFor(envName = "dev") {
+  const e = ENVIRONMENTS[envName];
+  if (!e) throw new Error(`no chapter configuration for environment ${String(envName)}`);
+  return defineChapter({
   id: "silver-and-salt-capital",
   name: "Silver & Salt Capital",
-  url: "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
+  url: e.url,
 
   // Public membership site with join, payment, booking, member, and admin
   // surfaces. Not "hub": that profile is admin-only and would drop the entire
@@ -61,16 +118,12 @@ export const chapter = defineChapter({
 
   // Built Not Found may publish complete, signed signup revisions to this
   // follower. Development accepts test-mode Stripe objects only; production
-  // remains absent from this repository descriptor until the human checkpoint.
+  // accepts live-mode objects addressed to the live runtime. A document in the
+  // wrong mode is refused (wrong_stripe_mode) before anything is stored.
   signupControl: {
     sourceId: "built-not-found",
-    stripeMode: "test",
-    // Each developer Worker verifies only its own addressed delivery. Declaring
-    // another runtime is not permission to deploy or install its credential.
-    runtimeSecrets: {
-      cory: "signup_control_silver_and_salt_capital__cory",
-      tori: "signup_control_silver_and_salt_capital__tori",
-    },
+    stripeMode: e.stripeMode,
+    runtimeSecrets: e.runtimeSecrets,
   },
 
   // Preserve the populated dev content namespaces discovered by the strict
@@ -149,18 +202,10 @@ export const chapter = defineChapter({
     interval: "year",
   },
 
-  // Managed tier authority replaces the ambiguous single-price fallback while
-  // retaining the same immutable Stripe Price and $900 annual charge. Additional
-  // tiers require a later signed BNF signup-control revision and their own
-  // reviewed Stripe Prices.
-  tiers: [{
-    id: "founding",
-    name: "Founding Member",
-    priceCents: 90_000,
-    stripePriceId: "price_1Ts7rW3sLwQtiao1DTAj0iS0",
-    sortOrder: 0,
-    active: true,
-  }],
+  // Seeded tiers per environment (see ENVIRONMENTS). Additional tiers arrive
+  // through a signed BNF signup-control revision with their own reviewed
+  // Stripe Prices; seeds insert only when absent.
+  tiers: e.tiers,
 
   // ── Policy copy ──────────────────────────────────────────────────────
   // Seed values only. createChapterIntegration inserts the group row ONLY when
@@ -176,14 +221,10 @@ export const chapter = defineChapter({
   },
 
   // ── Email ────────────────────────────────────────────────────────────
-  // Addressing matches the live dev group row: every dev send lands in the
-  // owner's debug inbox. Template BODIES live on the group row and are
-  // owner-editable at runtime; this config only carries addressing.
-  emails: {
-    notificationEmail: "cory.ondrejka+debug@gmail.com",
-    replyTo: "cory.ondrejka+debug@gmail.com",
-    debugEmail: "cory.ondrejka+debug@gmail.com",
-  },
+  // Addressing per environment (see ENVIRONMENTS). Template BODIES live on
+  // the group row and are owner-editable at runtime; this config only
+  // carries addressing.
+  emails: e.emails,
 
   // WHEN each lifecycle email fires (build-time), as opposed to its content.
   // OVERRIDE: Chapter defaults adminNotification to "submit". The legacy
@@ -308,6 +349,13 @@ export const chapter = defineChapter({
       cancelSubscription: true,
     },
   },
-});
+  });
+}
+
+// The CLI (provision, config diff, seeds) and the tests read this default.
+// Provisioning production must run with ODLA_ENV=prod so the composed seeds
+// carry the production addressing and no test-mode tier.
+const cliEnv = typeof process !== "undefined" && process.env?.ODLA_ENV === "prod" ? "prod" : "dev";
+export const chapter = chapterFor(cliEnv);
 
 export default chapter;
