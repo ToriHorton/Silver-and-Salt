@@ -30,7 +30,7 @@ const before = await state();
 
 if (args.includes("--addressing")) {
   const res = await db.transact([
-    { t: "update", ns: "groups", id: "silver-and-salt-capital", attrs: { notificationEmail: "tori@silverandsaltcapital.com", replyTo: "tori@silverandsaltcapital.com", updatedAt: Date.now() } },
+    { t: "update", ns: "groups", id: "silver-and-salt-capital", attrs: { notificationEmail: "tori@silverandsaltcapital.com", replyTo: "tori@silverandsaltcapital.com" } },
     { t: "retract", ns: "groups", id: "silver-and-salt-capital", attrs: ["debugEmail"] },
   ], { mutationId: "launch-prod-group-addressing-2026-09-14" });
   console.log("addressing transact:", JSON.stringify(res));
