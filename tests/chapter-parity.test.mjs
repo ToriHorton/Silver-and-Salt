@@ -56,7 +56,10 @@ const chapterVersion = JSON.parse(readFileSync(
 // (source commit 3eab2284): its dist/ tree is byte-identical, verified
 // 2026-09-14 at the launch dependency checkpoint, so it carries the same
 // reviewed namespaces and attributes.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1"];
+// 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
+// signup request reader changes. Keep unknown future versions gated.
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2"];
+const hasAccountProtection = ["0.48.1", "0.48.2"].includes(chapterVersion);
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -64,6 +67,7 @@ const reviewedVersionNamespaces = {
   "0.47.11": candidateNamespaces,
   "0.48.0": candidateNamespaces,
   "0.48.1": [...candidateNamespaces, "chapterAccountPolicy"],
+  "0.48.2": [...candidateNamespaces, "chapterAccountPolicy"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
@@ -136,7 +140,7 @@ const REVIEWED_ADDITIONS = {
     // Decision b44909c6-bafe-5315-aff9-3aadd33b44aa: reject repeat signups,
     // preserve existing accounts, and enable protected Studio account editing.
     // Optional fields preserve old applications; the email key is unique.
-    ...(chapterVersion === "0.48.1"
+    ...(hasAccountProtection
       ? ["signupEmailKey", "clerkInvitationSentAt", "clerkAccountPending"] : []),
     // Decision 346b7b00-6b5e-5748-8949-e4528c93868b: additive dev-only candidate contract.
     ...(isCandidate ? ["approvalEffectsPending", "approvalEffectsOrigin", "approvalEffectsLastAttemptAt",
@@ -241,7 +245,7 @@ describe("schema parity vs the frozen legacy contract", () => {
   });
 
   it("keeps duplicate-signup reservations optional and the account policy private", () => {
-    if (chapterVersion !== "0.48.1") return;
+    if (!hasAccountProtection) return;
     expect(integration.schema.entities.applications.attrs.signupEmailKey)
       .toEqual({ type: "string", unique: true, indexed: true, optional: true });
     expect(integration.schema.entities.applications.attrs.clerkInvitationSentAt)
@@ -561,7 +565,7 @@ describe("group seed is insert-only and cannot overwrite owner edits", () => {
   it("seeds the groups row, crm_config singleton, and managed founding tier", () => {
     const namespaces = integration.seeds.map((s) => s.ns ?? s.namespace).sort();
     expect(namespaces).toEqual([
-      ...(chapterVersion === "0.48.1" ? ["chapterAccountPolicy"] : []),
+      ...(hasAccountProtection ? ["chapterAccountPolicy"] : []),
       "crm_config", "groups", "tiers",
     ]);
   });
