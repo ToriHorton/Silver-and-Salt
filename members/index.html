@@ -340,6 +340,28 @@
       .back-link { position: static; display: block; text-align: left; margin-bottom: 24px; }
       .card { padding: 28px 20px; }
     }
+       /* Named seat card (src/app/members.jsx NamedSeatCard + Chapter's PaymentStep). */
+     .seat-form, .seat-review { text-align: left; }
+     .seat-field { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: var(--moss); margin: 14px 0 0; }
+     .seat-field input {
+       display: block; width: 100%; margin-top: 6px; padding: 12px 14px; font: inherit; font-weight: 400;
+       border: 1px solid var(--border); border-radius: 4px; background: #fff; color: var(--moss);
+     }
+     .seat-field input:focus { outline: none; border-color: var(--lime); }
+     .submit-btn {
+       width: 100%; background-color: var(--lime); color: #fff; font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+       font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: none; border-radius: 4px;
+       padding: 15px; cursor: pointer; margin-top: 16px; transition: background-color 0.2s, transform 0.1s;
+     }
+     .submit-btn:hover { background-color: var(--lime-dark); }
+     .submit-btn:disabled { background-color: #b0cc9e; cursor: not-allowed; }
+     .compliance-box { background: var(--lime-soft); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin-top: 14px; text-align: left; }
+     .compliance-box p { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 16px; line-height: 1.6; color: var(--moss); margin-bottom: 12px; }
+     .compliance-check { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--moss-light); cursor: pointer; }
+     .compliance-check input { margin-top: 3px; }
+     .join-pay > div[hidden] { display: none; }
+     .join-pay > div:not([hidden]) { margin-top: 14px; }
+     .pay-error { color: #a4442c; font-size: 13px; margin: 10px 0; min-height: 18px; }
   </style>
 </head>
 <body>
@@ -373,6 +395,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=4"></script>
-  <script type="module" src="/assets/app/members.js?v=3"></script>
+  <script type="module" src="/assets/app/members.js?v=4"></script>
 </body>
 </html>

@@ -4,8 +4,16 @@
 import { render } from "preact";
 import { useState } from "preact/hooks";
 import { SlotPicker } from "./slot-picker.jsx";
+import { PaymentStep } from "@odla-ai/chapter/ui/member";
 
 const $ = (id) => document.getElementById(id);
+// Resolved at call time so components can render without a page.
+const memberApi = (...args) => window.SSCAuth.api(...args);
+// The join page keeps the in-progress application id here so a reload
+// resumes it (src/app/join-island.jsx). Signing out ends that session too;
+// otherwise the next visitor at this browser tab lands on the previous
+// person's application state.
+const JOIN_RESUME_KEY = "ssc-application-id";
 const linkStyle = "color: var(--lime-dark); font-weight: 700; text-decoration: none;";
 const secondaryLink = "color: var(--sage); text-decoration: underline;";
 
@@ -160,11 +168,95 @@ function MemberView() {
   );
 }
 
-function MembersApp({ me: initialMe, email }) {
+// Named additional seat: a paying member buys one $500 seat for a named
+// person during the first three months of membership. The offer, price,
+// term, and eligibility come from /api/named-seat (Built Not Found is the
+// authority); this card only presents them and hands the checkout to the
+// same PaymentStep the join flow uses. Chapter ships an equivalent card
+// inside its MembersArea composite, which this page does not use.
+export function NamedSeatCard({ api, initial }) {
+  const [data, setData] = useState(initial ?? null);
+  const [error, setError] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [reviewing, setReviewing] = useState(false);
+  const [terms, setTerms] = useState(false);
+  const [pending, setPending] = useState(false);
+  const load = async () => {
+    try {
+      const value = await api("/api/named-seat");
+      setData(value);
+      if (value.seat) { setName(value.seat.recipientName); setEmail(value.seat.recipientEmail); }
+    } catch (e) {
+      setError("The seat offer is briefly unavailable. Please try again shortly.");
+    }
+  };
+  if (data === null && !error && !initial) { void load(); }
+  const money = data ? new Intl.NumberFormat("en-US", { style: "currency", currency: data.currency }).format(data.amountCents / 100) : "";
+  const untilDate = data?.termEndsAt ? new Date(data.termEndsAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }) : "";
+  const seatStatus = data?.seat ? String(data.seat.status).replaceAll("_", " ") : "";
+  return (
+    <div class="card" id="named-seat-card">
+      <div class="card-label">A second seat</div>
+      {error && <p class="pay-error" role="alert">{error}</p>}
+      {!data && !error && <p class="meeting-note">Loading your seat offer…</p>}
+      {data?.seat && (
+        <div class="meeting-block">
+          <div class="meeting-kicker">Your named seat</div>
+          <div class="meeting-note">{data.seat.recipientName} ({data.seat.recipientEmail}): {seatStatus}.</div>
+          {pending && <div class="meeting-note" role="status">Payment confirmation is being reconciled. Their access begins after their own acceptance and approval.</div>}
+        </div>
+      )}
+      {data && !data.seat && !data.eligible && (
+        <p class="meeting-note">Additional seats are offered during the first three months of a paid membership.</p>
+      )}
+      {data?.eligible && !data.seat && !reviewing && (
+        <form class="seat-form" onSubmit={(e) => { e.preventDefault(); if (name.trim().length >= 2 && email.trim()) { setError(""); setReviewing(true); } }}>
+          <p class="meeting-note" style="margin-top:0">Give a named seat to your mother, your daughter, or a friend: {money} through {untilDate}. She accepts the invitation, completes her own application, and joins as a member in her own right. An unaccepted seat is fully refunded after 30 days.</p>
+          <label class="seat-field">Her name<input required maxLength={160} value={name} onInput={(e) => setName(e.currentTarget.value)} /></label>
+          <label class="seat-field">Her email<input required type="email" maxLength={254} value={email} onInput={(e) => setEmail(e.currentTarget.value)} /></label>
+          <button class="submit-btn" type="submit">Review the seat</button>
+        </form>
+      )}
+      {data?.eligible && !data.seat && reviewing && (
+        <div class="seat-review">
+          <div class="meeting-block">
+            <div class="meeting-kicker">Named seat for {name}</div>
+            <div class="meeting-note">{email}</div>
+            <div class="meeting-note">{money} today, seat runs through {untilDate}.</div>
+            <div class="meeting-note"><a href="#" style={secondaryLink} onClick={(e) => { e.preventDefault(); setReviewing(false); setTerms(false); }}>Change the recipient</a></div>
+          </div>
+          <label class="compliance-check" style="margin-top:14px">
+            <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.currentTarget.checked)} />
+            <span>{data.autoRenew
+              ? "I agree to the full payment now and to automatic renewal alongside my own membership. I can cancel renewal at any time."
+              : "I agree to the full payment now and to the end date shown, with no automatic renewal while my own renewal is canceled."}</span>
+          </label>
+          {terms && (
+            <PaymentStep
+              applicationId={data.membershipId}
+              refundPolicyText={data.refundPolicyText}
+              merchantDisclosureText={data.merchantDisclosureText}
+              startCheckout={() => api("/api/named-seat/checkout", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ recipientName: name, recipientEmail: email, quoteDigest: data.digest, seatTermsAck: true, refundPolicyAck: true }),
+              })}
+              onPaid={() => { setPending(true); setReviewing(false); void load(); }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function MembersApp({ me: initialMe, email }) {
   const [me, setMe] = useState(initialMe);
   const reload = async () => { try { setMe(await window.SSCAuth.api("/api/me")); } catch (e) { console.error(e); } };
   const role = me.role || "provisional";
   const signOut = async () => {
+    try { sessionStorage.removeItem(JOIN_RESUME_KEY); } catch {}
     await window.Clerk.signOut();
     window.location.href = "/members/";
   };
@@ -177,10 +269,13 @@ function MembersApp({ me: initialMe, email }) {
         </div>
         <div class="account-actions">
           <button class="signout-btn" onClick={signOut}>Sign out</button>
-          {role === "admin" && <a class="admin-console-link" href="/admin/">Admin console</a>}
+          {/* authorized covers the admin role and odla superadmins alike; the
+              role string alone hides the console from a superadmin member. */}
+          {me.authorized && <a class="admin-console-link" href="/admin/">Admin console</a>}
         </div>
       </div>
       {role === "provisional" ? <ProvisionalCard application={me.application} onReschedule={reload} /> : <MemberView />}
+      {me.namedSeatsEnabled && <NamedSeatCard api={memberApi} />}
     </>
   );
 }
@@ -241,4 +336,5 @@ async function boot() {
   }
 }
 
-boot();
+// Tests import the components above without a page; only a real page boots.
+if (typeof document !== "undefined") boot();
