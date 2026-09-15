@@ -72,7 +72,14 @@ export default {
     id: "silver-and-salt-capital",
     name: "Silver & Salt Capital",
   },
-  envs: ["dev"],
+  // Production is managed by this config only when the operator opts in for
+  // that invocation: `ODLA_PROVISION_PROD=1 ODLA_ENV=prod npx @odla-ai/cli
+  // provision --live --dry-run` (then `--yes --push-secrets`). Ordinary runs
+  // touch the sandbox only. Note the odla registry already holds a prod
+  // environment for this app (verified 2026-09-14); a plan from dev-only
+  // intent proposes disabling its services (bug 9f161705) and must never be
+  // applied.
+  envs: process.env.ODLA_PROVISION_PROD === "1" ? ["dev", "prod"] : ["dev"],
   services: ["db", "calendar"],
   // Cory and Tori intentionally run separate authoritative development
   // Workers against the same Chapter data environment. Provider-facing
@@ -116,7 +123,9 @@ export default {
       // legacy key name `calendars`; `availabilityCalendars` is the 0.2.0
       // name.) Our odla-db is the source of truth for meetings; Google is
       // the invite/Meet projection.
-      calendars: { dev: ["primary"] },
+      calendars: process.env.ODLA_PROVISION_PROD === "1"
+        ? { dev: ["primary"], prod: ["primary"] }
+        : { dev: ["primary"] },
     },
   },
   // ai: enabled at Phase 4 if the owner opts in. Leaving the block out keeps
@@ -125,8 +134,14 @@ export default {
     clerk: {
       // Publishable key (public by design). Clerk app "Silver & Salt Capital"
       // in the Built Not Found workspace, app_3G6TCBtJKVZo6Aq5UGgz9URtDqV,
-      // dev instance. prod pk is set at Phase 5.
+      // dev instance.
       dev: "pk_test_cmVsaWV2ZWQtZWZ0LTkzLmNsZXJrLmFjY291bnRzLmRldiQ",
+      // The Production instance of the SAME Clerk app, activated with
+      // `npx clerk deploy` against silverandsaltcapital.com (launch Phase
+      // 4a). No fallback on purpose: provisioning production without the
+      // live key must fail, never silently reuse the dev instance (which is
+      // what the registry holds today).
+      ...(process.env.CLERK_PUBLISHABLE_KEY_PROD ? { prod: process.env.CLERK_PUBLISHABLE_KEY_PROD } : {}),
     },
   },
   // Add "o11y" to services to enable observability; provision then mints the
@@ -139,7 +154,8 @@ export default {
     // Copied from the Phase 1 `wrangler deploy --env dev` output and
     // curl-verified 200 before pasting (per runbook: never predict this URL).
     dev: "https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev",
-    // prod is set at Phase 5 from the prod deploy's printed URL.
+    // The public domain, served by the Worker on Tori's Cloudflare account.
+    prod: "https://silverandsaltcapital.com",
   },
   local: {
     tokenFile: ".odla/dev-token.json",
