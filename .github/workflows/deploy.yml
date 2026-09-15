@@ -62,8 +62,8 @@ jobs:
       - name: Test
         run: npm test
 
-      # Builds dist/ from git-tracked files only, minus the exclusions in
-      # _scripts/build-site.sh, then bundles the Preact islands with Vite.
+      # Builds dist/ from the reachability manifest (_scripts/site-manifest.mjs:
+      # only files the entry pages link to), then bundles the Preact islands.
       - name: Build
         run: npm run build
 
@@ -71,11 +71,14 @@ jobs:
       # ever produces nothing useful.
       - name: Sanity-check the build
         run: |
-          test -f dist/index.html || { echo "dist/index.html missing"; exit 1; }
-          test -f dist/404.html   || { echo "dist/404.html missing";   exit 1; }
+          for page in index.html 404.html join.html membership.html admin/index.html members/index.html assets/app/join-island.js version.txt; do
+            test -f "dist/$page" || { echo "dist/$page missing"; exit 1; }
+          done
           count=$(find dist -type f | wc -l | tr -d ' ')
           echo "dist contains $count files"
-          [ "$count" -ge 100 ] || { echo "suspiciously small build"; exit 1; }
+          # The manifest build ships about 75 files (2026-09-15). Well under
+          # that means a page tree or asset folder failed to copy.
+          [ "$count" -ge 50 ] || { echo "suspiciously small build"; exit 1; }
           for leaked in hq-25b5a94e297e.html goals.json MIGRATION.md PAYMENT-SPEC.md LEGAL-REVIEW-HOW-IT-WORKS.md; do
             [ -e "dist/$leaked" ] && { echo "private file reached the build: $leaked"; exit 1; }
           done
