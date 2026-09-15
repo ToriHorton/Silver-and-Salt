@@ -512,8 +512,8 @@ describe("follower role", () => {
 });
 
 describe("group seed is insert-only and cannot overwrite owner edits", () => {
-  it("uses Chapter plus a data-only descriptor for the retired newsletter rows", () => {
-    expect(odlaConfig.integrations).toHaveLength(2);
+  it("uses Chapter plus data-only descriptors for retired namespaces", () => {
+    expect(odlaConfig.integrations).toHaveLength(process.env.ODLA_PROVISION_PROD === "1" ? 2 : 3);
     expect(odlaConfig.integrations[0]).toBe(integration);
     expect(integration.schema.entities.applications.attrs.tier).toEqual(
       legacySourceSchema.entities.applications.attrs.tier,
@@ -539,6 +539,23 @@ describe("group seed is insert-only and cannot overwrite owner edits", () => {
     expect(Object.keys(odlaConfig.integrations[1].schema.entities)).toEqual([
       "newsletterSignups",
     ]);
+  });
+
+  it("preserves retired dev admin rows without restoring their authority", () => {
+    const retained = odlaConfig.integrations.find((item) => item.id === "retained-dev-admin-data");
+    if (process.env.ODLA_PROVISION_PROD === "1") {
+      expect(retained).toBeUndefined();
+      return;
+    }
+    expect(retained.schema).toEqual({
+      entities: { superAdmins: legacySourceSchema.entities.superAdmins }, links: {},
+    });
+    expect(retained.rules).toEqual({
+      superAdmins: { view: "false", create: "false", update: "false", delete: "false" },
+    });
+    expect(retained.seeds).toEqual([]);
+    expect(retained.probes).toEqual([]);
+    expect(chapter.auth.superAdminSource).toBe("odla");
   });
 
   it("seeds the groups row, crm_config singleton, and managed founding tier", () => {
