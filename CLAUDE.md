@@ -94,10 +94,9 @@ cross-check); those are the math and stay as they are. Do not reintroduce
 - **Deploys:** a push to `main` runs `.github/workflows/deploy.yml`, which runs
   `npm test`, builds `dist/` from git-tracked files, sanity-checks the output,
   then deploys with wrangler. Never run it with `--env dev`. Markdown sits in
-  `paths-ignore`, so a docs-only commit deploys nothing. GitHub Pages still
-  builds on every push and no longer serves the domain, which is why each push
-  shows two green Actions runs. **A green Pages run proves nothing about the
-  live site; the run that matters is "Deploy to Cloudflare."**
+  `paths-ignore`, so a docs-only commit deploys nothing. GitHub Pages is disabled on the
+  repository (confirmed 2026-09-15); the only run that matters is "Deploy to
+  Cloudflare."
 - **Confirming a change is actually live:** the build stamps the commit it came
   from into `dist/version.txt`, and the deploy workflow polls the live domain
   for it before reporting success, so a deploy that uploads assets but never

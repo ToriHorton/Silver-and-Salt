@@ -2,16 +2,17 @@
 # Build the Silver & Salt Capital static site into dist/.
 #
 # Copies GIT-TRACKED files only. This matters for two reasons:
-#   1. Parity: GitHub Pages serves exactly what is committed on main.
+#   1. Parity: the Worker serves exactly what is committed on main.
 #   2. Privacy: local-only CEO tools (dashboard.html, ecosystem.html,
 #      granola-inbox.js, newsletter-data.js, network/people*.js) are
 #      gitignored and must never reach a deploy directory. A blind
 #      `cp -r` would leak them; `git ls-files` cannot.
 #
 # Agent/migration infrastructure and internal documents are excluded
-# because they are not part of the public website. NOTE: this list only
-# shapes dist/. GitHub Pages serves the repo root directly, so anything
-# below is STILL public on Pages until the cutover retires it.
+# because they are not part of the public website. The exclusion list is a
+# deny list, so it can never be complete on its own: the extension guard
+# after the copy refuses any build that carries a file type the site does
+# not serve (decks, drafts, build scripts, spreadsheets, markdown).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -54,6 +55,12 @@ git ls-files -z -- . \
   ':!:goals.json' \
   ':!:deploy-dashboard.sh' \
   ':!:deploy-stamp.txt' \
+  ':!:marketing/presentations' \
+  ':!:marketing/*.docx' \
+  ':!:assets/presentations' \
+  ':!:task-decisions.json' \
+  ':!:CNAME' \
+  ':!:.nojekyll' \
   ':!:onboarding-scope.html' \
   ':!:membership-in-full.html' \
   ':!:*-options.html' \
@@ -93,6 +100,18 @@ npx vite build --logLevel warn
 
 if [ -e dist/vendor ] || [ -e dist/scripts ]; then
   echo "Build refused: development packages or scripts reached public assets." >&2
+  exit 1
+fi
+
+# Extension guard. Only file types the public site actually serves may reach
+# dist/. Anything else (a .pptx deck, a .docx draft, a .py build script, a
+# .md note, a file with no extension) means the deny list above missed a new
+# tracked file, and the build fails instead of publishing it.
+allowed='html|css|js|mjs|map|json|webmanifest|xml|txt|png|jpg|jpeg|gif|svg|webp|ico|avif|pdf|woff|woff2|ttf|otf|mp4|webm|mp3|vtt'
+stray=$(find dist -type f | grep -v -E "\.($allowed)$" || true)
+if [ -n "$stray" ]; then
+  echo "Build refused: files the site does not serve reached dist/:" >&2
+  printf '  %s\n' $stray >&2
   exit 1
 fi
 
