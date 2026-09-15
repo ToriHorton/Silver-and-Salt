@@ -1,97 +1,22 @@
 #!/usr/bin/env bash
 # Build the Silver & Salt Capital static site into dist/.
 #
-# Copies GIT-TRACKED files only. This matters for two reasons:
-#   1. Parity: the Worker serves exactly what is committed on main.
-#   2. Privacy: local-only CEO tools (dashboard.html, ecosystem.html,
-#      granola-inbox.js, newsletter-data.js, network/people*.js) are
-#      gitignored and must never reach a deploy directory. A blind
-#      `cp -r` would leak them; `git ls-files` cannot.
-#
-# Agent/migration infrastructure and internal documents are excluded
-# because they are not part of the public website. The exclusion list is a
-# deny list, so it can never be complete on its own: the extension guard
-# after the copy refuses any build that carries a file type the site does
-# not serve (decks, drafts, build scripts, spreadsheets, markdown).
+# Ships ONLY what the website reaches: _scripts/site-manifest.mjs starts from
+# the entry pages the Worker serves (index, 404, join, admin, members) and
+# follows every local link, script, stylesheet, image, and font from there.
+# A tracked file that no page references (a draft, a mockup, a research
+# note, a deck, a spec) is not part of the website and never reaches dist/.
+# The manifest only ever names git-tracked files, so gitignored CEO tools
+# (dashboard.html, granola-inbox.js, newsletter-data.js) cannot leak either.
+# The extension guard below is a second net for anything a page links to
+# that the site should not be serving.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 rm -rf dist
 mkdir -p dist
 
-git ls-files -z -- . \
-  ':!:.github' \
-  ':!:.agents' \
-  ':!:.claude' \
-  ':!:.cursor' \
-  ':!:.gitignore' \
-  ':!:AGENTS.md' \
-  ':!:GEMINI.md' \
-  ':!:CLAUDE.md' \
-  ':!:MIGRATION.md' \
-  ':!:PAYMENT-SPEC.md' \
-  ':!:JOURNEYS-PLAN.md' \
-  ':!:MULTI-BRAND-PLAN.md' \
-  ':!:UI-COMPONENT-SPECS.md' \
-  ':!:ADMIN-CALENDAR-SPEC.md' \
-  ':!:LEGAL-REVIEW-HOW-IT-WORKS.md' \
-  ':!:BRAND.md' \
-  ':!:WORKFLOW.md' \
-  ':!:faq-complete.md' \
-  ':!:report-headers.numbers' \
-  ':!:report-headers.xlsx' \
-  ':!:_reference' \
-  ':!:_mockups' \
-  ':!:_research' \
-  ':!:_archive' \
-  ':!:_scripts' \
-  ':!:generate-faq-pdf.py' \
-  ':!:enriched_data.tsv' \
-  ':!:women_orgs_additions.csv' \
-  ':!:hq-*.html' \
-  ':!:granola-inbox.js' \
-  ':!:newsletter-data.js' \
-  ':!:goals.js' \
-  ':!:goals.json' \
-  ':!:deploy-dashboard.sh' \
-  ':!:deploy-stamp.txt' \
-  ':!:marketing/presentations' \
-  ':!:marketing/*.docx' \
-  ':!:assets/presentations' \
-  ':!:task-decisions.json' \
-  ':!:CNAME' \
-  ':!:.nojekyll' \
-  ':!:onboarding-scope.html' \
-  ':!:membership-in-full.html' \
-  ':!:*-options.html' \
-  ':!:membership-[b-h].html' \
-  ':!:membership-[fgh][0-9].html' \
-  ':!:membership-draft.html' \
-  ':!:membership-final.html' \
-  ':!:membership-compare.html' \
-  ':!:membership-section-draft.html' \
-  ':!:membership-signup-section*.html' \
-  ':!:membership-sorter-marketing.html' \
-  ':!:membership-price-final3.html' \
-  ':!:membership-price-special.html' \
-  ':!:how-b.html' \
-  ':!:how-c.html' \
-  ':!:how-it-works-additions.html' \
-  ':!:hen-variants.html' \
-  ':!:hero-type.html' \
-  ':!:map-mockup.html' \
-  ':!:src' \
-  ':!:scripts' \
-  ':!:vendor' \
-  ':!:.nvmrc' \
-  ':!:tests' \
-  ':!:vitest.config.mjs' \
-  ':!:vite.config.mjs' \
-  ':!:wrangler.jsonc' \
-  ':!:odla.config.mjs' \
-  ':!:package.json' \
-  ':!:package-lock.json' \
-  | rsync -a --files-from=- --from0 . dist/
+node _scripts/site-manifest.mjs | rsync -a --files-from=- --from0 . dist/
 
 # App islands (admin console, member area, join booking step): Preact via
 # Vite, bundled into dist/assets/app/. Worker and island SOURCE is excluded
