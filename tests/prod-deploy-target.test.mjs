@@ -34,7 +34,7 @@ describe("assertProdWranglerConfig", () => {
     expect(assertProdWranglerConfig(real)).toEqual({ name: "silver-and-salt-capital" });
   });
   it("refuses sales open by default, a dev tenant, or a routed environment", () => {
-    expect(() => assertProdWranglerConfig(real.replace('"SALES_STATE": "disabled"', '"SALES_STATE": "public"'))).toThrow(/SALES_STATE/);
+    expect(() => assertProdWranglerConfig(real.replace('"MEMBERSHIP_AUTHORITY_OWNER": "built-not-found",\n    // SALES_STATE', '"MEMBERSHIP_AUTHORITY_OWNER": "built-not-found",\n    "SALES_STATE": "public",\n    // SALES_STATE'))).toThrow(/SALES_STATE/);
     expect(() => assertProdWranglerConfig(real.replace('"ODLA_TENANT": "silver-and-salt-capital",', '"ODLA_TENANT": "silver-and-salt-capital--dev",'))).toThrow(/ODLA_TENANT/);
     expect(() => assertProdWranglerConfig(real.replace('"routes": [],\n      // No triggers', '"routes": ["silverandsaltcapital.com/*"],\n      // No triggers'))).toThrow(/routes/);
     expect(() => assertProdWranglerConfig(real.replace('"crons": []', '"crons": ["*/5 * * * *"]'))).toThrow(/staging/);

@@ -29,9 +29,10 @@
     "ODLA_ENV": "prod",
     "ODLA_RUNTIME": "live",
     "MEMBERSHIP_AUTHORITY_OWNER": "built-not-found",
-    // disabled | restricted | public. SALES_STOP (a secret) overrides to
-    // disabled; SALES_CANARY_TOKEN and SALES_ALLOWLIST are secrets too.
-    "SALES_STATE": "disabled",
+    // SALES_STATE is deliberately NOT a var here. In production it is a
+    // Worker secret (absent = disabled): opening or closing sales is
+    // `wrangler secret put SALES_STATE` by an operator, never a code deploy.
+    // SALES_STOP, SALES_CANARY_TOKEN and SALES_ALLOWLIST are secrets too.
     // Verified sender for Cloudflare Email Service. Onboard
     // silverandsaltcapital.com to Email Service in the Cloudflare dashboard
     // before the first send, or sends fail with E_SENDER_NOT_VERIFIED (they

@@ -83,7 +83,7 @@ export function assertProdWranglerConfig(text) {
   for (const [k, val] of Object.entries(expected)) {
     if (v[k] !== val) fail(`top-level vars.${k} is ${String(v[k])}, expected ${val}`);
   }
-  if (v.SALES_STATE !== "disabled") fail("top-level vars.SALES_STATE must be \"disabled\"; opening sales is an operator action, not a deploy");
+  if (v.SALES_STATE !== undefined) fail("top-level vars must not carry SALES_STATE; in production it is a Worker secret set by an operator, never a deploy");
   if (Array.isArray(cfg.routes) && cfg.routes.length) fail("top-level routes must stay empty; the domain is attached in the dashboard");
   const first = cfg.assets?.run_worker_first ?? [];
   if (!first.includes("/api/*")) fail("assets.run_worker_first must include /api/*");
