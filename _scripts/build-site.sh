@@ -18,6 +18,11 @@ mkdir -p dist
 
 node _scripts/site-manifest.mjs | rsync -a --files-from=- --from0 . dist/
 
+# Browser security headers for every static asset (audit S04). Cloudflare
+# applies dist/_headers at the edge; the Worker sets the same set on its own
+# responses, and tests/hardening.test.mjs holds the two together.
+cp _headers dist/_headers
+
 # App islands (admin console, member area, join booking step): Preact via
 # Vite, bundled into dist/assets/app/. Worker and island SOURCE is excluded
 # from the copy above; only bundles ship. Marketing pages never touch this.
@@ -33,7 +38,7 @@ fi
 # .md note, a file with no extension) means the deny list above missed a new
 # tracked file, and the build fails instead of publishing it.
 allowed='html|css|js|mjs|map|json|webmanifest|xml|txt|png|jpg|jpeg|gif|svg|webp|ico|avif|pdf|woff|woff2|ttf|otf|mp4|webm|mp3|vtt'
-stray=$(find dist -type f | grep -v -E "\.($allowed)$" || true)
+stray=$(find dist -type f | grep -v -E "\.($allowed)$" | grep -v -x "dist/_headers" || true)
 if [ -n "$stray" ]; then
   echo "Build refused: files the site does not serve reached dist/:" >&2
   printf '  %s\n' $stray >&2

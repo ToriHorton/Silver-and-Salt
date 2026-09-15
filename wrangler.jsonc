@@ -48,6 +48,11 @@
   // account; src/email.ts falls back to log-only when the binding or
   // EMAIL_FROM is absent.
   "send_email": [{ "name": "SEND_EMAIL" }],
+  "ratelimits": [
+    // Public write routes (/api/* POST etc., excluding signed edges and the
+    // admin API): 30 per minute per client IP. Read by src/hardening.ts.
+    { "name": "PUBLIC_WRITE_LIMIT", "namespace_id": "1001", "simple": { "limit": 30, "period": 60 } }
+  ],
   "assets": {
     // Always the build dir (npm run build), never the repo root.
     "directory": "dist",
@@ -86,6 +91,7 @@
         "EMAIL_FROM": "membership@silverandsaltcapital.com"
       },
       "send_email": [{ "name": "SEND_EMAIL" }],
+      "ratelimits": [{ "name": "PUBLIC_WRITE_LIMIT", "namespace_id": "1001", "simple": { "limit": 30, "period": 60 } }],
       "assets": {
         "directory": "dist",
         "binding": "ASSETS",
@@ -125,6 +131,7 @@
       },
       // Environments inherit no bindings; dev declares its own.
       "send_email": [{ "name": "SEND_EMAIL" }],
+      "ratelimits": [{ "name": "PUBLIC_WRITE_LIMIT", "namespace_id": "1001", "simple": { "limit": 30, "period": 60 } }],
       "assets": {
         "directory": "dist",
         "binding": "ASSETS",

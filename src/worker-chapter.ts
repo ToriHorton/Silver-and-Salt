@@ -29,6 +29,8 @@ import { joinPage } from "./join-page";
 import { recoverPendingApprovals } from "./approval-recovery";
 import { membershipNetwork } from "./membership-network";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
+import { hardenFetch } from "./hardening";
+import { SILVER_HARDENING } from "./hardening.config";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -164,8 +166,10 @@ function workerFor(env: ChapterEnv): Built {
   return result;
 }
 
-export default {
-  fetch(req: Request, env: ChapterEnv, ctx: ExecutionContext) {
+// Body cap, public-write rate limit, and browser security headers wrap every
+// response the Worker produces (src/hardening.ts); static assets get the same
+// headers from _headers.
+const fetchHandler = hardenFetch((req: Request, env: ChapterEnv, ctx: ExecutionContext) => {
     let target: Built;
     try {
       target = workerFor(env);
@@ -177,7 +181,10 @@ export default {
       return env.ASSETS.fetch(req);
     }
     return target.worker.fetch(req, env, ctx);
-  },
+}, SILVER_HARDENING);
+
+export default {
+  fetch: fetchHandler,
   scheduled(_controller: ScheduledController, env: ChapterEnv, ctx: ExecutionContext) {
     ctx.waitUntil(
       (async () => {
