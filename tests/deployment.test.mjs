@@ -95,10 +95,11 @@ describe("chapterFor", () => {
 
 describe("wrangler deployments", () => {
   const text = readFileSync("wrangler.jsonc", "utf8");
-  it("every deployment closes sales by default except the dev rehearsal", () => {
-    // The production and staging blocks say disabled; only dev says public.
+  it("production carries no committed sales state; staging is disabled; only the dev rehearsal is public", () => {
     const states = [...text.matchAll(/"SALES_STATE":\s*"(\w+)"/g)].map((m) => m[1]);
-    expect(states).toEqual(["disabled", "disabled", "public"]);
+    expect(states).toEqual(["disabled", "public"]);
+    const top = text.slice(0, text.indexOf('"env": {'));
+    expect(top).not.toMatch(/"SALES_STATE":/);
   });
   it("staging is the production identity with no domain and no triggers", () => {
     const staging = text.slice(text.indexOf('"staging"'), text.indexOf('"dev": {'));
