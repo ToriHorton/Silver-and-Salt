@@ -67,8 +67,7 @@ async function stripe(method, path, params) {
 // 1. Same account, live mode.
 const account = await stripe("GET", "/v1/account");
 if (!account.charges_enabled) throw new Error(`account ${account.id} cannot take live charges yet (activation incomplete)`);
-const pkAccount = Buffer.from(pk.replace(/^pk_live_/, ""), "base64").toString("utf8");
-console.log(`live account ${account.id} (charges enabled); publishable key decodes to ${pkAccount}`);
+console.log(`live account ${account.id} (charges enabled)`);
 
 // 2. Webhook endpoint for this Worker, secret straight into the vault.
 const endpoints = await stripe("GET", "/v1/webhook_endpoints", { limit: 100 });
