@@ -71,7 +71,11 @@
       // No triggers: a candidate holding production credentials must not run
       // background work beside the real production Worker.
       "triggers": { "crons": [] },
-      "services": [{ "binding": "BUILT_NOT_FOUND", "service": "built-not-found-staging" }],
+      // TEMPORARY (2026-09-14): bound to the production hub until
+      // built-not-found-staging exists (launch Phase 4b). Staging makes no
+      // outbound hub call while sales are disabled; switch back to the
+      // staging hub as soon as it is deployed.
+      "services": [{ "binding": "BUILT_NOT_FOUND", "service": "built-not-found" }],
       "vars": {
         "ODLA_ENDPOINT": "https://db.odla.ai",
         "ODLA_TENANT": "silver-and-salt-capital",
