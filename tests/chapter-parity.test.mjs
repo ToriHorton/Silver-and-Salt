@@ -56,13 +56,14 @@ const chapterVersion = JSON.parse(readFileSync(
 // (source commit 3eab2284): its dist/ tree is byte-identical, verified
 // 2026-09-14 at the launch dependency checkpoint, so it carries the same
 // reviewed namespaces and attributes.
-const candidateVersions = ["0.47.11", "0.48.0"];
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1"];
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
   "0.47.10": [],
   "0.47.11": candidateNamespaces,
   "0.48.0": candidateNamespaces,
+  "0.48.1": [...candidateNamespaces, "chapterAccountPolicy"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
@@ -132,6 +133,11 @@ const REVIEWED_LEGACY_SOURCE_ATTRS = {
 // defaults; the browser still cannot write either attribute directly.
 const REVIEWED_ADDITIONS = {
   applications: [
+    // Decision b44909c6-bafe-5315-aff9-3aadd33b44aa: reject repeat signups,
+    // preserve existing accounts, and enable protected Studio account editing.
+    // Optional fields preserve old applications; the email key is unique.
+    ...(chapterVersion === "0.48.1"
+      ? ["signupEmailKey", "clerkInvitationSentAt", "clerkAccountPending"] : []),
     // Decision 346b7b00-6b5e-5748-8949-e4528c93868b: additive dev-only candidate contract.
     ...(isCandidate ? ["approvalEffectsPending", "approvalEffectsOrigin", "approvalEffectsLastAttemptAt",
       "namedSeatId", "namedSeatPrimaryApplicationId", "namedSeatClaimPending", "namedSeatAcceptedAt"] : []),
@@ -232,6 +238,24 @@ describe("schema parity vs the frozen legacy contract", () => {
     // Reviewed auth migration: old rows need not be deleted, but the legacy
     // allowlist is no longer provisioned or used as privilege authority.
     expect(chapterNs).toEqual([...legacyNs.filter(ns => ns !== "superAdmins"), ...REVIEWED_NAMESPACES].sort());
+  });
+
+  it("keeps duplicate-signup reservations optional and the account policy private", () => {
+    if (chapterVersion !== "0.48.1") return;
+    expect(integration.schema.entities.applications.attrs.signupEmailKey)
+      .toEqual({ type: "string", unique: true, indexed: true, optional: true });
+    expect(integration.schema.entities.applications.attrs.clerkInvitationSentAt)
+      .toEqual({ type: "number", unique: false, indexed: false, optional: true });
+    expect(integration.schema.entities.applications.attrs.clerkAccountPending)
+      .toEqual({ type: "boolean", unique: false, indexed: false, optional: true });
+    expect(Object.keys(integration.schema.entities.chapterAccountPolicy.attrs).sort())
+      .toEqual(["id", "metadata", "roles"]);
+    expect(integration.rules.chapterAccountPolicy)
+      .toEqual({ view: "false", create: "false", update: "false", delete: "false" });
+    expect(integration.seeds.find((seed) => seed.ns === "chapterAccountPolicy"))
+      .toEqual({ id: "account-policy", ns: "chapterAccountPolicy",
+        key: { attr: "id", value: chapter.id },
+        attrs: { metadata: "private", roles: [...chapter.auth.ladder] } });
   });
 
   it("keeps the reviewed publication head bounded and browser-inaccessible", () => {
@@ -519,7 +543,10 @@ describe("group seed is insert-only and cannot overwrite owner edits", () => {
 
   it("seeds the groups row, crm_config singleton, and managed founding tier", () => {
     const namespaces = integration.seeds.map((s) => s.ns ?? s.namespace).sort();
-    expect(namespaces).toEqual(["crm_config", "groups", "tiers"]);
+    expect(namespaces).toEqual([
+      ...(chapterVersion === "0.48.1" ? ["chapterAccountPolicy"] : []),
+      "crm_config", "groups", "tiers",
+    ]);
   });
 
   it("seeds the group under the live group id", () => {
