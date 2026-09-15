@@ -30,6 +30,22 @@ const retainedNewsletterData = {
   probes: [],
 };
 
+// The dev tenant still has historical allowlist rows. Preserve their schema
+// during additive provisioning; protected $users roles are the only active
+// super-admin authority. Production never used this retired namespace.
+const retainedDevAdminData = {
+  id: "retained-dev-admin-data",
+  title: "Retained development admin data",
+  npm: "silver-and-salt-capital",
+  schema: {
+    entities: { superAdmins: legacySourceSchema.entities.superAdmins },
+    links: {},
+  },
+  rules: { superAdmins: denyAll },
+  seeds: [],
+  probes: [],
+};
+
 const baseChapterIntegration = createChapterIntegration(chapter);
 
 // These attributes predate managed Chapter tiers. They may contain historical
@@ -115,7 +131,11 @@ export default {
   // Chapter composes the active membership and CRM namespaces, default-deny
   // rules, insert-only seeds, and managed founding tier. The second descriptor
   // retains a populated, retired namespace without restoring its public route.
-  integrations: [activeChapterIntegration, retainedNewsletterData],
+  integrations: [
+    activeChapterIntegration,
+    retainedNewsletterData,
+    ...(process.env.ODLA_PROVISION_PROD === "1" ? [] : [retainedDevAdminData]),
+  ],
   calendar: {
     google: {
       // 0.2.0 live booking: FreeBusy availability over these calendars;
