@@ -21,6 +21,7 @@ describe("resolveSalesState", () => {
     expect(resolveSalesState({}).state).toBe("disabled");
     expect(resolveSalesState({ SALES_STATE: "open" }).state).toBe("disabled");
     expect(resolveSalesState({ SALES_STATE: "" }).state).toBe("disabled");
+    expect(resolveSalesState({ SALES_STATE: "disabled" })).toEqual({ state: "disabled", reason: "SALES_STATE=disabled" });
   });
   it("opens only on the literal public value", () => {
     expect(resolveSalesState({ SALES_STATE: "public" }).state).toBe("public");

@@ -53,6 +53,7 @@ export function resolveSalesState(env: SalesEnv): { state: SalesState; reason: s
     }
     return { state: "restricted", reason: "SALES_STATE=restricted" };
   }
+  if (raw === "disabled") return { state: "disabled", reason: "SALES_STATE=disabled" };
   return { state: "disabled", reason: raw ? `unknown SALES_STATE ${raw}` : "SALES_STATE unset" };
 }
 
