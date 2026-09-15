@@ -15,7 +15,8 @@
     "deploy:app:dev": "node _scripts/assert-dev-deploy-target.mjs && npm run build && wrangler deploy --env dev",
     "check:schema": "node _scripts/check-deployed-schema.mjs",
     "deploy:app:staging": "npm run build && npx wrangler deploy --env staging",
-    "assert:prod-target": "node _scripts/assert-prod-deploy-target.mjs"
+    "assert:prod-target": "node _scripts/assert-prod-deploy-target.mjs",
+    "security:scan": "odla-security scan . --profile odla --out .odla/security/latest --fail-on high --fail-on-candidates critical --exclude Silver-and-Salt-Capital-FAQ.pdf --exclude report-headers.numbers --exclude report-headers.xlsx"
   },
   "devDependencies": {
     "@odla-ai/cli": "0.60.0",
