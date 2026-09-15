@@ -30,9 +30,11 @@ const before = await state();
 
 if (args.includes("--addressing")) {
   const res = await db.transact([
-    { t: "update", ns: "groups", id: "silver-and-salt-capital", attrs: { notificationEmail: "tori@silverandsaltcapital.com", replyTo: "tori@silverandsaltcapital.com" } },
-    { t: "retract", ns: "groups", id: "silver-and-salt-capital", attrs: ["debugEmail"] },
-  ], { mutationId: "launch-prod-group-addressing-2026-09-14" });
+    // Rows are addressed by their declared unique `id` attribute, not by an
+    // internal record id, so the transact ops use the keyed form.
+    { t: "update", ns: "groups", id: { ns: "groups", attr: "id", value: "silver-and-salt-capital" }, attrs: { notificationEmail: "tori@silverandsaltcapital.com", replyTo: "tori@silverandsaltcapital.com" } },
+    { t: "retract", ns: "groups", id: { ns: "groups", attr: "id", value: "silver-and-salt-capital" }, attrs: ["debugEmail"] },
+  ], { mutationId: "launch-prod-group-addressing-2026-09-14-keyed" });
   console.log("addressing transact:", JSON.stringify(res));
 }
 
@@ -44,8 +46,8 @@ if (i >= 0) {
   if (!app || !rec) throw new Error("fixture ids not found; nothing deleted");
   if (app.lastName !== "Replayfixture" || app.stripeSubscriptionId) throw new Error("refusing: not the acceptance fixture, or it has provider state");
   const res = await db.transact([
-    { t: "delete", ns: "applications", id: applicationId },
-    { t: "delete", ns: "crm_record", id: crmRecordId },
+    { t: "delete", ns: "applications", id: { ns: "applications", attr: "id", value: applicationId } },
+    { t: "delete", ns: "crm_record", id: { ns: "crm_record", attr: "id", value: crmRecordId } },
   ], { mutationId: `launch-prod-remove-fixture-${applicationId}` });
   console.log("fixture removal transact:", JSON.stringify(res));
 }
