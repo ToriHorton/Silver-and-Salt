@@ -1,9 +1,18 @@
-// Cloudflare Worker config for the Silver & Salt Capital site (odla migration).
-// Phase 1: serve the static build from dist/ via an assets binding.
+// Cloudflare Worker config for the Silver & Salt Capital site.
 //
-// IMPORTANT (until Phase 5 sign-off): deploy ONLY the dev environment
-//   npx wrangler deploy --env dev
-// Never deploy the top-level (prod) config before Phase 5.
+// Three deployments of the same entry (src/worker-chapter.ts):
+//   top level   production: the Worker that serves silverandsaltcapital.com
+//               (the domain is attached in the dashboard, so there are no
+//               routes here). Deployed by .github/workflows/deploy.yml from
+//               main, behind _scripts/assert-prod-deploy-target.mjs.
+//   env.staging the production candidate on a separate Worker with the
+//               production identity, no domain, no triggers. Read-only
+//               checks only; it is production data. `npm run deploy:app:staging`.
+//   env.dev     the developer Workers on the shared dev tenant.
+//
+// Sales are closed by default in every deployment (SALES_STATE=disabled).
+// Opening them is an operator action on the Worker vars/secrets, never a
+// code change: see src/sales-state.ts.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "silver-and-salt-capital",
@@ -12,7 +21,6 @@
   "compatibility_flags": ["nodejs_compat"],
   // Plain vars, not secrets. The secret (ODLA_API_KEY) is pushed by the odla
   // CLI via wrangler stdin and never appears in this file or the repo.
-  // Top level = prod tenant, used only from Phase 5 on.
   "vars": {
     "ODLA_ENDPOINT": "https://db.odla.ai",
     "ODLA_TENANT": "silver-and-salt-capital",
@@ -20,32 +28,70 @@
     "ODLA_APP_ID": "silver-and-salt-capital",
     "ODLA_ENV": "prod",
     "ODLA_RUNTIME": "live",
-    // Verified sender for Cloudflare Email Service. Phase 5 pre-requisite:
-    // onboard silverandsaltcapital.com to Email Service in the Cloudflare
-    // dashboard BEFORE the first prod deploy, or sends fail with
-    // E_SENDER_NOT_VERIFIED (they are audited in emailLog either way).
+    "MEMBERSHIP_AUTHORITY_OWNER": "built-not-found",
+    // disabled | restricted | public. SALES_STOP (a secret) overrides to
+    // disabled; SALES_CANARY_TOKEN and SALES_ALLOWLIST are secrets too.
+    "SALES_STATE": "disabled",
+    // Verified sender for Cloudflare Email Service. Onboard
+    // silverandsaltcapital.com to Email Service in the Cloudflare dashboard
+    // before the first send, or sends fail with E_SENDER_NOT_VERIFIED (they
+    // are audited in emailLog either way).
     "EMAIL_FROM": "membership@silverandsaltcapital.com"
   },
+  // The Built Not Found authority Worker on the same Cloudflare account.
+  "services": [{ "binding": "BUILT_NOT_FOUND", "service": "built-not-found" }],
+  // Durable pending approval effects are retried every five minutes.
+  "triggers": { "crons": ["*/5 * * * *"] },
   // Cloudflare Email Service: lets the Worker send transactional email.
   // The from address must be on a domain onboarded to Email Service in this
   // account; src/email.ts falls back to log-only when the binding or
   // EMAIL_FROM is absent.
   "send_email": [{ "name": "SEND_EMAIL" }],
   "assets": {
-    // Always the Phase 0 build dir (npm run build), never the repo root.
+    // Always the build dir (npm run build), never the repo root.
     "directory": "dist",
     "binding": "ASSETS",
-    // Serves the branded dist/404.html for any unmatched path. The comment
-    // here used to say no custom 404 existed; one has since been added, and
-    // Tori confirmed 2026-08-24 that it ships.
+    // The Worker must see every API request and the join page before the
+    // static asset of the same name; everything else is served as an asset.
+    "run_worker_first": ["/api/*", "/join", "/join/", "/join.html"],
+    // Serves the branded dist/404.html for any unmatched path.
     "not_found_handling": "404-page",
-    // GitHub Pages serves /join.html AND /join both as 200. Cloudflare has
+    // GitHub Pages served /join.html AND /join both as 200. Cloudflare has
     // no exact equivalent; this default keeps both forms reachable
     // (.html URLs 307-redirect to extensionless). "none" would 404 any
     // extensionless link, so it is the wrong trade.
     "html_handling": "auto-trailing-slash"
   },
   "env": {
+    "staging": {
+      "name": "silver-and-salt-capital-staging",
+      // ROUTE GUARD: environments inherit top-level routes. The top level has
+      // none today, and this explicit empty list keeps it that way forever.
+      "routes": [],
+      // No triggers: a candidate holding production credentials must not run
+      // background work beside the real production Worker.
+      "triggers": { "crons": [] },
+      "services": [{ "binding": "BUILT_NOT_FOUND", "service": "built-not-found-staging" }],
+      "vars": {
+        "ODLA_ENDPOINT": "https://db.odla.ai",
+        "ODLA_TENANT": "silver-and-salt-capital",
+        "ODLA_PLATFORM": "https://odla.ai",
+        "ODLA_APP_ID": "silver-and-salt-capital",
+        "ODLA_ENV": "prod",
+        "ODLA_RUNTIME": "live",
+        "MEMBERSHIP_AUTHORITY_OWNER": "built-not-found",
+        "SALES_STATE": "disabled",
+        "EMAIL_FROM": "membership@silverandsaltcapital.com"
+      },
+      "send_email": [{ "name": "SEND_EMAIL" }],
+      "assets": {
+        "directory": "dist",
+        "binding": "ASSETS",
+        "run_worker_first": ["/api/*", "/join", "/join/", "/join.html"],
+        "not_found_handling": "404-page",
+        "html_handling": "auto-trailing-slash"
+      }
+    },
     "dev": {
       "name": "silver-and-salt-capital-dev",
       "account_id": "c4f7c2b79a8ec203b50e1e36790ef038",
@@ -57,9 +103,7 @@
       // builtnotfoundcapital.com and www away from the production Worker and
       // pointed the live site at the dev tenant. It stayed up at 200 while
       // serving dev data, which is the worst kind of failure: invisible.
-      // The top level has no routes today, so this is harmless; it becomes
-      // load-bearing the moment silverandsaltcapital.com is attached to the
-      // prod Worker. An explicit empty list cannot inherit anything.
+      // An explicit empty list cannot inherit anything.
       "routes": [],
       "vars": {
         "ODLA_ENDPOINT": "https://db.odla.ai",
@@ -68,11 +112,12 @@
         "ODLA_APP_ID": "silver-and-salt-capital",
         "ODLA_ENV": "dev",
         "MEMBERSHIP_AUTHORITY_OWNER": "built-not-found",
+        // Development rehearses the whole flow with Stripe test payments.
+        "SALES_STATE": "public",
         // ODLA installs the account-bound cory/tori runtime binding. Stripe
         // test/live mode is separate; a static value here would overwrite it.
         // Dev sends from the odla.ai domain (already onboarded to Email
-        // Service on this Cloudflare account) until the Phase 5 cutover
-        // onboards silverandsaltcapital.com. Dev deliveries are further
+        // Service on this Cloudflare account). Dev deliveries are further
         // redirected to the group's debug inbox by src/email.ts.
         "EMAIL_FROM": "silver-and-salt-capital@odla.ai"
       },
