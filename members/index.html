@@ -362,6 +362,14 @@
      .join-pay > div[hidden] { display: none; }
      .join-pay > div:not([hidden]) { margin-top: 14px; }
      .pay-error { color: #a4442c; font-size: 13px; margin: 10px 0; min-height: 18px; }
+    .chapter-journey {
+      --ui-text: var(--moss); --ui-text-muted: var(--moss-light);
+      --ui-font-sans: 'Satoshi', 'Helvetica Neue', sans-serif;
+      --ui-font-display: 'Cormorant Garamond', Georgia, serif;
+      --ui-accent: var(--moss); --ui-on-accent: #fff;
+      --ui-border: var(--border); --ui-surface: #fff; --ui-surface-2: var(--lime-soft);
+      --ui-radius-lg: 14px;
+    }
   </style>
 </head>
 <body>
@@ -395,6 +403,6 @@
   </div>
 
   <script src="/assets/member-auth.js?v=4"></script>
-  <script type="module" src="/assets/app/members.js?v=4"></script>
+  <script type="module" src="/assets/app/members.js?v=5"></script>
 </body>
 </html>

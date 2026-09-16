@@ -7,21 +7,7 @@
 // so the legacy /api/groups/:id/join-config host route is no longer the join
 // page's contract.
 //
-// PRESERVING THE APPROVED EXPERIENCE. The form markup below is a faithful
-// transcription of the markup that was in join.html: same element order, same
-// classes, same labels, same placeholders, same option lists, same helper copy.
-// join.html's stylesheet is unchanged, so the rendered result is the same page.
-// What moved is orchestration only — submit, payment, and booking are now the
-// package's state machine instead of 307 lines of inline script.
-//
-// ONE DELIBERATE MARKUP CHANGE: the input `name` attributes are the API
-// contract now. JoinIsland's collectFormFields posts FormData keys VERBATIM
-// with no transformation, so the legacy snake_case names (first_name,
-// last_name, referral_name, who_you_are) are renamed to the camelCase the
-// applications endpoint requires. `name` is invisible to the applicant, so the
-// experience is unchanged; the legacy inline script did this same mapping by
-// hand at post time. The `for`/`id` pairs are renamed with them to keep every
-// label association intact.
+// Host brand, fields and confirmation surround the verified Chapter journey.
 
 import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
@@ -54,18 +40,18 @@ const WHO_YOU_ARE_OPTIONS = [
 
 /** The site's own step rail. Chapter owns the flow; these dots are site chrome,
  *  so they are driven from the packaged step rather than reimplemented. */
-function StepRail({ step }) {
+function StepRail({ step, invited }) {
   const index = step === "form" ? 0 : step === "payment" || step === "paymentPending" ? 1 : 2;
-  const cls = (i) => (i === index ? "step active" : i < index ? "step done" : "step pending");
+  const cls = (i) => (i === index ? "step active" : i < index ? "step complete" : "step pending");
   return (
     <div class="steps" id="steps">
       <div class={cls(0)} id="dot-1">
         <div class="step-dot">1</div>
-        <div class="step-label">Apply</div>
+        <div class="step-label">{invited ? "Your details" : "Apply"}</div>
       </div>
       <div class={cls(1)} id="dot-pay">
         <div class="step-dot">2</div>
-        <div class="step-label">Secure your place</div>
+        <div class="step-label">{invited ? "Accept your seat" : "Secure your place"}</div>
       </div>
       <div class={cls(2)} id="dot-2">
         <div class="step-dot">3</div>
@@ -75,23 +61,23 @@ function StepRail({ step }) {
   );
 }
 
-function ApplicationFields({ config, referral, onReferral, referralName, onReferralName, ack, onAck }) {
+function ApplicationFields({ invitation, config, referral, onReferral, referralName, onReferralName, ack, onAck }) {
   return (
     <>
       <div class="two-col">
         <div class="form-group">
           <label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" placeholder="Martha" required />
+          <input type="text" id="firstName" name="firstName" placeholder="Martha" defaultValue={invitation?.recipientName.split(" ")[0] ?? ""} required />
         </div>
         <div class="form-group">
           <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" placeholder="Cannon" required />
+          <input type="text" id="lastName" name="lastName" placeholder="Cannon" defaultValue={invitation?.recipientName.split(" ").slice(1).join(" ") ?? ""} required />
         </div>
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="martha@example.com" required />
+        <input type="email" id="email" name="email" placeholder="martha@example.com" value={invitation?.recipientEmail} readOnly={Boolean(invitation)} required />
       </div>
 
       <div class="two-col">
@@ -105,7 +91,7 @@ function ApplicationFields({ config, referral, onReferral, referralName, onRefer
         </div>
       </div>
 
-      <div class="form-group">
+      {invitation ? <><input type="hidden" name="referral" value="referred" /><input type="hidden" name="referralName" value={invitation.purchaserName} /></> : <div class="form-group">
         <label for="referral">How did you find Silver &amp; Salt Capital?</label>
         <select
           id="referral"
@@ -140,7 +126,7 @@ function ApplicationFields({ config, referral, onReferral, referralName, onRefer
             onInput={(e) => onReferralName(e.currentTarget.value)}
           />
         </div>
-      </div>
+      </div>}
 
       <div class="form-group">
         <label for="whoYouAre">How would you describe yourself?</label>
@@ -203,24 +189,23 @@ function ApplicationFields({ config, referral, onReferral, referralName, onRefer
 }
 
 export function Join({ config, initialTierId }) {
+  const seatId = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("seat");
+  const resumeKey = seatId ? `${RESUME_KEY}:seat:${seatId}` : RESUME_KEY;
   const [referral, setReferral] = useState("");
   const [referralName, setReferralName] = useState("");
   const [ack, setAck] = useState(false);
-  const [step, setStep] = useState("form");
   // Seeded from sessionStorage so a reload resumes; the id is a capability the
   // server re-validates, and the step itself always comes from the server.
   const [resumeId, setResumeId] = useState(() => {
-    try { return sessionStorage.getItem(RESUME_KEY) ?? null; } catch { return null; }
+    try { return sessionStorage.getItem(resumeKey) ?? null; } catch { return null; }
   });
 
   return (
     <>
-      <StepRail step={step} />
-      <div class="card">
-        <div class="card-label">Before we meet</div>
+      <div class="join-surface">
         <JoinIsland
           config={config}
-          initialNamedSeatId={typeof window === "undefined" ? undefined : new URLSearchParams(window.location.search).get("seat") ?? undefined}
+          initialNamedSeatId={seatId ?? undefined}
           namedSeatClaimApi={namedSeatClaimApi}
           initialTierId={initialTierId}
           renderTiers={({ tiers, selectedTierId, selectTier }) => (
@@ -249,14 +234,13 @@ export function Join({ config, initialTierId }) {
             // Keep the site's step rail in sync with the packaged flow, and
             // remember the application id so a reload can resume instead of
             // dropping the applicant back onto an empty form.
-            if (state.step !== step) queueMicrotask(() => setStep(state.step));
             if (state.applicationId && state.applicationId !== resumeId) {
               queueMicrotask(() => {
-                try { sessionStorage.setItem(RESUME_KEY, state.applicationId); } catch {}
+                try { sessionStorage.setItem(resumeKey, state.applicationId); } catch {}
                 setResumeId(state.applicationId);
               });
             }
-            return null;
+            return <StepRail step={state.step} invited={Boolean(seatId)} />;
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
           // Baker Priest quote card). Preserved verbatim from join.html's
@@ -369,7 +353,8 @@ export function Join({ config, initialTierId }) {
             ),
           }}
         >
-          <ApplicationFields
+          {({ invitation }) => <ApplicationFields
+            invitation={invitation}
             config={config}
             referral={referral}
             onReferral={(v) => {
@@ -382,7 +367,7 @@ export function Join({ config, initialTierId }) {
             onReferralName={setReferralName}
             ack={ack}
             onAck={setAck}
-          />
+          />}
         </JoinIsland>
       </div>
     </>
