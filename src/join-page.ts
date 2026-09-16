@@ -24,14 +24,16 @@ export const joinPage: Route = async (req, url, env) => {
   if (presented !== null) {
     const { state } = resolveSalesState(env);
     const token = env.SALES_CANARY_TOKEN;
-    const headers = new Headers({ location: "/join", "cache-control": "no-store" });
+    const clean = new URL(url); clean.searchParams.delete("canary");
+    const headers = new Headers({ location: clean.pathname + clean.search, "cache-control": "no-store" });
     if (state === "restricted" && typeof token === "string" && timingSafeEqual(presented, token)) {
       headers.set("set-cookie", canarySetCookie(token, url.protocol === "https:"));
     }
     return new Response(null, { status: 302, headers });
   }
 
-  if (!purchasesOpenFor(req, env)) return null;
+  const prepaidInvitation = /^seat_[A-Za-z0-9_-]{16,128}$/.test(url.searchParams.get("seat") ?? "");
+  if (!prepaidInvitation && !purchasesOpenFor(req, env)) return null;
 
   // Ask the assets binding, never public fetch back into this same Worker.
   const asset = await env.ASSETS.fetch(new Request(req, { method: "GET" }));
@@ -46,14 +48,19 @@ export const joinPage: Route = async (req, url, env) => {
   }
   let body = html.slice(0, start)
     + '<div id="join-root"><p role="status">Loading the application form…</p></div>'
-    + '<script type="module" src="/assets/app/join-island.js"></script>'
+    + '<script type="module" src="/assets/app/join-island.js?v=seat-journeys-0490"></script>'
     + html.slice(end + END.length);
   if (envNameOf(env) === "dev") {
     body = body.replace(
       "We look forward to welcoming you to our investor community. Memberships open soon.",
       "Development rehearsal — use test identities and Stripe test payments only.",
     );
+  } else {
+    body = body.replace("We look forward to welcoming you to our investor community. Memberships open soon.",
+      prepaidInvitation ? "Confirm your invitation and take the next step toward membership." : "We look forward to welcoming you to our community.");
   }
+  if (prepaidInvitation) body = body.replace('id="hero-title">Apply for Membership', 'id="hero-title">Your invitation')
+    .replace('id="hero-tag">By Application Only', 'id="hero-tag">A place for you');
   const headers = new Headers(asset.headers);
   headers.delete("content-length");
   headers.delete("etag");

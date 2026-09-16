@@ -2,9 +2,9 @@
 // provisional application card or the member material) into #members-root;
 // the hero and sign-in mount stay page-owned DOM, updated here directly.
 import { render } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { SlotPicker } from "./slot-picker.jsx";
-import { PaymentStep } from "@odla-ai/chapter/ui/member";
+import { PaymentStep, MemberRestart, JourneyFrame } from "@odla-ai/chapter/ui/member";
 
 const $ = (id) => document.getElementById(id);
 // Resolved at call time so components can render without a page.
@@ -191,13 +191,14 @@ export function NamedSeatCard({ api, initial }) {
       setError("The seat offer is briefly unavailable. Please try again shortly.");
     }
   };
-  if (data === null && !error && !initial) { void load(); }
+  useEffect(() => { if (!initial) void load(); }, [api]);
   const money = data ? new Intl.NumberFormat("en-US", { style: "currency", currency: data.currency }).format(data.amountCents / 100) : "";
   const untilDate = data?.termEndsAt ? new Date(data.termEndsAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }) : "";
   const seatStatus = data?.seat ? String(data.seat.status).replaceAll("_", " ") : "";
   return (
-    <div class="card" id="named-seat-card">
+    <JourneyFrame><div class="card" id="named-seat-card">
       <div class="card-label">A second seat</div>
+      <h2>A place for someone you know</h2>
       {error && <p class="pay-error" role="alert">{error}</p>}
       {!data && !error && <p class="meeting-note">Loading your seat offer…</p>}
       {data?.seat && (
@@ -247,7 +248,7 @@ export function NamedSeatCard({ api, initial }) {
           )}
         </div>
       )}
-    </div>
+    </div></JourneyFrame>
   );
 }
 
@@ -265,7 +266,7 @@ export function MembersApp({ me: initialMe, email }) {
       <div class="card">
         <div class="member-row">
           <span class="member-email">{email}</span>
-          <span class={"role-badge " + role}>{role}</span>
+          <span class={"role-badge " + role}>{role === "member" && me.memberAccess !== true ? "Inactive membership" : role}</span>
         </div>
         <div class="account-actions">
           <button class="signout-btn" onClick={signOut}>Sign out</button>
@@ -274,7 +275,9 @@ export function MembersApp({ me: initialMe, email }) {
           {me.authorized && <a class="admin-console-link" href="/admin/">Admin console</a>}
         </div>
       </div>
-      {role === "provisional" ? <ProvisionalCard application={me.application} onReschedule={reload} /> : <MemberView />}
+      {me.memberAccess === true ? <MemberView /> : me.membershipRestart?.eligible && me.application ?
+        <MemberRestart api={memberApi} application={me.application} applicationId={me.membershipRestart.applicationId} onComplete={reload} /> :
+        <JourneyFrame><ProvisionalCard application={me.application} onReschedule={reload} /></JourneyFrame>}
       {me.namedSeatsEnabled && <NamedSeatCard api={memberApi} />}
     </>
   );
@@ -315,7 +318,7 @@ async function showSignedIn() {
   const role = me.role || "provisional";
 
   $("hero-title").textContent = "Member Area";
-  $("hero-sub").textContent = role === "provisional"
+  $("hero-sub").textContent = me.membershipRestart?.eligible ? "Welcome back. Your membership is ready to restart." : me.memberAccess !== true
     ? "Thank you for joining us. Full membership follows your introduction call."
     : "Welcome back.";
 

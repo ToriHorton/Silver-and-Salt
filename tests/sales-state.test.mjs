@@ -66,6 +66,13 @@ describe("canary", () => {
 });
 
 describe("salesGate", () => {
+  it("lets only an explicit seat application reach Chapter verification while every new purchase remains stopped", async () => {
+    const seat = "seat_" + "a".repeat(64);
+    expect(await call(salesGate, post("/api/applications", { namedSeatId: seat }), { SALES_STOP: "1" })).toBeNull();
+    expect((await call(salesGate, post("/api/applications", { namedSeatId: "invalid" }), {})).status).toBe(503);
+    expect((await call(salesGate, post("/api/payments/subscription", { namedSeatId: seat }), {})).status).toBe(503);
+    expect((await call(salesGate, post("/api/membership/restart"), {})).status).toBe(503);
+  });
   it("covers every entry point through which a purchase or free signup can begin", () => {
     expect(GATED_POSTS).toEqual(expect.arrayContaining([
       "/api/applications", "/api/payments/quote", "/api/payments/subscription",
@@ -122,6 +129,16 @@ describe("joinPage", () => {
 <!-- membership-holding:start --><div id="coming-soon">soon</div><!-- membership-holding:end --></body></html>`;
   const assets = { fetch: async () => new Response(holding, { status: 200, headers: { "content-type": "text/html" } }) };
   const get = (path, cookie) => new Request(`https://silverandsaltcapital.com${path}`, { headers: cookie ? { cookie } : {} });
+  it("shows the verification flow for an already-paid invitation without opening public sales", async () => {
+    const seat = "seat_" + "a".repeat(64);
+    const response = await call(joinPage, get(`/join?seat=${seat}`), { ASSETS: assets, ODLA_ENV: "prod", SALES_STOP: "1" });
+    expect(await response.text()).toContain('id="join-root"');
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(await call(joinPage, get("/join?seat=invalid"), { ASSETS: assets })).toBeNull();
+    const canary = await call(joinPage, get(`/join?seat=${seat}&canary=${TOKEN}`), {
+      ASSETS: assets, SALES_STATE: "restricted", SALES_CANARY_TOKEN: TOKEN });
+    expect(canary.headers.get("location")).toBe(`/join?seat=${seat}`);
+  });
 
   it("falls through to the untouched holding page when sales are closed", async () => {
     expect(await call(joinPage, get("/join"), { ASSETS: assets, ODLA_ENV: "prod" })).toBeNull();
