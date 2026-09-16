@@ -30,7 +30,7 @@ describe("NamedSeatCard", () => {
 });
 
 describe("MembersApp", () => {
-  const me = (extra) => ({ email: "m@example.com", role: "member", application: { paid: true, tier: "standard" }, namedSeatsEnabled: false, ...extra });
+  const me = (extra) => ({ email: "m@example.com", role: "member", memberAccess: true, application: { paid: true, tier: "standard" }, namedSeatsEnabled: false, ...extra });
   it("shows the admin console to anyone the server authorizes, superadmins included", () => {
     expect(render(h(MembersApp, { me: me({ authorized: true }), email: "m@example.com" }))).toContain("Admin console");
     expect(render(h(MembersApp, { me: me({ authorized: true, role: "admin" }), email: "m@example.com" }))).toContain("Admin console");
@@ -39,5 +39,14 @@ describe("MembersApp", () => {
   it("mounts the seat card only when the server enables seats", () => {
     expect(render(h(MembersApp, { me: me({ authorized: false, namedSeatsEnabled: true }), email: "m@example.com" }))).toContain("A second seat");
     expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("A second seat");
+  });
+  it("offers a saved-profile restart to an inactive approved account instead of trusting a stale member role", () => {
+    const html = render(h(MembersApp, { me: me({ memberAccess: false, membershipRestart: { eligible: true, applicationId: null },
+      application: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com", status: "refunded", paid: false } }), email: "ada@example.com" }));
+    expect(html).toContain("Restart your membership");
+    expect(html).toContain("Ada Lovelace");
+    expect(html).toContain("ada@example.com");
+    expect(html).toContain("No new application or interview");
+    expect(html).not.toContain("A second seat");
   });
 });

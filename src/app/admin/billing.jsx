@@ -4,6 +4,7 @@
 // People tab.
 import { useState, useEffect } from "preact/hooks";
 import { DataTable } from "@odla-ai/ui/components";
+import { PaymentRecoveryQueue } from "@odla-ai/chapter/ui/admin";
 import { api, STATUS_LABELS, SUB_BADGE, SUB_LABELS, fmtMoney, fmtDate } from "../lib.js";
 
 const stripeLinkStyle =
@@ -75,6 +76,9 @@ const COLUMNS = [
 export function BillingTab() {
   const [billing, setBilling] = useState(null); // null = loading
   const [failed, setFailed] = useState(false);
+  const [busy, setBusy] = useState("");
+  const [message, setMessage] = useState("");
+  const [revision, setRevision] = useState(0);
 
   useEffect(() => {
     api("/api/admin/billing")
@@ -83,13 +87,30 @@ export function BillingTab() {
         if (b.truncated) console.warn("billing: subscription list truncated at 100");
       })
       .catch((e) => { console.error(e); setFailed(true); });
-  }, []);
+  }, [revision]);
+
+  const cancel = async (id) => {
+    if (!window.confirm("Cancel future renewals? Access continues through the paid term. No refund will be issued.")) return;
+    setBusy(id); setMessage("");
+    try {
+      await api(`/api/admin/applications/${id}/cancel-renewal`, { method: "POST" });
+      setMessage("Renewal canceled. Paid access continues through the current term.");
+      setRevision(value => value + 1);
+    } catch (error) { setMessage(error.message || "Cancellation could not be confirmed. Please retry."); }
+    finally { setBusy(""); }
+  };
+  const columns = [...COLUMNS, { key: "cancelRenewal", header: "Renewal", cell: row =>
+    row.cancelAtPeriodEnd ? "Ends after paid term" : ["active", "trialing", "past_due", "unpaid"].includes(row.subscriptionStatus)
+      ? <button type="button" class="btn-action" disabled={Boolean(busy)} onClick={() => void cancel(row.id)}>
+        {busy === row.id ? "Canceling…" : "Cancel renewal"}</button> : "—" }];
 
   const ready = billing?.billingReady;
   const s = billing?.summary;
 
   return (
     <>
+      {message && <p role="status">{message}</p>}
+      <PaymentRecoveryQueue getToken={getToken} />
       <div class="card">
         <div class="card-label">
           Billing {ready && billing.testMode && <span class="pay-badge unpaid" style="margin-left:8px;">Test mode</span>}
@@ -111,7 +132,7 @@ export function BillingTab() {
         ) : (
           <DataTable
             rows={billing?.rows ?? []}
-            columns={COLUMNS}
+            columns={columns}
             rowKey={(r) => r.id}
             filterable
             filterPlaceholder="Filter by name or email…"
@@ -126,3 +147,5 @@ export function BillingTab() {
     </>
   );
 }
+
+const getToken = async () => window.Clerk?.session?.getToken() ?? null;

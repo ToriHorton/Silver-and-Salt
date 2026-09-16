@@ -25,8 +25,21 @@ describe("named seat sign-in seam", () => {
     vi.stubGlobal("fetch", send);
     const { namedSeatClaimApi } = await import("../src/app/named-seat-api.mjs");
     await expect(namedSeatClaimApi("/api/named-seat/accept", { method: "POST", body: "{}" })).rejects.toThrow("sign in");
-    expect(client.instance.openSignIn).toHaveBeenCalledWith({ forceRedirectUrl: "/apply?seat=seat_test&tier=standard" });
+    expect(client.instance.openSignIn).toHaveBeenCalledWith({ withSignUp: true, forceRedirectUrl: "/apply?seat=seat_test&tier=standard",
+      signUpForceRedirectUrl: "/apply?seat=seat_test&tier=standard" });
     expect(send).toHaveBeenCalledTimes(1);
   });
+  it("authenticates invitation lookup and details, preserves server errors, and refuses unrelated authenticated requests", async () => {
+    const send = vi.fn(async path => Response.json(path === "/api/config" ? { clerkPublishableKey: "pk_test_synthetic" } :
+      path.startsWith("/api/named-seat/invitation?") ? { purchaserName: "Tori Horton" } : { error: "This invitation has expired." },
+      { status: path === "/api/applications" ? 409 : 200 }));
+    vi.stubGlobal("fetch", send);
+    const { namedSeatClaimApi } = await import("../src/app/named-seat-api.mjs");
+    await expect(namedSeatClaimApi("/api/named-seat/invitation?seat=seat_test")).resolves.toMatchObject({ purchaserName: "Tori Horton" });
+    await expect(namedSeatClaimApi("/api/applications", { method: "POST", body: "{}" })).rejects.toThrow("This invitation has expired.");
+    await expect(namedSeatClaimApi("/api/named-seat/invitation?seat=seat_test&redirect=evil")).rejects.toThrow("unsupported");
+    expect(send).toHaveBeenCalledTimes(3);
+    expect(send.mock.calls[1][1].headers.authorization).toBe("Bearer synthetic-jwt");
+    expect(send.mock.calls[2][1].headers.authorization).toBe("Bearer synthetic-jwt");
+  });
 });
-

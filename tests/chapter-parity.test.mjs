@@ -58,8 +58,9 @@ const chapterVersion = JSON.parse(readFileSync(
 // reviewed namespaces and attributes.
 // 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
 // signup request reader changes. Keep unknown future versions gated.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3"];
-const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3"].includes(chapterVersion);
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0"];
+const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0"].includes(chapterVersion);
+const hasSeatJourneys = chapterVersion === "0.49.0";
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -71,6 +72,9 @@ const reviewedVersionNamespaces = {
   // 0.48.3 only tightens the hub-side network push guard (requireSuperAdminWrites);
   // schema, rules and seeds are unchanged from 0.48.2.
   "0.48.3": [...candidateNamespaces, "chapterAccountPolicy"],
+  // Task 1359c8d3-c571-5b1b-a900-e78761d02717: additive, backend-only
+  // checkout history preserves the same member; recovery audit holds no credentials.
+  "0.49.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
@@ -140,6 +144,7 @@ const REVIEWED_LEGACY_SOURCE_ATTRS = {
 // defaults; the browser still cannot write either attribute directly.
 const REVIEWED_ADDITIONS = {
   applications: [
+    ...(hasSeatJourneys ? ["membershipRestartId", "membershipStatus", "membershipGraceEndsAt", "membershipAutoRenew"] : []),
     // Decision b44909c6-bafe-5315-aff9-3aadd33b44aa: reject repeat signups,
     // preserve existing accounts, and enable protected Studio account editing.
     // Optional fields preserve old applications; the email key is unique.
@@ -245,6 +250,22 @@ describe("schema parity vs the frozen legacy contract", () => {
     // Reviewed auth migration: old rows need not be deleted, but the legacy
     // allowlist is no longer provisioned or used as privilege authority.
     expect(chapterNs).toEqual([...legacyNs.filter(ns => ns !== "superAdmins"), ...REVIEWED_NAMESPACES].sort());
+  });
+
+  it("keeps restart history and provider review evidence backend-only with exact reviewed fields", () => {
+    if (!hasSeatJourneys) return;
+    const expected = {
+      membershipCheckoutHistory: ["id", "applicationId", "appId", "chapterId", "environment", "runtime", "skuId",
+        "providerSubscriptionId", "applicationSnapshot", "intentSnapshot", "quoteSnapshot", "archivedAt"],
+      paymentRecoveryReviews: ["id", "eventId", "actorUserId", "reviewedAt", "previousDigest", "providerDigest", "scope", "previousState"],
+    };
+    for (const [ns, attrs] of Object.entries(expected)) {
+      expect(Object.keys(integration.schema.entities[ns].attrs).sort()).toEqual(attrs.sort());
+      expect(integration.rules[ns]).toEqual({ view: "false", create: "false", update: "false", delete: "false" });
+    }
+    expect(integration.schema.entities.subscriptionCheckoutIntents.attrs.purchaseAttemptId).toMatchObject({ type: "string", optional: true });
+    for (const attr of ["retryReady", "reviewedDigest", "reviewId", "collisionDigest"])
+      expect(integration.schema.entities.stripeEventReceipts.attrs[attr].optional).toBe(true);
   });
 
   it("keeps duplicate-signup reservations optional and the account policy private", () => {
