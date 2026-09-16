@@ -13,6 +13,7 @@ import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { JoinIsland, loadJoinResume } from "@odla-ai/chapter/ui/member";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
+import ivyBakerPriest from "../../assets/ivy-baker-priest.jpg";
 
 // Same key the legacy page used, so an in-flight applicant keeps their place
 // across this deploy.
@@ -294,7 +295,7 @@ export function Join({ config, initialTierId }) {
                 </p>
                 <div class="quote-card-top">
                   <img
-                    src="/assets/ivy-baker-priest.jpg"
+                    src={ivyBakerPriest}
                     alt="Ivy Baker Priest"
                     loading="lazy"
                     decoding="async"
