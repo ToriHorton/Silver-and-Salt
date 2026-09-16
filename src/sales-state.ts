@@ -29,6 +29,7 @@ export const GATED_POSTS: readonly string[] = [
   "/api/applications",
   "/api/payments/quote",
   "/api/payments/subscription",
+  "/api/membership/restart",
   "/api/named-seat/checkout",
   "/api/gifts/checkout",
   "/api/gifts/redeem",
@@ -119,6 +120,15 @@ const refuse = (body: Record<string, unknown>, status: number) =>
  */
 export const salesGate: Route = async (req, url, env) => {
   if (req.method !== "POST" || !GATED_POSTS.includes(url.pathname)) return null;
+  // A paid invitation is fulfillment. Chapter verifies the recipient and seat
+  // before creating an application, and binds it so no paid checkout can follow.
+  // Merely adding this field cannot reach the ordinary signup branch.
+  if (url.pathname === "/api/applications") {
+    try {
+      const body = await req.clone().json() as { namedSeatId?: unknown };
+      if (typeof body?.namedSeatId === "string" && /^seat_[A-Za-z0-9_-]{16,128}$/.test(body.namedSeatId)) return null;
+    } catch { /* The normal body reader will return the bounded validation error. */ }
+  }
   const { state, reason } = resolveSalesState(env);
   if (state === "disabled") return refuse({ error: "sales_disabled", reason }, 503);
   if (state === "public") return null;

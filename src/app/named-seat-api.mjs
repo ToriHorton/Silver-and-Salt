@@ -1,9 +1,13 @@
 import { createClerkClient } from "@odla-ai/auth-clerk";
 
 let clientPromise;
-/** Only invitation acceptance loads sign-in; ordinary signup stays public. */
+/** A verified recipient session follows the invitation through details and acceptance. */
 export async function namedSeatClaimApi(path, options = {}) {
-  if (path !== "/api/named-seat/accept" || options.method !== "POST") throw Error("unsupported invitation request");
+  const method = options.method ?? "GET";
+  const url = new URL(path, window.location.origin ?? "https://chapter.invalid");
+  const invitationRead = method === "GET" && path.startsWith("/api/named-seat/invitation?") && url.pathname === "/api/named-seat/invitation" &&
+    [...url.searchParams.keys()].every(key => key === "seat");
+  if (!invitationRead && !(method === "POST" && ["/api/named-seat/accept", "/api/applications"].includes(path))) throw Error("unsupported invitation request");
   clientPromise ??= (async () => {
     const response = await fetch("/api/config");
     if (!response.ok) throw Error("sign-in unavailable");
@@ -17,10 +21,11 @@ export async function namedSeatClaimApi(path, options = {}) {
   const token = await client.getToken();
   if (!token) {
     const returnUrl = `${window.location.pathname}${window.location.search}`;
-    await client.instance.openSignIn({ forceRedirectUrl: returnUrl });
-    throw Error("sign in with the invited email, then accept again");
+    await client.instance.openSignIn({ withSignUp: true, forceRedirectUrl: returnUrl, signUpForceRedirectUrl: returnUrl });
+    throw Error("Please sign in or create an account with the invited email, then retry your invitation.");
   }
   const response = await fetch(path, { ...options, headers: { "content-type": "application/json", authorization: `Bearer ${token}` } });
-  if (!response.ok) throw Error("invitation acceptance unconfirmed");
-  return response.json();
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw Error(typeof result.error === "string" ? result.error.slice(0, 400) : "Your invitation could not be confirmed. Please retry.");
+  return result;
 }
