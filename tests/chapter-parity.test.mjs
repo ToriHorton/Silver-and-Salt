@@ -58,8 +58,8 @@ const chapterVersion = JSON.parse(readFileSync(
 // reviewed namespaces and attributes.
 // 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
 // signup request reader changes. Keep unknown future versions gated.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2"];
-const hasAccountProtection = ["0.48.1", "0.48.2"].includes(chapterVersion);
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3"];
+const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3"].includes(chapterVersion);
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -68,6 +68,9 @@ const reviewedVersionNamespaces = {
   "0.48.0": candidateNamespaces,
   "0.48.1": [...candidateNamespaces, "chapterAccountPolicy"],
   "0.48.2": [...candidateNamespaces, "chapterAccountPolicy"],
+  // 0.48.3 only tightens the hub-side network push guard (requireSuperAdminWrites);
+  // schema, rules and seeds are unchanged from 0.48.2.
+  "0.48.3": [...candidateNamespaces, "chapterAccountPolicy"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
