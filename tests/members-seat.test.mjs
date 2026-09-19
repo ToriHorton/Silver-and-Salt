@@ -9,23 +9,37 @@ const offer = { eligible: true, amountCents: 50000, currency: "usd", termEndsAt:
 const api = async () => { throw new Error("not called in a string render"); };
 
 describe("NamedSeatCard", () => {
-  it("offers the seat with price and end date when eligible", () => {
+  it("offers the gift with price and end date when eligible", () => {
     const html = render(h(NamedSeatCard, { api, initial: offer }));
-    expect(html).toContain("A second seat");
-    expect(html).toContain("$500.00");
-    expect(html).toContain("January 1, 2028");
-    expect(html).toContain("Review the seat");
+    expect(html).toContain("A gift for your mother or daughter");
+    expect(html).toContain("mothers and daughters to talk about money");
+    expect(html).toContain("$500.00 a year");
+    expect(html).toContain("renews alongside yours");
+    expect(html).toContain("Your gift is final");
+    expect(html).toContain("Review the gift");
+    // Family only, no deadline, no refund clock (Tori, 2026-09-19).
+    expect(html).not.toContain("friend");
+    expect(html).not.toContain("January 1, 2028");
+    expect(html).not.toContain("30 days");
+    expect(html).not.toContain("through");
   });
   it("shows the purchased seat and its status instead of the form", () => {
     const html = render(h(NamedSeatCard, { api, initial: { ...offer, eligible: false, seat: { recipientName: "Ada Lovelace", recipientEmail: "ada@example.com", status: "awaiting_acceptance" } } }));
     expect(html).toContain("Ada Lovelace");
-    expect(html).toContain("awaiting acceptance");
-    expect(html).not.toContain("Review the seat");
+    expect(html).toContain("waiting for her to accept");
+    expect(html).not.toContain("Review the gift");
   });
-  it("explains the window when no longer eligible", () => {
+  it("reads as included when the server prices the gift at zero", () => {
+    const html = render(h(NamedSeatCard, { api, initial: { ...offer, amountCents: 0 } }));
+    expect(html).toContain("includes a membership for your mother or your daughter");
+    expect(html).not.toContain("$0.00");
+    expect(html).not.toContain("refunded");
+  });
+  it("points to Tori when the server says the gift is unavailable, without asserting a rule", () => {
     const html = render(h(NamedSeatCard, { api, initial: { ...offer, eligible: false } }));
-    expect(html).toContain("first three months");
-    expect(html).not.toContain("Review the seat");
+    expect(html).toContain("tori@silverandsaltcapital.com");
+    expect(html).not.toContain("three months");
+    expect(html).not.toContain("Review the gift");
   });
 });
 
@@ -37,8 +51,8 @@ describe("MembersApp", () => {
     expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("Admin console");
   });
   it("mounts the seat card only when the server enables seats", () => {
-    expect(render(h(MembersApp, { me: me({ authorized: false, namedSeatsEnabled: true }), email: "m@example.com" }))).toContain("A second seat");
-    expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("A second seat");
+    expect(render(h(MembersApp, { me: me({ authorized: false, namedSeatsEnabled: true }), email: "m@example.com" }))).toContain("A gift for your mother or daughter");
+    expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("A gift for your mother or daughter");
   });
   it("offers a saved-profile restart to an inactive approved account instead of trusting a stale member role", () => {
     const html = render(h(MembersApp, { me: me({ memberAccess: false, membershipRestart: { eligible: true, applicationId: null },
@@ -47,6 +61,6 @@ describe("MembersApp", () => {
     expect(html).toContain("Ada Lovelace");
     expect(html).toContain("ada@example.com");
     expect(html).toContain("No new application or interview");
-    expect(html).not.toContain("A second seat");
+    expect(html).not.toContain("A gift for your mother or daughter");
   });
 });

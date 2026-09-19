@@ -227,12 +227,15 @@ export function chapterFor(envName = "dev") {
   emails: e.emails,
 
   // WHEN each lifecycle email fires (build-time), as opposed to its content.
-  // OVERRIDE: Chapter defaults adminNotification to "submit". The legacy
-  // worker fires it inside the Stripe webhook on first successful payment, so
-  // "submit" would notify the owner about unpaid applications that today are
-  // silent.
+  // The legacy worker fired adminNotification inside the Stripe webhook on
+  // first successful payment, and the Chapter adoption kept that. Owner
+  // decision 2026-09-19 (journey-map review): fire it at SUBMIT instead. With
+  // "payment", a free Associate signup never reached Tori's inbox at all, and
+  // an abandoned paid application was invisible too (decision 12 in
+  // journeys-plan.md keeps those records). Stripe still announces every
+  // successful charge on its own, so nothing about money goes unreported.
   sends: {
-    adminNotification: "payment",
+    adminNotification: "submit",
   },
 
   // ── Scheduling ───────────────────────────────────────────────────────
