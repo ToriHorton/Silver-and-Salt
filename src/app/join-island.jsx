@@ -78,6 +78,18 @@ const GIFT_COPY = {
 
 function tierDisplay(tier) {
   const d = TIER_DISPLAY[tier.id];
+  // Chapter 0.50.0: the authority says what a founding applicant pays today
+  // (tier.founding), so the rate shown here is the rate the quote will confirm.
+  if (tier.founding) {
+    const held = tier.founding.discountDuration === "while_active";
+    return {
+      name: d?.name ?? tier.name,
+      price: `${money(tier.founding.dueTodayCents)} a year`,
+      was: money(tier.priceCents),
+      note: held ? "The founding rate, held for as long as you stay. Confirmed at checkout."
+        : "The founding rate for your first year. Confirmed at checkout.",
+    };
+  }
   return {
     name: d?.name ?? tier.name,
     price: d?.price ?? (tier.free ? "Free" : money(tier.priceCents)),
