@@ -58,9 +58,9 @@ const chapterVersion = JSON.parse(readFileSync(
 // reviewed namespaces and attributes.
 // 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
 // signup request reader changes. Keep unknown future versions gated.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0"];
-const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0"].includes(chapterVersion);
-const hasSeatJourneys = chapterVersion === "0.49.0";
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0"];
+const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0"].includes(chapterVersion);
+const hasSeatJourneys = ["0.49.0", "0.50.0"].includes(chapterVersion);
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -75,6 +75,10 @@ const reviewedVersionNamespaces = {
   // Task 1359c8d3-c571-5b1b-a900-e78761d02717: additive, backend-only
   // checkout history preserves the same member; recovery audit holds no credentials.
   "0.49.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.50.0 adds no namespace: manual super-admin seat refunds, follower CRM for
+  // invited and candidate people, and the founding rate on the payment page
+  // are routes, UI and quote fields over the 0.49.0 schema.
+  "0.50.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
