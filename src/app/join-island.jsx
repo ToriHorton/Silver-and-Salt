@@ -39,23 +39,75 @@ const WHO_YOU_ARE_OPTIONS = [
   "Something else",
 ];
 
+/** How each offered tier reads on the application form. The tier ids, list
+ *  prices and availability come from the signup revision Built Not Found
+ *  publishes (join-config); the WORDS come from the membership page, so the
+ *  applicant sees the same name she clicked. The Standard tier is sold as
+ *  "Founding Member" at the founding rate; the $100 founding discount is
+ *  governed server-side and confirmed on the payment step, which is why the
+ *  chooser says "confirmed at checkout" rather than promising it. Unknown
+ *  tier ids fall back to the server's name and list price. */
+const TIER_DISPLAY = {
+  standard: {
+    name: "Founding Member",
+    price: "$900 a year",
+    was: "$1,000",
+    note: "The founding rate, held for as long as you stay. Confirmed at checkout.",
+  },
+  steward: { name: "Community Steward", price: "$5,000 a year" },
+  associate: { name: "Associate Member", price: "Free" },
+};
+
+/** The invited path's words. The membership is a gift from a mother to a
+ *  daughter or a daughter to a mother (Tori, 2026-09-19; honored, never
+ *  verified), so the packaged "seat" and "invitation" vocabulary is replaced
+ *  here. Keys mirror Chapter's join copy contract for namedSeat. */
+const GIFT_COPY = {
+  title: "Accept your gift",
+  from: "{purchaserName} has given you a membership.",
+  prepaid: "Your membership is already paid for.",
+  body: "Accept the membership, then finish your own application and book your conversation. You will not be asked to pay.",
+  consent: "I accept this membership for myself. It cannot be transferred, and it stays current while the membership of the person who gave it stays current.",
+  accept: "Accept my membership",
+  accepting: "Confirming…",
+  loading: "Finding your gift…",
+  unavailable: "Your gift could not be found. Sign in with the email address the gift was sent to, then try again.",
+  retry: "Try again",
+  failure: "We could not confirm your acceptance. Try again; you will not be asked to pay.",
+};
+
+function tierDisplay(tier) {
+  const d = TIER_DISPLAY[tier.id];
+  return {
+    name: d?.name ?? tier.name,
+    price: d?.price ?? (tier.free ? "Free" : money(tier.priceCents)),
+    was: d?.was,
+    note: d?.note,
+  };
+}
+
 /** The site's own step rail. Chapter owns the flow; these dots are site chrome,
- *  so they are driven from the packaged step rather than reimplemented. */
-function StepRail({ step, invited }) {
+ *  so they are driven from the packaged step rather than reimplemented. A free
+ *  tier has no payment step, so its rail shows two steps instead of three. */
+function StepRail({ step, invited, free }) {
   const index = step === "form" ? 0 : step === "payment" || step === "paymentPending" ? 1 : 2;
   const cls = (i) => (i === index ? "step active" : i < index ? "step complete" : "step pending");
+  const bookIndex = free ? 1 : 2;
+  const bookState = index >= 2 ? cls(2) : cls(bookIndex);
   return (
     <div class="steps" id="steps">
       <div class={cls(0)} id="dot-1">
         <div class="step-dot">1</div>
         <div class="step-label">{invited ? "Your details" : "Apply"}</div>
       </div>
-      <div class={cls(1)} id="dot-pay">
-        <div class="step-dot">2</div>
-        <div class="step-label">{invited ? "Accept your seat" : "Secure your place"}</div>
-      </div>
-      <div class={cls(2)} id="dot-2">
-        <div class="step-dot">3</div>
+      {!free && (
+        <div class={cls(1)} id="dot-pay">
+          <div class="step-dot">2</div>
+          <div class="step-label">{invited ? "Accept your gift" : "Secure your place"}</div>
+        </div>
+      )}
+      <div class={bookState} id="dot-2">
+        <div class="step-dot">{free ? 2 : 3}</div>
         <div class="step-label">Book your conversation</div>
       </div>
     </div>
@@ -195,6 +247,11 @@ export function Join({ config, initialTierId }) {
   const [referral, setReferral] = useState("");
   const [referralName, setReferralName] = useState("");
   const [ack, setAck] = useState(false);
+  // Whether the chosen tier is free, mirrored from the packaged tier selection
+  // so the step rail can drop the payment step. Preset from the URL so the
+  // first paint is already right; the chooser keeps it current after that.
+  const [freeTier, setFreeTier] = useState(() =>
+    Boolean((config.tiers ?? []).find((t) => t.id === initialTierId)?.free));
   // Seeded from sessionStorage so a reload resumes; the id is a capability the
   // server re-validates, and the step itself always comes from the server.
   const [resumeId, setResumeId] = useState(() => {
@@ -206,21 +263,37 @@ export function Join({ config, initialTierId }) {
       <div class="join-surface">
         <JoinIsland
           config={config}
+          // Server copy for everything except the invited path's words.
+          copy={{ ...(config.copy ?? {}), namedSeat: { ...(config.copy?.namedSeat ?? {}), ...GIFT_COPY } }}
           initialNamedSeatId={seatId ?? undefined}
           namedSeatClaimApi={namedSeatClaimApi}
           initialTierId={initialTierId}
-          renderTiers={({ tiers, selectedTierId, selectTier }) => (
-            <fieldset class="membership-choice">
-              <legend>Choose your membership</legend>
-              {tiers.map((tier) => (
-                <label class="membership-option" key={tier.id}>
-                  <input type="radio" name="__chapterTier" value={tier.id}
-                    checked={selectedTierId === tier.id} onChange={() => selectTier(tier.id)} />
-                  <span><strong>{tier.name}</strong><span class="membership-price">{tier.free ? "Free" : money(tier.priceCents)}</span></span>
-                </label>
-              ))}
-            </fieldset>
-          )}
+          renderTiers={({ tiers, selectedTierId, selectTier }) => {
+            const isFree = Boolean(tiers.find((t) => t.id === selectedTierId)?.free);
+            if (isFree !== freeTier) queueMicrotask(() => setFreeTier(isFree));
+            return (
+              <fieldset class="membership-choice">
+                <legend>Choose your membership</legend>
+                {tiers.map((tier) => {
+                  const d = tierDisplay(tier);
+                  return (
+                    <label class="membership-option" key={tier.id}>
+                      <input type="radio" name="__chapterTier" value={tier.id}
+                        checked={selectedTierId === tier.id} onChange={() => selectTier(tier.id)} />
+                      <span>
+                        <strong>{d.name}</strong>
+                        <span class="membership-price">
+                          {d.was && <s class="membership-was">{d.was}</s>}
+                          {d.price}
+                        </span>
+                        {d.note && <small class="membership-note">{d.note}</small>}
+                      </span>
+                    </label>
+                  );
+                })}
+              </fieldset>
+            );
+          }}
           membersHref="/members/"
           // The legacy page gated submit on the consent box; preserve that
           // exactly rather than relying on the server's 400.
@@ -241,7 +314,7 @@ export function Join({ config, initialTierId }) {
                 setResumeId(state.applicationId);
               });
             }
-            return <StepRail step={state.step} invited={Boolean(seatId)} />;
+            return <StepRail step={state.step} invited={Boolean(seatId)} free={freeTier && !seatId} />;
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
           // Baker Priest quote card). Preserved verbatim from join.html's

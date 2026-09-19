@@ -252,8 +252,12 @@
     .membership-choice legend { font-weight: 600; margin-bottom: 12px; }
     .membership-option { display: flex; align-items: center; gap: 12px; padding: 14px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
     .membership-option input { width: auto; flex: 0 0 auto; }
-    .membership-option > span { display: flex; flex-wrap: wrap; flex: 1; justify-content: space-between; gap: 8px; }
+    .membership-option > span { display: flex; flex-wrap: wrap; flex: 1; justify-content: space-between; gap: 4px 8px; }
     .membership-price { white-space: nowrap; }
+    /* The struck list price and the founding-rate note, matching the
+       membership page's seal (struck $1,000, $900 a year). */
+    .membership-was { color: var(--sage); margin-right: 8px; text-decoration-color: rgba(209,107,79,0.7); }
+    .membership-note { flex-basis: 100%; font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--sage); line-height: 1.5; }
 
     .form-group {
       display: flex;

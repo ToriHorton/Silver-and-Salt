@@ -390,9 +390,10 @@ describe("behavior decisions that override a Chapter default", () => {
     expect(chapter.account).toBe(baseline.clerk.account);
   });
 
-  it("fires adminNotification on payment, not on submit", () => {
-    // Chapter defaults to "submit"; legacy fires it inside the Stripe webhook.
-    expect(chapter.sends.adminNotification).toBe("payment");
+  it("fires adminNotification on submit, so free Associates and abandoned payments reach the owner", () => {
+    // Legacy fired it inside the Stripe webhook (baseline note). Owner decision
+    // 2026-09-19 moved it to submit; the fixture records the change.
+    expect(chapter.sends.adminNotification).toBe("submit");
     expect(chapter.sends.adminNotification).toBe(baseline.sends.adminNotification);
   });
 

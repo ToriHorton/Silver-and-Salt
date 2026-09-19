@@ -168,12 +168,26 @@ function MemberView() {
   );
 }
 
-// Named additional seat: a paying member buys one $500 seat for a named
-// person during the first three months of membership. The offer, price,
-// term, and eligibility come from /api/named-seat (Built Not Found is the
-// authority); this card only presents them and hands the checkout to the
-// same PaymentStep the join flow uses. Chapter ships an equivalent card
-// inside its MembersArea composite, which this page does not use.
+// The gift membership: a paying member gives one membership to her mother or
+// her daughter during the first three months of her own membership (Tori,
+// 2026-09-19: the seat exists so mothers and daughters talk about money; the
+// relationship is honored, never verified). The offer, price, term, and
+// eligibility come from /api/named-seat (Built Not Found is the authority);
+// this card only presents them and hands the checkout to the same
+// PaymentStep the join flow uses. Chapter ships an equivalent card inside its
+// MembersArea composite, which this page does not use.
+const GIFT_REFUND_POLICY =
+  "Gift memberships are final: there is no refund once the gift is given. The membership is hers to use, " +
+  "it carries full Founding Member benefits, and it renews alongside your own membership until you cancel renewal.";
+
+const SEAT_STATUS = {
+  pending_acceptance: "waiting for her to accept",
+  awaiting_acceptance: "waiting for her to accept",
+  renewal_pending: "waiting for her to accept",
+  accepted: "accepted",
+  active: "active",
+};
+
 export function NamedSeatCard({ api, initial }) {
   const [data, setData] = useState(initial ?? null);
   const [error, setError] = useState("");
@@ -188,43 +202,49 @@ export function NamedSeatCard({ api, initial }) {
       setData(value);
       if (value.seat) { setName(value.seat.recipientName); setEmail(value.seat.recipientEmail); }
     } catch (e) {
-      setError("The seat offer is briefly unavailable. Please try again shortly.");
+      setError("The gift is briefly unavailable. Please try again shortly.");
     }
   };
   useEffect(() => { if (!initial) void load(); }, [api]);
   const money = data ? new Intl.NumberFormat("en-US", { style: "currency", currency: data.currency }).format(data.amountCents / 100) : "";
-  const untilDate = data?.termEndsAt ? new Date(data.termEndsAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }) : "";
-  const seatStatus = data?.seat ? String(data.seat.status).replaceAll("_", " ") : "";
+  const included = Boolean(data) && data.amountCents === 0;
+  const seatStatus = data?.seat ? (SEAT_STATUS[data.seat.status] ?? String(data.seat.status).replaceAll("_", " ")) : "";
   return (
     <JourneyFrame><div class="card" id="named-seat-card">
-      <div class="card-label">A second seat</div>
-      <h2>A place for someone you know</h2>
+      <div class="card-label">A gift for your mother or daughter</div>
+      <h2>Give her a membership.</h2>
       {error && <p class="pay-error" role="alert">{error}</p>}
-      {!data && !error && <p class="meeting-note">Loading your seat offer…</p>}
+      {!data && !error && <p class="meeting-note">Loading…</p>}
       {data?.seat && (
         <div class="meeting-block">
-          <div class="meeting-kicker">Your named seat</div>
+          <div class="meeting-kicker">Your gift</div>
           <div class="meeting-note">{data.seat.recipientName} ({data.seat.recipientEmail}): {seatStatus}.</div>
-          {pending && <div class="meeting-note" role="status">Payment confirmation is being reconciled. Their access begins after their own acceptance and approval.</div>}
+          {pending && <div class="meeting-note" role="status">Your payment is being confirmed. Her membership begins once she accepts and is approved after her own conversation.</div>}
         </div>
       )}
       {data && !data.seat && !data.eligible && (
-        <p class="meeting-note">Additional seats are offered during the first three months of a paid membership.</p>
+        <p class="meeting-note">Gift memberships are briefly unavailable here. Write to <a href="mailto:tori@silverandsaltcapital.com" style={linkStyle}>tori@silverandsaltcapital.com</a> and we will set yours up.</p>
       )}
       {data?.eligible && !data.seat && !reviewing && (
         <form class="seat-form" onSubmit={(e) => { e.preventDefault(); if (name.trim().length >= 2 && email.trim()) { setError(""); setReviewing(true); } }}>
-          <p class="meeting-note" style="margin-top:0">Give a named seat to your mother, your daughter, or a friend: {money} through {untilDate}. She accepts the invitation, completes her own application, and joins as a member in her own right. An unaccepted seat is fully refunded after 30 days.</p>
+          <p class="meeting-note" style="margin-top:0">
+            We want it to be easy and normal for mothers and daughters to talk about money.{" "}
+            {included
+              ? <>Your Community Steward membership includes a membership for your mother or your daughter.</>
+              : <>Gift your mother or your daughter a membership for {money} a year.</>}
+            {" "}She accepts your gift, completes her own application, and joins as a member in her own right. Her membership renews alongside yours. Your gift is final: once given, it is hers to use.
+          </p>
           <label class="seat-field">Her name<input required maxLength={160} value={name} onInput={(e) => setName(e.currentTarget.value)} /></label>
           <label class="seat-field">Her email<input required type="email" maxLength={254} value={email} onInput={(e) => setEmail(e.currentTarget.value)} /></label>
-          <button class="submit-btn" type="submit">Review the seat</button>
+          <button class="submit-btn" type="submit">Review the gift</button>
         </form>
       )}
       {data?.eligible && !data.seat && reviewing && (
         <div class="seat-review">
           <div class="meeting-block">
-            <div class="meeting-kicker">Named seat for {name}</div>
+            <div class="meeting-kicker">A membership for {name}</div>
             <div class="meeting-note">{email}</div>
-            <div class="meeting-note">{money} today, seat runs through {untilDate}.</div>
+            <div class="meeting-note">{included ? "Included with your membership." : `${money} today.`} Your gift is final, and her membership renews alongside yours.</div>
             <div class="meeting-note"><a href="#" style={secondaryLink} onClick={(e) => { e.preventDefault(); setReviewing(false); setTerms(false); }}>Change the recipient</a></div>
           </div>
           <label class="compliance-check" style="margin-top:14px">
@@ -236,7 +256,10 @@ export function NamedSeatCard({ api, initial }) {
           {terms && (
             <PaymentStep
               applicationId={data.membershipId}
-              refundPolicyText={data.refundPolicyText}
+              // The gift's own terms (Tori, 2026-09-19), in place of the
+              // general membership refund policy the authority sends along.
+              // Flagged for counsel with the rest of the refund wording.
+              refundPolicyText={GIFT_REFUND_POLICY}
               merchantDisclosureText={data.merchantDisclosureText}
               startCheckout={() => api("/api/named-seat/checkout", {
                 method: "POST",

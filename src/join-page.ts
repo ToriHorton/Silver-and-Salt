@@ -57,10 +57,11 @@ export const joinPage: Route = async (req, url, env) => {
     );
   } else {
     body = body.replace("We look forward to welcoming you to our investor community. Memberships open soon.",
-      prepaidInvitation ? "Confirm your invitation and take the next step toward membership." : "We look forward to welcoming you to our community.");
+      prepaidInvitation ? "Someone who wants to talk about money with you has given you a membership. Accept it, tell us about yourself, and book your conversation." : "We look forward to welcoming you to our community.");
   }
-  if (prepaidInvitation) body = body.replace('id="hero-title">Apply for Membership', 'id="hero-title">Your invitation')
-    .replace('id="hero-tag">By Application Only', 'id="hero-tag">A place for you');
+  // The gift membership (a mother or a daughter, honored rather than verified).
+  if (prepaidInvitation) body = body.replace('id="hero-title">Apply for Membership', 'id="hero-title">Your gift membership')
+    .replace('id="hero-tag">By Application Only', 'id="hero-tag">A gift for you');
   const headers = new Headers(asset.headers);
   headers.delete("content-length");
   headers.delete("etag");
