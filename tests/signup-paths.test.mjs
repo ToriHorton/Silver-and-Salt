@@ -21,9 +21,27 @@ const HOUR = 60 * 60 * 1000;
 const NOW = 1_800_000_000_000;
 const CHAPTER = "silver-and-salt-capital";
 
-const facts = (over = {}) => ({ scheduled: new Set(), reminded: new Set(), paidAt: new Map(), ...over });
+const facts = (over = {}) => ({
+  scheduled: new Set(),
+  reminded: new Set(),
+  paidAt: new Map(),
+  freeTiers: new Set(["associate"]),
+  remindedFree: new Set(),
+  remindedPayment: new Set(),
+  ...over,
+});
 
 describe("classifyPath", () => {
+  it("splits the applied-and-left stalls by tier: an Associate needs to book, a paid tier needs to pay", () => {
+    expect(classifyPath({ id: "a", status: "submitted", tierId: "associate" }, facts())).toBe("free_awaiting_booking");
+    expect(classifyPath({ id: "a", status: "submitted", tierId: "associate" }, facts({ remindedFree: new Set(["a"]) }))).toBe("free_reminded");
+    expect(classifyPath({ id: "a", status: "submitted", tierId: "standard" }, facts())).toBe("unpaid");
+    expect(classifyPath({ id: "a", status: "payment_pending", tierId: "steward" }, facts())).toBe("unpaid");
+    expect(classifyPath({ id: "a", status: "submitted", tierId: "standard" }, facts({ remindedPayment: new Set(["a"]) }))).toBe("unpaid_reminded");
+    // A booked Associate is booked, whatever her tier.
+    expect(classifyPath({ id: "a", status: "call_scheduled", tierId: "associate" }, facts())).toBe("booked");
+  });
+
   it("names the three paths and the states around them", () => {
     expect(classifyPath({ id: "a", status: "approved", interviewWaivedAt: NOW }, facts())).toBe("waived");
     expect(classifyPath({ id: "a", status: "paid_pending_vetting", interviewWaivedAt: NOW }, facts())).toBe("waived");
@@ -78,6 +96,11 @@ const app = (id, over = {}) => ({
 });
 
 const group = { id: CHAPTER, name: "Silver & Salt Capital", replyTo: "tori@silverandsaltcapital.com", notificationEmail: "tori@silverandsaltcapital.com" };
+const stallTiers = [
+  { id: "standard", groupId: CHAPTER, name: "Standard Membership", priceCents: 100000 },
+  { id: "steward", groupId: CHAPTER, name: "Community Steward", priceCents: 500000 },
+  { id: "associate", groupId: CHAPTER, name: "Associate", priceCents: 0 },
+];
 const env = { ODLA_ENV: "prod", ODLA_RUNTIME: "live", EMAIL_FROM: "tori@silverandsaltcapital.com", SEND_EMAIL: { send: async () => ({ messageId: "m" }) } };
 const contextFor = (db) => ({ chapter: { id: CHAPTER }, makeDb: () => db });
 
@@ -122,18 +145,72 @@ describe("remindUnbooked", () => {
         app("staged", { status: "call_scheduled" }),
         app("waived", { interviewWaivedAt: NOW - 30 * HOUR }),
         app("reminded"),
-        app("free", { status: "submitted" }),
+        app("fresh-free", { status: "submitted", tierId: "associate", createdAt: NOW - 2 * HOUR }),
+        app("fresh-unpaid", { status: "submitted", tierId: "standard", createdAt: NOW - 2 * HOUR }),
+        app("reminded-free", { status: "submitted", tierId: "associate" }),
+        app("reminded-unpaid", { status: "payment_pending", tierId: "standard" }),
         app("gone", { canceled: true }),
         app("other", { stripeRuntime: "cory" }),
         app("elsewhere", { groupId: "another-chapter" }),
       ],
       meetings: [{ id: "m", groupId: CHAPTER, applicationId: "booked", status: "scheduled" }],
-      emailLog: [{ id: "e", template: "bookingReminder", applicationId: "reminded" }],
+      tiers: stallTiers,
+      emailLog: [
+        { id: "e", template: "bookingReminder", applicationId: "reminded" },
+        { id: "e2", template: "bookingReminderFree", applicationId: "reminded-free" },
+        { id: "e3", template: "paymentReminder", applicationId: "reminded-unpaid" },
+      ],
       groups: [group],
     });
     const run = await remindUnbooked(contextFor(db), env, { now: NOW });
     expect(run).toEqual({ due: 0, sent: 0, skipped: 0, failed: 0 });
     expect(send).not.toHaveBeenCalled();
+  });
+
+  it("sends the Associate booking reminder, without an admin copy, 24 hours after an unbooked free application", async () => {
+    const db = fakeDb({ applications: [app("assoc", { status: "submitted", tierId: "associate" })], tiers: stallTiers, groups: [group] });
+    const run = await remindUnbooked(contextFor(db), env, { now: NOW });
+    expect(run).toEqual({ due: 1, sent: 1, skipped: 0, failed: 0 });
+    expect(send).toHaveBeenCalledTimes(1);
+    const [, member] = send.mock.calls[0];
+    expect(member).toMatchObject({
+      template: "bookingReminderFree",
+      to: "assoc@example.com",
+      dedupeKey: "booking-reminder-free:assoc",
+      applicationId: "assoc",
+      vars: { firstName: "Jane", membersUrl: "https://silverandsaltcapital.com/members/" },
+    });
+  });
+
+  it("sends the payment reminder, without an admin copy, 24 hours after a paid-tier application that never paid", async () => {
+    const db = fakeDb({ applications: [app("unpaid", { status: "payment_pending", tierId: "steward" })], tiers: stallTiers, groups: [group] });
+    const run = await remindUnbooked(contextFor(db), env, { now: NOW });
+    expect(run).toEqual({ due: 1, sent: 1, skipped: 0, failed: 0 });
+    expect(send).toHaveBeenCalledTimes(1);
+    const [, member] = send.mock.calls[0];
+    expect(member).toMatchObject({ template: "paymentReminder", dedupeKey: "payment-reminder:unpaid", vars: { membersUrl: "https://silverandsaltcapital.com/members/" } });
+  });
+
+  it("a template that is not installed stops only its own stall; the others still send", async () => {
+    send.mockImplementation(async (_deps, msg) => (msg.template === "paymentReminder" ? { sent: false, reason: "template-missing" } : { sent: true }));
+    const db = fakeDb({
+      applications: [
+        app("unpaid-1", { status: "submitted", tierId: "standard" }),
+        app("unpaid-2", { status: "submitted", tierId: "standard" }),
+        app("assoc", { status: "submitted", tierId: "associate" }),
+        app("paid"),
+      ],
+      tiers: stallTiers,
+      groups: [group],
+    });
+    const run = await remindUnbooked(contextFor(db), env, { now: NOW });
+    expect(run).toEqual({ due: 4, sent: 2, skipped: 2, failed: 0, reason: "template-missing" });
+    const templates = send.mock.calls.map(([, m]) => m.template);
+    expect(templates.filter((t) => t === "paymentReminder")).toHaveLength(1);
+    expect(templates).toContain("bookingReminderFree");
+    expect(templates).toContain("bookingReminder");
+    expect(templates).toContain("bookingReminderAdmin");
+    send.mockImplementation(async () => ({ sent: true }));
   });
 
   it("stops and reports when the template is not installed yet", async () => {
@@ -164,7 +241,8 @@ describe("signupPathsRoute", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.paths["a@example.com"]).toMatchObject({ applicationId: "a", path: "awaiting_booking", label: "Paid, needs to book", reminderDueAt: NOW - 30 * HOUR + REMINDER_AFTER_MS });
-    expect(body.paths["b@example.com"]).toMatchObject({ path: "unpaid", paidAt: null, reminderDueAt: null });
+    // Applied for a paid tier and never paid: the payment reminder falls due 24 hours after the application.
+    expect(body.paths["b@example.com"]).toMatchObject({ path: "unpaid", label: "Applied, unpaid", paidAt: null, reminderDueAt: NOW - 30 * HOUR + REMINDER_AFTER_MS });
 
     const denied = await signupPathsRoute(req, new URL(req.url), env, { ...ctx, isAdmin: async () => false });
     expect(denied.status).toBe(403);

@@ -39,7 +39,7 @@ import { readFileSync } from "node:fs";
 import { initAdmin } from "@odla-ai/db";
 
 const GROUP_ID = "silver-and-salt-capital";
-const KEYS = ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "bookingReminderAdmin", "callBookedAdmin", "paidApprovedAdmin", "submitConfirmation", "seatAccepted"];
+const KEYS = ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "bookingReminderAdmin", "callBookedAdmin", "paidApprovedAdmin", "submitConfirmation", "seatAccepted", "bookingReminderFree", "paymentReminder"];
 const SOURCE = new URL("../_reference/signup-emails.md", import.meta.url);
 
 const args = process.argv.slice(2);
@@ -62,7 +62,8 @@ export function parseTemplates(markdown) {
     if (/[–—]/.test(subject + body)) throw new Error(`section "${key}" contains an em or en dash (brand rule 4)`);
     if (/Silver and Salt/i.test(subject + body)) throw new Error(`section "${key}" spells the name without the ampersand (brand rule 1)`);
     const enabled = !/^\*\*Enabled:\*\*\s*no\s*$/mi.test(section);
-    out[key] = { subject, text: body.replace(/\r\n/g, "\n"), enabled };
+    // Double asterisks mark bold for the HTML template; the text send drops them.
+    out[key] = { subject, text: body.replace(/\r\n/g, "\n").replace(/\*\*(.+?)\*\*/g, "$1"), enabled };
   }
   return out;
 }
