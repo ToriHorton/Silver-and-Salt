@@ -123,7 +123,7 @@ cross-check); those are the math and stay as they are. Do not reintroduce
 - `manifesto.html`, `opportunity.html`, `networks.html` etc. — Supporting pages
 
 ### join.html — Application Flow (target design; the page is a holding page on `main`)
-- **Step 1:** Form captures name, email, org, referral, focus areas, intro message
+- **Step 1 (as of 2026-09-20):** first name, last name, preferred name; email plus a confirm-email field (browser check only, never posted); phone; full US mailing address (street, unit, city, state, ZIP; country fixed to United States); how she found us (free text behind "Other"); how she describes herself (free text behind "Something else"); interests; LinkedIn profile (required); why she wants to join; disclaimer. Fields live in `src/chapter.config.mjs` (`application.optional` + `conditions`), the form in `src/app/join-island.jsx`, the CRM projection in `src/crm.mjs`. Adding a field changes the strict production schema: provision (`provision --live --yes --request-grant`, Tori approves in Studio) BEFORE the deploy, and add the attribute to `REVIEWED_ADDITIONS` in `tests/chapter-parity.test.mjs`.
 - **Step 2:** Native booking through the odla calendar service (the Google Calendar Appointments iframe was retired)
 - **Step 3:** Confirmation screen with Ivy Baker Priest quote and sepia photo
 - **Backend:** the odla worker (`POST /api/applications` into odla-db). The
