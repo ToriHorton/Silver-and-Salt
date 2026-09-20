@@ -37,7 +37,7 @@ describe("chapterWorkerOptions", () => {
     const options = chapterWorkerOptions("dev");
     expect(options.crmBasePath).toBe("/api/crm");
     expect(options.requirePaymentQuote).toBe(true);
-    expect(options.routes).toHaveLength(5);
+    expect(options.routes).toHaveLength(6);
     for (const route of options.routes) expect(typeof route).toBe("function");
   });
 });
@@ -57,6 +57,17 @@ describe("the exported Worker", () => {
     expect(await res.json()).toEqual({ ok: true });
     // The hardening headers ride every response the Worker produces.
     expect(res.headers.get("x-content-type-options")).toBe("nosniff");
+  });
+
+  it("mounts the resume-tier host route ahead of Chapter's router", async () => {
+    // Without an application id the route refuses before touching the
+    // database, so the real Worker can prove the mount with no credential. The
+    // built-in router would answer this unknown path 404, so a 400 here is the
+    // host route, in front, as src/worker-chapter.ts orders it.
+    const res = await worker.fetch(new Request("https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev/api/join/resume/tier"), env, ctx);
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: "application is required" });
+    expect(res.headers.get("cache-control")).toBe("no-store");
   });
 
   it("terminates an unknown /api/* path as an API error, never a static asset", async () => {

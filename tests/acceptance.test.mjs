@@ -85,7 +85,7 @@ run("deployed acceptance", () => {
       const html = await res.text();
       expect(html).toContain('id="join-root"');
       expect(html).not.toContain('id="coming-soon"');
-      expect(html).toContain('src="/assets/app/join-island.js?v=seat-journeys-0490"');
+      expect(html).toContain('src="/assets/app/join-island.js?v=free-resume-0520"');
       const bundle = await get("/assets/app/join-island.js");
       expect(bundle.status).toBe(200);
       expect(bundle.headers.get("content-type")).toMatch(/javascript/);
