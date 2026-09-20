@@ -58,14 +58,14 @@ const chapterVersion = JSON.parse(readFileSync(
 // reviewed namespaces and attributes.
 // 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
 // signup request reader changes. Keep unknown future versions gated.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0"];
-const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0"].includes(chapterVersion);
-const hasSeatJourneys = ["0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0"].includes(chapterVersion);
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0"];
+const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0"].includes(chapterVersion);
+const hasSeatJourneys = ["0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0"].includes(chapterVersion);
 // 0.52.0 (odla-ai PR #978): the sender display name on the group row (bug
 // 5a50304f) and the operator's resolve evidence on payment recovery reviews
 // (bugs 513172cd, e58fd02d). Both optional; neither is browser-readable.
-const hasSenderName = ["0.52.0", "0.52.1", "0.53.0"].includes(chapterVersion);
-const hasReviewActions = ["0.52.0", "0.52.1", "0.53.0"].includes(chapterVersion);
+const hasSenderName = ["0.52.0", "0.52.1", "0.53.0", "0.54.0"].includes(chapterVersion);
+const hasReviewActions = ["0.52.0", "0.52.1", "0.53.0", "0.54.0"].includes(chapterVersion);
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -99,6 +99,11 @@ const reviewedVersionNamespaces = {
   // discount version is a hub super-admin route, a panel action and a billing
   // forecast change over the 0.52.1 collections (odla-ai #982).
   "0.53.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.54.0 adds no namespace: an included seat (seatPriceCents 0), the seat
+  // offer on the members page once paid, recipientState on the offer and the
+  // hub reprice route are authority logic, routes and UI over the 0.53.0
+  // collections (odla-ai chapter 0.54.0; BNF bug 223eb199).
+  "0.54.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);

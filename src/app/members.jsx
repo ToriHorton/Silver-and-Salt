@@ -188,6 +188,78 @@ const SEAT_STATUS = {
   accepted: "accepted",
   active: "active",
 };
+// Chapter 0.54 folds the seat's lifecycle into recipientState, so the card can
+// say whether she accepted or joined without knowing the status machine. The
+// SEAT_STATUS map above stays as the fallback for an older authority.
+const RECIPIENT_STATE = {
+  payment_pending: "your payment is being confirmed",
+  invited: "invited; waiting for her to accept",
+  accepted: "accepted; her conversation with Tori is next",
+  joined: "a member",
+  declined: "declined the gift",
+  refunded: "refunded",
+  canceled: "canceled",
+};
+const shortDate = (at) => new Date(at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+/** One sentence on the person she named: who, and whether she accepted or joined. */
+export function giftStatusWords(seat) {
+  if (!seat) return "";
+  const words = RECIPIENT_STATE[seat.recipientState] ?? SEAT_STATUS[seat.status] ?? String(seat.status ?? "").replaceAll("_", " ");
+  if (seat.recipientState === "joined" && seat.joinedAt) return `${words} since ${shortDate(seat.joinedAt)}`;
+  if (seat.recipientState === "accepted" && seat.acceptedAt) return `${words} (accepted ${shortDate(seat.acceptedAt)})`;
+  return words;
+}
+/** The review step of the gift: an included seat is given with one click, a priced one through the card form. */
+export function GiftReview({ api, data, name, email, terms, onTerms, onChange, onGiven, onError }) {
+  const [giving, setGiving] = useState(false);
+  const included = data.included === true || data.amountCents === 0;
+  const money = new Intl.NumberFormat("en-US", { style: "currency", currency: data.currency }).format(data.amountCents / 100);
+  return (
+    <div class="seat-review">
+      <div class="meeting-block">
+        <div class="meeting-kicker">A membership for {name}</div>
+        <div class="meeting-note">{email}</div>
+        <div class="meeting-note">{included ? "Included with your membership." : `${money} today.`} Your gift is final, and her membership renews alongside yours.</div>
+        <div class="meeting-note"><a href="#" style={secondaryLink} onClick={(e) => { e.preventDefault(); onChange(); }}>Change the recipient</a></div>
+      </div>
+      <label class="compliance-check" style="margin-top:14px">
+        <input type="checkbox" checked={terms} onChange={(e) => onTerms(e.currentTarget.checked)} />
+        <span>{included
+          ? "I agree to the gift terms. Her membership is included with mine and renews alongside it; once given, it is hers."
+          : data.autoRenew
+            ? "I agree to the full payment now and to automatic renewal alongside my own membership. I can cancel renewal at any time."
+            : "I agree to the full payment now and to the end date shown, with no automatic renewal while my own renewal is canceled."}</span>
+      </label>
+      {terms && included && (
+        <button class="submit-btn" type="button" disabled={giving} style="margin-top:14px" onClick={async () => {
+          setGiving(true);
+          try {
+            const receipt = await api("/api/named-seat/checkout", { method: "POST", headers: { "content-type": "application/json" },
+              body: JSON.stringify({ recipientName: name, recipientEmail: email, quoteDigest: data.digest, seatTermsAck: true, refundPolicyAck: true }) });
+            if (receipt?.included !== true) throw new Error("The gift could not be confirmed. Please refresh and check before trying again.");
+            onGiven(receipt);
+          } catch (e) { setGiving(false); onError((e && e.message) || "The gift could not be confirmed. Please refresh and check before trying again."); }
+        }}>{giving ? "One moment…" : "Give her the membership"}</button>
+      )}
+      {terms && !included && (
+        <PaymentStep
+          applicationId={data.membershipId}
+          // The gift's own terms (Tori, 2026-09-19), in place of the
+          // general membership refund policy the authority sends along.
+          // Flagged for counsel with the rest of the refund wording.
+          refundPolicyText={GIFT_REFUND_POLICY}
+          merchantDisclosureText={data.merchantDisclosureText}
+          startCheckout={() => api("/api/named-seat/checkout", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ recipientName: name, recipientEmail: email, quoteDigest: data.digest, seatTermsAck: true, refundPolicyAck: true }),
+          })}
+          onPaid={() => onGiven(null)}
+        />
+      )}
+    </div>
+  );
+}
 
 export function NamedSeatCard({ api, initial }) {
   const [data, setData] = useState(initial ?? null);
@@ -208,8 +280,8 @@ export function NamedSeatCard({ api, initial }) {
   };
   useEffect(() => { if (!initial) void load(); }, [api]);
   const money = data ? new Intl.NumberFormat("en-US", { style: "currency", currency: data.currency }).format(data.amountCents / 100) : "";
-  const included = Boolean(data) && data.amountCents === 0;
-  const seatStatus = data?.seat ? (SEAT_STATUS[data.seat.status] ?? String(data.seat.status).replaceAll("_", " ")) : "";
+  const included = Boolean(data) && (data.included === true || data.amountCents === 0);
+  const seatStatus = giftStatusWords(data?.seat);
   return (
     <JourneyFrame><div class="card" id="named-seat-card">
       <div class="card-label">A gift for your mother or daughter</div>
@@ -220,7 +292,7 @@ export function NamedSeatCard({ api, initial }) {
         <div class="meeting-block">
           <div class="meeting-kicker">Your gift</div>
           <div class="meeting-note">{data.seat.recipientName} ({data.seat.recipientEmail}): {seatStatus}.</div>
-          {pending && <div class="meeting-note" role="status">Your payment is being confirmed. Her membership begins once she accepts and is approved after her own conversation.</div>}
+          {pending && <div class="meeting-note" role="status">{included ? "Her invitation is on its way." : "Your payment is being confirmed."} Her membership begins once she accepts and is approved after her own conversation.</div>}
         </div>
       )}
       {data && !data.seat && !data.eligible && (
@@ -241,36 +313,10 @@ export function NamedSeatCard({ api, initial }) {
         </form>
       )}
       {data?.eligible && !data.seat && reviewing && (
-        <div class="seat-review">
-          <div class="meeting-block">
-            <div class="meeting-kicker">A membership for {name}</div>
-            <div class="meeting-note">{email}</div>
-            <div class="meeting-note">{included ? "Included with your membership." : `${money} today.`} Your gift is final, and her membership renews alongside yours.</div>
-            <div class="meeting-note"><a href="#" style={secondaryLink} onClick={(e) => { e.preventDefault(); setReviewing(false); setTerms(false); }}>Change the recipient</a></div>
-          </div>
-          <label class="compliance-check" style="margin-top:14px">
-            <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.currentTarget.checked)} />
-            <span>{data.autoRenew
-              ? "I agree to the full payment now and to automatic renewal alongside my own membership. I can cancel renewal at any time."
-              : "I agree to the full payment now and to the end date shown, with no automatic renewal while my own renewal is canceled."}</span>
-          </label>
-          {terms && (
-            <PaymentStep
-              applicationId={data.membershipId}
-              // The gift's own terms (Tori, 2026-09-19), in place of the
-              // general membership refund policy the authority sends along.
-              // Flagged for counsel with the rest of the refund wording.
-              refundPolicyText={GIFT_REFUND_POLICY}
-              merchantDisclosureText={data.merchantDisclosureText}
-              startCheckout={() => api("/api/named-seat/checkout", {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({ recipientName: name, recipientEmail: email, quoteDigest: data.digest, seatTermsAck: true, refundPolicyAck: true }),
-              })}
-              onPaid={() => { setPending(true); setReviewing(false); void load(); }}
-            />
-          )}
-        </div>
+        <GiftReview api={api} data={data} name={name} email={email} terms={terms}
+          onTerms={setTerms} onChange={() => { setReviewing(false); setTerms(false); }}
+          onError={setError}
+          onGiven={() => { setPending(true); setReviewing(false); void load(); }} />
       )}
     </div></JourneyFrame>
   );
