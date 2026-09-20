@@ -19,7 +19,7 @@
     "security:scan": "odla-security scan . --profile odla --out .odla/security/latest --fail-on high --fail-on-candidates critical --exclude Silver-and-Salt-Capital-FAQ.pdf --exclude report-headers.numbers --exclude report-headers.xlsx"
   },
   "devDependencies": {
-    "@odla-ai/cli": "0.60.0",
+    "@odla-ai/cli": "0.61.2",
     "@odla-ai/security": "0.3.3",
     "@preact/preset-vite": "^2.10.5",
     "preact-render-to-string": "^6.7.0",
