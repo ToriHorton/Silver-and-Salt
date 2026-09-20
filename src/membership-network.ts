@@ -20,7 +20,9 @@ export function membershipNetwork(makeDb: (env: ChapterEnv) => ChapterDb, deploy
       }
       const binding = env.BUILT_NOT_FOUND as { fetch?: typeof fetch } | undefined;
       if (typeof binding?.fetch !== "function") throw new Error("BNF membership service unavailable");
-      return binding.fetch.bind(binding);
+      // Call through the binding as a method: an instrumented binding (o11y
+      // proxies) rejects a detached or pre-bound fetch with "Illegal invocation".
+      return (input: RequestInfo | URL, init?: RequestInit) => binding.fetch!(input, init);
     },
   });
   return { ...adapter, route: createMembershipChapterEffectRoute({ sender: "built-not-found", secretName,
