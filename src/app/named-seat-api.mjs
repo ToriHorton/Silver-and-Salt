@@ -8,6 +8,19 @@ export async function namedSeatClaimApi(path, options = {}) {
   const invitationRead = method === "GET" && path.startsWith("/api/named-seat/invitation?") && url.pathname === "/api/named-seat/invitation" &&
     [...url.searchParams.keys()].every(key => key === "seat");
   if (!invitationRead && !(method === "POST" && ["/api/named-seat/accept", "/api/applications"].includes(path))) throw Error("unsupported invitation request");
+  return signedInFetch(path, options, "Please sign in or create an account with the invited email, then retry your invitation.");
+}
+
+/** The giver's side, on the join page right after her own payment: read the
+ *  seat offer and start the seat checkout. Both need her signed in, because the
+ *  seat is tied to her membership; the sign-in prompt opens on first use. */
+export async function giftSeatApi(path, options = {}) {
+  const method = options.method ?? "GET";
+  if (!(method === "GET" && path === "/api/named-seat") && !(method === "POST" && path === "/api/named-seat/checkout")) throw Error("unsupported gift request");
+  return signedInFetch(path, options, "Please sign in with the email on your application, then try again.");
+}
+
+async function signedInFetch(path, options, signInMessage) {
   clientPromise ??= (async () => {
     const response = await fetch("/api/config");
     if (!response.ok) throw Error("sign-in unavailable");
@@ -22,7 +35,7 @@ export async function namedSeatClaimApi(path, options = {}) {
   if (!token) {
     const returnUrl = `${window.location.pathname}${window.location.search}`;
     await client.instance.openSignIn({ withSignUp: true, forceRedirectUrl: returnUrl, signUpForceRedirectUrl: returnUrl });
-    throw Error("Please sign in or create an account with the invited email, then retry your invitation.");
+    throw Error(signInMessage);
   }
   const response = await fetch(path, { ...options, headers: { "content-type": "application/json", authorization: `Bearer ${token}` } });
   const result = await response.json().catch(() => ({}));

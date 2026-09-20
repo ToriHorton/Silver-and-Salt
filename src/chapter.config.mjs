@@ -296,8 +296,13 @@ export function chapterFor(envName = "dev") {
     optional: [
       "preferredName", "referralName", "referralOther", "whoYouAreOther", "linkedin", "phone",
       "address1", "address2", "city", "state", "postalCode", "country",
+      // The gift-seat upsell (Tori, 2026-09-20): asked on the application for
+      // the paid tiers; the seat itself is bought right after payment.
+      "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
     ],
     conditions: {
+      giftSeatRecipientName: { visibleWhen: 'values.giftSeatInterest == "yes"' },
+      giftSeatRecipientEmail: { visibleWhen: 'values.giftSeatInterest == "yes"' },
       linkedin: { requiredWhen: "true" },
       address1: { requiredWhen: "true" },
       city: { requiredWhen: "true" },
@@ -325,6 +330,9 @@ export function chapterFor(envName = "dev") {
       state: 60,
       postalCode: 20,
       country: 60,
+      giftSeatInterest: 10,
+      giftSeatRecipientName: 160,
+      giftSeatRecipientEmail: 254,
     },
     bodyCap: 32_768,
     validateEmail: true,
@@ -352,6 +360,7 @@ export function chapterFor(envName = "dev") {
     crmFields: [
       "preferredName", "state", "whoYouAre", "whoYouAreOther", "referral", "referralName", "referralOther",
       "linkedin", "focus", "message", "address1", "address2", "city", "postalCode", "country",
+      "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
     ],
   },
 

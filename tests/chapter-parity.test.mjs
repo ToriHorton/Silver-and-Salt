@@ -168,6 +168,8 @@ const REVIEWED_ADDITIONS = {
     // free-text answer behind "Other" / "Something else", and the US mailing
     // address (src/chapter.config.mjs application.optional). All optional.
     "preferredName", "referralOther", "whoYouAreOther", "address1", "address2", "city", "postalCode", "country",
+    // Same day: the gift-seat upsell answer, so the seat can be bought right after payment.
+    "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
     ...(hasSeatJourneys ? ["membershipRestartId", "membershipStatus", "membershipGraceEndsAt", "membershipAutoRenew"] : []),
     // Decision b44909c6-bafe-5315-aff9-3aadd33b44aa: reject repeat signups,
     // preserve existing accounts, and enable protected Studio account editing.
@@ -449,7 +451,10 @@ describe("behavior that must match the frozen baseline exactly", () => {
   // free-text answer behind "Other" / "Something else", a required LinkedIn
   // profile, and the US mailing address. Every legacy field and cap is kept;
   // the additions are schema-optional and made required through conditions.
-  const ADDED_2026_09_20 = ["preferredName", "referralOther", "whoYouAreOther", "address1", "address2", "city", "postalCode", "country"];
+  const ADDED_2026_09_20 = [
+    "preferredName", "referralOther", "whoYouAreOther", "address1", "address2", "city", "postalCode", "country",
+    "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
+  ];
 
   it("validates the same join fields with the same caps, plus the 2026-09-20 additions", () => {
     expect([...chapter.application.required]).toEqual(baseline.application.required);

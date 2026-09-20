@@ -11,8 +11,8 @@
 
 import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { JoinIsland } from "@odla-ai/chapter/ui/member";
-import { namedSeatClaimApi } from "./named-seat-api.mjs";
+import { JoinIsland, PaymentStep } from "@odla-ai/chapter/ui/member";
+import { namedSeatClaimApi, giftSeatApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
 import ivyBakerPriest from "../../assets/ivy-baker-priest.jpg";
 
@@ -127,6 +127,95 @@ function StepRail({ step, invited, free }) {
   );
 }
 
+const GIFT_REFUND_POLICY =
+  "Gift memberships are final: there is no refund once the gift is given. The membership is hers to use, " +
+  "it carries full Founding Member benefits, and it renews alongside your own membership until you cancel renewal.";
+
+/** The seat step, right after her own payment and before booking (Tori,
+ *  2026-09-20): a paying member gives a membership to her mother or daughter.
+ *  The offer, price and terms come from /api/named-seat (Built Not Found is
+ *  the authority). Buying needs her signed in, because the seat is tied to her
+ *  membership, so the first click opens sign-in; after it she lands back here
+ *  with her answers kept (sessionStorage) and continues. */
+function GiftSeatOffer({ gift, onGift }) {
+  const [phase, setPhase] = useState("offer");
+  const [offer, setOffer] = useState(null);
+  const [error, setError] = useState("");
+  const [terms, setTerms] = useState(false);
+  if (phase === "skipped") return null;
+  const start = async () => {
+    setError("");
+    setPhase("loading");
+    try {
+      const o = await giftSeatApi("/api/named-seat");
+      if (!o?.eligible) throw Error("Gift memberships are briefly unavailable here. You can add hers from your member area at any time.");
+      setOffer(o);
+      setPhase("review");
+    } catch (e) {
+      setError(e.message);
+      setPhase("offer");
+    }
+  };
+  const money = offer ? new Intl.NumberFormat("en-US", { style: "currency", currency: offer.currency }).format(offer.amountCents / 100) : "$500";
+  const included = Boolean(offer) && offer.amountCents === 0;
+  const ready = gift.name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gift.email.trim());
+  if (phase === "paid") {
+    return (
+      <div class="gift-offer" id="gift-offer" role="status">
+        <h3>Her membership is on its way.</h3>
+        <p>We have emailed {gift.email.trim()} an invitation to accept it. Next, book your conversation below.</p>
+      </div>
+    );
+  }
+  return (
+    <div class="gift-offer" id="gift-offer">
+      <h3>Add a membership for your mother or daughter.</h3>
+      <p>
+        {included ? "Included with your Community Steward membership." : `${money} a year, included for Community Stewards.`}
+        {" "}She gets a full membership of her own, active alongside yours, and completes her own short application.
+      </p>
+      <div class="gift-fields">
+        <input type="text" placeholder="Her full name" aria-label="Her name" maxLength={160} value={gift.name} onInput={(e) => onGift({ ...gift, name: e.currentTarget.value })} />
+        <input type="email" placeholder="Her email" aria-label="Her email" maxLength={254} value={gift.email} onInput={(e) => onGift({ ...gift, email: e.currentTarget.value })} />
+      </div>
+      {error && <p class="gift-error" role="alert">{error}</p>}
+      {phase !== "review" && (
+        <div class="gift-actions">
+          <button type="button" class="submit-btn" disabled={phase === "loading" || !ready} onClick={start}>
+            {phase === "loading" ? "One moment…" : "Add her membership"}
+          </button>
+          <button type="button" class="gift-skip" onClick={() => setPhase("skipped")}>Continue to booking</button>
+        </div>
+      )}
+      {phase === "review" && offer && (
+        <>
+          <label class="compliance-check">
+            <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.currentTarget.checked)} />
+            <span>{offer.autoRenew
+              ? "I agree to the full payment now and to automatic renewal alongside my own membership. I can cancel renewal at any time."
+              : "I agree to the full payment now and to the end date shown, with no automatic renewal while my own renewal is canceled."}</span>
+          </label>
+          {terms && (
+            <PaymentStep
+              applicationId={offer.membershipId}
+              refundPolicyText={GIFT_REFUND_POLICY}
+              merchantDisclosureText={offer.merchantDisclosureText}
+              startCheckout={() => giftSeatApi("/api/named-seat/checkout", {
+                method: "POST",
+                body: JSON.stringify({ recipientName: gift.name.trim(), recipientEmail: gift.email.trim(), quoteDigest: offer.digest, seatTermsAck: true, refundPolicyAck: true }),
+              })}
+              onPaid={() => setPhase("paid")}
+            />
+          )}
+          <div class="gift-actions">
+            <button type="button" class="gift-skip" onClick={() => setPhase("skipped")}>Continue to booking</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 // The confirm-email field is a browser-side check only: it has no `name`, so
 // it is never posted, and a mismatch blocks submit through the browser's own
 // constraint validation (the form is a real <form>, so `required` and
@@ -139,7 +228,7 @@ function syncConfirmEmail() {
   confirm.setCustomValidity(confirm.value && !same ? "The two email addresses do not match." : "");
 }
 
-function ApplicationFields({ invitation, config, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, ack, onAck }) {
+function ApplicationFields({ invitation, config, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
   return (
     <>
       <div class="two-col">
@@ -298,6 +387,33 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
         ></textarea>
       </div>
 
+      {/* The gift-seat upsell (Tori, 2026-09-20). Asked here so the answer is
+          on the application, then offered for purchase right after payment.
+          Applies to the paid tiers; the free tier has no seat to give. A gift
+          recipient never sees it. */}
+      {!invitation && (
+        <div class="form-group" id="gift-seat-interest">
+          <label for="giftSeatInterest">A membership for your mother or daughter <span class="opt">($500 a year, included for Community Stewards)</span></label>
+          <label class="checkbox-option">
+            <input
+              type="checkbox"
+              id="giftSeatInterest"
+              name="giftSeatInterest"
+              value="yes"
+              checked={gift.interest}
+              onChange={(e) => onGift({ ...gift, interest: e.currentTarget.checked })}
+            />{" "}
+            Yes, I would like to add one right after my payment.
+          </label>
+          <div class={gift.interest ? "referral-reveal show" : "referral-reveal"} id="gift-seat-reveal">
+            <label for="giftSeatRecipientName">Her name <span class="opt">(you can add this later)</span></label>
+            <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Her full name" maxLength={160} value={gift.name} onInput={(e) => onGift({ ...gift, name: e.currentTarget.value })} />
+            <label for="giftSeatRecipientEmail">Her email</label>
+            <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" maxLength={254} value={gift.email} onInput={(e) => onGift({ ...gift, email: e.currentTarget.value })} />
+          </div>
+        </div>
+      )}
+
       <div class="compliance-box" id="disclaimer-box">
         {/* Copy comes from the group row via join-config, never from code, so an
             owner edit in the admin console reaches this page. */}
@@ -329,6 +445,21 @@ export function Join({ config, initialTierId, initialState }) {
   const [referral, setReferral] = useState("");
   const [referralName, setReferralName] = useState("");
   const [whoYouAre, setWhoYouAre] = useState("");
+  // The gift-seat upsell answer, kept so the seat step after payment opens
+  // with her mother's or daughter's details already filled in. Kept in
+  // sessionStorage too, because the seat purchase signs her in and that
+  // round trip reloads the page.
+  const [gift, setGiftState] = useState(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem("ssc-gift") ?? "null");
+      if (saved && typeof saved === "object") return { interest: Boolean(saved.interest), name: String(saved.name ?? ""), email: String(saved.email ?? "") };
+    } catch {}
+    return { interest: false, name: "", email: "" };
+  });
+  const setGift = (next) => {
+    setGiftState(next);
+    try { sessionStorage.setItem("ssc-gift", JSON.stringify(next)); } catch {}
+  };
   const [ack, setAck] = useState(false);
   // Whether the chosen tier is free, mirrored from the packaged tier selection
   // so the step rail can drop the payment step. Preset from the URL so the
@@ -406,7 +537,15 @@ export function Join({ config, initialTierId, initialState }) {
             // application; only a journey that has not been submitted yet
             // reads the chooser. Browser input never overrides the server.
             const free = state.tier ? state.tier.free : freeTier;
-            return <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />;
+            // Right after her payment, before booking: the gift seat for her
+            // mother or daughter (paid tiers only; a gift recipient never sees it).
+            const showGift = state.step === "booking" && !seatId && !free;
+            return (
+              <>
+                <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />
+                {showGift && <GiftSeatOffer gift={gift} onGift={setGift} />}
+              </>
+            );
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
           // Baker Priest quote card). Preserved verbatim from join.html's
@@ -547,6 +686,8 @@ export function Join({ config, initialTierId, initialState }) {
             onReferralName={setReferralName}
             whoYouAre={whoYouAre}
             onWhoYouAre={setWhoYouAre}
+            gift={gift}
+            onGift={setGift}
             ack={ack}
             onAck={setAck}
           />}
