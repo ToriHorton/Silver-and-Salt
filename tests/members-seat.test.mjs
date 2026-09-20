@@ -14,7 +14,7 @@ describe("NamedSeatCard", () => {
     expect(html).toContain("A gift for your mother or daughter");
     expect(html).toContain("mothers and daughters to talk about money");
     expect(html).toContain("$500.00 a year");
-    expect(html).toContain("renews alongside yours");
+    expect(html).toContain("active for the full year alongside yours and renews with it");
     expect(html).toContain("Your gift is final");
     expect(html).toContain("Review the gift");
     // Family only, no deadline, no refund clock (Tori, 2026-09-19).
