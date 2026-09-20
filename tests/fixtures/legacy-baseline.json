@@ -98,8 +98,8 @@
   },
 
   "sends": {
-    "adminNotification": "submit",
-    "adminNotificationNote": "legacy fired adminNotification inside the Stripe webhook on first successful payment; owner decision 2026-09-19 moved it to submit so free Associate signups and abandoned paid applications are announced too",
+    "adminNotification": "never",
+    "adminNotificationNote": "legacy fired adminNotification inside the Stripe webhook on first successful payment; owner decision 2026-09-19 moved it to submit so free Associate signups and abandoned paid applications are announced too Owner decision 2026-09-19: off entirely; callBookedAdmin and paidApprovedAdmin are host jobs in src/signup-paths.ts.",
     "templates": ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite"],
     "replayGuard": "emailLog.dedupeKey; a successful row means the mail went out"
   },
