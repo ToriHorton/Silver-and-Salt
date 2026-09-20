@@ -4,9 +4,11 @@
 // membership edge it runs with is decided per request from the ODLA_* vars
 // through src/deployment.ts and src/chapter.config.mjs, never by a fork.
 //
-// This is `chapterWorker({ chapter, routes })`. Chapter is primary for every
-// real route: applications, payments, scheduling, the Stripe webhook, /api/me,
-// CRM, and all of /api/admin/*. The three legacy host routes that used to sit
+// This is `withObservability(chapterWorker({ chapter, routes, recordError }))`,
+// the chapter-follower runbook's mount (Chapter 0.52.0) around a
+// per-deployment factory. Chapter is primary for every real route:
+// applications, payments, scheduling, the Stripe webhook, /api/me, CRM, and
+// all of /api/admin/*. The three legacy host routes that used to sit
 // in front of it were retired on 2026-09-14 (nothing in the tree called
 // /api/auth/config or /api/applications/count, and the admin availability tab
 // now calls Chapter's /api/admin/scheduling directly), so src/worker.ts is no
@@ -17,6 +19,9 @@
 //                        sales are open to this request (src/sales-state.ts)
 //   salesStateRoute      GET /api/sales-state readout for operators and CI
 //   joinPage             mounts the join island only when sales are open
+//   joinResumeTierRoute  the verified tier of a resumed application, which the
+//                        canonical GET /api/join/resume does not carry
+//                        (src/join-resume.ts; PM bug 854d3a8b E2E-01)
 //   migrationReadiness   fail-closed readiness gate for the cutover runbook
 //   signupPathsRoute     admin readout of each application's signup path
 //                        (src/signup-paths.ts, which also owns the 24-hour
@@ -26,9 +31,12 @@
 
 import { chapterWorker, createWorkerContext, type ChapterEnv, type Route } from "@odla-ai/chapter/worker";
 import chapterPackage from "@odla-ai/chapter/package.json";
+import { withObservability } from "@odla-ai/o11y";
+import { recordChapterAlert } from "./chapter-alerts";
 import { chapterFor } from "./chapter.config.mjs";
 import { envNameOf, resolveDeployment, type EnvName } from "./deployment";
 import { joinPage } from "./join-page";
+import { joinResumeTierRoute } from "./join-resume";
 import { recoverPendingApprovals } from "./approval-recovery";
 import { membershipNetwork } from "./membership-network";
 import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./signup-paths";
@@ -126,8 +134,21 @@ const migrationReadiness: Route = async (req, url, env, ctx) => {
   );
 };
 
-// Observability stays a host concern; wrap here with withObservability from
-// @odla-ai/o11y once "o11y" is added to services.
+/**
+ * The options every Worker for one environment is built from: the resolved
+ * chapter, the host routes, and where Chapter's operator alerts go
+ * (src/chapter-alerts.ts). Exported so tests/worker-mount.test.mjs can hold
+ * the mount to the chapter-follower runbook without a database.
+ */
+export function chapterWorkerOptions(envName: EnvName) {
+  return {
+    chapter: chapterFor(envName),
+    requirePaymentQuote: true,
+    crmBasePath: "/api/crm",
+    recordError: recordChapterAlert,
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute] as Route[],
+  };
+}
 
 interface Built {
   worker: ReturnType<typeof chapterWorker>;
@@ -149,13 +170,7 @@ function workerFor(env: ChapterEnv): Built {
   const cached = built.get(key);
   if (cached) return cached;
 
-  const chapter = chapterFor(envName);
-  const base = {
-    chapter,
-    requirePaymentQuote: true,
-    crmBasePath: "/api/crm",
-    routes: [salesGate, salesStateRoute, joinPage, migrationReadiness, signupPathsRoute] as Route[],
-  };
+  const base = chapterWorkerOptions(envName);
   let options: typeof base & { membershipAuthority?: unknown } = base;
   if (authority) {
     // Resolving the deployment here (not at module load) keeps a misconfigured
@@ -187,7 +202,10 @@ const fetchHandler = hardenFetch((req: Request, env: ChapterEnv, ctx: ExecutionC
     return target.worker.fetch(req, env, ctx);
 }, SILVER_HARDENING);
 
-export default {
+// withObservability (from @odla-ai/o11y, "o11y" in services) traces both
+// entrypoints and gives recordChapterAlert its sink. With no ingest token on
+// the Worker it is a network no-op and the alert is still the Workers Logs line.
+export default withObservability<ChapterEnv>({
   fetch: fetchHandler,
   scheduled(_controller: ScheduledController, env: ChapterEnv, ctx: ExecutionContext) {
     ctx.waitUntil(
@@ -216,4 +234,4 @@ export default {
       })(),
     );
   },
-};
+});

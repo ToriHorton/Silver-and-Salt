@@ -11,8 +11,9 @@
 
 import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { JoinIsland, loadJoinResume } from "@odla-ai/chapter/ui/member";
+import { JoinIsland } from "@odla-ai/chapter/ui/member";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
+import { loadSiteJoinResume } from "./join-resume.mjs";
 import ivyBakerPriest from "../../assets/ivy-baker-priest.jpg";
 
 // Same key the legacy page used, so an in-flight applicant keeps their place
@@ -78,6 +79,18 @@ const GIFT_COPY = {
 
 function tierDisplay(tier) {
   const d = TIER_DISPLAY[tier.id];
+  // Chapter 0.50.0: the authority says what a founding applicant pays today
+  // (tier.founding), so the rate shown here is the rate the quote will confirm.
+  if (tier.founding) {
+    const held = tier.founding.discountDuration === "while_active";
+    return {
+      name: d?.name ?? tier.name,
+      price: `${money(tier.founding.dueTodayCents)} a year`,
+      was: money(tier.priceCents),
+      note: held ? "The founding rate, held for as long as you stay. Confirmed at checkout."
+        : "The founding rate for your first year. Confirmed at checkout.",
+    };
+  }
   return {
     name: d?.name ?? tier.name,
     price: d?.price ?? (tier.free ? "Free" : money(tier.priceCents)),
@@ -241,7 +254,10 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
   );
 }
 
-export function Join({ config, initialTierId }) {
+/** The join page. `initialState` is trusted state the server produced (the
+ *  same contract as Chapter's own prop), never the URL; the page boot leaves it
+ *  unset and resumes through loadSiteJoinResume instead. */
+export function Join({ config, initialTierId, initialState }) {
   const seatId = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("seat");
   const resumeKey = seatId ? `${RESUME_KEY}:seat:${seatId}` : RESUME_KEY;
   const [referral, setReferral] = useState("");
@@ -250,6 +266,9 @@ export function Join({ config, initialTierId }) {
   // Whether the chosen tier is free, mirrored from the packaged tier selection
   // so the step rail can drop the payment step. Preset from the URL so the
   // first paint is already right; the chooser keeps it current after that.
+  // This is the applicant's CHOICE, before submit. Once an application exists
+  // the server's verified tier on the resumed state wins (see StepRail below):
+  // a reload without ?tier= must not turn a free membership into a paid one.
   const [freeTier, setFreeTier] = useState(() =>
     Boolean((config.tiers ?? []).find((t) => t.id === initialTierId)?.free));
   // Seeded from sessionStorage so a reload resumes; the id is a capability the
@@ -263,6 +282,7 @@ export function Join({ config, initialTierId }) {
       <div class="join-surface">
         <JoinIsland
           config={config}
+          initialState={initialState}
           // Server copy for everything except the invited path's words.
           copy={{ ...(config.copy ?? {}), namedSeat: { ...(config.copy?.namedSeat ?? {}), ...GIFT_COPY } }}
           initialNamedSeatId={seatId ?? undefined}
@@ -301,9 +321,10 @@ export function Join({ config, initialTierId }) {
           // Resume a journey interrupted by a reload or a redirect-based
           // payment method. chapter-follower: resume through the canonical
           // GET /api/join/resume state, never by letting raw query flags pick a
-          // UI step. loadJoinResume calls exactly that endpoint, so the SERVER
-          // decides which step the applicant belongs on.
-          loadResume={resumeId ? () => loadJoinResume(resumeId) : undefined}
+          // UI step. loadSiteJoinResume calls exactly that endpoint, so the
+          // SERVER decides which step the applicant belongs on, and then asks
+          // the site's own route which membership the application holds.
+          loadResume={resumeId ? () => loadSiteJoinResume(resumeId) : undefined}
           renderStepHeader={({ state }) => {
             // Keep the site's step rail in sync with the packaged flow, and
             // remember the application id so a reload can resume instead of
@@ -314,7 +335,11 @@ export function Join({ config, initialTierId }) {
                 setResumeId(state.applicationId);
               });
             }
-            return <StepRail step={state.step} invited={Boolean(seatId)} free={freeTier && !seatId} />;
+            // A resumed state carries the tier the server verified for the
+            // application; only a journey that has not been submitted yet
+            // reads the chooser. Browser input never overrides the server.
+            const free = state.tier ? state.tier.free : freeTier;
+            return <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />;
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
           // Baker Priest quote card). Preserved verbatim from join.html's
@@ -407,16 +432,29 @@ export function Join({ config, initialTierId }) {
           )}
           payment={{
             // The shared quote shows these server-owned amounts before consent.
-            renderPriceLines: (lines) => (
+            // Chapter 0.52.1 says where a difference comes from: lines.founding
+            // is a policy-backed founding discount from Built Not Found; a bare
+            // lines.presentation is only the catalog's comparison, so it is shown
+            // as two rates and never called a discount. An older Chapter sends
+            // neither field, and its discount lines keep the founding label.
+            renderPriceLines: (lines) => {
+              const comparisonOnly = lines.discountCents > 0 && !lines.founding && Boolean(lines.presentation);
+              return (
               <div class="pay-lines" id="pay-lines">
                 <div class="pay-line">
-                  <span>Membership price</span>
+                  <span>{comparisonOnly ? "Standard rate" : "Membership price"}</span>
                   <span>{money(lines.standardCents)}</span>
                 </div>
-                {lines.discountCents > 0 && (
+                {lines.discountCents > 0 && !comparisonOnly && (
                   <div class="pay-line discount">
                     <span>Founding-member discount</span>
                     <span>-{money(lines.discountCents)}</span>
+                  </div>
+                )}
+                {comparisonOnly && (
+                  <div class="pay-line">
+                    <span>Your rate</span>
+                    <span>{money(lines.dueTodayCents)}</span>
                   </div>
                 )}
                 <div class="pay-line total">
@@ -424,7 +462,8 @@ export function Join({ config, initialTierId }) {
                   <span>{money(lines.dueTodayCents)}</span>
                 </div>
               </div>
-            ),
+              );
+            },
           }}
         >
           {({ invitation }) => <ApplicationFields

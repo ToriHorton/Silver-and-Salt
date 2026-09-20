@@ -15,7 +15,7 @@
 //
 // Usage: node _scripts/setup-stripe-live.mjs pk_live_...
 //   The secret key is never an argument: it must already be in the prod vault
-//   (`npx @odla-ai/cli@0.60.0 secrets set stripe_secret_key --env prod --stdin --yes`).
+//   (`npx @odla-ai/cli@0.61.2 secrets set stripe_secret_key --env prod --stdin --yes`).
 import { initAdmin } from "@odla-ai/db";
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
@@ -78,7 +78,7 @@ if (!endpoint) {
     enabled_events: EVENTS,
     description: "Silver & Salt Capital production Worker (live runtime)",
   });
-  const r = spawnSync("npx", ["--yes", "@odla-ai/cli@0.60.0", "secrets", "set", SECRET_NAME, "--env", "prod", "--stdin", "--yes"], {
+  const r = spawnSync("npx", ["--yes", "@odla-ai/cli@0.61.2", "secrets", "set", SECRET_NAME, "--env", "prod", "--stdin", "--yes"], {
     input: endpoint.secret, cwd: new URL("..", import.meta.url).pathname, encoding: "utf8",
     env: { ...process.env, ODLA_PROVISION_PROD: "1", ODLA_ENV: "prod" },
   });

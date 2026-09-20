@@ -18,7 +18,7 @@ import {
   planMemberSystemEventReplay,
 } from "@odla-ai/chapter";
 import { createCrmIntegration } from "@odla-ai/crm";
-import { chapter } from "../src/chapter.config.mjs";
+import { chapter, chapterFor } from "../src/chapter.config.mjs";
 import odlaConfig from "../odla.config.mjs";
 import { schema as legacySourceSchema } from "../src/odla/schema.mjs";
 import { crm as legacyCrm } from "../src/crm.mjs";
@@ -58,9 +58,14 @@ const chapterVersion = JSON.parse(readFileSync(
 // reviewed namespaces and attributes.
 // 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
 // signup request reader changes. Keep unknown future versions gated.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0"];
-const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0"].includes(chapterVersion);
-const hasSeatJourneys = chapterVersion === "0.49.0";
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1"];
+const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1"].includes(chapterVersion);
+const hasSeatJourneys = ["0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1"].includes(chapterVersion);
+// 0.52.0 (odla-ai PR #978): the sender display name on the group row (bug
+// 5a50304f) and the operator's resolve evidence on payment recovery reviews
+// (bugs 513172cd, e58fd02d). Both optional; neither is browser-readable.
+const hasSenderName = ["0.52.0", "0.52.1"].includes(chapterVersion);
+const hasReviewActions = ["0.52.0", "0.52.1"].includes(chapterVersion);
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -75,6 +80,21 @@ const reviewedVersionNamespaces = {
   // Task 1359c8d3-c571-5b1b-a900-e78761d02717: additive, backend-only
   // checkout history preserves the same member; recovery audit holds no credentials.
   "0.49.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.50.0 adds no namespace: manual super-admin seat refunds, follower CRM for
+  // invited and candidate people, and the founding rate on the payment page
+  // are routes, UI and quote fields over the 0.49.0 schema.
+  "0.50.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.51.0 adds no namespace: the optional seat purchase window lives inside the
+  // frozen offering snapshot and the lift route works over existing collections.
+  "0.51.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.52.0 adds no namespace: signup email variables, the From display name,
+  // the seatAccepted notice, the audited hub resolve, the policy versions
+  // panel and the declared edge secrets are routes, templates, UI and
+  // descriptor metadata over the 0.51.0 collections. Its two optional
+  // attributes are reviewed below (hasSenderName, hasReviewActions).
+  "0.52.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.52.1 only relabels the payment price lines; schema, rules and seeds match 0.52.0.
+  "0.52.1": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
@@ -170,6 +190,9 @@ const REVIEWED_ADDITIONS = {
     "tierId",
   ],
   groups: [
+    // Chapter 0.52.0: the From header's display name ("Tori Horton <tori@…>").
+    // Optional, seeded from emails.fromName, owner-editable in Settings → Email.
+    ...(hasSenderName ? ["fromName"] : []),
     "currency",
     "interval",
     "merchantDisclosureText",
@@ -257,7 +280,10 @@ describe("schema parity vs the frozen legacy contract", () => {
     const expected = {
       membershipCheckoutHistory: ["id", "applicationId", "appId", "chapterId", "environment", "runtime", "skuId",
         "providerSubscriptionId", "applicationSnapshot", "intentSnapshot", "quoteSnapshot", "archivedAt"],
-      paymentRecoveryReviews: ["id", "eventId", "actorUserId", "reviewedAt", "previousDigest", "providerDigest", "scope", "previousState"],
+      paymentRecoveryReviews: ["id", "eventId", "actorUserId", "reviewedAt", "previousDigest", "providerDigest", "scope", "previousState",
+        // Chapter 0.52.0: what a review did (retry, resolve, canonical_replay) and the
+        // operator's stated reason on a hub resolve. Content-free; no payload, no PII.
+        ...(hasReviewActions ? ["action", "reason"] : [])],
     };
     for (const [ns, attrs] of Object.entries(expected)) {
       expect(Object.keys(integration.schema.entities[ns].attrs).sort()).toEqual(attrs.sort());
@@ -610,6 +636,39 @@ describe("group seed is insert-only and cannot overwrite owner edits", () => {
       stripePriceId: baseline.prices.stripePriceId,
       active: true,
     });
+  });
+});
+
+describe("Chapter 0.52.0: sender display name and operator alerts", () => {
+  it("sends every email as Tori Horton in both deployments", () => {
+    // Bug 5a50304f: the From header carries a display name while the address
+    // stays the Worker's EMAIL_FROM. Same name in dev (redirected to the debug
+    // inbox) and prod, so a test send reads like the real one.
+    if (!hasSenderName) return;
+    expect(chapterFor("dev").config.emails.fromName).toBe("Tori Horton");
+    expect(chapterFor("prod").config.emails.fromName).toBe("Tori Horton");
+  });
+
+  it("seeds the display name with the group row and keeps it optional", () => {
+    if (!hasSenderName) return;
+    const group = integration.seeds.find((s) => (s.ns ?? s.namespace) === "groups");
+    expect(group.attrs.fromName).toBe("Tori Horton");
+    expect(integration.schema.entities.groups.attrs.fromName).toMatchObject({ type: "string", optional: true });
+  });
+
+  it("runs o11y so the Worker's quarantine alerts have somewhere to go", () => {
+    // chapter.services drives the Worker; odla.config.mjs drives provisioning
+    // (which mints the ingest token). The two lists must not drift.
+    expect([...chapter.services]).toEqual(["db", "calendar", "o11y"]);
+    expect(odlaConfig.services).toEqual([...chapter.services]);
+  });
+
+  it("declares the follower edge secret so provisioning can report it unpaired", () => {
+    // Chapter 0.52.0 descriptor: the reader edge implies network_share_secret.
+    // odla-ai provision (cli 0.61.1) refuses an empty slot without
+    // --allow-unpaired; `odla-ai chapter edge pair` fills both vaults.
+    const edge = integration.secrets.find((s) => s.name === "network_share_secret");
+    expect(edge).toMatchObject({ required: true, edge: { role: "follower", peers: ["built-not-found"] } });
   });
 });
 

@@ -66,6 +66,10 @@ export const crm = defineCrm({
       // emails) run in the worker's own routes, never in a CRM stage hook.
       pipeline: {
         stages: [
+          // Pre-application stages: people the chapter is courting or has invited,
+          // managed by chapter admins before any application exists.
+          { id: "candidate", label: "Candidate" },
+          { id: "invited", label: "Invited" },
           { id: "submitted", label: "Submitted" },
           { id: "paid_pending_vetting", label: "Paid, pending vetting" },
           { id: "call_scheduled", label: "Call scheduled" },
