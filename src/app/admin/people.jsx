@@ -161,6 +161,22 @@ export const peopleColumns = (myUserId, reload) => [
       ),
   },
   {
+    // The three signup paths (Tori, 2026-09-19), read from the host's
+    // /api/admin/signup-paths: known to Tori (call waived), call booked, or
+    // paid and still needing to book (with the 24-hour reminder noted).
+    key: "path",
+    header: "Path",
+    sortAs: "string",
+    sortValue: (r) => r.path?.label ?? "",
+    filterText: (r) => r.path?.label ?? "",
+    cell: (r) =>
+      r.path ? (
+        <span class={`pay-badge path-${r.path.path}`} title={r.path.reminderDueAt ? `Reminder due ${new Date(r.path.reminderDueAt).toLocaleString()}` : undefined}>
+          {r.path.label}
+        </span>
+      ) : null,
+  },
+  {
     key: "tier",
     header: "Tier",
     sortAs: "string",
@@ -236,9 +252,17 @@ export function PeopleTab({ myUserId }) {
   // between reloads so sort/filter reorder preserves in-flight edits.
   const [gen, setGen] = useState(0);
 
+  // The signup path (known to Tori / booked / paid and needs to book) is a
+  // host readout (src/signup-paths.ts). Its absence never blocks the list.
+  const [paths, setPaths] = useState({});
+
   const reload = useCallback(async () => {
-    const res = await api("/api/admin/people");
+    const [res, pathRes] = await Promise.all([
+      api("/api/admin/people"),
+      api("/api/admin/signup-paths").catch(() => ({ paths: {} })),
+    ]);
     setPeople(res.people);
+    setPaths(pathRes?.paths ?? {});
     setGen((g) => g + 1);
   }, []);
 
@@ -254,6 +278,7 @@ export function PeopleTab({ myUserId }) {
     () =>
       (people ?? []).map((p) => ({
         ...p,
+        path: paths[String(p.email ?? "").toLowerCase()] ?? null,
         draft: {
           myUserId,
           role: p.role ?? "provisional",
@@ -261,7 +286,7 @@ export function PeopleTab({ myUserId }) {
           meeting: p.application?.meetingAt ? toLocalInputValue(p.application.meetingAt) : "",
         },
       })),
-    [people, gen, myUserId],
+    [people, paths, gen, myUserId],
   );
   const cols = useMemo(() => peopleColumns(myUserId, reload), [myUserId, reload]);
 

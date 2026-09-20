@@ -397,10 +397,11 @@ describe("behavior decisions that override a Chapter default", () => {
     expect(chapter.account).toBe(baseline.clerk.account);
   });
 
-  it("fires adminNotification on submit, so free Associates and abandoned payments reach the owner", () => {
+  it("keeps Chapter's adminNotification off; the owner's notices are host jobs", () => {
     // Legacy fired it inside the Stripe webhook (baseline note). Owner decision
-    // 2026-09-19 moved it to submit; the fixture records the change.
-    expect(chapter.sends.adminNotification).toBe("submit");
+    // 2026-09-19 (signup-path audit): neither submit nor payment; the host
+    // sends callBookedAdmin and paidApprovedAdmin from src/signup-paths.ts.
+    expect(chapter.sends.adminNotification).toBe("never");
     expect(chapter.sends.adminNotification).toBe(baseline.sends.adminNotification);
   });
 
