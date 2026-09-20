@@ -58,14 +58,14 @@ const chapterVersion = JSON.parse(readFileSync(
 // reviewed namespaces and attributes.
 // 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
 // signup request reader changes. Keep unknown future versions gated.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0"];
-const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0"].includes(chapterVersion);
-const hasSeatJourneys = ["0.49.0", "0.50.0", "0.51.0", "0.52.0"].includes(chapterVersion);
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1"];
+const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1"].includes(chapterVersion);
+const hasSeatJourneys = ["0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1"].includes(chapterVersion);
 // 0.52.0 (odla-ai PR #978): the sender display name on the group row (bug
 // 5a50304f) and the operator's resolve evidence on payment recovery reviews
 // (bugs 513172cd, e58fd02d). Both optional; neither is browser-readable.
-const hasSenderName = ["0.52.0"].includes(chapterVersion);
-const hasReviewActions = ["0.52.0"].includes(chapterVersion);
+const hasSenderName = ["0.52.0", "0.52.1"].includes(chapterVersion);
+const hasReviewActions = ["0.52.0", "0.52.1"].includes(chapterVersion);
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -93,6 +93,8 @@ const reviewedVersionNamespaces = {
   // descriptor metadata over the 0.51.0 collections. Its two optional
   // attributes are reviewed below (hasSenderName, hasReviewActions).
   "0.52.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.52.1 only relabels the payment price lines; schema, rules and seeds match 0.52.0.
+  "0.52.1": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
