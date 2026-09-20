@@ -1,17 +1,28 @@
-// The three signup paths (Tori, 2026-09-19) and the one piece of them the
-// Chapter package does not provide: the 24-hour booking reminder.
+// The signup paths (Tori, 2026-09-19) and the pieces of them the Chapter
+// package does not provide: the 24-hour stall emails.
 //
-//   1. waived            Tori already knows her: an admission grant waives the
-//                        call, payment approves her on the spot (Chapter).
-//   2. booked            she paid and booked her call in one sitting; the
-//                        prepEmail template is the single confirmation (Chapter).
-//   3. awaiting_booking  she paid and left. Twenty-four hours after payment
-//                        with no call on the calendar, this module sends her
-//                        the bookingReminder template and Tori the
-//                        bookingReminderAdmin copy, once per application.
+// The email rule (Tori, 2026-09-20): nobody receives a receipt for passing a
+// step inside the signup flow. Progress is tracked silently on the People
+// list. An applicant hears from us only when her progression stalls for more
+// than 24 hours, and otherwise only to congratulate her (onboardingInvite at
+// approval, Chapter) or to confirm the upcoming call (prepEmail at booking,
+// Chapter). Chapter's submitConfirmation is installed switched off.
+//
+//   1. waived                Tori already knows her: an admission grant waives
+//                            the call, payment approves her on the spot.
+//   2. booked                she booked her call; prepEmail is the confirmation.
+//   3. awaiting_booking      she paid and left. 24 hours after payment with no
+//                            call: bookingReminder to her, bookingReminderAdmin
+//                            to Tori, once per application.
+//   4. free_awaiting_booking an Associate applied and left. 24 hours after
+//                            submit with no call: bookingReminderFree, once.
+//   5. unpaid                a paid-tier applicant applied and never paid. 24
+//                            hours after submit: paymentReminder, once.
+//
+// The two newer stalls send no admin copy; Tori tracks them on the People list.
 //
 // Everything here reads Chapter's own rows and sends through Chapter's own
-// sendTemplated, so the reminder lands in the same email history, obeys the
+// sendTemplated, so each email lands in the same email history, obeys the
 // same dev redirect, and can never deliver twice (dedupeKey).
 //
 // Path classification is also served to the admin console at
@@ -30,6 +41,9 @@ import type { ChapterEnv, Route, WorkerContext } from "@odla-ai/chapter/worker";
 export const REMINDER_AFTER_MS = 24 * 60 * 60 * 1000;
 export const REMINDER_TEMPLATE = "bookingReminder";
 export const REMINDER_ADMIN_TEMPLATE = "bookingReminderAdmin";
+export const FREE_REMINDER_TEMPLATE = "bookingReminderFree";
+export const PAYMENT_REMINDER_TEMPLATE = "paymentReminder";
+const MEMBERS_URL = "https://silverandsaltcapital.com/members/";
 export const SIGNUP_PATHS_PATH = "/api/admin/signup-paths";
 export const CALL_BOOKED_ADMIN_TEMPLATE = "callBookedAdmin";
 export const PAID_APPROVED_ADMIN_TEMPLATE = "paidApprovedAdmin";
@@ -40,14 +54,26 @@ const ADMIN_URL = "https://silverandsaltcapital.com/admin/";
 
 type Row = Record<string, unknown>;
 
-export type SignupPath = "waived" | "booked" | "awaiting_booking" | "reminded" | "unpaid" | "closed";
+export type SignupPath =
+  | "waived"
+  | "booked"
+  | "awaiting_booking"
+  | "reminded"
+  | "free_awaiting_booking"
+  | "free_reminded"
+  | "unpaid"
+  | "unpaid_reminded"
+  | "closed";
 
 export const SIGNUP_PATH_LABELS: Record<SignupPath, string> = {
   waived: "Known to Tori, no call",
   booked: "Call booked",
   awaiting_booking: "Paid, needs to book",
   reminded: "Reminded, needs to book",
+  free_awaiting_booking: "Applied, needs to book",
+  free_reminded: "Reminded, needs to book",
   unpaid: "Applied, unpaid",
+  unpaid_reminded: "Reminded, unpaid",
   closed: "Closed",
 };
 
@@ -57,11 +83,17 @@ const CALL_STAGES = new Set(["call_scheduled", "interviewed", "approved"]);
 export interface PathFacts {
   // Application ids with a scheduled meeting row.
   scheduled: Set<string>;
-  // Application ids that already received the reminder (a non-failed emailLog row).
+  // Application ids that already received bookingReminder (a non-failed emailLog row).
   reminded: Set<string>;
   // Application id -> epoch ms of the first successful payment, when a Stripe
   // receipt names the application. Absent rows fall back to createdAt.
   paidAt: Map<string, number>;
+  // Tier ids that cost nothing (the Associate tier). An application on one of
+  // these never has a payment step, so its stall is the unbooked call.
+  freeTiers?: Set<string>;
+  // Application ids that already received bookingReminderFree / paymentReminder.
+  remindedFree?: Set<string>;
+  remindedPayment?: Set<string>;
 }
 
 export function classifyPath(app: Row, facts: PathFacts): SignupPath {
@@ -72,7 +104,20 @@ export function classifyPath(app: Row, facts: PathFacts): SignupPath {
   const meetingAt = typeof app.meetingAt === "number" ? app.meetingAt : 0;
   if (facts.scheduled.has(id) || meetingAt > 0 || CALL_STAGES.has(status)) return "booked";
   if (status === "paid_pending_vetting") return facts.reminded.has(id) ? "reminded" : "awaiting_booking";
-  return "unpaid";
+  if (facts.freeTiers?.has(String(app.tierId ?? ""))) {
+    return facts.remindedFree?.has(id) ? "free_reminded" : "free_awaiting_booking";
+  }
+  return facts.remindedPayment?.has(id) ? "unpaid_reminded" : "unpaid";
+}
+
+// When the stall clock started: payment for a paid member, the application
+// itself for everyone still ahead of payment or booking.
+export function stalledSince(app: Row, path: SignupPath, facts: PathFacts): number | null {
+  if (path === "awaiting_booking" || path === "reminded") return paidAtOf(app, facts);
+  if (path === "free_awaiting_booking" || path === "free_reminded" || path === "unpaid" || path === "unpaid_reminded") {
+    return typeof app.createdAt === "number" ? app.createdAt : null;
+  }
+  return null;
 }
 
 // When her membership became paid for. A Stripe first-payment receipt is the
@@ -97,15 +142,24 @@ export async function loadSignupPaths(db: ChapterDb, chapterId: string, runtime:
   const data = await db.query({
     applications: { $: { where: { groupId: chapterId }, limit: 500 } },
     meetings: { $: { where: { groupId: chapterId, status: "scheduled" }, limit: 500 } },
+    tiers: { $: { where: { groupId: chapterId }, limit: 50 } },
     emailLog: { $: { where: { template: REMINDER_TEMPLATE }, limit: 500 } },
     stripeEventReceipts: { $: { where: { kind: "first_payment" }, limit: 500 } },
   });
+  const freeLog = await db.query({ emailLog: { $: { where: { template: FREE_REMINDER_TEMPLATE }, limit: 500 } } });
+  const paymentLog = await db.query({ emailLog: { $: { where: { template: PAYMENT_REMINDER_TEMPLATE }, limit: 500 } } });
   const rows = (data.applications ?? []).filter((app) => inRuntime(app, runtime));
   const scheduled = new Set((data.meetings ?? []).map((m) => String(m.applicationId ?? "")));
-  const reminded = new Set(
-    (data.emailLog ?? [])
-      .filter((r) => !r.error || r.error === "" || r.deliveryState === "sent")
-      .map((r) => String(r.applicationId ?? "")),
+  const delivered = (log: Row[] | undefined) =>
+    new Set(
+      (log ?? [])
+        .filter((r) => !r.error || r.error === "" || r.deliveryState === "sent")
+        .map((r) => String(r.applicationId ?? "")),
+    );
+  const freeTiers = new Set(
+    (data.tiers ?? [])
+      .filter((t) => t.free === true || (typeof t.priceCents === "number" && t.priceCents === 0))
+      .map((t) => String(t.id ?? "")),
   );
   const paidAt = new Map<string, number>();
   for (const receipt of data.stripeEventReceipts ?? []) {
@@ -115,7 +169,15 @@ export async function loadSignupPaths(db: ChapterDb, chapterId: string, runtime:
     const prior = paidAt.get(appId);
     if (prior === undefined || at < prior) paidAt.set(appId, at);
   }
-  return { rows, facts: { scheduled, reminded, paidAt } as PathFacts };
+  const facts: PathFacts = {
+    scheduled,
+    reminded: delivered(data.emailLog),
+    paidAt,
+    freeTiers,
+    remindedFree: delivered(freeLog.emailLog),
+    remindedPayment: delivered(paymentLog.emailLog),
+  };
+  return { rows, facts };
 }
 
 export interface ReminderRun {
@@ -128,10 +190,20 @@ export interface ReminderRun {
 
 const text = (v: unknown) => (typeof v === "string" ? v : "");
 
+// Which stall each waiting path is, and the email that answers it.
+const STALL_EMAILS: Partial<Record<SignupPath, { template: string; keyPrefix: string; adminCopy: boolean }>> = {
+  awaiting_booking: { template: REMINDER_TEMPLATE, keyPrefix: "booking-reminder", adminCopy: true },
+  free_awaiting_booking: { template: FREE_REMINDER_TEMPLATE, keyPrefix: "booking-reminder-free", adminCopy: false },
+  unpaid: { template: PAYMENT_REMINDER_TEMPLATE, keyPrefix: "payment-reminder", adminCopy: false },
+};
+
 /**
- * Send the 24-hour reminder to every paid, unbooked application that is due,
- * and the admin copy to the group's notification inbox. Safe to run on every
- * cron tick: dedupeKey makes each application a single durable delivery.
+ * Send the 24-hour stall email to every application that is due: the booking
+ * reminder (with Tori's copy) to a paid, unbooked member; the Associate booking
+ * reminder to a free applicant with no call; the payment reminder to a paid-tier
+ * applicant who never paid. Safe to run on every cron tick: dedupeKey makes each
+ * application a single durable delivery, and a template that is not installed
+ * yet stops only its own stall, never the others.
  */
 export async function remindUnbooked(
   context: WorkerContext,
@@ -146,12 +218,17 @@ export async function remindUnbooked(
   const runtime = typeof e.ODLA_RUNTIME === "string" ? e.ODLA_RUNTIME : undefined;
 
   const { rows, facts } = await loadSignupPaths(db, chapter.id, runtime);
-  const due = rows.filter((app) => {
-    if (classifyPath(app, facts) !== "awaiting_booking") return false;
-    if (!text(app.email)) return false;
-    const paidAt = paidAtOf(app, facts);
-    return paidAt !== null && paidAt + REMINDER_AFTER_MS <= now;
-  });
+  // A stall older than the lookback is history, not a nudge: a first deploy or
+  // a long outage must not mail everyone who ever stopped part way.
+  const oldest = now - MILESTONE_LOOKBACK_MS;
+  const due: Array<{ app: Row; stall: NonNullable<(typeof STALL_EMAILS)[SignupPath]> }> = [];
+  for (const app of rows) {
+    const path = classifyPath(app, facts);
+    const stall = STALL_EMAILS[path];
+    if (!stall || !text(app.email)) continue;
+    const since = stalledSince(app, path, facts);
+    if (since !== null && since >= oldest && since + REMINDER_AFTER_MS <= now) due.push({ app, stall });
+  }
   const run: ReminderRun = { due: due.length, sent: 0, skipped: 0, failed: 0 };
   if (!due.length) return run;
 
@@ -169,7 +246,17 @@ export async function remindUnbooked(
     newId: () => crypto.randomUUID(),
   };
 
-  for (const app of due.slice(0, limit)) {
+  // A template that is not installed (or is switched off) stops its own stall
+  // for this run; the other stalls keep sending.
+  const dead = new Set<string>();
+  let attempted = 0;
+  for (const { app, stall } of due) {
+    if (attempted >= limit) break;
+    if (dead.has(stall.template)) {
+      run.skipped++;
+      continue;
+    }
+    attempted++;
     const id = String(app.id);
     const vars = {
       firstName: text(app.firstName),
@@ -177,32 +264,35 @@ export async function remindUnbooked(
       email: text(app.email),
       phone: text(app.phone),
       state: text(app.state),
+      membersUrl: MEMBERS_URL,
     };
     const member = await sendTemplated(deps, {
       group,
-      template: REMINDER_TEMPLATE,
+      template: stall.template,
       to: vars.email,
       vars,
-      dedupeKey: `booking-reminder:${id}`,
+      dedupeKey: `${stall.keyPrefix}:${id}`,
       applicationId: id,
     });
     if (!member.sent) {
       if (member.reason === "template-missing" || member.reason === "disabled") {
-        // Nothing will send until the template exists; stop rather than loop.
-        return { ...run, skipped: due.length - run.sent - run.failed, reason: member.reason };
+        dead.add(stall.template);
+        run.skipped++;
+        run.reason = run.reason ?? member.reason;
+        continue;
       }
       run.failed++;
       continue;
     }
     run.sent++;
     const notify = text(groupRow.notificationEmail);
-    if (notify) {
+    if (stall.adminCopy && notify) {
       await sendTemplated(deps, {
         group,
         template: REMINDER_ADMIN_TEMPLATE,
         to: notify,
         vars,
-        dedupeKey: `booking-reminder:${id}:admin`,
+        dedupeKey: `${stall.keyPrefix}:${id}:admin`,
         applicationId: id,
       });
     }
@@ -236,12 +326,13 @@ export const signupPathsRoute: Route = async (req, url, env, ctx) => {
     if (!email) continue;
     const path = classifyPath(app, facts);
     const paidAt = path === "awaiting_booking" || path === "reminded" ? paidAtOf(app, facts) : null;
+    const since = STALL_EMAILS[path] ? stalledSince(app, path, facts) : null;
     byEmail[email] = {
       applicationId: String(app.id),
       path,
       label: SIGNUP_PATH_LABELS[path],
       paidAt,
-      reminderDueAt: path === "awaiting_booking" && paidAt !== null ? paidAt + REMINDER_AFTER_MS : null,
+      reminderDueAt: since !== null ? since + REMINDER_AFTER_MS : null,
     };
   }
   return json({ paths: byEmail });
