@@ -47,7 +47,7 @@ async function main() {
   }
 
   await db.transact(
-    [{ t: "merge", ns: "groups", id: { ns: "groups", attr: "id", value: GROUP_ID }, attrs: { fromName: FROM_NAME } }],
+    [{ t: "update", ns: "groups", id: { ns: "groups", attr: "id", value: GROUP_ID }, attrs: { fromName: FROM_NAME } }],
     { mutationId: `${REVISION}:${envName}` },
   );
   const after = (await db.query({ groups: { $: { where: { id: GROUP_ID }, limit: 1 } } })).groups?.[0];
