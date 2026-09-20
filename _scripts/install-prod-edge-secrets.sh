@@ -12,7 +12,7 @@ set -euo pipefail
 
 SILVER=~/Projects/Silver-and-Salt
 BNF=~/Projects/bnfCapWeb
-CLI="npx --yes @odla-ai/cli@0.60.0"
+CLI="npx --yes @odla-ai/cli@0.61.2"
 EMAIL=tori@silverandsaltcapital.com
 
 # install_pair <chapter-side key> <hub-side key>: one value, two vaults.
