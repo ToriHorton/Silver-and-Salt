@@ -116,7 +116,8 @@ cross-check); those are the math and stay as they are. Do not reintroduce
 
 ### Pages
 - `index.html` — Homepage
-- `join.html` — a mailto holding page since 2026-08-24 (the `?tier=` query only rewrites the subject line). The Preact join island (`src/app/join-island.jsx`) builds but is not mounted on `main`; it mounts on `prod-cutover` behind a server-enforced sales state.
+- `join.html` — the live application page. **Sales opened to the public on 2026-09-20 (Tori).** The Worker (`src/join-page.ts`) mounts the Preact join island (`src/app/join-island.jsx`) inside the tracked holding markup whenever the server-enforced sales state is open; `_scripts/set-sales-state.sh <disabled|restricted|public>` is the operator switch, never a code deploy.
+- **Signup email rule (Tori, 2026-09-20):** no applicant receives a receipt for passing a step in the signup flow. Only three 24-hour stall emails (`src/signup-paths.ts`: bookingReminder, bookingReminderFree, paymentReminder), the welcome at approval, and the call confirmation at booking. Chapter's `submitConfirmation` stays installed switched off. Copy lives in `_reference/signup-emails.md` (local); the record is Addendum F of the operations living document in the Library.
 - `dashboard.html` — CEO command center (gitignored; published daily as an unlinked, noindexed copy at the obscure URL `hq-25b5a94e297e.html` with `granola-inbox.js` + `newsletter-data.js`, per Tori's 2026-07-14 decision, pending password protection; never link that URL from any public page)
   - **Canonical version (Tori, 2026-07-14): the single-page `dashboard.html` on the MacBook Pro.** The split pages on the other computer (`dashboard-actions.html`, `dashboard-newsletter.html`, `dashboard.css`, `dashboard-app.js`) are deprecated; do not build on them.
 - `manifesto.html`, `opportunity.html`, `networks.html` etc. — Supporting pages
