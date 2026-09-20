@@ -175,8 +175,8 @@ function GiftSeatOffer({ gift, onGift }) {
         {" "}She gets a full membership of her own, active alongside yours, and completes her own short application.
       </p>
       <div class="gift-fields">
-        <input type="text" placeholder="Her full name" aria-label="Her name" maxLength={160} value={gift.name} onInput={(e) => onGift({ ...gift, name: e.currentTarget.value })} />
-        <input type="email" placeholder="Her email" aria-label="Her email" maxLength={254} value={gift.email} onInput={(e) => onGift({ ...gift, email: e.currentTarget.value })} />
+        <input type="text" placeholder="Her full name" aria-label="Her name" maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
+        <input type="email" placeholder="Her email" aria-label="Her email" maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
       </div>
       {error && <p class="gift-error" role="alert">{error}</p>}
       {phase !== "review" && (
@@ -401,15 +401,15 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
               name="giftSeatInterest"
               value="yes"
               checked={gift.interest}
-              onChange={(e) => onGift({ ...gift, interest: e.currentTarget.checked })}
+              onChange={(e) => onGift((g) => ({ ...g, interest: e.currentTarget.checked }))}
             />{" "}
             Yes, I would like to add one right after my payment.
           </label>
           <div class={gift.interest ? "referral-reveal show" : "referral-reveal"} id="gift-seat-reveal">
             <label for="giftSeatRecipientName">Her name <span class="opt">(you can add this later)</span></label>
-            <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Her full name" maxLength={160} value={gift.name} onInput={(e) => onGift({ ...gift, name: e.currentTarget.value })} />
+            <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Her full name" maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
             <label for="giftSeatRecipientEmail">Her email</label>
-            <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" maxLength={254} value={gift.email} onInput={(e) => onGift({ ...gift, email: e.currentTarget.value })} />
+            <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
           </div>
         </div>
       )}
@@ -457,8 +457,11 @@ export function Join({ config, initialTierId, initialState }) {
     return { interest: false, name: "", email: "" };
   });
   const setGift = (next) => {
-    setGiftState(next);
-    try { sessionStorage.setItem("ssc-gift", JSON.stringify(next)); } catch {}
+    setGiftState((prev) => {
+      const value = typeof next === "function" ? next(prev) : next;
+      try { sessionStorage.setItem("ssc-gift", JSON.stringify(value)); } catch {}
+      return value;
+    });
   };
   const [ack, setAck] = useState(false);
   // Whether the chosen tier is free, mirrored from the packaged tier selection
