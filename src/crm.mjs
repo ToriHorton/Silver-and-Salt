@@ -37,7 +37,17 @@ export const crm = defineCrm({
         email: { type: "email", label: "Email" },
         firstName: { type: "string", label: "First name" },
         lastName: { type: "string", label: "Last name" },
+        preferredName: { type: "string", label: "Preferred name" },
         phone: { type: "string", label: "Phone" },
+        // The US mailing address, asked on the application (Tori, 2026-09-20).
+        address1: { type: "string", label: "Address line 1", search: false },
+        address2: { type: "string", label: "Address line 2", search: false },
+        city: { type: "string", label: "City" },
+        postalCode: { type: "string", label: "ZIP", search: false },
+        country: { type: "string", label: "Country", search: false },
+        // The free-text answers behind "Other" and "Something else".
+        referralOther: { type: "string", label: "How they found us (other)" },
+        whoYouAreOther: { type: "string", label: "Who they are (other)" },
         // Promoted so the list can sort/filter by location and cohort.
         state: { type: "string", label: "State", slot: "s1" },
         whoYouAre: { type: "string", label: "Who they are", slot: "s2" },

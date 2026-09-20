@@ -286,19 +286,45 @@ export function chapterFor(envName = "dev") {
   // contract being preserved, so they stay optional here; making them required
   // would newly reject API submissions the current product accepts.
   application: {
+    // Tori, 2026-09-20: the application also asks for a preferred name, a
+    // confirmed email (browser-side only, never stored), a required LinkedIn
+    // profile, the free-text answer behind "Other" / "Something else", and the
+    // full US mailing address. New columns stay schema-optional (existing rows
+    // have none of them) and are made required at submit through `conditions`,
+    // which Chapter enforces server-side and reports in the field contract.
     required: ["firstName", "lastName", "email", "referral", "whoYouAre", "message"],
-    optional: ["referralName", "linkedin", "phone", "state"],
+    optional: [
+      "preferredName", "referralName", "referralOther", "whoYouAreOther", "linkedin", "phone",
+      "address1", "address2", "city", "state", "postalCode", "country",
+    ],
+    conditions: {
+      linkedin: { requiredWhen: "true" },
+      address1: { requiredWhen: "true" },
+      city: { requiredWhen: "true" },
+      state: { requiredWhen: "true" },
+      postalCode: { requiredWhen: "true" },
+      referralOther: { visibleWhen: 'values.referral == "other"', requiredWhen: 'values.referral == "other"' },
+      whoYouAreOther: { visibleWhen: 'values.whoYouAre == "Something else"', requiredWhen: 'values.whoYouAre == "Something else"' },
+    },
     maxLen: {
       firstName: 200,
       lastName: 200,
+      preferredName: 200,
       email: 320,
       referral: 100,
       referralName: 200,
+      referralOther: 200,
       whoYouAre: 100,
+      whoYouAreOther: 200,
       linkedin: 500,
       message: 5000,
       phone: 40,
+      address1: 200,
+      address2: 200,
+      city: 120,
       state: 60,
+      postalCode: 20,
+      country: 60,
     },
     bodyCap: 32_768,
     validateEmail: true,
@@ -323,7 +349,10 @@ export function chapterFor(envName = "dev") {
     // Application fields carried into the one-way CRM projection on top of the
     // built-in identity/contact set. Each is declared on the person type in
     // src/crm.mjs, which is what keeps the enrichment from being dropped.
-    crmFields: ["state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"],
+    crmFields: [
+      "preferredName", "state", "whoYouAre", "whoYouAreOther", "referral", "referralName", "referralOther",
+      "linkedin", "focus", "message", "address1", "address2", "city", "postalCode", "country",
+    ],
   },
 
   // ── Auth ─────────────────────────────────────────────────────────────

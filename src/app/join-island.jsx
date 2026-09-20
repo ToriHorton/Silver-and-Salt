@@ -127,7 +127,19 @@ function StepRail({ step, invited, free }) {
   );
 }
 
-function ApplicationFields({ invitation, config, referral, onReferral, referralName, onReferralName, ack, onAck }) {
+// The confirm-email field is a browser-side check only: it has no `name`, so
+// it is never posted, and a mismatch blocks submit through the browser's own
+// constraint validation (the form is a real <form>, so `required` and
+// setCustomValidity run before Chapter's submit handler).
+function syncConfirmEmail() {
+  const email = document.getElementById("email");
+  const confirm = document.getElementById("confirmEmail");
+  if (!email || !confirm) return;
+  const same = confirm.value.trim().toLowerCase() === email.value.trim().toLowerCase();
+  confirm.setCustomValidity(confirm.value && !same ? "The two email addresses do not match." : "");
+}
+
+function ApplicationFields({ invitation, config, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, ack, onAck }) {
   return (
     <>
       <div class="two-col">
@@ -142,20 +154,50 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
       </div>
 
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="martha@example.com" value={invitation?.recipientEmail} readOnly={Boolean(invitation)} required />
+        <label for="preferredName">Preferred Name <span class="opt">(if different)</span></label>
+        <input type="text" id="preferredName" name="preferredName" placeholder="What you go by" maxLength={200} />
       </div>
 
-      <div class="two-col">
+      <div class={invitation ? "form-group" : "two-col"}>
         <div class="form-group">
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" name="phone" placeholder="(801) 555-0100" required />
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="martha@example.com" value={invitation?.recipientEmail} readOnly={Boolean(invitation)} required onInput={syncConfirmEmail} />
+        </div>
+        {!invitation && (
+          <div class="form-group">
+            <label for="confirmEmail">Confirm Email</label>
+            <input type="email" id="confirmEmail" placeholder="Type it once more" autoComplete="off" required onInput={syncConfirmEmail} />
+          </div>
+        )}
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" placeholder="(801) 555-0100" required />
+      </div>
+
+      {/* The full US mailing address (Tori, 2026-09-20). Membership is
+          US-only, so the country is fixed and posted as a hidden field. */}
+      <div class="form-group">
+        <label for="address1">Mailing Address <span class="opt">(United States)</span></label>
+        <input type="text" id="address1" name="address1" placeholder="Street address" autoComplete="address-line1" maxLength={200} required />
+        <input type="text" id="address2" name="address2" placeholder="Apartment, suite, or unit (optional)" aria-label="Address line 2" autoComplete="address-line2" maxLength={200} />
+      </div>
+      <div class="three-col">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="Salt Lake City" autoComplete="address-level2" maxLength={120} required />
         </div>
         <div class="form-group">
           <label for="state">State</label>
-          <input type="text" id="state" name="state" placeholder="Utah" required />
+          <input type="text" id="state" name="state" placeholder="Utah" autoComplete="address-level1" maxLength={60} required />
+        </div>
+        <div class="form-group">
+          <label for="postalCode">ZIP</label>
+          <input type="text" id="postalCode" name="postalCode" placeholder="84101" inputMode="numeric" pattern="\d{5}(-\d{4})?" title="A five-digit ZIP code" autoComplete="postal-code" maxLength={20} required />
         </div>
       </div>
+      <input type="hidden" name="country" value="United States" />
 
       {invitation ? <><input type="hidden" name="referral" value="referred" /><input type="hidden" name="referralName" value={invitation.purchaserName} /></> : <div class="form-group">
         <label for="referral">How did you find Silver &amp; Salt Capital?</label>
@@ -192,16 +234,40 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
             onInput={(e) => onReferralName(e.currentTarget.value)}
           />
         </div>
+        {/* "Other" opens a free-text answer, required only then. The server
+            drops it again if the choice changes (visibleWhen in chapter.config). */}
+        <div class={referral === "other" ? "referral-reveal show" : "referral-reveal"} id="referral-other-reveal">
+          <label for="referralOther">Tell us how you found us</label>
+          <input
+            type="text"
+            id="referralOther"
+            name="referralOther"
+            placeholder="A newsletter, a podcast episode, a friend of a friend…"
+            maxLength={200}
+            required={referral === "other"}
+          />
+        </div>
       </div>}
 
       <div class="form-group">
         <label for="whoYouAre">How would you describe yourself?</label>
-        <select id="whoYouAre" name="whoYouAre" required>
-          <option value="" disabled selected>Select one…</option>
+        <select id="whoYouAre" name="whoYouAre" required value={whoYouAre} onChange={(e) => onWhoYouAre(e.currentTarget.value)}>
+          <option value="" disabled>Select one…</option>
           {WHO_YOU_ARE_OPTIONS.map((o) => (
-            <option key={o}>{o}</option>
+            <option key={o} value={o}>{o}</option>
           ))}
         </select>
+        <div class={whoYouAre === "Something else" ? "referral-reveal show" : "referral-reveal"} id="who-other-reveal">
+          <label for="whoYouAreOther">Tell us a little about what you do</label>
+          <input
+            type="text"
+            id="whoYouAreOther"
+            name="whoYouAreOther"
+            placeholder="In your own words"
+            maxLength={200}
+            required={whoYouAre === "Something else"}
+          />
+        </div>
       </div>
 
       <div class="form-group">
@@ -218,8 +284,8 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
       </div>
 
       <div class="form-group">
-        <label for="linkedin">LinkedIn <span class="opt">(optional)</span></label>
-        <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/yourname" />
+        <label for="linkedin">LinkedIn Profile</label>
+        <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/yourname" autoComplete="url" maxLength={500} required />
       </div>
 
       <div class="form-group">
@@ -262,6 +328,7 @@ export function Join({ config, initialTierId, initialState }) {
   const resumeKey = seatId ? `${RESUME_KEY}:seat:${seatId}` : RESUME_KEY;
   const [referral, setReferral] = useState("");
   const [referralName, setReferralName] = useState("");
+  const [whoYouAre, setWhoYouAre] = useState("");
   const [ack, setAck] = useState(false);
   // Whether the chosen tier is free, mirrored from the packaged tier selection
   // so the step rail can drop the payment step. Preset from the URL so the
@@ -478,6 +545,8 @@ export function Join({ config, initialTierId, initialState }) {
             }}
             referralName={referralName}
             onReferralName={setReferralName}
+            whoYouAre={whoYouAre}
+            onWhoYouAre={setWhoYouAre}
             ack={ack}
             onAck={setAck}
           />}

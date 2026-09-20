@@ -164,6 +164,10 @@ const REVIEWED_LEGACY_SOURCE_ATTRS = {
 // defaults; the browser still cannot write either attribute directly.
 const REVIEWED_ADDITIONS = {
   applications: [
+    // Tori, 2026-09-20: the application form asks for a preferred name, the
+    // free-text answer behind "Other" / "Something else", and the US mailing
+    // address (src/chapter.config.mjs application.optional). All optional.
+    "preferredName", "referralOther", "whoYouAreOther", "address1", "address2", "city", "postalCode", "country",
     ...(hasSeatJourneys ? ["membershipRestartId", "membershipStatus", "membershipGraceEndsAt", "membershipAutoRenew"] : []),
     // Decision b44909c6-bafe-5315-aff9-3aadd33b44aa: reject repeat signups,
     // preserve existing accounts, and enable protected Studio account editing.
@@ -441,12 +445,26 @@ describe("behavior decisions that override a Chapter default", () => {
 });
 
 describe("behavior that must match the frozen baseline exactly", () => {
-  it("validates the same join fields with the same caps", () => {
+  // The application asks for more since 2026-09-20 (Tori): preferred name, the
+  // free-text answer behind "Other" / "Something else", a required LinkedIn
+  // profile, and the US mailing address. Every legacy field and cap is kept;
+  // the additions are schema-optional and made required through conditions.
+  const ADDED_2026_09_20 = ["preferredName", "referralOther", "whoYouAreOther", "address1", "address2", "city", "postalCode", "country"];
+
+  it("validates the same join fields with the same caps, plus the 2026-09-20 additions", () => {
     expect([...chapter.application.required]).toEqual(baseline.application.required);
-    expect([...chapter.application.optional]).toEqual(baseline.application.optional);
+    for (const field of baseline.application.optional) expect(chapter.application.optional).toContain(field);
+    expect([...chapter.application.optional].filter((f) => !baseline.application.optional.includes(f)).sort()).toEqual([...ADDED_2026_09_20].sort());
     expect(chapter.application.maxLen).toMatchObject(baseline.application.maxLen);
     expect(chapter.application.bodyCap).toBe(baseline.application.bodyCap);
     expect(chapter.application.validateEmail).toBe(baseline.application.validateEmail);
+  });
+
+  it("requires LinkedIn and the mailing address at submit, and the free-text answers only behind their choices", () => {
+    const c = chapter.application.conditions;
+    for (const field of ["linkedin", "address1", "city", "state", "postalCode"]) expect(c[field]).toEqual({ requiredWhen: "true" });
+    expect(c.referralOther).toEqual({ visibleWhen: 'values.referral == "other"', requiredWhen: 'values.referral == "other"' });
+    expect(c.whoYouAreOther).toEqual({ visibleWhen: 'values.whoYouAre == "Something else"', requiredWhen: 'values.whoYouAre == "Something else"' });
   });
 
   it("keeps phone and state optional server-side", () => {
