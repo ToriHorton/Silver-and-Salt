@@ -66,6 +66,9 @@ describe("chapterFor", () => {
     expect(c.config.emails).toEqual({
       notificationEmail: "tori@silverandsaltcapital.com",
       replyTo: "tori@silverandsaltcapital.com",
+      // Chapter 0.52.0 (bug 5a50304f): the From header's display name. Exact
+      // equality stays, so a debug inbox can never reach production addressing.
+      fromName: "Tori Horton",
     });
     expect(JSON.stringify(c)).not.toContain("+debug");
     expect(c.config.tiers).toEqual([]);

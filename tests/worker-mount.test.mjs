@@ -1,0 +1,67 @@
+// The Worker mount (src/worker-chapter.ts) against the chapter-follower
+// runbook's step for Chapter 0.52.0:
+//
+//   export default withObservability(chapterWorker({ chapter, recordError }));
+//
+// This site builds one Worker per deployment inside that wrapper, so the test
+// drives the exported handler the way Cloudflare does (a request in, a
+// response out) and holds the options every deployment is built from.
+import "./workers-globals.mjs";
+import { describe, expect, it } from "vitest";
+import worker, { chapterWorkerOptions } from "../src/worker-chapter.ts";
+import { recordChapterAlert } from "../src/chapter-alerts.ts";
+
+// The development deployment's plain vars (wrangler.jsonc env.dev), no
+// secrets, and an asset binding that answers so a fall-through is visible.
+const env = {
+  ODLA_ENV: "dev",
+  ODLA_APP_ID: "silver-and-salt-capital",
+  ODLA_TENANT: "silver-and-salt-capital--dev",
+  ODLA_PLATFORM: "https://odla.ai",
+  ODLA_ENDPOINT: "https://db.odla.ai",
+  ASSETS: { fetch: async () => new Response("static asset", { status: 200 }) },
+};
+const ctx = { waitUntil() {}, passThroughOnException() {} };
+
+describe("chapterWorkerOptions", () => {
+  it("hands Chapter this site's recorder for its operator alerts", () => {
+    for (const envName of ["dev", "prod"]) {
+      const options = chapterWorkerOptions(envName);
+      expect(options.recordError).toBe(recordChapterAlert);
+      expect(options.chapter.id).toBe("silver-and-salt-capital");
+      expect(options.chapter.config.emails.fromName).toBe("Tori Horton");
+    }
+  });
+
+  it("keeps the host routes ahead of the built-ins and the CRM at /api/crm", () => {
+    const options = chapterWorkerOptions("dev");
+    expect(options.crmBasePath).toBe("/api/crm");
+    expect(options.requirePaymentQuote).toBe(true);
+    expect(options.routes).toHaveLength(5);
+    for (const route of options.routes) expect(typeof route).toBe("function");
+  });
+});
+
+describe("the exported Worker", () => {
+  it("is a fetch and scheduled handler", () => {
+    expect(typeof worker.fetch).toBe("function");
+    expect(typeof worker.scheduled).toBe("function");
+  });
+
+  it("answers Chapter's health route through the observability wrapper", async () => {
+    // /api/health is the one built-in that touches nothing: a 200 here means
+    // the wrapper, the hardening layer, the host routes and Chapter's router
+    // all ran for a real Request, with no o11y configuration at all.
+    const res = await worker.fetch(new Request("https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev/api/health"), env, ctx);
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
+    // The hardening headers ride every response the Worker produces.
+    expect(res.headers.get("x-content-type-options")).toBe("nosniff");
+  });
+
+  it("terminates an unknown /api/* path as an API error, never a static asset", async () => {
+    const res = await worker.fetch(new Request("https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev/api/no-such-route"), env, ctx);
+    expect(res.status).toBe(404);
+    expect(res.headers.get("content-type")).toMatch(/json/);
+  });
+});

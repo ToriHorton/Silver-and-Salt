@@ -96,7 +96,11 @@ export default {
   // intent proposes disabling its services (bug 9f161705) and must never be
   // applied.
   envs: process.env.ODLA_PROVISION_PROD === "1" ? ["dev", "prod"] : ["dev"],
-  services: ["db", "calendar"],
+  // "o11y" joined "db" and "calendar" with Chapter 0.52.0: provision mints the
+  // ingest token, pushes it to the Worker with --push-secrets, and scaffolds
+  // the ODLA_O11Y_* vars into .dev.vars. src/chapter.config.mjs declares the
+  // same list; tests/chapter-parity.test.mjs holds the two together.
+  services: ["db", "calendar", "o11y"],
   // Cory and Tori intentionally run separate authoritative development
   // Workers against the same Chapter data environment. Provider-facing
   // receipts and secrets remain runtime-scoped; neither sandbox is a replica
@@ -164,8 +168,8 @@ export default {
       ...(process.env.CLERK_PUBLISHABLE_KEY_PROD ? { prod: process.env.CLERK_PUBLISHABLE_KEY_PROD } : {}),
     },
   },
-  // Add "o11y" to services to enable observability; provision then mints the
-  // ingest token and scaffolds the ODLA_O11Y_* vars into .dev.vars.
+  // The o11y service label defaults to the app id and the endpoint to odla's
+  // collector, so no block is needed; override here only if either changes.
   // o11y: {
   //   service: "silver-and-salt-capital",   // defaults to the app id
   //   // endpoint: "https://o11y.odla.ai",
