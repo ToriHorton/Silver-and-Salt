@@ -432,16 +432,29 @@ export function Join({ config, initialTierId, initialState }) {
           )}
           payment={{
             // The shared quote shows these server-owned amounts before consent.
-            renderPriceLines: (lines) => (
+            // Chapter 0.52.1 says where a difference comes from: lines.founding
+            // is a policy-backed founding discount from Built Not Found; a bare
+            // lines.presentation is only the catalog's comparison, so it is shown
+            // as two rates and never called a discount. An older Chapter sends
+            // neither field, and its discount lines keep the founding label.
+            renderPriceLines: (lines) => {
+              const comparisonOnly = lines.discountCents > 0 && !lines.founding && Boolean(lines.presentation);
+              return (
               <div class="pay-lines" id="pay-lines">
                 <div class="pay-line">
-                  <span>Membership price</span>
+                  <span>{comparisonOnly ? "Standard rate" : "Membership price"}</span>
                   <span>{money(lines.standardCents)}</span>
                 </div>
-                {lines.discountCents > 0 && (
+                {lines.discountCents > 0 && !comparisonOnly && (
                   <div class="pay-line discount">
                     <span>Founding-member discount</span>
                     <span>-{money(lines.discountCents)}</span>
+                  </div>
+                )}
+                {comparisonOnly && (
+                  <div class="pay-line">
+                    <span>Your rate</span>
+                    <span>{money(lines.dueTodayCents)}</span>
                   </div>
                 )}
                 <div class="pay-line total">
@@ -449,7 +462,8 @@ export function Join({ config, initialTierId, initialState }) {
                   <span>{money(lines.dueTodayCents)}</span>
                 </div>
               </div>
-            ),
+              );
+            },
           }}
         >
           {({ invitation }) => <ApplicationFields
