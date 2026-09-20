@@ -1,10 +1,13 @@
 import { expect, it } from "vitest";
 import { render } from "preact-render-to-string";
+import { DEFAULT_CHAPTER_COPY } from "@odla-ai/chapter";
 import { Join } from "../src/app/join-island.jsx";
 
 // The tier set production's signup revision publishes (see /api/join-config):
 // the Standard tier at its $1,000 list price, Steward, and the free Associate.
-const config = { paymentsReady: true, tiers: [
+// join-config also carries Chapter's resolved join copy, which the packaged
+// steps past the form read; the defaults stand in for the group's own words.
+const config = { paymentsReady: true, copy: DEFAULT_CHAPTER_COPY.join, tiers: [
   { id: "standard", name: "Standard Membership", priceCents: 100000, free: false, blurb: "" },
   { id: "steward", name: "Community Steward", priceCents: 500000, free: false, blurb: "" },
   { id: "associate", name: "Associate", priceCents: 0, free: true, blurb: "" },
@@ -53,4 +56,51 @@ it("shows three steps for a paid tier and two for the free tier", () => {
 
 it("does not invent a selected offer from an unknown URL tier", () => {
   expect(render(<Join config={config} initialTierId="unoffered" />)).not.toMatch(/checked/);
+});
+
+// The step rail on a RESUMED application (PM bug 854d3a8b, E2E-01). The tier
+// rides the server-verified state, so the rail must agree with the stored
+// membership whatever the URL says, and a fresh visit is exactly as before.
+const dot = (html, id) => html.match(new RegExp(`<div id="${id}" class="(step [a-z]+)">`))?.[1];
+
+it("keeps a resumed free application on two steps, whatever the URL says", () => {
+  const html = render(<Join config={config} initialTierId="standard"
+    initialState={{ step: "booking", applicationId: "app-free", tier: { id: "associate", free: true } }} />);
+  expect(html).not.toContain("Secure your place");
+  expect(html).not.toContain('<div class="step-dot">3</div>');
+  expect(dot(html, "dot-1")).toBe("step complete");
+  expect(dot(html, "dot-pay")).toBeUndefined();
+  expect(dot(html, "dot-2")).toBe("step active");
+});
+
+it("keeps a resumed paid application's payment step, complete once it is booking", () => {
+  const html = render(<Join config={config} initialTierId="associate"
+    initialState={{ step: "booking", applicationId: "app-paid", tier: { id: "standard", free: false } }} />);
+  expect(html).toContain("Secure your place");
+  expect(dot(html, "dot-1")).toBe("step complete");
+  expect(dot(html, "dot-pay")).toBe("step complete");
+  expect(dot(html, "dot-2")).toBe("step active");
+  expect(html).toContain('<div class="step-dot">3</div>');
+  const paying = render(<Join config={config} initialTierId="associate"
+    initialState={{ step: "payment", applicationId: "app-paid", tier: { id: "standard", free: false } }} />);
+  expect(dot(paying, "dot-pay")).toBe("step active");
+  expect(dot(paying, "dot-2")).toBe("step pending");
+});
+
+it("falls back to the chooser only when the server asserted no tier", () => {
+  const free = render(<Join config={config} initialTierId="associate" initialState={{ step: "booking", applicationId: "legacy" }} />);
+  expect(free).not.toContain("Secure your place");
+  const paid = render(<Join config={config} initialTierId="standard" initialState={{ step: "booking", applicationId: "legacy" }} />);
+  expect(dot(paid, "dot-pay")).toBe("step complete");
+});
+
+it("leaves a fresh visit with ?tier= on the form step, two steps free and three paid", () => {
+  const free = render(<Join config={config} initialTierId="associate" />);
+  expect(dot(free, "dot-1")).toBe("step active");
+  expect(dot(free, "dot-pay")).toBeUndefined();
+  expect(dot(free, "dot-2")).toBe("step pending");
+  const paid = render(<Join config={config} initialTierId="standard" />);
+  expect(dot(paid, "dot-1")).toBe("step active");
+  expect(dot(paid, "dot-pay")).toBe("step pending");
+  expect(dot(paid, "dot-2")).toBe("step pending");
 });
