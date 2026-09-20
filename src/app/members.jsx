@@ -169,9 +169,10 @@ function MemberView() {
 }
 
 // The gift membership: a paying member gives one membership to her mother or
-// her daughter during the first three months of her own membership (Tori,
-// 2026-09-19: the seat exists so mothers and daughters talk about money; the
-// relationship is honored, never verified). The offer, price, term, and
+// her daughter, named at purchase, at any point during her own membership year;
+// it is active for the full year alongside hers (Tori, 2026-09-19 and
+// 2026-09-20: the seat exists so mothers and daughters talk about money; the
+// relationship is honored, never verified; no deadline). The offer, price, term, and
 // eligibility come from /api/named-seat (Built Not Found is the authority);
 // this card only presents them and hands the checkout to the same
 // PaymentStep the join flow uses. Chapter ships an equivalent card inside its
@@ -232,7 +233,7 @@ export function NamedSeatCard({ api, initial }) {
             {included
               ? <>Your Community Steward membership includes a membership for your mother or your daughter.</>
               : <>Gift your mother or your daughter a membership for {money} a year.</>}
-            {" "}She accepts your gift, completes her own application, and joins as a member in her own right. Her membership renews alongside yours. Your gift is final: once given, it is hers to use.
+            {" "}She accepts your gift, completes her own application, and joins as a member in her own right. Her membership is active for the full year alongside yours and renews with it. Your gift is final: once given, it is hers to use.
           </p>
           <label class="seat-field">Her name<input required maxLength={160} value={name} onInput={(e) => setName(e.currentTarget.value)} /></label>
           <label class="seat-field">Her email<input required type="email" maxLength={254} value={email} onInput={(e) => setEmail(e.currentTarget.value)} /></label>
