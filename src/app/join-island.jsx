@@ -157,8 +157,17 @@ function GiftSeatOffer({ gift, onGift }) {
     }
   };
   const money = offer ? new Intl.NumberFormat("en-US", { style: "currency", currency: offer.currency }).format(offer.amountCents / 100) : "$500";
-  const included = Boolean(offer) && offer.amountCents === 0;
+  const included = Boolean(offer) && (offer.included === true || offer.amountCents === 0);
   const ready = gift.name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gift.email.trim());
+  const give = async () => {
+    setError(""); setPhase("giving");
+    try {
+      const receipt = await giftSeatApi("/api/named-seat/checkout", { method: "POST",
+        body: JSON.stringify({ recipientName: gift.name.trim(), recipientEmail: gift.email.trim(), quoteDigest: offer.digest, seatTermsAck: true, refundPolicyAck: true }) });
+      if (receipt?.included !== true) throw Error("Her membership could not be confirmed. You can add it from your member area at any time.");
+      setPhase("paid");
+    } catch (e) { setError(e.message); setPhase("review"); }
+  };
   if (phase === "paid") {
     return (
       <div class="gift-offer" id="gift-offer" role="status">
@@ -187,15 +196,22 @@ function GiftSeatOffer({ gift, onGift }) {
           <button type="button" class="gift-skip" onClick={() => setPhase("skipped")}>Continue to booking</button>
         </div>
       )}
-      {phase === "review" && offer && (
+      {(phase === "review" || phase === "giving") && offer && (
         <>
           <label class="compliance-check">
-            <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.currentTarget.checked)} />
-            <span>{offer.autoRenew
-              ? "I agree to the full payment now and to automatic renewal alongside my own membership. I can cancel renewal at any time."
-              : "I agree to the full payment now and to the end date shown, with no automatic renewal while my own renewal is canceled."}</span>
+            <input type="checkbox" checked={terms} disabled={phase === "giving"} onChange={(e) => setTerms(e.currentTarget.checked)} />
+            <span>{included
+              ? "I agree to the gift terms. Her membership is included with mine and renews alongside it; once given, it is hers."
+              : offer.autoRenew
+                ? "I agree to the full payment now and to automatic renewal alongside my own membership. I can cancel renewal at any time."
+                : "I agree to the full payment now and to the end date shown, with no automatic renewal while my own renewal is canceled."}</span>
           </label>
-          {terms && (
+          {terms && included && (
+            <div class="gift-actions">
+              <button type="button" class="submit-btn" disabled={phase === "giving"} onClick={give}>{phase === "giving" ? "One moment…" : "Send her invitation"}</button>
+            </div>
+          )}
+          {terms && !included && (
             <PaymentStep
               applicationId={offer.membershipId}
               refundPolicyText={GIFT_REFUND_POLICY}
