@@ -19,6 +19,9 @@
 //                        sales are open to this request (src/sales-state.ts)
 //   salesStateRoute      GET /api/sales-state readout for operators and CI
 //   joinPage             mounts the join island only when sales are open
+//   joinResumeTierRoute  the verified tier of a resumed application, which the
+//                        canonical GET /api/join/resume does not carry
+//                        (src/join-resume.ts; PM bug 854d3a8b E2E-01)
 //   migrationReadiness   fail-closed readiness gate for the cutover runbook
 //   signupPathsRoute     admin readout of each application's signup path
 //                        (src/signup-paths.ts, which also owns the 24-hour
@@ -33,6 +36,7 @@ import { recordChapterAlert } from "./chapter-alerts";
 import { chapterFor } from "./chapter.config.mjs";
 import { envNameOf, resolveDeployment, type EnvName } from "./deployment";
 import { joinPage } from "./join-page";
+import { joinResumeTierRoute } from "./join-resume";
 import { recoverPendingApprovals } from "./approval-recovery";
 import { membershipNetwork } from "./membership-network";
 import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./signup-paths";
@@ -142,7 +146,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, migrationReadiness, signupPathsRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute] as Route[],
   };
 }
 
