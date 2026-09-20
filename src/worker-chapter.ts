@@ -18,6 +18,9 @@
 //   salesStateRoute      GET /api/sales-state readout for operators and CI
 //   joinPage             mounts the join island only when sales are open
 //   migrationReadiness   fail-closed readiness gate for the cutover runbook
+//   signupPathsRoute     admin readout of each application's signup path
+//                        (src/signup-paths.ts, which also owns the 24-hour
+//                        booking reminder on the cron below)
 //   network.route        inbound membership effects from Built Not Found
 //                        (only when MEMBERSHIP_AUTHORITY_OWNER is set)
 
@@ -28,6 +31,7 @@ import { envNameOf, resolveDeployment, type EnvName } from "./deployment";
 import { joinPage } from "./join-page";
 import { recoverPendingApprovals } from "./approval-recovery";
 import { membershipNetwork } from "./membership-network";
+import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./signup-paths";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
 import { hardenFetch } from "./hardening";
 import { SILVER_HARDENING } from "./hardening.config";
@@ -150,7 +154,7 @@ function workerFor(env: ChapterEnv): Built {
     chapter,
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
-    routes: [salesGate, salesStateRoute, joinPage, migrationReadiness] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, migrationReadiness, signupPathsRoute] as Route[],
   };
   let options: typeof base & { membershipAuthority?: unknown } = base;
   if (authority) {
@@ -192,6 +196,22 @@ export default {
           await recoverPendingApprovals(workerFor(env).background, env);
         } catch (err) {
           console.error("chapter.scheduled", (err as Error).message);
+        }
+        // Path 3 of the signup flow (Tori, 2026-09-19): paid, no call booked,
+        // 24 hours on. Counts only are logged.
+        try {
+          const run = await remindUnbooked(workerFor(env).background, env);
+          if (run.due) console.log("chapter.booking-reminder", run);
+        } catch (err) {
+          console.error("chapter.booking-reminder", (err as Error).message);
+        }
+        // Tori's inbox (2026-09-19): a note when a call is booked, and when a
+        // waived member is paid and approved. Chapter's submit-time notice is off.
+        try {
+          const run = await notifyAdminOfMilestones(workerFor(env).background, env);
+          if (run.booked || run.approved) console.log("chapter.admin-milestones", run);
+        } catch (err) {
+          console.error("chapter.admin-milestones", (err as Error).message);
         }
       })(),
     );
