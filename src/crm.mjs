@@ -48,6 +48,10 @@ export const crm = defineCrm({
         // The free-text answers behind "Other" and "Something else".
         referralOther: { type: "string", label: "How they found us (other)" },
         whoYouAreOther: { type: "string", label: "Who they are (other)" },
+        // The gift-seat upsell answer from the application (Tori, 2026-09-20).
+        giftSeatInterest: { type: "string", label: "Wants a gift seat" },
+        giftSeatRecipientName: { type: "string", label: "Gift for (name)" },
+        giftSeatRecipientEmail: { type: "string", label: "Gift for (email)" },
         // Promoted so the list can sort/filter by location and cohort.
         state: { type: "string", label: "State", slot: "s1" },
         whoYouAre: { type: "string", label: "Who they are", slot: "s2" },

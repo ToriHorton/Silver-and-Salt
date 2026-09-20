@@ -87,6 +87,23 @@ it("keeps a resumed paid application's payment step, complete once it is booking
   expect(dot(paying, "dot-2")).toBe("step pending");
 });
 
+// The gift-seat step (Tori, 2026-09-20): offered right after a paid member's
+// payment, on the booking step, never to a free applicant and never to a gift
+// recipient. Its answer on the application form prefills it.
+it("offers the gift seat after payment for a paid tier only", () => {
+  const paid = render(<Join config={config} initialTierId="standard"
+    initialState={{ step: "booking", applicationId: "app-paid", tier: { id: "standard", free: false } }} />);
+  expect(paid).toContain("Add a membership for your mother or daughter.");
+  expect(paid).toContain("Continue to booking");
+  const free = render(<Join config={config} initialTierId="associate"
+    initialState={{ step: "booking", applicationId: "app-free", tier: { id: "associate", free: true } }} />);
+  expect(free).not.toContain("Add a membership for your mother or daughter.");
+  const form = render(<Join config={config} initialTierId="standard" />);
+  expect(form).toContain('name="giftSeatInterest"');
+  expect(form).toContain("Yes, I would like to add one right after my payment.");
+  expect(form).not.toContain("Add a membership for your mother or daughter.");
+});
+
 it("falls back to the chooser only when the server asserted no tier", () => {
   const free = render(<Join config={config} initialTierId="associate" initialState={{ step: "booking", applicationId: "legacy" }} />);
   expect(free).not.toContain("Secure your place");
