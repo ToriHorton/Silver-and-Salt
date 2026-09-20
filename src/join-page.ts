@@ -48,7 +48,7 @@ export const joinPage: Route = async (req, url, env) => {
   }
   let body = html.slice(0, start)
     + '<div id="join-root"><p role="status">Loading the application form…</p></div>'
-    + '<script type="module" src="/assets/app/join-island.js?v=seat-journeys-0490"></script>'
+    + '<script type="module" src="/assets/app/join-island.js?v=free-resume-0520"></script>'
     + html.slice(end + END.length);
   if (envNameOf(env) === "dev") {
     body = body.replace(
