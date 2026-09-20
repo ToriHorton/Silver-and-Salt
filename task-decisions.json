@@ -8,7 +8,7 @@
     "Verdict 'expired' means the deadline passed and the item was escalated into the dashboard action list as overdue. It is suppressed from re-proposal, NOT dismissed."
   ],
   "version": 1,
-  "updated": "2026-07-30",
+  "updated": "2026-09-20",
   "standing_rules": [
     {
       "rule": "GitHub Pages deploy-failure notifications are never tasks",
@@ -264,80 +264,8 @@
   ],
   "open_threads": [
     {
-      "thread_id": "sharlene-wells",
-      "title": "Get a meeting with Sharlene Wells on the calendar",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
-      "thread_id": "climate-first-bank",
-      "title": "Open the Climate First Bank business account",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
-      "thread_id": "erynn-kerrigan",
-      "title": "Intro call with Erynn Kerrigan of XL PR",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
-      "thread_id": "morgan-lemaitre",
-      "title": "Morgan Lemaitre of Park City Wealth Advisors",
-      "kind": "churn",
-      "open_count": 2
-    },
-    {
-      "thread_id": "github-tokens",
-      "title": "Revoke the leaked GitHub tokens",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
-      "thread_id": "tracey-lam",
-      "title": "Tracey Lam user journey trial",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
       "thread_id": "anne-marie",
       "title": "Anne Marie of AMMP Growth + Allyse Jackson",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
-      "thread_id": "multiplier",
-      "title": "Multiplier Advisors (Colby + Mikelle)",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
-      "thread_id": "high-five",
-      "title": "High Five Grant for Moms sponsorship",
-      "kind": "churn",
-      "open_count": 3
-    },
-    {
-      "thread_id": "juliana",
-      "title": "Juliana (investor)",
-      "kind": "churn",
-      "open_count": 2
-    },
-    {
-      "thread_id": "heather-gb",
-      "title": "Heather Griffith Barber ($10k commitment)",
-      "kind": "churn",
-      "open_count": 4
-    },
-    {
-      "thread_id": "maryam",
-      "title": "Maryam marketing project (she declined Jul 29)",
-      "kind": "churn",
-      "open_count": 1
-    },
-    {
-      "thread_id": "shalini-sardana",
-      "title": "Shalini Sardana August reconvene",
       "kind": "churn",
       "open_count": 1
     },
@@ -348,22 +276,16 @@
       "open_count": 2
     },
     {
-      "thread_id": "podcast-lisa",
-      "title": "Built Not Found podcast buildout with Lisa",
-      "kind": "project",
-      "open_count": 7
-    },
-    {
       "thread_id": "claire-larsen",
       "title": "Claire Larsen of Vamo",
       "kind": "project",
       "open_count": 5
     },
     {
-      "thread_id": "golden-hills",
-      "title": "Golden Hills Capital with Lauren Friedman",
-      "kind": "project",
-      "open_count": 4
+      "thread_id": "climate-first-bank",
+      "title": "Open the Climate First Bank business account",
+      "kind": "churn",
+      "open_count": 1
     },
     {
       "thread_id": "crystalee-intros",
@@ -378,6 +300,84 @@
       "open_count": 3
     },
     {
+      "thread_id": "dawn-myers",
+      "title": "Dawn Myers / Loon fund structure",
+      "kind": "project",
+      "open_count": 3
+    },
+    {
+      "thread_id": "erynn-kerrigan",
+      "title": "Intro call with Erynn Kerrigan of XL PR",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "github-tokens",
+      "title": "Revoke the leaked GitHub tokens",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "goal-membership-payment",
+      "title": "Quarterly goal: begin taking membership payment",
+      "kind": "goal",
+      "open_count": 2
+    },
+    {
+      "thread_id": "golden-hills",
+      "title": "Golden Hills Capital with Lauren Friedman",
+      "kind": "project",
+      "open_count": 4
+    },
+    {
+      "thread_id": "heather-gb",
+      "title": "Heather Griffith Barber ($10k commitment)",
+      "kind": "churn",
+      "open_count": 4
+    },
+    {
+      "thread_id": "high-five",
+      "title": "High Five Grant for Moms sponsorship",
+      "kind": "churn",
+      "open_count": 3
+    },
+    {
+      "thread_id": "intro-calls",
+      "title": "Intro calls still unscheduled",
+      "kind": "project",
+      "open_count": 7
+    },
+    {
+      "thread_id": "josh",
+      "title": "Josh (personal)",
+      "kind": "project",
+      "open_count": 3
+    },
+    {
+      "thread_id": "juliana",
+      "title": "Juliana (investor)",
+      "kind": "churn",
+      "open_count": 2
+    },
+    {
+      "thread_id": "maryam",
+      "title": "Maryam marketing project (she declined Jul 29)",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "morgan-lemaitre",
+      "title": "Morgan Lemaitre of Park City Wealth Advisors",
+      "kind": "churn",
+      "open_count": 2
+    },
+    {
+      "thread_id": "multiplier",
+      "title": "Multiplier Advisors (Colby + Mikelle)",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
       "thread_id": "pat-jones",
       "title": "Pat Jones and the Jacki Zehner endorsement",
       "kind": "project",
@@ -390,34 +390,40 @@
       "open_count": 3
     },
     {
-      "thread_id": "dawn-myers",
-      "title": "Dawn Myers / Loon fund structure",
-      "kind": "project",
-      "open_count": 3
-    },
-    {
-      "thread_id": "josh",
-      "title": "Josh (personal)",
-      "kind": "project",
-      "open_count": 3
-    },
-    {
-      "thread_id": "intro-calls",
-      "title": "Intro calls still unscheduled",
+      "thread_id": "podcast-lisa",
+      "title": "Built Not Found podcast buildout with Lisa",
       "kind": "project",
       "open_count": 7
     },
     {
-      "thread_id": "website",
-      "title": "Website, dashboard and messaging decisions",
-      "kind": "project",
-      "open_count": 6
+      "thread_id": "shalini-sardana",
+      "title": "Shalini Sardana August reconvene",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "sharlene-wells",
+      "title": "Get a meeting with Sharlene Wells on the calendar",
+      "kind": "churn",
+      "open_count": 1
     },
     {
       "thread_id": "singles",
       "title": "Standalone items",
       "kind": "single",
       "open_count": 16
+    },
+    {
+      "thread_id": "tracey-lam",
+      "title": "Tracey Lam user journey trial",
+      "kind": "churn",
+      "open_count": 1
+    },
+    {
+      "thread_id": "website",
+      "title": "Website, dashboard and messaging decisions",
+      "kind": "project",
+      "open_count": 9
     }
   ]
 }
