@@ -12,8 +12,19 @@
 //   the body, with {{placeholders}}
 //   ```
 // Template keys: adminNotification, paymentConfirmation, prepEmail,
-// onboardingInvite, namedSeatInvitation, bookingReminder, bookingReminderAdmin. Sections whose heading is anything
-// else are ignored, so the file can carry commentary freely.
+// onboardingInvite, namedSeatInvitation, bookingReminder, bookingReminderAdmin,
+// callBookedAdmin, paidApprovedAdmin, and from Chapter 0.52.0 submitConfirmation
+// (the free Associate's receipt) and seatAccepted (the giver's notice when her
+// gift is accepted). Sections whose heading is anything else are ignored, so
+// the file can carry commentary freely.
+//
+// Chapter 0.52.0 fills these placeholders from stored data (blank when the
+// value does not exist yet): prepEmail gets {{startAt}}, {{endAt}},
+// {{timezone}}, {{meetUrl}}, {{htmlLink}}, {{tierName}}, {{paymentAmount}} and
+// {{paymentAmountSummary}}; submitConfirmation gets {{tierName}},
+// {{submitNextStep}} and {{membersUrl}}; adminNotification gets {{tier}} and
+// {{adminUrl}}; seatAccepted gets {{recipientName}}, {{tierName}} and
+// {{chapterName}}. An unknown placeholder renders empty, so check the name.
 //
 // Usage (read-only unless --apply):
 //   node _scripts/set-signup-emails.mjs dev
@@ -28,7 +39,7 @@ import { readFileSync } from "node:fs";
 import { initAdmin } from "@odla-ai/db";
 
 const GROUP_ID = "silver-and-salt-capital";
-const KEYS = ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "bookingReminderAdmin", "callBookedAdmin", "paidApprovedAdmin"];
+const KEYS = ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "bookingReminderAdmin", "callBookedAdmin", "paidApprovedAdmin", "submitConfirmation", "seatAccepted"];
 const SOURCE = new URL("../_reference/signup-emails.md", import.meta.url);
 
 const args = process.argv.slice(2);

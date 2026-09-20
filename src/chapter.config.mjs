@@ -134,7 +134,13 @@ export function chapterFor(envName = "dev") {
     parent: { sourceId: "built-not-found" },
   },
 
-  services: ["db", "calendar"],
+  // "o11y" (Chapter 0.52.0 adoption): the Worker is wrapped in
+  // withObservability and hands Chapter's operator alerts (a quarantined
+  // Stripe webhook, a network commercial exception) to @odla-ai/o11y through
+  // src/chapter-alerts.ts. Provisioning mints the ingest token for this
+  // service; until a Worker carries it, the alert is still one structured
+  // console.error line in Workers Logs (src/chapter-alerts.ts keeps that).
+  services: ["db", "calendar", "o11y"],
 
   // ── Brand ────────────────────────────────────────────────────────────
   // Semantic roles mapped from styles.css :root. Public pages keep their own
@@ -224,7 +230,12 @@ export function chapterFor(envName = "dev") {
   // Addressing per environment (see ENVIRONMENTS). Template BODIES live on
   // the group row and are owner-editable at runtime; this config only
   // carries addressing.
-  emails: e.emails,
+  // fromName (bug 5a50304f, Chapter 0.52.0): the From header reads
+  // "Tori Horton <tori@silverandsaltcapital.com>" while the address stays the
+  // Worker's EMAIL_FROM. Seeded with the row on a fresh tenant; both existing
+  // rows get it once from _scripts/set-sender-name.mjs, and it stays
+  // owner-editable in Settings → Email.
+  emails: { ...e.emails, fromName: "Tori Horton" },
 
   // WHEN each lifecycle email fires (build-time), as opposed to its content.
   // Owner decision 2026-09-19 (signup-path audit): Chapter's adminNotification
