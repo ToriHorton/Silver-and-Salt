@@ -162,7 +162,7 @@ function syncConfirmEmail() {
 // at the top of the form so the dropdowns and text fields read as required.
 const Req = () => <span class="req" aria-hidden="true">*</span>;
 
-function ApplicationFields({ invitation, config, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
+function ApplicationFields({ invitation, config, canAddSeat, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
   const [noLinkedin, setNoLinkedin] = useState(false);
   return (
     <>
@@ -334,7 +334,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
           on the application, then included in the shared membership checkout.
           Applies to the paid tiers; the free tier has no seat to give. A gift
           recipient never sees it. */}
-      {!invitation && (
+      {!invitation && canAddSeat && (
         <div class="form-group" id="gift-seat-interest">
           <label for="giftSeatInterest">A membership for your mother or daughter <span class="opt">(any additional cost is confirmed at checkout)</span></label>
           <label class="checkbox-option">
@@ -611,6 +611,7 @@ export function Join({ config, initialTierId, initialState }) {
           {({ invitation }) => <ApplicationFields
             invitation={invitation}
             config={config}
+            canAddSeat={!freeTier}
             referral={referral}
             onReferral={(v) => {
               setReferral(v);

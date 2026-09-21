@@ -105,6 +105,11 @@ it("asks about the gift seat on the application and never on the booking step", 
   }
 });
 
+it("does not offer a paid-checkout seat on the free Associate application", () => {
+  const html = render(<Join config={config} initialTierId="associate" />);
+  expect(html).not.toContain('name="giftSeatInterest"');
+});
+
 it("falls back to the chooser only when the server asserted no tier", () => {
   const free = render(<Join config={config} initialTierId="associate" initialState={{ step: "booking", applicationId: "legacy" }} />);
   expect(free).not.toContain("Secure your place");
