@@ -293,6 +293,14 @@
       margin-left: 4px;
     }
 
+    /* Required marker, legend, and field hints (Tori, 2026-09-20). */
+    label .req, .form-legend .req { color: var(--lime-dark); font-weight: 700; margin-left: 2px; }
+    .form-legend { margin: 0 0 4px; font-size: 13px; color: var(--sage); }
+    .hint { font-size: 13px; color: var(--sage); margin-top: -2px; }
+    /* The LinkedIn opt-out: small and quiet, for the applicant with no account. */
+    .opt-out { display: flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--sage); }
+    .opt-out input[type="checkbox"] { width: 13px; height: 13px; margin: 0; accent-color: var(--moss); }
+
     input[type="text"],
     input[type="email"],
     input[type="tel"],

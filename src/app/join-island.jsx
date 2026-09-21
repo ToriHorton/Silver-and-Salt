@@ -244,16 +244,22 @@ function syncConfirmEmail() {
   confirm.setCustomValidity(confirm.value && !same ? "The two email addresses do not match." : "");
 }
 
+// A visible marker on every required label (Tori, 2026-09-20), with a legend
+// at the top of the form so the dropdowns and text fields read as required.
+const Req = () => <span class="req" aria-hidden="true">*</span>;
+
 function ApplicationFields({ invitation, config, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
+  const [noLinkedin, setNoLinkedin] = useState(false);
   return (
     <>
+      <p class="form-legend"><span class="req" aria-hidden="true">*</span> Required</p>
       <div class="two-col">
         <div class="form-group">
-          <label for="firstName">First Name</label>
+          <label for="firstName">First Name <Req /></label>
           <input type="text" id="firstName" name="firstName" placeholder="Martha" defaultValue={invitation?.recipientName.split(" ")[0] ?? ""} required />
         </div>
         <div class="form-group">
-          <label for="lastName">Last Name</label>
+          <label for="lastName">Last Name <Req /></label>
           <input type="text" id="lastName" name="lastName" placeholder="Cannon" defaultValue={invitation?.recipientName.split(" ").slice(1).join(" ") ?? ""} required />
         </div>
       </div>
@@ -265,47 +271,47 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
 
       <div class={invitation ? "form-group" : "two-col"}>
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="email">Email <Req /></label>
           <input type="email" id="email" name="email" placeholder="martha@example.com" value={invitation?.recipientEmail} readOnly={Boolean(invitation)} required onInput={syncConfirmEmail} />
         </div>
         {!invitation && (
           <div class="form-group">
-            <label for="confirmEmail">Confirm Email</label>
+            <label for="confirmEmail">Confirm Email <Req /></label>
             <input type="email" id="confirmEmail" placeholder="Type it once more" autoComplete="off" required onInput={syncConfirmEmail} />
           </div>
         )}
       </div>
 
       <div class="form-group">
-        <label for="phone">Phone</label>
+        <label for="phone">Phone <Req /></label>
         <input type="tel" id="phone" name="phone" placeholder="(801) 555-0100" required />
       </div>
 
       {/* The full US mailing address (Tori, 2026-09-20). Membership is
           US-only, so the country is fixed and posted as a hidden field. */}
       <div class="form-group">
-        <label for="address1">Mailing Address <span class="opt">(United States)</span></label>
+        <label for="address1">Mailing Address <Req /> <span class="opt">(United States)</span></label>
         <input type="text" id="address1" name="address1" placeholder="Street address" autoComplete="address-line1" maxLength={200} required />
         <input type="text" id="address2" name="address2" placeholder="Apartment, suite, or unit (optional)" aria-label="Address line 2" autoComplete="address-line2" maxLength={200} />
       </div>
       <div class="three-col">
         <div class="form-group">
-          <label for="city">City</label>
+          <label for="city">City <Req /></label>
           <input type="text" id="city" name="city" placeholder="Salt Lake City" autoComplete="address-level2" maxLength={120} required />
         </div>
         <div class="form-group">
-          <label for="state">State</label>
+          <label for="state">State <Req /></label>
           <input type="text" id="state" name="state" placeholder="Utah" autoComplete="address-level1" maxLength={60} required />
         </div>
         <div class="form-group">
-          <label for="postalCode">ZIP</label>
+          <label for="postalCode">ZIP <Req /></label>
           <input type="text" id="postalCode" name="postalCode" placeholder="84101" inputMode="numeric" pattern="\d{5}(-\d{4})?" title="A five-digit ZIP code" autoComplete="postal-code" maxLength={20} required />
         </div>
       </div>
       <input type="hidden" name="country" value="United States" />
 
       {invitation ? <><input type="hidden" name="referral" value="referred" /><input type="hidden" name="referralName" value={invitation.purchaserName} /></> : <div class="form-group">
-        <label for="referral">How did you find Silver &amp; Salt Capital?</label>
+        <label for="referral">How did you find Silver &amp; Salt Capital? <Req /></label>
         <select
           id="referral"
           name="referral"
@@ -328,7 +334,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
             CLASS, not by an inline style — an inline `style=""` loses to the
             class rule and the field stays invisible. */}
         <div class={referral === "referred" ? "referral-reveal show" : "referral-reveal"} id="referral-reveal">
-          <label for="referralName">Who should we thank?</label>
+          <label for="referralName">Who should we thank? <Req /></label>
           <input
             type="text"
             id="referralName"
@@ -342,7 +348,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
         {/* "Other" opens a free-text answer, required only then. The server
             drops it again if the choice changes (visibleWhen in chapter.config). */}
         <div class={referral === "other" ? "referral-reveal show" : "referral-reveal"} id="referral-other-reveal">
-          <label for="referralOther">Tell us how you found us</label>
+          <label for="referralOther">Tell us how you found us <Req /></label>
           <input
             type="text"
             id="referralOther"
@@ -355,7 +361,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
       </div>}
 
       <div class="form-group">
-        <label for="whoYouAre">How would you describe yourself?</label>
+        <label for="whoYouAre">How would you describe yourself? <Req /></label>
         <select id="whoYouAre" name="whoYouAre" required value={whoYouAre} onChange={(e) => onWhoYouAre(e.currentTarget.value)}>
           <option value="" disabled>Select one…</option>
           {WHO_YOU_ARE_OPTIONS.map((o) => (
@@ -363,7 +369,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
           ))}
         </select>
         <div class={whoYouAre === "Something else" ? "referral-reveal show" : "referral-reveal"} id="who-other-reveal">
-          <label for="whoYouAreOther">Tell us a little about what you do</label>
+          <label for="whoYouAreOther">Tell us a little about what you do <Req /></label>
           <input
             type="text"
             id="whoYouAreOther"
@@ -376,7 +382,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
       </div>
 
       <div class="form-group">
-        <label>Interests <span class="opt">(select all that apply)</span></label>
+        <label>Interests <span class="opt">(optional, select all that apply)</span></label>
         <div class="checkbox-group">
           {/* Repeated `name="focus"` gives FormData multiple values, which
               collectFormFields turns into the array the API expects. */}
@@ -389,12 +395,19 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
       </div>
 
       <div class="form-group">
-        <label for="linkedin">LinkedIn Profile</label>
-        <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/yourname" autoComplete="url" maxLength={500} required />
+        <label for="linkedin">LinkedIn Profile {!noLinkedin && <Req />}</label>
+        <span class="hint">For example: linkedin.com/in/marthacannon</span>
+        <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/yourname" autoComplete="url" maxLength={500} required={!noLinkedin} disabled={noLinkedin} />
+        {/* The rare applicant with no profile opts out; the opt-out is stored
+            (linkedinOptOut) and the server drops the requirement for her. */}
+        <label class="opt-out">
+          <input type="checkbox" id="linkedinOptOut" name="linkedinOptOut" value="yes" checked={noLinkedin} onChange={(e) => setNoLinkedin(e.currentTarget.checked)} />{" "}
+          I don’t have a LinkedIn account.
+        </label>
       </div>
 
       <div class="form-group">
-        <label for="message">Why do you want to join Silver &amp; Salt Capital?</label>
+        <label for="message">Why do you want to join Silver &amp; Salt Capital? <Req /></label>
         <textarea
           id="message"
           name="message"
@@ -419,7 +432,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
               checked={gift.interest}
               onChange={(e) => onGift((g) => ({ ...g, interest: e.currentTarget.checked }))}
             />{" "}
-            Yes, I would like to add one right after my payment.
+            Yes, I would like to add one family member to my payment.
           </label>
           <div class={gift.interest ? "referral-reveal show" : "referral-reveal"} id="gift-seat-reveal">
             <label for="giftSeatRecipientName">Her name <span class="opt">(you can add this later)</span></label>

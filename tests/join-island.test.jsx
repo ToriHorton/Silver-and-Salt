@@ -100,7 +100,7 @@ it("offers the gift seat after payment for a paid tier only", () => {
   expect(free).not.toContain("Add a membership for your mother or daughter.");
   const form = render(<Join config={config} initialTierId="standard" />);
   expect(form).toContain('name="giftSeatInterest"');
-  expect(form).toContain("Yes, I would like to add one right after my payment.");
+  expect(form).toContain("Yes, I would like to add one family member to my payment.");
   expect(form).not.toContain("Add a membership for your mother or daughter.");
 });
 
