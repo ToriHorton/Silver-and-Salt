@@ -299,11 +299,14 @@ export function chapterFor(envName = "dev") {
       // The gift-seat upsell (Tori, 2026-09-20): asked on the application for
       // the paid tiers; the seat itself is bought right after payment.
       "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
+      // "I'm applying without a LinkedIn profile" (Tori, 2026-09-20): the
+      // rare applicant with no profile opts out, and the opt-out is recorded.
+      "linkedinOptOut",
     ],
     conditions: {
       giftSeatRecipientName: { visibleWhen: 'values.giftSeatInterest == "yes"' },
       giftSeatRecipientEmail: { visibleWhen: 'values.giftSeatInterest == "yes"' },
-      linkedin: { requiredWhen: "true" },
+      linkedin: { requiredWhen: 'values.linkedinOptOut != "yes"' },
       address1: { requiredWhen: "true" },
       city: { requiredWhen: "true" },
       state: { requiredWhen: "true" },
@@ -333,6 +336,7 @@ export function chapterFor(envName = "dev") {
       giftSeatInterest: 10,
       giftSeatRecipientName: 160,
       giftSeatRecipientEmail: 254,
+      linkedinOptOut: 10,
     },
     bodyCap: 32_768,
     validateEmail: true,
@@ -360,7 +364,7 @@ export function chapterFor(envName = "dev") {
     crmFields: [
       "preferredName", "state", "whoYouAre", "whoYouAreOther", "referral", "referralName", "referralOther",
       "linkedin", "focus", "message", "address1", "address2", "city", "postalCode", "country",
-      "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
+      "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail", "linkedinOptOut",
     ],
   },
 

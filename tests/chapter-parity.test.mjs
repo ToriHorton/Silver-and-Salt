@@ -178,7 +178,7 @@ const REVIEWED_ADDITIONS = {
     // address (src/chapter.config.mjs application.optional). All optional.
     "preferredName", "referralOther", "whoYouAreOther", "address1", "address2", "city", "postalCode", "country",
     // Same day: the gift-seat upsell answer, so the seat can be bought right after payment.
-    "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
+    "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail", "linkedinOptOut",
     ...(hasSeatJourneys ? ["membershipRestartId", "membershipStatus", "membershipGraceEndsAt", "membershipAutoRenew"] : []),
     // Decision b44909c6-bafe-5315-aff9-3aadd33b44aa: reject repeat signups,
     // preserve existing accounts, and enable protected Studio account editing.
@@ -462,7 +462,7 @@ describe("behavior that must match the frozen baseline exactly", () => {
   // the additions are schema-optional and made required through conditions.
   const ADDED_2026_09_20 = [
     "preferredName", "referralOther", "whoYouAreOther", "address1", "address2", "city", "postalCode", "country",
-    "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
+    "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail", "linkedinOptOut",
   ];
 
   it("validates the same join fields with the same caps, plus the 2026-09-20 additions", () => {
@@ -476,7 +476,8 @@ describe("behavior that must match the frozen baseline exactly", () => {
 
   it("requires LinkedIn and the mailing address at submit, and the free-text answers only behind their choices", () => {
     const c = chapter.application.conditions;
-    for (const field of ["linkedin", "address1", "city", "state", "postalCode"]) expect(c[field]).toEqual({ requiredWhen: "true" });
+    for (const field of ["address1", "city", "state", "postalCode"]) expect(c[field]).toEqual({ requiredWhen: "true" });
+    expect(c.linkedin).toEqual({ requiredWhen: 'values.linkedinOptOut != "yes"' });
     expect(c.referralOther).toEqual({ visibleWhen: 'values.referral == "other"', requiredWhen: 'values.referral == "other"' });
     expect(c.whoYouAreOther).toEqual({ visibleWhen: 'values.whoYouAre == "Something else"', requiredWhen: 'values.whoYouAre == "Something else"' });
   });

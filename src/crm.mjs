@@ -61,6 +61,7 @@ export const crm = defineCrm({
         // "linkedin.com/in/…" with no scheme, which url-validation would
         // reject and fail the whole person sync. Store it verbatim.
         linkedin: { type: "string", label: "LinkedIn" },
+        linkedinOptOut: { type: "string", label: "Applied without LinkedIn" },
         focus: { type: "json", label: "Focus areas" },
         message: { type: "string", label: "Intro message" },
         // The operational applications.id this person was last synced from, so
