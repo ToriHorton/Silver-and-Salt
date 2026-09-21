@@ -6,6 +6,7 @@ import {
   APP_ID, envNameOf, membershipSecretName, resolveDeployment, runtimesFor, signupSecretName,
 } from "../src/deployment.ts";
 import { ENVIRONMENTS, chapterFor } from "../src/chapter.config.mjs";
+import { SIGNUP_EMAIL_EVENTS } from "../src/email-events.mjs";
 import { approvalRecoveryOrigin } from "../src/approval-recovery.ts";
 
 const base = { ODLA_APP_ID: APP_ID, ODLA_ENDPOINT: "https://db.odla.ai" };
@@ -69,6 +70,7 @@ describe("chapterFor", () => {
       // Chapter 0.52.0 (bug 5a50304f): the From header's display name. Exact
       // equality stays, so a debug inbox can never reach production addressing.
       fromName: "Tori Horton",
+      events: SIGNUP_EMAIL_EVENTS,
     });
     expect(JSON.stringify(c)).not.toContain("+debug");
     expect(c.config.tiers).toEqual([]);

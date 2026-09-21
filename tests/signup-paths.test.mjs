@@ -1,3 +1,4 @@
+import { SIGNUP_EMAIL_EVENTS } from "../src/email-events.mjs";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
 const { send } = vi.hoisted(() => ({ send: vi.fn(async () => ({ sent: true })) }));
@@ -102,7 +103,7 @@ const stallTiers = [
   { id: "associate", groupId: CHAPTER, name: "Associate", priceCents: 0 },
 ];
 const env = { ODLA_ENV: "prod", ODLA_RUNTIME: "live", EMAIL_FROM: "tori@silverandsaltcapital.com", SEND_EMAIL: { send: async () => ({ messageId: "m" }) } };
-const contextFor = (db) => ({ chapter: { id: CHAPTER }, makeDb: () => db });
+const contextFor = (db) => ({ chapter: { id: CHAPTER, config: { emails: { events: SIGNUP_EMAIL_EVENTS } } }, makeDb: () => db });
 
 describe("remindUnbooked", () => {
   beforeEach(() => send.mockClear());
@@ -235,7 +236,7 @@ describe("signupPathsRoute", () => {
     const db = fakeDb({
       applications: [app("a", { email: "A@Example.com" }), app("b", { status: "submitted", email: "b@example.com" })],
     });
-    const ctx = { chapter: { id: CHAPTER }, makeDb: () => db, verifyUser: async () => ({ userId: "u" }), isAdmin: async () => true };
+    const ctx = { chapter: { id: CHAPTER, config: { emails: { events: SIGNUP_EMAIL_EVENTS } } }, makeDb: () => db, verifyUser: async () => ({ userId: "u" }), isAdmin: async () => true };
     const req = new Request("https://silverandsaltcapital.com/api/admin/signup-paths");
     const res = await signupPathsRoute(req, new URL(req.url), env, ctx);
     expect(res.status).toBe(200);

@@ -31,7 +31,7 @@ function brandRules(tpl) {
   expect(copy).not.toMatch(/[–—]/);
   expect(copy).not.toMatch(/Silver and Salt/i);
   expect(copy.match(/Silver & Salt(?! Capital)/g)).toBeNull();
-  expect(tpl.enabled).toBe(true);
+  expect(tpl.enabled).toBe(tpl !== SUBMIT_CONFIRMATION);
 }
 
 describe("prepEmail (call prep, sent once at booking)", () => {

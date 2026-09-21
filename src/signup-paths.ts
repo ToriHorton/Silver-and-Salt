@@ -269,6 +269,7 @@ export async function remindUnbooked(
     const member = await sendTemplated(deps, {
       group,
       template: stall.template,
+      event: chapter.config.emails?.events?.[stall.template],
       to: vars.email,
       vars,
       dedupeKey: `${stall.keyPrefix}:${id}`,
@@ -290,6 +291,7 @@ export async function remindUnbooked(
       await sendTemplated(deps, {
         group,
         template: REMINDER_ADMIN_TEMPLATE,
+        event: chapter.config.emails?.events?.[REMINDER_ADMIN_TEMPLATE],
         to: notify,
         vars,
         dedupeKey: `${stall.keyPrefix}:${id}:admin`,
@@ -409,7 +411,7 @@ export async function notifyAdminOfMilestones(
   const apps = new Map((data.applications ?? []).filter((app) => inRuntime(app, runtime)).map((app) => [String(app.id), app]));
   const tierName = (tierId: unknown) => {
     const tier = (data.tiers ?? []).find((t) => t.id === tierId);
-    return text(tier?.name) || text(tierId);
+    return text(tier?.name);
   };
 
   type Job = { template: string; dedupeKey: string; app: Row; vars: Record<string, string> };
@@ -450,6 +452,7 @@ export async function notifyAdminOfMilestones(
     const result = await sendTemplated(deps, {
       group,
       template: job.template,
+      event: chapter.config.emails?.events?.[job.template],
       to: notify,
       vars: {
         firstName: text(app.firstName),
