@@ -36,7 +36,7 @@ function DashboardStats() {
     <>
       <div class="card">
         <div class="card-label">
-          Upcoming intro calls{calls?.needsAttention ? ` · ${calls.needsAttention} need attention` : ""}
+          Upcoming onboarding calls{calls?.needsAttention ? ` · ${calls.needsAttention} need attention` : ""}
         </div>
         {!d ? (
           <p class="muted"><span class="spinner"></span> Loading…</p>

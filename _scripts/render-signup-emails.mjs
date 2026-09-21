@@ -25,12 +25,12 @@ const HEADING_LIMIT = 27;
 // Member-facing emails, in the order a new member meets them.
 const MEMBER_KEYS = ["bookingReminderFree", "paymentReminder", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "paymentConfirmation", "declinePaid", "declineFree"];
 const BUTTONS = {
-  bookingReminderFree: { label: "Book your introduction call", href: "{{membersUrl}}" },
+  bookingReminderFree: { label: "Book your onboarding call", href: "{{membersUrl}}" },
   paymentReminder: { label: "Complete your membership payment", href: "{{membersUrl}}" },
   prepEmail: null,
   onboardingInvite: { label: "Log In", href: "{{membersUrl}}", after: /\{\{membersUrl\}\}/ },
-  namedSeatInvitation: { label: "Book your introduction call", href: "{{joinUrl}}" },
-  bookingReminder: { label: "Book your introduction call", href: "https://silverandsaltcapital.com/members/" },
+  namedSeatInvitation: { label: "Book your onboarding call", href: "{{joinUrl}}" },
+  bookingReminder: { label: "Book your onboarding call", href: "https://silverandsaltcapital.com/members/" },
   paymentConfirmation: { label: "Open your member area", href: "https://silverandsaltcapital.com/members/" },
   declinePaid: null,
   declineFree: null,

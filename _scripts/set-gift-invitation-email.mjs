@@ -37,7 +37,7 @@ export const GIFT_INVITATION = {
     "{{purchaserName}} has given you a membership at {{chapterName}}, a community of women who talk about money out loud. " +
     "Your membership is already paid for.\n\n" +
     "Accept your gift here:\n{{joinUrl}}\n\n" +
-    "You will complete your own short application and book a 20-minute introduction call. You will not be asked to pay.\n\n" +
+    "You will complete your own short application and book a 30-minute onboarding call. You will not be asked to pay.\n\n" +
     "Warmly,\nSilver & Salt Capital",
   enabled: true,
 };

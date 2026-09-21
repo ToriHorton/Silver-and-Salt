@@ -419,7 +419,7 @@ function Scheduling({ appId, onChanged }) {
   useEffect(() => { load(); }, [load]);
 
   const cancel = async () => {
-    if (!confirm("Cancel this intro call? Google notifies the attendee.")) return;
+    if (!confirm("Cancel this onboarding call? Google notifies the attendee.")) return;
     setBusy("cancel"); setMsg(null);
     try { await api(`/api/admin/meetings/${meeting.id}/cancel`, { method: "POST", body: "{}" }); onChanged?.(); load(); }
     catch (e) { setMsg(e.message || String(e)); } finally { setBusy(""); }
@@ -437,9 +437,9 @@ function Scheduling({ appId, onChanged }) {
     } catch (e) { setMsg(e.message || String(e)); } finally { setBusy(""); }
   };
 
-  if (!appId) return <p class="muted">No application on file, so no intro call.</p>;
+  if (!appId) return <p class="muted">No application on file, so no onboarding call.</p>;
   if (meeting === undefined) return <p class="muted"><span class="spinner"></span> Loading…</p>;
-  if (!meeting) return <p class="muted">No intro call booked.</p>;
+  if (!meeting) return <p class="muted">No onboarding call booked.</p>;
   return (
     <div>
       <p class="rec-when">{fmtTzTime(meeting.startAt, tz)}</p>
@@ -676,7 +676,7 @@ export function PeopleTab({ myUserId, superAdmin }) {
           ) : (
             <div class="card people-empty">
               <div class="card-label">Details</div>
-              <p>Select a person on the left to see their profile, billing, intro call, tags, notes, and to send them email.</p>
+              <p>Select a person on the left to see their profile, billing, onboarding call, tags, notes, and to send them email.</p>
             </div>
           )}
         </div>

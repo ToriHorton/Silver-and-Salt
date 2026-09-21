@@ -95,6 +95,19 @@ describe("MembersApp", () => {
   });
   it("mounts the seat card only when the server enables seats", () => {
     expect(render(h(MembersApp, { me: me({ authorized: false, namedSeatsEnabled: true }), email: "m@example.com" }))).toContain("A gift for your mother or daughter");
+    // Before approval the page shows only her onboarding call (Tori, 2026-09-20);
+    // the gift card appears once she is a member, even though the authority
+    // already offers the seat to a paid applicant.
+    const hadWindow = "window" in globalThis;
+    const savedWindow = globalThis.window;
+    globalThis.window = { SSCAuth: { fmtMeeting: () => "Tue, Sep 23, 11:15 AM MDT" } }; // ProvisionalCard reads it
+    try {
+      const provisional = render(h(MembersApp, { me: me({ role: "provisional", memberAccess: false, namedSeatsEnabled: true, application: { paid: true, tier: "standard", meetingAt: 1790183700000, timezone: "America/Denver" } }), email: "m@example.com" }));
+      expect(provisional).toContain("Your onboarding call");
+      expect(provisional).not.toContain("A gift for your mother or daughter");
+    } finally {
+      if (hadWindow) globalThis.window = savedWindow; else delete globalThis.window;
+    }
     expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("A gift for your mother or daughter");
   });
   it("offers a saved-profile restart to an inactive approved account instead of trusting a stale member role", () => {

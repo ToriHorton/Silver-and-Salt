@@ -48,7 +48,7 @@ export function AvailabilityTab() {
   return (
     <div class="card">
       <div class="card-label">Availability</div>
-      <p class="empty-note" style="margin-bottom: 16px;">The times offered for introduction calls. Booked slots and everything already on the connected calendar stay unavailable automatically.</p>
+      <p class="empty-note" style="margin-bottom: 16px;">The times offered for onboarding calls. Booked slots and everything already on the connected calendar stay unavailable automatically.</p>
       {s === null ? (
         <div class="loading-note"><span class="spinner"></span> Loading…</div>
       ) : (

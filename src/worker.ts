@@ -567,7 +567,7 @@ const SCHEDULING_DEFAULTS: SchedulingConfig = {
   timezone: "America/Los_Angeles",
   minNoticeHours: 24,
   windowDays: 14,
-  summaryTemplate: "Silver & Salt Capital: introduction call with {{firstName}} {{lastName}}",
+  summaryTemplate: "Silver & Salt Capital: onboarding call with {{firstName}} {{lastName}}",
 };
 
 function schedulingConfig(group: GroupRow & { schedulingJson?: unknown }): SchedulingConfig {
@@ -1521,7 +1521,7 @@ export async function handleApi(req: Request, env: Env, url: URL): Promise<Respo
         kind: "calendar",
         channel: "Google Calendar",
         label: m.status === "cancelled" ? "Invitation (call later cancelled)" : "Meeting invitation",
-        subject: "Introduction call invitation",
+        subject: "Onboarding call invitation",
         to: null,
         at: (m.createdAt as number) ?? (m.startAt as number),
         error: null,
