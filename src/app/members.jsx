@@ -348,11 +348,9 @@ export function MembersApp({ me: initialMe, email }) {
       {me.memberAccess === true ? <MemberView /> : me.membershipRestart?.eligible && me.application ?
         <MemberRestart api={memberApi} application={me.application} applicationId={me.membershipRestart.applicationId} onComplete={reload} /> :
         <JourneyFrame><ProvisionalCard application={me.application} onReschedule={reload} /></JourneyFrame>}
-      {/* The gift for her mother or daughter waits until she is a member
-          (Tori, 2026-09-20): before approval this page has one job, her
-          onboarding call time. The authority still reports the offer as
-          soon as she has paid; the card simply stays off the provisional view. */}
-      {me.namedSeatsEnabled && me.memberAccess === true && <NamedSeatCard api={memberApi} />}
+      {/* The authority offers a skipped seat after payment, including while
+          her application is awaiting approval. It owns eligibility and price. */}
+      {me.namedSeatsEnabled && <NamedSeatCard api={memberApi} />}
     </>
   );
 }

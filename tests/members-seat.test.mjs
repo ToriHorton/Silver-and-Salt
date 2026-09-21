@@ -95,16 +95,15 @@ describe("MembersApp", () => {
   });
   it("mounts the seat card only when the server enables seats", () => {
     expect(render(h(MembersApp, { me: me({ authorized: false, namedSeatsEnabled: true }), email: "m@example.com" }))).toContain("A gift for your mother or daughter");
-    // Before approval the page shows only her onboarding call (Tori, 2026-09-20);
-    // the gift card appears once she is a member, even though the authority
-    // already offers the seat to a paid applicant.
+    // A paid applicant who skipped the add-on can add it from the member page
+    // before approval, while member-content access remains closed.
     const hadWindow = "window" in globalThis;
     const savedWindow = globalThis.window;
     globalThis.window = { SSCAuth: { fmtMeeting: () => "Tue, Sep 23, 11:15 AM MDT" } }; // ProvisionalCard reads it
     try {
       const provisional = render(h(MembersApp, { me: me({ role: "provisional", memberAccess: false, namedSeatsEnabled: true, application: { paid: true, tier: "standard", meetingAt: 1790183700000, timezone: "America/Denver" } }), email: "m@example.com" }));
       expect(provisional).toContain("Your onboarding call");
-      expect(provisional).not.toContain("A gift for your mother or daughter");
+      expect(provisional).toContain("A gift for your mother or daughter");
     } finally {
       if (hadWindow) globalThis.window = savedWindow; else delete globalThis.window;
     }

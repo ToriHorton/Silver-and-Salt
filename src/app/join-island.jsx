@@ -331,12 +331,12 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
       </div>
 
       {/* The gift-seat upsell (Tori, 2026-09-20). Asked here so the answer is
-          on the application, then offered for purchase right after payment.
+          on the application, then included in the shared membership checkout.
           Applies to the paid tiers; the free tier has no seat to give. A gift
           recipient never sees it. */}
       {!invitation && (
         <div class="form-group" id="gift-seat-interest">
-          <label for="giftSeatInterest">A membership for your mother or daughter <span class="opt">($500 a year, included for Community Stewards)</span></label>
+          <label for="giftSeatInterest">A membership for your mother or daughter <span class="opt">(any additional cost is confirmed at checkout)</span></label>
           <label class="checkbox-option">
             <input
               type="checkbox"
@@ -349,7 +349,7 @@ function ApplicationFields({ invitation, config, referral, onReferral, referralN
             Yes, I would like to add one family member to my payment.
           </label>
           <div class={gift.interest ? "referral-reveal show" : "referral-reveal"} id="gift-seat-reveal">
-            <label for="giftSeatRecipientName">Her name <span class="opt">(you can add this later)</span></label>
+            <label for="giftSeatRecipientName">Her name <span class="opt">(required at checkout if you include her)</span></label>
             <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Her full name" maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
             <label for="giftSeatRecipientEmail">Her email</label>
             <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
@@ -566,6 +566,7 @@ export function Join({ config, initialTierId, initialState }) {
             </>
           )}
           payment={{
+            initialNamedSeat: gift.interest && !freeTier ? { recipientName: gift.name, recipientEmail: gift.email } : undefined,
             // The shared quote shows these server-owned amounts before consent.
             // Chapter 0.52.1 says where a difference comes from: lines.founding
             // is a policy-backed founding discount from Built Not Found; a bare
@@ -589,7 +590,13 @@ export function Join({ config, initialTierId, initialState }) {
                 {comparisonOnly && (
                   <div class="pay-line">
                     <span>Your rate</span>
-                    <span>{money(lines.dueTodayCents)}</span>
+                    <span>{money(lines.dueTodayCents - (lines.namedSeatCents ?? 0))}</span>
+                  </div>
+                )}
+                {lines.namedSeatCents !== undefined && (
+                  <div class="pay-line">
+                    <span>Additional family member</span>
+                    <span>{lines.namedSeatCents === 0 ? "Included" : money(lines.namedSeatCents)}</span>
                   </div>
                 )}
                 <div class="pay-line total">
