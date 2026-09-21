@@ -57,7 +57,7 @@ export const joinPage: Route = async (req, url, env) => {
     );
   } else {
     body = body.replace("We look forward to welcoming you to our investor community. Memberships open soon.",
-      prepaidInvitation ? "Someone who wants to talk about money with you has given you a membership. Accept it, tell us about yourself, and book your conversation." : "We look forward to welcoming you to our community.");
+      prepaidInvitation ? "Someone who wants to talk about money with you has given you a membership. Accept it, tell us about yourself, and book your conversation." : "This is how the game changes: women who learn together, invest together, and win together. You belong here.");
   }
   // The gift membership (a mother or a daughter, honored rather than verified).
   if (prepaidInvitation) body = body.replace('id="hero-title">Apply for Membership', 'id="hero-title">Your gift membership')
