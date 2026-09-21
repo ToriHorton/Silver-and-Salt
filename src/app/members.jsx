@@ -113,7 +113,7 @@ function ProvisionalCard({ application, onReschedule }) {
   } else if (application && application.meetingAt) {
     block = (
       <div class="meeting-block">
-        <div class="meeting-kicker">Your introduction call</div>
+        <div class="meeting-kicker">Your onboarding call</div>
         <div class="meeting-date">{fmtMeeting(application.meetingAt, application.timezone)}</div>
         <div class="meeting-note">A calendar invitation with the video call link is in your email. We look forward to meeting you.</div>
         {application.meetUrl && (
@@ -126,7 +126,7 @@ function ProvisionalCard({ application, onReschedule }) {
   } else if (application) {
     block = (
       <div class="meeting-block">
-        <div class="meeting-kicker">Book your introduction call</div>
+        <div class="meeting-kicker">Book your onboarding call</div>
         <div class="meeting-note">Your application is in. Choose a time below, and a calendar invitation with the video call link will reach your email.</div>
         <Rescheduler application={application} onReschedule={onReschedule} label="Choose a time" />
         <MembershipLine application={application} />
@@ -348,7 +348,11 @@ export function MembersApp({ me: initialMe, email }) {
       {me.memberAccess === true ? <MemberView /> : me.membershipRestart?.eligible && me.application ?
         <MemberRestart api={memberApi} application={me.application} applicationId={me.membershipRestart.applicationId} onComplete={reload} /> :
         <JourneyFrame><ProvisionalCard application={me.application} onReschedule={reload} /></JourneyFrame>}
-      {me.namedSeatsEnabled && <NamedSeatCard api={memberApi} />}
+      {/* The gift for her mother or daughter waits until she is a member
+          (Tori, 2026-09-20): before approval this page has one job, her
+          onboarding call time. The authority still reports the offer as
+          soon as she has paid; the card simply stays off the provisional view. */}
+      {me.namedSeatsEnabled && me.memberAccess === true && <NamedSeatCard api={memberApi} />}
     </>
   );
 }
@@ -389,7 +393,7 @@ async function showSignedIn() {
 
   $("hero-title").textContent = "Member Area";
   $("hero-sub").textContent = me.membershipRestart?.eligible ? "Welcome back. Your membership is ready to restart." : me.memberAccess !== true
-    ? "Thank you for joining us. Full membership follows your introduction call."
+    ? "Thank you for joining us. Full membership follows your onboarding call."
     : "Welcome back.";
 
   render(<MembersApp me={me} email={email} />, $("members-root"));

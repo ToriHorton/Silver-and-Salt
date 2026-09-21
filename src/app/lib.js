@@ -48,7 +48,7 @@ export const TEMPLATE_META = {
   prepEmail: {
     title: "Applicant: before your call",
     audience: "applicant",
-    purpose: "Sent to the applicant when their introduction call is booked; carries the community commitment and norms.",
+    purpose: "Sent to the applicant when their onboarding call is booked; carries the community commitment and norms.",
     hint: "{{firstName}} {{commitmentText}} {{normsText}}",
   },
   onboardingInvite: {

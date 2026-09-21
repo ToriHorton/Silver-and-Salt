@@ -11,15 +11,6 @@ export async function namedSeatClaimApi(path, options = {}) {
   return signedInFetch(path, options, "Please sign in or create an account with the invited email, then retry your invitation.");
 }
 
-/** The giver's side, on the join page right after her own payment: read the
- *  seat offer and start the seat checkout. Both need her signed in, because the
- *  seat is tied to her membership; the sign-in prompt opens on first use. */
-export async function giftSeatApi(path, options = {}) {
-  const method = options.method ?? "GET";
-  if (!(method === "GET" && path === "/api/named-seat") && !(method === "POST" && path === "/api/named-seat/checkout")) throw Error("unsupported gift request");
-  return signedInFetch(path, options, "Please sign in with the email on your application, then try again.");
-}
-
 async function signedInFetch(path, options, signInMessage) {
   clientPromise ??= (async () => {
     const response = await fetch("/api/config");

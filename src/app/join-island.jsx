@@ -11,8 +11,8 @@
 
 import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { JoinIsland, PaymentStep } from "@odla-ai/chapter/ui/member";
-import { namedSeatClaimApi, giftSeatApi } from "./named-seat-api.mjs";
+import { JoinIsland } from "@odla-ai/chapter/ui/member";
+import { namedSeatClaimApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
 import ivyBakerPriest from "../../assets/ivy-baker-priest.jpg";
 
@@ -77,6 +77,14 @@ const GIFT_COPY = {
   failure: "We could not confirm your acceptance. Try again; you will not be asked to pay.",
 };
 
+/** The booking step's words (Tori, 2026-09-20). The call completes her
+ *  application, so the step says so and names who she is meeting. Chapter's
+ *  packaged default ("Book your introduction") is replaced on the site. */
+const BOOKING_COPY = {
+  title: "Book your onboarding call",
+  intro: "Choose a time to meet with Tori to complete your application.",
+};
+
 function tierDisplay(tier) {
   const d = TIER_DISPLAY[tier.id];
   // Chapter 0.50.0: the authority says what a founding applicant pays today
@@ -102,7 +110,18 @@ function tierDisplay(tier) {
 /** The site's own step rail. Chapter owns the flow; these dots are site chrome,
  *  so they are driven from the packaged step rather than reimplemented. A free
  *  tier has no payment step, so its rail shows two steps instead of three. */
+let lastRailStep;
 function StepRail({ step, invited, free }) {
+  // Each step is shorter than the form above it, so on a phone the browser
+  // keeps its old scroll offset and the new step opens part way down the page
+  // (Tori, 2026-09-20). Land every step change at the top of the page. The
+  // last step is remembered at module level rather than in a ref, so the
+  // scroll still happens if the rail remounts between steps; a first paint
+  // (fresh visit, reload, or redirect back from payment) never scrolls.
+  useEffect(() => {
+    if (lastRailStep !== undefined && lastRailStep !== step) window.scrollTo(0, 0);
+    lastRailStep = step;
+  }, [step]);
   const index = step === "form" ? 0 : step === "payment" || step === "paymentPending" ? 1 : 2;
   const cls = (i) => (i === index ? "step active" : i < index ? "step complete" : "step pending");
   const bookIndex = free ? 1 : 2;
@@ -123,111 +142,6 @@ function StepRail({ step, invited, free }) {
         <div class="step-dot">{free ? 2 : 3}</div>
         <div class="step-label">Book your conversation</div>
       </div>
-    </div>
-  );
-}
-
-const GIFT_REFUND_POLICY =
-  "Gift memberships are final: there is no refund once the gift is given. The membership is hers to use, " +
-  "it carries full Founding Member benefits, and it renews alongside your own membership until you cancel renewal.";
-
-/** The seat step, right after her own payment and before booking (Tori,
- *  2026-09-20): a paying member gives a membership to her mother or daughter.
- *  The offer, price and terms come from /api/named-seat (Built Not Found is
- *  the authority). Buying needs her signed in, because the seat is tied to her
- *  membership, so the first click opens sign-in; after it she lands back here
- *  with her answers kept (sessionStorage) and continues. */
-function GiftSeatOffer({ gift, onGift }) {
-  const [phase, setPhase] = useState("offer");
-  const [offer, setOffer] = useState(null);
-  const [error, setError] = useState("");
-  const [terms, setTerms] = useState(false);
-  if (phase === "skipped") return null;
-  const start = async () => {
-    setError("");
-    setPhase("loading");
-    try {
-      const o = await giftSeatApi("/api/named-seat");
-      if (!o?.eligible) throw Error("Gift memberships are briefly unavailable here. You can add hers from your member area at any time.");
-      setOffer(o);
-      setPhase("review");
-    } catch (e) {
-      setError(e.message);
-      setPhase("offer");
-    }
-  };
-  const money = offer ? new Intl.NumberFormat("en-US", { style: "currency", currency: offer.currency }).format(offer.amountCents / 100) : "$500";
-  const included = Boolean(offer) && (offer.included === true || offer.amountCents === 0);
-  const ready = gift.name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gift.email.trim());
-  const give = async () => {
-    setError(""); setPhase("giving");
-    try {
-      const receipt = await giftSeatApi("/api/named-seat/checkout", { method: "POST",
-        body: JSON.stringify({ recipientName: gift.name.trim(), recipientEmail: gift.email.trim(), quoteDigest: offer.digest, seatTermsAck: true, refundPolicyAck: true }) });
-      if (receipt?.included !== true) throw Error("Her membership could not be confirmed. You can add it from your member area at any time.");
-      setPhase("paid");
-    } catch (e) { setError(e.message); setPhase("review"); }
-  };
-  if (phase === "paid") {
-    return (
-      <div class="gift-offer" id="gift-offer" role="status">
-        <h3>Her membership is on its way.</h3>
-        <p>We have emailed {gift.email.trim()} an invitation to accept it. Next, book your conversation below.</p>
-      </div>
-    );
-  }
-  return (
-    <div class="gift-offer" id="gift-offer">
-      <h3>Add a membership for your mother or daughter.</h3>
-      <p>
-        {included ? "Included with your Community Steward membership." : `${money} a year, included for Community Stewards.`}
-        {" "}She gets a full membership of her own, active alongside yours, and completes her own short application.
-      </p>
-      <div class="gift-fields">
-        <input type="text" placeholder="Her full name" aria-label="Her name" maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
-        <input type="email" placeholder="Her email" aria-label="Her email" maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
-      </div>
-      {error && <p class="gift-error" role="alert">{error}</p>}
-      {phase !== "review" && (
-        <div class="gift-actions">
-          <button type="button" class="submit-btn" disabled={phase === "loading" || !ready} onClick={start}>
-            {phase === "loading" ? "One moment…" : "Add her membership"}
-          </button>
-          <button type="button" class="gift-skip" onClick={() => setPhase("skipped")}>Continue to booking</button>
-        </div>
-      )}
-      {(phase === "review" || phase === "giving") && offer && (
-        <>
-          <label class="compliance-check">
-            <input type="checkbox" checked={terms} disabled={phase === "giving"} onChange={(e) => setTerms(e.currentTarget.checked)} />
-            <span>{included
-              ? "I agree to the gift terms. Her membership is included with mine and renews alongside it; once given, it is hers."
-              : offer.autoRenew
-                ? "I agree to the full payment now and to automatic renewal alongside my own membership. I can cancel renewal at any time."
-                : "I agree to the full payment now and to the end date shown, with no automatic renewal while my own renewal is canceled."}</span>
-          </label>
-          {terms && included && (
-            <div class="gift-actions">
-              <button type="button" class="submit-btn" disabled={phase === "giving"} onClick={give}>{phase === "giving" ? "One moment…" : "Send her invitation"}</button>
-            </div>
-          )}
-          {terms && !included && (
-            <PaymentStep
-              applicationId={offer.membershipId}
-              refundPolicyText={GIFT_REFUND_POLICY}
-              merchantDisclosureText={offer.merchantDisclosureText}
-              startCheckout={() => giftSeatApi("/api/named-seat/checkout", {
-                method: "POST",
-                body: JSON.stringify({ recipientName: gift.name.trim(), recipientEmail: gift.email.trim(), quoteDigest: offer.digest, seatTermsAck: true, refundPolicyAck: true }),
-              })}
-              onPaid={() => setPhase("paid")}
-            />
-          )}
-          <div class="gift-actions">
-            <button type="button" class="gift-skip" onClick={() => setPhase("skipped")}>Continue to booking</button>
-          </div>
-        </>
-      )}
     </div>
   );
 }
@@ -474,24 +388,10 @@ export function Join({ config, initialTierId, initialState }) {
   const [referral, setReferral] = useState("");
   const [referralName, setReferralName] = useState("");
   const [whoYouAre, setWhoYouAre] = useState("");
-  // The gift-seat upsell answer, kept so the seat step after payment opens
-  // with her mother's or daughter's details already filled in. Kept in
-  // sessionStorage too, because the seat purchase signs her in and that
-  // round trip reloads the page.
-  const [gift, setGiftState] = useState(() => {
-    try {
-      const saved = JSON.parse(sessionStorage.getItem("ssc-gift") ?? "null");
-      if (saved && typeof saved === "object") return { interest: Boolean(saved.interest), name: String(saved.name ?? ""), email: String(saved.email ?? "") };
-    } catch {}
-    return { interest: false, name: "", email: "" };
-  });
-  const setGift = (next) => {
-    setGiftState((prev) => {
-      const value = typeof next === "function" ? next(prev) : next;
-      try { sessionStorage.setItem("ssc-gift", JSON.stringify(value)); } catch {}
-      return value;
-    });
-  };
+  // The gift answer (Tori, 2026-09-20) is asked on the application and posted
+  // with it; the seat itself is charged through the membership authority, and
+  // the booking step never sells it.
+  const [gift, setGift] = useState({ interest: false, name: "", email: "" });
   const [ack, setAck] = useState(false);
   // Whether the chosen tier is free, mirrored from the packaged tier selection
   // so the step rail can drop the payment step. Preset from the URL so the
@@ -514,7 +414,12 @@ export function Join({ config, initialTierId, initialState }) {
           config={config}
           initialState={initialState}
           // Server copy for everything except the invited path's words.
-          copy={{ ...(config.copy ?? {}), namedSeat: { ...(config.copy?.namedSeat ?? {}), ...GIFT_COPY } }}
+          copy={{
+            ...(config.copy ?? {}),
+            namedSeat: { ...(config.copy?.namedSeat ?? {}), ...GIFT_COPY },
+            booking: { ...(config.copy?.booking ?? {}), ...BOOKING_COPY },
+            accepted: { ...(config.copy?.accepted ?? {}), body: "Your membership is approved. No onboarding call is required." },
+          }}
           initialNamedSeatId={seatId ?? undefined}
           namedSeatClaimApi={namedSeatClaimApi}
           initialTierId={initialTierId}
@@ -569,15 +474,7 @@ export function Join({ config, initialTierId, initialState }) {
             // application; only a journey that has not been submitted yet
             // reads the chooser. Browser input never overrides the server.
             const free = state.tier ? state.tier.free : freeTier;
-            // Right after her payment, before booking: the gift seat for her
-            // mother or daughter (paid tiers only; a gift recipient never sees it).
-            const showGift = state.step === "booking" && !seatId && !free;
-            return (
-              <>
-                <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />
-                {showGift && <GiftSeatOffer gift={gift} onGift={setGift} />}
-              </>
-            );
+            return <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />;
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
           // Baker Priest quote card). Preserved verbatim from join.html's

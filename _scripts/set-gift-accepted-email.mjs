@@ -32,7 +32,7 @@ export const GIFT_ACCEPTED = {
   text:
     "Dear {{firstName}},\n\n" +
     "{{recipientName}} has accepted the membership you gave her at Silver & Salt Capital and joins as a {{tierName}}. " +
-    "She will complete her own short application and book her introduction call from here; nothing more is needed from you.\n\n" +
+    "She will complete her own short application and book her onboarding call from here; nothing more is needed from you.\n\n" +
     "Thank you for bringing her in.\n\n" +
     "Warmly,\nSilver & Salt Capital",
   enabled: true,

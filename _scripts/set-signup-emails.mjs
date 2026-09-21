@@ -61,7 +61,10 @@ export function parseTemplates(markdown) {
     if (!subject || body === undefined) throw new Error(`section "${key}" needs a **Subject:** line and a \`\`\`text body block`);
     if (/[–—]/.test(subject + body)) throw new Error(`section "${key}" contains an em or en dash (brand rule 4)`);
     if (/Silver and Salt/i.test(subject + body)) throw new Error(`section "${key}" spells the name without the ampersand (brand rule 1)`);
-    const enabled = !/^\*\*Enabled:\*\*\s*no\s*$/mi.test(section);
+    // Anywhere in the section, on its own line or after another bold label.
+    // An anchored (^...$) match missed "**Fires:** never. **Enabled:** no" and
+    // installed submitConfirmation enabled on production (2026-09-20).
+    const enabled = !/\*\*Enabled:\*\*\s*no\b/i.test(section);
     // Double asterisks mark bold for the HTML template; the text send drops them.
     out[key] = { subject, text: body.replace(/\r\n/g, "\n").replace(/\*\*(.+?)\*\*/g, "$1"), enabled };
   }
@@ -90,7 +93,9 @@ for (const key of Object.keys(selected)) {
   const same = before && before.subject === after.subject && before.text === after.text && (before.enabled ?? true) === after.enabled;
   console.log(`\n==== ${key} (${same ? "unchanged" : "will change"}) ====`);
   console.log("--- stored subject:  ", JSON.stringify(before?.subject ?? null));
+  console.log("--- stored enabled:  ", JSON.stringify(before ? (before.enabled ?? true) : null));
   console.log("--- proposed subject:", JSON.stringify(after.subject));
+  console.log("--- proposed enabled:", JSON.stringify(after.enabled));
   console.log("--- proposed body:\n" + after.text);
   if (!same) changes++;
 }

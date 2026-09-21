@@ -214,7 +214,7 @@ export const peopleColumns = (myUserId, reload) => [
   },
   {
     key: "meeting",
-    header: "Introduction call",
+    header: "Onboarding call",
     sortAs: "date",
     sortValue: (r) => r.application?.meetingAt ?? 0,
     cell: (r) =>

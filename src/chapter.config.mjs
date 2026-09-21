@@ -250,9 +250,11 @@ export function chapterFor(envName = "dev") {
   },
 
   // ── Scheduling ───────────────────────────────────────────────────────
-  // Matches groups.schedulingJson on the live dev row.
+  // Seed only; the live row's schedulingJson is the authority and is
+  // owner-editable. The call is 30 minutes (Tori, 2026-09-20; set on both
+  // rows by _scripts/set-slot-minutes.mjs).
   scheduling: {
-    slotMinutes: 45,
+    slotMinutes: 30,
     days: [1, 2, 3, 4, 5],
     startHour: 9,
     endHour: 17,
@@ -296,8 +298,9 @@ export function chapterFor(envName = "dev") {
     optional: [
       "preferredName", "referralName", "referralOther", "whoYouAreOther", "linkedin", "phone",
       "address1", "address2", "city", "state", "postalCode", "country",
-      // The gift-seat upsell (Tori, 2026-09-20): asked on the application for
-      // the paid tiers; the seat itself is bought right after payment.
+      // The gift seat (Tori, 2026-09-20): asked on the application for the
+      // paid tiers; the seat itself is charged through the membership
+      // authority (the member area today), never on the booking step.
       "giftSeatInterest", "giftSeatRecipientName", "giftSeatRecipientEmail",
       // "I'm applying without a LinkedIn profile" (Tori, 2026-09-20): the
       // rare applicant with no profile opts out, and the opt-out is recorded.

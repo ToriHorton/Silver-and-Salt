@@ -55,7 +55,7 @@ const emailTemplates = {
     text:
       "Dear {{firstName}},\n\n" +
       "Thank you. Your founding-member payment of $900 has been received, and your application " +
-      "is with us for review. Your introduction call is the next step; your member area shows " +
+      "is with us for review. Your onboarding call is the next step; your member area shows " +
       "your application status and call details at {{membersUrl}}.\n\n" +
       "{{refundPolicyText}}\n\n" +
       "Warmly,\nSilver & Salt Capital",
@@ -64,7 +64,7 @@ const emailTemplates = {
     subject: "Before your Silver & Salt Capital conversation",
     text:
       "Dear {{firstName}},\n\n" +
-      "We look forward to meeting you. Ahead of your introduction call, here is the community " +
+      "We look forward to meeting you. Ahead of your onboarding call, here is the community " +
       "commitment every member agrees to, and the norms our community keeps:\n\n" +
       "{{commitmentText}}\n\n{{normsText}}\n\n" +
       "Your conversation will include your agreement to the community commitment.\n\n" +
@@ -109,7 +109,7 @@ await db.transact(
       timezone: "America/Los_Angeles",
       minNoticeHours: 24,
       windowDays: 14,
-      summaryTemplate: "Silver & Salt Capital: introduction call with {{firstName}} {{lastName}}",
+      summaryTemplate: "Silver & Salt Capital: onboarding call with {{firstName}} {{lastName}}",
     },
     createdAt: Date.now(),
   }),

@@ -115,12 +115,13 @@
   },
 
   "scheduling": {
-    "slotMinutes": 45,
+    "slotMinutes": 30,
     "days": [1, 2, 3, 4, 5],
     "startHour": 9,
     "endHour": 17,
     "timezone": "America/Los_Angeles",
-    "source": "groups.schedulingJson; odla-db meetings is the source of truth, Google is the invite/Meet projection"
+    "source": "groups.schedulingJson; odla-db meetings is the source of truth, Google is the invite/Meet projection",
+    "decision": "slotMinutes 45 -> 30 by Tori on 2026-09-20 (the onboarding call is 30 minutes); applied to both rows by _scripts/set-slot-minutes.mjs"
   },
 
   "emails": {

@@ -128,7 +128,7 @@ function MeetingDetail({ m, tz, onChanged, onClose }) {
   };
 
   const cancel = async () => {
-    const sure = confirm("Cancel this introduction call? The Google event is removed and the guest is notified.");
+    const sure = confirm("Cancel this onboarding call? The Google event is removed and the guest is notified.");
     if (!sure) return;
     setWorking(true);
     try {
@@ -215,7 +215,7 @@ function ByUser({ meetings, tz, person, onPerson, onSelect }) {
           {sections.map((s) => <option value={s.email}>{s.name} ({s.email})</option>)}
         </select>
       </div>
-      {!shown.length && <p class="empty-note">Introduction calls appear here as people book them.</p>}
+      {!shown.length && <p class="empty-note">Onboarding calls appear here as people book them.</p>}
       {shown.map((s) => (
         <div class="cal-person-section" key={s.email}>
           <div class="cal-person-head">{s.name} <span class="cell-sub" style="display:inline;margin-left:8px;">{s.email}</span></div>
@@ -326,7 +326,7 @@ export function CalendarTab({ active }) {
             <CalendarAgenda
               events={upcomingEvents}
               timezone={tz}
-              emptyLabel="No upcoming introduction calls. Booked times appear here; this database is the source of truth, and Google Calendar changes are flagged above instead of adopted."
+              emptyLabel="No upcoming onboarding calls. Booked times appear here; this database is the source of truth, and Google Calendar changes are flagged above instead of adopted."
               onEventClick={onSelect}
             />
           )}
