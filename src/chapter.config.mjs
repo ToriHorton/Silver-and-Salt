@@ -14,6 +14,7 @@
 // edge yet.
 
 import { defineChapter } from "@odla-ai/chapter";
+import { SIGNUP_EMAIL_EVENTS } from "./email-events.mjs";
 import { crm } from "./crm.mjs";
 
 // The values that differ between the development and production
@@ -235,7 +236,7 @@ export function chapterFor(envName = "dev") {
   // Worker's EMAIL_FROM. Seeded with the row on a fresh tenant; both existing
   // rows get it once from _scripts/set-sender-name.mjs, and it stays
   // owner-editable in Settings → Email.
-  emails: { ...e.emails, fromName: "Tori Horton" },
+  emails: { ...e.emails, fromName: "Tori Horton", events: SIGNUP_EMAIL_EVENTS },
 
   // WHEN each lifecycle email fires (build-time), as opposed to its content.
   // Owner decision 2026-09-19 (signup-path audit): Chapter's adminNotification
