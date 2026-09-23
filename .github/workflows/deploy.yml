@@ -156,6 +156,21 @@ jobs:
           echo "::error::silverandsaltcapital.com is not serving $expected after ~5 minutes. The deploy reported success but the live site is stale. Re-run this workflow; if it fails again, check the Cloudflare dashboard for the Worker silver-and-salt-capital."
           exit 1
 
+      # The step that would have caught the 2026-09-22 outage. Chapter 0.55.0
+      # made the quote route answer 400 to the bodyless POST its own payment
+      # step sends, and membership checkout was down for every paid tier for
+      # about 41 hours. Every test stayed green, because both halves of the
+      # broken contract ship inside the package: nothing here crossed that
+      # boundary until this canary did.
+      #
+      # It quotes an application id that cannot exist, so it creates nothing,
+      # charges nothing, and is safe to run against the live domain.
+      #
+      # Do not "fix" a red result by deleting this step. Red means no applicant
+      # can pay.
+      - name: Verify checkout still accepts the payment step's request
+        run: _scripts/verify-checkout-contract.sh https://silverandsaltcapital.com
+
   # Deploy failures used to be silent: the site simply kept serving the old
   # version, with nothing in the repo to say so. This leaves a visible record
   # that someone has to close.

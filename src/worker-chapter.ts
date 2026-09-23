@@ -47,6 +47,8 @@ import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./sig
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
 import { hardenFetch } from "./hardening";
 import { SILVER_HARDENING } from "./hardening.config";
+import { PAYMENT_QUOTE_PATH as QUOTE_PATH } from "./payment-quote-path";
+import { probeCheckoutQuote } from "./checkout-probe";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -76,7 +78,7 @@ const json = (body: unknown, status = 200) =>
  * Remove this once the package sends the empty object or tolerates a missing
  * body; tests/worker-mount.test.mjs pins both halves.
  */
-export const PAYMENT_QUOTE_PATH = "/api/payments/quote";
+export { PAYMENT_QUOTE_PATH } from "./payment-quote-path";
 
 const withJsonBody = (req: Request, body: string): Request => {
   const headers = new Headers(req.headers);
@@ -94,7 +96,7 @@ export async function withQuoteSelectionBody(req: Request): Promise<Request> {
   } catch {
     return req;
   }
-  if (pathname !== PAYMENT_QUOTE_PATH) return req;
+  if (pathname !== QUOTE_PATH) return req;
 
   // A declared, non-zero length is a seat selection on its way to Chapter.
   // Return the request unread so the body reaches the route as it was sent.
@@ -289,6 +291,26 @@ export default withObservability<ChapterEnv>({
           if (run.booked || run.approved) console.log("chapter.admin-milestones", run);
         } catch (err) {
           console.error("chapter.admin-milestones", (err as Error).message);
+        }
+        // The checkout canary (src/checkout-probe.ts). Silence here is the
+        // point: it speaks only when the payment step's own request stops
+        // working, which is the failure that went unseen for 41 hours on
+        // 2026-09-22. It runs through the composed handler, so it sees the
+        // same hardening, normalizer, and Chapter build a real applicant does.
+        try {
+          const result = await probeCheckoutQuote(
+            async (req) => fetchHandler(req, env, ctx),
+            chapterFor(envNameOf(env)).url,
+          );
+          if (!result.ok) {
+            recordChapterAlert(new Error(`checkout quote unavailable: ${result.detail}`), {
+              code: "checkout_quote_unavailable",
+              route: QUOTE_PATH,
+              attributes: { status: result.status },
+            });
+          }
+        } catch (err) {
+          console.error("chapter.checkout-probe", (err as Error).message);
         }
       })(),
     );

@@ -110,6 +110,28 @@ cross-check); those are the math and stay as they are. Do not reintroduce
 
   Matching means the live site is current. Never conclude a change shipped from
   a green push alone; a push is not a deploy.
+- **Adopting a new `@odla-ai/*` version is the highest-risk change in this
+  repository, and `npm test` does not cover it.** Chapter ships both halves of
+  the join flow (the payment step's client AND the routes it calls), so the two
+  can disagree with each other and every local test still passes. That is
+  exactly what happened on 2026-09-22: Chapter 0.55.0 made
+  `POST /api/payments/quote` answer 400 to the bodyless request its own payment
+  step sends, membership checkout was down for every paid tier for about 41
+  hours, and nothing caught it, because a failed quote writes no row and sends
+  no email. It was found only when Tori tried to buy a membership herself.
+
+  Before adopting a Chapter version, and after the deploy lands:
+
+  ```
+  _scripts/verify-checkout-contract.sh https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev
+  _scripts/verify-checkout-contract.sh https://silverandsaltcapital.com
+  ```
+
+  Better still, run a full paid signup on dev (test-mode Stripe) before the
+  version reaches production. The deploy workflow now runs that canary on every
+  deploy, and the Worker cron runs it every 5 minutes
+  (`src/checkout-probe.ts`), so a break alerts in minutes instead of days.
+  A red canary means no applicant can pay: treat it as an outage.
 - **Stack:** static HTML and CSS plus Preact islands bundled by Vite. There is a
   build step. `dist/` is the build output on `main` and is git-ignored, so never
   hand-edit a file there expecting it to survive.
