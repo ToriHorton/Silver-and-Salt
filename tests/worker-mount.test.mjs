@@ -8,7 +8,7 @@
 // response out) and holds the options every deployment is built from.
 import "./workers-globals.mjs";
 import { describe, expect, it } from "vitest";
-import worker, { chapterWorkerOptions } from "../src/worker-chapter.ts";
+import worker, { chapterWorkerOptions, withQuoteSelectionBody, PAYMENT_QUOTE_PATH } from "../src/worker-chapter.ts";
 import { recordChapterAlert } from "../src/chapter-alerts.ts";
 
 // The development deployment's plain vars (wrangler.jsonc env.dev), no
@@ -74,5 +74,48 @@ describe("the exported Worker", () => {
     const res = await worker.fetch(new Request("https://silver-and-salt-capital-dev.cory-ondrejka.workers.dev/api/no-such-route"), env, ctx);
     expect(res.status).toBe(404);
     expect(res.headers.get("content-type")).toMatch(/json/);
+  });
+});
+
+// The payment step's opening quote call sends no body, and Chapter 0.55.0's
+// route answers 400 "invalid seat selection" when it parses one that is empty.
+// That took every paid tier's checkout down on 2026-09-22. The mount gives the
+// request the empty object the route already accepts, and leaves a real seat
+// selection alone.
+describe("payment quote body", () => {
+  const quoteUrl = `https://silverandsaltcapital.com${PAYMENT_QUOTE_PATH}?application=abc`;
+  const read = async (req) => (req.body === null ? "" : await req.text());
+
+  it("gives the bodyless opening call an empty JSON object", async () => {
+    const req = new Request(quoteUrl, { method: "POST", headers: { "content-length": "0" } });
+    const out = await withQuoteSelectionBody(req);
+    expect(await read(out)).toBe("{}");
+    expect(out.headers.get("content-type")).toBe("application/json");
+    expect(out.method).toBe("POST");
+    expect(new URL(out.url).search).toBe("?application=abc");
+  });
+
+  it("treats a request with no declared length as the opening call too", async () => {
+    const req = new Request(quoteUrl, { method: "POST" });
+    expect(await read(await withQuoteSelectionBody(req))).toBe("{}");
+  });
+
+  it("hands a real seat selection through untouched and unread", async () => {
+    const selection = JSON.stringify({ namedSeat: { name: "A", email: "a@example.com" } });
+    const req = new Request(quoteUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json", "content-length": String(selection.length) },
+      body: selection,
+    });
+    const out = await withQuoteSelectionBody(req);
+    expect(out).toBe(req);
+    expect(await read(out)).toBe(selection);
+  });
+
+  it("leaves every other request alone", async () => {
+    const get = new Request(quoteUrl);
+    expect(await withQuoteSelectionBody(get)).toBe(get);
+    const other = new Request("https://silverandsaltcapital.com/api/applications", { method: "POST", headers: { "content-length": "0" } });
+    expect(await withQuoteSelectionBody(other)).toBe(other);
   });
 });

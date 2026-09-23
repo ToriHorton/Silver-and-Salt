@@ -28,6 +28,10 @@
 //                        booking reminder on the cron below)
 //   network.route        inbound membership effects from Built Not Found
 //                        (only when MEMBERSHIP_AUTHORITY_OWNER is set)
+//
+// One request normalizer sits in the mount itself, ahead of Chapter:
+//   withQuoteSelectionBody  gives POST /api/payments/quote the empty JSON body
+//                           Chapter 0.55.0 requires (see its comment below)
 
 import { chapterWorker, createWorkerContext, type ChapterEnv, type Route } from "@odla-ai/chapter/worker";
 import chapterPackage from "@odla-ai/chapter/package.json";
@@ -49,6 +53,61 @@ const json = (body: unknown, status = 200) =>
     status,
     headers: { "content-type": "application/json", "cache-control": "no-store" },
   });
+
+/**
+ * Hotfix (2026-09-23) for Chapter 0.55.0: restore the payment step's opening
+ * quote request.
+ *
+ * Chapter's POST /api/payments/quote parses a request body whenever the
+ * request carries one, and answers 400 "invalid seat selection" when that
+ * parse throws. The payment step's first call (the package's own
+ * MembershipPaymentStep) sends `{ method: "POST", cache: "no-store" }` with no
+ * body, and a bodyless POST still arrives with Content-Length: 0, so the route
+ * parsed "" and threw. Every paid tier's checkout answered 400 from the 0.55.0
+ * deploy (2026-09-22 05:44Z) onward: no quote, so no Stripe subscription, so
+ * no charge and no receipt. Both tiers were affected, not just Community
+ * Steward.
+ *
+ * `{}` is the body that route already accepts as "no seat selection": it has
+ * no keys, so the key guard passes and the route's own `selection` stays
+ * undefined, which is exactly the behaviour before 0.55.0. A request carrying
+ * a real seat selection is handed on untouched and is never read here.
+ *
+ * Remove this once the package sends the empty object or tolerates a missing
+ * body; tests/worker-mount.test.mjs pins both halves.
+ */
+export const PAYMENT_QUOTE_PATH = "/api/payments/quote";
+
+const withJsonBody = (req: Request, body: string): Request => {
+  const headers = new Headers(req.headers);
+  headers.set("content-type", "application/json");
+  // The runtime recomputes the length for the body handed to the constructor.
+  headers.delete("content-length");
+  return new Request(req.url, { method: req.method, headers, body });
+};
+
+export async function withQuoteSelectionBody(req: Request): Promise<Request> {
+  if (req.method !== "POST") return req;
+  let pathname: string;
+  try {
+    pathname = new URL(req.url).pathname;
+  } catch {
+    return req;
+  }
+  if (pathname !== PAYMENT_QUOTE_PATH) return req;
+
+  // A declared, non-zero length is a seat selection on its way to Chapter.
+  // Return the request unread so the body reaches the route as it was sent.
+  const declared = req.headers.get("content-length");
+  if (declared !== null && declared !== "0") return req;
+
+  // Length declared as zero: the opening call. Nothing to read.
+  if (declared === "0") return withJsonBody(req, "{}");
+
+  // No declared length at all: read once to tell empty from a real selection.
+  const body = await req.text();
+  return withJsonBody(req, body.trim() === "" ? "{}" : body);
+}
 
 /**
  * Fail-closed readiness gate (adopt-existing runbook, Phase 8 checkpoints).
@@ -188,7 +247,7 @@ function workerFor(env: ChapterEnv): Built {
 // Body cap, public-write rate limit, and browser security headers wrap every
 // response the Worker produces (src/hardening.ts); static assets get the same
 // headers from _headers.
-const fetchHandler = hardenFetch((req: Request, env: ChapterEnv, ctx: ExecutionContext) => {
+const fetchHandler = hardenFetch(async (req: Request, env: ChapterEnv, ctx: ExecutionContext) => {
     let target: Built;
     try {
       target = workerFor(env);
@@ -199,7 +258,7 @@ const fetchHandler = hardenFetch((req: Request, env: ChapterEnv, ctx: ExecutionC
       if (url.pathname.startsWith("/api/")) return json({ error: "deployment_misconfigured" }, 503);
       return env.ASSETS.fetch(req);
     }
-    return target.worker.fetch(req, env, ctx);
+    return target.worker.fetch(await withQuoteSelectionBody(req), env, ctx);
 }, SILVER_HARDENING);
 
 // withObservability (from @odla-ai/o11y, "o11y" in services) traces both
