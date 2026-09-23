@@ -13,12 +13,19 @@ watch-style.html
 # Daily deploy self-check log (kept local, never published)
 .deploy-log.json
 
-# Private (local-only) CEO tools + data, pending a protected host.
-# dashboard.html stays ignored; it is published as a copy at an obscure,
-# unlinked, noindexed URL (hq-25b5a94e297e.html) per Tori's 2026-07-14 decision.
-# granola-inbox.js and newsletter-data.js are published with it as its data feeds.
+# Private CEO tools. The dashboard, its data feeds, and the task management
+# guide moved to the private library repository on 2026-09-23:
+#   ~/Projects/Silver-and-Salt-Library/dashboard/
+# It is published from there, encrypted, behind its own passcode. This
+# repository is public, so none of it belongs here. These entries stay as a
+# guard, so a stray copy cannot land back in a commit.
 TASKS.md
 dashboard.html
+granola-inbox.js
+newsletter-data.js
+task-decisions.json
+deploy-stamp.txt
+hq-*.html
 dashboard-actions.html
 dashboard-newsletter.html
 dashboard.css
@@ -55,8 +62,7 @@ dist/
 .clerk/
 .odla/handshake.local.json
 
-# CEO dashboard goals feed (private, read by the daily agent; belongs with
-# dashboard.html and granola-inbox.js, never in a deploy)
+# CEO dashboard goals feed. Lives with the dashboard in the library repository.
 goals.js
 goals.json
 GTM-REVIEW-2.html

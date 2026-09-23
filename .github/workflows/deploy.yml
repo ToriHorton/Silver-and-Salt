@@ -16,18 +16,6 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      # Private CEO tooling and its feeds. The daily dashboard routine commits
-      # these to main, and none of them reach the build, so redeploying for
-      # them would burn a run to change nothing.
-      - 'hq-*.html'
-      - 'granola-inbox.js'
-      - 'newsletter-data.js'
-      - 'goals.js'
-      - 'goals.json'
-      - 'deploy-stamp.txt'
-      - 'deploy-dashboard.sh'
-      - '_scripts/publish-dashboard.sh'
-      - '_scripts/commit-dashboard-work.sh'
       # Documentation that is excluded from the build.
       - '**/*.md'
   # Lets you redeploy the current main without an empty commit.

@@ -6,8 +6,8 @@
 # follows every local link, script, stylesheet, image, and font from there.
 # A tracked file that no page references (a draft, a mockup, a research
 # note, a deck, a spec) is not part of the website and never reaches dist/.
-# The manifest only ever names git-tracked files, so gitignored CEO tools
-# (dashboard.html, granola-inbox.js, newsletter-data.js) cannot leak either.
+# The manifest only ever names git-tracked files, so anything gitignored
+# cannot leak either.
 # The extension guard below is a second net for anything a page links to
 # that the site should not be serving.
 set -euo pipefail

@@ -2,7 +2,7 @@
 
 ## Workflow Rules
 - **Never use git worktrees.** Always work directly on the main branch or create standard branches. Worktrees cause confusion and lost work.
-- **Task management:** Before capturing, moving, updating, completing, deleting, or assigning any action item (or changing the Actions code in `dashboard.html`), read `TASK-MANAGEMENT.md` (local-only, git-ignored) and follow its Core Principles and Scenario Playbook.
+- **Task management:** Before capturing, moving, updating, completing, deleting, or assigning any action item (or changing the Actions code in the dashboard), read `dashboard/TASK-MANAGEMENT.md` in the private library repository at `~/Projects/Silver-and-Salt-Library` and follow its Core Principles and Scenario Playbook. The dashboard itself lives there too, as of 2026-09-23.
 
 ---
 
@@ -118,7 +118,15 @@ cross-check); those are the math and stay as they are. Do not reintroduce
 - `index.html` — Homepage
 - `join.html` — the live application page. **Sales opened to the public on 2026-09-20 (Tori).** The Worker (`src/join-page.ts`) mounts the Preact join island (`src/app/join-island.jsx`) inside the tracked holding markup whenever the server-enforced sales state is open; `_scripts/set-sales-state.sh <disabled|restricted|public>` is the operator switch, never a code deploy.
 - **Signup email rule (Tori, 2026-09-20):** no applicant receives a receipt for passing a step in the signup flow. Only three 24-hour stall emails (`src/signup-paths.ts`: bookingReminder, bookingReminderFree, paymentReminder), the welcome at approval, and the call confirmation at booking. Chapter's `submitConfirmation` stays installed switched off. Copy lives in `_reference/signup-emails.md` (local); the record is Addendum F of the operations living document in the Library.
-- `dashboard.html` — CEO command center (gitignored; published daily as an unlinked, noindexed copy at the obscure URL `hq-25b5a94e297e.html` with `granola-inbox.js` + `newsletter-data.js`, per Tori's 2026-07-14 decision, pending password protection; never link that URL from any public page)
+- The CEO command center **left this repository on 2026-09-23.** It now lives in
+  the private library repository, at
+  `~/Projects/Silver-and-Salt-Library/dashboard/`, with its data feeds and the
+  task management guide. It is published from there, encrypted behind its own
+  passcode, at `https://silver-salt-library.silver-and-salt.workers.dev/hq/`.
+  The old obscure-URL copy (`hq-25b5a94e297e.html`) and the scripts that pushed
+  it here are gone: this repository is public, and the deploy workflow never
+  served that file anyway. Do not add `dashboard.html`, `granola-inbox.js`,
+  `newsletter-data.js`, `task-decisions.json`, or `goals.*` back here.
   - **Canonical version (Tori, 2026-07-14): the single-page `dashboard.html` on the MacBook Pro.** The split pages on the other computer (`dashboard-actions.html`, `dashboard-newsletter.html`, `dashboard.css`, `dashboard-app.js`) are deprecated; do not build on them.
 - `manifesto.html`, `opportunity.html`, `networks.html` etc. — Supporting pages
 
