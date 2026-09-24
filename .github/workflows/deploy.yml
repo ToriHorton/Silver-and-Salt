@@ -187,12 +187,29 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           {
-            echo "The live site may be serving an older version than main."
+            echo "A deploy to Cloudflare failed. Two different things can fail here,"
+            echo "and they need opposite responses. Check the run to see which."
             echo
             echo "- Commit: \`$GITHUB_SHA\`"
             echo "- Failed run: $RUN_URL"
             echo
-            echo "**Check whether the live site is stale**"
+            echo "## If \"Verify checkout still accepts the payment step's request\" failed"
+            echo
+            echo "**Nobody can buy a membership.** Treat this as an outage, not a deploy"
+            echo "problem. Re-running the workflow will not fix it."
+            echo
+            echo '```'
+            echo '_scripts/verify-checkout-contract.sh https://silverandsaltcapital.com'
+            echo '```'
+            echo
+            echo "A 400 there means the quote route is refusing the payment step's own"
+            echo "request. That is what took checkout down for 41 hours on 2026-09-22."
+            echo "Suspect a newly adopted \`@odla-ai/*\` version first; see"
+            echo "\`src/checkout-probe.ts\` and CLAUDE.md on package bumps."
+            echo
+            echo "## If \"Verify the live site is serving this commit\" failed"
+            echo
+            echo "The live site may be serving an older version than main."
             echo
             echo '```'
             echo 'curl -s https://silverandsaltcapital.com/version.txt'
@@ -202,7 +219,7 @@ jobs:
             echo "is stale. Most failures here are transient Cloudflare API errors, so"
             echo "re-running the failed run is the first thing to try."
             echo
-            echo "Close this issue once the live site matches main."
+            echo "Close this issue once the live site matches main and checkout answers."
           } > body.md
           gh issue create \
             --repo "$GITHUB_REPOSITORY" \

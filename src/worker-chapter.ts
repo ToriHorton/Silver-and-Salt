@@ -49,6 +49,7 @@ import { hardenFetch } from "./hardening";
 import { SILVER_HARDENING } from "./hardening.config";
 import { PAYMENT_QUOTE_PATH as QUOTE_PATH } from "./payment-quote-path";
 import { probeCheckoutQuote } from "./checkout-probe";
+import { alertOnCheckoutHealth } from "./checkout-alert";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -309,6 +310,17 @@ export default withObservability<ChapterEnv>({
               attributes: { status: result.status },
             });
           }
+          // o11y and Workers Logs are both pulls: someone has to go and look.
+          // This is the push. It runs on a healthy result too, because the all
+          // clear is what lets silence mean "fine" (src/checkout-alert.ts).
+          const context = workerFor(env).background;
+          const alert = await alertOnCheckoutHealth(
+            context.makeDb(env) as never,
+            env as unknown as Record<string, unknown>,
+            context.chapter.id,
+            result,
+          );
+          if (alert.sent) console.log("chapter.checkout-alert", JSON.stringify(alert));
         } catch (err) {
           console.error("chapter.checkout-probe", (err as Error).message);
         }
