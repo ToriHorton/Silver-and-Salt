@@ -67,6 +67,8 @@ import {
   ingestBatch,
   parseDue,
   isSelfEmail,
+  callLabelForStage,
+  CALL_LABELS,
 } from "../src/crm-ingest.mjs";
 import { crm } from "../src/crm.mjs";
 
@@ -83,7 +85,7 @@ const db = {
     const want = q.crm_record?.$?.where?.primaryEmail;
     const hit = store.records.find((r) => r.input?.email === want);
     if (!hit) return { crm_record: [] };
-    const row = { id: hit.id };
+    const row = { id: hit.id, stage: hit.stage };
     if (hit.updated?.callCount != null) row[CALL_COUNT_SLOT] = hit.updated.callCount;
     if (hit.updated?.lastCallAt != null) row[LAST_CALL_SLOT] = hit.updated.lastCallAt;
     return { crm_record: [row] };
@@ -137,14 +139,16 @@ describe("isSelfEmail", () => {
 });
 
 describe("ingestMeeting", () => {
-  it("creates the external attendee as a candidate and skips the chapter's own address", async () => {
+  it("creates the external attendee as a prospect and skips the chapter's own address", async () => {
     const res = await ingestMeeting(db, MEETING);
 
     expect(store.records).toHaveLength(1);
     const person = store.records[0];
     expect(person.input.email).toBe("sharlene@example.com"); // normalized
     expect(person.input.name).toBe("Sharlene Wells");
-    expect(person.stage).toBe("candidate");
+    // Someone who turned up on a call is, by definition, someone Tori wanted
+    // a conversation with.
+    expect(person.stage).toBe("prospect");
     expect(res.createdPeople).toEqual(["sharlene@example.com"]);
   });
 
@@ -237,6 +241,56 @@ describe("ingestMeeting", () => {
     const kinds = store.activities.map((a) => a.kind);
     expect(kinds).not.toContain("stage_change");
     expect(kinds).toContain("meeting"); // fell back to the safe default
+  });
+});
+
+// Conversation (before she applied) vs Member call (after). Tori's GTM
+// vocabulary, decided 2026-09-24.
+describe("call labels", () => {
+  const call = () => store.activities.find((a) => a.kind === "call");
+
+  it("maps every pre-application stage to Conversation", () => {
+    for (const s of ["prospect", "conversation_booked", "soft_commit"]) {
+      expect(callLabelForStage(s)).toBe(CALL_LABELS.conversation);
+    }
+  });
+
+  it("maps every application stage to Member call", () => {
+    for (const s of ["submitted", "paid_pending_vetting", "call_scheduled", "interviewed", "approved"]) {
+      expect(callLabelForStage(s)).toBe(CALL_LABELS.member);
+    }
+  });
+
+  it("treats an unknown or missing stage as pre-application", () => {
+    expect(callLabelForStage("")).toBe(CALL_LABELS.conversation);
+    expect(callLabelForStage(undefined)).toBe(CALL_LABELS.conversation);
+  });
+
+  it("labels a new person's call a Conversation, in the body and in meta", async () => {
+    await ingestMeeting(db, MEETING);
+    expect(call().body.startsWith("Conversation: ")).toBe(true);
+    expect(call().meta.callLabel).toBe("Conversation");
+    expect(call().meta.stageAtCall).toBe("prospect");
+  });
+
+  it("labels an approved member's call a Member call", async () => {
+    store.records.push({ id: "seed", input: { email: "sharlene@example.com" }, stage: "approved" });
+    await ingestMeeting(db, MEETING);
+    expect(call().body.startsWith("Member call: ")).toBe(true);
+    expect(call().meta.callLabel).toBe("Member call");
+  });
+
+  it("does not relabel earlier conversations once she applies", async () => {
+    store.records.push({ id: "seed", input: { email: "sharlene@example.com" }, stage: "prospect" });
+    await ingestMeeting(db, MEETING);
+    store.records[0].stage = "approved";
+    await ingestMeeting(db, { ...MEETING, meetingId: "later" });
+
+    const calls = store.activities.filter((a) => a.kind === "call");
+    expect(calls).toHaveLength(2);
+    // What actually happened, not what is true now.
+    expect(calls[0].meta.callLabel).toBe("Conversation");
+    expect(calls[1].meta.callLabel).toBe("Member call");
   });
 });
 

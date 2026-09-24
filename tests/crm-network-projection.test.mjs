@@ -46,7 +46,7 @@ describe("the Built Not Found reader", () => {
         // out of the projection. Computed from the CRM config, so a new field
         // is caught the day it is added rather than the day someone notices.
         const callish = Object.keys(crm.config.types.person.fields).filter((name) =>
-          /call|meeting|transcript|summary|note|granola/i.test(name),
+          /call|conversation|meeting|transcript|summary|note|granola/i.test(name),
         );
         const leaked = callish
           .filter((f) => !ALLOWED_CALL_FIELDS.includes(f))
@@ -70,12 +70,41 @@ describe("the Built Not Found reader", () => {
   }
 });
 
+describe("the pre-application stages", () => {
+  const stages = crm.config.types.person.pipeline.stages.map((s) => s.id);
+
+  it("use Tori's GTM vocabulary, so the CRM and the plan count the same thing", () => {
+    expect(stages.slice(0, 3)).toEqual(["prospect", "conversation_booked", "soft_commit"]);
+  });
+
+  it("keep conversation_booked distinct from the post-application call_scheduled", () => {
+    expect(stages).toContain("conversation_booked");
+    expect(stages).toContain("call_scheduled");
+    // Pre-application must sort before the application flow.
+    expect(stages.indexOf("conversation_booked")).toBeLessThan(stages.indexOf("submitted"));
+    expect(stages.indexOf("call_scheduled")).toBeGreaterThan(stages.indexOf("submitted"));
+  });
+
+  it("no longer carry the unused candidate/invited pair", () => {
+    expect(stages).not.toContain("candidate");
+    expect(stages).not.toContain("invited");
+  });
+});
+
 describe("the counter fields themselves", () => {
   const fields = crm.config.types.person.fields;
 
   it("are promoted to distinct pre-declared slots", () => {
     expect(fields.lastCallAt.slot).toBe("d1");
     expect(fields.callCount.slot).toBe("n1");
+    expect(fields.nextConversationAt.slot).toBe("d2");
+  });
+
+  it("keep Tori's calendar out of the parent's view", () => {
+    for (const envName of ["dev", "prod"]) {
+      const reader = readerFor(envName, "built-not-found");
+      expect(reader.fields.person).not.toContain("nextConversationAt");
+    }
   });
 
   it("do not collide with any other promoted field", () => {

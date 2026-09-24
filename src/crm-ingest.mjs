@@ -44,6 +44,35 @@ export const INGEST_PAYLOAD_VERSION = 1;
 // leaked ingest credential cannot forge pipeline history.
 export const INGEST_ACTIVITY_KINDS = ["call", "meeting", "note"];
 
+// The pre-application stages (src/crm.mjs). A person sitting in one of these,
+// or brand new, has not applied, so a call with them is a "Conversation" in
+// Tori's GTM vocabulary. Anyone at `submitted` or beyond is in the application
+// flow, so the same call is a "Member call".
+export const PRE_APPLICATION_STAGES = new Set([
+  "prospect",
+  "conversation_booked",
+  "soft_commit",
+]);
+
+// The stage a person is created at when a call surfaces someone unknown: she
+// is, by definition, someone Tori wanted to talk to.
+export const NEW_PERSON_STAGE = "prospect";
+
+export const CALL_LABELS = { conversation: "Conversation", member: "Member call" };
+
+/**
+ * Which label a call gets, from the person's stage at the time of ingest.
+ *
+ * Deliberately a point-in-time judgement, not a live one: once someone
+ * applies, her earlier conversations keep reading as Conversations, which is
+ * what actually happened. Re-labelling history would be a lie.
+ */
+export function callLabelForStage(stage) {
+  const s = str(stage);
+  if (!s || PRE_APPLICATION_STAGES.has(s)) return CALL_LABELS.conversation;
+  return CALL_LABELS.member;
+}
+
 // Addresses that are Tori / the chapter itself. These are never turned into
 // CRM people: the point of a call record is the other side of the call.
 export const SELF_EMAILS = new Set([
@@ -114,9 +143,18 @@ export async function resolvePerson(db, attendee) {
   const created = await createRecord(deps, {
     type: "person",
     input: { name: attendeeName(attendee) || email, email },
-    stage: "candidate",
+    stage: NEW_PERSON_STAGE,
     emailConsent: { state: "unsubscribed", source: "crm-ingest:auto-created" },
-    mutationId: `ingest:person:${email}`,
+    // Deliberately NO mutationId here. The lowercased email lookup above is
+    // already this person's natural key, so it provides the idempotency, and
+    // adding a second key on top made the import unrecoverable: the dedupe
+    // ledger lives in @odla-ai/db's transaction layer, so if a record is ever
+    // deleted (a wiped dev environment, a mistaken cleanup), the ledger
+    // outlives it and every later import fails with "record not found" while
+    // pointing at a ghost id. Leaving it off makes the import self-healing.
+    // The remaining risk is two *concurrent* ingests of the same new person,
+    // which cannot happen: the importer is single-threaded and the scheduled
+    // pull runs once.
   });
 
   // Provenance, so an auto-created person is distinguishable from an applicant
@@ -225,17 +263,23 @@ export async function ingestMeeting(db, meeting) {
       sourceRecordId: resolved.email,
       ...(url ? { sourceUrl: url } : {}),
       payloadVersion: INGEST_PAYLOAD_VERSION,
-      mutationId: `ingest:origin:${sourceId}:${resolved.email}`,
+      // Keyed on the record id, not the email, for the same self-healing
+      // reason as the create above: a key that outlives its record is a key
+      // that blocks recovery.
+      mutationId: `ingest:origin:${sourceId}:${resolved.recordId}`,
     }).catch(() => {});
   }
-
-  // The call body. Kept as plain text so it reads correctly in the record
-  // panel without a renderer.
-  const body = [title, summary].filter(Boolean).join("\n\n");
 
   let activitiesWritten = 0;
   let activitiesDuplicate = 0;
   for (const person of people) {
+    // Conversation (before she applied) vs Member call (after). The package's
+    // ACTIVITY_KINDS are fixed, so the label rides in the body's first line,
+    // which the stock ActivityFeed already renders, AND in meta.callLabel so a
+    // later view can filter on it without parsing prose.
+    const label = callLabelForStage(person.row?.stage);
+    const body = [`${label}: ${title}`, summary].filter(Boolean).join("\n\n");
+
     const res = await addActivity(deps, {
       recordId: person.recordId,
       kind,
@@ -245,6 +289,8 @@ export async function ingestMeeting(db, meeting) {
         source: sourceId,
         meetingId,
         title,
+        callLabel: label,
+        stageAtCall: person.row?.stage || NEW_PERSON_STAGE,
         ...(url ? { url } : {}),
         ...(occurredAt ? { occurredAt } : {}),
         attendees: externals.map((a) => normEmail(a.email)).filter(Boolean),
@@ -315,7 +361,9 @@ export async function ingestMeeting(db, meeting) {
       ...(owner ? { waitingOn: owner } : {}),
       meta: { source: sourceId, meetingId, title, ...(url ? { url } : {}) },
       // Index-based, so the same meeting replays onto the same task rows.
-      mutationId: `ingest:${sourceId}:${meetingId}:task:${i}`,
+      // Scoped by record id like every other key here, so it cannot outlive
+      // the record it belongs to.
+      mutationId: `ingest:${sourceId}:${meetingId}:task:${i}:${primary.recordId}`,
     });
     if (res.duplicate) tasksDuplicate++;
     else tasksWritten++;
