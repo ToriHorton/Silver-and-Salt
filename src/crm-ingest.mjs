@@ -261,6 +261,32 @@ export async function ingestMeeting(db, meeting) {
     }
   }
 
+  // Private notes: the operator's own raw shorthand from the meeting, kept as
+  // a SEPARATE `note` activity rather than appended to the call body, so the
+  // clean summary stays readable and the private material is obvious at a
+  // glance and easy to remove later. Flagged in meta so a future view can
+  // filter it out.
+  //
+  // Not counted as a call: the counters are bumped only by the call activity
+  // above, so private notes can never inflate `callCount` or move
+  // `lastCallAt`. And since the counters are the only thing that reaches Built
+  // Not Found, this material cannot cross to the parent by any route.
+  const privateNotes = str(meeting?.privateNotes).trim();
+  let privateNotesWritten = 0;
+  if (privateNotes) {
+    for (const person of people) {
+      const res = await addActivity(deps, {
+        recordId: person.recordId,
+        kind: "note",
+        body: privateNotes,
+        authorId: "system",
+        meta: { source: sourceId, meetingId, title, private: true, ...(url ? { url } : {}) },
+        mutationId: `ingest:${sourceId}:${meetingId}:private:${person.recordId}`,
+      });
+      if (!res.duplicate) privateNotesWritten++;
+    }
+  }
+
   // Follow-ups, attached to the primary attendee.
   const primary = people[0] ?? null;
   const items = Array.isArray(meeting?.actionItems) ? meeting.actionItems : [];
@@ -302,6 +328,7 @@ export async function ingestMeeting(db, meeting) {
     createdPeople,
     activitiesWritten,
     activitiesDuplicate,
+    privateNotesWritten,
     tasksWritten,
     tasksDuplicate,
     unattached,
@@ -333,6 +360,7 @@ export async function ingestBatch(db, payload) {
     peopleCreated: results.flatMap((r) => r.createdPeople),
     activitiesWritten: sum("activitiesWritten"),
     activitiesDuplicate: sum("activitiesDuplicate"),
+    privateNotesWritten: sum("privateNotesWritten"),
     tasksWritten: sum("tasksWritten"),
     tasksDuplicate: sum("tasksDuplicate"),
     unattached: results.flatMap((r) => r.unattached),

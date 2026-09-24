@@ -240,6 +240,45 @@ describe("ingestMeeting", () => {
   });
 });
 
+// Tori's raw shorthand from a meeting. Kept separate from the clean summary,
+// and kept away from the parent.
+describe("private notes", () => {
+  const withPrivate = { ...MEETING, privateNotes: "karen marriott. spv. loon creek." };
+
+  it("lands as its own note activity, not appended to the call", async () => {
+    await ingestMeeting(db, withPrivate);
+    const call = store.activities.find((a) => a.kind === "call");
+    const note = store.activities.find((a) => a.kind === "note");
+    expect(note).toBeTruthy();
+    expect(note.body).toBe("karen marriott. spv. loon creek.");
+    expect(call.body).not.toContain("loon creek");
+  });
+
+  it("is flagged private so a view can filter it out", async () => {
+    await ingestMeeting(db, withPrivate);
+    expect(store.activities.find((a) => a.kind === "note").meta.private).toBe(true);
+  });
+
+  it("does not count as a call, so it can never reach Built Not Found", async () => {
+    await ingestMeeting(db, withPrivate);
+    // Counters are the only call-derived values in the BNF allowlist, and a
+    // private note must not touch them.
+    expect(store.records[0].updated.callCount).toBe(1);
+    expect(store.records[0].updated.lastCallAt).toBe(MEETING.occurredAt);
+  });
+
+  it("is not duplicated on replay", async () => {
+    await ingestMeeting(db, withPrivate);
+    await ingestMeeting(db, withPrivate);
+    expect(store.activities.filter((a) => a.kind === "note")).toHaveLength(1);
+  });
+
+  it("is simply absent when the meeting has none", async () => {
+    await ingestMeeting(db, MEETING);
+    expect(store.activities.filter((a) => a.kind === "note")).toHaveLength(0);
+  });
+});
+
 // The two values that cross to Built Not Found. Everything asserted here is
 // about them staying truthful, because the parent sorts on them.
 describe("relationship temperature counters", () => {
