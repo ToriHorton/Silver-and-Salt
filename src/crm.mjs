@@ -71,6 +71,22 @@ export const crm = defineCrm({
         // "associate" | "founding" | "steward" (JOURNEYS-PLAN.md decision
         // 2). Promoted to a slot so the rail and views can filter by tier.
         tier: { type: "string", label: "Tier", slot: "s4" },
+        // ── Relationship temperature (Tori, 2026-09-24) ──────────────────
+        // Maintained by the call ingest (src/crm-ingest.mjs) and by nothing
+        // else. These are the ONLY call-derived values that cross to Built
+        // Not Found: they are in the `network.readers` allowlist below, while
+        // the call bodies stay follower-private in the activity feed.
+        //
+        // Both are append-only facts the ingest fully owns, so neither can go
+        // stale. A count of open follow-ups was deliberately left out: tasks
+        // are completed in the admin UI, which the ingest never sees, so that
+        // number would drift and quietly lie. Open follow-ups are read from
+        // `listTasks` instead, where they are always current.
+        //
+        // Promoted to slots so the list can sort on them: "who have we not
+        // spoken to since June" is the question this is for.
+        lastCallAt: { type: "date", label: "Last call", slot: "d1" },
+        callCount: { type: "number", label: "Calls logged", slot: "n1" },
       },
       // Mirrors the applications.status pipeline (STATUSES in src/worker.ts /
       // STATUS_LABELS in src/app/lib.js). Declaration order sets stageIndex

@@ -25,8 +25,15 @@
 // parsing, and this owns the mapping. That split keeps it unit-testable
 // without a Worker.
 
-import { createRecord, addActivity, addTag, upsertRecordOrigin } from "@odla-ai/crm";
+import { createRecord, updateRecord, addActivity, addTag, upsertRecordOrigin } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
+
+// The promoted slot columns behind the two relationship-temperature fields,
+// read off the config rather than hardcoded, so moving a field to a different
+// slot in src/crm.mjs does not silently break the counter read here.
+const PERSON_FIELDS = crm.config.types.person.fields;
+const CALL_COUNT_SLOT = PERSON_FIELDS.callCount?.slot;
+const LAST_CALL_SLOT = PERSON_FIELDS.lastCallAt?.slot;
 
 // Payload version stamped onto record origins, so a later mapper change can
 // tell which shape a person was first created from.
@@ -102,7 +109,7 @@ export async function resolvePerson(db, attendee) {
     crm_record: { $: { where: { type: "person", primaryEmail: email }, limit: 1 } },
   });
   const existing = crm_record?.[0] ?? null;
-  if (existing) return { recordId: existing.id, created: false, email };
+  if (existing) return { recordId: existing.id, created: false, email, row: existing };
 
   const created = await createRecord(deps, {
     type: "person",
@@ -120,7 +127,39 @@ export async function resolvePerson(db, attendee) {
     mutationId: `ingest:tag:auto:${created.id}`,
   }).catch(() => {});
 
-  return { recordId: created.id, created: true, email };
+  return { recordId: created.id, created: true, email, row: null };
+}
+
+/**
+ * Bump the relationship-temperature counters after a call actually landed.
+ *
+ * Only ever called for a NON-duplicate activity, so a replay cannot inflate
+ * the count. `lastCallAt` moves forward only, so ingesting an older meeting
+ * after a newer one does not rewrite the person as colder than they are.
+ *
+ * Best-effort: a counter is a convenience for sorting, and must never be the
+ * reason a call fails to be recorded. The activity is already written by the
+ * time this runs.
+ */
+export async function bumpCallCounters(db, person, occurredAt) {
+  if (!CALL_COUNT_SLOT && !LAST_CALL_SLOT) return;
+  const row = person.row ?? {};
+  const priorCount = Number(row[CALL_COUNT_SLOT]) || 0;
+  const priorLast = Number(row[LAST_CALL_SLOT]) || 0;
+  const when = typeof occurredAt === "number" && Number.isFinite(occurredAt) ? occurredAt : Date.now();
+
+  const input = { callCount: priorCount + 1 };
+  if (when > priorLast) input.lastCallAt = when;
+
+  try {
+    await updateRecord({ crm, db }, { id: person.recordId, input });
+  } catch (err) {
+    console.error(
+      "crm-ingest: call counters not updated (non-fatal)",
+      person.email,
+      err instanceof Error ? err.message : err,
+    );
+  }
 }
 
 /**
@@ -213,8 +252,13 @@ export async function ingestMeeting(db, meeting) {
       // The idempotency anchor: same meeting + same person = same id forever.
       mutationId: `ingest:${sourceId}:${meetingId}:${person.recordId}`,
     });
-    if (res.duplicate) activitiesDuplicate++;
-    else activitiesWritten++;
+    if (res.duplicate) {
+      activitiesDuplicate++;
+    } else {
+      activitiesWritten++;
+      // Only on a real write, so a replay never inflates the count.
+      await bumpCallCounters(db, person, occurredAt);
+    }
   }
 
   // Follow-ups, attached to the primary attendee.

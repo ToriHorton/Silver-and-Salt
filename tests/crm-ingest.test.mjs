@@ -54,6 +54,11 @@ vi.mock("@odla-ai/crm", () => {
       store.origins.push(opts);
       return { origin: opts, duplicate: false };
     }),
+    updateRecord: vi.fn(async (_deps, opts) => {
+      const r = store.records.find((x) => x.id === opts.id);
+      if (r) r.updated = { ...r.updated, ...opts.input };
+      return { id: opts.id };
+    }),
   };
 });
 
@@ -63,14 +68,25 @@ import {
   parseDue,
   isSelfEmail,
 } from "../src/crm-ingest.mjs";
+import { crm } from "../src/crm.mjs";
+
+const CALL_COUNT_SLOT = crm.config.types.person.fields.callCount.slot;
+const LAST_CALL_SLOT = crm.config.types.person.fields.lastCallAt.slot;
 
 // A db whose crm_record lookup answers from the same in-memory store, so a
 // person created by one call is found by the next (the real resolution path).
+// Committed counter values are reflected back onto the row the way a real
+// read-after-write would, so replay and out-of-order behaviour is genuinely
+// exercised rather than assumed.
 const db = {
   async query(q) {
     const want = q.crm_record?.$?.where?.primaryEmail;
     const hit = store.records.find((r) => r.input?.email === want);
-    return { crm_record: hit ? [{ id: hit.id }] : [] };
+    if (!hit) return { crm_record: [] };
+    const row = { id: hit.id };
+    if (hit.updated?.callCount != null) row[CALL_COUNT_SLOT] = hit.updated.callCount;
+    if (hit.updated?.lastCallAt != null) row[LAST_CALL_SLOT] = hit.updated.lastCallAt;
+    return { crm_record: [row] };
   },
 };
 
@@ -221,6 +237,56 @@ describe("ingestMeeting", () => {
     const kinds = store.activities.map((a) => a.kind);
     expect(kinds).not.toContain("stage_change");
     expect(kinds).toContain("meeting"); // fell back to the safe default
+  });
+});
+
+// The two values that cross to Built Not Found. Everything asserted here is
+// about them staying truthful, because the parent sorts on them.
+describe("relationship temperature counters", () => {
+  const only = (over = {}) => ({ ...MEETING, actionItems: [], ...over });
+  const person = () => store.records[0];
+
+  it("uses two distinct pre-declared slots, so no new schema attribute is needed", () => {
+    expect(CALL_COUNT_SLOT).toBe("n1");
+    expect(LAST_CALL_SLOT).toBe("d1");
+    expect(CALL_COUNT_SLOT).not.toBe(LAST_CALL_SLOT);
+  });
+
+  it("stamps the first call", async () => {
+    await ingestMeeting(db, only());
+    expect(person().updated.callCount).toBe(1);
+    expect(person().updated.lastCallAt).toBe(MEETING.occurredAt);
+  });
+
+  it("does not inflate the count on replay", async () => {
+    await ingestMeeting(db, only());
+    await ingestMeeting(db, only());
+    await ingestMeeting(db, only());
+    expect(person().updated.callCount).toBe(1);
+  });
+
+  it("increments on a genuinely new call and moves the date forward", async () => {
+    await ingestMeeting(db, only());
+    await ingestMeeting(db, only({ meetingId: "later", occurredAt: 1_900_000_000_000 }));
+    expect(person().updated.callCount).toBe(2);
+    expect(person().updated.lastCallAt).toBe(1_900_000_000_000);
+  });
+
+  it("backfilling an older call counts it without making the person look colder", async () => {
+    await ingestMeeting(db, only({ meetingId: "recent", occurredAt: 1_900_000_000_000 }));
+    await ingestMeeting(db, only({ meetingId: "ancient", occurredAt: 1_500_000_000_000 }));
+    expect(person().updated.callCount).toBe(2);
+    expect(person().updated.lastCallAt).toBe(1_900_000_000_000);
+  });
+
+  it("counts per person, not per meeting", async () => {
+    await ingestMeeting(
+      db,
+      only({ attendees: [{ email: "a@example.com" }, { email: "b@example.com" }] }),
+    );
+    expect(store.records).toHaveLength(2);
+    expect(store.records[0].updated.callCount).toBe(1);
+    expect(store.records[1].updated.callCount).toBe(1);
   });
 });
 

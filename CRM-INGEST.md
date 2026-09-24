@@ -40,12 +40,58 @@ describes. The ingest never calls `setStage` on a person who already exists, so
 it can never move someone's application status. The only stage it sets is the
 initial `candidate` on a person it just created.
 
+## Where it shows up
+
+**Silver & Salt Capital admin page: no UI work was needed.** The People tab
+(`src/app/admin/people-crm.jsx`) already renders `<ActivityFeed>` in each
+person's Notes subtab and loads it with `client.listActivities(id)`, unfiltered
+by kind. Calls, meetings and follow-up tasks appear there as soon as the ingest
+writes them.
+
+**Built Not Found Capital, at the parent level: relationship temperature only.**
+
+The federation projection (`NetworkRecord`) carries `name`, `stage`,
+timestamps and allowlisted `fields`. It does not carry activities at all, and
+`sharedNotes: ["person"]` is an *inbound* permission that lets BNF append a
+note to this chapter's feed. Call content is therefore follower-private by
+architecture, not by configuration.
+
+Two counters are promoted to person fields and added to the BNF read
+allowlist:
+
+| Field | Slot | Answers |
+| --- | --- | --- |
+| `lastCallAt` | `d1` | Who has gone quiet |
+| `callCount` | `n1` | How engaged this relationship is |
+
+That gives the parent a cross-chapter view of which relationships are warm
+without a single call summary, action item, or meeting title crossing the
+edge. Both are in `fields` and deliberately absent from `editableFields`: the
+parent reads them, never writes them, because only this chapter's ingest knows
+when a call happened.
+
+Both use slots from `CRM_SLOTS`, which are pre-declared columns, so **this adds
+no new schema attribute and needs no provisioning run**.
+
+`tests/crm-network-projection.test.mjs` locks the boundary. It fails if any
+future call-derived field (`lastCallSummary`, say) reaches the BNF allowlist,
+because the projection ships `fields` verbatim and a leak would otherwise go
+unnoticed.
+
+A count of open follow-ups was deliberately left out. Tasks are completed in
+the admin UI, which the ingest never sees, so that number would drift and
+quietly mislead the parent. Open follow-ups come from `listTasks` instead,
+where they are always current.
+
 ## Files
 
 - `src/crm-ingest.mjs` — the mapping. Pure data plus CRM calls, no HTTP.
 - `src/worker.ts` — `POST /api/crm-ingest`, guarded by `CRM_INGEST_SECRET`.
+- `src/crm.mjs` — the two counter fields.
+- `src/chapter.config.mjs` — the BNF read allowlist.
 - `tests/crm-ingest.test.mjs` — including a direct assertion that replaying a
   meeting writes nothing the second time.
+- `tests/crm-network-projection.test.mjs` — the parent-level privacy boundary.
 
 ## The endpoint
 
