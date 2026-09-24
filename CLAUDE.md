@@ -36,14 +36,20 @@ Cloudflare nameservers and is served by the Cloudflare Worker
 it. Earlier notes here described production as GitHub Pages awaiting a Phase 5
 sign-off; that is no longer true, so do not plan work around it.
 
-**Membership commerce cutover (2026-09-14 onward) happens on the branch
-`prod-cutover`**, which merged the proven dev branch and moved every
-`@odla-ai/*` dependency to its newest published version. Durable state lives in
-the private Library repo (`production-launch-plan.md`, `launch-manifest.md`,
+**Membership commerce is live, and all work flows through `main` (updated
+2026-09-24).** The `prod-cutover` branch did its job (sales opened 2026-09-20)
+and was deleted with the other stale branches on 2026-09-24. `main` is not
+frozen: make a short-lived branch per change, open a pull request, merge it,
+and delete the branch once merged. Durable launch state still lives in the
+private Library repo (`production-launch-plan.md`, `launch-manifest.md`,
 `launch-resource-map.md`, `launch-commercial-examples.md`) and in the odla PM
-tracker under BNF goal `c162d0c7` and Silver goal `ca34e66a`. `main` is frozen
-until a candidate is proven off the domain; merge with `--ff-only` when the
-gates pass. The old `odla-conversion-test` line and `MIGRATION.md` are history.
+tracker under BNF goal `c162d0c7` and Silver goal `ca34e66a`.
+
+**Archived work.** Branches whose commits never reached `main` were kept as
+`archive/<branch-name>` tags on GitHub before deletion (for example
+`archive/newsletter-sending`, `archive/odla/calendar-idempotency-key`). To pick
+one back up, run `git switch -c <new-branch> archive/<name>`. The old
+`odla-conversion-test` line and `MIGRATION.md` are history.
 
 ---
 
