@@ -476,6 +476,73 @@ function Scheduling({ appId, onChanged }) {
   );
 }
 
+// ── Calls (Tori, 2026-09-24) ────────────────────────────────────────────
+// Every recorded call with this person, newest first: when it happened, the
+// Granola summary, and a link out to the full transcript.
+//
+// Reads the same activity feed the Notes tab does, filtered to call and
+// meeting kinds, so there is nothing extra to load and nothing to keep in
+// sync. The ingest (src/crm-ingest.mjs) writes the body as a label line
+// ("Pre-call: <title>" or "Member call: <title>") followed by the summary,
+// so the two are split apart here for display.
+function CallLog({ activities }) {
+  const calls = (activities || [])
+    .filter((a) => a.kind === "call" || a.kind === "meeting")
+    .sort((a, b) => (callAt(b) - callAt(a)));
+
+  if (!calls.length) {
+    return <div class="rec-empty">No calls recorded yet.</div>;
+  }
+
+  return (
+    <div class="rec-calls">
+      {calls.map((a) => {
+        const meta = readMeta(a);
+        const [head, ...rest] = String(a.body || "").split("\n\n");
+        const summary = rest.join("\n\n").trim();
+        // The label is the part before the colon, when the ingest wrote one.
+        const m = /^(Pre-call|Member call):\s*(.*)$/.exec(head || "");
+        const label = m ? m[1] : null;
+        const title = m ? m[2] : head;
+        return (
+          <div class="rec-call" key={a.id}>
+            <div class="rec-call-head">
+              <span class="rec-call-when">{fmtTzTime(callAt(a))}</span>
+              {label && <span class="crm-stage-chip">{label}</span>}
+            </div>
+            <div class="rec-call-title">{title}</div>
+            {summary && <pre class="rec-call-summary">{summary}</pre>}
+            {meta.url && (
+              <a class="rec-call-link" href={meta.url} target="_blank" rel="noopener noreferrer">
+                View the full transcript in Granola
+              </a>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// meta is stored as JSON and may arrive as a string or an object depending on
+// the driver; read it defensively so a malformed row cannot blank the tab.
+function readMeta(a) {
+  try {
+    const m = typeof a.meta === "string" ? JSON.parse(a.meta) : a.meta;
+    return m && typeof m === "object" ? m : {};
+  } catch {
+    return {};
+  }
+}
+
+// When the call actually happened, which is the meeting time the ingest
+// recorded, not when the row was written. Falls back to createdAt for a note
+// added by hand in the panel.
+function callAt(a) {
+  const at = readMeta(a).occurredAt;
+  return typeof at === "number" && Number.isFinite(at) ? at : (a.createdAt || 0);
+}
+
 // ── One person's detail, organized into sub-tabs. ──
 const REC_TABS = [
   ["stage", "Stage"],
@@ -484,6 +551,7 @@ const REC_TABS = [
   ["history", "Comms history"],
   ["scheduling", "Scheduling"],
   ["billing", "Billing"],
+  ["calls", "Calls"],
   ["notes", "Notes"],
 ];
 
@@ -594,6 +662,7 @@ function RecordDrawer({ id, onClose, onChanged, superAdmin, myUserId, roleMap })
             <LifecycleActions record={record} onChanged={afterChange} />
           </div>
         )}
+        {subtab === "calls" && <CallLog activities={acts} />}
         {subtab === "notes" && (
           <ActivityFeed activities={acts} onAddNote={onAddNote} onAddTask={onAddTask} onToggleTask={onToggleTask} />
         )}

@@ -103,7 +103,19 @@ export function chapterFor(envName = "dev") {
   network: {
     readers: [{
       id: "built-not-found",
-      fields: { person: ["name", "email", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
+      // Readable projection. `lastCallAt` and `callCount` (Tori, 2026-09-24)
+      // give Built Not Found relationship temperature across chapters: who is
+      // warm, who has gone quiet, how engaged a chapter is. They are counters
+      // and a timestamp, never content. Call summaries, action items, and
+      // meeting titles stay follower-private in the activity feed, which the
+      // NetworkRecord projection does not carry at all. Deliberately absent
+      // from `editableFields` below: the parent reads this, never writes it,
+      // because only this chapter's ingest knows when a call happened.
+      // `secondaryEmail` rides with `email`: it is the same class of profile
+      // data, and showing the parent one of someone's two addresses but not
+      // the other would be more confusing than useful. Remove it here if that
+      // judgement is wrong; nothing else depends on it.
+      fields: { person: ["name", "email", "secondaryEmail", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount"] },
       sharedNotes: ["person"],
       // BNF delegates operator intent; this chapter remains profile and
       // application authority. Login identity and privilege are not fields.

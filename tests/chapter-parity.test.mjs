@@ -562,9 +562,21 @@ describe("follower role", () => {
   });
 
   it("delegates the approved operational profile, application, note and admission lanes", () => {
+    // Reviewed additions, Tori 2026-09-24 (see CRM-INGEST.md):
+    //   secondaryEmail          a second address for the same woman, so a work
+    //                           and a personal email are one record. Same class
+    //                           of profile data as `email`, which is already
+    //                           delegated, so it rides with it.
+    //   lastCallAt, callCount   relationship temperature. The parent sees who
+    //                           has gone quiet across chapters; no call
+    //                           summary, action item or meeting title crosses,
+    //                           because the NetworkRecord projection carries
+    //                           `fields` only and never the activity feed.
+    // All three are READ-only: editableFields is deliberately unchanged, since
+    // only this chapter's ingest knows when a call happened.
     expect(chapter.network.readers).toEqual([{
       id: "built-not-found",
-      fields: { person: ["name", "email", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
+      fields: { person: ["name", "email", "secondaryEmail", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount"] },
       sharedNotes: ["person"],
       editableFields: { person: ["name", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
       stageTransitions: ["person"],
@@ -572,6 +584,14 @@ describe("follower role", () => {
       commercialParity: true,
     }]);
     for (const field of ["email", "role", "superAdmin", "applicationId", "tierId"]) expect(chapter.network.readers[0].editableFields.person).not.toContain(field);
+    // The parent reads relationship temperature and a second address; it never
+    // writes them back.
+    for (const field of ["secondaryEmail", "lastCallAt", "callCount"]) {
+      expect(chapter.network.readers[0].fields.person).toContain(field);
+      expect(chapter.network.readers[0].editableFields.person).not.toContain(field);
+    }
+    // Tori's calendar stays in the chapter.
+    expect(chapter.network.readers[0].fields.person).not.toContain("nextConversationAt");
   });
 
   it("declares person as the only receivable CRM type", () => {

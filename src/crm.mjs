@@ -35,6 +35,16 @@ export const crm = defineCrm({
       fields: {
         name: { type: "string", label: "Name", required: true },
         email: { type: "email", label: "Email" },
+        // A second address for the same person, so a work and a personal
+        // email never become two records (Tori, 2026-09-24).
+        //
+        // This is a plain field rather than a second `crm_contact_channel`
+        // because the package exposes no write path for channels: they are
+        // derived from `email` above, and ChannelsCard is display-only. The
+        // consequence worth knowing is that consent still lives on the
+        // primary address, so an unsubscribe applies to the person, not to
+        // one of their two addresses.
+        secondaryEmail: { type: "email", label: "Second email" },
         firstName: { type: "string", label: "First name" },
         lastName: { type: "string", label: "Last name" },
         preferredName: { type: "string", label: "Preferred name" },
@@ -71,6 +81,29 @@ export const crm = defineCrm({
         // "associate" | "founding" | "steward" (JOURNEYS-PLAN.md decision
         // 2). Promoted to a slot so the rail and views can filter by tier.
         tier: { type: "string", label: "Tier", slot: "s4" },
+        // ── Relationship temperature (Tori, 2026-09-24) ──────────────────
+        // Maintained by the call ingest (src/crm-ingest.mjs) and by nothing
+        // else. These are the ONLY call-derived values that cross to Built
+        // Not Found: they are in the `network.readers` allowlist below, while
+        // the call bodies stay follower-private in the activity feed.
+        //
+        // Both are append-only facts the ingest fully owns, so neither can go
+        // stale. A count of open follow-ups was deliberately left out: tasks
+        // are completed in the admin UI, which the ingest never sees, so that
+        // number would drift and quietly lie. Open follow-ups are read from
+        // `listTasks` instead, where they are always current.
+        //
+        // Promoted to slots so the list can sort on them: "who have we not
+        // spoken to since June" is the question this is for.
+        lastCallAt: { type: "date", label: "Last call", slot: "d1" },
+        callCount: { type: "number", label: "Calls logged", slot: "n1" },
+        // When the next conversation is booked for. Answers "who am I
+        // scheduled with?" on its own, which the `conversation_booked` stage
+        // cannot: the stage says that one exists, this says when. Promoted to
+        // a slot so the list can sort by it. Chapter-only, deliberately NOT
+        // in the Built Not Found allowlist: the parent gets activity level,
+        // never Tori's calendar.
+        nextConversationAt: { type: "date", label: "Next conversation", slot: "d2" },
       },
       // Mirrors the applications.status pipeline (STATUSES in src/worker.ts /
       // STATUS_LABELS in src/app/lib.js). Declaration order sets stageIndex
@@ -81,10 +114,29 @@ export const crm = defineCrm({
       // emails) run in the worker's own routes, never in a CRM stage hook.
       pipeline: {
         stages: [
-          // Pre-application stages: people the chapter is courting or has invited,
-          // managed by chapter admins before any application exists.
-          { id: "candidate", label: "Candidate" },
-          { id: "invited", label: "Invited" },
+          // ── Pre-application (Tori, 2026-09-24) ────────────────────────
+          // Everything that can happen before someone submits an
+          // application. These are CRM-only and hand-managed: no
+          // operational flow writes them, because no application exists
+          // yet. They replace the unused `candidate` / `invited` pair.
+          //
+          // The names are Tori's own, taken from GTM-PLAYBOOK.md Part 6 and
+          // the Friday scoreboard in GTM-PLAN-FALL-2026.md, so the number in
+          // the CRM and the number in the plan are the same number:
+          //   prospect            = someone she wants a conversation with
+          //   conversation_booked = "Conversations booked", which the
+          //                         playbook calls the true top of a
+          //                         high-ticket funnel
+          //   soft_commit         = a price-aware verbal yes, not yet applied
+          //                         (the "40 soft commitments")
+          { id: "prospect", label: "Prospect" },
+          { id: "conversation_booked", label: "Conversation booked" },
+          { id: "soft_commit", label: "Soft commit" },
+          // ── Application onward ────────────────────────────────────────
+          // From here the operational flow is authoritative and the sync
+          // mirrors applications.status. Note `call_scheduled` below is the
+          // POST-application call and is deliberately distinct from
+          // `conversation_booked` above.
           { id: "submitted", label: "Submitted" },
           { id: "paid_pending_vetting", label: "Paid, pending vetting" },
           { id: "call_scheduled", label: "Call scheduled" },

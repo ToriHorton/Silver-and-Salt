@@ -25,6 +25,8 @@ import {
 import { createCrmRoutes } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
 import { syncPersonToCrm, backfillCrm } from "./crm-sync.mjs";
+// Meeting/call ingest mapping for POST /api/crm-ingest (see src/crm-ingest.mjs).
+import { ingestBatch } from "./crm-ingest.mjs";
 
 export interface Env {
   ASSETS: Fetcher;
@@ -39,6 +41,11 @@ export interface Env {
   // log-only sends (audited in emailLog, nothing delivered).
   SEND_EMAIL?: SendEmailBinding;
   EMAIL_FROM?: string;
+  // Shared secret for POST /api/crm-ingest (the automated meeting/call pull).
+  // Set as a Worker secret, never in wrangler.jsonc. When it is absent the
+  // route refuses every request, so a deploy that forgets the secret fails
+  // closed rather than accepting unauthenticated writes.
+  CRM_INGEST_SECRET?: string;
 }
 
 // ── Auth (Phase 3) ─────────────────────────────────────────────────
@@ -106,6 +113,19 @@ async function verifyUser(req: Request, env: Env): Promise<AuthedUser | null> {
   } catch {
     return null;
   }
+}
+
+// Constant-time string comparison for bearer secrets. Compares every byte of
+// the longer input regardless of where the first mismatch is, so response
+// timing does not reveal a correct prefix. Length is folded into the result
+// rather than short-circuiting on it.
+export function timingSafeEqualStr(a: string, b: string): boolean {
+  const len = Math.max(a.length, b.length);
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < len; i++) {
+    diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  }
+  return diff === 0;
 }
 
 // The CRM admin surface reuses the same Clerk verification as /api/admin/*:
@@ -709,6 +729,38 @@ export async function handleApi(req: Request, env: Env, url: URL): Promise<Respo
   // Cloudflare Email Service when wired, log-only otherwise; the seam means
   // every send call reads the same either way.
   const mailer: EmailTransport = resolveTransport(env.SEND_EMAIL, env.EMAIL_FROM);
+
+  // ── CRM ingest (automated meeting/call pull) ────────────────────────
+  // A deliberately narrow write-only surface for the scheduled morning job,
+  // kept OFF the admin CRM routes above. It maps meetings onto person records
+  // as call/meeting activities and follow-up tasks (src/crm-ingest.mjs) and
+  // can do nothing else: it cannot read the CRM, cannot send email, and cannot
+  // write stage_change or system activities. So a leaked ingest secret exposes
+  // no member data and cannot mail the membership, which a full admin service
+  // token would.
+  if (url.pathname === "/api/crm-ingest") {
+    if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
+    const expected = env.CRM_INGEST_SECRET;
+    const presented = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+    // Fail closed when the secret is unset, and compare in constant time so
+    // the endpoint does not leak the secret a character at a time.
+    if (!expected || !timingSafeEqualStr(presented, expected)) {
+      return json({ error: "unauthorized" }, 401);
+    }
+    let payload: unknown;
+    try {
+      payload = await req.json();
+    } catch {
+      return json({ error: "invalid json" }, 400);
+    }
+    try {
+      const report = await ingestBatch(db, payload);
+      return json(report, report.errors.length ? 207 : 200);
+    } catch (err) {
+      console.error("crm-ingest failed", err);
+      return json({ error: "ingest failed" }, 500);
+    }
+  }
 
   // ── CRM admin routes (@odla-ai/crm) ─────────────────────────────────
   // Mounted at /api/crm/*; the factory returns null outside its basePath, but

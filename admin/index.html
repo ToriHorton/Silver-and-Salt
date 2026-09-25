@@ -715,6 +715,23 @@
     .rec-tab.on { color: var(--moss); border-bottom-color: var(--lime); }
     .rec-info > * { margin-bottom: 18px; }
     .rec-info > *:last-child { margin-bottom: 0; }
+
+    /* Calls tab: every recorded call with this person, newest first. */
+    .rec-empty { color: var(--sage); font-size: 14px; padding: 8px 0; }
+    .rec-calls > * { margin-bottom: 18px; }
+    .rec-calls > *:last-child { margin-bottom: 0; }
+    .rec-call { border-left: 2px solid var(--lime); padding: 2px 0 2px 14px; }
+    .rec-call-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .rec-call-when { font-size: 13px; font-weight: 600; color: var(--moss); }
+    .rec-call-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    /* Granola summaries are markdown-ish plain text: preserve the line breaks
+       and bullets without pulling in a renderer, but wrap long lines. */
+    .rec-call-summary {
+      font: inherit; font-size: 13.5px; line-height: 1.65; color: var(--moss);
+      white-space: pre-wrap; word-break: break-word; margin: 0 0 10px;
+      max-height: 22em; overflow-y: auto;
+    }
+    .rec-call-link { font-size: 13px; font-weight: 600; color: var(--moss); }
     .rec-when { font-size: 16px; font-weight: 600; color: var(--moss); margin-bottom: 12px; }
     .rec-log { list-style: none; margin: 0; padding: 0; }
     .rec-log-row { padding: 10px 0; border-bottom: 1px solid var(--border); }
