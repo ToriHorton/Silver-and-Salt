@@ -152,17 +152,20 @@ If someone later joins, the normal application flow sets their real consent.
 
 ## Wiring it up
 
-Not yet deployed. In order:
+Live as of 2026-09-24.
 
-1. Generate a secret and set it on dev:
-   `npx wrangler secret put CRM_INGEST_SECRET --env dev`
-2. Deploy the branch to dev and exercise it with a sample payload.
-3. Confirm the call and its tasks appear on the person in the admin CRM panel.
-4. Set the same secret on production and merge with `--ff-only` once the
-   checkout gates pass.
-5. Repoint the scheduled morning task: it pulls Granola and Gmail as it does
-   today, then POSTs here instead of writing a file and pushing to git. It
-   should report what it wrote and stop there. No git, no publish, no verify.
+1. `CRM_INGEST_SECRET` is set on the production Worker
+   (`_scripts/install-crm-ingest-secret.sh`), with a local copy in the
+   git-ignored `.dev.vars`. The dev Worker is on a different Cloudflare
+   account and does not have it yet.
+2. History: 21 Granola meetings imported into production on 2026-09-24
+   (22 people, 23 calls, 19 private notes, 12 follow-ups), replayed from the
+   dev rehearsal.
+3. Daily: the `daily-dashboard-deploy` scheduled task writes the last week of
+   meetings from the Granola "Silver & Salt" folder into the export format and
+   runs `node _scripts/import-granola-calls.mjs --file <export> --post`, which
+   sends them to the live endpoint. Replays are no-ops, so the overlapping
+   window is safe.
 
 ## Backlog import
 
