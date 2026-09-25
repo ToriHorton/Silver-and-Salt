@@ -44,10 +44,14 @@ export const INGEST_PAYLOAD_VERSION = 1;
 // leaked ingest credential cannot forge pipeline history.
 export const INGEST_ACTIVITY_KINDS = ["call", "meeting", "note"];
 
-// The pre-application stages (src/crm.mjs). A person sitting in one of these,
-// or brand new, has not applied, so a call with them is a "Conversation" in
-// Tori's GTM vocabulary. Anyone at `submitted` or beyond is in the application
-// flow, so the same call is a "Member call".
+// The pre-application stages (src/crm.mjs).
+//
+// Tori's rule, 2026-09-24: ANYONE who has not applied for membership is a
+// prospect, whatever sub-stage she sits in, and a call with a prospect is a
+// "Pre-call". So the label turns on one question only, "has she applied?",
+// and every pre-application stage answers it the same way. Anyone at
+// `submitted` or beyond is in the application flow, so the same call is a
+// "Member call".
 export const PRE_APPLICATION_STAGES = new Set([
   "prospect",
   "conversation_booked",
@@ -55,21 +59,24 @@ export const PRE_APPLICATION_STAGES = new Set([
 ]);
 
 // The stage a person is created at when a call surfaces someone unknown: she
-// is, by definition, someone Tori wanted to talk to.
+// has not applied, so she is a prospect.
 export const NEW_PERSON_STAGE = "prospect";
 
-export const CALL_LABELS = { conversation: "Conversation", member: "Member call" };
+export const CALL_LABELS = { pre: "Pre-call", member: "Member call" };
 
 /**
  * Which label a call gets, from the person's stage at the time of ingest.
  *
  * Deliberately a point-in-time judgement, not a live one: once someone
- * applies, her earlier conversations keep reading as Conversations, which is
- * what actually happened. Re-labelling history would be a lie.
+ * applies, her earlier calls keep reading as Pre-calls, which is what they
+ * were. Re-labelling history would be a lie.
+ *
+ * An unknown or missing stage reads as a prospect, which is the safe default:
+ * someone we cannot place has certainly not completed an application.
  */
 export function callLabelForStage(stage) {
   const s = str(stage);
-  if (!s || PRE_APPLICATION_STAGES.has(s)) return CALL_LABELS.conversation;
+  if (!s || PRE_APPLICATION_STAGES.has(s)) return CALL_LABELS.pre;
   return CALL_LABELS.member;
 }
 
@@ -107,6 +114,38 @@ export function parseDue(value) {
   return Number.isFinite(ms) ? ms : undefined;
 }
 
+// Cache of the secondaryEmail -> record scan, per db handle. Held for the
+// life of one import so a batch pays for one query rather than one per
+// meeting. A WeakMap so it cannot keep a db alive or leak between runs.
+const secondaryIndexCache = new WeakMap();
+
+/**
+ * Map of lowercased secondary email -> record row, for every person that has
+ * one. Empty map (never a throw) if the scan fails: a dedupe convenience must
+ * not be able to stop a call being recorded.
+ */
+export async function secondaryEmailIndex(db) {
+  const cached = secondaryIndexCache.get(db);
+  if (cached) return cached;
+  const index = new Map();
+  try {
+    const { crm_record } = await db.query({
+      crm_record: { $: { where: { type: "person" }, limit: 1000 } },
+    });
+    for (const row of crm_record ?? []) {
+      const second = normEmail(row?.secondaryEmail);
+      if (second) index.set(second, row);
+    }
+  } catch (err) {
+    console.error(
+      "crm-ingest: secondary email scan failed (non-fatal)",
+      err instanceof Error ? err.message : err,
+    );
+  }
+  secondaryIndexCache.set(db, index);
+  return index;
+}
+
 /** A display name for a person we only know from a calendar attendee line. */
 function attendeeName(att) {
   const name = str(att?.name).trim();
@@ -139,6 +178,19 @@ export async function resolvePerson(db, attendee) {
   });
   const existing = crm_record?.[0] ?? null;
   if (existing) return { recordId: existing.id, created: false, email, row: existing };
+
+  // Miss on the primary address: before creating anyone, check whether this
+  // is someone's SECOND address. Without this, a woman who took a call on her
+  // work address and applied on her personal one becomes two records, and her
+  // call history splits in half.
+  //
+  // Done as a scan rather than a `where`, because secondaryEmail holds no
+  // promoted slot (all four string slots are taken) and so is not indexed for
+  // filtering. The scan is cached per db for the life of a batch, so a 25
+  // meeting import costs one extra query, not 25.
+  const bySecondary = await secondaryEmailIndex(db);
+  const hit = bySecondary.get(email);
+  if (hit) return { recordId: hit.id, created: false, email, row: hit };
 
   const created = await createRecord(deps, {
     type: "person",
@@ -273,7 +325,7 @@ export async function ingestMeeting(db, meeting) {
   let activitiesWritten = 0;
   let activitiesDuplicate = 0;
   for (const person of people) {
-    // Conversation (before she applied) vs Member call (after). The package's
+    // Pre-call (before she applied) vs Member call (after). The package's
     // ACTIVITY_KINDS are fixed, so the label rides in the body's first line,
     // which the stock ActivityFeed already renders, AND in meta.callLabel so a
     // later view can filter on it without parsing prose.

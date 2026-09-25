@@ -244,14 +244,15 @@ describe("ingestMeeting", () => {
   });
 });
 
-// Conversation (before she applied) vs Member call (after). Tori's GTM
-// vocabulary, decided 2026-09-24.
+// Pre-call (before she applied) vs Member call (after). Tori's rule: anyone
+// who has not applied for membership is a prospect, and a call with a prospect
+// is a Pre-call.
 describe("call labels", () => {
   const call = () => store.activities.find((a) => a.kind === "call");
 
-  it("maps every pre-application stage to Conversation", () => {
+  it("maps every pre-application stage to Pre-call, whatever the sub-stage", () => {
     for (const s of ["prospect", "conversation_booked", "soft_commit"]) {
-      expect(callLabelForStage(s)).toBe(CALL_LABELS.conversation);
+      expect(callLabelForStage(s)).toBe(CALL_LABELS.pre);
     }
   });
 
@@ -262,14 +263,14 @@ describe("call labels", () => {
   });
 
   it("treats an unknown or missing stage as pre-application", () => {
-    expect(callLabelForStage("")).toBe(CALL_LABELS.conversation);
-    expect(callLabelForStage(undefined)).toBe(CALL_LABELS.conversation);
+    expect(callLabelForStage("")).toBe(CALL_LABELS.pre);
+    expect(callLabelForStage(undefined)).toBe(CALL_LABELS.pre);
   });
 
-  it("labels a new person's call a Conversation, in the body and in meta", async () => {
+  it("labels a new person's call a Pre-call, in the body and in meta", async () => {
     await ingestMeeting(db, MEETING);
-    expect(call().body.startsWith("Conversation: ")).toBe(true);
-    expect(call().meta.callLabel).toBe("Conversation");
+    expect(call().body.startsWith("Pre-call: ")).toBe(true);
+    expect(call().meta.callLabel).toBe("Pre-call");
     expect(call().meta.stageAtCall).toBe("prospect");
   });
 
@@ -280,7 +281,7 @@ describe("call labels", () => {
     expect(call().meta.callLabel).toBe("Member call");
   });
 
-  it("does not relabel earlier conversations once she applies", async () => {
+  it("does not relabel earlier pre-calls once she applies", async () => {
     store.records.push({ id: "seed", input: { email: "sharlene@example.com" }, stage: "prospect" });
     await ingestMeeting(db, MEETING);
     store.records[0].stage = "approved";
@@ -289,7 +290,7 @@ describe("call labels", () => {
     const calls = store.activities.filter((a) => a.kind === "call");
     expect(calls).toHaveLength(2);
     // What actually happened, not what is true now.
-    expect(calls[0].meta.callLabel).toBe("Conversation");
+    expect(calls[0].meta.callLabel).toBe("Pre-call");
     expect(calls[1].meta.callLabel).toBe("Member call");
   });
 });

@@ -111,7 +111,11 @@ export function chapterFor(envName = "dev") {
       // NetworkRecord projection does not carry at all. Deliberately absent
       // from `editableFields` below: the parent reads this, never writes it,
       // because only this chapter's ingest knows when a call happened.
-      fields: { person: ["name", "email", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount"] },
+      // `secondaryEmail` rides with `email`: it is the same class of profile
+      // data, and showing the parent one of someone's two addresses but not
+      // the other would be more confusing than useful. Remove it here if that
+      // judgement is wrong; nothing else depends on it.
+      fields: { person: ["name", "email", "secondaryEmail", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount"] },
       sharedNotes: ["person"],
       // BNF delegates operator intent; this chapter remains profile and
       // application authority. Login identity and privilege are not fields.

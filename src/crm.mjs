@@ -35,6 +35,16 @@ export const crm = defineCrm({
       fields: {
         name: { type: "string", label: "Name", required: true },
         email: { type: "email", label: "Email" },
+        // A second address for the same person, so a work and a personal
+        // email never become two records (Tori, 2026-09-24).
+        //
+        // This is a plain field rather than a second `crm_contact_channel`
+        // because the package exposes no write path for channels: they are
+        // derived from `email` above, and ChannelsCard is display-only. The
+        // consequence worth knowing is that consent still lives on the
+        // primary address, so an unsubscribe applies to the person, not to
+        // one of their two addresses.
+        secondaryEmail: { type: "email", label: "Second email" },
         firstName: { type: "string", label: "First name" },
         lastName: { type: "string", label: "Last name" },
         preferredName: { type: "string", label: "Preferred name" },
