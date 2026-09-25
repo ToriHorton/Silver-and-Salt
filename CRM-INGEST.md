@@ -86,7 +86,7 @@ where they are always current.
 ## Files
 
 - `src/crm-ingest.mjs` — the mapping. Pure data plus CRM calls, no HTTP.
-- `src/worker.ts` — `POST /api/crm-ingest`, guarded by `CRM_INGEST_SECRET`.
+- `src/crm-ingest-route.ts`: `POST /api/crm-ingest`, guarded by `CRM_INGEST_SECRET`, mounted as a host route in `src/worker-chapter.ts`.
 - `src/crm.mjs` — the two counter fields.
 - `src/chapter.config.mjs` — the BNF read allowlist.
 - `tests/crm-ingest.test.mjs` — including a direct assertion that replaying a

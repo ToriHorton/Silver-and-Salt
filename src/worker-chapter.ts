@@ -26,6 +26,8 @@
 //   signupPathsRoute     admin readout of each application's signup path
 //                        (src/signup-paths.ts, which also owns the 24-hour
 //                        booking reminder on the cron below)
+//   crmIngestRoute       POST /api/crm-ingest, the morning job's call and
+//                        meeting pull, bearer-secret only (src/crm-ingest-route.ts)
 //   network.route        inbound membership effects from Built Not Found
 //                        (only when MEMBERSHIP_AUTHORITY_OWNER is set)
 //
@@ -43,6 +45,7 @@ import { joinPage } from "./join-page";
 import { joinResumeTierRoute } from "./join-resume";
 import { recoverPendingApprovals } from "./approval-recovery";
 import { membershipNetwork } from "./membership-network";
+import { crmIngestRoute } from "./crm-ingest-route";
 import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./signup-paths";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
 import { hardenFetch } from "./hardening";
@@ -208,7 +211,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute] as Route[],
   };
 }
 
