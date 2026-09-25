@@ -37,7 +37,7 @@ describe("chapterWorkerOptions", () => {
     const options = chapterWorkerOptions("dev");
     expect(options.crmBasePath).toBe("/api/crm");
     expect(options.requirePaymentQuote).toBe(true);
-    expect(options.routes).toHaveLength(6);
+    expect(options.routes).toHaveLength(7);
     for (const route of options.routes) expect(typeof route).toBe("function");
   });
 });
