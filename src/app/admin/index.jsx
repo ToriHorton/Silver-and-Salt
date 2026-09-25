@@ -31,6 +31,10 @@ import { ChapterAdmin } from "@odla-ai/chapter/ui/admin";
 import { chapter } from "../../chapter.config.mjs";
 import { WorkspaceFrame } from "./workspace-frame.jsx";
 import { isAdminAuthorized } from "./authorization.mjs";
+import { withCallsPeople } from "./people-workspace.jsx";
+
+// People records get a Calls tab between Billing and Notes (calls-tab.jsx).
+const WORKSPACES = withCallsPeople(chapter);
 
 // Inbound compatibility: the admin notification email links with ?tab=people,
 // and older links used ?tab=billing / calendar / calls / email, which the
@@ -99,6 +103,7 @@ async function boot() {
       <ChapterAdmin
         chapter={chapter}
         chrome="embedded"
+        workspaces={WORKSPACES}
         renderWorkspaceFrame={WorkspaceFrame}
         basePath="/admin/"
         crmBasePath="/api/crm"
