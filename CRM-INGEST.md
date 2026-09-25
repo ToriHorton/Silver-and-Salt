@@ -166,7 +166,5 @@ Not yet deployed. In order:
 
 ## Backlog import
 
-The roughly 95 untriaged items from the old inbox live in the Library repo
-(`~/Projects/Silver-and-Salt-Library/dashboard/`), which is not mounted in the
-session that wrote this. Importing the dated and still-open ones is a separate
-one-shot script against the same endpoint.
+Not doing it (Tori, 2026-09-24). The roughly 95 untriaged items from the old
+dashboard inbox stay where they are and are not imported into the CRM.
