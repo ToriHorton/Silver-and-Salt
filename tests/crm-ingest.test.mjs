@@ -69,6 +69,7 @@ import {
   isSelfEmail,
   callLabelForStage,
   CALL_LABELS,
+  toMs,
 } from "../src/crm-ingest.mjs";
 import { crm } from "../src/crm.mjs";
 
@@ -87,7 +88,14 @@ const db = {
     if (!hit) return { crm_record: [] };
     const row = { id: hit.id, stage: hit.stage };
     if (hit.updated?.callCount != null) row[CALL_COUNT_SLOT] = hit.updated.callCount;
-    if (hit.updated?.lastCallAt != null) row[LAST_CALL_SLOT] = hit.updated.lastCallAt;
+    // An ISO string, NOT the epoch number that was written. This is what
+    // odla-db actually returns for a `date` field, and writing the number
+    // here instead is what let a real bug through: `Number(iso)` is NaN, so
+    // the only-move-forward guard silently never fired and lastCallAt became
+    // "last imported" rather than "most recent". Keep this as a string.
+    if (hit.updated?.lastCallAt != null) {
+      row[LAST_CALL_SLOT] = new Date(hit.updated.lastCallAt).toISOString();
+    }
     return { crm_record: [row] };
   },
 };
@@ -371,6 +379,25 @@ describe("relationship temperature counters", () => {
     await ingestMeeting(db, only({ meetingId: "ancient", occurredAt: 1_500_000_000_000 }));
     expect(person().updated.callCount).toBe(2);
     expect(person().updated.lastCallAt).toBe(1_900_000_000_000);
+  });
+
+  // The exact shape of the real Lauren Friedman case on dev: two calls for one
+  // person in a single import, newest processed first.
+  it("keeps the newest date when a later call is imported before an earlier one", async () => {
+    const AUG = Date.parse("2026-08-10T18:00:00Z");
+    const JUL = Date.parse("2026-07-27T22:00:00Z");
+    await ingestMeeting(db, only({ meetingId: "aug", occurredAt: AUG }));
+    await ingestMeeting(db, only({ meetingId: "jul", occurredAt: JUL }));
+    expect(person().updated.callCount).toBe(2);
+    expect(person().updated.lastCallAt).toBe(AUG);
+  });
+
+  it("reads a stored date back whatever shape it arrives in", () => {
+    expect(toMs("2026-07-27T22:00:00.000Z")).toBe(Date.parse("2026-07-27T22:00:00.000Z"));
+    expect(toMs(1_785_189_600_000)).toBe(1_785_189_600_000);
+    expect(toMs("1785189600000")).toBe(1_785_189_600_000);
+    // Unreadable values floor at 0, which is the safe identity for a max().
+    for (const junk of ["", null, undefined, NaN, "not a date"]) expect(toMs(junk)).toBe(0);
   });
 
   it("counts per person, not per meeting", async () => {

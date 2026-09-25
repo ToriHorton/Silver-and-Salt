@@ -221,6 +221,29 @@ export async function resolvePerson(db, attendee) {
 }
 
 /**
+ * Read a stored `date` field back as epoch milliseconds.
+ *
+ * Necessary because a CRM `date` field does NOT read back in the shape it was
+ * written: odla-db returns the slot as an ISO 8601 string
+ * ("2026-07-27T22:00:00.000Z"), not the epoch number that was stored. A bare
+ * `Number(...)` on that yields NaN, which silently reads as "no previous
+ * call" and defeats the only-move-forward guard below. Caught on the dev
+ * rehearsal: Lauren Friedman's two calls left `lastCallAt` on the OLDER of
+ * the two, because each import overwrote rather than compared.
+ *
+ * Accepts a number, a numeric string, or an ISO string; returns 0 for
+ * anything it cannot read, which is the safe floor for a max().
+ */
+export function toMs(value) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  const s = str(value).trim();
+  if (!s) return 0;
+  if (/^\d+$/.test(s)) return Number(s);
+  const parsed = Date.parse(s);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+/**
  * Bump the relationship-temperature counters after a call actually landed.
  *
  * Only ever called for a NON-duplicate activity, so a replay cannot inflate
@@ -235,7 +258,7 @@ export async function bumpCallCounters(db, person, occurredAt) {
   if (!CALL_COUNT_SLOT && !LAST_CALL_SLOT) return;
   const row = person.row ?? {};
   const priorCount = Number(row[CALL_COUNT_SLOT]) || 0;
-  const priorLast = Number(row[LAST_CALL_SLOT]) || 0;
+  const priorLast = toMs(row[LAST_CALL_SLOT]);
   const when = typeof occurredAt === "number" && Number.isFinite(occurredAt) ? occurredAt : Date.now();
 
   const input = { callCount: priorCount + 1 };
