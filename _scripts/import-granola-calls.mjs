@@ -10,6 +10,14 @@
 //
 // Usage:
 //   node _scripts/import-granola-calls.mjs --file <export.txt> [--env dev|prod] [--dry-run]
+//   node _scripts/import-granola-calls.mjs --file <export.txt> --post [url]
+//
+// --post sends the batch to the live POST /api/crm-ingest endpoint (default
+// https://silverandsaltcapital.com/api/crm-ingest) with CRM_INGEST_SECRET from
+// the git-ignored .dev.vars, instead of writing to odla-db with admin
+// credentials. This is the morning routine's path: the endpoint can only add
+// calls, notes and tasks, so the routine never holds a database key. Batches
+// are split to stay under the Worker's 64 KB body cap.
 //
 // Defaults to --env dev and REQUIRES --yes to write to prod, because this
 // writes real relationship history onto real member records.
@@ -44,18 +52,30 @@ const flag = (name) => argv.includes(`--${name}`);
 const FILE = arg("file");
 const ENV = arg("env", "dev");
 const DRY = flag("dry-run");
+const POST = flag("post");
+const POST_URL = arg("post", "https://silverandsaltcapital.com/api/crm-ingest");
 
 if (!FILE) {
   console.error("usage: node _scripts/import-granola-calls.mjs --file <export.txt> [--env dev|prod] [--dry-run]");
   process.exit(2);
 }
-if (ENV === "prod" && !flag("yes") && !DRY) {
+if (ENV === "prod" && !flag("yes") && !DRY && !POST) {
   console.error("refusing to write to prod without --yes (this writes real member history)");
   process.exit(2);
 }
 
 // ── Parse ──────────────────────────────────────────────────────────────
+// Granola's connector returns HTML-escaped text (&apos;, &amp;); store it plain.
+const unescape = (t) =>
+  String(t ?? "")
+    .replace(/&apos;|&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+
 function parse(text) {
+  text = unescape(text);
   const out = [];
   for (const block of text.split("===MEETING===").slice(1)) {
     const body = block.split("===END===")[0];
@@ -147,11 +167,15 @@ if (DRY) {
   process.exit(0);
 }
 
-const creds = credentials(ENV);
-console.log(`\nwriting to ${ENV} (${creds.appId})`);
-const db = initAdmin(creds);
-
-const report = await ingestBatch(db, { meetings });
+let report;
+if (POST) {
+  report = await postBatches(meetings);
+} else {
+  const creds = credentials(ENV);
+  console.log(`\nwriting to ${ENV} (${creds.appId})`);
+  const db = initAdmin(creds);
+  report = await ingestBatch(db, { meetings });
+}
 
 console.log("\n=== result ===");
 console.log(`people created:     ${report.peopleCreated.length}${report.peopleCreated.length ? " -> " + report.peopleCreated.join(", ") : ""}`);
@@ -168,3 +192,49 @@ if (report.errors.length) {
   process.exit(1);
 }
 console.log("\ndone");
+
+// ── POST mode ──────────────────────────────────────────────────────────
+async function postBatches(all) {
+  let secret = "";
+  for (const line of readFileSync(new URL("../.dev.vars", import.meta.url), "utf8").split("\n")) {
+    const m = /^CRM_INGEST_SECRET\s*=\s*"?([^"]*)"?\s*$/.exec(line.trim());
+    if (m) secret = m[1];
+  }
+  if (!secret) {
+    console.error("CRM_INGEST_SECRET is missing from .dev.vars (see _scripts/install-crm-ingest-secret.sh)");
+    process.exit(2);
+  }
+  // Group meetings into bodies under ~48 KB, leaving room under the 64 KB cap.
+  const LIMIT = 48 * 1024;
+  const batches = [];
+  let cur = [];
+  for (const m of all) {
+    const next = [...cur, m];
+    if (cur.length && Buffer.byteLength(JSON.stringify({ meetings: next })) > LIMIT) {
+      batches.push(cur);
+      cur = [m];
+    } else cur = next;
+  }
+  if (cur.length) batches.push(cur);
+
+  console.log(`\nposting ${all.length} meetings to ${POST_URL} in ${batches.length} batch(es)`);
+  const total = {
+    peopleCreated: [], activitiesWritten: 0, activitiesDuplicate: 0, privateNotesWritten: 0,
+    tasksWritten: 0, tasksDuplicate: 0, unattached: [], errors: [],
+  };
+  for (const batch of batches) {
+    const res = await fetch(POST_URL, {
+      method: "POST",
+      headers: { authorization: `Bearer ${secret}`, "content-type": "application/json" },
+      body: JSON.stringify({ meetings: batch }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (res.status !== 200 && res.status !== 207) {
+      console.error(`POST failed: ${res.status} ${JSON.stringify(body)}`);
+      process.exit(1);
+    }
+    for (const k of ["peopleCreated", "unattached", "errors"]) total[k].push(...(body[k] || []));
+    for (const k of ["activitiesWritten", "activitiesDuplicate", "privateNotesWritten", "tasksWritten", "tasksDuplicate"]) total[k] += body[k] || 0;
+  }
+  return total;
+}
