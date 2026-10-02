@@ -60,9 +60,8 @@ const TIER_DISPLAY = {
   associate: { name: "Associate Member", price: "Free" },
 };
 
-/** The invited path's words. The membership is a gift from a mother to a
- *  daughter or a daughter to a mother (Tori, 2026-09-19; honored, never
- *  verified), so the packaged "seat" and "invitation" vocabulary is replaced
+/** The invited path's words. The membership is a gift for a mother, daughter,
+ *  or sister (honored, never verified), so the packaged "seat" and "invitation" vocabulary is replaced
  *  here. Keys mirror Chapter's join copy contract for namedSeat. */
 const GIFT_COPY = {
   title: "Accept your gift",
@@ -168,7 +167,7 @@ function JoinMeasurement({ observe, state, tier }) {
   return null;
 }
 
-function ApplicationFields({ invitation, config, canAddSeat, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
+function ApplicationFields({ invitation, config, canAddSeat, seatOffer, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
   const [noLinkedin, setNoLinkedin] = useState(false);
   return (
     <>
@@ -342,7 +341,8 @@ function ApplicationFields({ invitation, config, canAddSeat, referral, onReferra
           recipient never sees it. */}
       {!invitation && canAddSeat && (
         <div class="form-group" id="gift-seat-interest">
-          <label for="giftSeatInterest">A membership for your mother or daughter <span class="opt">(any additional cost is confirmed at checkout)</span></label>
+          <label for="giftSeatInterest">A membership for your mother, daughter, or sister</label>
+          <p class="hint">{seatOffer?.amountCents === 0 ? "Included with your membership at no extra charge." : seatOffer ? `${money(seatOffer.amountCents)} a year, paid with your membership.` : "Your family-member rate will be confirmed at checkout."}</p>
           <label class="checkbox-option">
             <input
               type="checkbox"
@@ -352,13 +352,13 @@ function ApplicationFields({ invitation, config, canAddSeat, referral, onReferra
               checked={gift.interest}
               onChange={(e) => onGift((g) => ({ ...g, interest: e.currentTarget.checked }))}
             />{" "}
-            Yes, I would like to add one family member to my payment.
+            {seatOffer?.amountCents === 0 ? "Yes, include my family member at no extra charge." : "Yes, I would like to add one family member."}
           </label>
           <div class={gift.interest ? "referral-reveal show" : "referral-reveal"} id="gift-seat-reveal">
-            <label for="giftSeatRecipientName">Her name <span class="opt">(required at checkout if you include her)</span></label>
-            <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Her full name" maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
-            <label for="giftSeatRecipientEmail">Her email</label>
-            <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
+            <label for="giftSeatRecipientName">Full name <Req /></label>
+            <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Full name" required={gift.interest} minLength={2} disabled={!gift.interest} maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
+            <label for="giftSeatRecipientEmail">Email <Req /></label>
+            <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" required={gift.interest} disabled={!gift.interest} maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
           </div>
         </div>
       )}
@@ -453,7 +453,7 @@ export function Join({ config, initialTierId, initialState }) {
                 {tiers.map((tier) => {
                   const d = tierDisplay(tier);
                   return (
-                    <label class="membership-option" key={tier.id}>
+                    <label class={`membership-option${selectedTierId === tier.id ? " is-selected" : selectedTierId ? " is-alternative" : ""}`} key={tier.id}>
                       <input type="radio" name="__chapterTier" value={tier.id}
                         checked={selectedTierId === tier.id} onChange={() => selectTier(tier.id)} />
                       <span>
@@ -635,7 +635,8 @@ export function Join({ config, initialTierId, initialState }) {
           {({ invitation }) => <ApplicationFields
             invitation={invitation}
             config={config}
-            canAddSeat={!freeTier}
+            canAddSeat={!freeTier && Boolean(measurementTier)}
+            seatOffer={(config.tiers ?? []).find(t => t.id === measurementTier)?.seatOffer}
             referral={referral}
             onReferral={(v) => {
               setReferral(v);

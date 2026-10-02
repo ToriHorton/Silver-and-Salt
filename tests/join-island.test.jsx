@@ -8,8 +8,8 @@ import { Join } from "../src/app/join-island.jsx";
 // join-config also carries Chapter's resolved join copy, which the packaged
 // steps past the form read; the defaults stand in for the group's own words.
 const config = { paymentsReady: true, copy: DEFAULT_CHAPTER_COPY.join, tiers: [
-  { id: "standard", name: "Standard Membership", priceCents: 100000, free: false, blurb: "" },
-  { id: "steward", name: "Community Steward", priceCents: 500000, free: false, blurb: "" },
+  { id: "standard", name: "Standard Membership", priceCents: 100000, free: false, blurb: "", seatOffer: { amountCents: 50000 } },
+  { id: "steward", name: "Community Steward", priceCents: 500000, free: false, blurb: "", seatOffer: { amountCents: 0 } },
   { id: "associate", name: "Associate", priceCents: 0, free: true, blurb: "" },
 ] };
 
@@ -94,8 +94,8 @@ it("asks about the gift seat on the application and never on the booking step", 
   const form = render(<Join config={config} initialTierId="standard" />);
   expect(form).toContain('name="giftSeatInterest"');
   expect(form).not.toContain("$500 a year, included for Community Stewards");
-  expect(form).toContain("any additional cost is confirmed at checkout");
-  expect(form).toContain("Yes, I would like to add one family member to my payment.");
+  expect(form).toContain("$500.00 a year, paid with your membership.");
+  expect(form).toContain("Yes, I would like to add one family member.");
   for (const [tier, free] of [["standard", false], ["associate", true]]) {
     const booking = render(<Join config={config} initialTierId={tier}
       initialState={{ step: "booking", applicationId: `app-${tier}`, tier: { id: tier, free } }} />);
@@ -126,4 +126,15 @@ it("leaves a fresh visit with ?tier= on the form step, two steps free and three 
   expect(dot(paid, "dot-1")).toBe("step active");
   expect(dot(paid, "dot-pay")).toBe("step pending");
   expect(dot(paid, "dot-2")).toBe("step pending");
+});
+
+it("shows the Steward family membership as included and emphasizes the selected tier", () => {
+  const html = render(<Join config={config} initialTierId="steward" />);
+  expect(html).toContain("Included with your membership at no extra charge.");
+  expect(html).toContain("Yes, include my family member at no extra charge.");
+  expect(html).toContain("mother, daughter, or sister");
+  expect(html).not.toContain("required at checkout");
+  expect(html.indexOf('value="steward"')).toBeLessThan(html.indexOf('value="standard"'));
+  expect(html).toContain("membership-option is-selected");
+  expect(html.match(/membership-option is-alternative/g)).toHaveLength(2);
 });
