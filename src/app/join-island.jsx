@@ -10,10 +10,11 @@
 // Host brand, fields and confirmation surround the verified Chapter journey.
 
 import { render } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { JoinIsland } from "@odla-ai/chapter/ui/member";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
+import { createJoinMeasurement } from "./join-measurement.mjs";
 import ivyBakerPriest from "../../assets/ivy-baker-priest.jpg";
 
 // Same key the legacy page used, so an in-flight applicant keeps their place
@@ -161,6 +162,11 @@ function syncConfirmEmail() {
 // A visible marker on every required label (Tori, 2026-09-20), with a legend
 // at the top of the form so the dropdowns and text fields read as required.
 const Req = () => <span class="req" aria-hidden="true">*</span>;
+
+function JoinMeasurement({ observe, state, tier }) {
+  useEffect(() => { observe(state, tier); }, [observe, state.step, state.applicationId, tier]);
+  return null;
+}
 
 function ApplicationFields({ invitation, config, canAddSeat, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
   const [noLinkedin, setNoLinkedin] = useState(false);
@@ -401,11 +407,25 @@ export function Join({ config, initialTierId, initialState }) {
   // a reload without ?tier= must not turn a free membership into a paid one.
   const [freeTier, setFreeTier] = useState(() =>
     Boolean((config.tiers ?? []).find((t) => t.id === initialTierId)?.free));
+  const [measurementTier, setMeasurementTier] = useState(initialTierId);
   // Seeded from sessionStorage so a reload resumes; the id is a capability the
   // server re-validates, and the step itself always comes from the server.
   const [resumeId, setResumeId] = useState(() => {
     try { return sessionStorage.getItem(resumeKey) ?? null; } catch { return null; }
   });
+  const measurement = useRef(null);
+  if (!measurement.current) {
+    let storage;
+    try { storage = sessionStorage; } catch {}
+    measurement.current = createJoinMeasurement({
+      storage,
+      // Chapter also resumes verified applications from email/payment links.
+      // This value only suppresses a duplicate lead; it never selects a step.
+      initialApplicationId: resumeId ?? (typeof window === "undefined" ? null
+        : new URLSearchParams(window.location.search).get("application")),
+      emit: (name, params) => window.SSCAnalytics?.track(name, params),
+    });
+  }
 
   return (
     <>
@@ -424,6 +444,7 @@ export function Join({ config, initialTierId, initialState }) {
           namedSeatClaimApi={namedSeatClaimApi}
           initialTierId={initialTierId}
           renderTiers={({ tiers, selectedTierId, selectTier }) => {
+            if (selectedTierId !== measurementTier) queueMicrotask(() => setMeasurementTier(selectedTierId));
             const isFree = Boolean(tiers.find((t) => t.id === selectedTierId)?.free);
             if (isFree !== freeTier) queueMicrotask(() => setFreeTier(isFree));
             return (
@@ -474,7 +495,10 @@ export function Join({ config, initialTierId, initialState }) {
             // application; only a journey that has not been submitted yet
             // reads the chooser. Browser input never overrides the server.
             const free = state.tier ? state.tier.free : freeTier;
-            return <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />;
+            return <>
+              <JoinMeasurement observe={measurement.current} state={state} tier={state.tier?.id ?? measurementTier} />
+              <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />
+            </>;
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
           // Baker Priest quote card). Preserved verbatim from join.html's
