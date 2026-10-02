@@ -1,0 +1,3 @@
+# Keep this printed URL stable. Change its destination here, never in old PDFs.
+/invite /membership?utm_source=one_pager&utm_medium=qr&utm_campaign=community_invitation 302
+/invite/ /membership?utm_source=one_pager&utm_medium=qr&utm_campaign=community_invitation 302
