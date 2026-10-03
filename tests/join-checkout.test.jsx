@@ -34,3 +34,12 @@ it("omits an unselected seat from the member-only total", () => {
   expect(html).not.toContain("Additional family member");
   expect(html).toContain("<span>Due today</span><span>$900.00</span>");
 });
+
+it("says Pick later when the included family member has not been selected", () => {
+  render(<Join config={config} initialTierId="standard" />);
+  const html = render(capture.props.payment.renderPriceLines({ standardCents: 500000, discountCents: 0,
+    dueTodayCents: 500000, namedSeatPickLater: true }));
+  expect(html).toContain("<span>Additional family member</span><span>Pick later</span>");
+  expect(html).not.toContain("Included");
+  expect(html).toContain("<span>Due today</span><span>$5,000.00</span>");
+});

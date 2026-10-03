@@ -11,8 +11,8 @@ const api = async () => { throw new Error("not called in a string render"); };
 describe("NamedSeatCard", () => {
   it("offers the gift with price and end date when eligible", () => {
     const html = render(h(NamedSeatCard, { api, initial: offer }));
-    expect(html).toContain("A gift for your mother or daughter");
-    expect(html).toContain("mothers and daughters to talk about money");
+    expect(html).toContain("A gift for your mother, daughter, or sister");
+    expect(html).toContain("mothers, daughters, and sisters to talk about money");
     expect(html).toContain("$500.00 a year");
     expect(html).toContain("active for the full year alongside yours and renews with it");
     expect(html).toContain("Your gift is final");
@@ -31,7 +31,7 @@ describe("NamedSeatCard", () => {
   });
   it("reads as included when the server prices the gift at zero", () => {
     const html = render(h(NamedSeatCard, { api, initial: { ...offer, amountCents: 0 } }));
-    expect(html).toContain("includes a membership for your mother or your daughter");
+    expect(html).toContain("includes a membership for your mother, daughter, or sister");
     expect(html).not.toContain("$0.00");
     expect(html).not.toContain("refunded");
   });
@@ -94,7 +94,7 @@ describe("MembersApp", () => {
     expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("Admin console");
   });
   it("mounts the seat card only when the server enables seats", () => {
-    expect(render(h(MembersApp, { me: me({ authorized: false, namedSeatsEnabled: true }), email: "m@example.com" }))).toContain("A gift for your mother or daughter");
+    expect(render(h(MembersApp, { me: me({ authorized: false, namedSeatsEnabled: true }), email: "m@example.com" }))).toContain("A gift for your mother, daughter, or sister");
     // A paid applicant who skipped the add-on can add it from the member page
     // before approval, while member-content access remains closed.
     const hadWindow = "window" in globalThis;
@@ -103,11 +103,11 @@ describe("MembersApp", () => {
     try {
       const provisional = render(h(MembersApp, { me: me({ role: "provisional", memberAccess: false, namedSeatsEnabled: true, application: { paid: true, tier: "standard", meetingAt: 1790183700000, timezone: "America/Denver" } }), email: "m@example.com" }));
       expect(provisional).toContain("Your onboarding call");
-      expect(provisional).toContain("A gift for your mother or daughter");
+      expect(provisional).toContain("A gift for your mother, daughter, or sister");
     } finally {
       if (hadWindow) globalThis.window = savedWindow; else delete globalThis.window;
     }
-    expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("A gift for your mother or daughter");
+    expect(render(h(MembersApp, { me: me({ authorized: false }), email: "m@example.com" }))).not.toContain("A gift for your mother, daughter, or sister");
   });
   it("offers a saved-profile restart to an inactive approved account instead of trusting a stale member role", () => {
     const html = render(h(MembersApp, { me: me({ memberAccess: false, membershipRestart: { eligible: true, applicationId: null },
@@ -116,6 +116,6 @@ describe("MembersApp", () => {
     expect(html).toContain("Ada Lovelace");
     expect(html).toContain("ada@example.com");
     expect(html).toContain("No new application or interview");
-    expect(html).not.toContain("A gift for your mother or daughter");
+    expect(html).not.toContain("A gift for your mother, daughter, or sister");
   });
 });
