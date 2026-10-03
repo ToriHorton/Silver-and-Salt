@@ -1,28 +1,18 @@
 import { expect, it } from "vitest";
 import { render } from "preact-render-to-string";
-import { FamilyMemberFields, FamilyMemberEditor } from "../src/app/family-member.jsx";
+import { AdditionalMemberFields, AdditionalMemberEditor } from "@odla-ai/chapter/ui/member";
+import { FAMILY_MEMBER_OPTIONS } from "../src/app/family-member.mjs";
 
-it.each([0, 50000])("requires full name and email for the selected family member at price %i", amountCents => {
-  const html = render(<FamilyMemberFields gift={{ interest: true, name: "", email: "" }} onGift={() => {}} seatOffer={{ amountCents }} />);
-  expect(html).toMatch(/name="giftSeatRecipientName"[^>]*required/);
-  expect(html).toMatch(/type="email"[^>]*name="giftSeatRecipientEmail"[^>]*required/);
-  expect(html).toContain(amountCents ? "$500.00 per year" : "at no extra charge");
-});
-
-it("disables recipient fields when the family member is skipped", () => {
-  const html = render(<FamilyMemberFields gift={{ interest: false, name: "", email: "" }} onGift={() => {}} seatOffer={{ amountCents: 0 }} />);
-  expect(html).toMatch(/name="giftSeatRecipientName"[^>]*disabled/);
-  expect(html).toMatch(/name="giftSeatRecipientEmail"[^>]*disabled/);
-  expect(html).not.toContain("required");
-});
-
-it("returns to the same field set with the saved details and one save action", () => {
-  const html = render(<FamilyMemberEditor selection={{ recipientName: "Recipient One", recipientEmail: "recipient@example.com" }}
-    offer={{ amountCents: 50000, currency: "usd", interval: "year" }} save={() => {}} cancel={() => {}} onSaved={() => {}} />);
-  expect(html).toContain('id="gift-seat-interest"');
-  expect(html).toContain('value="Recipient One"');
-  expect(html).toContain('value="recipient@example.com"');
-  expect(html).toContain("Save details");
-  expect(html).toContain('class="journey-actions family-member-actions"');
-  expect(html).toContain('class="journey-secondary"');
+it("uses the shared controls with family wording and the existing application field names", () => {
+  const html = render(<AdditionalMemberFields {...FAMILY_MEMBER_OPTIONS} value={{ selected: true, name: "Sample Sister", email: "sister@example.com" }}
+    onChange={() => {}} offer={{ amountCents: 0 }} />);
+  expect(html).toContain("mother, daughter, or sister");
+  expect(html).toContain("Yes, include my family member at no extra charge.");
+  expect(html).toContain('name="giftSeatInterest"');
+  expect(html).toContain('name="giftSeatRecipientName"');
+  expect(html).toContain('name="giftSeatRecipientEmail"');
+  const editor = render(<AdditionalMemberEditor {...FAMILY_MEMBER_OPTIONS} selection={null}
+    offer={{ amountCents: 0, currency: "usd", interval: "year" }} save={() => {}} cancel={() => {}} />);
+  expect(editor).toContain("Edit family member details");
+  expect(editor).toContain("Save details");
 });

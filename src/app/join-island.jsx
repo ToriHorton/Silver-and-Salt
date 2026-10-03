@@ -11,9 +11,8 @@
 
 import { render } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { JoinIsland } from "@odla-ai/chapter/ui/member";
-import { FamilyMemberFields, FamilyMemberEditor } from "./family-member.jsx";
-import { FormSubmitButton } from "./form-submit-button.jsx";
+import { JoinIsland, AdditionalMemberFields, JoinSubmitButton } from "@odla-ai/chapter/ui/member";
+import { FAMILY_MEMBER_OPTIONS } from "./family-member.mjs";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
 import { createJoinMeasurement } from "./join-measurement.mjs";
@@ -337,7 +336,7 @@ function ApplicationFields({ invitation, config, canAddSeat, seatOffer, referral
         ></textarea>
       </div>
 
-      {!invitation && canAddSeat && <FamilyMemberFields gift={gift} onGift={onGift} seatOffer={seatOffer} />}
+      {!invitation && canAddSeat && <AdditionalMemberFields {...FAMILY_MEMBER_OPTIONS} value={gift} onChange={onGift} offer={seatOffer} />}
 
       <div class="compliance-box" id="disclaimer-box">
         {/* Copy comes from the group row via join-config, never from code, so an
@@ -373,7 +372,7 @@ export function Join({ config, initialTierId, initialState }) {
   // The gift answer (Tori, 2026-09-20) is asked on the application and posted
   // with it; the seat itself is charged through the membership authority, and
   // the booking step never sells it.
-  const [gift, setGift] = useState({ interest: false, name: "", email: "" });
+  const [gift, setGift] = useState({ selected: false, name: "", email: "" });
   const [ack, setAck] = useState(false);
   // Whether the chosen tier is free, mirrored from the packaged tier selection
   // so the step rail can drop the payment step. Preset from the URL so the
@@ -552,12 +551,12 @@ export function Join({ config, initialTierId, initialState }) {
           )}
           renderSubmit={({ submitting, disabled }) => (
             <>
-              <FormSubmitButton
+              <JoinSubmitButton
                 id="submit-btn"
-                disabled={disabled || submitting || !ack}
+                disabled={disabled}
               >
                 {submitting ? "Submitting…" : "Submit"}
-              </FormSubmitButton>
+              </JoinSubmitButton>
               <p class="privacy">
                 Your privacy matters to us. Your information is never sold or shared with third
                 parties.
@@ -565,9 +564,9 @@ export function Join({ config, initialTierId, initialState }) {
             </>
           )}
           payment={{
-            initialNamedSeat: gift.interest && !freeTier ? { recipientName: gift.name, recipientEmail: gift.email } : undefined,
+            initialNamedSeat: gift.selected && !freeTier ? { recipientName: gift.name, recipientEmail: gift.email } : undefined,
             namedSeatLabel: "Additional family member",
-            renderNamedSeatEditor: context => <FamilyMemberEditor {...context} onSaved={setGift} />,
+            additionalMember: { ...FAMILY_MEMBER_OPTIONS, onSaved: setGift },
             // The shared quote shows these server-owned amounts before consent.
             // Chapter 0.52.1 says where a difference comes from: lines.founding
             // is a policy-backed founding discount from Built Not Found; a bare
