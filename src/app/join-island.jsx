@@ -12,6 +12,7 @@
 import { render } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { JoinIsland } from "@odla-ai/chapter/ui/member";
+import { FamilyMemberFields, FamilyMemberEditor } from "./family-member.jsx";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
 import { createJoinMeasurement } from "./join-measurement.mjs";
@@ -335,33 +336,7 @@ function ApplicationFields({ invitation, config, canAddSeat, seatOffer, referral
         ></textarea>
       </div>
 
-      {/* The gift-seat upsell (Tori, 2026-09-20). Asked here so the answer is
-          on the application, then included in the shared membership checkout.
-          Applies to the paid tiers; the free tier has no seat to give. A gift
-          recipient never sees it. */}
-      {!invitation && canAddSeat && (
-        <div class="form-group" id="gift-seat-interest">
-          <label for="giftSeatInterest">A membership for your mother, daughter, or sister</label>
-          <p class="hint">{seatOffer?.amountCents === 0 ? "Included with your membership at no extra charge." : seatOffer ? `${money(seatOffer.amountCents)} a year, paid with your membership.` : "Your family-member rate will be confirmed at checkout."}</p>
-          <label class="checkbox-option">
-            <input
-              type="checkbox"
-              id="giftSeatInterest"
-              name="giftSeatInterest"
-              value="yes"
-              checked={gift.interest}
-              onChange={(e) => onGift((g) => ({ ...g, interest: e.currentTarget.checked }))}
-            />{" "}
-            {seatOffer?.amountCents === 0 ? "Yes, include my family member at no extra charge." : "Yes, I would like to add one family member."}
-          </label>
-          <div class={gift.interest ? "referral-reveal show" : "referral-reveal"} id="gift-seat-reveal">
-            <label for="giftSeatRecipientName">Full name <Req /></label>
-            <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Full name" required={gift.interest} minLength={2} disabled={!gift.interest} maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
-            <label for="giftSeatRecipientEmail">Email <Req /></label>
-            <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" required={gift.interest} disabled={!gift.interest} maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
-          </div>
-        </div>
-      )}
+      {!invitation && canAddSeat && <FamilyMemberFields gift={gift} onGift={onGift} seatOffer={seatOffer} />}
 
       <div class="compliance-box" id="disclaimer-box">
         {/* Copy comes from the group row via join-config, never from code, so an
@@ -481,7 +456,7 @@ export function Join({ config, initialTierId, initialState }) {
           // SERVER decides which step the applicant belongs on, and then asks
           // the site's own route which membership the application holds.
           loadResume={resumeId ? () => loadSiteJoinResume(resumeId) : undefined}
-          renderStepHeader={({ state }) => {
+          renderStepHeader={({ state, editingNamedSeat }) => {
             // Keep the site's step rail in sync with the packaged flow, and
             // remember the application id so a reload can resume instead of
             // dropping the applicant back onto an empty form.
@@ -497,7 +472,7 @@ export function Join({ config, initialTierId, initialState }) {
             const free = state.tier ? state.tier.free : freeTier;
             return <>
               <JoinMeasurement observe={measurement.current} state={state} tier={state.tier?.id ?? measurementTier} />
-              <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />
+              <StepRail step={editingNamedSeat ? "form" : state.step} invited={Boolean(seatId)} free={free && !seatId} />
             </>;
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
@@ -591,6 +566,8 @@ export function Join({ config, initialTierId, initialState }) {
           )}
           payment={{
             initialNamedSeat: gift.interest && !freeTier ? { recipientName: gift.name, recipientEmail: gift.email } : undefined,
+            namedSeatLabel: "Additional family member",
+            renderNamedSeatEditor: context => <FamilyMemberEditor {...context} onSaved={setGift} />,
             // The shared quote shows these server-owned amounts before consent.
             // Chapter 0.52.1 says where a difference comes from: lines.founding
             // is a policy-backed founding discount from Built Not Found; a bare
@@ -617,10 +594,10 @@ export function Join({ config, initialTierId, initialState }) {
                     <span>{money(lines.dueTodayCents - (lines.namedSeatCents ?? 0))}</span>
                   </div>
                 )}
-                {lines.namedSeatCents !== undefined && (
+                {(lines.namedSeatCents !== undefined || lines.namedSeatPickLater) && (
                   <div class="pay-line">
                     <span>Additional family member</span>
-                    <span>{lines.namedSeatCents === 0 ? "Included" : money(lines.namedSeatCents)}</span>
+                    <span>{lines.namedSeatPickLater ? "Pick later" : lines.namedSeatCents === 0 ? "Included" : money(lines.namedSeatCents)}</span>
                   </div>
                 )}
                 <div class="pay-line total">

@@ -94,7 +94,7 @@ it("asks about the gift seat on the application and never on the booking step", 
   const form = render(<Join config={config} initialTierId="standard" />);
   expect(form).toContain('name="giftSeatInterest"');
   expect(form).not.toContain("$500 a year, included for Community Stewards");
-  expect(form).toContain("$500.00 a year, paid with your membership.");
+  expect(form).toContain("$500.00 per year, paid with your membership.");
   expect(form).toContain("Yes, I would like to add one family member.");
   for (const [tier, free] of [["standard", false], ["associate", true]]) {
     const booking = render(<Join config={config} initialTierId={tier}

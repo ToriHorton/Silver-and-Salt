@@ -320,8 +320,8 @@ export function chapterFor(envName = "dev") {
       "linkedinOptOut",
     ],
     conditions: {
-      giftSeatRecipientName: { visibleWhen: 'values.giftSeatInterest == "yes"' },
-      giftSeatRecipientEmail: { visibleWhen: 'values.giftSeatInterest == "yes"' },
+      giftSeatRecipientName: { visibleWhen: 'values.giftSeatInterest == "yes"', requiredWhen: 'values.giftSeatInterest == "yes"' },
+      giftSeatRecipientEmail: { visibleWhen: 'values.giftSeatInterest == "yes"', requiredWhen: 'values.giftSeatInterest == "yes"' },
       linkedin: { requiredWhen: 'values.linkedinOptOut != "yes"' },
       address1: { requiredWhen: "true" },
       city: { requiredWhen: "true" },
