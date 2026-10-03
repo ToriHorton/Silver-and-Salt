@@ -1,4 +1,5 @@
 import { useState } from "preact/hooks";
+import { FormSubmitButton } from "./form-submit-button.jsx";
 
 const money = (cents, currency = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency }).format(cents / 100);
 const Req = () => <span class="req" aria-hidden="true">*</span>;
@@ -26,6 +27,7 @@ export function FamilyMemberFields({ gift, onGift, seatOffer }) {
         }} />
       <label for="giftSeatRecipientEmail">Email <Req /></label>
       <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com"
+        pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
         required={gift.interest} disabled={!gift.interest} maxLength={254} value={gift.email}
         onInput={event => { const email = event.currentTarget.value; onGift(current => ({ ...current, email })); }} />
     </div>
@@ -50,8 +52,10 @@ export function FamilyMemberEditor({ selection, offer, save, cancel, onSaved }) 
     <fieldset disabled={saving}>
       <FamilyMemberFields gift={gift} onGift={setGift} seatOffer={offer} />
       {error ? <p role="alert">{error}</p> : null}
-      <button class="submit-btn" type="submit">{saving ? "Saving…" : "Save and return to payment"}</button>
-      <button type="button" onClick={cancel}>Cancel</button>
+      <div class="journey-actions family-member-actions">
+        <FormSubmitButton disabled={saving}>{saving ? "Saving…" : "Save details"}</FormSubmitButton>
+        <button class="journey-secondary" type="button" onClick={cancel}>Cancel</button>
+      </div>
     </fieldset>
   </form>;
 }

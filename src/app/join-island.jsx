@@ -13,6 +13,7 @@ import { render } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { JoinIsland } from "@odla-ai/chapter/ui/member";
 import { FamilyMemberFields, FamilyMemberEditor } from "./family-member.jsx";
+import { FormSubmitButton } from "./form-submit-button.jsx";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
 import { createJoinMeasurement } from "./join-measurement.mjs";
@@ -430,6 +431,7 @@ export function Join({ config, initialTierId, initialState }) {
                   return (
                     <label class={`membership-option${selectedTierId === tier.id ? " is-selected" : selectedTierId ? " is-alternative" : ""}`} key={tier.id}>
                       <input type="radio" name="__chapterTier" value={tier.id}
+                        required
                         checked={selectedTierId === tier.id} onChange={() => selectTier(tier.id)} />
                       <span>
                         <strong>{d.name}</strong>
@@ -446,8 +448,8 @@ export function Join({ config, initialTierId, initialState }) {
             );
           }}
           membersHref="/members/"
-          // The legacy page gated submit on the consent box; preserve that
-          // exactly rather than relying on the server's 400.
+          // Consent remains an explicit gate; the submit control also checks
+          // the host form's required fields and native validation constraints.
           submitDisabled={!ack}
           // Resume a journey interrupted by a reload or a redirect-based
           // payment method. chapter-follower: resume through the canonical
@@ -550,14 +552,12 @@ export function Join({ config, initialTierId, initialState }) {
           )}
           renderSubmit={({ submitting, disabled }) => (
             <>
-              <button
-                type="submit"
-                class="submit-btn"
+              <FormSubmitButton
                 id="submit-btn"
                 disabled={disabled || submitting || !ack}
               >
                 {submitting ? "Submitting…" : "Submit"}
-              </button>
+              </FormSubmitButton>
               <p class="privacy">
                 Your privacy matters to us. Your information is never sold or shared with third
                 parties.

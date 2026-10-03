@@ -408,7 +408,7 @@
     }
 
     /* Submit */
-    .submit-btn {
+    .submit-btn, .join-surface .submit-btn {
       width: 100%;
       background-color: var(--lime);
       color: #fff;
@@ -425,9 +425,20 @@
       transition: background-color 0.2s, transform 0.1s;
     }
 
-    .submit-btn:hover   { background-color: var(--lime-dark); }
-    .submit-btn:active  { transform: scale(0.99); }
-    .submit-btn:disabled { background-color: #b0cc9e; cursor: not-allowed; }
+    .submit-btn:hover, .join-surface .submit-btn:hover { background-color: var(--lime-dark); }
+    .submit-btn:active, .join-surface .submit-btn:active { transform: scale(0.99); }
+    .submit-btn:disabled, .join-surface .submit-btn:disabled {
+      background-color: #e3e8df;
+      color: #687361;
+      opacity: 1;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .family-member-actions .submit-btn { width: auto; flex: 1; margin-top: 0; }
+    .family-member-actions .journey-secondary { min-width: 7rem; }
+    @media (max-width: 520px) {
+      .family-member-actions { flex-direction: column; }
+    }
 
     .privacy {
       font-size: 11px;

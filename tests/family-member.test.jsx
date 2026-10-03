@@ -22,5 +22,7 @@ it("returns to the same field set with the saved details and one save action", (
   expect(html).toContain('id="gift-seat-interest"');
   expect(html).toContain('value="Recipient One"');
   expect(html).toContain('value="recipient@example.com"');
-  expect(html).toContain("Save and return to payment");
+  expect(html).toContain("Save details");
+  expect(html).toContain('class="journey-actions family-member-actions"');
+  expect(html).toContain('class="journey-secondary"');
 });
