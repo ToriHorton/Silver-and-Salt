@@ -59,7 +59,7 @@ export const joinPage: Route = async (req, url, env) => {
     body = body.replace("We look forward to welcoming you to our investor community. Memberships open soon.",
       prepaidInvitation ? "Someone who wants to talk about money with you has given you a membership. Accept it, tell us about yourself, and book your conversation." : "This is how the game changes: women who learn together, invest together, and win together. You belong here.");
   }
-  // The gift membership (a mother or a daughter, honored rather than verified).
+  // The gift membership (a mother, daughter, or sister, honored rather than verified).
   if (prepaidInvitation) body = body.replace('id="hero-title">Apply for Membership', 'id="hero-title">Your gift membership')
     .replace('id="hero-tag">By Application Only', 'id="hero-tag">A gift for you');
   const headers = new Headers(asset.headers);

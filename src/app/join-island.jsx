@@ -11,7 +11,8 @@
 
 import { render } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { JoinIsland } from "@odla-ai/chapter/ui/member";
+import { JoinIsland, AdditionalMemberFields, JoinSubmitButton } from "@odla-ai/chapter/ui/member";
+import { FAMILY_MEMBER_OPTIONS } from "./family-member.mjs";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
 import { createJoinMeasurement } from "./join-measurement.mjs";
@@ -60,9 +61,8 @@ const TIER_DISPLAY = {
   associate: { name: "Associate Member", price: "Free" },
 };
 
-/** The invited path's words. The membership is a gift from a mother to a
- *  daughter or a daughter to a mother (Tori, 2026-09-19; honored, never
- *  verified), so the packaged "seat" and "invitation" vocabulary is replaced
+/** The invited path's words. The membership is a gift for a mother, daughter,
+ *  or sister (honored, never verified), so the packaged "seat" and "invitation" vocabulary is replaced
  *  here. Keys mirror Chapter's join copy contract for namedSeat. */
 const GIFT_COPY = {
   title: "Accept your gift",
@@ -168,7 +168,7 @@ function JoinMeasurement({ observe, state, tier }) {
   return null;
 }
 
-function ApplicationFields({ invitation, config, canAddSeat, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
+function ApplicationFields({ invitation, config, canAddSeat, seatOffer, referral, onReferral, referralName, onReferralName, whoYouAre, onWhoYouAre, gift, onGift, ack, onAck }) {
   const [noLinkedin, setNoLinkedin] = useState(false);
   return (
     <>
@@ -336,32 +336,7 @@ function ApplicationFields({ invitation, config, canAddSeat, referral, onReferra
         ></textarea>
       </div>
 
-      {/* The gift-seat upsell (Tori, 2026-09-20). Asked here so the answer is
-          on the application, then included in the shared membership checkout.
-          Applies to the paid tiers; the free tier has no seat to give. A gift
-          recipient never sees it. */}
-      {!invitation && canAddSeat && (
-        <div class="form-group" id="gift-seat-interest">
-          <label for="giftSeatInterest">A membership for your mother or daughter <span class="opt">(any additional cost is confirmed at checkout)</span></label>
-          <label class="checkbox-option">
-            <input
-              type="checkbox"
-              id="giftSeatInterest"
-              name="giftSeatInterest"
-              value="yes"
-              checked={gift.interest}
-              onChange={(e) => onGift((g) => ({ ...g, interest: e.currentTarget.checked }))}
-            />{" "}
-            Yes, I would like to add one family member to my payment.
-          </label>
-          <div class={gift.interest ? "referral-reveal show" : "referral-reveal"} id="gift-seat-reveal">
-            <label for="giftSeatRecipientName">Her name <span class="opt">(required at checkout if you include her)</span></label>
-            <input type="text" id="giftSeatRecipientName" name="giftSeatRecipientName" placeholder="Her full name" maxLength={160} value={gift.name} onInput={(e) => onGift((g) => ({ ...g, name: e.currentTarget.value }))} />
-            <label for="giftSeatRecipientEmail">Her email</label>
-            <input type="email" id="giftSeatRecipientEmail" name="giftSeatRecipientEmail" placeholder="her@example.com" maxLength={254} value={gift.email} onInput={(e) => onGift((g) => ({ ...g, email: e.currentTarget.value }))} />
-          </div>
-        </div>
-      )}
+      {!invitation && canAddSeat && <AdditionalMemberFields {...FAMILY_MEMBER_OPTIONS} value={gift} onChange={onGift} offer={seatOffer} />}
 
       <div class="compliance-box" id="disclaimer-box">
         {/* Copy comes from the group row via join-config, never from code, so an
@@ -397,7 +372,7 @@ export function Join({ config, initialTierId, initialState }) {
   // The gift answer (Tori, 2026-09-20) is asked on the application and posted
   // with it; the seat itself is charged through the membership authority, and
   // the booking step never sells it.
-  const [gift, setGift] = useState({ interest: false, name: "", email: "" });
+  const [gift, setGift] = useState({ selected: false, name: "", email: "" });
   const [ack, setAck] = useState(false);
   // Whether the chosen tier is free, mirrored from the packaged tier selection
   // so the step rail can drop the payment step. Preset from the URL so the
@@ -453,8 +428,9 @@ export function Join({ config, initialTierId, initialState }) {
                 {tiers.map((tier) => {
                   const d = tierDisplay(tier);
                   return (
-                    <label class="membership-option" key={tier.id}>
+                    <label class={`membership-option${selectedTierId === tier.id ? " is-selected" : selectedTierId ? " is-alternative" : ""}`} key={tier.id}>
                       <input type="radio" name="__chapterTier" value={tier.id}
+                        required
                         checked={selectedTierId === tier.id} onChange={() => selectTier(tier.id)} />
                       <span>
                         <strong>{d.name}</strong>
@@ -471,8 +447,8 @@ export function Join({ config, initialTierId, initialState }) {
             );
           }}
           membersHref="/members/"
-          // The legacy page gated submit on the consent box; preserve that
-          // exactly rather than relying on the server's 400.
+          // Consent remains an explicit gate; the submit control also checks
+          // the host form's required fields and native validation constraints.
           submitDisabled={!ack}
           // Resume a journey interrupted by a reload or a redirect-based
           // payment method. chapter-follower: resume through the canonical
@@ -481,7 +457,7 @@ export function Join({ config, initialTierId, initialState }) {
           // SERVER decides which step the applicant belongs on, and then asks
           // the site's own route which membership the application holds.
           loadResume={resumeId ? () => loadSiteJoinResume(resumeId) : undefined}
-          renderStepHeader={({ state }) => {
+          renderStepHeader={({ state, editingNamedSeat }) => {
             // Keep the site's step rail in sync with the packaged flow, and
             // remember the application id so a reload can resume instead of
             // dropping the applicant back onto an empty form.
@@ -497,7 +473,7 @@ export function Join({ config, initialTierId, initialState }) {
             const free = state.tier ? state.tier.free : freeTier;
             return <>
               <JoinMeasurement observe={measurement.current} state={state} tier={state.tier?.id ?? measurementTier} />
-              <StepRail step={state.step} invited={Boolean(seatId)} free={free && !seatId} />
+              <StepRail step={editingNamedSeat ? "form" : state.step} invited={Boolean(seatId)} free={free && !seatId} />
             </>;
           }}
           // The confirmation screen is site-owned copy and imagery (the Ivy
@@ -575,14 +551,12 @@ export function Join({ config, initialTierId, initialState }) {
           )}
           renderSubmit={({ submitting, disabled }) => (
             <>
-              <button
-                type="submit"
-                class="submit-btn"
+              <JoinSubmitButton
                 id="submit-btn"
-                disabled={disabled || submitting || !ack}
+                disabled={disabled}
               >
                 {submitting ? "Submitting…" : "Submit"}
-              </button>
+              </JoinSubmitButton>
               <p class="privacy">
                 Your privacy matters to us. Your information is never sold or shared with third
                 parties.
@@ -590,7 +564,9 @@ export function Join({ config, initialTierId, initialState }) {
             </>
           )}
           payment={{
-            initialNamedSeat: gift.interest && !freeTier ? { recipientName: gift.name, recipientEmail: gift.email } : undefined,
+            initialNamedSeat: gift.selected && !freeTier ? { recipientName: gift.name, recipientEmail: gift.email } : undefined,
+            namedSeatLabel: "Additional family member",
+            additionalMember: { ...FAMILY_MEMBER_OPTIONS, onSaved: setGift },
             // The shared quote shows these server-owned amounts before consent.
             // Chapter 0.52.1 says where a difference comes from: lines.founding
             // is a policy-backed founding discount from Built Not Found; a bare
@@ -617,10 +593,10 @@ export function Join({ config, initialTierId, initialState }) {
                     <span>{money(lines.dueTodayCents - (lines.namedSeatCents ?? 0))}</span>
                   </div>
                 )}
-                {lines.namedSeatCents !== undefined && (
+                {(lines.namedSeatCents !== undefined || lines.namedSeatPickLater) && (
                   <div class="pay-line">
                     <span>Additional family member</span>
-                    <span>{lines.namedSeatCents === 0 ? "Included" : money(lines.namedSeatCents)}</span>
+                    <span>{lines.namedSeatPickLater ? "Pick later" : lines.namedSeatCents === 0 ? "Included" : money(lines.namedSeatCents)}</span>
                   </div>
                 )}
                 <div class="pay-line total">
@@ -635,7 +611,8 @@ export function Join({ config, initialTierId, initialState }) {
           {({ invitation }) => <ApplicationFields
             invitation={invitation}
             config={config}
-            canAddSeat={!freeTier}
+            canAddSeat={!freeTier && Boolean(measurementTier)}
+            seatOffer={(config.tiers ?? []).find(t => t.id === measurementTier)?.seatOffer}
             referral={referral}
             onReferral={(v) => {
               setReferral(v);

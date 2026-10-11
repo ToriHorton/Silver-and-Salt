@@ -171,7 +171,7 @@ function MemberView() {
 // The gift membership: a paying member gives one membership to her mother or
 // her daughter, named at purchase, at any point during her own membership year;
 // it is active for the full year alongside hers (Tori, 2026-09-19 and
-// 2026-09-20: the seat exists so mothers and daughters talk about money; the
+// 2026-09-20: the seat exists so mothers, daughters, and sisters talk about money; the
 // relationship is honored, never verified; no deadline). The offer, price, term, and
 // eligibility come from /api/named-seat (Built Not Found is the authority);
 // this card only presents them and hands the checkout to the same
@@ -284,7 +284,7 @@ export function NamedSeatCard({ api, initial }) {
   const seatStatus = giftStatusWords(data?.seat);
   return (
     <JourneyFrame><div class="card" id="named-seat-card">
-      <div class="card-label">A gift for your mother or daughter</div>
+      <div class="card-label">A gift for your mother, daughter, or sister</div>
       <h2>Give her a membership.</h2>
       {error && <p class="pay-error" role="alert">{error}</p>}
       {!data && !error && <p class="meeting-note">Loading…</p>}
@@ -301,14 +301,14 @@ export function NamedSeatCard({ api, initial }) {
       {data?.eligible && !data.seat && !reviewing && (
         <form class="seat-form" onSubmit={(e) => { e.preventDefault(); if (name.trim().length >= 2 && email.trim()) { setError(""); setReviewing(true); } }}>
           <p class="meeting-note" style="margin-top:0">
-            We want it to be easy and normal for mothers and daughters to talk about money.{" "}
+            We want it to be easy and normal for mothers, daughters, and sisters to talk about money.{" "}
             {included
-              ? <>Your Community Steward membership includes a membership for your mother or your daughter.</>
-              : <>Gift your mother or your daughter a membership for {money} a year.</>}
+              ? <>Your Community Steward membership includes a membership for your mother, daughter, or sister.</>
+              : <>Gift your mother, daughter, or sister a membership for {money} a year.</>}
             {" "}She accepts your gift, completes her own application, and joins as a member in her own right. Her membership is active for the full year alongside yours and renews with it. Your gift is final: once given, it is hers to use.
           </p>
-          <label class="seat-field">Her name<input required maxLength={160} value={name} onInput={(e) => setName(e.currentTarget.value)} /></label>
-          <label class="seat-field">Her email<input required type="email" maxLength={254} value={email} onInput={(e) => setEmail(e.currentTarget.value)} /></label>
+          <label class="seat-field">Full name<input required maxLength={160} value={name} onInput={(e) => setName(e.currentTarget.value)} /></label>
+          <label class="seat-field">Email<input required type="email" maxLength={254} value={email} onInput={(e) => setEmail(e.currentTarget.value)} /></label>
           <button class="submit-btn" type="submit">Review the gift</button>
         </form>
       )}

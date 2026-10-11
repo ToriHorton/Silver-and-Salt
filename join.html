@@ -34,7 +34,7 @@
       --ui-text: var(--moss); --ui-text-muted: var(--moss-light);
       --ui-font-sans: 'Satoshi', 'Helvetica Neue', sans-serif;
       --ui-font-display: 'Cormorant Garamond', Georgia, serif;
-      --ui-accent: var(--moss); --ui-on-accent: #fff;
+      --ui-accent: var(--lime); --ui-on-accent: #fff;
       --ui-border: var(--border); --ui-surface: #fff; --ui-surface-2: var(--lime-soft);
       --ui-radius-lg: 14px;
     }
@@ -252,6 +252,8 @@
     .membership-choice { border: 0; padding: 0; margin: 0 0 28px; min-width: 0; }
     .membership-choice legend { font-weight: 600; margin-bottom: 12px; }
     .membership-option { display: flex; align-items: center; gap: 12px; padding: 14px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+    .membership-option.is-selected { border: 2px solid var(--teal, #1C6D66); background: #f1f7f5; }
+    .membership-option.is-alternative { opacity: .68; }
     .membership-option input { width: auto; flex: 0 0 auto; }
     .membership-option > span { display: flex; flex-wrap: wrap; flex: 1; justify-content: space-between; gap: 4px 8px; }
     .membership-price { white-space: nowrap; }
@@ -403,28 +405,6 @@
     .referral-reveal label {
       color: var(--moss);
     }
-
-    /* Submit */
-    .submit-btn {
-      width: 100%;
-      background-color: var(--lime);
-      color: #fff;
-      font-family: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 4px;
-      padding: 15px;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background-color 0.2s, transform 0.1s;
-    }
-
-    .submit-btn:hover   { background-color: var(--lime-dark); }
-    .submit-btn:active  { transform: scale(0.99); }
-    .submit-btn:disabled { background-color: #b0cc9e; cursor: not-allowed; }
 
     .privacy {
       font-size: 11px;
