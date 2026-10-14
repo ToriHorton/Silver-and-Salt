@@ -239,3 +239,17 @@ describe("a call that did not happen", () => {
     expect(systemEventsFor(app, rebooked).action).toBe("conversation_booked");
   });
 });
+
+describe("member access after approval", () => {
+  const base = { freeTiers: new Set(), paidAt: new Map(), renewals: [], renewalFailures: [], now: 5000 };
+  it("counts access once approval has finished, even while the projection still reads paid pending approval", () => {
+    const app = { id: "s1", status: "approved", tierId: "standard", createdAt: 1, approvalEffectsPending: false, membershipStatus: "paid_pending_approval", renewalAt: 9e12 };
+    expect(systemEventsFor(app, base).action).toBe("member_access");
+  });
+  it("never counts access for a lapsed, refunded or declined membership", () => {
+    for (const ms of ["lapsed", "refunded", "declined", "refund_pending"]) {
+      const app = { id: "s2", status: "approved", tierId: "standard", createdAt: 1, approvalEffectsPending: false, membershipStatus: ms, renewalAt: 9e12 };
+      expect(systemEventsFor(app, base).events.map((e) => e.event)).not.toContain("member_access");
+    }
+  });
+});
