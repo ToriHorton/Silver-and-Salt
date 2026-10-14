@@ -47,6 +47,9 @@ import { recoverPendingApprovals } from "./approval-recovery";
 import { membershipNetwork } from "./membership-network";
 import { crmIngestRoute } from "./crm-ingest-route";
 import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./signup-paths";
+// Signup labels: Type, Path and Action on every person (Signup Journeys v3.1).
+import { labelsRoute } from "./labels-route.mjs";
+import { labelsTick } from "./labels-job.mjs";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
 import { hardenFetch } from "./hardening";
 import { SILVER_HARDENING } from "./hardening.config";
@@ -211,7 +214,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute] as Route[],
   };
 }
 
@@ -295,6 +298,15 @@ export default withObservability<ChapterEnv>({
           if (run.booked || run.approved) console.log("chapter.admin-milestones", run);
         } catch (err) {
           console.error("chapter.admin-milestones", (err as Error).message);
+        }
+        // Signup labels (src/labels-job.mjs): Type, Path, Action and the event
+        // history. Off until SIGNUP_LABELS is "on", which Tori turns on after
+        // approving the backfill review list.
+        try {
+          const run = await labelsTick(workerFor(env).background, env as unknown as Record<string, unknown>);
+          if (run && !("skipped" in run) && (run.events || run.labels || run.retries)) console.log("chapter.labels", JSON.stringify(run));
+        } catch (err) {
+          console.error("chapter.labels", (err as Error).message);
         }
         // The checkout canary (src/checkout-probe.ts). Silence here is the
         // point: it speaks only when the payment step's own request stops
