@@ -28,7 +28,8 @@ export const PATH_LABELS = {
 //   manual  Tori sets it in the Action tab
 //   confirm Tori sets it, normally by confirming a detected proposal
 //   system  only the labels job, from a record that proves it
-//   pending the operation behind it does not exist yet (with Cory); refused
+//   pending the operation behind it does not exist yet; refused (none today:
+//           Declined and Moved to Associate arrived with Chapter 0.57.0)
 const A = (id, label, type, setBy, rank, when) => ({ id, label, type, setBy, rank, when });
 
 // `rank` orders Actions inside one stretch of the journey so an older signal
@@ -54,12 +55,12 @@ export const ACTIONS = [
   A("not_fit", "Not a fit", "applicant", "manual", 50, { admission: ["call_required"] }),
   A("waiting_on_buyer", "Waiting on buying member", "member", "system", 55, { path: ["second_seat"] }),
   A("approved", "Approved", "member", "system", 60, {}),
-  A("moved_to_associate", "Moved to Associate", "member", "pending", 60, { payment: ["required"] }),
+  A("moved_to_associate", "Moved to Associate", "member", "system", 60, { payment: ["required"] }),
   A("member_access", "Member access", "member", "system", 70, {}),
   A("renewed", "Renewed", "member", "system", 80, {}),
   A("passed", "Passed", "former", "manual", 90, { path: ["relationship_first"], before: "applied" }),
   A("seat_declined", "Seat declined", "former", "manual", 90, { path: ["second_seat"] }),
-  A("declined", "Declined", "former", "pending", 90, {}),
+  A("declined", "Declined", "former", "system", 90, {}),
   A("refunded", "Refunded", "former", "system", 90, { payment: ["required"] }),
   A("seat_ended", "Seat ended", "former", "system", 90, { path: ["second_seat"] }),
   A("lapsed", "Lapsed", "former", "system", 90, {}),
@@ -106,13 +107,11 @@ export function refusalFor(actionId, person) {
   if (a.setBy === "system") {
     if (actionId === "approved") return "Approve from the application's Approve button; Approved is recorded once the approval has finished.";
     if (actionId === "refunded") return "Refund from the application's Refund button; Refunded is recorded once the refund has finished.";
+    if (actionId === "declined") return "Decline from the Decision panel's Decline button; Declined is recorded once it has finished.";
+    if (actionId === "moved_to_associate") return "Use Not a paid fit in the Decision panel (a refund that keeps them as an Associate); Moved to Associate is recorded once it has finished.";
     return `${a.label} is recorded by the system from the record that proves it.`;
   }
-  if (a.setBy === "pending") {
-    if (actionId === "declined") return "There is no decline operation yet (BNF bug fa96b11c). Record Not a fit instead.";
-    if (actionId === "moved_to_associate") return "There is no Not a paid fit operation yet (BNF bug f7bc92ee). Refund for now.";
-    return `${a.label} is not available yet.`;
-  }
+  if (a.setBy === "pending") return `${a.label} is not available yet.`;
   if (!validFor(actionId, person)) return `${a.label} does not apply to this person's path or application.`;
   return null;
 }
@@ -194,7 +193,7 @@ export const EVENT_LABELS = {
  * Pure: the caller supplies the application and the facts it read.
  *
  * facts: { freeTiers:Set, paidAt:Map<appId,{at,id}>, meeting:{id,at,startAt}|null,
- *          renewals:[{id,at}], now:number }
+ *          renewals:[{id,at}], continued:Set<appId>, path:string|null, now:number }
  */
 export function systemEventsFor(app, facts) {
   const events = [];
@@ -244,6 +243,9 @@ export function systemEventsFor(app, facts) {
   const approvedish = status === "approved";
   if (approvedish) {
     push("approved", journeyApproved ?? facts.now, "application", `${id}:approved`, journeyApproved === null ? observed : "exact");
+    // Not a paid fit (Chapter 0.57.0): the paid membership was refunded and the same application was kept
+    // on the free tier. Chapter archives the purchase, which is the record that proves it.
+    if (facts.continued?.has(id)) push("moved_to_associate", facts.now, "application", `${id}:continued`, observed);
     const ms = str(app.membershipStatus);
     const accessOk = app.approvalEffectsPending !== true && !NO_ACCESS_STATUSES.has(ms);
     if (accessOk) push("member_access", facts.now, "access", `${id}:access`, observed);
@@ -261,7 +263,9 @@ export function systemEventsFor(app, facts) {
   if (status === "refunded" || str(app.membershipStatus) === "refunded") {
     push(seat ? "seat_ended" : "refunded", num(app.refundedAt) ?? facts.now, "refund", `${id}:refunded`, num(app.refundedAt) === null ? observed : "exact");
   }
-  if (status === "declined") push("declined", facts.now, "application", `${id}:declined`, observed);
+  // A seat recipient the buyer replaced (Chapter 0.57.0 re-gift) is declined without a refund; their path
+  // still says Second seat even though Chapter has released the seat binding from the row.
+  if (status === "declined") push(seat || facts.path === "second_seat" ? "seat_declined" : "declined", facts.now, "application", `${id}:declined`, observed);
 
   // The current system Action is the highest-ranked event, latest wins a tie.
   let action = null;

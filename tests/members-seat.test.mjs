@@ -119,3 +119,18 @@ describe("MembersApp", () => {
     expect(html).not.toContain("A gift for your mother, daughter, or sister");
   });
 });
+
+describe("the gift after Chapter 0.57.0: held invitations and giving it to someone else", () => {
+  const seat = { seatId: "seat_x", recipientName: "Ada Lovelace", recipientEmail: "ada@example.com" };
+  it("says the invitation waits for her own approval instead of claiming it was sent", () => {
+    expect(giftStatusWords({ ...seat, status: "pending_acceptance", recipientState: "invited", invitationHeld: true })).toBe("named; her invitation goes out once your own membership is approved");
+    expect(giftStatusWords({ ...seat, status: "pending_acceptance", recipientState: "invited" })).toBe("invited; waiting for her to accept");
+  });
+  it("offers to give the gift to someone else only while the authority says it can be", () => {
+    const open = render(h(NamedSeatCard, { api, initial: { ...offer, eligible: false, seat: { ...seat, status: "pending_approval", recipientState: "accepted", regiftable: true } } }));
+    expect(open).toContain("Give the gift to someone else");
+    expect(open).not.toContain("Give her the membership instead");
+    const active = render(h(NamedSeatCard, { api, initial: { ...offer, eligible: false, seat: { ...seat, status: "active", recipientState: "joined", joinedAt: Date.UTC(2026, 9, 2) } } }));
+    expect(active).not.toContain("Give the gift to someone else");
+  });
+});
