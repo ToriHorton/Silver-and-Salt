@@ -580,9 +580,14 @@ describe("follower role", () => {
     //                           `fields` only and never the activity feed.
     // All three are READ-only: editableFields is deliberately unchanged, since
     // only this chapter's ingest knows when a call happened.
+    // Reviewed addition, Tori 2026-10-14 (Signup Journeys v3.1, build plan v3
+    // phase 3.1): the signup labels, so the hub sees Type, Path and Action for
+    // every chapter person. Read-only too: the chapter is authoritative for
+    // its labels.
     expect(chapter.network.readers).toEqual([{
       id: "built-not-found",
-      fields: { person: ["name", "email", "secondaryEmail", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount"] },
+      fields: { person: ["name", "email", "secondaryEmail", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount",
+        "journeyType", "journeyPath", "journeyAction", "actionSince", "admission", "payment", "tier"] },
       sharedNotes: ["person"],
       editableFields: { person: ["name", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message"] },
       stageTransitions: ["person"],
