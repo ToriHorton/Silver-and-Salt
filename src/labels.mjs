@@ -333,7 +333,7 @@ export const FLAG_TAGS = {
 };
 
 /** Which flags a person should carry right now. */
-export function flagsFor({ action, app, facts, revisitAt }) {
+export function flagsFor({ action, app, facts, revisitAt, proposal = null }) {
   const out = new Set();
   const now = facts?.now ?? Date.now();
   const ms = str(app?.membershipStatus);
@@ -348,7 +348,71 @@ export function flagsFor({ action, app, facts, revisitAt }) {
   if (ms === "payment_grace") out.add("payment_failed");
   if (ms === "cancel_at_term_end") out.add("cancels_at_term_end");
   if (action === "waiting_on_buyer") out.add("waiting_on_buyer");
+  if (proposal) out.add("move_to_confirm");
   return [...out].map((f) => FLAG_TAGS[f]);
 }
 
 export const KEEP_INFORMED_DAYS = 90;
+
+// ── Proposals (detected moves) ───────────────────────────────────────────────
+//
+// A proposal is one person, one target Action, one piece of evidence (build
+// plan v3, Appendix A.5). Tori confirms or dismisses it in the Action tab.
+//   - A dismissed proposal never returns from the same evidence.
+//   - It is only offered if the target is a valid next step, later in the
+//     journey than where the person is, and the evidence is newer than the
+//     current Action (a stale signal never overrides a newer decision).
+
+const CALL_KINDS = new Set(["call", "meeting"]);
+const HOUR = 60 * 60 * 1000;
+
+/**
+ * The one move to propose for a person, or null.
+ * input: { action, actionSince, path, hasApplication, admission, payment,
+ *          activities:[{id, kind, occurredAt}], emails:[{id, sentAt}],
+ *          meetingStartAt, waiverGrantId, prepNotes, linkedin, dismissed:Set }
+ */
+export function proposalFor(input) {
+  const { action, actionSince = 0, dismissed = new Set() } = input;
+  if (!action) return null;
+  const person = { path: input.path, hasApplication: input.hasApplication, admission: input.admission, payment: input.payment };
+  const cur = ACTION_BY_ID[action];
+  const candidates = [];
+  const add = (to, evidence, at, reason) => {
+    if (!evidence || dismissed.has(`${to}:${evidence}`)) return false;
+    if (!validFor(to, person)) return false;
+    const target = ACTION_BY_ID[to];
+    if (!target || !cur || (target.rank <= cur.rank && !(action === "keep_informed" && to === "contacted"))) return false;
+    if (typeof at === "number" && at < actionSince) return false;
+    candidates.push({ to, evidence, at: at ?? null, reason });
+    return true;
+  };
+  const calls = (input.activities ?? []).filter((a) => CALL_KINDS.has(a.kind));
+  // Each kind of evidence is tried oldest first until one is not dismissed.
+  if (action === "intro_booked") {
+    calls.filter((a) => a.occurredAt >= actionSince - 24 * HOUR).sort((a, b) => a.occurredAt - b.occurredAt)
+      .some((c) => add("intro_held", `call:${c.id}`, Math.max(c.occurredAt, actionSince), "A call summary arrived from Granola."));
+  }
+  if (action === "conversation_booked" && input.meetingStartAt) {
+    calls.filter((a) => a.occurredAt >= input.meetingStartAt - 2 * HOUR).sort((a, b) => a.occurredAt - b.occurredAt)
+      .some((c) => add("conversation_held", `call:${c.id}`, Math.max(c.occurredAt, actionSince), "A call summary arrived from Granola after the booked time."));
+  }
+  if (["identified", "researched", "keep_informed"].includes(action)) {
+    (input.emails ?? []).filter((m) => typeof m.sentAt === "number" && m.sentAt >= actionSince).sort((a, b) => a.sentAt - b.sentAt)
+      .some((e) => add("contacted", `email:${e.id}`, e.sentAt, "An email to them was sent from the admin console."));
+  }
+  if (action === "identified" && str(input.prepNotes).trim() && str(input.linkedin).trim()) {
+    add("researched", `prep:${str(input.prepNotes).trim().length}`, null, "Prep notes and LinkedIn are filled in.");
+  }
+  if (!input.hasApplication && input.waiverGrantId && !["invited", "passed"].includes(action)) {
+    add("invited", `grant:${input.waiverGrantId}`, null, "Waive interview is recorded for their email.");
+  }
+  if (!candidates.length) return null;
+  return candidates.sort((a, b) => ACTION_BY_ID[b.to].rank - ACTION_BY_ID[a.to].rank)[0];
+}
+
+/** Did a call summary arrive after the booked time? null when not yet knowable. */
+export function callSummaryAfter(activities, meetingStartAt) {
+  if (!meetingStartAt) return null;
+  return (activities ?? []).some((a) => CALL_KINDS.has(a.kind) && a.occurredAt >= meetingStartAt - 2 * HOUR);
+}

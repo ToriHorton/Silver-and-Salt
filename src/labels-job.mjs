@@ -14,11 +14,11 @@
 //     never writes a person who has no application (Tori labels those, and the
 //     backfill only writes after her review).
 
-import { addActivity, listRecords, updateRecord } from "@odla-ai/crm";
+import { addActivity, listActivities, listEmailLog, listRecords, updateRecord } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
 import {
-  ACTION_BY_ID, admissionOf, attemptOf, eventBody, eventId, eventMeta, flagsFor, initialPath,
-  nextAction, paymentOf, systemEventsFor, typeOf,
+  ACTION_BY_ID, admissionOf, attemptOf, callSummaryAfter, eventBody, eventId, eventMeta, flagsFor, initialPath,
+  nextAction, paymentOf, proposalFor, systemEventsFor, typeOf,
 } from "./labels.mjs";
 
 const REMINDER_TEMPLATES = ["bookingReminder", "bookingReminderFree", "paymentReminder"];
@@ -40,6 +40,67 @@ export async function loadPeople(db) {
     if (out.length >= total || !records.length) break;
   }
   return out;
+}
+
+/**
+ * What one person's activity log says: their calls (for Introduction held,
+ * Conversation held and Attendance unconfirmed), and the proposals Tori
+ * already dismissed, keyed "<to>:<evidence>".
+ */
+export async function loadSignals(db, record, { withEmails = false } = {}) {
+  const deps = { crm, db };
+  const acts = await listActivities(deps, { recordId: record.id, limit: 300 });
+  const activities = [];
+  const dismissed = new Set();
+  for (const a of acts) {
+    const m = typeof a.meta === "string" ? safeJson(a.meta) : a.meta ?? {};
+    const at = typeof m?.occurredAt === "number" ? m.occurredAt : a.createdAt;
+    activities.push({ id: a.id, kind: a.kind, occurredAt: at });
+    if (m?.journeyEvent === "proposal_dismissed" && m.to && m.evidence) dismissed.add(`${m.to}:${m.evidence}`);
+  }
+  let emails = [];
+  if (withEmails) {
+    try {
+      const rows = await listEmailLog(deps, { recordId: record.id, limit: 50 });
+      emails = rows
+        .filter((r) => !r.error)
+        .map((r) => ({ id: String(r.id), sentAt: typeof r.sentAt === "number" ? r.sentAt : typeof r.createdAt === "number" ? r.createdAt : null }));
+    } catch { /* no email log: no email signal */ }
+  }
+  return { activities, dismissed, emails };
+}
+
+function safeJson(s) {
+  try { return JSON.parse(s); } catch { return null; }
+}
+
+/** Active "Waive interview" decisions, by normalized email. */
+export async function loadWaivers(db) {
+  const { admissionGrants } = await db.query({ admissionGrants: { $: { limit: 1000 } } });
+  const now = Date.now();
+  const out = new Map();
+  for (const g of admissionGrants ?? []) {
+    if (str(g.decision || "waive_interview") !== "waive_interview" || g.active === false) continue;
+    if (typeof g.expiresAt === "number" && g.expiresAt <= now) continue;
+    const e = lower(g.emailNormalized ?? g.email);
+    if (e) out.set(e, String(g.id));
+  }
+  return out;
+}
+
+/** The proposal fields and flag for a person, and the event that records a new proposal. */
+export function proposalPlan(record, proposal, now) {
+  const f = record.fields ?? {};
+  const fields = {
+    proposedAction: proposal?.to ?? "",
+    proposalEvidence: proposal?.evidence ?? "",
+    proposalReason: proposal?.reason ?? "",
+  };
+  const isNew = proposal && (f.proposedAction !== proposal.to || f.proposalEvidence !== proposal.evidence);
+  const event = isNew
+    ? { event: "proposal_made", occurredAt: proposal.at ?? now, sourceType: "proposal", sourceId: `${proposal.to}:${proposal.evidence}`, dateQuality: "exact", proposedTo: proposal.to, reason: proposal.reason }
+    : null;
+  return { fields, event };
 }
 
 /** Everything the rules need, read once per run. */
@@ -107,7 +168,7 @@ export async function loadFacts(db, chapterId, runtime) {
  * What one person's labels and events should be. Pure apart from its inputs,
  * so the backfill can show it without writing it.
  */
-export function planPerson(record, app, all, { now, nowQuality, pathOverride = null }) {
+export function planPerson(record, app, all, { now, nowQuality, pathOverride = null, signals = null }) {
   const f = record.fields ?? {};
   const appId = app ? String(app.id) : null;
   const facts = {
@@ -120,6 +181,10 @@ export function planPerson(record, app, all, { now, nowQuality, pathOverride = n
     now,
     nowQuality,
   };
+  const meeting = facts.meeting;
+  if (signals && meeting?.startAt && meeting.startAt + 60 * 60 * 1000 < now) {
+    facts.callSummaryAfterMeeting = callSummaryAfter(signals.activities, meeting.startAt);
+  }
   const knownBeforeApplying = !!app && typeof app.createdAt === "number" && record.createdAt < app.createdAt - 60_000;
   // Tori's answer for a person already on record wins over the guess (backfill only).
   const path = initialPath({ existingPath: str(f.journeyPath) || pathOverride, app, knownBeforeApplying });
@@ -135,7 +200,16 @@ export function planPerson(record, app, all, { now, nowQuality, pathOverride = n
   const since = action !== current
     ? (sys.events.filter((e) => e.event === action).at(-1)?.occurredAt ?? now)
     : (typeof f.actionSince === "number" ? f.actionSince : null);
-  const flags = flagsFor({ action, app, facts, revisitAt: typeof f.revisitAt === "number" ? f.revisitAt : null });
+  const actionSinceNow = since ?? 0;
+  const proposal = signals
+    ? proposalFor({
+        action, actionSince: actionSinceNow, path, hasApplication: !!app, admission, payment,
+        activities: signals.activities, emails: signals.emails, meetingStartAt: meeting?.startAt ?? null,
+        waiverGrantId: signals.waiverGrantId ?? null, prepNotes: f.prepNotes, linkedin: f.linkedin, dismissed: signals.dismissed,
+      })
+    : null;
+  const proposalBits = signals ? proposalPlan(record, proposal, now) : { fields: {}, event: null };
+  const flags = flagsFor({ action, app, facts, revisitAt: typeof f.revisitAt === "number" ? f.revisitAt : null, proposal });
   const labels = {
     journeyPath: path,
     journeyAction: action,
@@ -146,9 +220,10 @@ export function planPerson(record, app, all, { now, nowQuality, pathOverride = n
     attempt,
     ...(since !== null ? { actionSince: since } : {}),
     journeyFlags: flags.join(","),
+    ...proposalBits.fields,
   };
   const changed = Object.entries(labels).some(([k, v]) => (f[k] ?? null) !== (v ?? null));
-  return { recordId: record.id, current, labels, changed, events: [...sys.events, ...reminderEvents] };
+  return { recordId: record.id, current, labels, changed, events: [...sys.events, ...reminderEvents, ...(proposalBits.event ? [proposalBits.event] : [])] };
 }
 
 /** Write one plan: events first, then the labels. */
@@ -161,7 +236,11 @@ export async function applyPlan(db, record, plan, { now, method = "automatic" })
       kind: "system",
       body: eventBody(e),
       authorId: "system",
-      meta: { ...eventMeta(e, { personId: record.id, actor: "system", method, recordedAt: now }), ...(e.reminderType ? { reminderType: e.reminderType } : {}) },
+      meta: {
+        ...eventMeta(e, { personId: record.id, actor: "system", method, recordedAt: now }),
+        ...(e.reminderType ? { reminderType: e.reminderType } : {}),
+        ...(e.proposedTo ? { proposedTo: e.proposedTo, reason: e.reason } : {}),
+      },
       mutationId: eventId({ personId: record.id, event: e.event, sourceType: e.sourceType, sourceId: e.sourceId }),
     });
     if (!res.duplicate) written++;
@@ -198,8 +277,8 @@ export async function applyPlan(db, record, plan, { now, method = "automatic" })
  * One pass over every applicant. `write: false` returns the plans without
  * writing (the backfill's review list).
  */
-export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQuality = "exact", write = true, pathOverrides = new Map() } = {}) {
-  const [people, all] = await Promise.all([loadPeople(db), loadFacts(db, chapterId, runtime)]);
+export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQuality = "exact", write = true, pathOverrides = new Map(), detect = false } = {}) {
+  const [people, all, waivers] = await Promise.all([loadPeople(db), loadFacts(db, chapterId, runtime), detect ? loadWaivers(db) : Promise.resolve(new Map())]);
   const byAppId = new Map();
   const byEmail = new Map();
   for (const p of people) {
@@ -213,7 +292,8 @@ export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQ
   for (const app of all.apps) {
     const record = byAppId.get(String(app.id)) ?? byEmail.get(lower(app.email));
     if (!record) { summary.unmatched++; continue; }
-    const plan = planPerson(record, app, all, { now, nowQuality, pathOverride: pathOverrides.get(lower(record.primaryEmail ?? app.email)) ?? null });
+    const signals = detect ? await loadSignals(db, record) : null;
+    const plan = planPerson(record, app, all, { now, nowQuality, pathOverride: pathOverrides.get(lower(record.primaryEmail ?? app.email)) ?? null, signals });
     plans.push({ record, app, plan });
     summary.people++;
     if (!write) continue;
@@ -222,17 +302,36 @@ export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQ
     if (res.labels) summary.labels++;
     if (res.retry) summary.retries++;
   }
-  // Prospects already labelled by Tori: keep their flags current (Revisit due).
+  // Prospects already labelled by Tori: keep their flags current (Revisit
+  // due) and, when detection is on, propose the moves their records show.
   for (const p of people) {
     const f = p.fields ?? {};
     if (str(f.applicationId) || !str(f.journeyAction)) continue;
-    const flags = flagsFor({ action: f.journeyAction, app: null, facts: { now }, revisitAt: typeof f.revisitAt === "number" ? f.revisitAt : null }).join(",");
-    if ((f.journeyFlags ?? "") === flags) continue;
-    plans.push({ record: p, app: null, plan: { recordId: p.id, current: f.journeyAction, labels: { journeyFlags: flags }, changed: true, events: [] } });
+    let proposalBits = { fields: {}, event: null };
+    let proposal = null;
+    if (detect) {
+      const signals = await loadSignals(db, p, { withEmails: true });
+      proposal = proposalFor({
+        action: f.journeyAction, actionSince: typeof f.actionSince === "number" ? f.actionSince : 0,
+        path: str(f.journeyPath) || "relationship_first", hasApplication: false,
+        activities: signals.activities, emails: signals.emails,
+        waiverGrantId: waivers.get(lower(p.primaryEmail ?? f.email)) ?? null,
+        prepNotes: f.prepNotes, linkedin: f.linkedin, dismissed: signals.dismissed,
+      });
+      proposalBits = proposalPlan(p, proposal, now);
+    }
+    const flags = flagsFor({ action: f.journeyAction, app: null, facts: { now }, revisitAt: typeof f.revisitAt === "number" ? f.revisitAt : null, proposal }).join(",");
+    const input = { journeyFlags: flags, ...proposalBits.fields };
+    const changed = Object.entries(input).some(([k, v]) => (f[k] ?? "") !== (v ?? ""));
+    if (!changed && !proposalBits.event) continue;
+    plans.push({ record: p, app: null, plan: { recordId: p.id, current: f.journeyAction, labels: input, changed, events: proposalBits.event ? [proposalBits.event] : [] } });
     if (write) {
-      try {
-        await updateRecord({ crm, db }, { id: p.id, input: { journeyFlags: flags }, expectedUpdatedAt: p.updatedAt });
-      } catch { summary.retries++; }
+      if (proposalBits.event) await applyPlan(db, p, { recordId: p.id, current: f.journeyAction, labels: {}, changed: false, events: [proposalBits.event] }, { now });
+      if (changed) {
+        try {
+          await updateRecord({ crm, db }, { id: p.id, input, expectedUpdatedAt: p.updatedAt });
+        } catch { summary.retries++; }
+      }
     }
   }
   return { summary, plans };
@@ -242,7 +341,7 @@ export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQ
 export async function labelsTick(context, env, { now = Date.now() } = {}) {
   if (env?.SIGNUP_LABELS !== "on") return { skipped: "off" };
   const runtime = typeof env.ODLA_RUNTIME === "string" ? env.ODLA_RUNTIME : undefined;
-  const { summary } = await runLabels(context.makeDb(env), context.chapter.id, runtime, { now, nowQuality: "exact", write: true });
+  const { summary } = await runLabels(context.makeDb(env), context.chapter.id, runtime, { now, nowQuality: "exact", write: true, detect: true });
   return summary;
 }
 
