@@ -341,7 +341,9 @@ export function flagsFor({ action, app, facts, revisitAt }) {
   if ((action === "paid" || (action === "applied" && paymentOf(app, facts?.freeTiers) === "not_required")) && admissionOf(app).admission === "call_required") out.add("needs_to_book");
   if (facts?.reminded) out.add("reminded");
   if (action === "conversation_held") out.add("outcome_due");
-  if (action === "conversation_booked" && facts?.meeting?.startAt && facts.meeting.startAt + 60 * 60 * 1000 < now && !facts.callSummaryAfterMeeting) out.add("attendance_unconfirmed");
+  // Only once the job knows whether a call summary arrived (phase 4 reads
+  // Granola). Unknown is not "no summary", so no flag until it is checked.
+  if (action === "conversation_booked" && facts?.meeting?.startAt && facts.meeting.startAt + 60 * 60 * 1000 < now && facts.callSummaryAfterMeeting === false) out.add("attendance_unconfirmed");
   if (action === "keep_informed" && revisitAt && revisitAt <= now) out.add("revisit_due");
   if (ms === "payment_grace") out.add("payment_failed");
   if (ms === "cancel_at_term_end") out.add("cancels_at_term_end");
