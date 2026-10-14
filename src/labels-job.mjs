@@ -55,7 +55,11 @@ export async function loadSignals(db, record, { withEmails = false } = {}) {
   for (const a of acts) {
     const m = typeof a.meta === "string" ? safeJson(a.meta) : a.meta ?? {};
     const at = typeof m?.occurredAt === "number" ? m.occurredAt : a.createdAt;
-    activities.push({ id: a.id, kind: a.kind, occurredAt: at });
+    activities.push({
+      id: a.id, kind: a.kind, occurredAt: at,
+      // Outreach signals from the morning routine (src/crm-ingest.mjs ingestOutreach).
+      ...(m?.signal ? { signal: m.signal, signalId: m.signalId, startAt: m.startAt ?? null } : {}),
+    });
     if (m?.journeyEvent === "proposal_dismissed" && m.to && m.evidence) dismissed.add(`${m.to}:${m.evidence}`);
   }
   let emails = [];

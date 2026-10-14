@@ -210,3 +210,17 @@ describe("proposals", () => {
     expect(callSummaryAfter([], null)).toBeNull();
   });
 });
+
+describe("outreach signals from the morning routine", () => {
+  const prospect = { path: "relationship_first", hasApplication: false };
+  it("an email found in Gmail proposes Contacted", () => {
+    const p = proposalFor({ ...prospect, action: "identified", actionSince: 10, activities: [{ id: "a1", kind: "note", occurredAt: 20, signal: "email_sent", signalId: "m1" }] });
+    expect(p).toMatchObject({ to: "contacted", evidence: "email:gmail:m1" });
+    expect(p.reason).toMatch(/Gmail/);
+  });
+  it("a calendar event proposes Introduction booked, but a note is never a call", () => {
+    const acts = [{ id: "a2", kind: "note", occurredAt: 30, signal: "calendar_event", signalId: "ev1", startAt: 99 }];
+    expect(proposalFor({ ...prospect, action: "contacted", actionSince: 10, activities: acts })).toMatchObject({ to: "intro_booked", evidence: "calendar:ev1" });
+    expect(proposalFor({ ...prospect, action: "intro_booked", actionSince: 10, activities: acts })).toBeNull();
+  });
+});

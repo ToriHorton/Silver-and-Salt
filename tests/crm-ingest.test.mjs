@@ -428,3 +428,23 @@ describe("ingestBatch", () => {
     await expect(ingestBatch(db, null)).resolves.toMatchObject({ meetings: 0 });
   });
 });
+
+describe("outreach signals", () => {
+  it("attach to people already known, never create anyone, and replay as nothing", async () => {
+    await ingestBatch(db, { meetings: [MEETING] }); // creates Sharlene
+    const people = store.records.length;
+    const signal = { kind: "email_sent", sourceId: "gmail", signalId: "msg-1", occurredAt: 1_800_000_100_000, subject: "Following up", emails: ["sharlene@example.com", "stranger@example.com", "tori@silverandsaltcapital.com"] };
+    const first = await ingestBatch(db, { outreach: [signal] });
+    expect(first.signalsWritten).toBe(1);
+    expect(first.signalsUnmatched).toEqual(["stranger@example.com"]);
+    expect(store.records).toHaveLength(people);
+    const note = store.activities.find((a) => a.meta?.signal === "email_sent");
+    expect(note).toMatchObject({ kind: "note", meta: { signal: "email_sent", signalId: "msg-1" } });
+    const again = await ingestBatch(db, { outreach: [signal] });
+    expect(again.signalsWritten).toBe(0);
+  });
+  it("refuses an unknown kind or a signal with no id, without sinking the batch", async () => {
+    const res = await ingestBatch(db, { outreach: [{ kind: "tweet", signalId: "x", occurredAt: 1 }, { kind: "calendar_event", occurredAt: 1 }] });
+    expect(res.errors.map((e) => e.error)).toEqual([expect.stringMatching(/unknown signal kind/), expect.stringMatching(/signalId is required/)]);
+  });
+});

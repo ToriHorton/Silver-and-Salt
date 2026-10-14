@@ -10,7 +10,7 @@
 // other way round. Writes carry the record's last-updated time, so two people
 // editing at once cannot overwrite each other silently.
 
-import { getRecord, listActivities, listRecords, updateRecord } from "@odla-ai/crm";
+import { addActivity, getRecord, listActivities, listRecords, updateRecord } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
 import {
   ACTION_BY_ID, EVENT_LABELS, KEEP_INFORMED_DAYS, PATH_LABELS, TYPE_LABELS, manualActionsFor, refusalFor, typeOf,
@@ -240,6 +240,20 @@ export const labelsRoute = async (req, url, env, ctx) => {
       });
     } catch (err) {
       return json({ error: "This person changed since you opened them. Refresh and try again.", detail: err instanceof Error ? err.message : String(err) }, 409);
+    }
+    // Keep informed puts a follow-up on Tori's open list for the revisit date,
+    // beside the call follow-ups. The Action stays Keep informed until fresh
+    // outreach is recorded or confirmed (Appendix A.3).
+    if (action === "keep_informed" && input.revisitAt) {
+      await addActivity(deps, {
+        recordId,
+        kind: "task",
+        body: `Revisit ${record.name}: kept informed since ${new Date(now).toISOString().slice(0, 10)}. Reach out again.`,
+        authorId: auth.user.userId,
+        dueAt: input.revisitAt,
+        meta: { journeyEvent: "revisit_task", revisitAt: input.revisitAt, occurredAt: now },
+        mutationId: `journey-revisit:${recordId}:${input.revisitAt}`,
+      }).catch((err) => console.error("labels: revisit task not written", recordId, err instanceof Error ? err.message : err));
     }
     const fresh = await getRecord(deps, recordId);
     return json({ ok: true, updatedAt: fresh?.updatedAt, labels: labelsView(fresh) });
