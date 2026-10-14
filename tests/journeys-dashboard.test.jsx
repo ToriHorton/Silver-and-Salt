@@ -20,6 +20,8 @@ it("draws the filters, the grid, the list and the curves from the people", () =>
   expect(html).not.toContain("Sample Member");
   expect(html).toContain("Counts ignore the Path and Type filters");
   expect(html).toContain('aria-pressed="true"');
-  expect(html).toContain("Progress over time");
+  expect(html).toContain("Conversion curves");
+  expect(html).toContain('class="seg-ctl small"');
+  expect(html).toContain("Include estimated dates");
   expect(html).toContain("Prospect → Applicant");
 });
