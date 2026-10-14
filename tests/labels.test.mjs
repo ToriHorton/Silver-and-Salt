@@ -157,8 +157,10 @@ describe("labels reflect completed operations", () => {
 describe("flags", () => {
   it("Attendance unconfirmed, never a no-show, when a booked time passes with no summary", () => {
     const app = { id: "a", status: "call_scheduled", tierId: "standard" };
-    const f = flagsFor({ action: "conversation_booked", app, facts: facts({ meeting: { startAt: NOW - 2 * 60 * 60 * 1000 } }) });
-    expect(f).toContain(FLAG_TAGS.attendance_unconfirmed);
+    const meeting = { startAt: NOW - 2 * 60 * 60 * 1000 };
+    expect(flagsFor({ action: "conversation_booked", app, facts: facts({ meeting, callSummaryAfterMeeting: false }) })).toContain(FLAG_TAGS.attendance_unconfirmed);
+    // Not checked yet (no Granola read) is not the same as no summary.
+    expect(flagsFor({ action: "conversation_booked", app, facts: facts({ meeting }) })).not.toContain(FLAG_TAGS.attendance_unconfirmed);
   });
   it("Revisit due keeps the Action", () => {
     expect(flagsFor({ action: "keep_informed", app: null, facts: facts(), revisitAt: NOW - 1 })).toContain(FLAG_TAGS.revisit_due);
