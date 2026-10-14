@@ -175,6 +175,7 @@ export const EVENT_LABELS = {
   renewal_payment_failed: "Renewal payment failed",
   cancellation_scheduled: "Cancellation scheduled",
   reminder_sent: "Reminder sent",
+  proposal_made: "Move proposed",
   proposal_dismissed: "Proposal dismissed",
   reopened: "Reopened",
   no_show: "No-show",

@@ -222,7 +222,9 @@ export function planPerson(record, app, all, { now, nowQuality, pathOverride = n
     journeyFlags: flags.join(","),
     ...proposalBits.fields,
   };
-  const changed = Object.entries(labels).some(([k, v]) => (f[k] ?? null) !== (v ?? null));
+  // An empty string and a missing field mean the same: nothing to write.
+  const norm = (v) => (v === "" || v === undefined ? null : v);
+  const changed = Object.entries(labels).some(([k, v]) => norm(f[k]) !== norm(v));
   return { recordId: record.id, current, labels, changed, events: [...sys.events, ...reminderEvents, ...(proposalBits.event ? [proposalBits.event] : [])] };
 }
 
