@@ -37,7 +37,11 @@
     // silverandsaltcapital.com to Email Service in the Cloudflare dashboard
     // before the first send, or sends fail with E_SENDER_NOT_VERIFIED (they
     // are audited in emailLog either way).
-    "EMAIL_FROM": "tori@silverandsaltcapital.com"
+    "EMAIL_FROM": "tori@silverandsaltcapital.com",
+    // The signup labels job (src/labels-job.mjs) runs on the five-minute cron
+    // only when this is "on". Switched on by Tori, 2026-10-14. Production only:
+    // staging shares the production tenant and must not run a second copy.
+    "SIGNUP_LABELS": "on"
   },
   // The Built Not Found authority Worker on the same Cloudflare account.
   "services": [{ "binding": "BUILT_NOT_FOUND", "service": "built-not-found" }],
