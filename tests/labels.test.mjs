@@ -173,3 +173,40 @@ describe("attempts", () => {
     expect(attemptOf({ id: "a", membershipRestartId: "r1" })).toBe("a:r1");
   });
 });
+
+import { proposalFor, callSummaryAfter } from "../src/labels.mjs";
+
+describe("proposals", () => {
+  const prospect = { path: "relationship_first", hasApplication: false };
+  it("a Granola summary after an introduction was booked proposes Introduction held", () => {
+    const p = proposalFor({ ...prospect, action: "intro_booked", actionSince: 100, activities: [{ id: "c1", kind: "call", occurredAt: 200 }] });
+    expect(p).toMatchObject({ to: "intro_held", evidence: "call:c1" });
+  });
+  it("a dismissed proposal never returns from the same evidence", () => {
+    const input = { ...prospect, action: "intro_booked", actionSince: 100, activities: [{ id: "c1", kind: "call", occurredAt: 200 }] };
+    expect(proposalFor({ ...input, dismissed: new Set(["intro_held:call:c1"]) })).toBeNull();
+    const fresh = proposalFor({ ...input, dismissed: new Set(["intro_held:call:c1"]), activities: [...input.activities, { id: "c2", kind: "meeting", occurredAt: 300 }] });
+    expect(fresh).toMatchObject({ evidence: "call:c2" });
+  });
+  it("an email older than the current Action proposes nothing", () => {
+    expect(proposalFor({ ...prospect, action: "identified", actionSince: 500, emails: [{ id: "e1", sentAt: 400 }] })).toBeNull();
+    expect(proposalFor({ ...prospect, action: "identified", actionSince: 500, emails: [{ id: "e2", sentAt: 600 }] })).toMatchObject({ to: "contacted" });
+  });
+  it("fresh outreach after Keep informed proposes Contacted", () => {
+    expect(proposalFor({ ...prospect, action: "keep_informed", actionSince: 10, emails: [{ id: "e3", sentAt: 20 }] })).toMatchObject({ to: "contacted" });
+  });
+  it("a waiver proposes Invited for someone who has not applied", () => {
+    expect(proposalFor({ ...prospect, action: "soft_commit", waiverGrantId: "g1" })).toMatchObject({ to: "invited", evidence: "grant:g1" });
+    expect(proposalFor({ ...prospect, hasApplication: true, action: "applied", waiverGrantId: "g1" })).toBeNull();
+  });
+  it("a summary after the booked time proposes Conversation held; before it, nothing", () => {
+    const base = { path: "website_first", hasApplication: true, admission: "call_required", payment: "required", action: "conversation_booked", actionSince: 0, meetingStartAt: 10 * 3600e3 };
+    expect(proposalFor({ ...base, activities: [{ id: "c", kind: "call", occurredAt: 10 * 3600e3 + 60e3 }] })).toMatchObject({ to: "conversation_held" });
+    expect(proposalFor({ ...base, activities: [{ id: "c", kind: "call", occurredAt: 1 }] })).toBeNull();
+  });
+  it("knows whether a summary arrived after the booked time", () => {
+    expect(callSummaryAfter([{ kind: "note", occurredAt: 99 }], 50)).toBe(false);
+    expect(callSummaryAfter([{ kind: "call", occurredAt: 99 }], 50)).toBe(true);
+    expect(callSummaryAfter([], null)).toBeNull();
+  });
+});

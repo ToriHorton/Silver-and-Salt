@@ -126,6 +126,11 @@ export const crm = defineCrm({
         // The current flags as one comma-separated string, so the job can tell
         // whether they changed without a tag read per person every run.
         journeyFlags: { type: "string", label: "Flags", search: false },
+        // A detected move waiting for Tori (src/labels.mjs proposalFor): the
+        // target Action, the evidence it came from, and why, in plain words.
+        proposedAction: { type: "string", label: "Proposed action", search: false },
+        proposalEvidence: { type: "string", label: "Proposal evidence", search: false },
+        proposalReason: { type: "string", label: "Proposal reason", search: false },
       },
       // Mirrors the applications.status pipeline (STATUSES in src/worker.ts /
       // STATUS_LABELS in src/app/lib.js). Declaration order sets stageIndex

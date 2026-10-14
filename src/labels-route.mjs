@@ -19,6 +19,7 @@ import {
 export const LABELS_PERSON_PATH = "/api/admin/labels/person";
 export const LABELS_ACTION_PATH = "/api/admin/labels/person/action";
 export const LABELS_PEOPLE_PATH = "/api/admin/labels/people";
+export const LABELS_DISMISS_PATH = "/api/admin/labels/person/dismiss";
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -53,8 +54,13 @@ export function labelsView(record) {
     actionSince: typeof f.actionSince === "number" ? f.actionSince : null,
     revisitAt: typeof f.revisitAt === "number" ? f.revisitAt : null,
     flags: str(f.journeyFlags).split(",").filter(Boolean),
+    proposal: str(f.proposedAction)
+      ? { action: str(f.proposedAction), label: ACTION_BY_ID[str(f.proposedAction)]?.label ?? str(f.proposedAction), evidence: str(f.proposalEvidence), reason: str(f.proposalReason) }
+      : null,
   };
 }
+
+const CLEAR_PROPOSAL = { proposedAction: "", proposalEvidence: "", proposalReason: "" };
 
 /** The history, oldest first, from the person's activity log. */
 export function historyFrom(activities) {
@@ -183,6 +189,7 @@ export const labelsRoute = async (req, url, env, ctx) => {
     const recordId = str(body?.recordId);
     const action = str(body?.action);
     const method = body?.method === "confirmed" ? "confirmed" : "manual";
+    const evidence = str(body?.evidence);
     const deps = { crm, db: auth.db };
     const record = await getRecord(deps, recordId);
     if (!record || record.type !== "person") return json({ error: "not found" }, 404);
@@ -192,8 +199,13 @@ export const labelsRoute = async (req, url, env, ctx) => {
     if (action === "invited" && !(await hasWaiver(auth.db, record.primaryEmail ?? record.fields?.email))) {
       return json({ error: "Record Waive interview for their email under Admission first; Invited needs it, because a waiver only counts if it exists before they apply." }, 400);
     }
-    const now = Date.now();
     const f = record.fields ?? {};
+    // Confirming checks the proposal is still the one Tori saw; if the person
+    // moved on since, the proposal is stale and nothing changes.
+    if (method === "confirmed" && (str(f.proposedAction) !== action || str(f.proposalEvidence) !== evidence)) {
+      return json({ error: "This proposal is out of date: the person changed since it was made. Refresh to see where they are now." }, 409);
+    }
+    const now = Date.now();
     const from = str(f.journeyAction) || null;
     const reopened = from && typeOf(from) === "former";
     const input = {
@@ -201,6 +213,8 @@ export const labelsRoute = async (req, url, env, ctx) => {
       journeyType: typeOf(action),
       journeyPath: person.path ?? "relationship_first",
       actionSince: now,
+      // Any decision, by hand or by confirming, settles the open proposal.
+      ...CLEAR_PROPOSAL,
     };
     if (action === "keep_informed") {
       const r = typeof body?.revisitAt === "number" && body.revisitAt > now ? body.revisitAt : now + KEEP_INFORMED_DAYS * 864e5;
@@ -219,12 +233,49 @@ export const labelsRoute = async (req, url, env, ctx) => {
           meta: {
             journeyEvent: "action_changed", from, to: action, reopened: !!reopened,
             occurredAt: now, recordedAt: now, actor: auth.user.userId, method,
-            sourceType: "manual", sourceId, dateQuality: "exact", personId: recordId,
+            sourceType: method === "confirmed" ? "proposal" : "manual", sourceId: method === "confirmed" ? evidence : sourceId,
+            dateQuality: "exact", personId: recordId,
           },
         },
       });
     } catch (err) {
       return json({ error: "This person changed since you opened them. Refresh and try again.", detail: err instanceof Error ? err.message : String(err) }, 409);
+    }
+    const fresh = await getRecord(deps, recordId);
+    return json({ ok: true, updatedAt: fresh?.updatedAt, labels: labelsView(fresh) });
+  }
+
+  if (url.pathname === LABELS_DISMISS_PATH && req.method === "POST") {
+    const auth = await adminOrError(req, env, ctx);
+    if (auth.error) return auth.error;
+    let body;
+    try { body = await req.json(); } catch { return json({ error: "bad request" }, 400); }
+    const recordId = str(body?.recordId);
+    const action = str(body?.action);
+    const evidence = str(body?.evidence);
+    const deps = { crm, db: auth.db };
+    const record = await getRecord(deps, recordId);
+    if (!record || record.type !== "person") return json({ error: "not found" }, 404);
+    const f = record.fields ?? {};
+    if (str(f.proposedAction) !== action || str(f.proposalEvidence) !== evidence) {
+      return json({ error: "This proposal is out of date. Refresh to see where they are now." }, 409);
+    }
+    const now = Date.now();
+    try {
+      await updateRecord(deps, {
+        id: recordId,
+        input: { ...CLEAR_PROPOSAL, journeyFlags: str(f.journeyFlags).split(",").filter((x) => x && x !== "flag:move-to-confirm").join(",") },
+        expectedUpdatedAt: typeof body?.expectedUpdatedAt === "number" ? body.expectedUpdatedAt : record.updatedAt,
+        audit: {
+          id: `journey-dismiss:${recordId}:${action}:${evidence}`,
+          body: `Proposal dismissed: ${ACTION_BY_ID[action]?.label ?? action}`,
+          authorId: auth.user.userId,
+          // The job reads this so the same evidence never proposes again.
+          meta: { journeyEvent: "proposal_dismissed", to: action, evidence, occurredAt: now, recordedAt: now, actor: auth.user.userId, method: "manual", sourceType: "proposal", sourceId: evidence, dateQuality: "exact", personId: recordId },
+        },
+      });
+    } catch {
+      return json({ error: "This person changed since you opened them. Refresh and try again." }, 409);
     }
     const fresh = await getRecord(deps, recordId);
     return json({ ok: true, updatedAt: fresh?.updatedAt, labels: labelsView(fresh) });

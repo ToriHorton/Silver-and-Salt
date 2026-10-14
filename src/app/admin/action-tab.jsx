@@ -12,6 +12,7 @@ import { useEffect, useState } from "preact/hooks";
 
 const PERSON_PATH = "/api/admin/labels/person";
 const ACTION_PATH = "/api/admin/labels/person/action";
+const DISMISS_PATH = "/api/admin/labels/person/dismiss";
 const DAY = 864e5;
 
 // Insert the Action tab first on person records, so the labels are the first
@@ -95,8 +96,32 @@ function ActionTab({ recordId }) {
     }
   };
 
+  const decide = async (path, body) => {
+    setSaving(true);
+    setMessage(null);
+    try {
+      await request(path, { method: "POST", body: JSON.stringify({ recordId, expectedUpdatedAt: updatedAt, ...body }) });
+      setMessage({ ok: true, text: "Saved." });
+      load();
+    } catch (err) {
+      setMessage({ ok: false, text: err.message });
+    } finally {
+      setSaving(false);
+    }
+  };
+  const p = labels.proposal;
+
   return (
     <div class="journey-tab" style="display:grid;gap:18px">
+      {p && (
+        <div role="region" aria-label="Proposed move" style="border:1px solid #B8925A;background:rgba(184,146,90,.12);border-radius:6px;padding:12px 14px;display:grid;gap:8px;max-width:620px">
+          <div><b>Move to {p.label}?</b> <span class="muted">{p.reason}</span></div>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="btn" disabled={saving} onClick={() => decide(ACTION_PATH, { action: p.action, method: "confirmed", evidence: p.evidence })}>Confirm</button>
+            <button type="button" class="btn secondary" disabled={saving} onClick={() => decide(DISMISS_PATH, { action: p.action, evidence: p.evidence })}>Dismiss</button>
+          </div>
+        </div>
+      )}
       <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
         <Chip k="Type" v={labels.typeLabel} />
         <Chip k="Path" v={labels.pathLabel} />
