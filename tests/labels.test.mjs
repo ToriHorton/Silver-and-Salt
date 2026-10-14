@@ -224,3 +224,18 @@ describe("outreach signals from the morning routine", () => {
     expect(proposalFor({ ...prospect, action: "intro_booked", actionSince: 10, activities: acts })).toBeNull();
   });
 });
+
+import { meetingKey } from "../src/labels.mjs";
+
+describe("a call that did not happen", () => {
+  it("stops counting that booked time, and a new time counts again", () => {
+    const app = { id: "n1", status: "call_scheduled", tierId: "standard", createdAt: 1 };
+    const meeting = { id: "m1", at: 5, startAt: 1000 };
+    const base = { freeTiers: new Set(), paidAt: new Map([["n1", { at: 2, id: "p" }]]), renewals: [], renewalFailures: [], now: 2000 };
+    expect(systemEventsFor(app, { ...base, meeting }).action).toBe("conversation_booked");
+    const marked = { ...base, meeting, noShowKeys: new Set([meetingKey(meeting)]) };
+    expect(systemEventsFor(app, marked).action).toBe("paid");
+    const rebooked = { ...marked, meeting: { ...meeting, startAt: 3000 } };
+    expect(systemEventsFor(app, rebooked).action).toBe("conversation_booked");
+  });
+});

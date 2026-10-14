@@ -177,6 +177,7 @@ export const EVENT_LABELS = {
   reminder_sent: "Reminder sent",
   proposal_made: "Move proposed",
   revisit_task: "Revisit task added",
+  no_show: "Call did not happen; invited to rebook",
   proposal_dismissed: "Proposal dismissed",
   reopened: "Reopened",
   no_show: "No-show",
@@ -218,10 +219,13 @@ export function systemEventsFor(app, facts) {
   }
 
   const callRequired = admissionOf(app).admission === "call_required";
-  const meeting = facts.meeting;
+  // A booking Tori marked "Didn't happen" no longer counts as booked: the
+  // person is invited to rebook, and a new time counts again.
+  const meeting = facts.meeting && !facts.noShowKeys?.has(meetingKey(facts.meeting)) ? facts.meeting : null;
+  const noShowOnly = facts.meeting && !meeting;
   if (meeting && callRequired) {
     push("conversation_booked", meeting.at ?? meeting.startAt ?? facts.now, "meeting", meeting.id);
-  } else if (callRequired && PAST_BOOKING.includes(status)) {
+  } else if (callRequired && PAST_BOOKING.includes(status) && !noShowOnly) {
     push("conversation_booked", facts.now, "meeting", `${id}:booked-by-status`, observed);
   }
   if (callRequired && status === "interviewed") push("conversation_held", facts.now, "application", `${id}:interviewed`, observed);
@@ -261,6 +265,11 @@ export function systemEventsFor(app, facts) {
     if (!action || a.rank >= ACTION_BY_ID[action].rank) action = e.event;
   }
   return { action, events };
+}
+
+/** One booked time: the meeting and its start, so a rebooked time is a new key. */
+export function meetingKey(meeting) {
+  return `${meeting?.id ?? ""}:${meeting?.startAt ?? ""}`;
 }
 
 /**

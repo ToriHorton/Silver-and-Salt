@@ -52,6 +52,7 @@ export async function loadSignals(db, record, { withEmails = false } = {}) {
   const acts = await listActivities(deps, { recordId: record.id, limit: 300 });
   const activities = [];
   const dismissed = new Set();
+  const noShowKeys = new Set();
   for (const a of acts) {
     const m = typeof a.meta === "string" ? safeJson(a.meta) : a.meta ?? {};
     const at = typeof m?.occurredAt === "number" ? m.occurredAt : a.createdAt;
@@ -61,6 +62,7 @@ export async function loadSignals(db, record, { withEmails = false } = {}) {
       ...(m?.signal ? { signal: m.signal, signalId: m.signalId, startAt: m.startAt ?? null } : {}),
     });
     if (m?.journeyEvent === "proposal_dismissed" && m.to && m.evidence) dismissed.add(`${m.to}:${m.evidence}`);
+    if (m?.journeyEvent === "no_show" && m.meetingKey) noShowKeys.add(m.meetingKey);
   }
   let emails = [];
   if (withEmails) {
@@ -71,7 +73,7 @@ export async function loadSignals(db, record, { withEmails = false } = {}) {
         .map((r) => ({ id: String(r.id), sentAt: typeof r.sentAt === "number" ? r.sentAt : typeof r.createdAt === "number" ? r.createdAt : null }));
     } catch { /* no email log: no email signal */ }
   }
-  return { activities, dismissed, emails };
+  return { activities, dismissed, emails, noShowKeys };
 }
 
 function safeJson(s) {
@@ -184,6 +186,7 @@ export function planPerson(record, app, all, { now, nowQuality, pathOverride = n
     reminded: appId ? (all.reminders.get(appId) ?? []).length > 0 : false,
     now,
     nowQuality,
+    noShowKeys: signals?.noShowKeys ?? new Set(),
   };
   const meeting = facts.meeting;
   if (signals && meeting?.startAt && meeting.startAt + 60 * 60 * 1000 < now) {

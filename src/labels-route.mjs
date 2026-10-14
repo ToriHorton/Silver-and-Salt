@@ -13,13 +13,18 @@
 import { addActivity, getRecord, listActivities, listRecords, updateRecord } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
 import {
-  ACTION_BY_ID, EVENT_LABELS, KEEP_INFORMED_DAYS, PATH_LABELS, TYPE_LABELS, manualActionsFor, refusalFor, typeOf,
+  ACTION_BY_ID, EVENT_LABELS, KEEP_INFORMED_DAYS, PATH_LABELS, TYPE_LABELS, manualActionsFor, meetingKey, refusalFor, typeOf,
 } from "./labels.mjs";
+import { emailGroupFrom, sendTemplated } from "@odla-ai/chapter";
+import { runLabels } from "./labels-job.mjs";
 
 export const LABELS_PERSON_PATH = "/api/admin/labels/person";
 export const LABELS_ACTION_PATH = "/api/admin/labels/person/action";
 export const LABELS_PEOPLE_PATH = "/api/admin/labels/people";
 export const LABELS_DISMISS_PATH = "/api/admin/labels/person/dismiss";
+export const LABELS_NO_SHOW_PATH = "/api/admin/labels/person/no-show";
+export const LABELS_REFRESH_PATH = "/api/admin/labels/refresh";
+const MEMBERS_URL = "https://silverandsaltcapital.com/members/";
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -42,6 +47,7 @@ export function labelsView(record) {
   const f = record?.fields ?? {};
   const action = str(f.journeyAction) || null;
   return {
+    applicationId: str(f.applicationId) || null,
     action,
     actionLabel: action ? ACTION_BY_ID[action]?.label ?? action : null,
     type: typeOf(action),
@@ -293,6 +299,93 @@ export const labelsRoute = async (req, url, env, ctx) => {
     }
     const fresh = await getRecord(deps, recordId);
     return json({ ok: true, updatedAt: fresh?.updatedAt, labels: labelsView(fresh) });
+  }
+
+  // Bring the labels up to date now, after Approve or Refund, instead of
+  // waiting for the five-minute run. Same code and rules as the job.
+  if (url.pathname === LABELS_REFRESH_PATH && req.method === "POST") {
+    const auth = await adminOrError(req, env, ctx);
+    if (auth.error) return auth.error;
+    const e = env;
+    const runtime = typeof e.ODLA_RUNTIME === "string" ? e.ODLA_RUNTIME : undefined;
+    const { summary } = await runLabels(auth.db, ctx.chapter.id, runtime, { write: true, detect: true });
+    return json({ ok: true, summary });
+  }
+
+  // "Didn't happen": the booked call did not take place. Tori's rule
+  // (2026-10-14): invite them to rebook. The booking stops counting, the
+  // person steps back to Paid (or Applied if they owe nothing), and the
+  // booking reminder goes to them once for this booked time.
+  if (url.pathname === LABELS_NO_SHOW_PATH && req.method === "POST") {
+    const auth = await adminOrError(req, env, ctx);
+    if (auth.error) return auth.error;
+    let body;
+    try { body = await req.json(); } catch { return json({ error: "bad request" }, 400); }
+    const recordId = str(body?.recordId);
+    const deps = { crm, db: auth.db };
+    const record = await getRecord(deps, recordId);
+    if (!record || record.type !== "person") return json({ error: "not found" }, 404);
+    const f = record.fields ?? {};
+    if (str(f.journeyAction) !== "conversation_booked") return json({ error: "Only a booked call can be marked as not having happened." }, 400);
+    const appId = str(f.applicationId);
+    const { applications } = await auth.db.query({ applications: { $: { where: { id: appId }, limit: 1 } } });
+    const app = applications?.[0];
+    if (!app) return json({ error: "The application could not be found." }, 404);
+    const { meetings } = await auth.db.query({ meetings: { $: { where: { applicationId: appId }, limit: 50 } } });
+    const meeting = (meetings ?? []).filter((m) => !/^cancel/.test(str(m.status))).sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))[0];
+    if (!meeting) return json({ error: "No booked call was found for this application." }, 404);
+    const key = meetingKey(meeting);
+    const back = str(f.payment) === "required" ? "paid" : "applied";
+    const now = Date.now();
+    try {
+      await updateRecord(deps, {
+        id: recordId,
+        input: {
+          journeyAction: back, journeyType: typeOf(back), actionSince: now, ...CLEAR_PROPOSAL,
+          journeyFlags: str(f.journeyFlags).split(",").filter((x) => x && x !== "flag:attendance-unconfirmed" && x !== "flag:move-to-confirm").join(","),
+        },
+        expectedUpdatedAt: typeof body?.expectedUpdatedAt === "number" ? body.expectedUpdatedAt : record.updatedAt,
+        audit: {
+          id: `journey-no-show:${recordId}:${key}`,
+          body: `Call did not happen (${new Date(meeting.startAt ?? now).toISOString().slice(0, 16).replace("T", " ")} UTC). Invited to rebook.`,
+          authorId: auth.user.userId,
+          // The job reads meetingKey so this booked time stops counting.
+          meta: { journeyEvent: "no_show", meetingKey: key, from: "conversation_booked", to: back, occurredAt: meeting.startAt ?? now, recordedAt: now, actor: auth.user.userId, method: "manual", sourceType: "meeting", sourceId: key, dateQuality: "exact", personId: recordId },
+        },
+      });
+    } catch {
+      return json({ error: "This person changed since you opened them. Refresh and try again." }, 409);
+    }
+    // The rebook invitation: the existing booking reminder, once per booked time.
+    let emailed = false;
+    try {
+      const { groups } = await auth.db.query({ groups: { $: { where: { id: ctx.chapter.id }, limit: 1 } } });
+      if (groups?.[0] && str(app.email)) {
+        const template = back === "paid" ? "bookingReminder" : "bookingReminderFree";
+        const res = await sendTemplated({
+          db: auth.db,
+          envName: str(env.ODLA_ENV),
+          sender: env.SEND_EMAIL,
+          from: typeof env.EMAIL_FROM === "string" ? env.EMAIL_FROM : undefined,
+          debugEmail: typeof env.ODLA_DEBUG_EMAIL === "string" ? env.ODLA_DEBUG_EMAIL : undefined,
+          now: () => now,
+          newId: () => crypto.randomUUID(),
+        }, {
+          group: emailGroupFrom(groups[0]),
+          template,
+          event: ctx.chapter.config?.emails?.events?.[template],
+          to: str(app.email),
+          vars: { firstName: str(app.firstName), lastName: str(app.lastName), email: str(app.email), phone: str(app.phone), state: str(app.state), membersUrl: MEMBERS_URL },
+          dedupeKey: `no-show-rebook:${appId}:${key}`,
+          applicationId: appId,
+        });
+        emailed = !!res?.sent;
+      }
+    } catch (err) {
+      console.error("labels: rebook email not sent", recordId, err instanceof Error ? err.message : err);
+    }
+    const fresh = await getRecord(deps, recordId);
+    return json({ ok: true, emailed, updatedAt: fresh?.updatedAt, labels: labelsView(fresh) });
   }
 
   return null;

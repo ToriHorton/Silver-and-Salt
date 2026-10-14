@@ -13,6 +13,10 @@ import { useEffect, useState } from "preact/hooks";
 const PERSON_PATH = "/api/admin/labels/person";
 const ACTION_PATH = "/api/admin/labels/person/action";
 const DISMISS_PATH = "/api/admin/labels/person/dismiss";
+const NO_SHOW_PATH = "/api/admin/labels/person/no-show";
+const REFRESH_PATH = "/api/admin/labels/refresh";
+// Where a decision can be made: after the call, or after payment on a waived path.
+const DECIDABLE = new Set(["paid", "conversation_booked", "conversation_held", "fit", "not_fit", "not_paid_fit"]);
 const DAY = 864e5;
 
 // Insert the Action tab first on person records, so the labels are the first
@@ -65,6 +69,7 @@ function ActionTab({ recordId }) {
   const [revisit, setRevisit] = useState(isoDay(Date.now() + 90 * DAY));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
+  const [confirming, setConfirming] = useState(null);
 
   const load = () => {
     setState((s) => ({ ...s, loading: true, error: null }));
@@ -110,6 +115,25 @@ function ActionTab({ recordId }) {
     }
   };
   const p = labels.proposal;
+  // Approve and Refund run the application's own operations (Chapter), then
+  // bring the labels up to date at once. The label only moves once the
+  // operation has finished, exactly as when the five-minute job sees it.
+  const operate = async (kind) => {
+    setSaving(true);
+    setMessage(null);
+    setConfirming(null);
+    try {
+      await request(`/api/admin/applications/${labels.applicationId}/${kind}`, { method: "POST", body: "{}" });
+      await request(REFRESH_PATH, { method: "POST", body: "{}" });
+      setMessage({ ok: true, text: kind === "approve" ? "Approved. The welcome email is on its way." : "Refunded." });
+      load();
+    } catch (err) {
+      setMessage({ ok: false, text: err.message });
+    } finally {
+      setSaving(false);
+    }
+  };
+  const canDecide = labels.applicationId && DECIDABLE.has(labels.action);
 
   return (
     <div class="journey-tab" style="display:grid;gap:18px">
@@ -149,9 +173,32 @@ function ActionTab({ recordId }) {
         </div>
         {message && <div class={message.ok ? "muted" : "pay-badge refunded"} role="status">{message.text}</div>}
         <p class="muted" style="font-size:12.5px;margin:0">
-          Approve and Refund are done with the application's own buttons; the Action follows once they have finished. Decline and Not a paid fit arrive when Cory ships them.
+          Then decide in the Decision panel below: Approve, Refund, or Didn't happen. The Action follows once each has finished.
         </p>
       </div>
+
+      {labels.applicationId && (canDecide || labels.action === "conversation_booked") && (
+        <div role="region" aria-label="Decision" style="border:1px solid rgba(47,62,52,.2);border-radius:6px;padding:12px 14px;display:grid;gap:10px;max-width:620px">
+          <div class="card-label" style="margin:0">Decision</div>
+          {confirming ? (
+            <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+              <span>{confirming === "approve" ? "Approve this membership? The welcome email goes out and the member area opens." : confirming === "refund" ? "Refund in full and end this membership?" : "Mark the call as not having happened? They get the booking reminder to pick a new time."}</span>
+              <button type="button" class="btn" disabled={saving} onClick={() => (confirming === "no-show" ? decide(NO_SHOW_PATH, {}).then(() => setConfirming(null)) : operate(confirming))}>Yes, {confirming === "approve" ? "approve" : confirming === "refund" ? "refund" : "invite to rebook"}</button>
+              <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming(null)}>Cancel</button>
+            </div>
+          ) : (
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              {canDecide && labels.action !== "conversation_booked" && <button type="button" class="btn" disabled={saving} onClick={() => setConfirming("approve")}>Approve</button>}
+              {canDecide && labels.payment === "required" && <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming("refund")}>Refund</button>}
+              {labels.action === "conversation_booked" && <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming("no-show")}>Didn't happen</button>}
+              <button type="button" class="btn secondary" disabled title="Waiting on Cory (BNF bug fa96b11c)">Decline</button>
+            </div>
+          )}
+          <p class="muted" style="font-size:12.5px;margin:0">
+            {labels.action === "conversation_booked" ? "After the call, set Conversation held above (or confirm it when the Granola summary arrives), then the outcome, then decide here." : "Record the outcome above, then decide here. Decline arrives when Cory ships it; until then record Not a fit."}
+          </p>
+        </div>
+      )}
 
       <div>
         <div class="card-label">History</div>
