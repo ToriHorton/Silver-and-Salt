@@ -62,7 +62,7 @@ describe('invitation analytics', () => {
     const redirects = readFileSync(new URL('../_redirects', import.meta.url), 'utf8');
     expect(redirects).toContain('/invite /membership' + campaign + ' 302');
     for (const page of ['membership.html', 'join.html']) {
-      expect(readFileSync(new URL('../' + page, import.meta.url), 'utf8')).toContain('/assets/membership-analytics.js?v=1');
+      expect(readFileSync(new URL('../' + page, import.meta.url), 'utf8')).toContain('/assets/membership-analytics.js?v=2');
     }
   });
 });
@@ -113,5 +113,20 @@ describe('verified application milestones', () => {
     expect(emit).toHaveBeenCalledTimes(3);
     const failing = createJoinMeasurement({ emit() { throw Error(); } });
     expect(() => failing(state)).not.toThrow();
+  });
+});
+
+describe('how people reach the form', () => {
+  it('sends the entry with every milestone when it is known', () => {
+    const emit = vi.fn(() => true);
+    const observe = createJoinMeasurement({ emit, storage: null, entry: 'second_seat' });
+    observe({ step: 'booking', applicationId: 'cap' }, 'standard');
+    expect(emit.mock.calls[0]).toEqual(['generate_lead', { membership_tier: 'standard', entry: 'second_seat' }]);
+  });
+  it('lets only the two entry values through to Analytics', () => {
+    const b = browser('https://silverandsaltcapital.com/join');
+    b.window.SSCAnalytics.track('generate_lead', { membership_tier: 'standard', entry: 'join_link' });
+    b.window.SSCAnalytics.track('generate_lead', { membership_tier: 'standard', entry: 'seat_secret_abc' });
+    expect(b.events().slice(-2).map((e) => e[2])).toEqual([{ membership_tier: 'standard', entry: 'join_link' }, { membership_tier: 'standard' }]);
   });
 });

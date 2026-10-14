@@ -1,7 +1,11 @@
 // Observe Chapter's server-confirmed states without touching submission,
 // payments, or booking. The capability stays in this tab; only safe labels
 // reach the analytics emitter. Storage/analytics failure must never block joining.
-export function createJoinMeasurement({ emit, storage, initialApplicationId = null }) {
+// `entry` says how the person reached the form (Signup Journeys v3.1): "second_seat"
+// for a family seat link, "join_link" for everyone else. The full Path is decided on
+// the server (an invitation is only known once the call is waived), so the website
+// reports what it can see, and completion_type "approved_without_call" marks invitations.
+export function createJoinMeasurement({ emit, storage, initialApplicationId = null, entry = null }) {
   const key = 'ssc-join-measurement-v1';
   let ledger;
   try { ledger = JSON.parse(storage?.getItem(key) || 'null'); } catch {}
@@ -20,7 +24,7 @@ export function createJoinMeasurement({ emit, storage, initialApplicationId = nu
     const once = (name, extra = {}) => {
       if (ledger.sent.includes(name)) return;
       try {
-        if (!emit(name, { membership_tier: tier, ...extra })) return;
+        if (!emit(name, { membership_tier: tier, ...(entry ? { entry } : {}), ...extra })) return;
         ledger.sent.push(name);
         storage?.setItem(key, JSON.stringify(ledger));
       } catch { /* Measurement is optional; the application is not. */ }

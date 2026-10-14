@@ -41,6 +41,7 @@
       if (!allowed.has(name)) return;
       const safe = {};
       if (tiers.has(params.membership_tier)) safe.membership_tier = params.membership_tier;
+      if (['second_seat', 'join_link'].includes(params.entry)) safe.entry = params.entry;
       if (['onboarding_booked', 'approved_without_call'].includes(params.completion_type)) {
         safe.completion_type = params.completion_type;
       }

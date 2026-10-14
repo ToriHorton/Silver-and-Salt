@@ -399,6 +399,7 @@ export function Join({ config, initialTierId, initialState }) {
       initialApplicationId: resumeId ?? (typeof window === "undefined" ? null
         : new URLSearchParams(window.location.search).get("application")),
       emit: (name, params) => window.SSCAnalytics?.track(name, params),
+      entry: seatId ? "second_seat" : "join_link",
     });
   }
 
