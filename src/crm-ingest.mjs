@@ -458,6 +458,60 @@ export async function ingestMeeting(db, meeting) {
   };
 }
 
+// ── Outreach signals (Signup Journeys v3.1, build plan v3 phase 4) ──────────
+//
+// The morning routine also sends two kinds of evidence for the labels job:
+//   email_sent      an email Tori sent from Gmail          → may propose Contacted
+//   calendar_event  a calendar event with them as a guest   → may propose Introduction booked
+// They are evidence, never decisions: the labels job turns them into proposals
+// Tori confirms or dismisses. Unlike a call, a signal never creates a person:
+// Gmail and the calendar hold everyone, and only people already in the CRM are
+// worth tracking. A signal for someone unknown comes back as `unmatched`.
+
+export const OUTREACH_SIGNALS = ["email_sent", "calendar_event"];
+
+/** The existing person for an email, by primary or second address, or null. */
+export async function findPerson(db, email) {
+  const e = normEmail(email);
+  if (!e) return null;
+  const { crm_record } = await db.query({
+    crm_record: { $: { where: { type: "person", primaryEmail: e }, limit: 1 } },
+  });
+  if (crm_record?.[0]) return crm_record[0];
+  return (await secondaryEmailIndex(db)).get(e) ?? null;
+}
+
+/** Record one outreach signal on the person it is about. Replays write nothing. */
+export async function ingestOutreach(db, signal) {
+  const kind = str(signal?.kind);
+  if (!OUTREACH_SIGNALS.includes(kind)) throw new Error(`unknown signal kind: ${kind}`);
+  const sourceId = str(signal?.sourceId) || (kind === "email_sent" ? "gmail" : "calendar");
+  const signalId = str(signal?.signalId);
+  if (!signalId) throw new Error("signalId is required");
+  const occurredAt = typeof signal?.occurredAt === "number" && Number.isFinite(signal.occurredAt) ? signal.occurredAt : null;
+  if (!occurredAt) throw new Error("occurredAt is required");
+  const startAt = typeof signal?.startAt === "number" && Number.isFinite(signal.startAt) ? signal.startAt : null;
+  const emails = (Array.isArray(signal?.emails) ? signal.emails : [signal?.email])
+    .map(normEmail)
+    .filter((e) => e && !isSelfEmail(e));
+  const written = [];
+  const unmatched = [];
+  for (const email of emails) {
+    const person = await findPerson(db, email);
+    if (!person) { unmatched.push(email); continue; }
+    const res = await addActivity({ crm, db }, {
+      recordId: person.id,
+      kind: "note",
+      body: kind === "email_sent" ? `Email sent${signal?.subject ? `: ${str(signal.subject).slice(0, 200)}` : ""}` : `Calendar: ${str(signal?.title).slice(0, 200) || "event with them"}`,
+      authorId: "system",
+      meta: { signal: kind, source: sourceId, signalId, occurredAt, ...(startAt ? { startAt } : {}) },
+      mutationId: `signal:${sourceId}:${signalId}:${person.id}`,
+    });
+    if (!res.duplicate) written.push(email);
+  }
+  return { signalId, kind, written, unmatched };
+}
+
 /**
  * Ingest a batch of meetings. One failure never sinks the batch: the error is
  * captured per meeting and the rest still land, because a morning pull that
@@ -465,8 +519,17 @@ export async function ingestMeeting(db, meeting) {
  */
 export async function ingestBatch(db, payload) {
   const meetings = Array.isArray(payload?.meetings) ? payload.meetings : [];
+  const outreach = Array.isArray(payload?.outreach) ? payload.outreach : [];
   const results = [];
   const errors = [];
+  const signals = [];
+  for (const signal of outreach) {
+    try {
+      signals.push(await ingestOutreach(db, signal));
+    } catch (err) {
+      errors.push({ signalId: str(signal?.signalId), error: err instanceof Error ? err.message : String(err) });
+    }
+  }
   for (const meeting of meetings) {
     try {
       results.push(await ingestMeeting(db, meeting));
@@ -487,6 +550,8 @@ export async function ingestBatch(db, payload) {
     tasksWritten: sum("tasksWritten"),
     tasksDuplicate: sum("tasksDuplicate"),
     unattached: results.flatMap((r) => r.unattached),
+    signalsWritten: signals.reduce((n, r) => n + r.written.length, 0),
+    signalsUnmatched: [...new Set(signals.flatMap((r) => r.unmatched))],
     results,
     errors,
   };

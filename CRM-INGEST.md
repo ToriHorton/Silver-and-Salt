@@ -140,6 +140,32 @@ Behaviour worth knowing:
 - An item with an `owner` is stored with `waitingOn`, so it lands on the
   waiting board rather than Tori's open list.
 
+## Outreach signals (added 2026-10-14)
+
+The same endpoint also takes `outreach`: evidence for the signup labels
+(Signup Journeys v3.1). The morning routine sends emails Tori sent from Gmail
+and calendar events with guests:
+
+```json
+{
+  "outreach": [
+    { "kind": "email_sent", "signalId": "<Gmail message id>", "occurredAt": 1800000000000,
+      "emails": ["someone@example.com"], "subject": "…" },
+    { "kind": "calendar_event", "signalId": "<event id>", "occurredAt": 1800000000000,
+      "startAt": 1800500000000, "emails": ["someone@example.com"], "title": "…" }
+  ]
+}
+```
+
+- A signal attaches only to people already in the CRM, as a `note` activity
+  with `meta.signal`. It never creates a person: Gmail and the calendar hold
+  everyone. Unknown addresses come back in `signalsUnmatched`.
+- It is evidence, not a decision. The labels job turns it into a proposal
+  ("Move to Contacted?", "Move to Introduction booked?") that Tori confirms or
+  dismisses on the person's Action tab.
+- Replays write nothing (`mutationId` `signal:<source>:<signalId>:<person>`).
+- Script: `node _scripts/post-outreach.mjs --file <signals.json> --post`.
+
 ## Consent posture
 
 A person auto-created from a call is written with consent `unsubscribed`.

@@ -176,6 +176,7 @@ export const EVENT_LABELS = {
   cancellation_scheduled: "Cancellation scheduled",
   reminder_sent: "Reminder sent",
   proposal_made: "Move proposed",
+  revisit_task: "Revisit task added",
   proposal_dismissed: "Proposal dismissed",
   reopened: "Reopened",
   no_show: "No-show",
@@ -398,9 +399,20 @@ export function proposalFor(input) {
     calls.filter((a) => a.occurredAt >= input.meetingStartAt - 2 * HOUR).sort((a, b) => a.occurredAt - b.occurredAt)
       .some((c) => add("conversation_held", `call:${c.id}`, Math.max(c.occurredAt, actionSince), "A call summary arrived from Granola after the booked time."));
   }
+  // Emails: those sent from the admin console, and those the morning routine
+  // found in Gmail (activity signal "email_sent").
+  const gmail = (input.activities ?? [])
+    .filter((a) => a.signal === "email_sent")
+    .map((a) => ({ id: `gmail:${a.signalId ?? a.id}`, sentAt: a.occurredAt, from: "Gmail" }));
+  const sent = [...(input.emails ?? []).map((e) => ({ ...e, from: "the admin console" })), ...gmail];
   if (["identified", "researched", "keep_informed"].includes(action)) {
-    (input.emails ?? []).filter((m) => typeof m.sentAt === "number" && m.sentAt >= actionSince).sort((a, b) => a.sentAt - b.sentAt)
-      .some((e) => add("contacted", `email:${e.id}`, e.sentAt, "An email to them was sent from the admin console."));
+    sent.filter((m) => typeof m.sentAt === "number" && m.sentAt >= actionSince).sort((a, b) => a.sentAt - b.sentAt)
+      .some((e) => add("contacted", `email:${e.id}`, e.sentAt, `An email to them was sent from ${e.from}.`));
+  }
+  // Calendar: an event with them as a guest, found by the morning routine.
+  if (["identified", "researched", "contacted", "keep_informed"].includes(action)) {
+    (input.activities ?? []).filter((a) => a.signal === "calendar_event").sort((a, b) => a.occurredAt - b.occurredAt)
+      .some((a) => add("intro_booked", `calendar:${a.signalId ?? a.id}`, Math.max(a.occurredAt, actionSince), "A calendar event with them as a guest was found."));
   }
   if (action === "identified" && str(input.prepNotes).trim() && str(input.linkedin).trim()) {
     add("researched", `prep:${str(input.prepNotes).trim().length}`, null, "Prep notes and LinkedIn are filled in.");
