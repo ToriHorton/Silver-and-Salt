@@ -107,7 +107,7 @@ export async function loadFacts(db, chapterId, runtime) {
  * What one person's labels and events should be. Pure apart from its inputs,
  * so the backfill can show it without writing it.
  */
-export function planPerson(record, app, all, { now, nowQuality }) {
+export function planPerson(record, app, all, { now, nowQuality, pathOverride = null }) {
   const f = record.fields ?? {};
   const appId = app ? String(app.id) : null;
   const facts = {
@@ -121,7 +121,8 @@ export function planPerson(record, app, all, { now, nowQuality }) {
     nowQuality,
   };
   const knownBeforeApplying = !!app && typeof app.createdAt === "number" && record.createdAt < app.createdAt - 60_000;
-  const path = initialPath({ existingPath: str(f.journeyPath), app, knownBeforeApplying });
+  // Tori's answer for a person already on record wins over the guess (backfill only).
+  const path = initialPath({ existingPath: str(f.journeyPath) || pathOverride, app, knownBeforeApplying });
   const { admission, waiverSource } = admissionOf(app);
   const payment = paymentOf(app, all.freeTiers);
   const attempt = attemptOf(app);
@@ -197,7 +198,7 @@ export async function applyPlan(db, record, plan, { now, method = "automatic" })
  * One pass over every applicant. `write: false` returns the plans without
  * writing (the backfill's review list).
  */
-export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQuality = "exact", write = true } = {}) {
+export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQuality = "exact", write = true, pathOverrides = new Map() } = {}) {
   const [people, all] = await Promise.all([loadPeople(db), loadFacts(db, chapterId, runtime)]);
   const byAppId = new Map();
   const byEmail = new Map();
@@ -212,7 +213,7 @@ export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQ
   for (const app of all.apps) {
     const record = byAppId.get(String(app.id)) ?? byEmail.get(lower(app.email));
     if (!record) { summary.unmatched++; continue; }
-    const plan = planPerson(record, app, all, { now, nowQuality });
+    const plan = planPerson(record, app, all, { now, nowQuality, pathOverride: pathOverrides.get(lower(record.primaryEmail ?? app.email)) ?? null });
     plans.push({ record, app, plan });
     summary.people++;
     if (!write) continue;

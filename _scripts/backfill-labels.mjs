@@ -3,6 +3,7 @@
 //
 //   node _scripts/backfill-labels.mjs prod            review list only, writes nothing
 //   node _scripts/backfill-labels.mjs prod --apply    writes exactly what the list showed
+//   add --path <email>=relationship_first for anyone Tori knew before they applied (both runs)
 //
 // The review list is written to .odla/review/ (git-ignored, never deployed):
 // it holds names and emails. Dates the backfill cannot know exactly are marked
@@ -33,7 +34,12 @@ const now = Date.now();
 
 const STAGE_TO_ACTION = { prospect: "identified", candidate: "identified", invited: "identified", conversation_booked: "intro_booked", soft_commit: "soft_commit" };
 
-const { plans } = await runLabels(db, CHAPTER, runtime, { now, nowQuality: "estimated", write: false });
+// Paths Tori set by hand for people she knew before they applied:
+//   --path someone@example.com=relationship_first
+const pathOverrides = new Map(
+  process.argv.filter((x, i) => process.argv[i - 1] === "--path").map((x) => x.split("=")).map(([e, p]) => [e.trim().toLowerCase(), p.trim()]),
+);
+const { plans } = await runLabels(db, CHAPTER, runtime, { now, nowQuality: "estimated", write: false, pathOverrides });
 const applicantIds = new Set(plans.map((p) => p.record.id));
 
 // People with no application and no labels yet.
