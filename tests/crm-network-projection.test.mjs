@@ -117,3 +117,14 @@ describe("the counter fields themselves", () => {
     expect(fields.callCount.type).toBe("number");
   });
 });
+
+describe("the signup labels", () => {
+  const LABELS = ["journeyType", "journeyPath", "journeyAction", "actionSince", "admission", "payment", "tier"];
+  for (const env of ["dev", "prod"]) {
+    it(`${env}: the hub may read the labels and may not edit them`, () => {
+      const reader = chapterFor(env).network.readers.find((r) => r.id === "built-not-found");
+      for (const f of LABELS) expect(reader.fields.person).toContain(f);
+      for (const f of LABELS) expect(reader.editableFields?.person ?? []).not.toContain(f);
+    });
+  }
+});

@@ -115,7 +115,10 @@ export function chapterFor(envName = "dev") {
       // data, and showing the parent one of someone's two addresses but not
       // the other would be more confusing than useful. Remove it here if that
       // judgement is wrong; nothing else depends on it.
-      fields: { person: ["name", "email", "secondaryEmail", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount"] },
+      fields: { person: ["name", "email", "secondaryEmail", "firstName", "lastName", "phone", "state", "whoYouAre", "referral", "referralName", "linkedin", "focus", "message", "lastCallAt", "callCount",
+        // Signup labels (Signup Journeys v3.1): the hub reads them for every
+        // chapter and never writes them, so they are NOT in editableFields.
+        "journeyType", "journeyPath", "journeyAction", "actionSince", "admission", "payment", "tier"] },
       sharedNotes: ["person"],
       // BNF delegates operator intent; this chapter remains profile and
       // application authority. Login identity and privilege are not fields.
