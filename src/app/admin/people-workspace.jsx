@@ -65,7 +65,7 @@ function PeopleWorkspace({ chapter, ctx }) {
 
 // Copy of Chapter's internal adminViewContext: scopes the workspace route to
 // one collection view, so record and tab links stay inside it.
-function adminViewContext(ctx, viewId, active) {
+export function adminViewContext(ctx, viewId, active) {
   const route = {
     workspaceId: ctx.route.workspaceId,
     viewId,

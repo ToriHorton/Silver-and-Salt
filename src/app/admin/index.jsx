@@ -32,9 +32,14 @@ import { chapter } from "../../chapter.config.mjs";
 import { WorkspaceFrame } from "./workspace-frame.jsx";
 import { isAdminAuthorized } from "./authorization.mjs";
 import { withCallsPeople } from "./people-workspace.jsx";
+import { withJourneysDashboard } from "./dashboard-workspace.jsx";
 
 // People records get a Calls tab between Billing and Notes (calls-tab.jsx).
-const WORKSPACES = withCallsPeople(chapter);
+// The Dashboard opens on the Journeys view (dashboard-workspace.jsx); people
+// get the Action and Calls tabs (people-workspace.jsx).
+const callsPeople = withCallsPeople(chapter);
+const journeysDashboard = withJourneysDashboard(chapter);
+const WORKSPACES = (defaults) => journeysDashboard(callsPeople(defaults));
 
 // Inbound compatibility: the admin notification email links with ?tab=people,
 // and older links used ?tab=billing / calendar / calls / email, which the
