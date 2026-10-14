@@ -37,7 +37,8 @@ describe("chapterWorkerOptions", () => {
     const options = chapterWorkerOptions("dev");
     expect(options.crmBasePath).toBe("/api/crm");
     expect(options.requirePaymentQuote).toBe(true);
-    expect(options.routes).toHaveLength(7);
+    // Eight host routes; the eighth is the signup labels route (src/labels-route.mjs).
+    expect(options.routes).toHaveLength(8);
     for (const route of options.routes) expect(typeof route).toBe("function");
   });
 });

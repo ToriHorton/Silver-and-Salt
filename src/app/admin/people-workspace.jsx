@@ -14,6 +14,11 @@
 import { collectionSection } from "@odla-ai/chapter/ui/admin";
 import { Tabs } from "@odla-ai/ui/components";
 import { withCallsTab } from "./calls-tab.jsx";
+import { withActionTab } from "./action-tab.jsx";
+
+// Person records get the Action tab first (action-tab.jsx) and the Calls tab
+// between Billing and Notes (calls-tab.jsx).
+const withPersonTabs = (tabs, context) => withActionTab(withCallsTab(tabs, context), context);
 
 // ChapterAdmin's `workspaces` transform: keep every default workspace, swap
 // the People render for this one. Module-level so its identity is stable.
@@ -45,7 +50,7 @@ function PeopleWorkspace({ chapter, ctx }) {
           roles: chapter.auth.ladder,
           networkSharing,
           applicationStages: chapter.pipeline.stages,
-          extendRecordTabs: withCallsTab,
+          extendRecordTabs: withPersonTabs,
         });
         return {
           value: type,

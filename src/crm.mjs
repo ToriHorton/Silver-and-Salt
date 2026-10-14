@@ -104,6 +104,28 @@ export const crm = defineCrm({
         // in the Built Not Found allowlist: the parent gets activity level,
         // never Tori's calendar.
         nextConversationAt: { type: "date", label: "Next conversation", slot: "d2" },
+        // ── Signup labels (Signup Journeys v3.1, Tori, 2026-10-14) ──────────
+        // Written only by src/labels-job.mjs and the Action tab's route, never
+        // by Chapter's sync, which leaves fields it does not know untouched.
+        // The `journey` prefix avoids the CRM's reserved column names (`type`).
+        // Plain fields, not slots: all four string slots are taken, so the
+        // Dashboard filters on the server (build plan v3, section 2).
+        // `journeyType` is a copy of the lookup from `journeyAction` (src/labels.mjs), kept
+        // so the hub can read it; it is never set on its own.
+        journeyType: { type: "string", label: "Type", search: false },
+        journeyPath: { type: "string", label: "Path", search: false },
+        journeyAction: { type: "string", label: "Action", search: false },
+        actionSince: { type: "date", label: "Action since" },
+        admission: { type: "string", label: "Admission", search: false },
+        waiverSource: { type: "string", label: "Waiver source", search: false },
+        payment: { type: "string", label: "Payment", search: false },
+        attempt: { type: "string", label: "Application attempt", search: false },
+        revisitAt: { type: "date", label: "Revisit on" },
+        prepNotes: { type: "string", label: "Prep notes" },
+        introducedBy: { type: "string", label: "Introduced by" },
+        // The current flags as one comma-separated string, so the job can tell
+        // whether they changed without a tag read per person every run.
+        journeyFlags: { type: "string", label: "Flags", search: false },
       },
       // Mirrors the applications.status pipeline (STATUSES in src/worker.ts /
       // STATUS_LABELS in src/app/lib.js). Declaration order sets stageIndex
