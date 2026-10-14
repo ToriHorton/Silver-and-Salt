@@ -10,7 +10,7 @@
 // other way round. Writes carry the record's last-updated time, so two people
 // editing at once cannot overwrite each other silently.
 
-import { getRecord, listActivities, updateRecord } from "@odla-ai/crm";
+import { getRecord, listActivities, listRecords, updateRecord } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
 import {
   ACTION_BY_ID, EVENT_LABELS, KEEP_INFORMED_DAYS, PATH_LABELS, TYPE_LABELS, manualActionsFor, refusalFor, typeOf,
@@ -18,6 +18,7 @@ import {
 
 export const LABELS_PERSON_PATH = "/api/admin/labels/person";
 export const LABELS_ACTION_PATH = "/api/admin/labels/person/action";
+export const LABELS_PEOPLE_PATH = "/api/admin/labels/people";
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -79,6 +80,27 @@ export function historyFrom(activities) {
     .sort((x, y) => x.occurredAt - y.occurredAt || x.recordedAt - y.recordedAt);
 }
 
+/**
+ * The events a person's curves are drawn from: every journey event, plus each
+ * hand-set Action change read as reaching that Action on that day.
+ */
+export function curveEvents(activities) {
+  const seen = new Set();
+  const out = [];
+  for (const a of activities ?? []) {
+    const m = typeof a.meta === "string" ? safeJson(a.meta) : a.meta ?? {};
+    if (!m?.journeyEvent) continue;
+    const event = m.journeyEvent === "action_changed" ? m.to : m.journeyEvent;
+    if (!event) continue;
+    const occurredAt = typeof m.occurredAt === "number" ? m.occurredAt : a.createdAt;
+    const key = `${event}:${m.attempt ?? ""}:${occurredAt}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ event, occurredAt, dateQuality: m.dateQuality ?? "exact", attempt: m.attempt ?? null });
+  }
+  return out.sort((x, y) => x.occurredAt - y.occurredAt);
+}
+
 function safeJson(s) {
   try { return JSON.parse(s); } catch { return null; }
 }
@@ -119,6 +141,38 @@ export const labelsRoute = async (req, url, env, ctx) => {
       history: historyFrom(activities),
       options: manualActionsFor(person).map((id) => ({ id, label: ACTION_BY_ID[id].label })),
     });
+  }
+
+  if (url.pathname === LABELS_PEOPLE_PATH && req.method === "GET") {
+    const auth = await adminOrError(req, env, ctx);
+    if (auth.error) return auth.error;
+    const deps = { crm, db: auth.db };
+    const records = [];
+    for (let offset = 0; offset < 5000; offset += 200) {
+      const { records: page, total } = await listRecords(deps, { type: "person", limit: 200, offset, archived: false });
+      records.push(...page);
+      if (records.length >= total || !page.length) break;
+    }
+    const people = [];
+    for (const r of records) {
+      const f = r.fields ?? {};
+      const action = str(f.journeyAction) || null;
+      const activities = await listActivities(deps, { recordId: r.id, limit: 500 });
+      people.push({
+        id: r.id,
+        name: r.name,
+        type: typeOf(action),
+        path: str(f.journeyPath) || null,
+        action,
+        tier: str(f.tier) || str(r.s4) || null,
+        admission: str(f.admission) || null,
+        payment: str(f.payment) || null,
+        actionSince: typeof f.actionSince === "number" ? f.actionSince : null,
+        flags: str(f.journeyFlags).split(",").filter(Boolean),
+        events: curveEvents(activities),
+      });
+    }
+    return json({ people, now: Date.now() });
   }
 
   if (url.pathname === LABELS_ACTION_PATH && req.method === "POST") {
