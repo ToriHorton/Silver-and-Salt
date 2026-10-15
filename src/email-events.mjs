@@ -13,6 +13,8 @@ export const SIGNUP_EMAIL_EVENTS = {
   callBookedAdmin: event("Call booked notice", "A new introduction call is found on the calendar", "Administrator", [...identity, "meetingTime", "tierName", "adminUrl"]),
   callReminderDayBefore: event("Call reminder, day before", "The onboarding call is 24 hours away (not sent for a call booked less than a day ahead)", "Applicant", [...identity, "startAt", "meetingLink", "rescheduleUrl"]),
   callReminderHour: event("Call reminder, one hour before", "The onboarding call starts within the hour", "Applicant", [...identity, "startAt", "meetingLink"]),
+  callMoved: event("Call moved", "Tori moves a booked call to a new time from the admin Calendar tab", "Applicant", [...identity, "startAt", "meetingLink", "rescheduleUrl"]),
+  callCancelledRebook: event("Call cancelled, rebook", "Tori cancels a booked call and invites a new booking", "Applicant", [...identity, "membersUrl", "rescheduleUrl"]),
   missedCallRebook: event("Missed call, rebook", "Tori marks a booked call as not having happened", "Applicant", [...identity, "membersUrl", "rescheduleUrl"]),
   paidApprovedAdmin: event("Paid and approved notice", "A member pays and is approved with the call waived", "Administrator", [...identity, "tierName", "adminUrl"]),
 };

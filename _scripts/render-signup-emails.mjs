@@ -23,7 +23,7 @@ const OUT_DIR = new URL("_reference/signup-emails-html/", ROOT);
 const HEADING_LIMIT = 27;
 
 // Member-facing emails, in the order a new member meets them.
-const MEMBER_KEYS = ["bookingReminderFree", "paymentReminder", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "callReminderDayBefore", "callReminderHour", "missedCallRebook", "paymentConfirmation", "declinePaid", "declineFree"];
+const MEMBER_KEYS = ["bookingReminderFree", "paymentReminder", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "callReminderDayBefore", "callReminderHour", "missedCallRebook", "callMoved", "callCancelledRebook", "paymentConfirmation", "declinePaid", "declineFree"];
 const BUTTONS = {
   bookingReminderFree: { label: "Book your onboarding call", href: "{{membersUrl}}" },
   paymentReminder: { label: "Complete your membership payment", href: "{{membersUrl}}" },
@@ -35,6 +35,8 @@ const BUTTONS = {
   callReminderDayBefore: { label: "Join the video call", href: "{{meetingLink}}" },
   callReminderHour: { label: "Join the video call", href: "{{meetingLink}}" },
   missedCallRebook: { label: "Pick a new time", href: "{{rescheduleUrl}}" },
+  callMoved: { label: "Join the video call", href: "{{meetingLink}}" },
+  callCancelledRebook: { label: "Pick a new time", href: "{{rescheduleUrl}}" },
   declinePaid: null,
   declineFree: null,
 };

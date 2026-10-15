@@ -80,63 +80,107 @@ export function NeedsAttention({ meetings, tz, onSelect }) {
   );
 }
 
-// Detail and actions for one selected meeting; mirrors the Introduction
-// Calls table's Reschedule (shared SlotPicker) and Cancel semantics.
-function MeetingDetail({ m, tz, onChanged, onClose }) {
-  const [resched, setResched] = useState(false);
+// The site's fetch with the Clerk session token, keeping the server's error
+// message and code (window.SSCAuth.api drops both).
+async function request(path, body) {
+  const headers = { "content-type": "application/json" };
+  try {
+    const token = await window.Clerk?.session?.getToken();
+    if (token) headers.authorization = "Bearer " + token;
+  } catch { /* the route answers 401 and the panel says so */ }
+  const res = await fetch(path, { method: "POST", headers, body: JSON.stringify(body ?? {}) });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw Object.assign(new Error(data.error || `Request failed (${res.status})`), { code: data.code, status: res.status });
+  return data;
+}
+
+/** Epoch ms for a wall-clock date ("2026-10-20") and time ("07:30") in `tz`.
+ *  Exported for the render suite. */
+export function zonedTime(date, time, tz) {
+  const [y, mo, d] = date.split("-").map(Number);
+  const [h, mi] = time.split(":").map(Number);
+  if (![y, mo, d, h, mi].every(Number.isFinite)) return null;
+  const wall = Date.UTC(y, mo - 1, d, h, mi);
+  const offsetAt = (ms) => {
+    const p = new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })
+      .formatToParts(new Date(ms)).reduce((o, x) => ({ ...o, [x.type]: Number(x.value) }), {});
+    return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute) - ms;
+  };
+  let guess = wall - offsetAt(wall);
+  guess = wall - offsetAt(guess);
+  return guess;
+}
+
+const isoDate = (ms, tz) => new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms));
+
+// Detail and actions for one selected call. Moves go through the site's own
+// route (src/call-admin-route.mjs): any time, open slot or not, with a check
+// against the calendar and the callMoved email. Cancelling offers "invite them
+// to pick a new time" (our email, no Google notice) or "cancel only"
+// (Chapter's route; Google notifies the guest). Exported for the render suite.
+export function MeetingDetail({ m, tz, onChanged, onClose, now = Date.now() }) {
+  const [mode, setMode] = useState(null); // null | "move" | "cancel"
   const [slotState, setSlotState] = useState(null);
+  const [anyDate, setAnyDate] = useState("");
+  const [anyTime, setAnyTime] = useState("");
+  const [busyAsk, setBusyAsk] = useState(null); // startAt awaiting "move anyway"
   const [note, setNote] = useState(null);
   const [working, setWorking] = useState(false);
 
   useEffect(() => {
-    setResched(false);
-    setSlotState(null);
-    setNote(null);
+    setMode(null); setSlotState(null); setBusyAsk(null); setNote(null);
+    setAnyDate(isoDate(m.startAt, tz)); setAnyTime("");
   }, [m.id]);
 
-  const openResched = async () => {
-    setResched(true);
-    setSlotState(null);
+  const upcoming = m.status === "scheduled" && (m.endAt ?? m.startAt) > now;
+
+  const openMove = async () => {
+    setMode("move"); setSlotState(null); setNote(null); setBusyAsk(null);
     try {
       const data = await api("/api/schedule/slots");
-      if (!data.schedulingReady || !data.slots.length) {
-        setSlotState({ phase: "none" });
-      } else {
-        setSlotState({ phase: "ready", slots: data.slots, timezone: data.timezone });
-      }
+      setSlotState(data.schedulingReady && data.slots.length ? { phase: "ready", slots: data.slots, timezone: data.timezone } : { phase: "none" });
     } catch (e) {
       console.error(e);
       setSlotState({ phase: "error" });
     }
   };
 
-  const pick = async (slot) => {
-    setWorking(true);
+  const done = (message) => {
+    bus.dispatchEvent(new Event("people:reload"));
+    onChanged(message);
+  };
+
+  const move = async (startAt, force = false) => {
+    setWorking(true); setNote(null);
     try {
-      await api(`/api/admin/meetings/${m.id}/reschedule`, {
-        method: "POST",
-        body: JSON.stringify({ startAt: slot.startAt }),
-      });
-      bus.dispatchEvent(new Event("people:reload"));
-      onChanged();
+      const r = await request(`/api/admin/calls/${m.id}/move`, { startAt, force });
+      done(r.emailed ? "Moved. They have the new time by email and in their calendar invitation." : "Moved. Their calendar invitation shows the new time.");
     } catch (e) {
-      console.error(e);
-      setNote("That time could not be booked (it may have just been taken). Pick another.");
+      if (e.code === "busy" || e.code === "busy_unknown") setBusyAsk(startAt);
+      setNote(e.message);
     } finally {
       setWorking(false);
     }
   };
 
-  const cancel = async () => {
-    const sure = confirm("Cancel this onboarding call? The Google event is removed and the guest is notified.");
-    if (!sure) return;
-    setWorking(true);
+  const moveAnyTime = () => {
+    const startAt = anyDate && anyTime ? zonedTime(anyDate, anyTime, tz) : null;
+    if (startAt === null) { setNote("Choose a date and a time."); return; }
+    move(startAt);
+  };
+
+  const cancel = async (rebook) => {
+    setWorking(true); setNote(null);
     try {
-      await api(`/api/admin/meetings/${m.id}/cancel`, { method: "POST", body: "{}" });
-      bus.dispatchEvent(new Event("people:reload"));
-      onChanged();
+      if (rebook) {
+        await request(`/api/admin/calls/${m.id}/cancel-rebook`);
+        done("Cancelled. They have an email with a link to pick a new time.");
+      } else {
+        await request(`/api/admin/meetings/${m.id}/cancel`);
+        done("Cancelled. Google has told them the call is off.");
+      }
     } catch (e) {
-      console.error(e);
+      setNote(e.message || "The call could not be cancelled. Try again.");
       setWorking(false);
     }
   };
@@ -156,32 +200,55 @@ function MeetingDetail({ m, tz, onChanged, onClose }) {
         {m.meetUrl && <a href={m.meetUrl} target="_blank" rel="noopener" style={linkStyle}>Meet link</a>}
         {m.htmlLink && <a href={m.htmlLink} target="_blank" rel="noopener" style={linkStyle + "margin-left:12px;"}>Open in Google Calendar</a>}
       </p>
-      {m.status === "scheduled" && (
+      {upcoming && mode === null && (
         <div class="row-actions" style="margin-top: 12px;">
-          <button class="row-save row-approve" disabled={working} onClick={openResched}>Reschedule</button>
-          <button class="row-save row-refund" disabled={working} onClick={cancel}>Cancel call</button>
+          <button class="row-save row-approve" disabled={working} onClick={openMove}>Move the call</button>
+          <button class="row-save row-refund" disabled={working} onClick={() => { setMode("cancel"); setNote(null); }}>Cancel the call</button>
         </div>
       )}
-      {resched && (
+      {upcoming && mode === "cancel" && (
+        <div class="resched-cell" style="margin-top: 12px;">
+          <p class="resched-note"><strong>Cancel this call?</strong></p>
+          <div class="row-actions" style="flex-wrap: wrap; gap: 8px;">
+            <button class="row-save row-approve" disabled={working} onClick={() => cancel(true)}>Cancel and invite them to pick a new time</button>
+            <button class="row-save row-refund" disabled={working} onClick={() => cancel(false)}>Cancel only</button>
+            <button class="signout-btn" disabled={working} onClick={() => { setMode(null); setNote(null); }}>Keep the call</button>
+          </div>
+          <p class="resched-note">"Invite them" sends our email with a link to book again, and Google sends nothing. "Cancel only" sends Google's cancellation notice.</p>
+        </div>
+      )}
+      {upcoming && mode === "move" && (
         <div class="resched-cell" style="margin-top: 12px;">
           {slotState === null && <div class="loading-note"><span class="spinner"></span> Loading open times…</div>}
-          {slotState?.phase === "none" && <p class="resched-note">No open times are available right now.</p>}
-          {slotState?.phase === "error" && <p class="resched-note">Open times could not be loaded. Try again.</p>}
+          {slotState?.phase === "none" && <p class="resched-note">No open times right now. Use any time below.</p>}
+          {slotState?.phase === "error" && <p class="resched-note">Open times could not be loaded. Use any time below.</p>}
           {slotState?.phase === "ready" && (
-            <>
-              <SlotPicker
-                slots={slotState.slots}
-                timezone={slotState.timezone}
-                classes={{ days: "resched-days", day: "resched-day", times: "resched-times", time: "resched-time" }}
-                onPick={pick}
-              />
-              <p class="resched-note">
-                {note || "Times shown in " + tzShort(slotState.timezone) + ". Pick a new time; the guest is notified by Google and the video link stays the same."}
-              </p>
-            </>
+            <SlotPicker
+              slots={slotState.slots}
+              timezone={slotState.timezone}
+              classes={{ days: "resched-days", day: "resched-day", times: "resched-times", time: "resched-time" }}
+              onPick={(slot) => move(slot.startAt)}
+            />
           )}
+          <p class="resched-note" style="margin-top: 12px;"><strong>Or any time</strong> ({tzShort(tz)}), for a time you agreed with them directly:</p>
+          <div class="row-actions" style="flex-wrap: wrap; gap: 8px; align-items: center;">
+            <input type="date" aria-label="Date" value={anyDate} onInput={(e) => setAnyDate(e.currentTarget.value)} />
+            <input type="time" aria-label="Time" step="300" value={anyTime} onInput={(e) => setAnyTime(e.currentTarget.value)} />
+            <button class="row-save row-approve" disabled={working} onClick={moveAnyTime}>Move to this time</button>
+          </div>
+          {working && <p class="resched-note">Moving the call…</p>}
+          {note && <p class="resched-note" role="alert">{note}</p>}
+          {busyAsk !== null && (
+            <div class="row-actions" style="gap: 8px;">
+              <button class="row-save row-approve" disabled={working} onClick={() => move(busyAsk, true)}>Move anyway</button>
+              <button class="signout-btn" disabled={working} onClick={() => { setBusyAsk(null); setNote(null); }}>Pick another time</button>
+            </div>
+          )}
+          <p class="resched-note">The video link stays the same. Google updates their invitation and we email them the new time.</p>
+          <button class="signout-btn" disabled={working} onClick={() => { setMode(null); setNote(null); setBusyAsk(null); }}>Keep the current time</button>
         </div>
       )}
+      {mode !== "move" && note && <p class="resched-note" role="alert">{note}</p>}
     </div>
   );
 }
@@ -237,6 +304,7 @@ export function CalendarTab({ active }) {
   const [monthKey, setMonthKey] = useState(null);
   const [person, setPerson] = useState(null);
   const [selected, setSelected] = useState(null); // meeting id
+  const [flash, setFlash] = useState(null); // what the last move or cancel did
 
   const reload = useCallback(async () => {
     const res = await api("/api/admin/meetings?all=1");
@@ -337,10 +405,11 @@ export function CalendarTab({ active }) {
             <MeetingDetail
               m={selectedMeeting}
               tz={tz}
-              onChanged={() => { setSelected(null); reload().catch(console.error); }}
+              onChanged={(message) => { setSelected(null); setFlash(message ?? null); reload().catch(console.error); }}
               onClose={() => setSelected(null)}
             />
           )}
+          {flash && !selectedMeeting && <p class="resched-note" role="status">{flash}</p>}
         </>
       )}
     </div>

@@ -16,8 +16,10 @@
 
 import { emailGroupFrom, sendTemplated } from "@odla-ai/chapter";
 import type { ChapterEnv, WorkerContext } from "@odla-ai/chapter/worker";
-import { rescheduleUrl } from "./call-links.mjs";
+import { callTimeLabel, rescheduleUrl } from "./call-links.mjs";
 import { greetingName } from "./greeting-name.mjs";
+
+export { callTimeLabel };
 
 export const DAY_BEFORE_TEMPLATE = "callReminderDayBefore";
 export const HOUR_BEFORE_TEMPLATE = "callReminderHour";
@@ -33,16 +35,6 @@ type Row = Record<string, unknown>;
 const text = (v: unknown) => (typeof v === "string" ? v : "");
 const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
 
-/** "Tuesday, September 23, 2026 at 10:00 AM MDT", the prepEmail's own format. */
-export function callTimeLabel(startAt: number, timezone: string): string {
-  try {
-    const day = new Intl.DateTimeFormat("en-US", { timeZone: timezone, weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(startAt);
-    const time = new Intl.DateTimeFormat("en-US", { timeZone: timezone, hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(startAt);
-    return `${day} at ${time}`;
-  } catch {
-    return new Date(startAt).toISOString();
-  }
-}
 
 
 /** Which reminder, if any, a scheduled meeting is due right now. */
