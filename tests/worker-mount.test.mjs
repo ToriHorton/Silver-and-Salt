@@ -40,12 +40,13 @@ describe("chapterWorkerOptions", () => {
     const options = chapterWorkerOptions("dev");
     expect(options.crmBasePath).toBe("/api/crm");
     expect(options.requirePaymentQuote).toBe(true);
-    // Twelve host routes; the eighth is the signup labels route (src/labels-route.mjs),
+    // Thirteen host routes; the eighth is the signup labels route (src/labels-route.mjs),
     // the ninth the Partners & Team list (src/relationship-groups.mjs), the
-    // tenth the Monday report's read of the curve snapshots (src/curve-snapshots.mjs)
-    // the eleventh the admin call moves and cancellations (src/call-admin-route.mjs)
-    // and the twelfth the open call time report (src/availability-report.mjs).
-    expect(options.routes).toHaveLength(12);
+    // tenth Add person (src/add-person.mjs), the eleventh the Monday report's
+    // read of the curve snapshots (src/curve-snapshots.mjs), the twelfth the
+    // admin call moves and cancellations (src/call-admin-route.mjs) and the
+    // thirteenth the open call time report (src/availability-report.mjs).
+    expect(options.routes).toHaveLength(13);
     for (const route of options.routes) expect(typeof route).toBe("function");
   });
 });

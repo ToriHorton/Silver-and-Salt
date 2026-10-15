@@ -4,7 +4,8 @@
 // Chapter's default People workspace (PeopleWorkspace in @odla-ai/chapter
 // 0.55.0) builds each collection with collectionSection() and no
 // extendRecordTabs, and does not expose a way to pass one. So this mirrors it
-// line for line, with one addition: extendRecordTabs: withCallsTab. Same
+// line for line, with two additions: extendRecordTabs: withCallsTab, and the
+// Add person form as the person list's renderSummary. Same
 // collections, same lifecycle, roles, network sharing and pipeline stages.
 //
 // When adopting a new Chapter version, compare this against its
@@ -15,10 +16,20 @@ import { collectionSection } from "@odla-ai/chapter/ui/admin";
 import { Tabs } from "@odla-ai/ui/components";
 import { withCallsTab } from "./calls-tab.jsx";
 import { withActionTab } from "./action-tab.jsx";
+import { AddPerson } from "./add-person.jsx";
 
 // Person records get the Action tab first (action-tab.jsx) and the Calls tab
 // between Billing and Notes (calls-tab.jsx).
 const withPersonTabs = (tabs, context) => withActionTab(withCallsTab(tabs, context), context);
+
+// The Add person form above the People list (add-person.jsx). A new person
+// opens on their Action tab; someone already there opens on their profile.
+export const addPersonSummary = (context, ctx) => (
+  <AddPerson
+    onAdded={(recordId) => { context.query.refresh(); ctx.navigate({ recordId, detailTab: "journey" }); }}
+    onOpen={(recordId) => ctx.navigate({ recordId, detailTab: "profile" })}
+  />
+);
 
 // ChapterAdmin's `workspaces` transform: keep every default workspace, swap
 // the People render for this one. Module-level so its identity is stable.
@@ -51,6 +62,7 @@ function PeopleWorkspace({ chapter, ctx }) {
           networkSharing,
           applicationStages: chapter.pipeline.stages,
           extendRecordTabs: withPersonTabs,
+          ...(type === "person" ? { renderSummary: addPersonSummary } : {}),
         });
         return {
           value: type,

@@ -34,6 +34,8 @@
 //   availabilityReportRoute  GET /api/admin/availability-report, open call
 //                        time over the next 14 days plus the daily history,
 //                        admins only (src/availability-report.mjs)
+//   addPersonRoute       POST /api/admin/people/add, the Add person form in
+//                        People, admins only (src/add-person.mjs)
 //   network.route        inbound membership effects from Built Not Found
 //                        (only when MEMBERSHIP_AUTHORITY_OWNER is set)
 //
@@ -59,6 +61,7 @@ import { callAdminRoute } from "./call-admin-route.mjs";
 // Signup labels: Type, Path and Action on every person (Signup Journeys v3.1).
 import { labelsRoute } from "./labels-route.mjs";
 import { relationshipsRoute } from "./relationship-groups.mjs";
+import { addPersonRoute } from "./add-person.mjs";
 import { labelsTick } from "./labels-job.mjs";
 import { curveReportRoute, curveSnapshotTick } from "./curve-snapshots.mjs";
 import { availabilityReportRoute, availabilitySnapshotTick } from "./availability-report.mjs";
@@ -225,7 +228,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, relationshipsRoute, curveReportRoute, callAdminRoute, availabilityReportRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, relationshipsRoute, addPersonRoute, curveReportRoute, callAdminRoute, availabilityReportRoute] as Route[],
   };
 }
 
