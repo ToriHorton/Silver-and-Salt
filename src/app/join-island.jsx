@@ -15,6 +15,7 @@ import { JoinIsland, AdditionalMemberFields, JoinSubmitButton } from "@odla-ai/c
 import { FAMILY_MEMBER_OPTIONS } from "./family-member.mjs";
 import { namedSeatClaimApi } from "./named-seat-api.mjs";
 import { loadSiteJoinResume } from "./join-resume.mjs";
+import { ChangeTime } from "./join-change-time.jsx";
 import { createJoinMeasurement } from "./join-measurement.mjs";
 import ivyBakerPriest from "../../assets/ivy-baker-priest.jpg";
 
@@ -106,6 +107,85 @@ function tierDisplay(tier) {
     was: d?.was,
     note: d?.note,
   };
+}
+
+/** The confirmation screen, site-owned copy and imagery (the Ivy Baker Priest
+ *  quote card), preserved from join.html's step-3. Holds the booked time so
+ *  "Pick a new time" can show the new one without a reload. */
+function DoneCard({ applicationId, booked: bookedAtLoad, membersHref }) {
+  const [booked, setBooked] = useState(bookedAtLoad);
+  return (
+      // `#step-3 { display: none }` (join.html) is the page's default —
+      // the legacy script revealed this panel imperatively with
+      // `step3.style.display = 'block'`. Rendering the id alone leaves the
+      // confirmation invisible, so the booking looks like it hung even
+      // though POST /api/schedule/book returned 200 and the meeting was
+      // written. The inline style beats the id rule while keeping that
+      // rule's text-align and padding. Same class of bug as the referral
+      // reveal above; these are the only two default-hidden selectors this
+      // island renders (audited: display:none appears three times in
+      // join.html, and #step-2 is not rendered here).
+      <div id="step-3" style="display:block;">
+        <div class="step3-icon">✦</div>
+        <h2 class="step3-heading">You’re confirmed.</h2>
+        <p class="step3-body">
+          Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital.
+        </p>
+        {booked && (
+          <p class="step3-body" id="confirmed-when">
+            {new Date(booked.startAt).toLocaleString("en-US", {
+              dateStyle: "full",
+              timeStyle: "short",
+              timeZone: booked.timezone,
+            })}
+          </p>
+        )}
+        {booked && applicationId && (
+          <ChangeTime applicationId={applicationId} onMoved={(next) => setBooked({ ...booked, ...next, timezone: next.timezone ?? booked.timezone })} />
+        )}
+        <p class="step3-body">
+          A calendar invitation with your video call link has been sent to your email.
+        </p>
+        <p class="step3-body step3-body-final">We’ll see you soon.</p>
+        <p class="step3-body">
+          Your member account is ready. Sign in with your email to see your application status
+          and call details.
+        </p>
+        <a href={membersHref} class="step3-account-btn" id="account-cta">
+          Sign in to your member area
+        </a>
+        <br />
+        <a href="/" class="step3-link">
+          Return to Silver <span class="brand-amp">&amp;</span> Salt Capital
+        </a>
+        <div class="quote-card">
+          <p class="quote-text">
+            “We women don’t care too much about getting our pictures on money as long as we can
+            get our hands on it.”
+          </p>
+          <div class="quote-card-top">
+            <img
+              src={ivyBakerPriest}
+              alt="Ivy Baker Priest"
+              loading="lazy"
+              decoding="async"
+              width="200"
+              height="200"
+            />
+            <div class="quote-card-identity">
+              <p class="quote-name">Ivy Baker Priest (1905–1975)</p>
+              <p class="quote-title">
+                30th Treasurer of the United States
+                <br />
+                Appointed by President Dwight D. Eisenhower (R), 1953
+                <br />
+                Utah’s first woman to hold a Cabinet-level federal office
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+  );
 }
 
 /** The site's own step rail. Chapter owns the flow; these dots are site chrome,
@@ -481,75 +561,7 @@ export function Join({ config, initialTierId, initialState }) {
           // Baker Priest quote card). Preserved verbatim from join.html's
           // step-3 so the applicant sees the same page they always did;
           // Chapter keeps the flow orchestration behind it.
-          renderDone={({ booked, membersHref }) => (
-            // `#step-3 { display: none }` (join.html) is the page's default —
-            // the legacy script revealed this panel imperatively with
-            // `step3.style.display = 'block'`. Rendering the id alone leaves the
-            // confirmation invisible, so the booking looks like it hung even
-            // though POST /api/schedule/book returned 200 and the meeting was
-            // written. The inline style beats the id rule while keeping that
-            // rule's text-align and padding. Same class of bug as the referral
-            // reveal above; these are the only two default-hidden selectors this
-            // island renders (audited: display:none appears three times in
-            // join.html, and #step-2 is not rendered here).
-            <div id="step-3" style="display:block;">
-              <div class="step3-icon">✦</div>
-              <h2 class="step3-heading">You’re confirmed.</h2>
-              <p class="step3-body">
-                Thank you for applying to Silver <span class="brand-amp">&amp;</span> Salt Capital.
-              </p>
-              {booked && (
-                <p class="step3-body" id="confirmed-when">
-                  {new Date(booked.startAt).toLocaleString("en-US", {
-                    dateStyle: "full",
-                    timeStyle: "short",
-                    timeZone: booked.timezone,
-                  })}
-                </p>
-              )}
-              <p class="step3-body">
-                A calendar invitation with your video call link has been sent to your email.
-              </p>
-              <p class="step3-body step3-body-final">We’ll see you soon.</p>
-              <p class="step3-body">
-                Your member account is ready. Sign in with your email to see your application status
-                and call details.
-              </p>
-              <a href={membersHref} class="step3-account-btn" id="account-cta">
-                Sign in to your member area
-              </a>
-              <br />
-              <a href="/" class="step3-link">
-                Return to Silver <span class="brand-amp">&amp;</span> Salt Capital
-              </a>
-              <div class="quote-card">
-                <p class="quote-text">
-                  “We women don’t care too much about getting our pictures on money as long as we can
-                  get our hands on it.”
-                </p>
-                <div class="quote-card-top">
-                  <img
-                    src={ivyBakerPriest}
-                    alt="Ivy Baker Priest"
-                    loading="lazy"
-                    decoding="async"
-                    width="200"
-                    height="200"
-                  />
-                  <div class="quote-card-identity">
-                    <p class="quote-name">Ivy Baker Priest (1905–1975)</p>
-                    <p class="quote-title">
-                      30th Treasurer of the United States
-                      <br />
-                      Appointed by President Dwight D. Eisenhower (R), 1953
-                      <br />
-                      Utah’s first woman to hold a Cabinet-level federal office
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          renderDone={(done) => <DoneCard {...done} />}
           renderSubmit={({ submitting, disabled }) => (
             <>
               <JoinSubmitButton

@@ -11,9 +11,10 @@ vi.mock("@odla-ai/crm", async (orig) => ({
   updateRecord: vi.fn(async (_deps, input) => { crmState.updates.push(input); return {}; }),
 }));
 const sent = vi.hoisted(() => []);
+const sendResult = vi.hoisted(() => ({ next: null }));
 vi.mock("@odla-ai/chapter", async (orig) => ({
   ...(await orig()),
-  sendTemplated: vi.fn(async (_deps, msg) => { sent.push(msg); return { sent: true }; }),
+  sendTemplated: vi.fn(async (_deps, msg) => { sent.push(msg); return sendResult.next ? sendResult.next(msg) : { sent: true }; }),
 }));
 
 const { labelsRoute, LABELS_NO_SHOW_PATH } = await import("../src/labels-route.mjs");
@@ -70,7 +71,17 @@ describe("Didn't happen", () => {
     expect(db.state.applications[0]).toMatchObject({ meetingAt: 0, meetingLink: "", status: "call_scheduled" });
     expect(crmState.updates[0].input).toMatchObject({ journeyAction: "paid" });
     expect(sent).toHaveLength(1);
-    expect(sent[0]).toMatchObject({ to: "jane@example.com", template: "bookingReminder" });
+    expect(sent[0]).toMatchObject({ to: "jane@example.com", template: "missedCallRebook" });
+    expect(sent[0].vars.rescheduleUrl).toBe("https://silverandsaltcapital.com/join?application=a1");
+  });
+
+  it("falls back to the booking reminder while the missed-call email is not installed", async () => {
+    sendResult.next = (msg) => (msg.template === "missedCallRebook" ? { sent: false, reason: "template-missing" } : { sent: true });
+    const res = await post(fakeDb(rows()));
+    expect(res.status).toBe(200);
+    expect(sent.map((m) => m.template)).toEqual(["missedCallRebook", "bookingReminder"]);
+    expect((await res.json()).emailed).toBe(true);
+    sendResult.next = null;
   });
 
   it("changes nothing when the booking cannot be released, so a retry starts clean", async () => {

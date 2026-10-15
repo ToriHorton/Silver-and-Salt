@@ -11,5 +11,8 @@ export const SIGNUP_EMAIL_EVENTS = {
   paymentReminder: event("Payment reminder", "A paid-tier application is over 24 hours old and payment is incomplete", "Applicant", [...identity, "membersUrl"]),
   bookingReminderAdmin: event("Unbooked member notice", "A paid member receives her booking reminder", "Administrator", [...identity, "membersUrl"]),
   callBookedAdmin: event("Call booked notice", "A new introduction call is found on the calendar", "Administrator", [...identity, "meetingTime", "tierName", "adminUrl"]),
+  callReminderDayBefore: event("Call reminder, day before", "The onboarding call is 24 hours away (not sent for a call booked less than a day ahead)", "Applicant", [...identity, "startAt", "meetingLink", "rescheduleUrl"]),
+  callReminderHour: event("Call reminder, one hour before", "The onboarding call starts within the hour", "Applicant", [...identity, "startAt", "meetingLink"]),
+  missedCallRebook: event("Missed call, rebook", "Tori marks a booked call as not having happened", "Applicant", [...identity, "membersUrl", "rescheduleUrl"]),
   paidApprovedAdmin: event("Paid and approved notice", "A member pays and is approved with the call waived", "Administrator", [...identity, "tierName", "adminUrl"]),
 };
