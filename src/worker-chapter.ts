@@ -31,6 +31,9 @@
 //   curveReportRoute     GET /api/reports/curves, the Monday report's read of
 //                        the weekly curve snapshots, bearer REPORT_KEY only
 //                        (src/curve-snapshots.mjs)
+//   availabilityReportRoute  GET /api/admin/availability-report, open call
+//                        time over the next 14 days plus the daily history,
+//                        admins only (src/availability-report.mjs)
 //   network.route        inbound membership effects from Built Not Found
 //                        (only when MEMBERSHIP_AUTHORITY_OWNER is set)
 //
@@ -58,6 +61,7 @@ import { labelsRoute } from "./labels-route.mjs";
 import { relationshipsRoute } from "./relationship-groups.mjs";
 import { labelsTick } from "./labels-job.mjs";
 import { curveReportRoute, curveSnapshotTick } from "./curve-snapshots.mjs";
+import { availabilityReportRoute, availabilitySnapshotTick } from "./availability-report.mjs";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
 import { hardenFetch } from "./hardening";
 import { SILVER_HARDENING } from "./hardening.config";
@@ -221,7 +225,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, relationshipsRoute, curveReportRoute, callAdminRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, relationshipsRoute, curveReportRoute, callAdminRoute, availabilityReportRoute] as Route[],
   };
 }
 
@@ -332,6 +336,15 @@ export default withObservability<ChapterEnv>({
           if ("taken" in run) console.log("chapter.curve-snapshot", JSON.stringify(run));
         } catch (err) {
           console.error("chapter.curve-snapshot", (err as Error).message);
+        }
+        // Daily snapshot of open call time over the next 14 days
+        // (src/availability-report.mjs): the first run after midnight in the
+        // scheduling timezone records the day. Every other run is one lookup.
+        try {
+          const run = await availabilitySnapshotTick(workerFor(env).background, env);
+          if ("taken" in run) console.log("chapter.availability-snapshot", JSON.stringify(run));
+        } catch (err) {
+          console.error("chapter.availability-snapshot", (err as Error).message);
         }
         // The checkout canary (src/checkout-probe.ts). Silence here is the
         // point: it speaks only when the payment step's own request stops

@@ -74,6 +74,38 @@ const journeyCurveSnapshots = {
   probes: [],
 };
 
+// Daily snapshots of open onboarding-call time over the next 14 days
+// (src/availability-report.mjs, Tori 2026-10-15). The Worker's cron writes one
+// row per day and the hours form in Admin > Settings > Calendar reads them;
+// minutes and counts only, no event titles or guests.
+const availabilitySnapshots = {
+  id: "availability-snapshots",
+  title: "Availability snapshots",
+  npm: "silver-and-salt-capital",
+  schema: {
+    entities: {
+      availabilitySnapshots: {
+        attrs: {
+          id: { type: "string", unique: true, indexed: true, optional: false },
+          // The day the numbers were taken, YYYY-MM-DD, in the scheduling timezone.
+          day: { type: "string", unique: true, indexed: true, optional: false },
+          takenAt: { type: "number", unique: false, indexed: true, optional: false },
+          openMinutes: { type: "number", unique: false, indexed: false, optional: false },
+          offeredMinutes: { type: "number", unique: false, indexed: false, optional: false },
+          callCount: { type: "number", unique: false, indexed: false, optional: false },
+          targetMinutes: { type: "number", unique: false, indexed: false, optional: false },
+          // Per-day open and offered minutes, the first open time, slot length and timezone.
+          detail: { type: "json", unique: false, indexed: false, optional: false },
+        },
+      },
+    },
+    links: {},
+  },
+  rules: { availabilitySnapshots: denyAll },
+  seeds: [],
+  probes: [],
+};
+
 const baseChapterIntegration = createChapterIntegration(chapter);
 
 // These attributes predate managed Chapter tiers. They may contain historical
@@ -167,6 +199,7 @@ export default {
     activeChapterIntegration,
     retainedNewsletterData,
     journeyCurveSnapshots,
+    availabilitySnapshots,
     ...(process.env.ODLA_PROVISION_PROD === "1" ? [] : [retainedDevAdminData]),
   ],
   calendar: {
