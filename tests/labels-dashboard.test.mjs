@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { actionBars, actionChoices, checkpoint, cohortCurves, CONVERSIONS, grid, matching, snapshotCurves, valueOf, weekEnding } from "../src/labels-dashboard.mjs";
+import { actionBars, actionChoices, checkpoint, cohortCurves, CONVERSIONS, grid, matching, snapshotCurves, snapshotMembers, valueOf, weekEnding } from "../src/labels-dashboard.mjs";
 
 const DAY = 864e5;
 const NOW = Date.UTC(2026, 9, 14);
@@ -110,6 +110,22 @@ describe("the people behind each curve and the weekly snapshot", () => {
     expect(snap.map((c) => `${c.path}:${c.id}`)).toEqual(all);
     expect(snap.find((c) => c.id === "applied_paid")).toMatchObject({ eligible: 3, converted: 1, ended: 1, waiting: 1 });
     expect(JSON.stringify(snap)).not.toContain("Ann");
+  });
+  it("gives each step its 30-day rate's counts and how many are stuck", () => {
+    // Ann and Bea started 30 days ago (Ann paid in 2 days, Bea refunded); Cat started 3 days ago.
+    const step = snapshotCurves(ps, NOW).find((c) => c.id === "applied_paid");
+    expect(step).toMatchObject({ rateCohort: 2, rateConverted: 1, stuck: 0 });
+    const late = [P("d", "applicant", "website_first", "applied", "standard", { payment: "required", events: [ev("applied", 20)] })];
+    expect(snapshotCurves(late, NOW).find((c) => c.id === "applied_paid")).toMatchObject({ rateCohort: 0, stuck: 1, waiting: 1 });
+  });
+  it("counts members, paying members, and who joined in the week", () => {
+    const ms = [
+      P("m1", "member", "website_first", "member_access", "standard", { payment: "required", events: [ev("member_access", 3)] }),
+      P("m2", "member", "website_first", "member_access", "associate", { payment: "not_required", events: [ev("member_access", 2)] }),
+      P("m3", "member", "relationship_first", "member_access", "standard", { payment: "required", events: [ev("member_access", 40)] }),
+      P("a1", "applicant", "website_first", "paid", "standard", { payment: "required", events: [] }),
+    ];
+    expect(snapshotMembers(ms, NOW)).toEqual({ total: 3, paying: 2, joined: 2, payingJoined: 1 });
   });
   it("names the Sunday to Saturday week by the Saturday that closed it, in Mountain time", () => {
     // Wednesday 14 October 2026 → the week that ended Saturday 10 October.
