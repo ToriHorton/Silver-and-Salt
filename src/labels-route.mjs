@@ -19,6 +19,7 @@ import { emailGroupFrom, sendTemplated } from "@odla-ai/chapter";
 import { runLabels } from "./labels-job.mjs";
 import { rescheduleUrl } from "./call-links.mjs";
 import { listCurveSnapshots } from "./curve-snapshots.mjs";
+import { GROUP_LABELS, groupMembers } from "./relationship-groups.mjs";
 
 export const LABELS_PERSON_PATH = "/api/admin/labels/person";
 export const LABELS_ACTION_PATH = "/api/admin/labels/person/action";
@@ -130,8 +131,11 @@ export async function loadJourneyPeople(deps) {
     records.push(...page);
     if (records.length >= total || !page.length) break;
   }
+  // Partners and Team are not on a journey, so they never count here.
+  const groups = await groupMembers(deps);
   const people = [];
   for (const r of records) {
+    if (groups.has(r.id)) continue;
     const f = r.fields ?? {};
     const action = str(f.journeyAction) || null;
     const activities = await listActivities(deps, { recordId: r.id, limit: 500 });
@@ -227,6 +231,10 @@ export const labelsRoute = async (req, url, env, ctx) => {
     const person = personFacts(record);
     const refusal = refusalFor(action, person);
     if (refusal) return json({ error: refusal }, 400);
+    const group = (await groupMembers(deps)).get(record.id);
+    if (group) {
+      return json({ error: `${record.name ?? "This person"} is tagged ${GROUP_LABELS[group]}, and partners and team stay off the signup journey. Remove the ${group} tag first if they are joining as a member.` }, 400);
+    }
     if (action === "invited" && !(await hasWaiver(auth.db, record.primaryEmail ?? record.fields?.email))) {
       return json({ error: "Record Waive interview for their email under Admission first; Invited needs it, because a waiver only counts if it exists before they apply." }, 400);
     }

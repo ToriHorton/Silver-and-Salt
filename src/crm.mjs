@@ -45,6 +45,11 @@ export const crm = defineCrm({
         // primary address, so an unsubscribe applies to the person, not to
         // one of their two addresses.
         secondaryEmail: { type: "email", label: "Second email" },
+        // Where they work and what they do there, from Tori's contact list.
+        // Most useful for Partners (src/relationship-groups.mjs), whose
+        // relationship is with the organization as much as the person.
+        organization: { type: "string", label: "Organization" },
+        title: { type: "string", label: "Title" },
         firstName: { type: "string", label: "First name" },
         lastName: { type: "string", label: "Last name" },
         preferredName: { type: "string", label: "Preferred name" },

@@ -12,10 +12,13 @@
 //     from fresh reads;
 //   - the job never touches the CRM stage, which Chapter's sync owns, and
 //     never writes a person who has no application (Tori labels those, and the
-//     backfill only writes after her review).
+//     backfill only writes after her review);
+//   - Partners and Team (src/relationship-groups.mjs) are never labelled,
+//     even when they apply.
 
 import { addActivity, listActivities, listEmailLog, listRecords, updateRecord } from "@odla-ai/crm";
 import { crm } from "./crm.mjs";
+import { groupMembers } from "./relationship-groups.mjs";
 import {
   ACTION_BY_ID, admissionOf, attemptOf, callSummaryAfter, eventBody, eventId, eventMeta, flagsFor, initialPath,
   nextAction, paymentOf, proposalFor, systemEventsFor, typeOf,
@@ -308,9 +311,17 @@ export function latestApplicationPerRecord(apps, resolve) {
 }
 
 export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQuality = "exact", write = true, pathOverrides = new Map(), detect = false } = {}) {
-  const [people, all, waivers] = await Promise.all([loadPeople(db), loadFacts(db, chapterId, runtime), detect ? loadWaivers(db) : Promise.resolve(new Map())]);
+  const [people, all, waivers, groups] = await Promise.all([
+    loadPeople(db), loadFacts(db, chapterId, runtime), detect ? loadWaivers(db) : Promise.resolve(new Map()), groupMembers({ crm, db }),
+  ]);
   const byAppId = new Map();
   const byEmail = new Map();
+  // Either address finds the person, so someone who applies with their second
+  // email is not counted as a stranger. A main address wins over a second one.
+  for (const p of people) {
+    const second = lower(p.fields?.secondaryEmail);
+    if (second) byEmail.set(second, p);
+  }
   for (const p of people) {
     const appId = str(p.fields?.applicationId);
     if (appId) byAppId.set(appId, p);
@@ -318,11 +329,12 @@ export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQ
     if (email) byEmail.set(email, p);
   }
   const plans = [];
-  const summary = { people: 0, events: 0, labels: 0, retries: 0, unmatched: 0 };
+  const summary = { people: 0, events: 0, labels: 0, retries: 0, unmatched: 0, grouped: 0 };
   const resolve = (app) => byAppId.get(String(app.id)) ?? byEmail.get(lower(app.email)) ?? null;
   const unmatched = all.apps.filter((app) => !resolve(app)).length;
   summary.unmatched += unmatched;
   for (const { record, app } of latestApplicationPerRecord(all.apps, resolve)) {
+    if (groups.has(record.id)) { summary.grouped++; continue; }
     const signals = detect ? await loadSignals(db, record) : null;
     const plan = planPerson(record, app, all, { now, nowQuality, pathOverride: pathOverrides.get(lower(record.primaryEmail ?? app.email)) ?? null, signals });
     plans.push({ record, app, plan });
@@ -337,7 +349,7 @@ export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQ
   // due) and, when detection is on, propose the moves their records show.
   for (const p of people) {
     const f = p.fields ?? {};
-    if (str(f.applicationId) || !str(f.journeyAction)) continue;
+    if (str(f.applicationId) || !str(f.journeyAction) || groups.has(p.id)) continue;
     let proposalBits = { fields: {}, event: null };
     let proposal = null;
     if (detect) {

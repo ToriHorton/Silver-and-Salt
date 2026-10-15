@@ -53,6 +53,7 @@ import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./sig
 import { remindBeforeCalls } from "./call-reminders";
 // Signup labels: Type, Path and Action on every person (Signup Journeys v3.1).
 import { labelsRoute } from "./labels-route.mjs";
+import { relationshipsRoute } from "./relationship-groups.mjs";
 import { labelsTick } from "./labels-job.mjs";
 import { curveReportRoute, curveSnapshotTick } from "./curve-snapshots.mjs";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
@@ -219,7 +220,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, curveReportRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, relationshipsRoute, curveReportRoute] as Route[],
   };
 }
 
