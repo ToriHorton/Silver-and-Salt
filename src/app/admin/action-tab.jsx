@@ -49,7 +49,10 @@ export function withActionTab(tabs, context) {
  * After the call panel, and the choice an already recorded outcome stands for.
  */
 export function decisionFor(labels, history) {
-  const canDecide = !!labels.applicationId && DECIDABLE.has(labels.action);
+  // Paid alone is decidable only when the call was waived; after a missed call
+  // a paid person waits to rebook, and the decision returns with the new booking.
+  const canDecide = !!labels.applicationId && DECIDABLE.has(labels.action)
+    && !(labels.action === "paid" && labels.admission === "call_required");
   // Decline is for people who hold no payment: Associates, and paid-tier applicants who never paid
   // (Chapter refuses it with payment_held otherwise). Not a paid fit is the refund that keeps them.
   const paid = labels.payment === "required" && history.some((h) => h.event === "paid");
@@ -105,6 +108,8 @@ function ActionTab({ recordId }) {
   const [message, setMessage] = useState(null);
   const [confirming, setConfirming] = useState(null);
   const [pick, setPick] = useState("");
+  // The confirmation shown after "They missed the call", instead of the choices.
+  const [rebooked, setRebooked] = useState(null);
 
   const load = () => {
     setState((s) => ({ ...s, loading: true, error: null }));
@@ -129,6 +134,23 @@ function ActionTab({ recordId }) {
       await request(ACTION_PATH, { method: "POST", body: JSON.stringify(body) });
       setChoice("");
       setMessage({ ok: true, text: "Saved." });
+      load();
+    } catch (err) {
+      setMessage({ ok: false, text: err.message });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // They missed the call: mark it, send the rebooking email, then show a
+  // confirmation in place of the After the call questions.
+  const missedCall = async () => {
+    setSaving(true);
+    setMessage(null);
+    try {
+      const res = await request(NO_SHOW_PATH, { method: "POST", body: JSON.stringify({ recordId, expectedUpdatedAt: updatedAt }) });
+      setConfirming(null);
+      setRebooked({ emailed: res.emailed !== false });
       load();
     } catch (err) {
       setMessage({ ok: false, text: err.message });
@@ -210,7 +232,7 @@ function ActionTab({ recordId }) {
       <b>Mark the call as missed?</b>
       <span class="jt-hint">They get an email with a link to pick a new time.</span>
       <div class="jt-actions">
-        <button type="button" class="btn" disabled={saving} onClick={() => decide(NO_SHOW_PATH, {}).then(() => setConfirming(null))}>{saving ? "Sending…" : "Yes, send the rebooking email"}</button>
+        <button type="button" class="btn" disabled={saving} onClick={missedCall}>{saving ? "Sending…" : "Yes, send the rebooking email"}</button>
         <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming(null)}>Go back</button>
       </div>
     </div>
@@ -248,7 +270,22 @@ function ActionTab({ recordId }) {
         </section>
       )}
 
-      {callPanel && (
+      {rebooked && (
+        <section class="jt-card is-done" aria-label="Call marked as missed" role="status">
+          <div class="jt-title">{rebooked.emailed ? "Rebooking email sent" : "Call marked as missed"}</div>
+          <p class="jt-lead">
+            {rebooked.emailed
+              ? "The missed call is recorded, and they have an email with a link to pick a new time."
+              : "The missed call is recorded, but the rebooking email did not send. Reach out to them yourself to pick a new time."}
+          </p>
+          <p class="jt-hint">Nothing else to do for now. When they book, they show here as Conversation booked again, and After the call returns for the new time.</p>
+          <div class="jt-actions">
+            <button type="button" class="btn" onClick={() => setRebooked(null)}>Done</button>
+          </div>
+        </section>
+      )}
+
+      {!rebooked && callPanel && (
         <section class="jt-card" aria-label="After the call">
           <div class="jt-title">After the call</div>
           <p class="jt-lead">
@@ -270,7 +307,7 @@ function ActionTab({ recordId }) {
         </section>
       )}
 
-      {!callPanel && canDecide && (
+      {!rebooked && !callPanel && canDecide && (
         <section class="jt-card" aria-label="Decision">
           <div class="jt-title">Decision</div>
           {confirmView ?? (
@@ -338,6 +375,7 @@ const JT_CSS = `
 .jt-tag.is-flag{border-color:rgba(209,107,79,.45);background:rgba(209,107,79,.08);color:#B4553B;font-weight:600}
 .jt-card{display:grid;gap:12px;padding:18px 20px;border-radius:12px;background:var(--ui-surface,#fff);border:1px solid var(--ui-border,rgba(47,62,52,.14));box-shadow:0 1px 2px rgba(47,62,52,.05),0 6px 20px rgba(47,62,52,.06)}
 .jt-card.is-suggest{border-color:rgba(184,146,90,.55);background:rgba(184,146,90,.08);box-shadow:none}
+.jt-card.is-done{border-color:rgba(26,143,125,.45);background:rgba(26,143,125,.06);box-shadow:none}
 .jt-card.is-quiet{box-shadow:none;background:transparent}
 .jt-title{font-family:var(--ui-font-display,"Cormorant Garamond",Georgia,serif);font-size:22px;font-weight:600;line-height:1.1;color:var(--ui-text,#2F3E34)}
 .jt-lead{margin:0;line-height:1.5}
