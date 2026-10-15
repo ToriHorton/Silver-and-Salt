@@ -58,14 +58,14 @@ const chapterVersion = JSON.parse(readFileSync(
 // reviewed namespaces and attributes.
 // 0.48.2 preserves the reviewed 0.48.1 schema, rules and seeds; only the
 // signup request reader changes. Keep unknown future versions gated.
-const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0"];
-const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0"].includes(chapterVersion);
-const hasSeatJourneys = ["0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0"].includes(chapterVersion);
+const candidateVersions = ["0.47.11", "0.48.0", "0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0", "0.58.0"];
+const hasAccountProtection = ["0.48.1", "0.48.2", "0.48.3", "0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0", "0.58.0"].includes(chapterVersion);
+const hasSeatJourneys = ["0.49.0", "0.50.0", "0.51.0", "0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0", "0.58.0"].includes(chapterVersion);
 // 0.52.0 (odla-ai PR #978): the sender display name on the group row (bug
 // 5a50304f) and the operator's resolve evidence on payment recovery reviews
 // (bugs 513172cd, e58fd02d). Both optional; neither is browser-readable.
-const hasSenderName = ["0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0"].includes(chapterVersion);
-const hasReviewActions = ["0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0"].includes(chapterVersion);
+const hasSenderName = ["0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0", "0.58.0"].includes(chapterVersion);
+const hasReviewActions = ["0.52.0", "0.52.1", "0.53.0", "0.54.0", "0.55.0", "0.56.0", "0.56.1", "0.56.2", "0.57.0", "0.58.0"].includes(chapterVersion);
 const isCandidate = candidateVersions.includes(chapterVersion);
 const candidateNamespaces = ["membershipQuoteProjections", "namedSeatConsents", "signupControlHeads"];
 const reviewedVersionNamespaces = {
@@ -119,6 +119,10 @@ const reviewedVersionNamespaces = {
   // 0.56.2 collections (odla-ai #996). Its new optional attributes (seat
   // regiftedAt/formerRecipients, effect recipient ids) belong to BNF authority only.
   "0.57.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
+  // 0.58.0 changes the availability route and the scheduling defaults only; schema, rules
+  // and seeds match 0.57.0 (the seed's windowDays moves to 21 inside schedulingJson, a
+  // value, not an attribute). odla-ai 0.58.0.
+  "0.58.0": [...candidateNamespaces, "chapterAccountPolicy", "membershipCheckoutHistory", "paymentRecoveryReviews"],
 };
 if (!Object.hasOwn(reviewedVersionNamespaces, chapterVersion)) {
   throw new Error(`Review the Chapter ${chapterVersion} schema before adopting it`);
