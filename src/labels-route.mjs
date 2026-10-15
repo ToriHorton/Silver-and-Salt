@@ -20,6 +20,7 @@ import { runLabels } from "./labels-job.mjs";
 import { rescheduleUrl } from "./call-links.mjs";
 import { listCurveSnapshots } from "./curve-snapshots.mjs";
 import { GROUP_LABELS, groupMembers } from "./relationship-groups.mjs";
+import { greetingName } from "./greeting-name.mjs";
 
 export const LABELS_PERSON_PATH = "/api/admin/labels/person";
 export const LABELS_ACTION_PATH = "/api/admin/labels/person/action";
@@ -487,7 +488,7 @@ export const labelsRoute = async (req, url, env, ctx) => {
           template,
           event: ctx.chapter.config?.emails?.events?.[template],
           to: str(app.email),
-          vars: { firstName: str(app.firstName), lastName: str(app.lastName), email: str(app.email), phone: str(app.phone), state: str(app.state), membersUrl: MEMBERS_URL, rescheduleUrl: rescheduleUrl(appId) },
+          vars: { firstName: greetingName(app), lastName: str(app.lastName), email: str(app.email), phone: str(app.phone), state: str(app.state), membersUrl: MEMBERS_URL, rescheduleUrl: rescheduleUrl(appId) },
           dedupeKey: `no-show-rebook:${appId}:${key}`,
           applicationId: appId,
         });

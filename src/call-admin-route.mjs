@@ -21,6 +21,7 @@
 import { emailGroupFrom, sendTemplated } from "@odla-ai/chapter";
 import { initCalendar } from "@odla-ai/calendar";
 import { callTimeLabel, rescheduleUrl } from "./call-links.mjs";
+import { greetingName } from "./greeting-name.mjs";
 
 const MOVE = /^\/api\/admin\/calls\/([0-9a-f-]+)\/move$/;
 const CANCEL_REBOOK = /^\/api\/admin\/calls\/([0-9a-f-]+)\/cancel-rebook$/;
@@ -78,7 +79,7 @@ async function email(db, env, ctx, group, app, template, vars, dedupeKey) {
     template,
     event: ctx.chapter.config?.emails?.events?.[template],
     to: str(app.email),
-    vars: { firstName: str(app.firstName), lastName: str(app.lastName), email: str(app.email), phone: str(app.phone), state: str(app.state), ...vars },
+    vars: { firstName: greetingName(app), lastName: str(app.lastName), email: str(app.email), phone: str(app.phone), state: str(app.state), ...vars },
     dedupeKey,
     applicationId: str(app.id),
   });

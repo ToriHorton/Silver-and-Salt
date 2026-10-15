@@ -38,7 +38,7 @@ function fakeDb(state) {
 }
 const rows = () => ({
   meetings: [{ id: MID, applicationId: "a1", groupId: CHAPTER, status: "scheduled", startAt: START, endAt: START + 30 * 60e3, timezone: "America/Denver", googleEventId: "g1", meetUrl: "https://meet.google.com/abc" }],
-  applications: [{ id: "a1", groupId: CHAPTER, stripeRuntime: "live", status: "call_scheduled", firstName: "Jane", email: "jane@example.com", meetingAt: START, stripeSubscriptionId: "sub_1" }],
+  applications: [{ id: "a1", groupId: CHAPTER, stripeRuntime: "live", status: "call_scheduled", firstName: "Jane", preferredName: "Janie", email: "jane@example.com", meetingAt: START, stripeSubscriptionId: "sub_1" }],
   groups: [{ id: CHAPTER, name: "Silver & Salt Capital", schedulingJson: { timezone: "America/Denver", slotMinutes: 30 } }],
 });
 const fakeCal = (busy = []) => ({
@@ -70,7 +70,7 @@ describe("moving a call", () => {
     expect(db.state.meetings[0]).toMatchObject({ startAt: to, endAt: to + 30 * 60e3 });
     expect(db.state.applications[0].meetingAt).toBe(to);
     expect(sent[0]).toMatchObject({ template: "callMoved", to: "jane@example.com", dedupeKey: `call-moved:${MID}:${to}` });
-    expect(sent[0].vars).toMatchObject({ meetingLink: "https://meet.google.com/abc", rescheduleUrl: "https://silverandsaltcapital.com/join?application=a1" });
+    expect(sent[0].vars).toMatchObject({ firstName: "Janie", meetingLink: "https://meet.google.com/abc", rescheduleUrl: "https://silverandsaltcapital.com/join?application=a1" });
     expect(sent[0].vars.startAt).toMatch(/2026 at /);
   });
 

@@ -17,6 +17,7 @@
 import { emailGroupFrom, sendTemplated } from "@odla-ai/chapter";
 import type { ChapterEnv, WorkerContext } from "@odla-ai/chapter/worker";
 import { callTimeLabel, rescheduleUrl } from "./call-links.mjs";
+import { greetingName } from "./greeting-name.mjs";
 
 export { callTimeLabel };
 
@@ -125,7 +126,7 @@ export async function remindBeforeCalls(
       event: chapter.config.emails?.events?.[template],
       to: text(app.email),
       vars: {
-        firstName: text(app.firstName),
+        firstName: greetingName(app),
         lastName: text(app.lastName),
         email: text(app.email),
         phone: text(app.phone),
