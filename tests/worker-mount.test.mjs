@@ -37,8 +37,9 @@ describe("chapterWorkerOptions", () => {
     const options = chapterWorkerOptions("dev");
     expect(options.crmBasePath).toBe("/api/crm");
     expect(options.requirePaymentQuote).toBe(true);
-    // Eight host routes; the eighth is the signup labels route (src/labels-route.mjs).
-    expect(options.routes).toHaveLength(8);
+    // Nine host routes; the eighth is the signup labels route (src/labels-route.mjs)
+    // and the ninth the Monday report's read of the curve snapshots (src/curve-snapshots.mjs).
+    expect(options.routes).toHaveLength(9);
     for (const route of options.routes) expect(typeof route).toBe("function");
   });
 });

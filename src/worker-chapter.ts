@@ -28,6 +28,9 @@
 //                        booking reminder on the cron below)
 //   crmIngestRoute       POST /api/crm-ingest, the morning job's call and
 //                        meeting pull, bearer-secret only (src/crm-ingest-route.ts)
+//   curveReportRoute     GET /api/reports/curves, the Monday report's read of
+//                        the weekly curve snapshots, bearer REPORT_KEY only
+//                        (src/curve-snapshots.mjs)
 //   network.route        inbound membership effects from Built Not Found
 //                        (only when MEMBERSHIP_AUTHORITY_OWNER is set)
 //
@@ -51,7 +54,7 @@ import { remindBeforeCalls } from "./call-reminders";
 // Signup labels: Type, Path and Action on every person (Signup Journeys v3.1).
 import { labelsRoute } from "./labels-route.mjs";
 import { labelsTick } from "./labels-job.mjs";
-import { curveSnapshotTick } from "./curve-snapshots.mjs";
+import { curveReportRoute, curveSnapshotTick } from "./curve-snapshots.mjs";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
 import { hardenFetch } from "./hardening";
 import { SILVER_HARDENING } from "./hardening.config";
@@ -216,7 +219,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, curveReportRoute] as Route[],
   };
 }
 
