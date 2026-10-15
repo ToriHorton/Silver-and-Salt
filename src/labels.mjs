@@ -185,7 +185,6 @@ export const EVENT_LABELS = {
   no_show: "Call did not happen; invited to rebook",
   proposal_dismissed: "Proposal dismissed",
   reopened: "Reopened",
-  no_show: "No-show",
 };
 
 /**

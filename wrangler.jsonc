@@ -131,7 +131,11 @@
         // Dev sends from the odla.ai domain (already onboarded to Email
         // Service on this Cloudflare account). Dev deliveries are further
         // redirected to the group's debug inbox by src/email.ts.
-        "EMAIL_FROM": "silver-and-salt-capital@odla.ai"
+        "EMAIL_FROM": "silver-and-salt-capital@odla.ai",
+        // The signup labels job stays off on dev: Tori's and Cory's dev
+        // Workers share the dev tenant, and two copies of the job on one
+        // tenant would race each other, as staging would on production.
+        "SIGNUP_LABELS": "off"
       },
       // Environments inherit no bindings; dev declares its own.
       "send_email": [{ "name": "SEND_EMAIL" }],
