@@ -647,7 +647,7 @@ describe("follower role", () => {
 
 describe("group seed is insert-only and cannot overwrite owner edits", () => {
   it("uses Chapter plus data-only descriptors for retired namespaces", () => {
-    expect(odlaConfig.integrations).toHaveLength(process.env.ODLA_PROVISION_PROD === "1" ? 3 : 4);
+    expect(odlaConfig.integrations).toHaveLength(process.env.ODLA_PROVISION_PROD === "1" ? 4 : 5);
     expect(odlaConfig.integrations[0]).toBe(integration);
     expect(integration.schema.entities.applications.attrs.tier).toEqual(
       legacySourceSchema.entities.applications.attrs.tier,
@@ -681,6 +681,15 @@ describe("group seed is insert-only and cannot overwrite owner edits", () => {
     expect(Object.keys(snaps.schema.entities)).toEqual(["curveSnapshots"]);
     expect(Object.keys(snaps.schema.entities.curveSnapshots.attrs).sort()).toEqual(["curves", "id", "people", "takenAt", "weekEnding"]);
     expect(snaps.rules).toEqual({ curveSnapshots: { view: "false", create: "false", update: "false", delete: "false" } });
+    expect(snaps.seeds).toEqual([]);
+  });
+
+  it("adds the daily availability snapshots as one deny-all namespace with no seed", () => {
+    // Tori, 2026-10-15: the Worker cron writes one row per day (src/availability-report.mjs).
+    const snaps = odlaConfig.integrations.find((item) => item.id === "availability-snapshots");
+    expect(Object.keys(snaps.schema.entities)).toEqual(["availabilitySnapshots"]);
+    expect(Object.keys(snaps.schema.entities.availabilitySnapshots.attrs).sort()).toEqual(["callCount", "day", "detail", "id", "offeredMinutes", "openMinutes", "takenAt", "targetMinutes"]);
+    expect(snaps.rules).toEqual({ availabilitySnapshots: { view: "false", create: "false", update: "false", delete: "false" } });
     expect(snaps.seeds).toEqual([]);
   });
 

@@ -34,6 +34,7 @@ import { isAdminAuthorized } from "./authorization.mjs";
 import { withCallsPeople } from "./people-workspace.jsx";
 import { withJourneysDashboard } from "./dashboard-workspace.jsx";
 import { withRelationships } from "./relationships.jsx";
+import { withAvailabilityReport } from "./settings-workspace.jsx";
 
 // People records get a Calls tab between Billing and Notes (calls-tab.jsx).
 // The Dashboard opens on the Journeys view (dashboard-workspace.jsx); people
@@ -42,7 +43,9 @@ const callsPeople = withCallsPeople(chapter);
 const journeysDashboard = withJourneysDashboard(chapter);
 // Partners & Team sits after People (relationships.jsx).
 const relationships = withRelationships();
-const WORKSPACES = (defaults) => relationships(journeysDashboard(callsPeople(defaults)));
+// Open call time for the next 14 days sits under the hours form in Settings > Calendar.
+const availabilityReport = withAvailabilityReport();
+const WORKSPACES = (defaults) => availabilityReport(relationships(journeysDashboard(callsPeople(defaults))));
 
 // Inbound compatibility: the admin notification email links with ?tab=people,
 // and older links used ?tab=billing / calendar / calls / email, which the
