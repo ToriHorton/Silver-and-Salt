@@ -19,7 +19,8 @@
 //   - Action "Do not upload" or "Already a member": skipped.
 //
 // Safe to run again: people are found by either email before anyone is
-// created, a waiver is only added where none is live, labels are only set on
+// created, including people who were archived (they come back with their call
+// history rather than as a duplicate), a waiver is only added where none is live, labels are only set on
 // someone who has none, and blank fields are filled without overwriting.
 // Anyone who has already applied is reported and left alone.
 //
@@ -28,9 +29,9 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { initAdmin } from "@odla-ai/db";
-import { addTag, createRecord, updateRecord } from "@odla-ai/crm";
+import { addTag, createRecord, listRecords, setArchived, updateRecord } from "@odla-ai/crm";
 import { crm } from "../src/crm.mjs";
-import { loadPeople, loadWaivers } from "../src/labels-job.mjs";
+import { loadWaivers } from "../src/labels-job.mjs";
 import { ACTION_BY_ID, refusalFor, typeOf } from "../src/labels.mjs";
 
 const [envName, csvPath] = process.argv.slice(2);
@@ -97,6 +98,24 @@ export function planRow(cols) {
   };
 }
 
+/**
+ * Every person, live and archived. `archived: true` lists only the archived
+ * ones and the default only the live ones, so this reads both.
+ */
+async function loadEveryone(db) {
+  const out = [];
+  for (const archived of [false, true]) {
+    const part = [];
+    for (let offset = 0; offset < 5000; offset += 200) {
+      const { records, total } = await listRecords({ crm, db }, { type: "person", limit: 200, offset, archived });
+      part.push(...records.map((r) => ({ ...r, archived })));
+      if (part.length >= total || !records.length) break;
+    }
+    out.push(...part);
+  }
+  return out;
+}
+
 async function main() {
   if (!["dev", "prod"].includes(envName) || !csvPath) throw new Error("usage: upload-contacts.mjs <dev|prod> <contacts.csv> [--apply]");
   const creds = JSON.parse(readFileSync(new URL("../.odla/credentials.local.json", import.meta.url), "utf8"));
@@ -115,10 +134,13 @@ async function main() {
     email: col("E-mail 1 - Value"), email2: col("E-mail 2 - Value"), action: col("Action"), waive: col("Waive call"), group: col("Group"),
   };
 
-  const people = await loadPeople(db);
+  // Later wins: second emails, then main emails; archived, then live. So a
+  // live record beats an archived one, and a main address beats a second one.
+  const people = await loadEveryone(db);
+  const ordered = [...people.filter((p) => p.archived), ...people.filter((p) => !p.archived)];
   const byEmail = new Map();
-  for (const p of people) { const s = lower(p.fields?.secondaryEmail); if (s) byEmail.set(s, p); }
-  for (const p of people) { const e = lower(p.primaryEmail ?? p.fields?.email); if (e) byEmail.set(e, p); }
+  for (const p of ordered) { const s = lower(p.fields?.secondaryEmail); if (s) byEmail.set(s, p); }
+  for (const p of ordered) { const e = lower(p.primaryEmail ?? p.fields?.email); if (e) byEmail.set(e, p); }
   const waivers = await loadWaivers(db);
 
   const rows = [];
@@ -153,7 +175,8 @@ async function main() {
       if (k === "secondaryEmail" && lower(existing?.primaryEmail) === v) continue;
       fill[k] = v;
     }
-    rows.push({ ...plan, existing, grants, labels, fill, result: existing ? "update" : "create", note: notes.join("; ") });
+    const result = !existing ? "create" : existing.archived ? "restore" : "update";
+    rows.push({ ...plan, existing, grants, labels, fill, result, note: notes.join("; ") });
   }
 
   mkdirSync(new URL("../.odla/review/", import.meta.url), { recursive: true });
@@ -167,7 +190,7 @@ async function main() {
 
   const count = (pred) => rows.filter(pred).length;
   console.log(`${envName}: ${rows.length} rows`);
-  console.log(`  create ${count((r) => r.result === "create")}, update ${count((r) => r.result === "update")}, skip ${count((r) => r.result === "skipped")}`);
+  console.log(`  create ${count((r) => r.result === "create")}, restore from archive ${count((r) => r.result === "restore")}, update ${count((r) => r.result === "update")}, skip ${count((r) => r.result === "skipped")}`);
   for (const id of Object.values(ACTIONS)) {
     const n = count((r) => r.labels?.journeyAction === id);
     if (n) console.log(`  ${ACTION_BY_ID[id].label}: ${n}`);
@@ -191,6 +214,11 @@ async function main() {
       } }], { mutationId: `upload-contacts:waiver:${email}` });
     }
     let recordId = r.existing?.id;
+    if (r.result === "restore") {
+      await setArchived(deps, { id: recordId, archived: false, mutationId: `upload-contacts:restore:${recordId}:${now}` });
+      const { getRecord } = await import("@odla-ai/crm");
+      r.existing = await getRecord(deps, recordId);
+    }
     if (!recordId) {
       const created = await createRecord(deps, {
         type: "person",
