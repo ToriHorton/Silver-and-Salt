@@ -25,6 +25,7 @@ export const LABELS_ACTION_PATH = "/api/admin/labels/person/action";
 export const LABELS_PEOPLE_PATH = "/api/admin/labels/people";
 export const LABELS_DISMISS_PATH = "/api/admin/labels/person/dismiss";
 export const LABELS_NO_SHOW_PATH = "/api/admin/labels/person/no-show";
+export const LABELS_OUTCOME_PATH = "/api/admin/labels/person/outcome";
 export const LABELS_REFRESH_PATH = "/api/admin/labels/refresh";
 export const LABELS_SNAPSHOTS_PATH = "/api/admin/labels/snapshots";
 const MEMBERS_URL = "https://silverandsaltcapital.com/members/";
@@ -70,6 +71,8 @@ export function labelsView(record) {
 }
 
 const CLEAR_PROPOSAL = { proposedAction: "", proposalEvidence: "", proposalReason: "" };
+// The decisions a call ends in; the Action tab records them with the call.
+const CALL_OUTCOMES = new Set(["fit", "not_fit", "not_paid_fit"]);
 
 /** The history, oldest first, from the person's activity log. */
 export function historyFrom(activities) {
@@ -332,6 +335,63 @@ export const labelsRoute = async (req, url, env, ctx) => {
     const runtime = typeof e.ODLA_RUNTIME === "string" ? e.ODLA_RUNTIME : undefined;
     const { summary } = await runLabels(auth.db, ctx.chapter.id, runtime, { write: true, detect: true });
     return json({ ok: true, summary });
+  }
+
+  // "Finish the call": Tori picks the decision and the call is recorded with
+  // it (2026-10-14: every call that happens ends in a decision). Records
+  // Conversation held if the person is still at Conversation booked, then the
+  // outcome, each as its own dated event so the curves keep both steps. Safe
+  // to send again: a step already recorded is skipped, so a retry after the
+  // approval or refund failed only re-runs that operation from the tab.
+  if (url.pathname === LABELS_OUTCOME_PATH && req.method === "POST") {
+    const auth = await adminOrError(req, env, ctx);
+    if (auth.error) return auth.error;
+    let body;
+    try { body = await req.json(); } catch { return json({ error: "bad request" }, 400); }
+    const recordId = str(body?.recordId);
+    const outcome = str(body?.outcome);
+    if (!CALL_OUTCOMES.has(outcome)) return json({ error: "Unknown outcome." }, 400);
+    const deps = { crm, db: auth.db };
+    const record = await getRecord(deps, recordId);
+    if (!record || record.type !== "person") return json({ error: "not found" }, 404);
+    const from = str(record.fields?.journeyAction);
+    if (from !== "conversation_booked" && from !== "conversation_held" && !CALL_OUTCOMES.has(from)) {
+      return json({ error: "Only someone with a booked or held call can have the call finished." }, 400);
+    }
+    const refusal = refusalFor(outcome, personFacts(record));
+    if (refusal) return json({ error: refusal }, 400);
+    const steps = [from === "conversation_booked" ? "conversation_held" : null, from === outcome ? null : outcome].filter(Boolean);
+    let current = record;
+    for (const to of steps) {
+      const was = str(current.fields?.journeyAction) || null;
+      const now = Date.now();
+      const sourceId = crypto.randomUUID();
+      try {
+        await updateRecord(deps, {
+          id: recordId,
+          input: {
+            journeyAction: to, journeyType: typeOf(to), journeyPath: personFacts(current).path ?? "relationship_first", actionSince: now, ...CLEAR_PROPOSAL,
+            // Recording the call settles the question of whether it happened.
+            journeyFlags: str(current.fields?.journeyFlags).split(",").filter((x) => x && x !== "flag:attendance-unconfirmed").join(","),
+          },
+          expectedUpdatedAt: current === record && typeof body?.expectedUpdatedAt === "number" ? body.expectedUpdatedAt : current.updatedAt,
+          audit: {
+            id: `journey-manual:${recordId}:${sourceId}`,
+            body: `Action: ${ACTION_BY_ID[was]?.label ?? was ?? "None"} → ${ACTION_BY_ID[to].label}`,
+            authorId: auth.user.userId,
+            meta: {
+              journeyEvent: "action_changed", from: was, to, reopened: false,
+              occurredAt: now, recordedAt: now, actor: auth.user.userId, method: "manual",
+              sourceType: "finish_call", sourceId, dateQuality: "exact", personId: recordId,
+            },
+          },
+        });
+      } catch (err) {
+        return json({ error: "This person changed since you opened them. Refresh and try again.", detail: err instanceof Error ? err.message : String(err) }, 409);
+      }
+      current = (await getRecord(deps, recordId)) ?? current;
+    }
+    return json({ ok: true, recorded: steps, updatedAt: current.updatedAt, labels: labelsView(current) });
   }
 
   // "Didn't happen": the booked call did not take place. Tori's rule
