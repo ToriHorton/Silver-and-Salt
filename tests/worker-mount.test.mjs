@@ -8,7 +8,10 @@
 // response out) and holds the options every deployment is built from.
 import "./workers-globals.mjs";
 import { describe, expect, it } from "vitest";
-import worker, { chapterWorkerOptions, withQuoteSelectionBody, PAYMENT_QUOTE_PATH } from "../src/worker-chapter.ts";
+import worker, { chapterWorkerOptions, withQuoteSelectionBody } from "../src/worker-chapter.ts";
+// Imported from its own module: the Worker entry exports only handlers, since
+// the local runtime (wrangler dev) refuses to start on a plain constant export.
+import { PAYMENT_QUOTE_PATH } from "../src/payment-quote-path.ts";
 import { recordChapterAlert } from "../src/chapter-alerts.ts";
 
 // The development deployment's plain vars (wrangler.jsonc env.dev), no

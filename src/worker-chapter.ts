@@ -91,7 +91,6 @@ const json = (body: unknown, status = 200) =>
  * Remove this once the package sends the empty object or tolerates a missing
  * body; tests/worker-mount.test.mjs pins both halves.
  */
-export { PAYMENT_QUOTE_PATH } from "./payment-quote-path";
 
 const withJsonBody = (req: Request, body: string): Request => {
   const headers = new Headers(req.headers);
