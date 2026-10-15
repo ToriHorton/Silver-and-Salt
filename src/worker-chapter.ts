@@ -50,6 +50,7 @@ import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./sig
 // Signup labels: Type, Path and Action on every person (Signup Journeys v3.1).
 import { labelsRoute } from "./labels-route.mjs";
 import { labelsTick } from "./labels-job.mjs";
+import { curveSnapshotTick } from "./curve-snapshots.mjs";
 import { resolveSalesState, salesGate, salesStateRoute } from "./sales-state";
 import { hardenFetch } from "./hardening";
 import { SILVER_HARDENING } from "./hardening.config";
@@ -307,6 +308,16 @@ export default withObservability<ChapterEnv>({
           if (run && !("skipped" in run) && (run.events || run.labels || run.retries)) console.log("chapter.labels", JSON.stringify(run));
         } catch (err) {
           console.error("chapter.labels", (err as Error).message);
+        }
+        // Weekly snapshot of the Journeys curves (src/curve-snapshots.mjs): the
+        // first run after midnight on Saturday night, Mountain time, freezes the
+        // Sunday to Saturday week just closed.
+        // Every other run is one lookup that finds it already taken.
+        try {
+          const run = await curveSnapshotTick(workerFor(env).background, env);
+          if ("taken" in run) console.log("chapter.curve-snapshot", JSON.stringify(run));
+        } catch (err) {
+          console.error("chapter.curve-snapshot", (err as Error).message);
         }
         // The checkout canary (src/checkout-probe.ts). Silence here is the
         // point: it speaks only when the payment step's own request stops

@@ -46,6 +46,34 @@ const retainedDevAdminData = {
   probes: [],
 };
 
+// Weekly snapshots of the Journeys conversion curves (src/curve-snapshots.mjs,
+// Tori 2026-10-14). The Worker's cron writes one row per week and the admin
+// Journeys view reads them; counts and percentages only, no member data.
+const journeyCurveSnapshots = {
+  id: "journey-curve-snapshots",
+  title: "Journey curve snapshots",
+  npm: "silver-and-salt-capital",
+  schema: {
+    entities: {
+      curveSnapshots: {
+        attrs: {
+          id: { type: "string", unique: true, indexed: true, optional: false },
+          // The Saturday that closes the week (Sunday to Saturday), YYYY-MM-DD, Mountain time.
+          weekEnding: { type: "string", unique: true, indexed: true, optional: false },
+          takenAt: { type: "number", unique: false, indexed: true, optional: false },
+          people: { type: "number", unique: false, indexed: false, optional: false },
+          // One entry per conversion: totals and each starting month's checkpoints.
+          curves: { type: "json", unique: false, indexed: false, optional: false },
+        },
+      },
+    },
+    links: {},
+  },
+  rules: { curveSnapshots: denyAll },
+  seeds: [],
+  probes: [],
+};
+
 const baseChapterIntegration = createChapterIntegration(chapter);
 
 // These attributes predate managed Chapter tiers. They may contain historical
@@ -138,6 +166,7 @@ export default {
   integrations: [
     activeChapterIntegration,
     retainedNewsletterData,
+    journeyCurveSnapshots,
     ...(process.env.ODLA_PROVISION_PROD === "1" ? [] : [retainedDevAdminData]),
   ],
   calendar: {

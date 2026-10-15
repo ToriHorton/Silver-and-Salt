@@ -17,6 +17,7 @@ import {
 } from "./labels.mjs";
 import { emailGroupFrom, sendTemplated } from "@odla-ai/chapter";
 import { runLabels } from "./labels-job.mjs";
+import { listCurveSnapshots } from "./curve-snapshots.mjs";
 
 export const LABELS_PERSON_PATH = "/api/admin/labels/person";
 export const LABELS_ACTION_PATH = "/api/admin/labels/person/action";
@@ -24,6 +25,7 @@ export const LABELS_PEOPLE_PATH = "/api/admin/labels/people";
 export const LABELS_DISMISS_PATH = "/api/admin/labels/person/dismiss";
 export const LABELS_NO_SHOW_PATH = "/api/admin/labels/person/no-show";
 export const LABELS_REFRESH_PATH = "/api/admin/labels/refresh";
+export const LABELS_SNAPSHOTS_PATH = "/api/admin/labels/snapshots";
 const MEMBERS_URL = "https://silverandsaltcapital.com/members/";
 
 const json = (body, status = 200) =>
@@ -113,6 +115,39 @@ export function curveEvents(activities) {
   return out.sort((x, y) => x.occurredAt - y.occurredAt);
 }
 
+/**
+ * Everyone not archived, with the labels and events the Journeys dashboard
+ * draws from. The weekly curve snapshot reads the same list.
+ */
+export async function loadJourneyPeople(deps) {
+  const records = [];
+  for (let offset = 0; offset < 5000; offset += 200) {
+    const { records: page, total } = await listRecords(deps, { type: "person", limit: 200, offset, archived: false });
+    records.push(...page);
+    if (records.length >= total || !page.length) break;
+  }
+  const people = [];
+  for (const r of records) {
+    const f = r.fields ?? {};
+    const action = str(f.journeyAction) || null;
+    const activities = await listActivities(deps, { recordId: r.id, limit: 500 });
+    people.push({
+      id: r.id,
+      name: r.name,
+      type: typeOf(action),
+      path: str(f.journeyPath) || null,
+      action,
+      tier: str(f.tier) || str(r.s4) || null,
+      admission: str(f.admission) || null,
+      payment: str(f.payment) || null,
+      actionSince: typeof f.actionSince === "number" ? f.actionSince : null,
+      flags: str(f.journeyFlags).split(",").filter(Boolean),
+      events: curveEvents(activities),
+    });
+  }
+  return people;
+}
+
 function safeJson(s) {
   try { return JSON.parse(s); } catch { return null; }
 }
@@ -158,33 +193,19 @@ export const labelsRoute = async (req, url, env, ctx) => {
   if (url.pathname === LABELS_PEOPLE_PATH && req.method === "GET") {
     const auth = await adminOrError(req, env, ctx);
     if (auth.error) return auth.error;
-    const deps = { crm, db: auth.db };
-    const records = [];
-    for (let offset = 0; offset < 5000; offset += 200) {
-      const { records: page, total } = await listRecords(deps, { type: "person", limit: 200, offset, archived: false });
-      records.push(...page);
-      if (records.length >= total || !page.length) break;
-    }
-    const people = [];
-    for (const r of records) {
-      const f = r.fields ?? {};
-      const action = str(f.journeyAction) || null;
-      const activities = await listActivities(deps, { recordId: r.id, limit: 500 });
-      people.push({
-        id: r.id,
-        name: r.name,
-        type: typeOf(action),
-        path: str(f.journeyPath) || null,
-        action,
-        tier: str(f.tier) || str(r.s4) || null,
-        admission: str(f.admission) || null,
-        payment: str(f.payment) || null,
-        actionSince: typeof f.actionSince === "number" ? f.actionSince : null,
-        flags: str(f.journeyFlags).split(",").filter(Boolean),
-        events: curveEvents(activities),
-      });
-    }
+    const people = await loadJourneyPeople({ crm, db: auth.db });
     return json({ people, now: Date.now() });
+  }
+
+  if (url.pathname === LABELS_SNAPSHOTS_PATH && req.method === "GET") {
+    const auth = await adminOrError(req, env, ctx);
+    if (auth.error) return auth.error;
+    try {
+      return json({ snapshots: await listCurveSnapshots(auth.db) });
+    } catch (err) {
+      // Before the namespace is provisioned the page still draws its curves.
+      return json({ snapshots: [], unavailable: (err).message?.slice(0, 200) ?? "unavailable" });
+    }
   }
 
   if (url.pathname === LABELS_ACTION_PATH && req.method === "POST") {
