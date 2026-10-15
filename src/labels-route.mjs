@@ -332,11 +332,31 @@ export const labelsRoute = async (req, url, env, ctx) => {
     const app = applications?.[0];
     if (!app) return json({ error: "The application could not be found." }, 404);
     const { meetings } = await auth.db.query({ meetings: { $: { where: { applicationId: appId }, limit: 50 } } });
-    const meeting = (meetings ?? []).filter((m) => !/^cancel/.test(str(m.status))).sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))[0];
+    // The newest booked call; failing that, the newest past one, which is the
+    // call this route already released if an earlier attempt stopped part way.
+    const newest = (list) => list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))[0];
+    const meeting = newest((meetings ?? []).filter((m) => !/^cancel/.test(str(m.status))))
+      ?? newest((meetings ?? []).filter((m) => (m.startAt ?? Infinity) <= Date.now()));
     if (!meeting) return json({ error: "No booked call was found for this application." }, 404);
     const key = meetingKey(meeting);
     const back = str(f.payment) === "required" ? "paid" : "applied";
     const now = Date.now();
+    // Release the missed time so the join page offers booking again. While the
+    // meeting stays "scheduled", Chapter's resume answers "done" and the
+    // applicant sees "You're confirmed" for a time that has passed. Only our
+    // rows change: the Google event is left as the record of the slot, since
+    // cancelling it would send the applicant Google's own cancellation notice.
+    if (str(meeting.status) === "scheduled") {
+      try {
+        await auth.db.transact([
+          { t: "update", ns: "meetings", id: String(meeting.id), attrs: { status: "cancelled", drift: "none" } },
+          { t: "update", ns: "applications", id: appId, attrs: { meetingAt: 0, meetingLink: "" } },
+        ]);
+      } catch (err) {
+        console.error("labels: missed call not released", recordId, err instanceof Error ? err.message : err);
+        return json({ error: "The booking could not be reopened, so nothing was changed. Try again." }, 502);
+      }
+    }
     try {
       await updateRecord(deps, {
         id: recordId,
