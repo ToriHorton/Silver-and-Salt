@@ -310,7 +310,8 @@ export default withObservability<ChapterEnv>({
           console.error("chapter.labels", (err as Error).message);
         }
         // Weekly snapshot of the Journeys curves (src/curve-snapshots.mjs): the
-        // first run after midnight Monday, Mountain time, freezes last week.
+        // first run after midnight on Saturday night, Mountain time, freezes the
+        // Sunday to Saturday week just closed.
         // Every other run is one lookup that finds it already taken.
         try {
           const run = await curveSnapshotTick(workerFor(env).background, env);

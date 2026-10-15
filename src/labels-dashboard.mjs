@@ -210,21 +210,21 @@ export function checkpoint(tranche, day) {
 }
 
 // ── Weekly snapshots ─────────────────────────────────────────────────────────
-// Every Monday the Worker freezes the curves for the week that just closed, so
+// Every Saturday night the Worker freezes the curves for the week that just closed, so
 // the weekly report compares like with like even after later backfills.
 
 const SNAPSHOT_DAYS = [7, 14, 30, 60, 90];
 const PATH_ORDER = ["all", "relationship_first", "website_first", "second_seat"];
 
 /**
- * The Sunday that ends the last full week (Monday to Sunday, Mountain time)
- * before `now`, as YYYY-MM-DD. On a Sunday that is the Sunday before, because
- * today's week has not finished.
+ * The Saturday that ends the last full week (Sunday to Saturday, Mountain time)
+ * before `now`, as YYYY-MM-DD. On a Saturday that is the Saturday before,
+ * because today's week has not finished.
  */
 export function weekEnding(now = Date.now()) {
   const local = new Date(now).toLocaleDateString("en-CA", { timeZone: "America/Denver" });
   const d = new Date(local + "T12:00:00Z");
-  const back = d.getUTCDay() === 0 ? 7 : d.getUTCDay();
+  const back = d.getUTCDay() === 6 ? 7 : d.getUTCDay() + 1;
   return new Date(d.getTime() - back * DAY).toISOString().slice(0, 10);
 }
 

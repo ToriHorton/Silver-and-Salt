@@ -454,10 +454,10 @@ function WeeklySnapshots({ snaps, paths }) {
     <section>
       <div class="path-head">Weekly snapshots</div>
       {snaps.loading ? <p class="none">Loading…</p> : !weeks.length ? (
-        <p class="none">No snapshot yet. The first is taken just after midnight on Monday, Mountain time, and freezes the week that closed on Sunday.</p>
+        <p class="none">No snapshot yet. The first is taken at midnight on Saturday night, Mountain time, and freezes the week from Sunday to Saturday.</p>
       ) : (
         <>
-          <p class="fact">Frozen each Monday for the week that just closed, exact dates only. Each cell is converted of eligible.</p>
+          <p class="fact">Frozen each Saturday night for the Sunday to Saturday week, exact dates only. Each cell is converted of eligible.</p>
           <div class="table-wrap">
             <table class="ftable">
               <thead><tr><th>Step</th>{weeks.map((s) => <th key={s.weekEnding}>{fmtWeek(s.weekEnding)}</th>)}</tr></thead>

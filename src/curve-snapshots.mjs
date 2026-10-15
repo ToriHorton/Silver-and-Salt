@@ -1,8 +1,9 @@
 // Weekly snapshots of the Journeys conversion curves (Tori, 2026-10-14).
 //
-// Every Monday the first five-minute cron run after midnight Mountain time
-// freezes the curves for the week that just closed: one curveSnapshots row per
-// week, keyed `curves:<week-ending Sunday>`, written once. Later backfills or
+// Weeks run Sunday to Saturday (Tori, 2026-10-14). On Saturday night the first
+// five-minute cron run after midnight Mountain time freezes the curves for the
+// week that just closed, so Monday starts with last week's numbers: one
+// curveSnapshots row per week, keyed `curves:<week-ending Saturday>`, written once. Later backfills or
 // estimated dates never change a week already recorded, so the weekly report
 // compares like with like. The rows hold counts and percentages only, no names.
 

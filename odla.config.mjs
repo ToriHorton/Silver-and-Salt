@@ -58,7 +58,7 @@ const journeyCurveSnapshots = {
       curveSnapshots: {
         attrs: {
           id: { type: "string", unique: true, indexed: true, optional: false },
-          // The Sunday that closes the week, YYYY-MM-DD (Mountain time).
+          // The Saturday that closes the week (Sunday to Saturday), YYYY-MM-DD, Mountain time.
           weekEnding: { type: "string", unique: true, indexed: true, optional: false },
           takenAt: { type: "number", unique: false, indexed: true, optional: false },
           people: { type: "number", unique: false, indexed: false, optional: false },

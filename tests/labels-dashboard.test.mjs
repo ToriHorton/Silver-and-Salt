@@ -111,12 +111,14 @@ describe("the people behind each curve and the weekly snapshot", () => {
     expect(snap.find((c) => c.id === "applied_paid")).toMatchObject({ eligible: 3, converted: 1, ended: 1, waiting: 1 });
     expect(JSON.stringify(snap)).not.toContain("Ann");
   });
-  it("names the week by the Sunday that closed it, in Mountain time", () => {
-    // Wednesday 14 October 2026 → the week that ended Sunday 11 October.
-    expect(weekEnding(Date.UTC(2026, 9, 14, 18))).toBe("2026-10-11");
-    // Monday 19 October, 00:10 Mountain (06:10 UTC) → Sunday 18 October.
-    expect(weekEnding(Date.UTC(2026, 9, 19, 6, 10))).toBe("2026-10-18");
-    // Sunday 18 October, 23:50 Mountain is still inside that week → 11 October.
-    expect(weekEnding(Date.UTC(2026, 9, 19, 5, 50))).toBe("2026-10-11");
+  it("names the Sunday to Saturday week by the Saturday that closed it, in Mountain time", () => {
+    // Wednesday 14 October 2026 → the week that ended Saturday 10 October.
+    expect(weekEnding(Date.UTC(2026, 9, 14, 18))).toBe("2026-10-10");
+    // Just past midnight on Saturday night, Sunday 18 October 00:05 Mountain (06:05 UTC) → Saturday 17 October.
+    expect(weekEnding(Date.UTC(2026, 9, 18, 6, 5))).toBe("2026-10-17");
+    // Saturday 17 October, 23:50 Mountain is still inside that week → 10 October.
+    expect(weekEnding(Date.UTC(2026, 9, 18, 5, 50))).toBe("2026-10-10");
+    // Monday morning reads the week just closed → Saturday 17 October.
+    expect(weekEnding(Date.UTC(2026, 9, 19, 15))).toBe("2026-10-17");
   });
 });
