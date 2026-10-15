@@ -119,10 +119,33 @@ export function parseDue(value) {
 // meeting. A WeakMap so it cannot keep a db alive or leak between runs.
 const secondaryIndexCache = new WeakMap();
 
+// Since the 2026-10-14 contact upload and its repair, some emails have two
+// rows: the live original and an archived duplicate. A call must land on the
+// live one, so every lookup prefers a live row, then the oldest.
+const isLive = (row) => row?.archived !== true;
+
+/** The row a lookup should use: live before archived, then the oldest. */
+export function bestRow(rows) {
+  return [...(rows ?? [])].filter(Boolean).sort((a, b) => {
+    if (isLive(a) !== isLive(b)) return isLive(a) ? -1 : 1;
+    return (toMs(a.createdAt) || Infinity) - (toMs(b.createdAt) || Infinity);
+  })[0] ?? null;
+}
+
+// A raw crm_record row keeps custom fields inside its `fields` JSON column.
+function fieldsOf(row) {
+  const f = row?.fields;
+  if (typeof f === "string") {
+    try { return JSON.parse(f) ?? {}; } catch { return {}; }
+  }
+  return f && typeof f === "object" ? f : {};
+}
+
 /**
  * Map of lowercased secondary email -> record row, for every person that has
- * one. Empty map (never a throw) if the scan fails: a dedupe convenience must
- * not be able to stop a call being recorded.
+ * one; where two rows share a second email, the live (then oldest) one. Empty
+ * map (never a throw) if the scan fails: a dedupe convenience must not be
+ * able to stop a call being recorded.
  */
 export async function secondaryEmailIndex(db) {
   const cached = secondaryIndexCache.get(db);
@@ -133,8 +156,8 @@ export async function secondaryEmailIndex(db) {
       crm_record: { $: { where: { type: "person" }, limit: 1000 } },
     });
     for (const row of crm_record ?? []) {
-      const second = normEmail(row?.secondaryEmail);
-      if (second) index.set(second, row);
+      const second = normEmail(fieldsOf(row).secondaryEmail ?? row?.secondaryEmail);
+      if (second) index.set(second, bestRow([index.get(second), row]));
     }
   } catch (err) {
     console.error(
@@ -144,6 +167,23 @@ export async function secondaryEmailIndex(db) {
   }
   secondaryIndexCache.set(db, index);
   return index;
+}
+
+/**
+ * The existing person for an email: a live record on the main address, then
+ * a live one on a second address, then an archived one, else null.
+ */
+export async function lookupPerson(db, email) {
+  const e = normEmail(email);
+  if (!e) return null;
+  const { crm_record } = await db.query({
+    crm_record: { $: { where: { type: "person", primaryEmail: e }, limit: 20 } },
+  });
+  const primary = bestRow(crm_record);
+  if (primary && isLive(primary)) return primary;
+  const second = (await secondaryEmailIndex(db)).get(e) ?? null;
+  if (second && isLive(second)) return second;
+  return primary ?? second;
 }
 
 /** A display name for a person we only know from a calendar attendee line. */
@@ -173,24 +213,17 @@ export async function resolvePerson(db, attendee) {
   if (!email) return null;
 
   const deps = { crm, db };
-  const { crm_record } = await db.query({
-    crm_record: { $: { where: { type: "person", primaryEmail: email }, limit: 1 } },
-  });
-  const existing = crm_record?.[0] ?? null;
-  if (existing) return { recordId: existing.id, created: false, email, row: existing };
-
-  // Miss on the primary address: before creating anyone, check whether this
-  // is someone's SECOND address. Without this, a woman who took a call on her
-  // work address and applied on her personal one becomes two records, and her
-  // call history splits in half.
+  // The primary address first, then someone's SECOND address, so a woman who
+  // took a call on her work address and applied on her personal one stays one
+  // record and her call history does not split in half. Live records win over
+  // archived ones (lookupPerson).
   //
-  // Done as a scan rather than a `where`, because secondaryEmail holds no
-  // promoted slot (all four string slots are taken) and so is not indexed for
-  // filtering. The scan is cached per db for the life of a batch, so a 25
-  // meeting import costs one extra query, not 25.
-  const bySecondary = await secondaryEmailIndex(db);
-  const hit = bySecondary.get(email);
-  if (hit) return { recordId: hit.id, created: false, email, row: hit };
+  // The second address is a scan rather than a `where`, because
+  // secondaryEmail holds no promoted slot (all four string slots are taken)
+  // and so is not indexed for filtering. The scan is cached per db for the
+  // life of a batch, so a 25 meeting import costs one extra query, not 25.
+  const existing = await lookupPerson(db, email);
+  if (existing) return { recordId: existing.id, created: false, email, row: existing };
 
   const created = await createRecord(deps, {
     type: "person",
@@ -472,13 +505,7 @@ export const OUTREACH_SIGNALS = ["email_sent", "calendar_event"];
 
 /** The existing person for an email, by primary or second address, or null. */
 export async function findPerson(db, email) {
-  const e = normEmail(email);
-  if (!e) return null;
-  const { crm_record } = await db.query({
-    crm_record: { $: { where: { type: "person", primaryEmail: e }, limit: 1 } },
-  });
-  if (crm_record?.[0]) return crm_record[0];
-  return (await secondaryEmailIndex(db)).get(e) ?? null;
+  return lookupPerson(db, email);
 }
 
 /** Record one outreach signal on the person it is about. Replays write nothing. */
