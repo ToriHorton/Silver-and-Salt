@@ -112,6 +112,21 @@ describe("system events record every milestone", () => {
     const app = { id: "a7", status: "refunded", tierId: "standard", namedSeatId: "seat_1", createdAt: 1 };
     expect(systemEventsFor(app, facts()).action).toBe("seat_ended");
   });
+  it("a declined Associate ends as Declined; a replaced seat recipient ends as Seat declined (Chapter 0.57.0)", () => {
+    const associate = { id: "d1", status: "declined", tierId: "associate", createdAt: 1, canceled: true };
+    expect(systemEventsFor(associate, facts()).action).toBe("declined");
+    // Chapter releases the seat binding from a replaced recipient's row; the stored path still says Second seat.
+    const released = { id: "d2", status: "declined", tierId: "standard", createdAt: 1, canceled: true };
+    expect(systemEventsFor(released, facts({ path: "second_seat" })).action).toBe("seat_declined");
+    expect(systemEventsFor(released, facts({ path: "website_first" })).action).toBe("declined");
+  });
+  it("a paid applicant refunded and kept as an Associate: Moved to Associate, then Member access (Chapter 0.57.0)", () => {
+    const app = { id: "k1", status: "approved", tierId: "associate", createdAt: 1, journeyApprovedAt: 2 };
+    const r = systemEventsFor(app, facts({ continued: new Set(["k1"]) }));
+    expect(r.events.map((e) => e.event)).toEqual(["applied", "approved", "moved_to_associate", "member_access"]);
+    expect(r.action).toBe("member_access");
+    expect(systemEventsFor(app, facts()).events.map((e) => e.event)).not.toContain("moved_to_associate");
+  });
   it("a seat holder approved before the buyer waits on the buyer", () => {
     const app = { id: "a8", status: "call_scheduled", tierId: "standard", namedSeatId: "seat_1", createdAt: 1, journeyApprovedAt: 9 };
     expect(systemEventsFor(app, facts()).action).toBe("waiting_on_buyer");
@@ -142,8 +157,10 @@ describe("labels reflect completed operations", () => {
     expect(refusalFor("approved", applicant)).toMatch(/Approve button/);
     expect(refusalFor("refunded", applicant)).toMatch(/Refund button/);
     expect(refusalFor("member_access", applicant)).toMatch(/system/);
-    expect(refusalFor("declined", applicant)).toMatch(/fa96b11c/);
-    expect(refusalFor("moved_to_associate", applicant)).toMatch(/f7bc92ee/);
+    expect(refusalFor("declined", applicant)).toMatch(/Decline button/);
+    expect(refusalFor("moved_to_associate", applicant)).toMatch(/Not a paid fit/);
+    expect(manualActionsFor(applicant)).not.toContain("declined");
+    expect(manualActionsFor(applicant)).not.toContain("moved_to_associate");
   });
   it("allows outcomes and refuses steps that do not fit the path", () => {
     expect(refusalFor("fit", applicant)).toBeNull();
@@ -251,5 +268,20 @@ describe("member access after approval", () => {
       const app = { id: "s2", status: "approved", tierId: "standard", createdAt: 1, approvalEffectsPending: false, membershipStatus: ms, renewalAt: 9e12 };
       expect(systemEventsFor(app, base).events.map((e) => e.event)).not.toContain("member_access");
     }
+  });
+});
+
+describe("one application per person (Chapter 0.57.0 reapplication)", () => {
+  it("keeps only the newest application for a person who applied again", async () => {
+    const { latestApplicationPerRecord } = await import("../src/labels-job.mjs");
+    const ada = { id: "person_ada" }, grace = { id: "person_grace" };
+    const apps = [
+      { id: "old", email: "ada@example.com", createdAt: 1000, status: "declined" },
+      { id: "new", email: "ada@example.com", createdAt: 2000, status: "submitted" },
+      { id: "g", email: "grace@example.com", createdAt: 500, status: "approved" },
+      { id: "nobody", email: "nobody@example.com", createdAt: 3000, status: "submitted" },
+    ];
+    const resolve = (app) => (app.email === "ada@example.com" ? ada : app.email === "grace@example.com" ? grace : null);
+    expect(latestApplicationPerRecord(apps, resolve).map(({ record, app }) => `${record.id}:${app.id}`)).toEqual(["person_ada:new", "person_grace:g"]);
   });
 });

@@ -18,6 +18,15 @@ const REFRESH_PATH = "/api/admin/labels/refresh";
 // Where a decision can be made: after the call, or after payment on a waived path.
 const DECIDABLE = new Set(["paid", "conversation_booked", "conversation_held", "fit", "not_fit", "not_paid_fit"]);
 const DAY = 864e5;
+// The operations behind the Decision panel: the Chapter route each one calls, the question asked first,
+// the word on the Yes button, and what the panel says once it has finished. Not a paid fit is the
+// refund with continueAs (Chapter 0.57.0): a full refund that keeps the person as a free Associate.
+const OPERATIONS = {
+  approve: { route: "approve", body: {}, ask: "Approve this membership? The welcome email goes out and the member area opens.", yes: "approve", done: "Approved. The welcome email is on its way." },
+  decline: { route: "decline", body: {}, ask: "Decline this application? Nothing is emailed; tell them yourself.", yes: "decline", done: "Declined." },
+  refund: { route: "refund", body: {}, ask: "Refund in full and end this membership?", yes: "refund", done: "Refunded." },
+  "not-paid-fit": { route: "refund", body: { continueAs: "associate" }, ask: "Refund in full and keep them as an Associate? They keep member access on the free tier.", yes: "refund and keep as Associate", done: "Refunded, and kept as an Associate." },
+};
 
 // Insert the Action tab first on person records, so the labels are the first
 // thing Tori sees on opening someone.
@@ -115,17 +124,19 @@ function ActionTab({ recordId }) {
     }
   };
   const p = labels.proposal;
-  // Approve and Refund run the application's own operations (Chapter), then
-  // bring the labels up to date at once. The label only moves once the
-  // operation has finished, exactly as when the five-minute job sees it.
+  // Approve, Decline, Refund and Not a paid fit run the application's own
+  // operations (Chapter 0.57.0), then bring the labels up to date at once. The
+  // label only moves once the operation has finished, exactly as when the
+  // five-minute job sees it.
   const operate = async (kind) => {
     setSaving(true);
     setMessage(null);
     setConfirming(null);
     try {
-      await request(`/api/admin/applications/${labels.applicationId}/${kind}`, { method: "POST", body: "{}" });
+      const op = OPERATIONS[kind];
+      await request(`/api/admin/applications/${labels.applicationId}/${op.route}`, { method: "POST", body: JSON.stringify(op.body) });
       await request(REFRESH_PATH, { method: "POST", body: "{}" });
-      setMessage({ ok: true, text: kind === "approve" ? "Approved. The welcome email is on its way." : "Refunded." });
+      setMessage({ ok: true, text: op.done });
       load();
     } catch (err) {
       setMessage({ ok: false, text: err.message });
@@ -134,6 +145,11 @@ function ActionTab({ recordId }) {
     }
   };
   const canDecide = labels.applicationId && DECIDABLE.has(labels.action);
+  // Decline is for people who hold no payment: Associates, and paid-tier applicants who never paid
+  // (Chapter refuses it with payment_held otherwise). Not a paid fit is the refund that keeps them.
+  const paid = labels.payment === "required" && history.some((h) => h.event === "paid");
+  const canDecline = canDecide && !paid;
+  const canKeepAsAssociate = canDecide && paid;
 
   return (
     <div class="journey-tab" style="display:grid;gap:18px">
@@ -173,7 +189,7 @@ function ActionTab({ recordId }) {
         </div>
         {message && <div class={message.ok ? "muted" : "pay-badge refunded"} role="status">{message.text}</div>}
         <p class="muted" style="font-size:12.5px;margin:0">
-          Then decide in the Decision panel below: Approve, Refund, or Didn't happen. The Action follows once each has finished.
+          Then decide in the Decision panel below: Approve, Decline, Refund, Not a paid fit, or Didn't happen. The Action follows once each has finished.
         </p>
       </div>
 
@@ -182,20 +198,21 @@ function ActionTab({ recordId }) {
           <div class="card-label" style="margin:0">Decision</div>
           {confirming ? (
             <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-              <span>{confirming === "approve" ? "Approve this membership? The welcome email goes out and the member area opens." : confirming === "refund" ? "Refund in full and end this membership?" : "Mark the call as not having happened? They get the booking reminder to pick a new time."}</span>
-              <button type="button" class="btn" disabled={saving} onClick={() => (confirming === "no-show" ? decide(NO_SHOW_PATH, {}).then(() => setConfirming(null)) : operate(confirming))}>Yes, {confirming === "approve" ? "approve" : confirming === "refund" ? "refund" : "invite to rebook"}</button>
+              <span>{confirming === "no-show" ? "Mark the call as not having happened? They get the booking reminder to pick a new time." : OPERATIONS[confirming].ask}</span>
+              <button type="button" class="btn" disabled={saving} onClick={() => (confirming === "no-show" ? decide(NO_SHOW_PATH, {}).then(() => setConfirming(null)) : operate(confirming))}>Yes, {confirming === "no-show" ? "invite to rebook" : OPERATIONS[confirming].yes}</button>
               <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming(null)}>Cancel</button>
             </div>
           ) : (
             <div style="display:flex;flex-wrap:wrap;gap:8px">
               {canDecide && labels.action !== "conversation_booked" && <button type="button" class="btn" disabled={saving} onClick={() => setConfirming("approve")}>Approve</button>}
+              {canDecline && <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming("decline")}>Decline</button>}
               {canDecide && labels.payment === "required" && <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming("refund")}>Refund</button>}
+              {canKeepAsAssociate && <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming("not-paid-fit")}>Not a paid fit</button>}
               {labels.action === "conversation_booked" && <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming("no-show")}>Didn't happen</button>}
-              <button type="button" class="btn secondary" disabled title="Waiting on Cory (BNF bug fa96b11c)">Decline</button>
             </div>
           )}
           <p class="muted" style="font-size:12.5px;margin:0">
-            {labels.action === "conversation_booked" ? "After the call, set Conversation held above (or confirm it when the Granola summary arrives), then the outcome, then decide here." : "Record the outcome above, then decide here. Decline arrives when Cory ships it; until then record Not a fit."}
+            {labels.action === "conversation_booked" ? "After the call, set Conversation held above (or confirm it when the Granola summary arrives), then the outcome, then decide here." : paid ? "Record the outcome above, then decide here: Approve, Refund, or Not a paid fit (a full refund that keeps them as an Associate)." : "Record the outcome above, then decide here: Approve or Decline."}
           </p>
         </div>
       )}

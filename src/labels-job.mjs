@@ -126,6 +126,10 @@ export async function loadFacts(db, chapterId, runtime) {
   const logs = await Promise.all(
     REMINDER_TEMPLATES.map((template) => db.query({ emailLog: { $: { where: { template }, limit: 1000 } } })),
   );
+  // Chapter 0.57.0 archives a refunded purchase under `<applicationId>:continue:<subscription>` when the
+  // person is kept on the free tier; that row is what proves Moved to Associate.
+  const archived = await db.query({ membershipCheckoutHistory: { $: { limit: 1000 } } });
+  const continued = new Set((archived.membershipCheckoutHistory ?? []).filter((row) => str(row.id).includes(":continue:")).map((row) => str(row.applicationId)));
   const apps = (data.applications ?? []).filter((a) => inRuntime(a, runtime));
   const freeTiers = new Set(
     (data.tiers ?? []).filter((t) => t.free === true || t.priceCents === 0).map((t) => String(t.id ?? "")),
@@ -167,7 +171,7 @@ export async function loadFacts(db, chapterId, runtime) {
       reminders.set(appId, [...(reminders.get(appId) ?? []), { id: String(row.id), at, type: REMINDER_TEMPLATES[i] }]);
     }
   });
-  return { apps, freeTiers, paidAt, renewals, failures, meetingFor, reminders };
+  return { apps, freeTiers, paidAt, renewals, failures, meetingFor, reminders, continued };
 }
 
 /**
@@ -184,6 +188,7 @@ export function planPerson(record, app, all, { now, nowQuality, pathOverride = n
     renewals: appId ? all.renewals.get(appId) ?? [] : [],
     renewalFailures: appId ? all.failures.get(appId) ?? [] : [],
     reminded: appId ? (all.reminders.get(appId) ?? []).length > 0 : false,
+    continued: all.continued ?? new Set(),
     now,
     nowQuality,
     noShowKeys: signals?.noShowKeys ?? new Set(),
@@ -195,6 +200,7 @@ export function planPerson(record, app, all, { now, nowQuality, pathOverride = n
   const knownBeforeApplying = !!app && typeof app.createdAt === "number" && record.createdAt < app.createdAt - 60_000;
   // Tori's answer for a person already on record wins over the guess (backfill only).
   const path = initialPath({ existingPath: str(f.journeyPath) || pathOverride, app, knownBeforeApplying });
+  facts.path = path;
   const { admission, waiverSource } = admissionOf(app);
   const payment = paymentOf(app, all.freeTiers);
   const attempt = attemptOf(app);
@@ -286,6 +292,21 @@ export async function applyPlan(db, record, plan, { now, method = "automatic" })
  * One pass over every applicant. `write: false` returns the plans without
  * writing (the backfill's review list).
  */
+/**
+ * One application per person: a person who applied again after a decline or refund (Chapter 0.57.0) has
+ * two rows on the same email, and only the newest attempt may decide their labels. Unmatched rows are dropped.
+ */
+export function latestApplicationPerRecord(apps, resolve) {
+  const latest = new Map();
+  for (const app of apps) {
+    const record = resolve(app);
+    if (!record) continue;
+    const prior = latest.get(record.id);
+    if (!prior || Number(app.createdAt ?? 0) > Number(prior.app.createdAt ?? 0)) latest.set(record.id, { record, app });
+  }
+  return [...latest.values()];
+}
+
 export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQuality = "exact", write = true, pathOverrides = new Map(), detect = false } = {}) {
   const [people, all, waivers] = await Promise.all([loadPeople(db), loadFacts(db, chapterId, runtime), detect ? loadWaivers(db) : Promise.resolve(new Map())]);
   const byAppId = new Map();
@@ -298,9 +319,10 @@ export async function runLabels(db, chapterId, runtime, { now = Date.now(), nowQ
   }
   const plans = [];
   const summary = { people: 0, events: 0, labels: 0, retries: 0, unmatched: 0 };
-  for (const app of all.apps) {
-    const record = byAppId.get(String(app.id)) ?? byEmail.get(lower(app.email));
-    if (!record) { summary.unmatched++; continue; }
+  const resolve = (app) => byAppId.get(String(app.id)) ?? byEmail.get(lower(app.email)) ?? null;
+  const unmatched = all.apps.filter((app) => !resolve(app)).length;
+  summary.unmatched += unmatched;
+  for (const { record, app } of latestApplicationPerRecord(all.apps, resolve)) {
     const signals = detect ? await loadSignals(db, record) : null;
     const plan = planPerson(record, app, all, { now, nowQuality, pathOverride: pathOverrides.get(lower(record.primaryEmail ?? app.email)) ?? null, signals });
     plans.push({ record, app, plan });

@@ -204,6 +204,8 @@ const shortDate = (at) => new Date(at).toLocaleDateString("en-US", { month: "lon
 /** One sentence on the person she named: who, and whether she accepted or joined. */
 export function giftStatusWords(seat) {
   if (!seat) return "";
+  // Chapter 0.57.0 holds the invitation until the buyer is approved; say so instead of "waiting for her".
+  if (seat.invitationHeld) return "named; her invitation goes out once your own membership is approved";
   const words = RECIPIENT_STATE[seat.recipientState] ?? SEAT_STATUS[seat.status] ?? String(seat.status ?? "").replaceAll("_", " ");
   if (seat.recipientState === "joined" && seat.joinedAt) return `${words} since ${shortDate(seat.joinedAt)}`;
   if (seat.recipientState === "accepted" && seat.acceptedAt) return `${words} (accepted ${shortDate(seat.acceptedAt)})`;
@@ -269,6 +271,9 @@ export function NamedSeatCard({ api, initial }) {
   const [reviewing, setReviewing] = useState(false);
   const [terms, setTerms] = useState(false);
   const [pending, setPending] = useState(false);
+  const [regifting, setRegifting] = useState(false);
+  const [nextName, setNextName] = useState("");
+  const [nextEmail, setNextEmail] = useState("");
   const load = async () => {
     try {
       const value = await api("/api/named-seat");
@@ -293,6 +298,29 @@ export function NamedSeatCard({ api, initial }) {
           <div class="meeting-kicker">Your gift</div>
           <div class="meeting-note">{data.seat.recipientName} ({data.seat.recipientEmail}): {seatStatus}.</div>
           {pending && <div class="meeting-note" role="status">{included ? "Her invitation is on its way." : "Your payment is being confirmed."} Her membership begins once she accepts and is approved after her own conversation.</div>}
+          {/* Until the gift is active she may give it to someone else (Chapter 0.57.0): the first
+              invitation stops working, nothing is charged or refunded, and the gift stays final once active. */}
+          {data.seat.regiftable && !regifting && (
+            <div class="meeting-note"><a href="#" style={secondaryLink} onClick={(e) => { e.preventDefault(); setNextName(""); setNextEmail(""); setRegifting(true); }}>Give the gift to someone else</a></div>
+          )}
+          {data.seat.regiftable && regifting && (
+            <form class="seat-form" aria-label="Give the gift to someone else" onSubmit={async (e) => {
+              e.preventDefault();
+              if (nextName.trim().length < 2 || !nextEmail.trim()) return;
+              setError("");
+              try {
+                await api("/api/named-seat/regift", { method: "POST", headers: { "content-type": "application/json" },
+                  body: JSON.stringify({ recipientName: nextName.trim(), recipientEmail: nextEmail.trim() }) });
+                setRegifting(false); setPending(true); await load();
+              } catch (err) { setError((err && err.message) || "The gift could not be changed. Please refresh and check before trying again."); }
+            }}>
+              <p class="meeting-note" style="margin-top:0">The gift moves to the person you name here. {data.seat.recipientName}'s invitation stops working, and nothing is charged or refunded.</p>
+              <label class="seat-field">Her full name<input required maxLength={160} value={nextName} onInput={(e) => setNextName(e.currentTarget.value)} /></label>
+              <label class="seat-field">Her email<input required type="email" maxLength={254} value={nextEmail} onInput={(e) => setNextEmail(e.currentTarget.value)} /></label>
+              <button class="submit-btn" type="submit">Give her the membership instead</button>
+              <div class="meeting-note"><a href="#" style={secondaryLink} onClick={(e) => { e.preventDefault(); setRegifting(false); }}>Keep {data.seat.recipientName}</a></div>
+            </form>
+          )}
         </div>
       )}
       {data && !data.seat && !data.eligible && (
