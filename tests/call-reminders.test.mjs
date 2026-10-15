@@ -74,6 +74,12 @@ describe("remindBeforeCalls", () => {
     });
   });
 
+  it("greets by the preferred name when the applicant gave one", async () => {
+    sent.length = 0; outcome.next = null;
+    await remindBeforeCalls(context(fakeDb(state({ applications: [app({ firstName: "Patricia", preferredName: "Pat" })] }))), env, { now: NOW });
+    expect(sent[0].vars.firstName).toBe("Pat");
+  });
+
   it("skips a reminder already delivered, and closed or other-runtime applications", async () => {
     sent.length = 0; outcome.next = null;
     const key = `call-reminder-day:m1:${NOW + 20 * HOUR}`;
