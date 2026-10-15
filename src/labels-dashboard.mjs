@@ -214,6 +214,12 @@ export function checkpoint(tranche, day) {
 // the weekly report compares like with like even after later backfills.
 
 const SNAPSHOT_DAYS = [7, 14, 30, 60, 90];
+// The weekly report grades each step on its 30-day rate: of everyone who
+// started the step at least 30 days ago, the share who reached the next step
+// within 30 days. Everyone graded has had the same fair chance.
+const RATE_DAYS = 30;
+// Waiting longer than this reads as stuck in the report's "focus" line.
+const STUCK_DAYS = 14;
 const PATH_ORDER = ["all", "relationship_first", "website_first", "second_seat"];
 
 /**
@@ -239,6 +245,8 @@ export function snapshotCurves(people, now = Date.now()) {
     for (const conv of CONVERSIONS[path]) {
       const r = cohortCurves(people, conv, { path, now, maxDays: 365, months: 12 });
       const sum = (k) => r.tranches.reduce((n, t) => n + t[k], 0);
+      const units = r.tranches.flatMap((t) => t.units);
+      const ripe = units.filter((u) => u.age >= RATE_DAYS);
       out.push({
         path,
         id: conv.id,
@@ -247,6 +255,9 @@ export function snapshotCurves(people, now = Date.now()) {
         converted: sum("converted"),
         ended: sum("ended"),
         waiting: sum("waiting"),
+        stuck: units.filter((u) => !u.converted && !u.ended && u.age > STUCK_DAYS).length,
+        rateCohort: ripe.length,
+        rateConverted: ripe.filter((u) => u.converted && u.t <= RATE_DAYS).length,
         ineligible: r.ineligible,
         tranches: r.tranches.map((t) => ({
           month: t.month,
@@ -261,4 +272,16 @@ export function snapshotCurves(people, now = Date.now()) {
     }
   }
   return out;
+}
+
+/**
+ * Members at the snapshot: everyone whose Type is Member, the paying ones
+ * (Founding and Steward; the goal is 75 by 31 December 2027), and who reached
+ * Member access in the seven days before `now`.
+ */
+export function snapshotMembers(people, now = Date.now()) {
+  const members = people.filter((p) => p.type === "member");
+  const paying = (p) => p.payment === "required";
+  const joined = members.filter((p) => (p.events ?? []).some((e) => e.event === "member_access" && e.occurredAt > now - 7 * DAY && e.occurredAt <= now));
+  return { total: members.length, paying: members.filter(paying).length, joined: joined.length, payingJoined: joined.filter(paying).length };
 }
