@@ -39,7 +39,7 @@ import { readFileSync } from "node:fs";
 import { initAdmin } from "@odla-ai/db";
 
 const GROUP_ID = "silver-and-salt-capital";
-const KEYS = ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "bookingReminderAdmin", "callBookedAdmin", "paidApprovedAdmin", "submitConfirmation", "seatAccepted", "bookingReminderFree", "paymentReminder", "callReminderDayBefore", "callReminderHour", "missedCallRebook"];
+const KEYS = ["adminNotification", "paymentConfirmation", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "bookingReminderAdmin", "callBookedAdmin", "paidApprovedAdmin", "submitConfirmation", "seatAccepted", "bookingReminderFree", "paymentReminder", "callReminderDayBefore", "callReminderHour", "missedCallRebook", "callMoved", "callCancelledRebook"];
 const SOURCE = new URL("../_reference/signup-emails.md", import.meta.url);
 
 const args = process.argv.slice(2);

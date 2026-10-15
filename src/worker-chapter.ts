@@ -51,6 +51,8 @@ import { membershipNetwork } from "./membership-network";
 import { crmIngestRoute } from "./crm-ingest-route";
 import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./signup-paths";
 import { remindBeforeCalls } from "./call-reminders";
+// Admin moves and cancel-and-rebook for onboarding calls (Calendar tab).
+import { callAdminRoute } from "./call-admin-route.mjs";
 // Signup labels: Type, Path and Action on every person (Signup Journeys v3.1).
 import { labelsRoute } from "./labels-route.mjs";
 import { relationshipsRoute } from "./relationship-groups.mjs";
@@ -219,7 +221,7 @@ export function chapterWorkerOptions(envName: EnvName) {
     requirePaymentQuote: true,
     crmBasePath: "/api/crm",
     recordError: recordChapterAlert,
-    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, relationshipsRoute, curveReportRoute] as Route[],
+    routes: [salesGate, salesStateRoute, joinPage, joinResumeTierRoute, migrationReadiness, signupPathsRoute, crmIngestRoute, labelsRoute, relationshipsRoute, curveReportRoute, callAdminRoute] as Route[],
   };
 }
 
