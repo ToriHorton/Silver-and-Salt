@@ -166,6 +166,12 @@ export function initialPath({ existingPath, app, knownBeforeApplying }) {
 // Membership states (the hub's authority, projected onto the application)
 // that still allow access.
 const ACCESS_STATUSES = new Set(["active", "cancel_at_term_end", "payment_grace"]);
+// States that end or withhold access. The projection on the application is
+// only refreshed by payment events, so right after approval it can still read
+// "paid_pending_approval" while the member already has access (Shelly
+// Leatham, 2026-10-14). Access is therefore "approval finished, and not in
+// one of these", not "projection says active".
+const NO_ACCESS_STATUSES = new Set(["lapsed", "canceled", "refunded", "refund_pending", "declined", "restarting", "superseded"]);
 
 // Access continues this long after a failed renewal (Chapter 0.56.2; Tori kept 14 days, 2026-10-14).
 export const GRACE_MS = 14 * 24 * 60 * 60 * 1000;
@@ -239,7 +245,7 @@ export function systemEventsFor(app, facts) {
   if (approvedish) {
     push("approved", journeyApproved ?? facts.now, "application", `${id}:approved`, journeyApproved === null ? observed : "exact");
     const ms = str(app.membershipStatus);
-    const accessOk = app.approvalEffectsPending !== true && (!ms || ACCESS_STATUSES.has(ms));
+    const accessOk = app.approvalEffectsPending !== true && !NO_ACCESS_STATUSES.has(ms);
     if (accessOk) push("member_access", facts.now, "access", `${id}:access`, observed);
     for (const r of facts.renewals ?? []) push("renewed", r.at, "payment", r.id);
     for (const f of facts.renewalFailures ?? []) push("renewal_payment_failed", f.at, "payment", f.id);
