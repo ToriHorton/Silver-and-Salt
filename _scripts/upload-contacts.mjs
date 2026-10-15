@@ -6,7 +6,8 @@
 //
 // The CSV is the master contacts sheet, downloaded as CSV. Columns read:
 // Name, Given Name, Family Name, Organization 1 - Name, Organization 1 - Title,
-// E-mail 1 - Value, E-mail 2 - Value, Action, Waive call, Group.
+// E-mail 1 - Value, E-mail 2 - Value, Action, Waive call, Group, and
+// Preferred name when the sheet has it.
 //
 // For each row:
 //   - Group Partner or Team: the person gets the "partner" or "team" tag and
@@ -94,7 +95,7 @@ export function planRow(cols) {
   }
   return {
     ...base, group, action,
-    fields: { name, email, firstName: clean(cols.first), lastName: clean(cols.last), secondaryEmail: second, organization: clean(cols.org), title: clean(cols.title) },
+    fields: { name, email, firstName: clean(cols.first), lastName: clean(cols.last), preferredName: clean(cols.preferred), secondaryEmail: second, organization: clean(cols.org), title: clean(cols.title) },
   };
 }
 
@@ -133,6 +134,8 @@ async function main() {
     name: col("Name"), first: col("Given Name"), last: col("Family Name"), org: col("Organization 1 - Name"), title: col("Organization 1 - Title"),
     email: col("E-mail 1 - Value"), email2: col("E-mail 2 - Value"), action: col("Action"), waive: col("Waive call"), group: col("Group"),
   };
+  const preferredAt = header.findIndex((h) => clean(h).toLowerCase() === "preferred name");
+  if (preferredAt !== -1) idx.preferred = preferredAt;
 
   // Later wins: second emails, then main emails; archived, then live. So a
   // live record beats an archived one, and a main address beats a second one.

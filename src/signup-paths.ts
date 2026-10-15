@@ -37,6 +37,7 @@
 
 import { emailGroupFrom, sendTemplated, type ChapterDb } from "@odla-ai/chapter";
 import type { ChapterEnv, Route, WorkerContext } from "@odla-ai/chapter/worker";
+import { greetingName } from "./greeting-name.mjs";
 
 export const REMINDER_AFTER_MS = 24 * 60 * 60 * 1000;
 export const REMINDER_TEMPLATE = "bookingReminder";
@@ -259,7 +260,7 @@ export async function remindUnbooked(
     attempted++;
     const id = String(app.id);
     const vars = {
-      firstName: text(app.firstName),
+      firstName: greetingName(app),
       lastName: text(app.lastName),
       email: text(app.email),
       phone: text(app.phone),
