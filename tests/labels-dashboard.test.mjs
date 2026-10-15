@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { actionBars, actionChoices, checkpoint, cohortCurves, CONVERSIONS, grid, matching, valueOf } from "../src/labels-dashboard.mjs";
+import { actionBars, actionChoices, checkpoint, cohortCurves, CONVERSIONS, grid, matching, snapshotCurves, valueOf, weekEnding } from "../src/labels-dashboard.mjs";
 
 const DAY = 864e5;
 const NOW = Date.UTC(2026, 9, 14);
@@ -86,5 +86,37 @@ describe("conversion curves", () => {
     const appr = CONVERSIONS.website_first.find((c) => c.id === "held_approved");
     expect(cohortCurves(ps, dec, { path: "website_first", now: NOW }).tranches[0].converted).toBe(2);
     expect(cohortCurves(ps, appr, { path: "website_first", now: NOW }).tranches[0]).toMatchObject({ converted: 1, ended: 1 });
+  });
+});
+
+describe("the people behind each curve and the weekly snapshot", () => {
+  const ev = (event, daysAgo) => ({ event, occurredAt: NOW - daysAgo * DAY, dateQuality: "exact", attempt: "a" });
+  const applied = CONVERSIONS.website_first.find((c) => c.id === "applied_paid");
+  const ps = [
+    P("a", "applicant", "website_first", "paid", "standard", { name: "Ann", payment: "required", events: [ev("applied", 30), ev("paid", 28)] }),
+    P("b", "former", "website_first", "refunded", "standard", { name: "Bea", payment: "required", events: [ev("applied", 30), ev("refunded", 25)] }),
+    P("c", "applicant", "website_first", "applied", "standard", { name: "Cat", payment: "required", events: [ev("applied", 3)] }),
+  ];
+  it("keeps each person in their tranche with how it went", () => {
+    const units = cohortCurves(ps, applied, { path: "website_first", now: NOW }).tranches.flatMap((t) => t.units);
+    expect(units.map((u) => [u.name, u.converted, u.endedAs, u.t])).toEqual([
+      ["Ann", true, null, 2], ["Bea", false, "refunded", 30], ["Cat", false, null, 3],
+    ]);
+    expect(units[0].reachedAt).toBe(NOW - 28 * DAY);
+  });
+  it("snapshots every conversion on every path, in journey order, without names", () => {
+    const snap = snapshotCurves(ps, NOW);
+    const all = Object.entries(CONVERSIONS).flatMap(([path, cs]) => cs.map((c) => `${path}:${c.id}`));
+    expect(snap.map((c) => `${c.path}:${c.id}`)).toEqual(all);
+    expect(snap.find((c) => c.id === "applied_paid")).toMatchObject({ eligible: 3, converted: 1, ended: 1, waiting: 1 });
+    expect(JSON.stringify(snap)).not.toContain("Ann");
+  });
+  it("names the week by the Sunday that closed it, in Mountain time", () => {
+    // Wednesday 14 October 2026 → the week that ended Sunday 11 October.
+    expect(weekEnding(Date.UTC(2026, 9, 14, 18))).toBe("2026-10-11");
+    // Monday 19 October, 00:10 Mountain (06:10 UTC) → Sunday 18 October.
+    expect(weekEnding(Date.UTC(2026, 9, 19, 6, 10))).toBe("2026-10-18");
+    // Sunday 18 October, 23:50 Mountain is still inside that week → 11 October.
+    expect(weekEnding(Date.UTC(2026, 9, 19, 5, 50))).toBe("2026-10-11");
   });
 });

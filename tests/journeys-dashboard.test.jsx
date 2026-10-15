@@ -24,4 +24,8 @@ it("draws the filters, the grid, the list and the curves from the people", () =>
   expect(html).toContain('class="seg-ctl small"');
   expect(html).toContain("Include estimated dates");
   expect(html).toContain("Prospect → Applicant");
+  // Every step, one after another, each with its people one click away.
+  for (const step of ["Identified → Contacted", "Applied → Paid", "Seat invited → Applied"]) expect(html).toContain(step);
+  expect(html).toContain("See the 2 people");
+  expect(html).toContain("Weekly snapshots");
 });

@@ -150,13 +150,18 @@ export function cohortCurves(people, conv, { path = "all", now = Date.now(), max
     if (start === null) continue;
     if (!conv.eligible(u)) { ineligible++; continue; }
     const end = firstAt(u.events, conv.to, start, withEstimates);
-    const ended = !end && u.events.some((e) => e.occurredAt >= start && ENDINGS.has(e.event));
+    const ending = end === null ? u.events.find((e) => e.occurredAt >= start && ENDINGS.has(e.event)) : null;
     const age = Math.floor((now - start) / DAY);
     rows.push({
       unit: u.id,
+      personId: u.person.id,
+      name: u.person.name,
       month: new Date(start).toISOString().slice(0, 7),
+      startedAt: start,
+      reachedAt: end,
       converted: end !== null,
-      ended,
+      ended: Boolean(ending),
+      endedAs: ending ? ending.event : null,
       t: end !== null ? Math.floor((end - start) / DAY) : age,
       age,
     });
@@ -187,6 +192,7 @@ export function cohortCurves(people, conv, { path = "all", now = Date.now(), max
       converted: rs.filter((r) => r.converted).length,
       ended: rs.filter((r) => r.ended).length,
       waiting: rs.filter((r) => !r.converted && !r.ended).length,
+      units: rs.slice().sort((a, b) => a.startedAt - b.startedAt),
       maxT,
       maxAge,
       pts,
@@ -201,4 +207,58 @@ export function checkpoint(tranche, day) {
   if (tranche.maxT >= day) return { value: tranche.pts[day] };
   if (tranche.maxAge < day) return { note: "not yet" };
   return { note: "too few" };
+}
+
+// ── Weekly snapshots ─────────────────────────────────────────────────────────
+// Every Monday the Worker freezes the curves for the week that just closed, so
+// the weekly report compares like with like even after later backfills.
+
+const SNAPSHOT_DAYS = [7, 14, 30, 60, 90];
+const PATH_ORDER = ["all", "relationship_first", "website_first", "second_seat"];
+
+/**
+ * The Sunday that ends the last full week (Monday to Sunday, Mountain time)
+ * before `now`, as YYYY-MM-DD. On a Sunday that is the Sunday before, because
+ * today's week has not finished.
+ */
+export function weekEnding(now = Date.now()) {
+  const local = new Date(now).toLocaleDateString("en-CA", { timeZone: "America/Denver" });
+  const d = new Date(local + "T12:00:00Z");
+  const back = d.getUTCDay() === 0 ? 7 : d.getUTCDay();
+  return new Date(d.getTime() - back * DAY).toISOString().slice(0, 10);
+}
+
+/**
+ * Every conversion on every path, in journey order, reduced to the numbers a
+ * weekly report needs: totals and each starting month's checkpoints. Exact
+ * dates only, the last twelve months, no names.
+ */
+export function snapshotCurves(people, now = Date.now()) {
+  const out = [];
+  for (const path of PATH_ORDER) {
+    for (const conv of CONVERSIONS[path]) {
+      const r = cohortCurves(people, conv, { path, now, maxDays: 365, months: 12 });
+      const sum = (k) => r.tranches.reduce((n, t) => n + t[k], 0);
+      out.push({
+        path,
+        id: conv.id,
+        label: conv.label,
+        eligible: sum("eligible"),
+        converted: sum("converted"),
+        ended: sum("ended"),
+        waiting: sum("waiting"),
+        ineligible: r.ineligible,
+        tranches: r.tranches.map((t) => ({
+          month: t.month,
+          eligible: t.eligible,
+          converted: t.converted,
+          ended: t.ended,
+          waiting: t.waiting,
+          toDate: Math.round(t.toDate * 1000) / 1000,
+          days: Object.fromEntries(SNAPSHOT_DAYS.map((d) => [d, t.maxT >= d ? Math.round(t.pts[d] * 1000) / 1000 : null])),
+        })),
+      });
+    }
+  }
+  return out;
 }

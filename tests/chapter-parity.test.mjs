@@ -637,7 +637,7 @@ describe("follower role", () => {
 
 describe("group seed is insert-only and cannot overwrite owner edits", () => {
   it("uses Chapter plus data-only descriptors for retired namespaces", () => {
-    expect(odlaConfig.integrations).toHaveLength(process.env.ODLA_PROVISION_PROD === "1" ? 2 : 3);
+    expect(odlaConfig.integrations).toHaveLength(process.env.ODLA_PROVISION_PROD === "1" ? 3 : 4);
     expect(odlaConfig.integrations[0]).toBe(integration);
     expect(integration.schema.entities.applications.attrs.tier).toEqual(
       legacySourceSchema.entities.applications.attrs.tier,
@@ -663,6 +663,15 @@ describe("group seed is insert-only and cannot overwrite owner edits", () => {
     expect(Object.keys(odlaConfig.integrations[1].schema.entities)).toEqual([
       "newsletterSignups",
     ]);
+  });
+
+  it("adds the weekly curve snapshots as one deny-all namespace with no seed", () => {
+    // Tori, 2026-10-14: the Worker cron writes one row per week (src/curve-snapshots.mjs).
+    const snaps = odlaConfig.integrations.find((item) => item.id === "journey-curve-snapshots");
+    expect(Object.keys(snaps.schema.entities)).toEqual(["curveSnapshots"]);
+    expect(Object.keys(snaps.schema.entities.curveSnapshots.attrs).sort()).toEqual(["curves", "id", "people", "takenAt", "weekEnding"]);
+    expect(snaps.rules).toEqual({ curveSnapshots: { view: "false", create: "false", update: "false", delete: "false" } });
+    expect(snaps.seeds).toEqual([]);
   });
 
   it("preserves retired dev admin rows without restoring their authority", () => {
