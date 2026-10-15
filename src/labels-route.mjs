@@ -17,6 +17,7 @@ import {
 } from "./labels.mjs";
 import { emailGroupFrom, sendTemplated } from "@odla-ai/chapter";
 import { runLabels } from "./labels-job.mjs";
+import { rescheduleUrl } from "./call-links.mjs";
 import { listCurveSnapshots } from "./curve-snapshots.mjs";
 
 export const LABELS_PERSON_PATH = "/api/admin/labels/person";
@@ -402,8 +403,9 @@ export const labelsRoute = async (req, url, env, ctx) => {
     try {
       const { groups } = await auth.db.query({ groups: { $: { where: { id: ctx.chapter.id }, limit: 1 } } });
       if (groups?.[0] && str(app.email)) {
-        const template = back === "paid" ? "bookingReminder" : "bookingReminderFree";
-        const res = await sendTemplated({
+        // The missed-call email (Tori's copy); until it is installed, the
+        // ordinary booking reminder for the tier, as before.
+        const mailer = {
           db: auth.db,
           envName: str(env.ODLA_ENV),
           sender: env.SEND_EMAIL,
@@ -411,15 +413,20 @@ export const labelsRoute = async (req, url, env, ctx) => {
           debugEmail: typeof env.ODLA_DEBUG_EMAIL === "string" ? env.ODLA_DEBUG_EMAIL : undefined,
           now: () => now,
           newId: () => crypto.randomUUID(),
-        }, {
+        };
+        const message = (template) => ({
           group: emailGroupFrom(groups[0]),
           template,
           event: ctx.chapter.config?.emails?.events?.[template],
           to: str(app.email),
-          vars: { firstName: str(app.firstName), lastName: str(app.lastName), email: str(app.email), phone: str(app.phone), state: str(app.state), membersUrl: MEMBERS_URL },
+          vars: { firstName: str(app.firstName), lastName: str(app.lastName), email: str(app.email), phone: str(app.phone), state: str(app.state), membersUrl: MEMBERS_URL, rescheduleUrl: rescheduleUrl(appId) },
           dedupeKey: `no-show-rebook:${appId}:${key}`,
           applicationId: appId,
         });
+        let res = await sendTemplated(mailer, message("missedCallRebook"));
+        if (!res?.sent && ["template-missing", "disabled"].includes(res?.reason ?? "")) {
+          res = await sendTemplated(mailer, message(back === "paid" ? "bookingReminder" : "bookingReminderFree"));
+        }
         emailed = !!res?.sent;
       }
     } catch (err) {

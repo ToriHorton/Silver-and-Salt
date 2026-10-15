@@ -23,7 +23,7 @@ const OUT_DIR = new URL("_reference/signup-emails-html/", ROOT);
 const HEADING_LIMIT = 27;
 
 // Member-facing emails, in the order a new member meets them.
-const MEMBER_KEYS = ["bookingReminderFree", "paymentReminder", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "paymentConfirmation", "declinePaid", "declineFree"];
+const MEMBER_KEYS = ["bookingReminderFree", "paymentReminder", "prepEmail", "onboardingInvite", "namedSeatInvitation", "bookingReminder", "callReminderDayBefore", "callReminderHour", "missedCallRebook", "paymentConfirmation", "declinePaid", "declineFree"];
 const BUTTONS = {
   bookingReminderFree: { label: "Book your onboarding call", href: "{{membersUrl}}" },
   paymentReminder: { label: "Complete your membership payment", href: "{{membersUrl}}" },
@@ -32,6 +32,9 @@ const BUTTONS = {
   namedSeatInvitation: { label: "Book your onboarding call", href: "{{joinUrl}}" },
   bookingReminder: { label: "Book your onboarding call", href: "https://silverandsaltcapital.com/members/" },
   paymentConfirmation: { label: "Open your member area", href: "https://silverandsaltcapital.com/members/" },
+  callReminderDayBefore: { label: "Join the video call", href: "{{meetingLink}}" },
+  callReminderHour: { label: "Join the video call", href: "{{meetingLink}}" },
+  missedCallRebook: { label: "Pick a new time", href: "{{rescheduleUrl}}" },
   declinePaid: null,
   declineFree: null,
 };
@@ -43,6 +46,8 @@ const GROUP_TEXT = {
   firstName: "Martha",
   purchaserName: "Lauren Sercu",
   startAt: "Tuesday, September 23, 2026 at 10:00 AM MDT",
+  meetingLink: "https://meet.google.com/abc-defg-hij",
+  rescheduleUrl: "https://silverandsaltcapital.com/join?application=sample",
   refundPolicyText: "Payment is collected when you apply. Before approval, a decline or cancellation receives a full refund and stops renewal. Once approved, the paid membership term is non-refundable. Cancel before renewal to stop the next charge; access continues through the paid term. Your checkout shows the exact amount, service term, discount duration and renewal amount before you consent.",
 };
 
@@ -73,7 +78,7 @@ export function parseSections(markdown) {
 const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const brand = (s) => escape(s).replace(/Silver &amp; Salt Capital/g, `Silver ${AMP} Salt Capital`);
 const inline = (s) =>
-  brand(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/(https?:\/\/[^\s<]+[^\s<.,;:)])|(\{\{[a-zA-Z]+Url\}\})/g, (m) => `<a href="${m}" style="color:#2F3E34; text-decoration:underline;">${m}</a>`);
+  brand(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/(https?:\/\/[^\s<]+[^\s<.,;:)])|(\{\{[a-zA-Z]+(?:Url|Link)\}\})/g, (m) => `<a href="${m}" style="color:#2F3E34; text-decoration:underline;">${m}</a>`);
 
 const P = (html, last) => `<p style="margin:0${last ? "" : " 0 18px"};">${html}</p>`;
 const BODY_TD = (inner, top) =>
@@ -98,15 +103,16 @@ export function renderBody(key, text) {
     // A URL on its own last line, or "…here: URL" on one line, becomes the button.
     const lines = p.split("\n");
     const last = lines[lines.length - 1];
-    const oneLine = lines.length === 1 ? last.match(/^(.*?):\s*(https?:\/\/\S+|\{\{[a-zA-Z]+Url\}\})$/) : null;
-    if (button && (URL_RE.test(last) || oneLine)) {
+    const oneLine = lines.length === 1 ? last.match(/^(.*?):\s*(https?:\/\/\S+|\{\{[a-zA-Z]+(?:Url|Link)\}\})$/) : null;
+    // Only the line that carries the button's own link becomes the button.
+    if (button && p.includes(button.href) && (URL_RE.test(last) || oneLine)) {
       const lead = (oneLine ? oneLine[1] : lines.slice(0, -1).join(" ")).replace(/:$/, "").trim();
       if (lead && !/here$/i.test(lead)) run.push(lead + ".");
       flush();
       blocks.push({ type: "button" });
       continue;
     }
-    const filled = p.replace(/\{\{(commitmentText|normsText|refundPolicyText|startAt|firstName|purchaserName)\}\}/g, (_, k) => GROUP_TEXT[k]);
+    const filled = p.replace(/\{\{(commitmentText|normsText|refundPolicyText|startAt|firstName|purchaserName|meetingLink|rescheduleUrl)\}\}/g, (_, k) => GROUP_TEXT[k]);
     run.push(filled.replace(/\n/g, " "));
     if (button?.after && button.after.test(p)) { flush(); blocks.push({ type: "button" }); }
   }

@@ -47,6 +47,7 @@ import { recoverPendingApprovals } from "./approval-recovery";
 import { membershipNetwork } from "./membership-network";
 import { crmIngestRoute } from "./crm-ingest-route";
 import { notifyAdminOfMilestones, remindUnbooked, signupPathsRoute } from "./signup-paths";
+import { remindBeforeCalls } from "./call-reminders";
 // Signup labels: Type, Path and Action on every person (Signup Journeys v3.1).
 import { labelsRoute } from "./labels-route.mjs";
 import { labelsTick } from "./labels-job.mjs";
@@ -299,6 +300,14 @@ export default withObservability<ChapterEnv>({
           if (run.booked || run.approved) console.log("chapter.admin-milestones", run);
         } catch (err) {
           console.error("chapter.admin-milestones", (err as Error).message);
+        }
+        // Before the onboarding call (Tori, 2026-10-14): a reminder the day
+        // before, with a link to pick a new time, and one an hour before.
+        try {
+          const run = await remindBeforeCalls(workerFor(env).background, env);
+          if (run.due) console.log("chapter.call-reminders", run);
+        } catch (err) {
+          console.error("chapter.call-reminders", (err as Error).message);
         }
         // Signup labels (src/labels-job.mjs): Type, Path, Action and the event
         // history. Off until SIGNUP_LABELS is "on", which Tori turns on after
