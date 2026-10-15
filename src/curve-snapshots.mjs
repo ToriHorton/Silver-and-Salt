@@ -12,6 +12,12 @@ import { snapshotCurves, snapshotMembers, weekEnding } from "./labels-dashboard.
 import { loadJourneyPeople } from "./labels-route.mjs";
 
 export const SNAPSHOT_NS = "curveSnapshots";
+// A snapshot is taken only on the Sunday or Monday (Mountain time) after its
+// week closes. Later than that it would hold numbers from days after the week
+// it names, so a late start or a long outage skips the week instead. The
+// first run in production (2026-10-14) saved Wednesday's numbers as "week
+// ending 10 October"; this rule is why that cannot happen again.
+export const SNAPSHOT_GRACE_DAYS = 2;
 const snapshotId = (week) => `curves:${week}`;
 
 /** Has this week's snapshot been taken? One indexed lookup, cheap enough for every cron run. */
@@ -20,12 +26,19 @@ async function hasSnapshot(db, week) {
   return Boolean(res?.[SNAPSHOT_NS]?.length);
 }
 
+/** Whole days since the week ending `week` closed: 0 on that Sunday, Mountain time. */
+export function daysSinceClose(week, now = Date.now()) {
+  const local = new Date(now).toLocaleDateString("en-CA", { timeZone: "America/Denver" });
+  return Math.round((Date.parse(local + "T12:00:00Z") - Date.parse(week + "T12:00:00Z")) / 864e5) - 1;
+}
+
 /**
- * Take the snapshot for the week that just closed, unless it exists. The
- * mutationId makes two overlapping runs write one row.
+ * Take the snapshot for the week that just closed, unless it exists or the
+ * grace days have passed. The mutationId makes two overlapping runs write one row.
  */
 export async function takeWeeklySnapshot(db, { now = Date.now(), force = false } = {}) {
   const week = weekEnding(now);
+  if (!force && daysSinceClose(week, now) >= SNAPSHOT_GRACE_DAYS) return { skipped: "late", week };
   if (!force && (await hasSnapshot(db, week))) return { skipped: "taken", week };
   const people = await loadJourneyPeople({ crm, db });
   // `curves` is one json value: the steps plus the member counts.
