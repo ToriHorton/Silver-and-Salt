@@ -3,7 +3,7 @@
 // Shows the three labels (Type, Path, Action), the facts that decide which
 // steps apply (Admission, Payment), the flags, and the dated history of every
 // event. Tori sets relationship steps here, and finishes a call in one place:
-// she picks the decision, the call is recorded as held with it, and the
+// she picks the decision, the call is recorded as having taken place with it, and the
 // application's own operation (approve, refund, decline) runs. The Approved,
 // Refunded and Declined labels follow once that operation has finished.
 //
@@ -199,7 +199,7 @@ function ActionTab({ recordId }) {
   const confirmView = ask ? (
     <div class="jt-confirm" role="alertdialog" aria-label={ask.ask}>
       <b>{ask.ask}</b>
-      <span class="jt-hint">{ask.detail}{callPanel && !CALL_OUTCOMES.has(labels.action) ? " The call is saved as held." : ""}</span>
+      <span class="jt-hint">{ask.detail}{callPanel && !CALL_OUTCOMES.has(labels.action) ? " Saving records that the call took place." : ""}</span>
       <div class="jt-actions">
         <button type="button" class="btn" disabled={saving} onClick={() => operate(confirming)}>{saving ? "Saving…" : ask.yes}</button>
         <button type="button" class="btn secondary" disabled={saving} onClick={() => setConfirming(null)}>Go back</button>
@@ -254,7 +254,7 @@ function ActionTab({ recordId }) {
           <p class="jt-lead">
             {CALL_OUTCOMES.has(labels.action)
               ? `Your decision (${labels.actionLabel}) is saved, but ${OPERATIONS[recordedPick]?.label ?? "it"} has not finished. Save decision to try again.`
-              : "How did it go? Choose what happens next. Saving records the call as held."}
+              : "How did it go? Choose what happens next. Saving records that the call took place."}
           </p>
           {confirmView ?? (
             <>
